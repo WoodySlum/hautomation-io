@@ -1,0 +1,29 @@
+{
+  "name": "hautomation-core",
+  "version": "0.0.0",
+  "description": "Hautomation core module",
+  "main": "HautomationCore.js",
+  "scripts": {
+    "start": "node HautomationRunner.js",
+    "test": "mocha --compilers js:mocha-traceur --recursive ./tests/*.tests.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@honey.hd.free.fr:hautomation/core-node.git"
+  },
+  "keywords": [
+    "hautomation",
+    "core"
+  ],
+  "author": "WoodySlum",
+  "license": "ISC",
+   "dependencies" : {
+     "traceur":"^0.0.111"
+  },
+  "devDependencies":{
+    "mocha":"^3.3.0",
+    "mocha-traceur":"2.1.0",
+    "chai":"^3.5.0",
+    "sinon":"^2.2.0"
+  }
+}
