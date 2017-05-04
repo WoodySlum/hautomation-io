@@ -3,6 +3,8 @@
   "version": "0.0.0",
   "description": "Hautomation core module",
   "main": "HautomationCore.js",
+  "engines" : { "node" : ">=6.1" },
+  "engineStrict" : true,
   "scripts": {
     "start": "node HautomationRunner.js",
     "test": "mocha --compilers js:mocha-traceur --recursive ./tests/*.tests.js"
@@ -18,12 +20,13 @@
   "author": "WoodySlum",
   "license": "ISC",
    "dependencies" : {
-     "traceur":"^0.0.111"
+     "traceur":"^0.0",
+     "express":"^4.15"
   },
   "devDependencies":{
-    "mocha":"^3.3.0",
-    "mocha-traceur":"2.1.0",
-    "chai":"^3.5.0",
-    "sinon":"^2.2.0"
+    "mocha":"^3.3",
+    "mocha-traceur":"2.1",
+    "chai":"^3.5",
+    "sinon":"^2.2"
   }
 }

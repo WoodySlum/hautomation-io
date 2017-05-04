@@ -6,6 +6,10 @@
 
 In preferences / languages / Javascript, set ECMAScript 6 and save.
 
+### Requirements
+
+* node 6.1.0 or upper version
+
 ### Installation
 
 In console, type `npm install` and everything should go on.
