@@ -1,3 +1,6 @@
+# Vim
+*.swp
+
 # Inteelij
 core-node.iml
 .idea/**
