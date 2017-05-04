@@ -1,8 +1,7 @@
-stages:
-  - tests
-  
-tests:
-  stage: tests
+image: node:6.0
+before_script:
+- npm install
+
+test:
   script:
-   - npm install
-   - npm run test
+  - npm run test
