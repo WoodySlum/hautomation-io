@@ -25,7 +25,26 @@ class HautomationCore {
 
     start() {
         Logger.info('Starting core');
-        this.webServices.start();
+        this.startServices();
+    }
+
+    stop() {
+        Logger.info('Stopping core');
+        this.stopServices();
+    }
+
+    startServices() {
+        Logger.info('Starting services');
+        this.services.forEach((s)=>{
+            s.start();
+        });
+    }
+
+    stopServices() {
+        Logger.info('Starting services');
+        this.services.forEach((s)=>{
+            s.stop();
+        });
     }
 
 }

@@ -18,8 +18,9 @@ class WebServices extends Service {
             this.app.get('/services/', function(req, res) {
                 res.send('Hello\n');
             });
+            
             this.server = this.app.listen(this.port);
-            Logger.info("Services are listening on port " + this.port);
+            Logger.info("Web services are listening on port " + this.port);
 
             super.start();
         } else {
