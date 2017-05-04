@@ -31,7 +31,7 @@ class WebServices extends Service {
         if (this.server && this.status == ServiceConst.RUNNING) {
             this.server.close();
         } else {
-            Logger.warn("Web services are already running");
+            Logger.warn("WebServices are not running, nothing to do...");
         }
     }
 }
