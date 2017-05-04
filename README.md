@@ -18,4 +18,5 @@ In console, type `npm install` and everything should go on.
 
 * `npm run start` Start Hautomation services
 * `npm run test` Run all unit test
+* `npm run dev` Run dev server
 * `npm update` Update dependencies
