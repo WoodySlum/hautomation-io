@@ -8,6 +8,7 @@
   },
   "engineStrict": true,
   "scripts": {
+    "dev": "nodemon HautomationRunner.js",
     "start": "node HautomationRunner.js",
     "test": "mocha --compilers js:mocha-traceur --recursive ./tests/*.tests.js"
   },
