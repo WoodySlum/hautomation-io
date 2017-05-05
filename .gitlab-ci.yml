@@ -6,3 +6,7 @@ test:
   script:
   - npm run test-ci
   coverage: '/Statements   : \d+\.\d+/'
+  
+lint:
+  script:
+  - npm run lint

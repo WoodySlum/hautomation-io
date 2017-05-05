@@ -8,7 +8,7 @@
   },
   "engineStrict": true,
   "scripts": {
-    "dev": "nodemon --ignore '**/*.json' --ignore '**/*.db' --ignore '**/*.jpg' HautomationRunner.js --exec 'npm run lint'",
+    "dev": "nodemon --debug=8081 --ignore '**/*.json' --ignore '**/*.db' --ignore '**/*.jpg' HautomationRunner.js",
     "start": "node HautomationRunner.js",
     "test": "mocha --compilers js:mocha-traceur --recursive ./tests/*.tests.js",
     "test-ci": "istanbul cover _mocha -- --reporter mocha-junit-reporter --compilers js:mocha-traceur --recursive ./tests/*.tests.js",
@@ -25,10 +25,6 @@
   ],
   "author": "WoodySlum",
   "license": "ISC",
-  "dependencies": {
-    "traceur": "^0.0",
-    "express": "^4.15"
-  },
   "devDependencies": {
     "chai": "^3.5",
     "sinon": "^2.2",
@@ -39,5 +35,9 @@
     "eslint":"^3.19",
     "eslint-plugin-mocha":"^4.9",
     "nodemon": "^1.11.0"
+  },
+  "dependencies": {
+    "traceur": "^0.0",
+    "express": "^4.15"
   }
 }
