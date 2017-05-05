@@ -6,6 +6,7 @@ core-node.iml
 .idea/**
 
 # Logs
+test-results.xml
 logs
 *.log
 npm-debug.log*
