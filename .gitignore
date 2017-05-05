@@ -1,12 +1,13 @@
 # Vim
 *.swp
 
-# Inteelij
+# Intellij
 core-node.iml
 .idea/**
 
 # Logs
 test-results.xml
+coverage/
 logs
 *.log
 npm-debug.log*
