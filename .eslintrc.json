@@ -1,0 +1,40 @@
+{
+    "env": {
+        "browser": false,
+        "es6": true
+    },
+    "globals": {
+      "require": false,
+      "module": false,
+      "console": false
+  },
+    "plugins": [
+        "mocha"
+    ],
+    "extends": "eslint:recommended",
+    "parserOptions": {
+        "sourceType": "module"
+    },
+    "rules": {
+        "mocha/no-exclusive-tests": "error",
+        "no-console":0,
+        "indent": [
+            "error",
+            4
+        ],
+        "linebreak-style": [
+            "error",
+            "unix"
+        ],
+        "quotes": [
+            "error",
+            "double"
+        ],
+        "semi": [
+            "error",
+            "always"
+        ],
+        "no-underscore-dangle": 1,
+        "no-unused-vars": ["warn", { "vars": "all", "args": "after-used", "ignoreRestSiblings": false }]
+    }
+}
