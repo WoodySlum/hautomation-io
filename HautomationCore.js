@@ -1,6 +1,6 @@
 "use strict";
-var Logger = require('./logger/Logger');
-var WebServices = require('./services/webservices/WebServices');
+var Logger = require("./logger/Logger");
+var WebServices = require("./services/webservices/WebServices");
 
 class HautomationCore {
     constructor(webServices = null) {
@@ -18,30 +18,37 @@ class HautomationCore {
         this.services.push(this.webServices);
     }
 
-    sample(val) {
-        return val;
-    }
-
-
+    /**
+     * Start Hautomation core
+     */
     start() {
-        Logger.info('Starting core');
+        Logger.info("Starting core");
         this.startServices();
     }
 
+    /**
+     * Stop automation core
+     */
     stop() {
-        Logger.info('Stopping core');
+        Logger.info("Stopping core");
         this.stopServices();
     }
 
+    /**
+     * Start all services
+     */
     startServices() {
-        Logger.info('Starting services');
+        Logger.info("Starting services");
         this.services.forEach((s)=>{
             s.start();
         });
     }
 
+    /**
+     * Stop all services
+     */
     stopServices() {
-        Logger.info('Starting services');
+        Logger.info("Stopping services");
         this.services.forEach((s)=>{
             s.stop();
         });

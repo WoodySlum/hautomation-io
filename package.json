@@ -8,7 +8,7 @@
   },
   "engineStrict": true,
   "scripts": {
-    "dev": "nodemon HautomationRunner.js --exec 'npm run lint'",
+    "dev": "nodemon --ignore '**/*.json' --ignore '**/*.db' --ignore '**/*.jpg' HautomationRunner.js --exec 'npm run lint'",
     "start": "node HautomationRunner.js",
     "test": "mocha --compilers js:mocha-traceur --recursive ./tests/*.tests.js",
     "test-ci": "istanbul cover _mocha -- --reporter mocha-junit-reporter --compilers js:mocha-traceur --recursive ./tests/*.tests.js",
