@@ -1,4 +1,4 @@
-image: node:6.0
+image: hypriot/rpi-node
 before_script:
 - npm install
 
