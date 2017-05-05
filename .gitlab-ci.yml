@@ -4,4 +4,5 @@ before_script:
 
 test:
   script:
-  - npm run test
+  - npm run test-ci
+  coverage: '/Statements   : \d+\.\d+/'

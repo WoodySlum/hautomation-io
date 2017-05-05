@@ -4,14 +4,15 @@
   "description": "Hautomation core module",
   "main": "HautomationCore.js",
   "engines": {
-    "node": ">=6.1"
+    "node": ">=6.0"
   },
   "engineStrict": true,
   "scripts": {
     "dev": "nodemon HautomationRunner.js",
     "start": "node HautomationRunner.js",
     "test": "mocha --compilers js:mocha-traceur --recursive ./tests/*.tests.js",
-    "testci": "mocha --reporter mocha-junit-reporter --compilers js:mocha-traceur --recursive ./tests/*.tests.js"
+    "test-ci": "istanbul cover ./node_modules/mocha/bin/_mocha -- --reporter mocha-junit-reporter --compilers js:mocha-traceur --recursive ./tests/*.tests.js",
+    "coverage":"istanbul cover ./node_modules/mocha/bin/_mocha -- --compilers js:mocha-traceur --recursive ./tests/*.tests.js"
   },
   "repository": {
     "type": "git",
@@ -29,10 +30,11 @@
   },
   "devDependencies": {
     "chai": "^3.5",
+    "sinon": "^2.2",
     "mocha": "^3.3",
     "mocha-traceur": "2.1",
     "mocha-junit-reporter":"^1.13",
-    "nodemon": "^1.11.0",
-    "sinon": "^2.2"
+    "istanbul":"^1.1.0-alpha.1",
+    "nodemon": "^1.11.0"
   }
 }
