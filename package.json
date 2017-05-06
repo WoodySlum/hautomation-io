@@ -10,9 +10,9 @@
   "scripts": {
     "dev": "nodemon --debug=8081 --ignore '**/*.json' --ignore '**/*.db' --ignore '**/*.jpg' HautomationRunner.js",
     "start": "node HautomationRunner.js",
-    "test": "mocha --compilers js:mocha-traceur --recursive ./tests/*.tests.js",
-    "test-ci": "istanbul cover _mocha -- --reporter mocha-junit-reporter --compilers js:mocha-traceur --recursive ./tests/*.tests.js",
-    "coverage":"istanbul cover _mocha -- --compilers js:mocha-traceur --recursive ./tests/*.tests.js",
+    "test": "mocha --compilers js:mocha-traceur --recursive ./tests/**/*.tests.js",
+    "test-ci": "istanbul cover _mocha -- --reporter mocha-junit-reporter --compilers js:mocha-traceur --recursive ./tests/**/*.tests.js",
+    "coverage":"istanbul cover _mocha -- --compilers js:mocha-traceur --recursive ./tests/**/*.tests.js",
     "lint":"eslint ./**/*.js"
   },
   "repository": {
@@ -38,6 +38,7 @@
   },
   "dependencies": {
     "traceur": "^0.0",
-    "express": "^4.15"
+    "express": "^4.15",
+    "body-parser": "^1.17"
   }
 }

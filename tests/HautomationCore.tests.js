@@ -7,7 +7,7 @@ var HautomationCore = require("./../HautomationCore");
 var WebServices = require("./../services/webservices/WebServices");
 
 describe("HautomationCore", function() {
-    const ws = new WebServices();
+    const ws = new WebServices.class();
 
     before(() => {
         sinon.stub(ws, "start");

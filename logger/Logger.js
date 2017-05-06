@@ -7,6 +7,10 @@ class Logger {
      * @param  {Number} [level=3] Log level between 0 to 5
      */
     static log(message, level = 3) {
+        if (message instanceof Object) {
+            message = JSON.stringify(message);
+        }
+
         console.log("[" + level + "]    " + message);
     }
 

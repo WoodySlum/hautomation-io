@@ -1,6 +1,10 @@
 "use strict";
 var Logger = require("./logger/Logger");
 var WebServices = require("./services/webservices/WebServices");
+var Authentication = require("./modules/authentication/Authentication.js");
+const AppConfiguration = require("./conf/config.default.json");
+
+var APIResponse = require("./services/webservices/APIResponse");
 
 class HautomationCore {
     constructor(webServices = null) {
@@ -9,7 +13,7 @@ class HautomationCore {
 
         // Create WebService if needed
         if (!webServices) {
-            this.webServices = new WebServices();
+            this.webServices = new WebServices.class();
         } else {
             this.webServices = webServices;
         }
@@ -23,7 +27,12 @@ class HautomationCore {
      */
     start() {
         Logger.info("Starting core");
+
+        // Authentication module
+        this.addModule(new Authentication.class(AppConfiguration, this.webServices));
+
         this.startServices();
+
     }
 
     /**
@@ -40,6 +49,7 @@ class HautomationCore {
     startServices() {
         Logger.info("Starting services");
         this.services.forEach((s)=>{
+            s.register(this);
             s.start();
         });
     }
@@ -54,6 +64,24 @@ class HautomationCore {
         });
     }
 
+    /**
+     * Add a module
+     * @param {Object} module A module
+     */
+    addModule(module) {
+        let a = "";
+        this.modules.push(module);
+    }
+
+    // TODO:REMOVE for testing only
+    processAPI(apiRequest) {
+        return new Promise((resolve, reject) => {
+            Logger.verbose(apiRequest);
+            //let a = new APIResponse(true, {"hey":"ho"});
+            resolve(new APIResponse.class(true, {"hey":"ho"}));
+            //reject();
+         } );
+    }
 }
 
 module.exports = HautomationCore;
