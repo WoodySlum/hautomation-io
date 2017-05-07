@@ -1,3 +1,8 @@
 {
-    "configurationPath":"/tmp"
+    "configurationPath":"/tmp/",
+    "admin":{
+        "username":"admin",
+        "password":"admin",
+        "enable":true
+    }
 }

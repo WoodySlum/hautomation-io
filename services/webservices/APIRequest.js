@@ -18,6 +18,9 @@ class APIRequest {
          * @type {string}
          */
         this.route = ":/" + route;
+        if (this.route.slice(-1) != "/") {
+            this.route += "/";
+        }
         /**
          * path
          * @type {string}

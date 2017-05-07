@@ -5,6 +5,8 @@ var sinon = require("sinon");
 
 var WebServices = require("./../../../services/webservices/WebServices");
 var APIResponse = require("./../../../services/webservices/APIResponse");
+var Authentication = require("./../../../modules/authentication/Authentication");
+var AuthenticationData = require("./../../../modules/authentication/AuthenticationData");
 
 class APIResgistrationClassA {
     constructor(apiResponse = null, reject = false, empty = false){this.apiResponse = apiResponse; this.reject = reject; this.empty = empty;}
@@ -35,6 +37,7 @@ describe("WebServices", function() {
     contentTypePost[WebServices.CONTENT_TYPE] = WebServices.HEADER_APPLICATION_FORM;
     const reqGet = {method:"GET", ip:"127.0.0.1", path:"/s/foo/bar/", query:{"foo":"bar"}, headers:contentTypeGet};
     const reqPost = {method:"POST", ip:"127.0.0.1", path:"/s/foo/bar/", body:{"foo":"bar"}, headers:contentTypePost};
+
     const endpoint = "/s/";
 
     before(() => {
@@ -271,6 +274,33 @@ describe("WebServices", function() {
 
         let v = function(apiResponses) {
             expect(apiResponses.length).to.be.equal(0);
+            done();
+        }
+
+        let sendAPIResponse = sinon.stub(w, "sendAPIResponse").callsFake((apiResponses, res) => {
+            v(apiResponses);
+        });
+
+        w.runPromises(reqPost, p , null);
+    });
+
+    it("runPromises should return unauthorized result", function(done) {
+        let w = new WebServices.class(9090);
+
+        w.registerAPI(new APIResgistrationClassA(
+                                        new APIResponse.class(true, {"foo":"bar"})),
+                                        WebServices.POST, ":/foo/bar/",
+                                        Authentication.AUTH_USAGE_LEVEL
+                                    );
+
+        let r = w.manageResponse(reqPost, endpoint);
+
+        r.addAuthenticationData(new AuthenticationData.class(true, "foo", Authentication.AUTH_NO_LEVEL));
+        let p = w.buildPromises(r);
+
+        let v = function(apiResponses) {
+            expect(apiResponses.length).to.be.equal(1);
+            expect(apiResponses[0].errorCode).to.be.equal(812);
             done();
         }
 
