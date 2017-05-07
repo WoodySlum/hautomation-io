@@ -28,4 +28,4 @@ In console, type `npm install` and everything should go on.
 
 #### Web Services API registration
 
-[Go to details](href "services/webservices/README.md")
+[Go to details]("services/webservices/README.md")
