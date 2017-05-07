@@ -1,4 +1,9 @@
 image: hypriot/rpi-node
+
+cache:
+  paths:
+  - node_modules/
+
 before_script:
 - npm install
 
@@ -6,7 +11,7 @@ test:
   script:
   - npm run test-ci
   coverage: '/Statements   : \d+\.\d+/'
-  
+
 lint:
   script:
   - npm run lint
