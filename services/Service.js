@@ -1,5 +1,7 @@
 "use strict";
 
+var Logger = require("./../logger/Logger");
+
 const STOPPED = 0;
 const RUNNING = 1;
 
