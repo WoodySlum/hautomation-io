@@ -44,7 +44,12 @@ class Service {
      * @param  {Object} delegate The service delegate
      */
     register(delegate) {
-        this.delegates.push(delegate);
+        let i = this.delegates.indexOf(delegate);
+        if (i === -1) {
+            this.delegates.push(delegate);
+        } else {
+            Logger.warn("Delegate already registered");
+        }
     }
 
     /**

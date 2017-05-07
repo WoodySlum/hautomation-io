@@ -49,7 +49,7 @@ class HautomationCore {
     startServices() {
         Logger.info("Starting services");
         this.services.forEach((s)=>{
-            s.register(this);
+            s.registerAPI(this, WebServices.POST, ":/toto/titi/");
             s.start();
         });
     }

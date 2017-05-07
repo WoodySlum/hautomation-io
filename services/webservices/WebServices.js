@@ -5,16 +5,21 @@ var Service = require("./../Service");
 
 var APIRequest = require("./APIRequest");
 var APIResponse = require("./APIResponse");
+var APIRegistration = require("./APIRegistration");
 
 // External
 var BodyParser = require('body-parser');
 
+// Constants
 const CONTENT_TYPE = "content-type";
 
 const HEADER_APPLICATION_JSON = "application/json";
 const HEADER_APPLICATION_FORM = "application/x-www-form-urlencoded";
+const GET = "GET";
+const POST = "POST";
 
 const API_ERROR_HTTP_CODE = 500;
+
 
 class WebServices extends Service.class {
 
@@ -24,6 +29,7 @@ class WebServices extends Service.class {
         let express = require("express");
         this.app = express();
         this.server = null;
+        this.apiRegistered
     }
 
     /**
@@ -72,6 +78,67 @@ class WebServices extends Service.class {
     }
 
     /**
+     * Override Register service callback
+     * @param  {Object} delegate The service delegate
+     */
+    register(delegate) {
+        this.registerAPI(delegate);
+    }
+
+    /**
+     * Override Unregister service callback
+     * @param  {Object} delegate The service delegate
+     */
+    unregister(delegate) {
+        this.unregisterAPI(delegate);
+    }
+
+    /**
+     * Register to a specific API to be notified when a route and/or method is called
+     * @param  {Object} delegate     A delegate which implements the processAPI(apiRequest) function
+     * @param  {String} [method="*"] A method (*, WebServices.GET / WebServices.POST)
+     * @param  {String} [route="*"]  A route (*, :/my/route/)
+     */
+    registerAPI(delegate, method = "*", route = "*") {
+        let found = false;
+        let registration = new APIRegistration.class(delegate, method, route);
+        this.delegates.forEach((d) => {
+            if (d.isEqual(registration)) {
+                found = true;
+                return;
+            }
+        });
+        if (!found) {
+            super.register(registration);
+        } else {
+            Logger.warn("Delegate already registered");
+        }
+    }
+
+    /**
+     * Unregister a specific API to be not notified when a route and/or method is called
+     * @param  {Object} delegate     A delegate which implements the processAPI(apiRequest) function
+     * @param  {String} [method="*"] A method (*, WebServices.GET / WebServices.POST)
+     * @param  {String} [route="*"]  A route (*, :/my/route/)
+     */
+    unregisterAPI(delegate, method = "*", route = "*") {
+        let found = false;
+        let registration = new APIRegistration.class(delegate, method, route);
+        this.delegates.forEach((d) => {
+            if (d.isEqual(registration)) {
+                found = true;
+                registration = d;
+                return;
+            }
+        });
+        if (found) {
+            super.unregister(registration);
+        } else {
+            Logger.warn("Delegate not registered");
+        }
+    }
+
+    /**
      * Create an API
      * @param  {Request} req        The WS request
      * @param  {string} endpoint    The WS endpoint
@@ -98,12 +165,15 @@ class WebServices extends Service.class {
             }
         }
 
+        let methodConstant = null;
         if (method === "GET") {
             params = Object.assign(params, req.query);
+            methodConstant = GET;
         }
 
         if (method === "POST" && req.headers[CONTENT_TYPE] === HEADER_APPLICATION_FORM) {
             params = Object.assign(params, req.body);
+            methodConstant = POST;
         }
 
         let data = {};
@@ -113,7 +183,7 @@ class WebServices extends Service.class {
 
         Logger.info(method + " " + req.path + " from " + ip + " " + req.headers[CONTENT_TYPE]);
 
-        return new APIRequest.class(method, ip, route, path, action, params, data);
+        return new APIRequest.class(methodConstant, ip, route, path, action, params, data);
     }
 
     /**
@@ -123,9 +193,14 @@ class WebServices extends Service.class {
      */
     buildPromises(apiRequest) {
         let promises = [];
-        this.delegates.forEach((delegate) => {
-            if (delegate != null && typeof delegate.processAPI === "function") {
-                promises.push(delegate.processAPI(apiRequest));
+        this.delegates.forEach((registeredEl) => {
+            if ((registeredEl.method === "*"
+                || registeredEl.method === apiRequest.method)
+                && (registeredEl.route === "*"
+                || apiRequest.route.startsWith(registeredEl.route) === true)
+                && registeredEl.delegate != null
+                && typeof registeredEl.delegate.processAPI === "function") {
+                    promises.push(registeredEl.delegate.processAPI(apiRequest));
             }
         });
 
@@ -145,6 +220,7 @@ class WebServices extends Service.class {
                 this.sendAPIResponse(apiResponse, res);
             }
         }).catch((apiResponse) => {
+
             if (apiResponse) {
                 this.sendAPIResponse([apiResponse], res);
             } else {
@@ -182,4 +258,9 @@ class WebServices extends Service.class {
     }
 }
 
-module.exports = {class:WebServices, CONTENT_TYPE:CONTENT_TYPE, HEADER_APPLICATION_JSON:HEADER_APPLICATION_JSON, HEADER_APPLICATION_FORM:HEADER_APPLICATION_FORM, API_ERROR_HTTP_CODE:API_ERROR_HTTP_CODE};
+module.exports = {class:WebServices, CONTENT_TYPE:CONTENT_TYPE,
+    HEADER_APPLICATION_JSON:HEADER_APPLICATION_JSON, HEADER_APPLICATION_FORM:HEADER_APPLICATION_FORM,
+    API_ERROR_HTTP_CODE:API_ERROR_HTTP_CODE,
+    GET:GET,
+    POST:POST
+    };

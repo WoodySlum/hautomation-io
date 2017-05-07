@@ -23,3 +23,9 @@ In console, type `npm install` and everything should go on.
 * `npm run lint` Check code issues
 * `npm run coverage` Generate test coverage
 * `npm run test-ci` Execute tests and generate test coverage
+
+### Code documentation
+
+#### Web Services API registration
+
+[Go to details](href "./services/webservices/README.md")

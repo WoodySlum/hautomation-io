@@ -6,6 +6,28 @@ var sinon = require("sinon");
 var WebServices = require("./../../../services/webservices/WebServices");
 var APIResponse = require("./../../../services/webservices/APIResponse");
 
+class APIResgistrationClassA {
+    constructor(apiResponse = null, reject = false, empty = false){this.apiResponse = apiResponse; this.reject = reject; this.empty = empty;}
+    processAPI(apiRequest) {
+        return new Promise((resolve, reject) => {
+            if (this.reject) {
+                if (this.empty) {
+                    reject();
+                } else {
+                    reject(this.apiResponse);
+                }
+            } else {
+                if (this.empty) {
+                    resolve();
+                } else {
+                    resolve(this.apiResponse);
+                }
+            }
+         } );
+    }
+}
+class APIResgistrationClassB extends APIResgistrationClassA {}
+
 describe("WebServices", function() {
     let contentTypeGet = [];
     contentTypeGet[WebServices.CONTENT_TYPE] = WebServices.HEADER_APPLICATION_JSON;
@@ -19,6 +41,9 @@ describe("WebServices", function() {
 
     });
 
+    /**
+     * Constructor tests
+     */
     it("constructor should be well played", function() {
         let w = new WebServices.class(9090);
         expect(w).to.have.property("port").and.equal(9090);
@@ -26,6 +51,48 @@ describe("WebServices", function() {
         expect(w).to.have.property("server").and.to.be.null;
     });
 
+    /**
+     * API Registration tests
+     */
+     it("should register with wilcard route and method", function() {
+         let w = new WebServices.class(8080);
+         let obj = new APIResgistrationClassA();
+         w.register(obj);
+         expect(w.delegates.length).to.be.equal(1);
+         expect(w.delegates[0].method).to.be.equal("*");
+         expect(w.delegates[0].route).to.be.equal("*");
+     });
+
+     it("should register with specific route and method", function() {
+         let w = new WebServices.class(8080);
+         let obj = new APIResgistrationClassA();
+         w.registerAPI(obj, WebServices.POST, ":/foo/bar/");
+         expect(w.delegates.length).to.be.equal(1);
+         expect(w.delegates[0].method).to.be.equal(WebServices.POST);
+         expect(w.delegates[0].route).to.be.equal(":/foo/bar/");
+     });
+
+     it("should unregister with wilcard route and method", function() {
+         let w = new WebServices.class(8080);
+         let obj = new APIResgistrationClassA();
+         w.register(obj);
+         expect(w.delegates.length).to.be.equal(1);
+         w.unregister(obj);
+         expect(w.delegates.length).to.be.equal(0);
+     });
+
+     it("should unregister with specific route and method", function() {
+         let w = new WebServices.class(8080);
+         let obj = new APIResgistrationClassA();
+         w.registerAPI(obj, WebServices.GET, ":/bar/foo/");
+         expect(w.delegates.length).to.be.equal(1);
+         w.unregisterAPI(obj, WebServices.GET, ":/bar/foo/");
+         expect(w.delegates.length).to.be.equal(0);
+     });
+
+    /**
+     * Manage response tests
+     */
     it("manageResponse should return valid GET APIRequest", function() {
         let w = new WebServices.class(9090);
         let r = w.manageResponse(reqGet, endpoint);
@@ -58,6 +125,9 @@ describe("WebServices", function() {
         expect(r.authenticationData).to.be.null;
     });
 
+    /**
+     * Build promises tests
+     */
     it("buildPromises should return an array of promises", function() {
         let w = new WebServices.class(9090);
         w.register({
@@ -75,23 +145,14 @@ describe("WebServices", function() {
         expect(p[0]).to.be.an("Promise");
     });
 
+    /**
+     * Run promises tests
+     */
     it("runPromises should go well with 2 success", function(done) {
         let w = new WebServices.class(9090);
-        w.register({
-            processAPI : function(apiRequest) {
-                return new Promise((resolve, reject) => {
-                    resolve(new APIResponse.class(true, {"foo":"bar"}));
-                 } );
-            }
-        });
 
-        w.register({
-            processAPI : function(apiRequest) {
-                return new Promise((resolve, reject) => {
-                    resolve(new APIResponse.class(true, {"foo":"bar"}));
-                 } );
-            }
-        });
+        w.register(new APIResgistrationClassA(new APIResponse.class(true, {"foo":"bar"})));
+        w.register(new APIResgistrationClassB(new APIResponse.class(true, {"foo":"bar"})));
 
         let r = w.manageResponse(reqPost, endpoint);
         let p = w.buildPromises(r);
@@ -110,23 +171,11 @@ describe("WebServices", function() {
         w.runPromises(reqPost, p , null);
     });
 
-    it("runPromises should go get only one APIResult with first promise in error", function(done) {
+    it("runPromises should get only one APIResult with first promise in error", function(done) {
         let w = new WebServices.class(9090);
-        w.register({
-            processAPI : function(apiRequest) {
-                return new Promise((resolve, reject) => {
-                    reject(new APIResponse.class(false, {"foo":"bar"}));
-                 } );
-            }
-        });
 
-        w.register({
-            processAPI : function(apiRequest) {
-                return new Promise((resolve, reject) => {
-                    resolve(new APIResponse.class(true, {"foo":"bar"}));
-                 } );
-            }
-        });
+        w.register(new APIResgistrationClassA(new APIResponse.class(false, {"foo":"bar"}), true));
+        w.register(new APIResgistrationClassB(new APIResponse.class(true, {"foo":"bar"})));
 
         let r = w.manageResponse(reqPost, endpoint);
         let p = w.buildPromises(r);
@@ -146,27 +195,14 @@ describe("WebServices", function() {
 
     it("runPromises should go get only one APIResult with second promise in error", function(done) {
         let w = new WebServices.class(9090);
-        w.register({
-            processAPI : function(apiRequest) {
-                return new Promise((resolve, reject) => {
-                    resolve(new APIResponse.class(true, {"foo":"bar"}));
-                 } );
-            }
-        });
 
-        w.register({
-            processAPI : function(apiRequest) {
-                return new Promise((resolve, reject) => {
-                    reject(new APIResponse.class(false, {"foo":"bar"}, 100, "foo"));
-                 } );
-            }
-        });
+        w.register(new APIResgistrationClassA(new APIResponse.class(true, {"foo":"bar"})));
+        w.register(new APIResgistrationClassB(new APIResponse.class(false, {"foo":"bar"}, 100, "foo"), true));
 
         let r = w.manageResponse(reqPost, endpoint);
         let p = w.buildPromises(r);
 
         let v = function(apiResponses) {
-            console.log(JSON.stringify(apiResponses));
             expect(apiResponses.length).to.be.equal(1);
             expect(apiResponses[0].success).to.be.false;
             expect(apiResponses[0].errorCode).to.be.equal(100);
@@ -184,29 +220,16 @@ describe("WebServices", function() {
 
     it("runPromises should go well with empty resolve content", function(done) {
         let w = new WebServices.class(9090);
-        w.register({
-            processAPI : function(apiRequest) {
-                return new Promise((resolve, reject) => {
-                    resolve();
-                 } );
-            }
-        });
 
-        w.register({
-            processAPI : function(apiRequest) {
-                return new Promise((resolve, reject) => {
-                    resolve(new APIResponse.class(true, {"foo":"bar"}));
-                 } );
-            }
-        });
+        w.register(new APIResgistrationClassA(null, false, true));
+        w.register(new APIResgistrationClassB(new APIResponse.class(true, {"foo":"bar"}), true));
 
         let r = w.manageResponse(reqPost, endpoint);
         let p = w.buildPromises(r);
 
         let v = function(apiResponses) {
-            expect(apiResponses.length).to.be.equal(2);
-            expect(apiResponses[0]).to.be.undefined;
-            expect(apiResponses[1].success).to.be.true;
+            expect(apiResponses.length).to.be.equal(1);
+            expect(apiResponses[0].success).to.be.true;
             done();
         }
 
@@ -217,24 +240,57 @@ describe("WebServices", function() {
         w.runPromises(reqPost, p , null);
     });
 
+    it("runPromises should go well with specific route registering", function(done) {
+        let w = new WebServices.class(9090);
+
+        w.registerAPI(new APIResgistrationClassA(new APIResponse.class(true, {"foo":"bar"})), WebServices.POST, ":/foo/bar/");
+
+        let r = w.manageResponse(reqPost, endpoint);
+        let p = w.buildPromises(r);
+
+        let v = function(apiResponses) {
+            expect(apiResponses.length).to.be.equal(1);
+            expect(apiResponses[0].success).to.be.true;
+            done();
+        }
+
+        let sendAPIResponse = sinon.stub(w, "sendAPIResponse").callsFake((apiResponses, res) => {
+            v(apiResponses);
+        });
+
+        w.runPromises(reqPost, p , null);
+    });
+
+    it("runPromises should go wrong with specific route registering", function(done) {
+        let w = new WebServices.class(9090);
+
+        w.registerAPI(new APIResgistrationClassA(new APIResponse.class(true, {"foo":"bar"})), WebServices.POST, ":/bar/foo/");
+
+        let r = w.manageResponse(reqPost, endpoint);
+        let p = w.buildPromises(r);
+
+        let v = function(apiResponses) {
+            expect(apiResponses.length).to.be.equal(0);
+            done();
+        }
+
+        let sendAPIResponse = sinon.stub(w, "sendAPIResponse").callsFake((apiResponses, res) => {
+            v(apiResponses);
+        });
+
+        w.runPromises(reqPost, p , null);
+    });
+
+    /**
+     * Send API response tests
+     */
     it("sendAPIResponse should return a valid sample (test all processing, more functional)", function(done) {
         let w = new WebServices.class(9090);
         let sample = {foo:"bar"};
-        w.register({
-            processAPI : function(apiRequest) {
-                return new Promise((resolve, reject) => {
-                    resolve();
-                 } );
-            }
-        });
 
-        w.register({
-            processAPI : function(apiRequest) {
-                return new Promise((resolve, reject) => {
-                    resolve(new APIResponse.class(true, sample));
-                 } );
-            }
-        });
+        w.register(new APIResgistrationClassA(null, false, true));
+        w.register(new APIResgistrationClassB(new APIResponse.class(true, sample), true));
+
         let res = {};
         res.json = (d) => {
             expect(d).to.be.equal(sample);
@@ -249,21 +305,9 @@ describe("WebServices", function() {
     it("sendAPIResponse should return an error (test all processing, more functional)", function(done) {
         let w = new WebServices.class(9090);
 
-        w.register({
-            processAPI : function(apiRequest) {
-                return new Promise((resolve, reject) => {
-                    resolve(new APIResponse.class(true, {}));
-                 } );
-            }
-        });
+        w.register(new APIResgistrationClassA(null, false, true));
+        w.register(new APIResgistrationClassB(new APIResponse.class(false, {}, 100, "foo"), true));
 
-        w.register({
-            processAPI : function(apiRequest) {
-                return new Promise((resolve, reject) => {
-                    reject(new APIResponse.class(false, {}, 100, "foo"));
-                 } );
-            }
-        });
         let res = {};
         res.status = (c) => {
             expect(c).to.be.equal(WebServices.API_ERROR_HTTP_CODE);
