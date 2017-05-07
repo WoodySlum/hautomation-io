@@ -9,7 +9,6 @@ class Service {
     constructor() {
         this.status = STOPPED;
         this.delegates = [];
-        let a = 3;
     }
 
     /**
