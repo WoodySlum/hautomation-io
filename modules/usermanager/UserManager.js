@@ -8,33 +8,35 @@ const ERROR_USER_NOT_FOUND = "ERROR_USER_NOT_FOUND";
 
 class UserManager {
     constructor(confManager) {
+        /**
+         * Configuration manager
+         * @type {ConfManager}
+         */
         this.confManager = confManager;
 
         try {
-            this.users = this.confManager.loadDatas(User, CONF_KEY);
+            /**
+             * Users
+             * @type {[User]}
+             */
+            this.users = this.confManager.loadDatas(User.class, CONF_KEY);
         } catch(e) {
             Logger.warn("Load users error : " + e.message);
             this.users = [];
         }
     }
 
+    /**
+     * Delete specific user
+     * @param  {string} username The username
+     */
     delUser(username) {
         let user = this.getUser(username);
-
-        if (user) {
-            let index = this.users.indexOf(user);
-            if (index > -1) {
-                Logger.verbose("User " + username + " found");
-                this.users.splice(index, 1);
-            } else {
-                Logger.verbose("User " + username + " not found");
-                throw Error(ERROR_USER_NOT_FOUND);
-            }
-        } else {
-            Logger.verbose("User " + username + " not found");
+        try {
+            this.users = this.confManager.delData(this.users, CONF_KEY, user, this.compareUser);
+        } catch(e) {
             throw Error(ERROR_USER_NOT_FOUND);
         }
-
     }
 
     /**
@@ -45,28 +47,41 @@ class UserManager {
         return this.users.slice();
     }
 
-    getUser(username) {
-        let user = null;
-
-        this.users.forEach((u) => {
-            if (u.username === username) {
-                user = u;
-                return;
-            }
-        });
-        return user;
+    /**
+     * Comparator for users
+     * @param  {User} user1 A user
+     * @param  {User} user2 Another user
+     * @return {Boolean}       True if user are identical, else false
+     */
+    compareUser(user1, user2) {
+        return (user1.username == user2.username)?true:false;
     }
 
+    /**
+     * Get a user with username
+     * @param  {string} username The username
+     * @return {User}   A user, null if user does not exists
+     */
+    getUser(username) {
+        return this.confManager.getData(this.users, new User.class(username), this.compareUser);
+    }
+
+    /**
+     * Set user and store into json
+     * @param {User} user A user
+     */
     setUser(user) {
         try {
-            this.delUser(user.username);
+            this.users = this.confManager.setData(this.users, CONF_KEY, user, this.compareUser);
         } catch (e) {
-
+            Logger.err("Could not save user : " + e.message);
         }
-        this.users.push(user);
-        this.confManager.saveData(this.users, CONF_KEY);
     }
 
+    /**
+     * Get the admin user
+     * @return {User} The admin user, null if admin user is disabled
+     */
     getAdminUser() {
         if (this.confManager.appConfiguration.admin.enable) {
             return new User.class(this.confManager.appConfiguration.admin.username, this.confManager.appConfiguration.admin.password, Authentication.AUTH_MAX_LEVEL);

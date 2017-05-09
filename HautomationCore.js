@@ -12,15 +12,9 @@ class HautomationCore {
     constructor(webServices = null) {
         this.services = [];
 
-        // Create WebService if needed
-        if (!webServices) {
-            this.webServices = new WebServices.class();
-        } else {
-            this.webServices = webServices;
-        }
-
-        // Add WebService to list
-        this.services.push(this.webServices);
+        // Services
+        // Web services and API
+        this.webServices = new WebServices.class(AppConfiguration.port, AppConfiguration.ssl.port, AppConfiguration.ssl.key, AppConfiguration.ssl.cert);
 
         // Init modules
         // ConfManager module
@@ -29,6 +23,9 @@ class HautomationCore {
         this.userManager = new UserManager.class(this.confManager);
         // Authentication module
         this.authentication = new Authentication.class(this.webServices, this.userManager);
+
+        // Add WebService to list
+        this.services.push(this.webServices);
     }
 
     /**

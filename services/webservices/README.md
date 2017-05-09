@@ -1,4 +1,11 @@
-## Web Services
+# Web Services
+
+## Description
+
+This class allows to create an API endpoint.
+Any class can register a specific route and will call back a method when the endpoint is requested.
+
+## API
 
 ### Registration
 

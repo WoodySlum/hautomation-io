@@ -10,6 +10,8 @@ var Authentication = require("./../../modules/authentication/Authentication");
 
 // External
 var BodyParser = require('body-parser');
+var fs = require('fs');
+var https = require('https');
 
 // Constants
 const CONTENT_TYPE = "content-type";
@@ -24,13 +26,16 @@ const API_ERROR_HTTP_CODE = 500;
 
 class WebServices extends Service.class {
 
-    constructor(port = 8080) {
+    constructor(port = 8080, sslPort = 8443, sslKey = null, sslCert = null) {
         super();
         this.port = port;
+        this.sslPort = sslPort;
         let express = require("express");
         this.app = express();
-        this.server = null;
-        this.apiRegistered
+        this.servers = [];
+        this.sslKey = sslKey;
+        this.sslCert = sslCert;
+        this.fs = fs;
     }
 
     /**
@@ -58,7 +63,24 @@ class WebServices extends Service.class {
                 instance.runPromises(apiRequest, instance.buildPromises(apiRequest), res);
             });
 
-            this.server = this.app.listen(this.port);
+            try {
+                let sslServer = https.createServer({
+                    key: this.fs.readFileSync(this.sslKey),
+                    cert: this.fs.readFileSync(this.sslCert)
+                }, this.app).listen(this.sslPort);
+                this.servers.push(sslServer);
+            } catch (e) {
+                Logger.err("SSL Server can not started");
+            }
+
+            try {
+                let server = this.app.listen(this.port);
+                this.servers.push(server);
+            } catch (e) {
+                Logger.err("HTTP Server can not started");
+            }
+
+
             Logger.info("Web services are listening on port " + this.port);
 
             super.start();
@@ -72,7 +94,10 @@ class WebServices extends Service.class {
      */
     stop() {
         if (this.server && this.status == Service.RUNNING) {
-            this.server.close();
+            this.servers.forEach((server) => {
+                server.close();
+            });
+            this.servers = [];
         } else {
             Logger.warn("WebServices are not running, nothing to do...");
         }

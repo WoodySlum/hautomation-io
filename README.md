@@ -26,6 +26,8 @@ In console, type `npm install` and everything should go on.
 
 ### Code documentation
 
+[Full documentation auto generated](services/webservices/DOCUMENTATION.md)
+
 #### Web Services API registration
 
 [Go to details](services/webservices/README.md)

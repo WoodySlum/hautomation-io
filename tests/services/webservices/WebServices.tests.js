@@ -48,10 +48,12 @@ describe("WebServices", function() {
      * Constructor tests
      */
     it("constructor should be well played", function() {
-        let w = new WebServices.class(9090);
+        let w = new WebServices.class(9090, 9091);
         expect(w).to.have.property("port").and.equal(9090);
+        expect(w).to.have.property("sslPort").and.equal(9091);
         expect(w).to.have.property("app").and.to.be.not.null;
-        expect(w).to.have.property("server").and.to.be.null;
+        expect(w).to.have.property("servers");
+        expect(w.servers.length).to.be.equal(0);
     });
 
     /**

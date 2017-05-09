@@ -13,7 +13,8 @@
     "test": "mocha --compilers js:mocha-traceur --recursive ./tests/**/*.tests.js",
     "test-ci": "istanbul cover _mocha -- --reporter mocha-junit-reporter --compilers js:mocha-traceur --recursive ./tests/**/*.tests.js",
     "coverage":"istanbul cover _mocha -- --compilers js:mocha-traceur --recursive ./tests/**/*.tests.js",
-    "lint":"eslint ./**/*.js"
+    "lint":"eslint ./**/*.js",
+    "doc":"documentation build **/*.js -f md -o DOCUMENTATION.md"
   },
   "repository": {
     "type": "git",
@@ -34,7 +35,8 @@
     "istanbul":"^1.1.0-alpha.1",
     "eslint":"^3.19",
     "eslint-plugin-mocha":"^4.9",
-    "nodemon": "^1.11.0"
+    "nodemon": "^1.11.0",
+    "documentation": "^4.0.0-rc.1"
   },
   "dependencies": {
     "traceur": "^0.0",
