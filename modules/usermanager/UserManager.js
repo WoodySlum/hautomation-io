@@ -33,7 +33,7 @@ class UserManager {
     delUser(username) {
         let user = this.getUser(username);
         try {
-            this.users = this.confManager.delData(this.users, CONF_KEY, user, this.compareUser);
+            this.users = this.confManager.removeData(this.users, CONF_KEY, user, this.compareUser);
         } catch(e) {
             throw Error(ERROR_USER_NOT_FOUND);
         }

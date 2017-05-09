@@ -165,7 +165,7 @@ class ConfManager {
      */
     setData(datas, key, object, comparator) {
         try {
-            this.delData(datas, key, object, comparator);
+            this.removeData(datas, key, object, comparator);
         } catch (e) {}
         datas.push(object);
         this.saveData(datas, key);
@@ -173,14 +173,14 @@ class ConfManager {
     }
 
     /**
-     * Delete data into object's array (delete). Can throw error.
+     * Remove data into object's array (delete). Can throw error.
      * @param  {Array} datas      An array of objects
      * @param  {string} key A file store key
      * @param  {Object} object     The object to search
      * @param  {Function} comparator A comparator function with 2 parameters (obj1, obj2). The comparator must return true if objects are equals. Else false.
      * @return {[Object]}     The Array of Objects updated
      */
-    delData(datas, key, object, comparator) {
+    removeData(datas, key, object, comparator) {
         let d = this.getData(datas, object, comparator);
         if (d) {
             let index = datas.indexOf(d);

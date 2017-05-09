@@ -13,6 +13,10 @@ describe("ConfManager", function() {
         readFileSync: function(path, mode){return "{\"foo\":\"bar\"}";},
         writeFile: function(file, data, callback){callback();}
     }
+    const fsMockArray = {
+        readFileSync: function(path, mode){return "[{\"foo\":\"bar\"},{\"foo\":\"foo\"}]";},
+        writeFile: function(file, data, callback){callback();}
+    }
     const fsMockInvalid = {
         readFileSync: function(path, mode){return "foobar";},
         writeFile: function(file, data, callback){callback();}
@@ -24,6 +28,10 @@ describe("ConfManager", function() {
     const fsMockException = {
         readFileSync: function(path, mode){throw Error("foobar");},
         writeFile: function(file, data, callback){throw Error("foobar");callback();}
+    }
+    // Fake methods
+    function comparator(obj1, obj2) {
+        return (obj1.foo === obj2.foo)?true:false;
     }
     // Fake classes
     class Foo {
@@ -65,7 +73,7 @@ describe("ConfManager", function() {
 
     // File access
     it("readFile should set back data", function() {
-         let readFileSpy = sinon.spy(confManager.fs, 'readFileSync');
+         sinon.spy(confManager.fs, 'readFileSync');
          let result = confManager.readFile("foo");
          expect(confManager.fs.readFileSync.withArgs("foo", "utf-8").calledOnce).to.be.true;
          expect(result.foo).to.be.equal("bar");
@@ -107,7 +115,7 @@ describe("ConfManager", function() {
 
     it("saveData should be corrctly done", function() {
          confManager.fs = fsMock;
-         let writeFileSpy = sinon.spy(confManager.fs, 'writeFile');
+         sinon.spy(confManager.fs, 'writeFile');
          try {
              confManager.saveData({foo:"bar"}, "foo");
         } catch(e) {
@@ -115,17 +123,19 @@ describe("ConfManager", function() {
         }
 
          expect(confManager.fs.writeFile.withArgs("/foo/bar/foo.json", "{\"foo\":\"bar\"}", sinon.match.any).calledOnce).to.be.true;
+         confManager.fs.writeFile.restore();
     });
 
     it("saveData should throw error", function() {
-         confManager.fs = fsMockException;
-         let writeFileSpy = sinon.spy(confManager.fs, 'writeFile');
-         try {
-             confManager.saveData({foo:"bar"}, "foo");
-             expect(false).to.be.true; // This should not happened because an exception is thrown
+        confManager.fs = fsMockException;
+        sinon.spy(confManager.fs, 'writeFile');
+        try {
+            confManager.saveData({foo:"bar"}, "foo");
+            expect(false).to.be.true; // This should not happened because an exception is thrown
         } catch(e) {
             expect(e.message).to.be.equal("foobar");
         }
+        confManager.fs.writeFile.restore();
     });
 
     // Load and save data/s
@@ -144,6 +154,100 @@ describe("ConfManager", function() {
          } catch(e) {
              expect(e.message).to.be.equal(ConfManager.ERROR_NO_JSON_METHOD);
          }
+    });
+
+    it("loadDatas should be well done", function() {
+         confManager.fs = fsMockArray;
+         let r = confManager.loadDatas(Foo, "notimportant");
+         expect(r.length).to.be.equal(2);
+         expect(r[0] instanceof Foo).to.be.true;
+         expect(r[0].foo).to.be.equal("bar");
+         expect(r[1] instanceof Foo).to.be.true;
+         expect(r[1].foo).to.be.equal("foo");
+    });
+
+    it("loadDatas should throw error", function() {
+         confManager.fs = fsMockArray;
+         try {
+             let r = confManager.loadDatas(FooNoJson, "notimportant");
+             expect(false).to.be.true; // This should not happened because an exception is thrown
+         } catch(e) {
+             expect(e.message).to.be.equal(ConfManager.ERROR_NO_JSON_METHOD);
+         }
+    });
+
+    // Get, Set and Del
+    it("getData should find data", function() {
+         confManager.fs = fsMockArray;
+         let datas = confManager.loadDatas(Foo, "notimportant");
+         let data = new Foo("foo");
+         let r = confManager.getData(datas, data, comparator);
+
+         expect(r instanceof Foo).to.be.true;
+         expect(r.foo).to.be.equal("foo");
+    });
+
+    it("getData should not find data", function() {
+         confManager.fs = fsMockArray;
+         let datas = confManager.loadDatas(Foo, "notimportant");
+         let data = new Foo("foobar");
+         let r = confManager.getData(datas, data, comparator);
+
+         expect(r).to.be.null;
+    });
+
+    it("setData should process save correctly", function() {
+         confManager.fs = fsMockArray;
+         let datas = confManager.loadDatas(Foo, "notimportant");
+         let data = new Foo("foobar");
+         sinon.spy(confManager, 'saveData');
+         sinon.spy(confManager, 'removeData');
+         sinon.spy(datas, 'push');
+
+         let r = confManager.setData(datas, "notimportant", data, comparator);
+
+         expect(confManager.removeData.withArgs(datas, "notimportant", data, comparator).calledOnce).to.be.true;
+         expect(datas.push.withArgs(data).calledOnce).to.be.true;
+         expect(confManager.saveData.withArgs(sinon.match.any, "notimportant").calledOnce).to.be.true;
+         expect(r[r.length-1].foo).to.be.equal("foobar");
+
+         confManager.removeData.restore();
+         datas.push.restore();
+         confManager.saveData.restore();
+    });
+
+    it("removeData should be well processed", function() {
+        confManager.fs = fsMockArray;
+        let datas = confManager.loadDatas(Foo, "notimportant");
+        let data = new Foo("foo");
+        sinon.spy(confManager, 'saveData');
+        sinon.spy(datas, 'splice');
+        sinon.spy(datas, 'indexOf');
+
+        let r = confManager.removeData(datas, "notimportant", data, comparator);
+
+        expect(datas.splice.withArgs(sinon.match.any, 1).calledOnce).to.be.true;
+        expect(datas.indexOf.withArgs(sinon.match.any).calledOnce).to.be.true;
+        expect(confManager.saveData.withArgs(sinon.match.any, "notimportant").calledOnce).to.be.true;
+        expect(r.length).to.be.equal(1);
+
+        datas.indexOf.restore();
+        datas.splice.restore();
+        confManager.saveData.restore();
+    });
+
+    it("removeData should throw error", function() {
+        confManager.fs = fsMockArray;
+        let datas = confManager.loadDatas(Foo, "notimportant");
+        let data = new Foo("foobar");
+
+        try {
+            let r = confManager.removeData(datas, "notimportant", data, comparator);
+            expect(false).to.be.true; // This should not happened because an exception is thrown
+        } catch(e) {
+            expect(e.message).to.be.equal(ConfManager.DATA_NOT_FOUND);
+        }
+
     });
 
     after(function () {
