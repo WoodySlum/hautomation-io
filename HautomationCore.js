@@ -1,7 +1,9 @@
 "use strict";
 var Logger = require("./logger/Logger");
 var WebServices = require("./services/webservices/WebServices");
-var Authentication = require("./modules/authentication/Authentication.js");
+var Authentication = require("./modules/authentication/Authentication");
+var ConfManager = require("./modules/confmanager/ConfManager");
+var UserManager = require("./modules/usermanager/UserManager");
 const AppConfiguration = require("./conf/config.default.json");
 
 var APIResponse = require("./services/webservices/APIResponse");
@@ -9,14 +11,18 @@ var APIResponse = require("./services/webservices/APIResponse");
 class HautomationCore {
     constructor(webServices = null) {
         this.services = [];
-        this.modules = [];
 
-        // Create WebService if needed
-        if (!webServices) {
-            this.webServices = new WebServices.class();
-        } else {
-            this.webServices = webServices;
-        }
+        // Services
+        // Web services and API
+        this.webServices = new WebServices.class(AppConfiguration.port, AppConfiguration.ssl.port, AppConfiguration.ssl.key, AppConfiguration.ssl.cert);
+
+        // Init modules
+        // ConfManager module
+        this.confManager = new ConfManager.class(AppConfiguration);
+        // UserManager module
+        this.userManager = new UserManager.class(this.confManager);
+        // Authentication module
+        this.authentication = new Authentication.class(this.webServices, this.userManager);
 
         // Add WebService to list
         this.services.push(this.webServices);
@@ -27,9 +33,6 @@ class HautomationCore {
      */
     start() {
         Logger.info("Starting core");
-
-        // Authentication module
-        this.addModule(new Authentication.class(AppConfiguration, this.webServices));
 
         this.startServices();
 
@@ -62,15 +65,6 @@ class HautomationCore {
         this.services.forEach((s)=>{
             s.stop();
         });
-    }
-
-    /**
-     * Add a module
-     * @param {Object} module A module
-     */
-    addModule(module) {
-        let a = "";
-        this.modules.push(module);
     }
 
     // TODO:REMOVE for testing only

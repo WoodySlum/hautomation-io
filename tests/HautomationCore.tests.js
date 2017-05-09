@@ -14,12 +14,13 @@ describe("HautomationCore", function() {
     });
 
     it("constructor should fill at least 1 service item", function() {
-        let c = new HautomationCore(ws);
+        let c = new HautomationCore();
         expect(c.services.length).to.be.above(0);
     });
 
     it("should call start", function() {
-        let c = new HautomationCore(ws);
+        let c = new HautomationCore();
+        c.services = [ws];
         c.start();
 
         expect(ws.start.calledOnce).to.be.true;

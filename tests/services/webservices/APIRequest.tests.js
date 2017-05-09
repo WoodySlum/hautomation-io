@@ -16,7 +16,7 @@ describe("APIRequest", function() {
         let r = new APIRequest.class("1", "2", "3", "4", "5", "6");
         expect(r).to.have.property("method").and.equal("1");
         expect(r).to.have.property("ip").and.equal("2");
-        expect(r).to.have.property("route").and.equal(":/3");
+        expect(r).to.have.property("route").and.equal(":/3/");
         expect(r).to.have.property("path").and.equal("4");
         expect(r).to.have.property("action").and.equal("5");
         expect(r).to.have.property("params").and.equal("6");
