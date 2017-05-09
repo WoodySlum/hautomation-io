@@ -16,6 +16,6 @@ lint:
   script:
   - npm run lint
 
- doc:
-   script:
-   - npm run doc
+doc:
+  script:
+  - npm run doc
