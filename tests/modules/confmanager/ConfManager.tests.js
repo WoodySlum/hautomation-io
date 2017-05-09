@@ -56,6 +56,7 @@ describe("ConfManager", function() {
     it("default constructor should fill correctly elements", function() {
         let c = new ConfManager.class();
         expect(c).to.have.property("appConfiguration");
+        expect(c).to.have.property("fs");
     });
 
     it("getFilePath should return correct path", function() {

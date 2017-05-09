@@ -30,7 +30,7 @@ class UserManager {
      * Delete specific user
      * @param  {string} username The username
      */
-    delUser(username) {
+    removeUser(username) {
         let user = this.getUser(username);
         try {
             this.users = this.confManager.removeData(this.users, CONF_KEY, user, this.compareUser);
