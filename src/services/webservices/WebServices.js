@@ -23,9 +23,21 @@ const POST = "POST";
 
 const API_ERROR_HTTP_CODE = 500;
 
-
+/**
+ * This class manage Web Services call, and more specifically the external APIs
+ * @class
+ */
 class WebServices extends Service.class {
 
+    /**
+     * Constructor
+     *
+     * @param  {int} [port=8080]        The listening HTTP port
+     * @param  {int} [sslPort=8443]     The listening HTTPS port
+     * @param  {string} [sslKey=null]   The path for SSL key
+     * @param  {string} [sslCert=null]  The path for sslCert key
+     * @returns {WebServices}            The instance
+     */
     constructor(port = 8080, sslPort = 8443, sslKey = null, sslCert = null) {
         super();
         this.port = port;

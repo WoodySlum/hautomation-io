@@ -2,106 +2,143 @@
 
 ### Table of Contents
 
--   [log](#log)
--   [warn](#warn)
--   [err](#err)
--   [verbose](#verbose)
--   [info](#info)
--   [hljs](#hljs)
--   [D_KEYWORDS](#d_keywords)
--   [float_re](#float_re)
--   [escape_sequence_re](#escape_sequence_re)
--   [D_INTEGER_MODE](#d_integer_mode)
--   [D_FLOAT_MODE](#d_float_mode)
--   [D_CHARACTER_MODE](#d_character_mode)
--   [D_ESCAPE_SEQUENCE](#d_escape_sequence)
--   [D_STRING_MODE](#d_string_mode)
--   [D_WYSIWYG_DELIMITED_STRING_MODE](#d_wysiwyg_delimited_string_mode)
--   [D_ALTERNATE_WYSIWYG_STRING_MODE](#d_alternate_wysiwyg_string_mode)
--   [D_HEX_STRING_MODE](#d_hex_string_mode)
--   [D_TOKEN_STRING_MODE](#d_token_string_mode)
--   [D_HASHBANG_MODE](#d_hashbang_mode)
--   [D_SPECIAL_TOKEN_SEQUENCE_MODE](#d_special_token_sequence_mode)
--   [D_ATTRIBUTE_MODE](#d_attribute_mode)
--   [D_NESTING_COMMENT_MODE](#d_nesting_comment_mode)
--   [start](#start)
--   [stop](#stop)
--   [restart](#restart)
--   [status](#status)
--   [register](#register)
--   [unregister](#unregister)
--   [start](#start-1)
--   [stop](#stop-1)
--   [startServices](#startservices)
--   [stopServices](#stopservices)
--   [authorized](#authorized)
--   [username](#username)
--   [level](#level)
--   [appConfiguration](#appconfiguration)
--   [getFilePath](#getfilepath)
--   [isJsonValid](#isjsonvalid)
--   [readFile](#readfile)
--   [saveData](#savedata)
--   [loadData](#loaddata)
--   [loadDatas](#loaddatas)
--   [getData](#getdata)
--   [setData](#setdata)
--   [delData](#deldata)
--   [confManager](#confmanager)
--   [users](#users)
--   [delUser](#deluser)
--   [getUsers](#getusers)
--   [compareUser](#compareuser)
--   [getUser](#getuser)
--   [setUser](#setuser)
--   [getAdminUser](#getadminuser)
--   [username](#username-1)
--   [password](#password)
--   [level](#level-1)
--   [fullName](#fullname)
--   [email](#email)
--   [phone](#phone)
--   [picture](#picture)
--   [json](#json)
--   [success](#success)
--   [response](#response)
--   [errorCode](#errorcode)
--   [errorMessage](#errormessage)
--   [start](#start-2)
--   [stop](#stop-2)
--   [register](#register-1)
--   [unregister](#unregister-1)
--   [registerAPI](#registerapi)
--   [unregisterAPI](#unregisterapi)
--   [manageResponse](#manageresponse)
--   [buildPromises](#buildpromises)
--   [runPromises](#runpromises)
--   [sendAPIResponse](#sendapiresponse)
--   [method](#method)
--   [ip](#ip)
--   [route](#route)
--   [path](#path)
--   [action](#action)
--   [params](#params)
--   [data](#data)
--   [authenticationData](#authenticationdata)
--   [addAuthenticationData](#addauthenticationdata)
--   [delegate](#delegate)
--   [method](#method-1)
--   [route](#route-1)
--   [authLevel](#authlevel)
--   [isEqual](#isequal)
+-   [HautomationCore](#hautomationcore)
+    -   [constructor](#constructor)
+    -   [start](#start)
+    -   [stop](#stop)
+    -   [startServices](#startservices)
+    -   [stopServices](#stopservices)
+-   [Logger](#logger)
+    -   [log](#log)
+    -   [warn](#warn)
+    -   [err](#err)
+    -   [verbose](#verbose)
+    -   [info](#info)
+-   [Authentication](#authentication)
+    -   [constructor](#constructor-1)
+-   [AuthenticationData](#authenticationdata)
+    -   [constructor](#constructor-2)
+    -   [authorized](#authorized)
+    -   [username](#username)
+    -   [level](#level)
+-   [ConfManager](#confmanager)
+    -   [constructor](#constructor-3)
+    -   [appConfiguration](#appconfiguration)
+    -   [fs](#fs)
+    -   [getFilePath](#getfilepath)
+    -   [isJsonValid](#isjsonvalid)
+    -   [readFile](#readfile)
+    -   [saveData](#savedata)
+    -   [loadData](#loaddata)
+    -   [loadDatas](#loaddatas)
+    -   [getData](#getdata)
+    -   [setData](#setdata)
+    -   [removeData](#removedata)
+-   [User](#user)
+    -   [constructor](#constructor-4)
+    -   [username](#username-1)
+    -   [password](#password)
+    -   [level](#level-1)
+    -   [fullName](#fullname)
+    -   [email](#email)
+    -   [phone](#phone)
+    -   [picture](#picture)
+    -   [json](#json)
+-   [UserManager](#usermanager)
+    -   [constructor](#constructor-5)
+    -   [confManager](#confmanager-1)
+    -   [users](#users)
+    -   [removeUser](#removeuser)
+    -   [getUsers](#getusers)
+    -   [compareUser](#compareuser)
+    -   [getUser](#getuser)
+    -   [setUser](#setuser)
+    -   [getAdminUser](#getadminuser)
+-   [Service](#service)
+    -   [constructor](#constructor-6)
+    -   [start](#start-1)
+    -   [stop](#stop-1)
+    -   [restart](#restart)
+    -   [status](#status)
+    -   [register](#register)
+    -   [unregister](#unregister)
+-   [APIRegistration](#apiregistration)
+    -   [constructor](#constructor-7)
+    -   [delegate](#delegate)
+    -   [method](#method)
+    -   [route](#route)
+    -   [authLevel](#authlevel)
+    -   [isEqual](#isequal)
+-   [APIRequest](#apirequest)
+    -   [constructor](#constructor-8)
+    -   [method](#method-1)
+    -   [ip](#ip)
+    -   [route](#route-1)
+    -   [path](#path)
+    -   [action](#action)
+    -   [params](#params)
+    -   [data](#data)
+    -   [authenticationData](#authenticationdata-1)
+    -   [addAuthenticationData](#addauthenticationdata)
+-   [APIResponse](#apiresponse)
+    -   [constructor](#constructor-9)
+    -   [success](#success)
+    -   [response](#response)
+    -   [errorCode](#errorcode)
+    -   [errorMessage](#errormessage)
+-   [WebServices](#webservices)
+    -   [constructor](#constructor-10)
+    -   [start](#start-2)
+    -   [stop](#stop-2)
+    -   [register](#register-1)
+    -   [unregister](#unregister-1)
+    -   [registerAPI](#registerapi)
+    -   [unregisterAPI](#unregisterapi)
+    -   [manageResponse](#manageresponse)
+    -   [buildPromises](#buildpromises)
+    -   [runPromises](#runpromises)
+    -   [sendAPIResponse](#sendapiresponse)
 
-## log
+## HautomationCore
+
+The main class for core.
+
+### constructor
+
+Constructor
+
+Returns **[HautomationCore](#hautomationcore)** The instance
+
+### start
+
+Start Hautomation core
+
+### stop
+
+Stop automation core
+
+### startServices
+
+Start all services
+
+### stopServices
+
+Stop all services
+
+## Logger
+
+This class provides static methods to log into a file.
+
+### log
 
 Log to a file
 
 **Parameters**
 
 -   `message` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A log message
--   `level` **[Number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** Log level between 0 to 5 (optional, default `3`)
+-   `level` **int** Log level between 0 to 5 (optional, default `3`)
 
-## warn
+### warn
 
 Log a warning to a file
 
@@ -109,7 +146,7 @@ Log a warning to a file
 
 -   `message` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A log message
 
-## err
+### err
 
 Log an error to a file
 
@@ -117,7 +154,7 @@ Log an error to a file
 
 -   `message` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A log message
 
-## verbose
+### verbose
 
 Log a verbose message to a file
 
@@ -125,7 +162,7 @@ Log a verbose message to a file
 
 -   `message` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A log message
 
-## info
+### info
 
 Log an information to a file
 
@@ -133,159 +170,89 @@ Log an information to a file
 
 -   `message` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A log message
 
-## hljs
+## Authentication
 
-Known issues:
-
--   invalid hex string literals will be recognized as a double quoted strings
-    but 'x' at the beginning of string will not be matched
-
--   delimited string literals are not checked for matching end delimiter
-    (not possible to do with js regexp)
-
--   content of token string is colored as a string (i.e. no keyword coloring inside a token string)
-    also, content of token string is not validated to contain only valid D tokens
-
--   special token sequence rule is not strictly following D grammar (anything following #line
-    up to the end of line is matched as special token sequence)
+This class manage authentication for Web Services
 
 **Parameters**
 
--   `hljs`  
+-   `webService`  
+-   `userManager`  
 
-## D_KEYWORDS
+### constructor
 
-Language keywords
-
-## float_re
-
-Number literal regexps
-
-## escape_sequence_re
-
-Escape sequence supported in D string and character literals
-
-## D_INTEGER_MODE
-
-D integer number literals
-
-## D_FLOAT_MODE
-
-[D_FLOAT_MODE description]
-
-## D_CHARACTER_MODE
-
-D character literal
-
-## D_ESCAPE_SEQUENCE
-
-D string escape sequence
-
-## D_STRING_MODE
-
-D double quoted string literal
-
-## D_WYSIWYG_DELIMITED_STRING_MODE
-
-D wysiwyg and delimited string literals
-
-## D_ALTERNATE_WYSIWYG_STRING_MODE
-
-D alternate wysiwyg string literal
-
-## D_HEX_STRING_MODE
-
-D hexadecimal string literal
-
-## D_TOKEN_STRING_MODE
-
-D delimited string literal
-
-## D_HASHBANG_MODE
-
-Hashbang support
-
-## D_SPECIAL_TOKEN_SEQUENCE_MODE
-
-D special token sequence
-
-## D_ATTRIBUTE_MODE
-
-D attributes
-
-## D_NESTING_COMMENT_MODE
-
-D nesting comment
-
-## start
-
-Start the service
-
-## stop
-
-Stop the service
-
-## restart
-
-Restart the service
-
-## status
-
-Return the service status
-
-Returns **int** STOPPED or RUNNING
-
-## register
-
-Register service callback
+Constructor
 
 **Parameters**
 
--   `delegate` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The service delegate
+-   `webService` **WebService** The web service instance
+-   `userManager` **[UserManager](#usermanager)** User manager
 
-## unregister
+Returns **[Authentication](#authentication)** Instance
 
-Unregister service callback
+## AuthenticationData
+
+This class encapsulate authentication data
 
 **Parameters**
 
--   `delegate` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The service delegate
+-   `authorized`   (optional, default `false`)
+-   `username`   (optional, default `null`)
+-   `level`   (optional, default `-1`)
 
-## start
+### constructor
 
-Start Hautomation core
+Constructor
 
-## stop
+**Parameters**
 
-Stop automation core
+-   `authorized` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if authorized, else false (optional, default `false`)
+-   `username` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Username (optional, default `null`)
+-   `level` **inr** Authorization level (optional, default `-1`)
 
-## startServices
+Returns **[Authentication](#authentication)** The instance
 
-Start all services
-
-## stopServices
-
-Stop all services
-
-## authorized
+### authorized
 
 Authorized
 
-## username
+### username
 
 Username
 
-## level
+### level
 
 App access level
 
-## appConfiguration
+## ConfManager
+
+This class manage object persistence with JSON format
+
+**Parameters**
+
+-   `appConfiguration`  
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `appConfiguration` **AppConfiguration** The app configuration object
+
+Returns **[ConfManager](#confmanager)** The instance
+
+### appConfiguration
 
 App configuration
 
-## getFilePath
+### fs
 
-Return the file path for specific key, depending on app configuration base path
+File system
+
+### getFilePath
+
+Returns the file path for specific key, depending on app configuration base path
 
 **Parameters**
 
@@ -293,7 +260,7 @@ Return the file path for specific key, depending on app configuration base path
 
 Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Config file path
 
-## isJsonValid
+### isJsonValid
 
 Check if JSON is valid
 
@@ -301,9 +268,9 @@ Check if JSON is valid
 
 -   `data` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** JSON string
 
-Returns **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if the json is valid, else false
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if the json is valid, else false
 
-## readFile
+### readFile
 
 Read a file from a path. Can throw error.
 
@@ -313,7 +280,7 @@ Read a file from a path. Can throw error.
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The decoded object
 
-## saveData
+### saveData
 
 Save data for a specific key. Can throw error.
 
@@ -322,7 +289,7 @@ Save data for a specific key. Can throw error.
 -   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A JS object
 -   `key` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A file store key
 
-## loadData
+### loadData
 
 Load data from file
 
@@ -333,19 +300,18 @@ Load data from file
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An object instance of classType
 
-## loadDatas
+### loadDatas
 
 Load multiple datas from file (Array)
 
 **Parameters**
 
--   `type`  
--   `key` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A file store key
 -   `classType` **class** The object class. This class MUST implement a json() method to process JSON to Object mapping
+-   `key` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A file store key
 
 Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of objects (instance of classType)
 
-## getData
+### getData
 
 Get data from object's array (search)
 
@@ -357,7 +323,7 @@ Get data from object's array (search)
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Null if nothing found, Object instance if found
 
-## setData
+### setData
 
 Set data into object's array (save)
 
@@ -370,9 +336,9 @@ Set data into object's array (save)
 
 Returns **\[[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)]** The Array of Objects updated
 
-## delData
+### removeData
 
-Delete data into object's array (delete). Can throw error.
+Remove data into object's array (delete). Can throw error.
 
 **Parameters**
 
@@ -383,92 +349,65 @@ Delete data into object's array (delete). Can throw error.
 
 Returns **\[[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)]** The Array of Objects updated
 
-## confManager
+## User
 
-Configuration manager
-
-## users
-
-Users
-
-## delUser
-
-Delete specific user
+This class is a User POJO
 
 **Parameters**
 
--   `username` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The username
+-   `username`   (optional, default `null`)
+-   `password`   (optional, default `null`)
+-   `level`   (optional, default `null`)
+-   `fullName`   (optional, default `null`)
+-   `email`   (optional, default `null`)
+-   `phone`   (optional, default `null`)
+-   `picture`   (optional, default `null`)
 
-## getUsers
+### constructor
 
-Return a COPY of the user array
-
-Returns **\[User]** An array of Users
-
-## compareUser
-
-Comparator for users
-
-**Parameters**
-
--   `user1` **User** A user
--   `user2` **User** Another user
-
-Returns **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if user are identical, else false
-
-## getUser
-
-Get a user with username
+Constructor
 
 **Parameters**
 
--   `username` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The username
+-   `username` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Username (optional, default `null`)
+-   `password` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Password (optional, default `null`)
+-   `level` **int** Authorization level (optional, default `null`)
+-   `fullName` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Full name (optional, default `null`)
+-   `email` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Email (optional, default `null`)
+-   `phone` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Phone number (optional, default `null`)
+-   `picture` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Picture, in base64 format (optional, default `null`)
 
-Returns **User** A user, null if user does not exists
+Returns **[User](#user)** The instance
 
-## setUser
-
-Set user and store into json
-
-**Parameters**
-
--   `user` **User** A user
-
-## getAdminUser
-
-Get the admin user
-
-Returns **User** The admin user, null if admin user is disabled
-
-## username
+### username
 
 The username
 
-## password
+### password
 
 The password
 
-## level
+### level
 
 The authorization level
 
-## fullName
+### fullName
 
 The full name
 
-## email
+### email
 
 The email
 
-## phone
+### phone
 
 The phone
 
-## picture
+### picture
 
 The picture
 
-## json
+### json
 
 Transform json raw object to instance
 
@@ -476,33 +415,323 @@ Transform json raw object to instance
 
 -   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** JSON object data
 
-Returns **User** A User instance
+Returns **[User](#user)** A User instance
 
-## success
+## UserManager
+
+This class allows to manage users (create, delete, search, ...)
+
+**Parameters**
+
+-   `confManager`  
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `confManager` **[ConfManager](#confmanager)** A configuration manager needed for persistence
+
+Returns **[UserManager](#usermanager)** The instance
+
+### confManager
+
+Configuration manager
+
+### users
+
+Users
+
+### removeUser
+
+Delete specific user
+
+**Parameters**
+
+-   `username` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The username
+
+### getUsers
+
+Return a COPY of the user array
+
+Returns **\[[User](#user)]** An array of Users
+
+### compareUser
+
+Comparator for users
+
+**Parameters**
+
+-   `user1` **[User](#user)** A user
+-   `user2` **[User](#user)** Another user
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if user are identical, else false
+
+### getUser
+
+Get a user with username
+
+**Parameters**
+
+-   `username` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The username
+
+Returns **[User](#user)** A user, null if user does not exists
+
+### setUser
+
+Set user and store into json
+
+**Parameters**
+
+-   `user` **[User](#user)** A user
+
+### getAdminUser
+
+Get the admin user
+
+Returns **[User](#user)** The admin user, null if admin user is disabled
+
+## Service
+
+This class should not be implemented but only inherited.
+This class is used for services, start, stop, ...
+
+### constructor
+
+Constructor
+
+Returns **[Service](#service)** The instance
+
+### start
+
+Start the service
+
+### stop
+
+Stop the service
+
+### restart
+
+Restart the service
+
+### status
+
+Return the service status
+
+Returns **int** STOPPED or RUNNING
+
+### register
+
+Register service callback
+
+**Parameters**
+
+-   `delegate` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The service delegate
+
+### unregister
+
+Unregister service callback
+
+**Parameters**
+
+-   `delegate` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The service delegate
+
+## APIRegistration
+
+This class is a POJO representing an APIRegistration item
+
+**Parameters**
+
+-   `delegate`  
+-   `method`   (optional, default `"*"`)
+-   `route`   (optional, default `"*"`)
+-   `authLevel`   (optional, default `Authentication.AUTH_USAGE_LEVEL`)
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `delegate` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The object which implements the processAPI callback
+-   `method` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The method (GET, POST, ...) (optional, default `"*"`)
+-   `route` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The needed route (:/foo/bar) (optional, default `"*"`)
+-   `authLevel` **int** The authentication level needed to be called (optional, default `Authentication.AUTH_USAGE_LEVEL`)
+
+Returns **[APIRegistration](#apiregistration)** The instance
+
+### delegate
+
+delegate
+
+### method
+
+method
+
+### route
+
+route
+
+### authLevel
+
+Authentication level requested for API
+
+### isEqual
+
+Check if the parameter equality
+
+**Parameters**
+
+-   `obj` **[APIRegistration](#apiregistration)** An APIRegistration object
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** true or false
+
+## APIRequest
+
+This class is a POJO representing an APIRequest item
+
+**Parameters**
+
+-   `method`  
+-   `ip`  
+-   `route`  
+-   `path`  
+-   `action`  
+-   `params`  
+-   `data`   (optional, default `null`)
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `method` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The method
+-   `ip` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** IP address
+-   `route` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The route
+-   `path` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** The path (route splitted in array)
+-   `action` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The action (first element of route)
+-   `params` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The parameters under key / value format
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The object sent (optional, default `null`)
+
+Returns **[APIRequest](#apirequest)** The instance
+
+### method
+
+method
+
+### ip
+
+ip
+
+### route
+
+route
+
+### path
+
+path
+
+### action
+
+action
+
+### params
+
+params
+
+### data
+
+data
+
+### authenticationData
+
+Authentication data
+
+### addAuthenticationData
+
+Add authentication data to request
+
+**Parameters**
+
+-   `authenticationData` **[AuthenticationData](#authenticationdata)** The data authentication
+
+## APIResponse
+
+This class is a POJO representing an APIResponse item
+
+**Parameters**
+
+-   `success`   (optional, default `false`)
+-   `response`   (optional, default `{}`)
+-   `errorCode`   (optional, default `-1`)
+-   `errorMessage`   (optional, default `null`)
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `success` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Set to true if API success, else false (optional, default `false`)
+-   `response` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A response object to transmit (optional) (optional, default `{}`)
+-   `errorCode` **int** The error code (optional) (optional, default `-1`)
+-   `errorMessage` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The error message (optional) (optional, default `null`)
+
+Returns **[APIResponse](#apiresponse)** The instance
+
+### success
 
 Success
 
-## response
+### response
 
 Response
 
-## errorCode
+### errorCode
 
 Error code
 
-## errorMessage
+### errorMessage
 
 The error message
 
-## start
+## WebServices
+
+**Extends Service.class**
+
+This class manage Web Services call, and more specifically the external APIs
+
+**Parameters**
+
+-   `port`   (optional, default `8080`)
+-   `sslPort`   (optional, default `8443`)
+-   `sslKey`   (optional, default `null`)
+-   `sslCert`   (optional, default `null`)
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `port` **int** The listening HTTP port (optional, default `8080`)
+-   `sslPort` **int** The listening HTTPS port (optional, default `8443`)
+-   `sslKey` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The path for SSL key (optional, default `null`)
+-   `sslCert` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The path for sslCert key (optional, default `null`)
+
+Returns **[WebServices](#webservices)** The instance
+
+### start
 
 Start Web Services
 
-## stop
+### stop
 
 Stop Web Services
 
-## register
+### register
 
 Override Register service callback
 
@@ -510,7 +739,7 @@ Override Register service callback
 
 -   `delegate` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The service delegate
 
-## unregister
+### unregister
 
 Override Unregister service callback
 
@@ -518,28 +747,28 @@ Override Unregister service callback
 
 -   `delegate` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The service delegate
 
-## registerAPI
+### registerAPI
 
 Register to a specific API to be notified when a route and/or method is called
 
 **Parameters**
 
 -   `delegate` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A delegate which implements the processAPI(apiRequest) function
--   `method` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A method (\*, WebServices.GET / WebServices.POST) (optional, default `"*"`)
--   `route` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A route (\*, :/my/route/) (optional, default `"*"`)
+-   `method` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A method (\*, WebServices.GET / WebServices.POST) (optional, default `"*"`)
+-   `route` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A route (\*, :/my/route/) (optional, default `"*"`)
 -   `authLevel` **int** An authentification level (optional, default `Authentication.AUTH_USAGE_LEVEL`)
 
-## unregisterAPI
+### unregisterAPI
 
 Unregister a specific API to be not notified when a route and/or method is called
 
 **Parameters**
 
 -   `delegate` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A delegate which implements the processAPI(apiRequest) function
--   `method` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A method (\*, WebServices.GET / WebServices.POST) (optional, default `"*"`)
--   `route` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A route (\*, :/my/route/) (optional, default `"*"`)
+-   `method` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A method (\*, WebServices.GET / WebServices.POST) (optional, default `"*"`)
+-   `route` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A route (\*, :/my/route/) (optional, default `"*"`)
 
-## manageResponse
+### manageResponse
 
 Create an API
 
@@ -548,99 +777,33 @@ Create an API
 -   `req` **[Request](https://developer.mozilla.org/en-US/Add-ons/SDK/High-Level_APIs/request)** The WS request
 -   `endpoint` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The WS endpoint
 
-Returns **APIRequest** An API Request
+Returns **[APIRequest](#apirequest)** An API Request
 
-## buildPromises
+### buildPromises
 
 Build a promise array from delegates
 
 **Parameters**
 
--   `apiRequest` **APIRequest** The apiRequest
+-   `apiRequest` **[APIRequest](#apirequest)** The apiRequest
 
 Returns **\[[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)]** An array of promises
 
-## runPromises
+### runPromises
 
 Run promises sequentially
 
 **Parameters**
 
--   `apiRequest` **\[APIRequest]** The API Request object
+-   `apiRequest` **\[[APIRequest](#apirequest)]** The API Request object
 -   `promises` **\[promises]** An array of promises (delegates callees)
 -   `res` **[Response](https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/HTML5)** The response
 
-## sendAPIResponse
+### sendAPIResponse
 
 Process sending results in JSON to API caller
 
 **Parameters**
 
--   `apiResponses` **\[APIResponse]** The API responses
+-   `apiResponses` **\[[APIResponse](#apiresponse)]** The API responses
 -   `res` **[Response](https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/HTML5)** The response
-
-## method
-
-method
-
-## ip
-
-ip
-
-## route
-
-route
-
-## path
-
-path
-
-## action
-
-action
-
-## params
-
-params
-
-## data
-
-data
-
-## authenticationData
-
-Authentication data
-
-## addAuthenticationData
-
-Add authentication data to request
-
-**Parameters**
-
--   `authenticationData` **AuthenticationData** The data authentication
-
-## delegate
-
-delegate
-
-## method
-
-method
-
-## route
-
-route
-
-## authLevel
-
-Authentication level requested for API
-
-## isEqual
-
-Check if the parameter equality
-
-**Parameters**
-
--   `obj` **APIRegistration** An APIRegistration object
-
-Returns **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** true or false

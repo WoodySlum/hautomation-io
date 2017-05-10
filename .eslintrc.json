@@ -10,7 +10,8 @@
   },
     "plugins": [
         "mocha",
-        "jsdoc"
+        "jsdoc",
+        "require-jsdoc"
     ],
     "extends": "eslint:recommended",
     "parserOptions": {
@@ -20,7 +21,7 @@
         "mocha/no-exclusive-tests": "error",
         "no-console":0,
         "indent": [
-            "error",
+            "warn",
             4
         ],
         "linebreak-style": [
@@ -37,6 +38,15 @@
         ],
         "no-underscore-dangle": 1,
         "no-unused-vars": ["warn", { "vars": "all", "args": "after-used", "ignoreRestSiblings": false }],
+        "require-jsdoc": ["warn", {
+            "require": {
+                "FunctionDeclaration": true,
+                "MethodDefinition": true,
+                "ClassDeclaration": true,
+                "ArrowFunctionExpression": false
+            }
+        }],
+        "valid-jsdoc": 0,
         "jsdoc/check-param-names": 1,
         "jsdoc/check-tag-names": 1,
         "jsdoc/check-types": 1,

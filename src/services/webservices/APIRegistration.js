@@ -1,8 +1,20 @@
 "use strict";
 var Authentication = require("./../../modules/authentication/Authentication");
 
+/**
+ * This class is a POJO representing an APIRegistration item
+ * @class
+ */
 class APIRegistration {
-
+    /**
+     * Constructor
+     *
+     * @param  {Object} delegate  The object which implements the processAPI callback
+     * @param  {string} [method="*"] The method (GET, POST, ...)
+     * @param  {string} [route="*"] The needed route (:/foo/bar)
+     * @param  {int} [authLevel=Authentication.AUTH_USAGE_LEVEL] The authentication level needed to be called
+     * @returns {APIRegistration} The instance
+     */
     constructor(delegate, method = "*", route = "*", authLevel = Authentication.AUTH_USAGE_LEVEL) {
         /**
          * delegate

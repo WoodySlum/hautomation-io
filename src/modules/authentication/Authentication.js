@@ -1,3 +1,4 @@
+/*eslint "require-jsdoc": 0*/
 "use strict";
 
 var AuthenticationData = require("./AuthenticationData");
@@ -10,9 +11,20 @@ const AUTH_NO_LEVEL = 0;
 const AUTH_USAGE_LEVEL = 10;
 const AUTH_MAX_LEVEL = 100;
 
-
+/**
+ * This class manage authentication for Web Services
+ * @class
+ */
 class Authentication {
 
+    /**
+     * Constructor
+     *
+     * @param  {WebService} webService  The web service instance
+     * @param  {UserManager} userManager User manager
+     *
+     * @returns {Authentication} Instance
+     */
     constructor(webService, userManager) {
         webService.register(this);
         this.userManager = userManager;

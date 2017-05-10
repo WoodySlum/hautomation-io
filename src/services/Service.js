@@ -5,7 +5,17 @@ var Logger = require("./../logger/Logger");
 const STOPPED = 0;
 const RUNNING = 1;
 
+/**
+ * This class should not be implemented but only inherited.
+ * This class is used for services, start, stop, ...
+ * @class
+ */
 class Service {
+    /**
+     * Constructor
+     *
+     * @returns {Service} The instance
+     */
     constructor() {
         this.status = STOPPED;
         this.delegates = [];

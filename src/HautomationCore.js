@@ -6,8 +6,17 @@ var ConfManager = require("./modules/confmanager/ConfManager");
 var UserManager = require("./modules/usermanager/UserManager");
 const AppConfiguration = require("./../conf/config.default.json");
 
+/**
+ * The main class for core.
+ * @class
+ */
 class HautomationCore {
-    constructor(webServices = null) {
+    /**
+     * Constructor
+     *
+     * @returns {HautomationCore} The instance
+     */
+    constructor() {
         this.services = [];
 
         // Services
@@ -31,9 +40,7 @@ class HautomationCore {
      */
     start() {
         Logger.info("Starting core");
-
         this.startServices();
-
     }
 
     /**

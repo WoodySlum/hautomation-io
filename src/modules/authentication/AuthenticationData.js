@@ -1,7 +1,18 @@
 "use strict";
 
+/**
+ * This class encapsulate authentication data
+ * @class
+ */
 class AuthenticationData {
-
+    /**
+     * Constructor
+     *
+     * @param  {boolean} [authorized=false] True if authorized, else false
+     * @param  {string}  [username=null]    Username
+     * @param  {inr}  [level=-1] Authorization level
+     * @returns {Authentication} The instance
+     */
     constructor(authorized = false, username = null, level = -1) {
         /**
          * Authorized

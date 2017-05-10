@@ -1,6 +1,22 @@
 "use strict";
 
+/**
+ * This class is a User POJO
+ * @class
+ */
 class User {
+    /**
+     * Constructor
+     *
+     * @param  {string} [username=null] Username
+     * @param  {string} [password=null] Password
+     * @param  {int} [level=null] Authorization level
+     * @param  {string} [fullName=null] Full name
+     * @param  {string} [email=null] Email
+     * @param  {string} [phone=null]  Phone number
+     * @param  {string} [picture=null]  Picture, in base64 format
+     * @returns {User} The instance
+     */
     constructor(username = null, password = null, level = null, fullName = null, email = null, phone = null, picture = null) {
         /**
          * The username
@@ -41,7 +57,7 @@ class User {
 
     /**
      * Transform json raw object to instance
-     * 
+     *
      * @param  {Object} data JSON object data
      * @returns {User} A User instance
      */

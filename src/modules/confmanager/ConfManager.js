@@ -8,7 +8,17 @@ const ERROR_INVALID_FILE  = "ERROR_INVALID_FILE";
 const ERROR_NO_JSON_METHOD = "ERROR_NO_JSON_METHOD";
 const DATA_NOT_FOUND      = "DATA_NOT_FOUND";
 
+/**
+ * This class manage object persistence with JSON format
+ * @class
+ */
 class ConfManager {
+    /**
+     * Constructor
+     *
+     * @param  {AppConfiguration} appConfiguration The app configuration object
+     * @returns {ConfManager} The instance
+     */
     constructor(appConfiguration) {
         /**
          * App configuration

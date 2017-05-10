@@ -1,5 +1,9 @@
 "use strict";
 
+/**
+ * This class provides static methods to log into a file.
+ * @class
+ */
 class Logger {
     /**
      * Log to a file
@@ -44,7 +48,7 @@ class Logger {
 
     /**
      * Log an information to a file
-     * 
+     *
      * @param  {string} message   A log message
      */
     static info(message) {

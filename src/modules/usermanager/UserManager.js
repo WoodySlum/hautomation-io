@@ -6,7 +6,17 @@ var Authentication = require("./../authentication/Authentication");
 const CONF_KEY = "users";
 const ERROR_USER_NOT_FOUND = "ERROR_USER_NOT_FOUND";
 
+/**
+ * This class allows to manage users (create, delete, search, ...)
+ * @class
+ */
 class UserManager {
+    /**
+     * Constructor
+     *
+     * @param  {ConfManager} confManager A configuration manager needed for persistence
+     * @returns {UserManager} The instance
+     */
     constructor(confManager) {
         /**
          * Configuration manager

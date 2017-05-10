@@ -1,7 +1,19 @@
 "use strict";
 
+/**
+ * This class is a POJO representing an APIResponse item
+ * @class
+ */
 class APIResponse {
-
+    /**
+     * Constructor
+     *
+     * @param  {boolean} [success=false]     Set to true if API success, else false
+     * @param  {Object}  [response={}]       A response object to transmit (optional)
+     * @param  {int}  [errorCode=-1]         The error code (optional)
+     * @param  {string}  [errorMessage=null] The error message (optional)
+     * @returns {APIResponse}                 The instance
+     */
     constructor(success = false, response = {}, errorCode = -1, errorMessage = null) {
         /**
          * Success
