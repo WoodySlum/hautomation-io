@@ -1,5 +1,7 @@
 # Hautomation Core
 
+![coverage](http://honey.hd.free.fr:81/hautomation/core-node/badges/master/coverage.svg?job=test)  ![build](http://honey.hd.free.fr:81/hautomation/core-node/badges/master/build.svg)
+
 ## Environment
 
 ### WebStorm
@@ -36,4 +38,3 @@ In console, type `npm install` and everything should go on.
 #### Configuration manager
 
 [Go to details](modules/confmanager/README.md)
-
