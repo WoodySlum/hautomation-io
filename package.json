@@ -8,7 +8,7 @@
   },
   "engineStrict": true,
   "scripts": {
-    "dev": "nodemon --debug=8081 --ignore '**/*.json' --ignore '**/*.db' --ignore '**/*.jpg' HautomationRunner.js",
+    "dev": "nodemon --debug=8081 --config .nodemon.json  HautomationRunner.js",
     "start": "node HautomationRunner.js",
     "test": "mocha --compilers js:mocha-traceur --recursive ./tests/**/*.tests.js",
     "test-ci": "istanbul cover _mocha -- --reporter mocha-junit-reporter --compilers js:mocha-traceur --recursive ./tests/**/*.tests.js",
@@ -35,6 +35,7 @@
     "istanbul":"^1.1.0-alpha.1",
     "eslint":"^3.19",
     "eslint-plugin-mocha":"^4.9",
+    "eslint-plugin-jsdoc":"^3.0",
     "nodemon": "^1.11.0",
     "documentation": "^4.0.0-rc.1"
   },

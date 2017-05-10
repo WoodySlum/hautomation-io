@@ -28,8 +28,9 @@ class APIRegistration {
 
     /**
      * Check if the parameter equality
+     *
      * @param  {APIRegistration}  obj   An APIRegistration object
-     * @return {Boolean}     true or false
+     * @returns {boolean}     true or false
      */
     isEqual(obj) {
         if (obj.delegate.constructor.name === this.delegate.constructor.name && obj.method === this.method && obj.route === this.route && obj.authLevel === this.authLevel) {

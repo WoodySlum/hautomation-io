@@ -51,6 +51,7 @@ class APIRequest {
 
     /**
      * Add authentication data to request
+     * 
      * @param {AuthenticationData} authenticationData The data authentication
      */
     addAuthenticationData(authenticationData) {

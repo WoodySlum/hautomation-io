@@ -28,6 +28,7 @@ class UserManager {
 
     /**
      * Delete specific user
+     *
      * @param  {string} username The username
      */
     removeUser(username) {
@@ -41,7 +42,8 @@ class UserManager {
 
     /**
      * Return a COPY of the user array
-     * @return {[User]} An array of Users
+     *
+     * @returns {[User]} An array of Users
      */
     getUsers() {
         return this.users.slice();
@@ -49,9 +51,10 @@ class UserManager {
 
     /**
      * Comparator for users
+     *
      * @param  {User} user1 A user
      * @param  {User} user2 Another user
-     * @return {Boolean}       True if user are identical, else false
+     * @returns {boolean}       True if user are identical, else false
      */
     compareUser(user1, user2) {
         return (user1.username == user2.username)?true:false;
@@ -59,8 +62,9 @@ class UserManager {
 
     /**
      * Get a user with username
+     *
      * @param  {string} username The username
-     * @return {User}   A user, null if user does not exists
+     * @returns {User}   A user, null if user does not exists
      */
     getUser(username) {
         return this.confManager.getData(this.users, new User.class(username), this.compareUser);
@@ -68,6 +72,7 @@ class UserManager {
 
     /**
      * Set user and store into json
+     *
      * @param {User} user A user
      */
     setUser(user) {
@@ -80,7 +85,8 @@ class UserManager {
 
     /**
      * Get the admin user
-     * @return {User} The admin user, null if admin user is disabled
+     *
+     * @returns {User} The admin user, null if admin user is disabled
      */
     getAdminUser() {
         if (this.confManager.appConfiguration.admin.enable) {

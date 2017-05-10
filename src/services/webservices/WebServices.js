@@ -105,6 +105,7 @@ class WebServices extends Service.class {
 
     /**
      * Override Register service callback
+     *
      * @param  {Object} delegate The service delegate
      */
     register(delegate) {
@@ -113,6 +114,7 @@ class WebServices extends Service.class {
 
     /**
      * Override Unregister service callback
+     *
      * @param  {Object} delegate The service delegate
      */
     unregister(delegate) {
@@ -121,9 +123,10 @@ class WebServices extends Service.class {
 
     /**
      * Register to a specific API to be notified when a route and/or method is called
+     *
      * @param  {Object} delegate     A delegate which implements the processAPI(apiRequest) function
-     * @param  {String} [method="*"] A method (*, WebServices.GET / WebServices.POST)
-     * @param  {String} [route="*"]  A route (*, :/my/route/)
+     * @param  {string} [method="*"] A method (*, WebServices.GET / WebServices.POST)
+     * @param  {string} [route="*"]  A route (*, :/my/route/)
      * @param  {int} authLevel  An authentification level
      */
     registerAPI(delegate, method = "*", route = "*", authLevel = Authentication.AUTH_USAGE_LEVEL) {
@@ -144,9 +147,10 @@ class WebServices extends Service.class {
 
     /**
      * Unregister a specific API to be not notified when a route and/or method is called
+     *
      * @param  {Object} delegate     A delegate which implements the processAPI(apiRequest) function
-     * @param  {String} [method="*"] A method (*, WebServices.GET / WebServices.POST)
-     * @param  {String} [route="*"]  A route (*, :/my/route/)
+     * @param  {string} [method="*"] A method (*, WebServices.GET / WebServices.POST)
+     * @param  {string} [route="*"]  A route (*, :/my/route/)
      */
     unregisterAPI(delegate, method = "*", route = "*") {
         let found = false;
@@ -167,9 +171,10 @@ class WebServices extends Service.class {
 
     /**
      * Create an API
+     *
      * @param  {Request} req        The WS request
      * @param  {string} endpoint    The WS endpoint
-     * @return {APIRequest}         An API Request
+     * @returns {APIRequest}         An API Request
      */
     manageResponse(req, endpoint) {
         let method = req.method;
@@ -215,8 +220,9 @@ class WebServices extends Service.class {
 
     /**
      * Build a promise array from delegates
+     *
      * @param  {APIRequest} apiRequest The apiRequest
-     * @return {[Promise]} An array of promises
+     * @returns {[Promise]} An array of promises
      */
     buildPromises(apiRequest) {
         let promises = [];
@@ -241,6 +247,7 @@ class WebServices extends Service.class {
 
     /**
      * Run promises sequentially
+     *
      * @param  {[APIRequest]} apiRequest The API Request object
      * @param  {[promises]} promises     An array of promises (delegates callees)
      * @param  {Response} res            The response
@@ -263,6 +270,7 @@ class WebServices extends Service.class {
 
     /**
      * Process sending results in JSON to API caller
+     *
      * @param  {[APIResponse]} apiResponses The API responses
      * @param  {Response} res             The response
      */

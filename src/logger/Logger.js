@@ -3,8 +3,9 @@
 class Logger {
     /**
      * Log to a file
+     *
      * @param  {string} message   A log message
-     * @param  {Number} [level=3] Log level between 0 to 5
+     * @param  {int} [level=3] Log level between 0 to 5
      */
     static log(message, level = 3) {
         if (message instanceof Object) {
@@ -16,6 +17,7 @@ class Logger {
 
     /**
      * Log a warning to a file
+     *
      * @param  {string} message   A log message
      */
     static warn(message) {
@@ -24,6 +26,7 @@ class Logger {
 
     /**
      * Log an error to a file
+     *
      * @param  {string} message   A log message
      */
     static err(message) {
@@ -32,6 +35,7 @@ class Logger {
 
     /**
      * Log a verbose message to a file
+     *
      * @param  {string} message   A log message
      */
     static verbose(message) {
@@ -40,6 +44,7 @@ class Logger {
 
     /**
      * Log an information to a file
+     * 
      * @param  {string} message   A log message
      */
     static info(message) {

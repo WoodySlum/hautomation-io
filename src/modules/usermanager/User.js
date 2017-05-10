@@ -41,8 +41,9 @@ class User {
 
     /**
      * Transform json raw object to instance
+     * 
      * @param  {Object} data JSON object data
-     * @return {User} A User instance
+     * @returns {User} A User instance
      */
     json(data) {
         return new User(data.username, data.password, data.level, data.fullName, data.email, data.phone, data.picture);

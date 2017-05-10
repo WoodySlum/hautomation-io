@@ -9,7 +9,8 @@
       "console": false
   },
     "plugins": [
-        "mocha"
+        "mocha",
+        "jsdoc"
     ],
     "extends": "eslint:recommended",
     "parserOptions": {
@@ -35,6 +36,17 @@
             "always"
         ],
         "no-underscore-dangle": 1,
-        "no-unused-vars": ["warn", { "vars": "all", "args": "after-used", "ignoreRestSiblings": false }]
+        "no-unused-vars": ["warn", { "vars": "all", "args": "after-used", "ignoreRestSiblings": false }],
+        "jsdoc/check-param-names": 1,
+        "jsdoc/check-tag-names": 1,
+        "jsdoc/check-types": 1,
+        "jsdoc/newline-after-description": 1,
+        "jsdoc/require-description-complete-sentence": 0,
+        "jsdoc/require-hyphen-before-param-description": 0,
+        "jsdoc/require-param": 1,
+        "jsdoc/require-param-description": 1,
+        "jsdoc/require-param-type": 1,
+        "jsdoc/require-returns-description": 1,
+        "jsdoc/require-returns-type": 1
     }
 }

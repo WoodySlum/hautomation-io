@@ -35,7 +35,8 @@ class Service {
 
     /**
      * Return the service status
-     * @return {int} STOPPED or RUNNING
+     *
+     * @returns {int} STOPPED or RUNNING
      */
     status() {
         return this.status;
@@ -43,6 +44,7 @@ class Service {
 
     /**
      * Register service callback
+     *
      * @param  {Object} delegate The service delegate
      */
     register(delegate) {
@@ -56,6 +58,7 @@ class Service {
 
     /**
      * Unregister service callback
+     *
      * @param  {Object} delegate The service delegate
      */
     unregister(delegate) {

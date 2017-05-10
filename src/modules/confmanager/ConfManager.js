@@ -15,13 +15,18 @@ class ConfManager {
          * @type {Object}
          */
         this.appConfiguration = appConfiguration;
+        /**
+         * File system
+         * @type {fs}
+         */
         this.fs = fs;
     }
 
     /**
-     * Return the file path for specific key, depending on app configuration base path
+     * Returns the file path for specific key, depending on app configuration base path
+     *
      * @param  {string} key A file store key
-     * @return {string}     Config file path
+     * @returns {string}     Config file path
      */
     getFilePath(key) {
 
@@ -34,8 +39,9 @@ class ConfManager {
 
     /**
      * Check if JSON is valid
+     *
      * @param  {string}  data JSON string
-     * @return {Boolean}      True if the json is valid, else false
+     * @returns {boolean}      True if the json is valid, else false
      */
     isJsonValid(data) {
         try {
@@ -48,8 +54,9 @@ class ConfManager {
 
     /**
      * Read a file from a path. Can throw error.
+     *
      * @param  {string} jsonPath The path
-     * @return {Object}          The decoded object
+     * @returns {Object}          The decoded object
      */
     readFile(jsonPath) {
         let t = this;
@@ -78,6 +85,7 @@ class ConfManager {
 
     /**
      * Save data for a specific key. Can throw error.
+     *
      * @param  {Object} data A JS object
      * @param  {string} key A file store key
      */
@@ -91,9 +99,10 @@ class ConfManager {
 
     /**
      * Load data from file
+     *
      * @param  {class} classType The object class. This class MUST implement a json() method to process JSON to Object mapping
      * @param  {string} key A file store key
-     * @return {Object}      An object instance of classType
+     * @returns {Object}      An object instance of classType
      */
     loadData(classType, key) {
         const content = this.readFile(this.getFilePath(key));
@@ -112,17 +121,18 @@ class ConfManager {
 
     /**
      * Load multiple datas from file (Array)
+     *
      * @param  {class} classType The object class. This class MUST implement a json() method to process JSON to Object mapping
      * @param  {string} key A file store key
-     * @return {Array}      An array of objects (instance of classType)
+     * @returns {Array}      An array of objects (instance of classType)
      */
-    loadDatas(type, key) {
+    loadDatas(classType, key) {
         const content = this.readFile(this.getFilePath(key));
 
         if (content != null && content instanceof Array) {
             let results = [];
             content.forEach((element) => {
-                let o = new type();
+                let o = new classType();
                 if (typeof o.json === "function") {
                     results.push(o.json(element));
                 } else {
@@ -137,10 +147,11 @@ class ConfManager {
 
     /**
      * Get data from object's array (search)
+     *
      * @param  {Array} datas      An array of objects
      * @param  {Object} object     The object to search
      * @param  {Function} comparator A comparator function with 2 parameters (obj1, obj2). The comparator must return true if objects are equals. Else false.
-     * @return {Object}     Null if nothing found, Object instance if found
+     * @returns {Object}     Null if nothing found, Object instance if found
      */
     getData(datas, object, comparator) {
         let d = null;
@@ -157,11 +168,12 @@ class ConfManager {
 
     /**
      * Set data into object's array (save)
+     *
      * @param  {Array} datas      An array of objects
      * @param  {string} key A file store key
      * @param  {Object} object     The object to search
      * @param  {Function} comparator A comparator function with 2 parameters (obj1, obj2). The comparator must return true if objects are equals. Else false.
-     * @return {[Object]}     The Array of Objects updated
+     * @returns {[Object]}     The Array of Objects updated
      */
     setData(datas, key, object, comparator) {
         try {
@@ -176,11 +188,12 @@ class ConfManager {
 
     /**
      * Remove data into object's array (delete). Can throw error.
+     *
      * @param  {Array} datas      An array of objects
      * @param  {string} key A file store key
      * @param  {Object} object     The object to search
      * @param  {Function} comparator A comparator function with 2 parameters (obj1, obj2). The comparator must return true if objects are equals. Else false.
-     * @return {[Object]}     The Array of Objects updated
+     * @returns {[Object]}     The Array of Objects updated
      */
     removeData(datas, key, object, comparator) {
         let d = this.getData(datas, object, comparator);
