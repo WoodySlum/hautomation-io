@@ -1,4 +1,11 @@
-## Web Services
+# Web Services
+
+## Description
+
+This class allows to create an API endpoint.
+Any class can register a specific route and will call back a method when the endpoint is requested.
+
+## API
 
 ### Registration
 
@@ -20,6 +27,7 @@ Example :
 | delegate  | Object   | Delegate must implement method `processAPI`                                                                 |
 | method    | Constant | Web Services method, commonly WebServices.GET or WebServices.POST. You can use wilcard `*` for all methods. |
 | route     | String   |  The route you want to register, for example `:/my/route/`. You can use wilcard `*` for all methods.        |
+| authLevel | Int      |  The authentication level needed for the API. `Authentication.AUTH_NO_LEVEL`, `Authentication.AUTH_USAGE_LEVEL` or `Authentication.AUTH_MAX_LEVEL`        |
 
 Example :
 

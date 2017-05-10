@@ -1,8 +1,9 @@
 "use strict";
+var Authentication = require('./../../modules/authentication/Authentication');
 
 class APIRegistration {
 
-    constructor(delegate, method = "*", route = "*") {
+    constructor(delegate, method = "*", route = "*", authLevel = Authentication.AUTH_USAGE_LEVEL) {
         /**
          * delegate
          * @type {Object}
@@ -18,6 +19,11 @@ class APIRegistration {
          * @type {string}
          */
         this.route = route;
+        /**
+         * Authentication level requested for API
+         * @type {int} An Authentication constant
+         */
+        this.authLevel = authLevel;
     }
 
     /**
@@ -26,7 +32,7 @@ class APIRegistration {
      * @return {Boolean}     true or false
      */
     isEqual(obj) {
-        if (obj.delegate.constructor.name === this.delegate.constructor.name && obj.method === this.method && obj.route === this.route) {
+        if (obj.delegate.constructor.name === this.delegate.constructor.name && obj.method === this.method && obj.route === this.route && obj.authLevel === this.authLevel) {
             return true;
         }
         return false;

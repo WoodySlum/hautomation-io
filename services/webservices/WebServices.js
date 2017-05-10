@@ -6,9 +6,12 @@ var Service = require("./../Service");
 var APIRequest = require("./APIRequest");
 var APIResponse = require("./APIResponse");
 var APIRegistration = require("./APIRegistration");
+var Authentication = require("./../../modules/authentication/Authentication");
 
 // External
 var BodyParser = require('body-parser');
+var fs = require('fs');
+var https = require('https');
 
 // Constants
 const CONTENT_TYPE = "content-type";
@@ -23,13 +26,16 @@ const API_ERROR_HTTP_CODE = 500;
 
 class WebServices extends Service.class {
 
-    constructor(port = 8080) {
+    constructor(port = 8080, sslPort = 8443, sslKey = null, sslCert = null) {
         super();
         this.port = port;
+        this.sslPort = sslPort;
         let express = require("express");
         this.app = express();
-        this.server = null;
-        this.apiRegistered
+        this.servers = [];
+        this.sslKey = sslKey;
+        this.sslCert = sslCert;
+        this.fs = fs;
     }
 
     /**
@@ -57,7 +63,24 @@ class WebServices extends Service.class {
                 instance.runPromises(apiRequest, instance.buildPromises(apiRequest), res);
             });
 
-            this.server = this.app.listen(this.port);
+            try {
+                let sslServer = https.createServer({
+                    key: this.fs.readFileSync(this.sslKey),
+                    cert: this.fs.readFileSync(this.sslCert)
+                }, this.app).listen(this.sslPort);
+                this.servers.push(sslServer);
+            } catch (e) {
+                Logger.err("SSL Server can not started");
+            }
+
+            try {
+                let server = this.app.listen(this.port);
+                this.servers.push(server);
+            } catch (e) {
+                Logger.err("HTTP Server can not started");
+            }
+
+
             Logger.info("Web services are listening on port " + this.port);
 
             super.start();
@@ -71,7 +94,10 @@ class WebServices extends Service.class {
      */
     stop() {
         if (this.server && this.status == Service.RUNNING) {
-            this.server.close();
+            this.servers.forEach((server) => {
+                server.close();
+            });
+            this.servers = [];
         } else {
             Logger.warn("WebServices are not running, nothing to do...");
         }
@@ -98,10 +124,11 @@ class WebServices extends Service.class {
      * @param  {Object} delegate     A delegate which implements the processAPI(apiRequest) function
      * @param  {String} [method="*"] A method (*, WebServices.GET / WebServices.POST)
      * @param  {String} [route="*"]  A route (*, :/my/route/)
+     * @param  {int} authLevel  An authentification level
      */
-    registerAPI(delegate, method = "*", route = "*") {
+    registerAPI(delegate, method = "*", route = "*", authLevel = Authentication.AUTH_USAGE_LEVEL) {
         let found = false;
-        let registration = new APIRegistration.class(delegate, method, route);
+        let registration = new APIRegistration.class(delegate, method, route, authLevel);
         this.delegates.forEach((d) => {
             if (d.isEqual(registration)) {
                 found = true;
@@ -193,6 +220,7 @@ class WebServices extends Service.class {
      */
     buildPromises(apiRequest) {
         let promises = [];
+
         this.delegates.forEach((registeredEl) => {
             if ((registeredEl.method === "*"
                 || registeredEl.method === apiRequest.method)
@@ -200,7 +228,11 @@ class WebServices extends Service.class {
                 || apiRequest.route.startsWith(registeredEl.route) === true)
                 && registeredEl.delegate != null
                 && typeof registeredEl.delegate.processAPI === "function") {
-                    promises.push(registeredEl.delegate.processAPI(apiRequest));
+                    if (!apiRequest.authenticationData  || apiRequest.authenticationData && registeredEl.authLevel <= apiRequest.authenticationData.level) {
+                        promises.push(registeredEl.delegate.processAPI(apiRequest));
+                    } else if (apiRequest.authenticationData) {
+                        promises.push(new Promise((resolve, reject) => {resolve(new APIResponse.class(false, {}, 812, "Unauthorized"))}));
+                    }
             }
         });
 
