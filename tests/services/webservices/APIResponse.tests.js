@@ -3,7 +3,7 @@ var chai = require("chai");
 var expect = chai.expect;
 var sinon = require("sinon");
 
-var APIResponse = require("./../../../services/webservices/APIResponse");
+var APIResponse = require("./../../../src/services/webservices/APIResponse");
 
 describe("APIResponse", function() {
 

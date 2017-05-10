@@ -3,10 +3,10 @@ var chai = require("chai");
 var expect = chai.expect;
 var sinon = require("sinon");
 
-var WebServices = require("./../../../services/webservices/WebServices");
-var APIResponse = require("./../../../services/webservices/APIResponse");
-var Authentication = require("./../../../modules/authentication/Authentication");
-var AuthenticationData = require("./../../../modules/authentication/AuthenticationData");
+var WebServices = require("./../../../src/services/webservices/WebServices");
+var APIResponse = require("./../../../src/services/webservices/APIResponse");
+var Authentication = require("./../../../src/modules/authentication/Authentication");
+var AuthenticationData = require("./../../../src/modules/authentication/AuthenticationData");
 
 class APIResgistrationClassA {
     constructor(apiResponse = null, reject = false, empty = false){this.apiResponse = apiResponse; this.reject = reject; this.empty = empty;}

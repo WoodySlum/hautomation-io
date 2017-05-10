@@ -3,8 +3,8 @@ var chai = require("chai");
 var expect = chai.expect;
 var sinon = require("sinon");
 
-var APIRequest = require("./../../../services/webservices/APIRequest");
-var AuthenticationData = require("./../../../modules/authentication/AuthenticationData");
+var APIRequest = require("./../../../src/services/webservices/APIRequest");
+var AuthenticationData = require("./../../../src/modules/authentication/AuthenticationData");
 
 describe("APIRequest", function() {
 

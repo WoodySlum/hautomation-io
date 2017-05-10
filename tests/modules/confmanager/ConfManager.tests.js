@@ -3,7 +3,7 @@ var chai = require("chai");
 var expect = chai.expect;
 var sinon = require("sinon");
 
-var ConfManager = require("./../../../modules/confmanager/ConfManager");
+var ConfManager = require("./../../../src/modules/confmanager/ConfManager");
 
 describe("ConfManager", function() {
     const confManager = new ConfManager.class({configurationPath:"/foo/bar"});

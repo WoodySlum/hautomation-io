@@ -3,7 +3,7 @@ var chai = require("chai");
 var expect = chai.expect;
 var sinon = require("sinon");
 
-var User = require("./../../../modules/usermanager/User");
+var User = require("./../../../src/modules/usermanager/User");
 
 describe("User", function() {
     const user = new User.class("username", "password", 0, "fullName", "email", "phone", "picture");

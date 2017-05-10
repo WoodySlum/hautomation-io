@@ -3,10 +3,10 @@ var chai = require("chai");
 var expect = chai.expect;
 var sinon = require("sinon");
 
-var ConfManager = require("./../../../modules/confmanager/ConfManager");
-var UserManager = require("./../../../modules/usermanager/UserManager");
-var User = require("./../../../modules/usermanager/User");
-var Authentication = require("./../../../modules/authentication/Authentication");
+var ConfManager = require("./../../../src/modules/confmanager/ConfManager");
+var UserManager = require("./../../../src/modules/usermanager/UserManager");
+var User = require("./../../../src/modules/usermanager/User");
+var Authentication = require("./../../../src/modules/authentication/Authentication");
 
 describe("UserManager", function() {
     const confManager = new ConfManager.class(null);

@@ -3,8 +3,8 @@ var chai = require("chai");
 var expect = chai.expect;
 var sinon = require("sinon");
 
-var APIRegistration = require("./../../../services/webservices/APIRegistration");
-var WebServices = require("./../../../services/webservices/WebServices");
+var APIRegistration = require("./../../../src/services/webservices/APIRegistration");
+var WebServices = require("./../../../src/services/webservices/WebServices");
 
 class APIResgistrationClassA {}
 class APIResgistrationClassB extends APIResgistrationClassA {}
