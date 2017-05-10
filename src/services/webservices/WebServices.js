@@ -9,9 +9,9 @@ var APIRegistration = require("./APIRegistration");
 var Authentication = require("./../../modules/authentication/Authentication");
 
 // External
-var BodyParser = require('body-parser');
-var fs = require('fs');
-var https = require('https');
+var BodyParser = require("body-parser");
+var fs = require("fs");
+var https = require("https");
 
 // Constants
 const CONTENT_TYPE = "content-type";
@@ -175,13 +175,13 @@ class WebServices extends Service.class {
         let method = req.method;
         let ip = req.ip;
         let route = req.path.replace(endpoint, "");
-        let path = route.split('/');
+        let path = route.split("/");
         let action = null;
         let params = {};
 
         if (path && path.length > 0) {
             // Last element is /
-            if (path[path.length-1] === '') {
+            if (path[path.length-1] === "") {
                 path.splice(-1, 1);
             }
 
@@ -228,11 +228,11 @@ class WebServices extends Service.class {
                 || apiRequest.route.startsWith(registeredEl.route) === true)
                 && registeredEl.delegate != null
                 && typeof registeredEl.delegate.processAPI === "function") {
-                    if (!apiRequest.authenticationData  || apiRequest.authenticationData && registeredEl.authLevel <= apiRequest.authenticationData.level) {
-                        promises.push(registeredEl.delegate.processAPI(apiRequest));
-                    } else if (apiRequest.authenticationData) {
-                        promises.push(new Promise((resolve, reject) => {resolve(new APIResponse.class(false, {}, 812, "Unauthorized"))}));
-                    }
+                if (!apiRequest.authenticationData  || apiRequest.authenticationData && registeredEl.authLevel <= apiRequest.authenticationData.level) {
+                    promises.push(registeredEl.delegate.processAPI(apiRequest));
+                } else if (apiRequest.authenticationData) {
+                    promises.push(new Promise((resolve) => {resolve(new APIResponse.class(false, {}, 812, "Unauthorized"));}));
+                }
             }
         });
 
@@ -295,4 +295,4 @@ module.exports = {class:WebServices, CONTENT_TYPE:CONTENT_TYPE,
     API_ERROR_HTTP_CODE:API_ERROR_HTTP_CODE,
     GET:GET,
     POST:POST
-    };
+};

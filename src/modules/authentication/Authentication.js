@@ -1,11 +1,11 @@
 "use strict";
-var Logger = require("./../../logger/Logger");
+
 var AuthenticationData = require("./AuthenticationData");
 var APIResponse = require("./../../services/webservices/APIResponse");
 
 const USERNAME = "u";
 const PASSWORD = "p";
-const TOKEN    = "t";
+//const TOKEN    = "t";
 const AUTH_NO_LEVEL = 0;
 const AUTH_USAGE_LEVEL = 10;
 const AUTH_MAX_LEVEL = 100;
@@ -22,13 +22,13 @@ class Authentication {
         let t = this;
         return new Promise( function(resolve, reject) {
             t.processAuthentication(apiRequest, resolve, reject);
-         } );
+        });
     }
 
     processAuthentication(apiRequest, resolve, reject) {
         let u = apiRequest.params[USERNAME];
         let p = apiRequest.params[PASSWORD];
-        let t = apiRequest.params[TOKEN];
+        //let t = apiRequest.params[TOKEN];
         let admin = this.userManager.getAdminUser();
 
         let users = this.userManager.getUsers();

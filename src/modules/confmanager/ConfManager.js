@@ -1,6 +1,6 @@
 "use strict";
 var Logger = require("./../../logger/Logger");
-var fs = require('fs');
+var fs = require("fs");
 
 const ERROR_EMPTY_FILE    = "ERROR_EMPTY_FILE";
 const ERROR_INVALID_JSON  = "ERROR_INVALID_JSON";
@@ -40,10 +40,10 @@ class ConfManager {
     isJsonValid(data) {
         try {
             JSON.parse(data);
-       } catch (e) {
-           return false;
-       }
-       return true;
+        } catch (e) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -54,7 +54,7 @@ class ConfManager {
     readFile(jsonPath) {
         let t = this;
         try {
-            let content = this.fs.readFileSync(jsonPath, 'utf-8');
+            let content = this.fs.readFileSync(jsonPath, "utf-8");
             let validJson = t.isJsonValid(content);
 
             if (content && validJson) {
@@ -166,7 +166,9 @@ class ConfManager {
     setData(datas, key, object, comparator) {
         try {
             this.removeData(datas, key, object, comparator);
-        } catch (e) {}
+        } catch (e) {
+            Logger.verbose(e);
+        }
         datas.push(object);
         this.saveData(datas, key);
         return datas;

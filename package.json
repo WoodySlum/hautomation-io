@@ -13,7 +13,7 @@
     "test": "mocha --compilers js:mocha-traceur --recursive ./tests/**/*.tests.js",
     "test-ci": "istanbul cover _mocha -- --reporter mocha-junit-reporter --compilers js:mocha-traceur --recursive ./tests/**/*.tests.js",
     "coverage":"istanbul cover _mocha -- --compilers js:mocha-traceur --recursive ./tests/**/*.tests.js",
-    "lint":"eslint ./**/*.js",
+    "lint":"eslint ./src/ --ext .js",
     "doc":"documentation build **/*.js -f md -o DOCUMENTATION.md"
   },
   "repository": {

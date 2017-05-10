@@ -1,5 +1,5 @@
 "use strict";
-var Authentication = require('./../../modules/authentication/Authentication');
+var Authentication = require("./../../modules/authentication/Authentication");
 
 class APIRegistration {
 

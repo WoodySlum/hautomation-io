@@ -6,12 +6,10 @@ var ConfManager = require("./modules/confmanager/ConfManager");
 var UserManager = require("./modules/usermanager/UserManager");
 const AppConfiguration = require("./../conf/config.default.json");
 
-var APIResponse = require("./services/webservices/APIResponse");
-
 class HautomationCore {
     constructor(webServices = null) {
         this.services = [];
-        let a = 2;
+
         // Services
         // Web services and API
         this.webServices = new WebServices.class(AppConfiguration.port, AppConfiguration.ssl.port, AppConfiguration.ssl.key, AppConfiguration.ssl.cert);
@@ -52,7 +50,6 @@ class HautomationCore {
     startServices() {
         Logger.info("Starting services");
         this.services.forEach((s)=>{
-            s.registerAPI(this, WebServices.POST, ":/toto/titi/");
             s.start();
         });
     }
@@ -65,16 +62,6 @@ class HautomationCore {
         this.services.forEach((s)=>{
             s.stop();
         });
-    }
-
-    // TODO:REMOVE for testing only
-    processAPI(apiRequest) {
-        return new Promise((resolve, reject) => {
-            Logger.verbose(apiRequest);
-            //let a = new APIResponse(true, {"hey":"ho"});
-            resolve(new APIResponse.class(true, {"hey":"ho"}));
-            //reject();
-         } );
     }
 }
 

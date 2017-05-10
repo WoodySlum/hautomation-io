@@ -1,5 +1,4 @@
 "use strict";
-var Logger = require("./../../logger/Logger");
 
 class User {
     constructor(username = null, password = null, level = null, fullName = null, email = null, phone = null, picture = null) {
