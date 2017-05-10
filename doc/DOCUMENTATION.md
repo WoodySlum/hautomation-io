@@ -30,7 +30,6 @@
     -   [readFile](#readfile)
     -   [saveData](#savedata)
     -   [loadData](#loaddata)
-    -   [loadDatas](#loaddatas)
     -   [getData](#getdata)
     -   [setData](#setdata)
     -   [removeData](#removedata)
@@ -291,18 +290,7 @@ Save data for a specific key. Can throw error.
 
 ### loadData
 
-Load data from file
-
-**Parameters**
-
--   `classType` **class** The object class. This class MUST implement a json() method to process JSON to Object mapping
--   `key` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A file store key
-
-Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An object instance of classType
-
-### loadDatas
-
-Load multiple datas from file (Array)
+Load data from file (Array or object)
 
 **Parameters**
 

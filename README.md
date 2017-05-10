@@ -27,9 +27,15 @@ In console, type `npm install` and everything should go on.
 * `npm run test-ci` Execute tests and generate test coverage
 * `npm run doc` Generate code documentation
 
+## Global architecture
+
+![Global architecture](doc/architecture.png "Global architecture")
+
+## Documentation
+
 ### Code documentation
 
-[Full documentation auto generated](DOCUMENTATION.md)
+[Full documentation](doc/DOCUMENTATION.md)
 
 #### Web Services API registration
 
