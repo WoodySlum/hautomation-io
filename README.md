@@ -29,7 +29,7 @@ In console, type `npm install` and everything should go on.
 
 ### Code documentation
 
-[Full documentation auto generated](services/webservices/DOCUMENTATION.md)
+[Full documentation auto generated](DOCUMENTATION.md)
 
 #### Web Services API registration
 
