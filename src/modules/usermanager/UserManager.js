@@ -29,7 +29,7 @@ class UserManager {
              * Users
              * @type {[User]}
              */
-            this.users = this.confManager.loadDatas(User.class, CONF_KEY);
+            this.users = this.confManager.loadData(User.class, CONF_KEY);
         } catch(e) {
             Logger.warn("Load users error : " + e.message);
             this.users = [];

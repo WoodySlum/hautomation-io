@@ -10,21 +10,7 @@ This class will save / load data into / from JSON file.
 
 #### loadData
 
-Load a single data (not an array - for array use `loadDatas` instead). Return a `classType` object.
-
-| Parameter | Type   | Additional informations                     |
-|-----------|--------|---------------------------------------------|
-| classType  | Class | The class where object should be cast. The class MUST implement `json` method |
-| key  | String | The key to store object (= the file name) |
-
-Example :
-
-	let c = new confManager(appConfiguration);
-	let myUsers = c.loadDatas(User, "users");
-
-#### loadDatas
-
-Load an array of data. Return an array of `classType` object.
+Load an array or object of data. Return an array / object of `classType`.
 
 | Parameter | Type   | Additional informations                     |
 |-----------|--------|---------------------------------------------|
@@ -110,7 +96,3 @@ Example :
 	} catch(e) {
 		console.log("Error ! User not found");
 	}
-
-
-
-

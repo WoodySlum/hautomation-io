@@ -14,7 +14,7 @@ describe("UserManager", function() {
     const userB = new User.class("userB");
 
     before(() => {
-        sinon.stub(confManager, "loadDatas").returns([userA, userB]);
+        sinon.stub(confManager, "loadData").returns([userA, userB]);
     });
 
     it("default constructor should fill correctly elements", function() {
@@ -87,6 +87,6 @@ describe("UserManager", function() {
     });
 
     after(function () {
-        confManager.loadDatas.restore();
+        confManager.loadData.restore();
     });
 });

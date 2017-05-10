@@ -140,14 +140,35 @@ describe("ConfManager", function() {
     });
 
     // Load and save data/s
-    it("loadData should be well done", function() {
+
+    it("loadData (array) should be well done", function() {
+         confManager.fs = fsMockArray;
+         let r = confManager.loadData(Foo, "notimportant");
+         expect(r.length).to.be.equal(2);
+         expect(r[0] instanceof Foo).to.be.true;
+         expect(r[0].foo).to.be.equal("bar");
+         expect(r[1] instanceof Foo).to.be.true;
+         expect(r[1].foo).to.be.equal("foo");
+    });
+
+    it("loadData (array) should throw error", function() {
+         confManager.fs = fsMockArray;
+         try {
+             let r = confManager.loadData(FooNoJson, "notimportant");
+             expect(false).to.be.true; // This should not happened because an exception is thrown
+         } catch(e) {
+             expect(e.message).to.be.equal(ConfManager.ERROR_NO_JSON_METHOD);
+         }
+    });
+
+    it("loadData (object) should be well done", function() {
          confManager.fs = fsMock;
          let r = confManager.loadData(Foo, "notimportant");
          expect(r instanceof Foo).to.be.true;
          expect(r.foo).to.be.equal("bar");
     });
 
-    it("loadData should throw error", function() {
+    it("loadData (object) should throw error", function() {
          confManager.fs = fsMock;
          try {
              let r = confManager.loadData(FooNoJson, "notimportant");
@@ -157,30 +178,10 @@ describe("ConfManager", function() {
          }
     });
 
-    it("loadDatas should be well done", function() {
-         confManager.fs = fsMockArray;
-         let r = confManager.loadDatas(Foo, "notimportant");
-         expect(r.length).to.be.equal(2);
-         expect(r[0] instanceof Foo).to.be.true;
-         expect(r[0].foo).to.be.equal("bar");
-         expect(r[1] instanceof Foo).to.be.true;
-         expect(r[1].foo).to.be.equal("foo");
-    });
-
-    it("loadDatas should throw error", function() {
-         confManager.fs = fsMockArray;
-         try {
-             let r = confManager.loadDatas(FooNoJson, "notimportant");
-             expect(false).to.be.true; // This should not happened because an exception is thrown
-         } catch(e) {
-             expect(e.message).to.be.equal(ConfManager.ERROR_NO_JSON_METHOD);
-         }
-    });
-
     // Get, Set and Del
     it("getData should find data", function() {
          confManager.fs = fsMockArray;
-         let datas = confManager.loadDatas(Foo, "notimportant");
+         let datas = confManager.loadData(Foo, "notimportant");
          let data = new Foo("foo");
          let r = confManager.getData(datas, data, comparator);
 
@@ -190,7 +191,7 @@ describe("ConfManager", function() {
 
     it("getData should not find data", function() {
          confManager.fs = fsMockArray;
-         let datas = confManager.loadDatas(Foo, "notimportant");
+         let datas = confManager.loadData(Foo, "notimportant");
          let data = new Foo("foobar");
          let r = confManager.getData(datas, data, comparator);
 
@@ -199,7 +200,7 @@ describe("ConfManager", function() {
 
     it("setData should process save correctly", function() {
          confManager.fs = fsMockArray;
-         let datas = confManager.loadDatas(Foo, "notimportant");
+         let datas = confManager.loadData(Foo, "notimportant");
          let data = new Foo("foobar");
          sinon.spy(confManager, 'saveData');
          sinon.spy(confManager, 'removeData');
@@ -219,7 +220,7 @@ describe("ConfManager", function() {
 
     it("removeData should be well processed", function() {
         confManager.fs = fsMockArray;
-        let datas = confManager.loadDatas(Foo, "notimportant");
+        let datas = confManager.loadData(Foo, "notimportant");
         let data = new Foo("foo");
         sinon.spy(confManager, 'saveData');
         sinon.spy(datas, 'splice');
@@ -239,7 +240,7 @@ describe("ConfManager", function() {
 
     it("removeData should throw error", function() {
         confManager.fs = fsMockArray;
-        let datas = confManager.loadDatas(Foo, "notimportant");
+        let datas = confManager.loadData(Foo, "notimportant");
         let data = new Foo("foobar");
 
         try {

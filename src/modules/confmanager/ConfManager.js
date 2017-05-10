@@ -108,35 +108,13 @@ class ConfManager {
     }
 
     /**
-     * Load data from file
-     *
-     * @param  {class} classType The object class. This class MUST implement a json() method to process JSON to Object mapping
-     * @param  {string} key A file store key
-     * @returns {Object}      An object instance of classType
-     */
-    loadData(classType, key) {
-        const content = this.readFile(this.getFilePath(key));
-
-        if (content != null) {
-            let o = new classType();
-            if (typeof o.json === "function") {
-                return o.json(content);
-            } else {
-                throw Error(ERROR_NO_JSON_METHOD);
-            }
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * Load multiple datas from file (Array)
+     * Load data from file (Array or object)
      *
      * @param  {class} classType The object class. This class MUST implement a json() method to process JSON to Object mapping
      * @param  {string} key A file store key
      * @returns {Array}      An array of objects (instance of classType)
      */
-    loadDatas(classType, key) {
+    loadData(classType, key) {
         const content = this.readFile(this.getFilePath(key));
 
         if (content != null && content instanceof Array) {
@@ -150,9 +128,14 @@ class ConfManager {
                 }
             });
             return results;
+        } else {
+            let o = new classType();
+            if (typeof o.json === "function") {
+                return o.json(content);
+            } else {
+                throw Error(ERROR_NO_JSON_METHOD);
+            }
         }
-
-        return null;
     }
 
     /**
