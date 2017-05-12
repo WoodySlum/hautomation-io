@@ -18,6 +18,7 @@ const CONTENT_TYPE = "content-type";
 
 const HEADER_APPLICATION_JSON = "application/json";
 const HEADER_APPLICATION_FORM = "application/x-www-form-urlencoded";
+const DATA_FIELD = "data";
 const GET = "GET";
 const POST = "POST";
 
@@ -38,7 +39,7 @@ class WebServices extends Service.class {
      * @param  {string} [sslCert=null]  The path for sslCert key
      * @returns {WebServices}            The instance
      */
-    constructor(port = 8080, sslPort = 8443, sslKey = null, sslCert = null) {
+    constructor(port = 8080, sslPort = 8043, sslKey = null, sslCert = null) {
         super();
         this.port = port;
         this.sslPort = sslPort;
@@ -81,19 +82,19 @@ class WebServices extends Service.class {
                     cert: this.fs.readFileSync(this.sslCert)
                 }, this.app).listen(this.sslPort);
                 this.servers.push(sslServer);
+                Logger.info("Web services are listening on port " + this.sslPort);
             } catch (e) {
                 Logger.err("SSL Server can not started");
+                Logger.err(e);
             }
 
             try {
                 let server = this.app.listen(this.port);
                 this.servers.push(server);
+                Logger.info("Web services are listening on port " + this.port);
             } catch (e) {
                 Logger.err("HTTP Server can not started");
             }
-
-
-            Logger.info("Web services are listening on port " + this.port);
 
             super.start();
         } else {
@@ -221,8 +222,17 @@ class WebServices extends Service.class {
         }
 
         let data = {};
-        if (req.headers[CONTENT_TYPE] === HEADER_APPLICATION_JSON && req.body && req.body.length > 0) {
-            data = req.body;
+        if (method === "POST" && req.headers[CONTENT_TYPE] === HEADER_APPLICATION_JSON && req.body) {
+            methodConstant = POST;
+
+            // If application/json header
+            if (req.body.data) {
+                data = req.body[DATA_FIELD];
+                params = Object.assign(params, req.body);
+                delete params[DATA_FIELD];
+            } else {
+                Logger.warn("Empty body content");
+            }
         }
 
         Logger.info(method + " " + req.path + " from " + ip + " " + req.headers[CONTENT_TYPE]);

@@ -4,6 +4,7 @@ var WebServices = require("./services/webservices/WebServices");
 var Authentication = require("./modules/authentication/Authentication");
 var ConfManager = require("./modules/confmanager/ConfManager");
 var UserManager = require("./modules/usermanager/UserManager");
+var AlarmManager = require("./modules/alarmmanager/AlarmManager");
 const AppConfiguration = require("./../conf/config.default.json");
 
 /**
@@ -30,6 +31,8 @@ class HautomationCore {
         this.userManager = new UserManager.class(this.confManager);
         // Authentication module
         this.authentication = new Authentication.class(this.webServices, this.userManager);
+        // Alarm module
+        this.alarmManager = new AlarmManager.class(this.confManager, this.webServices);
 
         // Add WebService to list
         this.services.push(this.webServices);

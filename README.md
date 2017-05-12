@@ -39,8 +39,8 @@ In console, type `npm install` and everything should go on.
 
 #### Web Services API registration
 
-[Go to details](services/webservices/README.md)
+[Go to details](src/services/webservices/README.md)
 
 #### Configuration manager
 
-[Go to details](modules/confmanager/README.md)
+[Go to details](src/modules/confmanager/README.md)

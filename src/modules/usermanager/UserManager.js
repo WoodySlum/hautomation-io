@@ -44,7 +44,7 @@ class UserManager {
     removeUser(username) {
         let user = this.getUser(username);
         try {
-            this.users = this.confManager.removeData(this.users, CONF_KEY, user, this.compareUser);
+            this.users = this.confManager.removeData(CONF_KEY, user, this.users, this.compareUser);
         } catch(e) {
             throw Error(ERROR_USER_NOT_FOUND);
         }
@@ -87,7 +87,7 @@ class UserManager {
      */
     setUser(user) {
         try {
-            this.users = this.confManager.setData(this.users, CONF_KEY, user, this.compareUser);
+            this.users = this.confManager.setData(CONF_KEY, user, this.users, this.compareUser);
         } catch (e) {
             Logger.err("Could not save user : " + e.message);
         }
