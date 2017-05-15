@@ -14,15 +14,22 @@
     -   [err](#err)
     -   [verbose](#verbose)
     -   [info](#info)
--   [Authentication](#authentication)
+-   [Alarm](#alarm)
     -   [constructor](#constructor-1)
--   [AuthenticationData](#authenticationdata)
+    -   [json](#json)
+-   [AlarmManager](#alarmmanager)
     -   [constructor](#constructor-2)
+    -   [setAlarm](#setalarm)
+    -   [processAPI](#processapi)
+-   [Authentication](#authentication)
+    -   [constructor](#constructor-3)
+-   [AuthenticationData](#authenticationdata)
+    -   [constructor](#constructor-4)
     -   [authorized](#authorized)
     -   [username](#username)
     -   [level](#level)
 -   [ConfManager](#confmanager)
-    -   [constructor](#constructor-3)
+    -   [constructor](#constructor-5)
     -   [appConfiguration](#appconfiguration)
     -   [fs](#fs)
     -   [getFilePath](#getfilepath)
@@ -34,7 +41,7 @@
     -   [setData](#setdata)
     -   [removeData](#removedata)
 -   [User](#user)
-    -   [constructor](#constructor-4)
+    -   [constructor](#constructor-6)
     -   [username](#username-1)
     -   [password](#password)
     -   [level](#level-1)
@@ -42,9 +49,9 @@
     -   [email](#email)
     -   [phone](#phone)
     -   [picture](#picture)
-    -   [json](#json)
+    -   [json](#json-1)
 -   [UserManager](#usermanager)
-    -   [constructor](#constructor-5)
+    -   [constructor](#constructor-7)
     -   [confManager](#confmanager-1)
     -   [users](#users)
     -   [removeUser](#removeuser)
@@ -54,7 +61,7 @@
     -   [setUser](#setuser)
     -   [getAdminUser](#getadminuser)
 -   [Service](#service)
-    -   [constructor](#constructor-6)
+    -   [constructor](#constructor-8)
     -   [start](#start-1)
     -   [stop](#stop-1)
     -   [restart](#restart)
@@ -62,14 +69,14 @@
     -   [register](#register)
     -   [unregister](#unregister)
 -   [APIRegistration](#apiregistration)
-    -   [constructor](#constructor-7)
+    -   [constructor](#constructor-9)
     -   [delegate](#delegate)
     -   [method](#method)
     -   [route](#route)
     -   [authLevel](#authlevel)
     -   [isEqual](#isequal)
 -   [APIRequest](#apirequest)
-    -   [constructor](#constructor-8)
+    -   [constructor](#constructor-10)
     -   [method](#method-1)
     -   [ip](#ip)
     -   [route](#route-1)
@@ -80,13 +87,13 @@
     -   [authenticationData](#authenticationdata-1)
     -   [addAuthenticationData](#addauthenticationdata)
 -   [APIResponse](#apiresponse)
-    -   [constructor](#constructor-9)
+    -   [constructor](#constructor-11)
     -   [success](#success)
     -   [response](#response)
     -   [errorCode](#errorcode)
     -   [errorMessage](#errormessage)
 -   [WebServices](#webservices)
-    -   [constructor](#constructor-10)
+    -   [constructor](#constructor-12)
     -   [start](#start-2)
     -   [stop](#stop-2)
     -   [register](#register-1)
@@ -168,6 +175,72 @@ Log an information to a file
 **Parameters**
 
 -   `message` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A log message
+
+## Alarm
+
+This class is an Alarm POJO
+
+**Parameters**
+
+-   `enabled`   (optional, default `false`)
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `enabled` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if alarm is enabled, else false (optional, default `false`)
+
+Returns **[Alarm](#alarm)** The instance
+
+### json
+
+Transform json raw object to instance
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** JSON object data
+
+Returns **[Alarm](#alarm)** A User instance
+
+## AlarmManager
+
+This class allows to manage alarm (nable, disable, ...)
+
+**Parameters**
+
+-   `confManager`  
+-   `webServices`  
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `confManager` **[ConfManager](#confmanager)** A configuration manager needed for persistence
+-   `webServices` **[WebServices](#webservices)** The web services to register APIs
+
+Returns **[Alarm](#alarm)** The instance
+
+### setAlarm
+
+Set alarm from ageneric JSON object
+
+**Parameters**
+
+-   `object` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The JSON object
+
+### processAPI
+
+Process web API callback
+
+**Parameters**
+
+-   `apiRequest` **[APIRequest](#apirequest)** An API Request
+
+Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with APIResponse
 
 ## Authentication
 
@@ -313,16 +386,16 @@ Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refer
 
 ### setData
 
-Set data into object's array (save)
+Set data (save)
 
 **Parameters**
 
--   `datas` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of objects
 -   `key` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A file store key
 -   `object` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The object to search
--   `comparator` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A comparator function with 2 parameters (obj1, obj2). The comparator must return true if objects are equals. Else false.
+-   `datas` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of objects (optional, default `null`)
+-   `comparator` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A comparator function with 2 parameters (obj1, obj2). The comparator must return true if objects are equals. Else false. (optional, default `null`)
 
-Returns **\[[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)]** The Array of Objects updated
+Returns **\[[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)]** The Array of Objects updated, null if object savec
 
 ### removeData
 
@@ -330,10 +403,10 @@ Remove data into object's array (delete). Can throw error.
 
 **Parameters**
 
--   `datas` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of objects
 -   `key` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A file store key
 -   `object` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The object to search
--   `comparator` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A comparator function with 2 parameters (obj1, obj2). The comparator must return true if objects are equals. Else false.
+-   `datas` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of objects (optional, default `null`)
+-   `comparator` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A comparator function with 2 parameters (obj1, obj2). The comparator must return true if objects are equals. Else false. (optional, default `null`)
 
 Returns **\[[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)]** The Array of Objects updated
 
@@ -694,7 +767,7 @@ This class manage Web Services call, and more specifically the external APIs
 **Parameters**
 
 -   `port`   (optional, default `8080`)
--   `sslPort`   (optional, default `8443`)
+-   `sslPort`   (optional, default `8043`)
 -   `sslKey`   (optional, default `null`)
 -   `sslCert`   (optional, default `null`)
 

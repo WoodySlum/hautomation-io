@@ -2,7 +2,8 @@
   "name": "hautomation-core",
   "version": "0.0.0",
   "description": "Hautomation core module",
-  "main": "HautomationCore.js",
+  "main": "HautomationRunner.js",
+  "publishConfig":{"registry":"http://honey.hd.free.fr:4873"},
   "engines": {
     "node": ">=6.0"
   },
@@ -14,7 +15,8 @@
     "test-ci": "istanbul cover _mocha -- --reporter mocha-junit-reporter --compilers js:mocha-traceur --recursive ./tests/**/*.tests.js",
     "coverage":"istanbul cover _mocha -- --compilers js:mocha-traceur --recursive ./tests/**/*.tests.js",
     "lint":"eslint ./src/ --ext .js",
-    "doc":"documentation build ./src/** -f md -o ./doc/DOCUMENTATION.md"
+    "doc":"documentation build ./src/** -f md -o ./doc/DOCUMENTATION.md",
+    "patch-release": "npm version patch && npm publish && git push --follow-tags"
   },
   "repository": {
     "type": "git",
