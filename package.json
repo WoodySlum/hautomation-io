@@ -1,9 +1,11 @@
 {
   "name": "hautomation-core",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Hautomation core module",
   "main": "HautomationRunner.js",
-  "publishConfig":{"registry":"http://honey.hd.free.fr:4873"},
+  "publishConfig": {
+    "registry": "http://honey.hd.free.fr:4873"
+  },
   "engines": {
     "node": ">=6.0"
   },
@@ -13,9 +15,9 @@
     "start": "node HautomationRunner.js",
     "test": "mocha --compilers js:mocha-traceur --recursive ./tests/**/*.tests.js",
     "test-ci": "istanbul cover _mocha -- --reporter mocha-junit-reporter --compilers js:mocha-traceur --recursive ./tests/**/*.tests.js",
-    "coverage":"istanbul cover _mocha -- --compilers js:mocha-traceur --recursive ./tests/**/*.tests.js",
-    "lint":"eslint ./src/ --ext .js",
-    "doc":"documentation build ./src/** -f md -o ./doc/DOCUMENTATION.md",
+    "coverage": "istanbul cover _mocha -- --compilers js:mocha-traceur --recursive ./tests/**/*.tests.js",
+    "lint": "eslint ./src/ --ext .js",
+    "doc": "documentation build ./src/** -f md -o ./doc/DOCUMENTATION.md",
     "patch-release": "npm version patch && npm publish && git push --follow-tags"
   },
   "repository": {
@@ -33,12 +35,12 @@
     "sinon": "^2.2",
     "mocha": "^3.3",
     "mocha-traceur": "2.1",
-    "mocha-junit-reporter":"^1.13",
-    "istanbul":"^1.1.0-alpha.1",
-    "eslint":"^3.19",
-    "eslint-plugin-mocha":"^4.9",
-    "eslint-plugin-jsdoc":"^3.0",
-    "eslint-plugin-require-jsdoc":"^1.0",
+    "mocha-junit-reporter": "^1.13",
+    "istanbul": "^1.1.0-alpha.1",
+    "eslint": "^3.19",
+    "eslint-plugin-mocha": "^4.9",
+    "eslint-plugin-jsdoc": "^3.0",
+    "eslint-plugin-require-jsdoc": "^1.0",
     "nodemon": "^1.11.0",
     "documentation": "^4.0.0-rc.1"
   },
