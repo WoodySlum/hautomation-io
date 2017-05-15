@@ -18,7 +18,7 @@
     "coverage": "istanbul cover _mocha -- --compilers js:mocha-traceur --recursive ./tests/**/*.tests.js",
     "lint": "eslint ./src/ --ext .js",
     "doc": "documentation build ./src/** -f md -o ./doc/DOCUMENTATION.md",
-    "patch-release": "npm version patch && npm publish && git push --follow-tags"
+    "patch-release": "npm version patch && npm publish"
   },
   "repository": {
     "type": "git",
