@@ -24,7 +24,6 @@ doc:
 deploy:
   script:
   - npm run build
-
-artifacts:
-  paths:
-  - build/*
+  artifacts:
+    paths:
+    - build/*
