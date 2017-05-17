@@ -1,6 +1,6 @@
 {
     "ignore": ["**/*.json", "**/*.db", "**/*.jpg"],
     "events": {
-        "start": "npm run lint"
+         "start": "npm run lint"
     }
 }

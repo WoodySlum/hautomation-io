@@ -1,9 +1,16 @@
+# Mac
+.DS_Store
+
 # Vim
 *.swp
 
 # Intellij
 core-node.iml
 .idea/**
+
+# Bin
+build/**
+
 
 # Logs
 test-results.xml

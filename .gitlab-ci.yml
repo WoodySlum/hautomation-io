@@ -19,3 +19,4 @@ lint:
 doc:
   script:
   - npm run doc
+  - npm run doc-apis

@@ -56,7 +56,10 @@ class Authentication {
             }
         });
 
-        if (userAuth) {
+        if (!u && !p) {
+            apiRequest.addAuthenticationData(new AuthenticationData.class(false, null, AUTH_NO_LEVEL));
+            resolve(new APIResponse.class(true));
+        } else if (userAuth) {
             apiRequest.addAuthenticationData(new AuthenticationData.class(true, userAuth.username, userAuth.level));
             resolve(new APIResponse.class(true));
         } else {

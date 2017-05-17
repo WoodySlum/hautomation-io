@@ -11,14 +11,21 @@
   },
   "engineStrict": true,
   "scripts": {
-    "dev": "nodemon --debug=8081 --config .nodemon.json  HautomationRunner.js",
+    "dev": "nodemon --debug=8082 --config .nodemon.json  HautomationRunner.js",
     "start": "node HautomationRunner.js",
     "test": "mocha --compilers js:mocha-traceur --recursive ./tests/**/*.tests.js",
     "test-ci": "istanbul cover _mocha -- --reporter mocha-junit-reporter --compilers js:mocha-traceur --recursive ./tests/**/*.tests.js",
     "coverage": "istanbul cover _mocha -- --compilers js:mocha-traceur --recursive ./tests/**/*.tests.js",
     "lint": "eslint ./src/ --ext .js",
     "doc": "documentation build ./src/** -f md -o ./doc/DOCUMENTATION.md",
-    "patch-release": "npm version patch && npm publish"
+    "doc-apis": "documentation build ./src/modules/pluginsmanager/publicapis/** -f md -o ./doc/PUBLIC-APIS.md",
+    "pre-build":"rm -Rf ./build/* && mkdir ./build/plugins && cp -R ./conf ./build/",
+    "build": "npm run pre-build && pkg -o ./build/hautomation ."
+  },
+  "bin": "HautomationRunner.js",
+  "pkg": {
+    "scripts": ["./src/**/*.js"],
+    "assets": ["./src/internal-plugins/**/*.js"]
   },
   "repository": {
     "type": "git",
@@ -42,11 +49,13 @@
     "eslint-plugin-jsdoc": "^3.0",
     "eslint-plugin-require-jsdoc": "^1.0",
     "nodemon": "^1.11.0",
-    "documentation": "^4.0.0-rc.1"
+    "documentation": "^4.0.0-rc.1",
+    "pkg":"^3.0"
   },
   "dependencies": {
     "traceur": "^0.0",
     "express": "^4.15",
-    "body-parser": "^1.17"
-  }
+    "body-parser": "^1.17",
+    "remi":"^2.0"
+ }
 }

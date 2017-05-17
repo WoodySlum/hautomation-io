@@ -8,6 +8,9 @@
     -   [stop](#stop)
     -   [startServices](#startservices)
     -   [stopServices](#stopservices)
+    -   [configurationLoader](#configurationloader)
+-   [Sample](#sample)
+    -   [processAPI](#processapi)
 -   [Logger](#logger)
     -   [log](#log)
     -   [warn](#warn)
@@ -20,7 +23,7 @@
 -   [AlarmManager](#alarmmanager)
     -   [constructor](#constructor-2)
     -   [setAlarm](#setalarm)
-    -   [processAPI](#processapi)
+    -   [processAPI](#processapi-1)
 -   [Authentication](#authentication)
     -   [constructor](#constructor-3)
 -   [AuthenticationData](#authenticationdata)
@@ -40,8 +43,20 @@
     -   [getData](#getdata)
     -   [setData](#setdata)
     -   [removeData](#removedata)
--   [User](#user)
+-   [PluginsAPI](#pluginsapi)
+-   [PluginsManager](#pluginsmanager)
     -   [constructor](#constructor-6)
+    -   [getPluginsFromDirectory](#getpluginsfromdirectory)
+    -   [checkPluginSanity](#checkpluginsanity)
+    -   [registerPlugins](#registerplugins)
+    -   [load](#load)
+-   [WebAPI](#webapi)
+    -   [register](#register)
+    -   [unregister](#unregister)
+    -   [Authentication](#authentication-1)
+    -   [APIResponse](#apiresponse)
+-   [User](#user)
+    -   [constructor](#constructor-7)
     -   [username](#username-1)
     -   [password](#password)
     -   [level](#level-1)
@@ -51,7 +66,7 @@
     -   [picture](#picture)
     -   [json](#json-1)
 -   [UserManager](#usermanager)
-    -   [constructor](#constructor-7)
+    -   [constructor](#constructor-8)
     -   [confManager](#confmanager-1)
     -   [users](#users)
     -   [removeUser](#removeuser)
@@ -61,22 +76,22 @@
     -   [setUser](#setuser)
     -   [getAdminUser](#getadminuser)
 -   [Service](#service)
-    -   [constructor](#constructor-8)
+    -   [constructor](#constructor-9)
     -   [start](#start-1)
     -   [stop](#stop-1)
     -   [restart](#restart)
     -   [status](#status)
-    -   [register](#register)
-    -   [unregister](#unregister)
+    -   [register](#register-1)
+    -   [unregister](#unregister-1)
 -   [APIRegistration](#apiregistration)
-    -   [constructor](#constructor-9)
+    -   [constructor](#constructor-10)
     -   [delegate](#delegate)
     -   [method](#method)
     -   [route](#route)
     -   [authLevel](#authlevel)
     -   [isEqual](#isequal)
 -   [APIRequest](#apirequest)
-    -   [constructor](#constructor-10)
+    -   [constructor](#constructor-11)
     -   [method](#method-1)
     -   [ip](#ip)
     -   [route](#route-1)
@@ -86,18 +101,18 @@
     -   [data](#data)
     -   [authenticationData](#authenticationdata-1)
     -   [addAuthenticationData](#addauthenticationdata)
--   [APIResponse](#apiresponse)
-    -   [constructor](#constructor-11)
+-   [APIResponse](#apiresponse-1)
+    -   [constructor](#constructor-12)
     -   [success](#success)
     -   [response](#response)
     -   [errorCode](#errorcode)
     -   [errorMessage](#errormessage)
 -   [WebServices](#webservices)
-    -   [constructor](#constructor-12)
+    -   [constructor](#constructor-13)
     -   [start](#start-2)
     -   [stop](#stop-2)
-    -   [register](#register-1)
-    -   [unregister](#unregister-1)
+    -   [register](#register-2)
+    -   [unregister](#unregister-2)
     -   [registerAPI](#registerapi)
     -   [unregisterAPI](#unregisterapi)
     -   [manageResponse](#manageresponse)
@@ -130,6 +145,29 @@ Start all services
 ### stopServices
 
 Stop all services
+
+### configurationLoader
+
+Try to overload configuration
+
+## Sample
+
+This class is a sample plugin
+
+**Parameters**
+
+-   `api`  
+-   `options`  
+
+### processAPI
+
+Process API callback
+
+**Parameters**
+
+-   `apiRequest` **\[type]** An APIRequest
+
+Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with an APIResponse object
 
 ## Logger
 
@@ -409,6 +447,115 @@ Remove data into object's array (delete). Can throw error.
 -   `comparator` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A comparator function with 2 parameters (obj1, obj2). The comparator must return true if objects are equals. Else false. (optional, default `null`)
 
 Returns **\[[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)]** The Array of Objects updated
+
+## PluginsAPI
+
+This class is an interface for plugins
+
+**Parameters**
+
+-   `webServices`  
+-   `identifier`  
+-   `version`  
+-   `description`   (optional, default `""`)
+
+## PluginsManager
+
+This class manage plugins
+
+**Parameters**
+
+-   `webServices`  
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `webServices` **[WebServices](#webservices)** The web services
+
+Returns **[PluginsManager](#pluginsmanager)** The instance
+
+### getPluginsFromDirectory
+
+Get plugins from external directory
+
+**Parameters**
+
+-   `srcPath` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A source path
+
+Returns **\[[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)]** An array of plugins where prefix is well set as descripbed in PLUGIN_PREFIX
+
+### checkPluginSanity
+
+Check plugin sanity. A plugin should have name, version and description properties and a function as entry point
+
+**Parameters**
+
+-   `p` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A plugin object as set in require. This method throws errors
+
+### registerPlugins
+
+This method register plugins
+
+**Parameters**
+
+-   `path` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Plugins path
+-   `plugins` **\[[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)]** An array of plugins name
+-   `relative` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if path is relative, else false (optional, default `false`)
+
+### load
+
+Load all plugins (internal and external)
+
+## WebAPI
+
+Public API for Web services
+
+**Parameters**
+
+-   `webServices`  
+
+### register
+
+Register to a specific web service be notified when a route and/or method is called
+
+**Parameters**
+
+-   `delegate` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A delegate which implements the processAPI(apiRequest) function
+-   `method` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A method (\*, WebServices.GET / WebServices.POST) (optional, default `"*"`)
+-   `route` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A route (\*, :/my/route/) (optional, default `"*"`)
+-   `authLevel` **int** An authentification level (optional, default `Authentication.AUTH_USAGE_LEVEL`)
+
+### unregister
+
+Unregister to a specific web service be notified when a route and/or method is called
+
+**Parameters**
+
+-   `delegate` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A delegate which implements the processAPI(apiRequest) function
+-   `method` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A method (\*, WebServices.GET / WebServices.POST) (optional, default `"*"`)
+-   `route` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A route (\*, :/my/route/) (optional, default `"*"`)
+
+### Authentication
+
+Get authentication constants : e.g. :  this.webApi.Authentication().AUTH_NO_LEVEL
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** All constants as properties
+
+### APIResponse
+
+Create an APIResponse object
+
+**Parameters**
+
+-   `success` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Set to true if API success, else false (optional, default `false`)
+-   `response` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A response object to transmit (optional) (optional, default `{}`)
+-   `errorCode` **int** The error code (optional) (optional, default `-1`)
+-   `errorMessage` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The error message (optional) (optional, default `null`)
+
+Returns **[APIResponse](#apiresponse)** The instance
 
 ## User
 

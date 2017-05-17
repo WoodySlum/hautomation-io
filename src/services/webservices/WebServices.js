@@ -256,7 +256,7 @@ class WebServices extends Service.class {
                 || apiRequest.route.startsWith(registeredEl.route) === true)
                 && registeredEl.delegate != null
                 && typeof registeredEl.delegate.processAPI === "function") {
-                if (!apiRequest.authenticationData  || apiRequest.authenticationData && registeredEl.authLevel <= apiRequest.authenticationData.level) {
+                if (!apiRequest.authenticationData || apiRequest.authenticationData && registeredEl.authLevel <= apiRequest.authenticationData.level) {
                     promises.push(registeredEl.delegate.processAPI(apiRequest));
                 } else if (apiRequest.authenticationData) {
                     promises.push(new Promise((resolve) => {resolve(new APIResponse.class(false, {}, 812, "Unauthorized"));}));

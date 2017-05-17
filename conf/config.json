@@ -1,10 +1,10 @@
 {
-    "configurationPath":"/tmp/",
+    "configurationPath":"./conf/",
     "port":8080,
     "ssl": {
         "port":8443,
-        "key":"/tmp/key.pem",
-        "cert":"/tmp/cert.pem"
+        "key":"./conf/ssl/key.pem",
+        "cert":"./conf/ssl/cert.pem"
     },
     "admin":{
         "username":"admin",
