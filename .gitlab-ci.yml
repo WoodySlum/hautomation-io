@@ -23,5 +23,8 @@ doc:
 
 deploy:
   script:
-  - echo "TEST" > /tmp/bobby
-  
+  - npm run build
+
+artifacts:
+  paths:
+  - build/*

@@ -8,8 +8,8 @@ var ConfManager = require("./modules/confmanager/ConfManager");
 var UserManager = require("./modules/usermanager/UserManager");
 var AlarmManager = require("./modules/alarmmanager/AlarmManager");
 var PluginsManager = require("./modules/pluginsmanager/PluginsManager");
-const CONFIGURATION_FILE = "conf/config.json";
-var AppConfiguration = require("./../conf/config.json");
+const CONFIGURATION_FILE = "data/config.json";
+var AppConfiguration = require("./../data/config.json");
 
 /**
  * The main class for core.
