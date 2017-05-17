@@ -21,7 +21,7 @@ doc:
   - npm run doc
   - npm run doc-apis
 
-deploy:
+build:
   script:
   - npm run build
   artifacts:
