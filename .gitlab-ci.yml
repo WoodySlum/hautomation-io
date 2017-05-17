@@ -20,3 +20,8 @@ doc:
   script:
   - npm run doc
   - npm run doc-apis
+
+deploy:
+  script:
+  - echo "TEST" > /tmp/bobby
+  
