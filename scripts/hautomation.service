@@ -2,11 +2,11 @@
 Description=Hautomation
 
 [Service]
-ExecStart=/var/hautomation/hautomation
+ExecStart={INSTALLATION_FOLDER}hautomation
 Restart=always
 Environment=PATH=/usr/bin:/usr/local/bin
 Environment=NODE_ENV=production
-WorkingDirectory=/var/hautomation
+WorkingDirectory={INSTALLATION_FOLDER}
 
 [Install]
 WantedBy=multi-user.target
