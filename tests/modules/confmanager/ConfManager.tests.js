@@ -198,7 +198,7 @@ describe("ConfManager", function() {
          expect(r).to.be.null;
     });
 
-    it("setData should process save correctly", function() {
+    it("setData (array) should process save correctly", function() {
          confManager.fs = fsMockArray;
          let datas = confManager.loadData(Foo, "notimportant");
          let data = new Foo("foobar");
@@ -206,15 +206,27 @@ describe("ConfManager", function() {
          sinon.spy(confManager, 'removeData');
          sinon.spy(datas, 'push');
 
-         let r = confManager.setData(datas, "notimportant", data, comparator);
+         let r = confManager.setData("notimportant", data, datas, comparator);
 
-         expect(confManager.removeData.withArgs(datas, "notimportant", data, comparator).calledOnce).to.be.true;
+         expect(confManager.removeData.withArgs("notimportant", data, datas, comparator).calledOnce).to.be.true;
          expect(datas.push.withArgs(data).calledOnce).to.be.true;
          expect(confManager.saveData.withArgs(sinon.match.any, "notimportant").calledOnce).to.be.true;
          expect(r[r.length-1].foo).to.be.equal("foobar");
 
          confManager.removeData.restore();
          datas.push.restore();
+         confManager.saveData.restore();
+    });
+
+    it("setData (object) should process save correctly", function() {
+         confManager.fs = fsMock;
+         let data = new Foo("foobar");
+         sinon.spy(confManager, 'saveData');
+
+         let r = confManager.setData("notimportant", data);
+
+         expect(confManager.saveData.withArgs(sinon.match.any, "notimportant").calledOnce).to.be.true;
+
          confManager.saveData.restore();
     });
 
@@ -226,7 +238,7 @@ describe("ConfManager", function() {
         sinon.spy(datas, 'splice');
         sinon.spy(datas, 'indexOf');
 
-        let r = confManager.removeData(datas, "notimportant", data, comparator);
+        let r = confManager.removeData("notimportant", data, datas, comparator);
 
         expect(datas.splice.withArgs(sinon.match.any, 1).calledOnce).to.be.true;
         expect(datas.indexOf.withArgs(sinon.match.any).calledOnce).to.be.true;
@@ -244,7 +256,7 @@ describe("ConfManager", function() {
         let data = new Foo("foobar");
 
         try {
-            let r = confManager.removeData(datas, "notimportant", data, comparator);
+            let r = confManager.removeData("notimportant", data, datas, comparator);
             expect(false).to.be.true; // This should not happened because an exception is thrown
         } catch(e) {
             expect(e.message).to.be.equal(ConfManager.DATA_NOT_FOUND);

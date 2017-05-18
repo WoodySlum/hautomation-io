@@ -64,7 +64,7 @@ describe("UserManager", function() {
         const userManager = new UserManager.class(confManager);
         sinon.stub(confManager, "setData").returns([userA, userB, newUser]);
         userManager.setUser(newUser);
-        expect(confManager.setData.withArgs(sinon.match.any, sinon.match.any, newUser, sinon.match.any).calledOnce).to.be.true;
+        expect(confManager.setData.withArgs(sinon.match.any, newUser, sinon.match.any, sinon.match.any).calledOnce).to.be.true;
         confManager.setData.restore();
     });
 

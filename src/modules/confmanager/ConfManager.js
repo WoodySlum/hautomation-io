@@ -102,7 +102,7 @@ class ConfManager {
     saveData(data, key) {
         this.fs.writeFile(this.getFilePath(key), JSON.stringify(data), (err) => {
             if (err) {
-                throw err;
+                Logger.err(err);
             }
         });
     }
@@ -160,45 +160,53 @@ class ConfManager {
     }
 
     /**
-     * Set data into object's array (save)
+     * Set data (save)
      *
-     * @param  {Array} datas      An array of objects
      * @param  {string} key A file store key
      * @param  {Object} object     The object to search
-     * @param  {Function} comparator A comparator function with 2 parameters (obj1, obj2). The comparator must return true if objects are equals. Else false.
-     * @returns {[Object]}     The Array of Objects updated
+     * @param  {Array} [datas=null]      An array of objects
+     * @param  {Function} [comparator=null] A comparator function with 2 parameters (obj1, obj2). The comparator must return true if objects are equals. Else false.
+     * @returns {[Object]}     The Array of Objects updated, null if object savec
      */
-    setData(datas, key, object, comparator) {
-        try {
-            this.removeData(datas, key, object, comparator);
-        } catch (e) {
-            Logger.verbose(e);
+    setData(key, object, datas = null, comparator = null) {
+        if (datas) {
+            try {
+                this.removeData(key, object, datas, comparator);
+            } catch (e) {
+                Logger.verbose(e);
+            }
+            datas.push(object);
+            this.saveData(datas, key);
+            return datas;
+        } else {
+            this.saveData(object, key);
         }
-        datas.push(object);
-        this.saveData(datas, key);
-        return datas;
     }
 
     /**
      * Remove data into object's array (delete). Can throw error.
      *
-     * @param  {Array} datas      An array of objects
      * @param  {string} key A file store key
      * @param  {Object} object     The object to search
-     * @param  {Function} comparator A comparator function with 2 parameters (obj1, obj2). The comparator must return true if objects are equals. Else false.
+     * @param  {Array} [datas=null]      An array of objects
+     * @param  {Function} [comparator=null] A comparator function with 2 parameters (obj1, obj2). The comparator must return true if objects are equals. Else false.
      * @returns {[Object]}     The Array of Objects updated
      */
-    removeData(datas, key, object, comparator) {
-        let d = this.getData(datas, object, comparator);
-        if (d) {
-            let index = datas.indexOf(d);
-            if (index > -1) {
-                datas.splice(index, 1);
-                this.saveData(datas, key);
-                return datas;
+    removeData(key, object, datas = null, comparator = null) {
+        if (datas) {
+            let d = this.getData(datas, object, comparator);
+            if (d) {
+                let index = datas.indexOf(d);
+                if (index > -1) {
+                    datas.splice(index, 1);
+                    this.saveData(datas, key);
+                    return datas;
+                }
+            } else {
+                throw Error(DATA_NOT_FOUND);
             }
         } else {
-            throw Error(DATA_NOT_FOUND);
+            this.saveData(null, key);
         }
     }
 }

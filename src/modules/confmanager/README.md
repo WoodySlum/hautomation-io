@@ -49,15 +49,14 @@ Example :
 
 #### setData
 
-Set a data into an array and save it into json file automatically.
+Set a data into an array of datas and / or save array / object into json file automatically.
 
 | Parameter | Type   | Additional informations                     |
 |-----------|--------|---------------------------------------------|
-| datas  | Array | The array of data retrieved with `loadDatas` |
 | key  | String | The key to store object (= the file name) |
 | object  | Object | The object to search, with properties filled for `comparator` |
-| comparator  | Function | The function used to compare objects. This function must have 2 parameters |
-
+| datas  | Array | The array of data retrieved with `loadDatas` (optional) |
+| comparator  | Function | The function used to compare objects. This function must have 2 parameters (optional)  |
 
 Example :
 
@@ -77,10 +76,10 @@ Throw a `DATA_NOT_FOUND` error if the data is not found.
 
 | Parameter | Type   | Additional informations                     |
 |-----------|--------|---------------------------------------------|
-| datas  | Array | The array of data retrieved with `loadDatas` |
 | key  | String | The key to store object (= the file name) |
 | object  | Object | The object to search, with properties filled for `comparator` |
-| comparator  | Function | The function used to compare objects. This function must have 2 parameters |
+| datas  | Array | The array of data retrieved with `loadDatas` (optional) |
+| comparator  | Function | The function used to compare objects. This function must have 2 parameters (optional) |
 
 
 Example :

@@ -26,6 +26,8 @@ In console, type `npm install` and everything should go on.
 * `npm run coverage` Generate test coverage
 * `npm run test-ci` Execute tests and generate test coverage
 * `npm run doc` Generate code documentation
+* `npm run doc-apis` Generate Public APIs documentation
+* `npm run build` Build for current architecture
 
 ## Global architecture
 
@@ -37,10 +39,14 @@ In console, type `npm install` and everything should go on.
 
 [Full documentation](doc/DOCUMENTATION.md)
 
+### Public APIs
+
+[Full documentation](doc/PUBLIC-APIS.md)
+
 #### Web Services API registration
 
-[Go to details](services/webservices/README.md)
+[Go to details](src/services/webservices/README.md)
 
 #### Configuration manager
 
-[Go to details](modules/confmanager/README.md)
+[Go to details](src/modules/confmanager/README.md)
