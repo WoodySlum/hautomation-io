@@ -7,23 +7,11 @@ cache:
 before_script:
 - npm install
 
-test:
-  script:
-  - npm run test-ci
-  coverage: '/Statements   : \d+\.\d+/'
-
-lint:
-  script:
-  - npm run lint
-
-doc:
-  script:
-  - npm run doc
-  - npm run doc-apis
-
-build:
+deploy:
   script:
   - npm run build
-  artifacts:
-    paths:
-    - build/*
+  - ssh-add <(echo "$STAGING_PRIVATE_KEY")
+  - ssh -p22 pi@$STAGING_IP "rm -Rf /tmp/hautomation-core-deploy"
+  - ssh -p22 pi@$STAGING_IP "mkdir /tmp/hautomation-core-deploy"
+  - scp -P22 -r build/* pi@$STAGING_IP:/tmp/hautomation-core-deploy/
+  - ssh -p22 pi@$STAGING_IP "cd /tmp/hautomation-core-deploy/install && sh install.sh"
