@@ -12,6 +12,27 @@ before_script:
   - eval $(ssh-agent -s)
   - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
 
+test:
+  script:
+  - npm run test-ci
+  coverage: '/Statements   : \d+\.\d+/'
+
+lint:
+  script:
+  - npm run lint
+
+doc:
+  script:
+  - npm run doc
+  - npm run doc-apis
+
+build:
+  script:
+  - npm run build
+  artifacts:
+    paths:
+    - build/*
+
 deploy:
   script:
   - npm run build
@@ -19,4 +40,4 @@ deploy:
   - ssh -p22 pi@$STAGING_IP "rm -Rf /tmp/hautomation-core-deploy"
   - ssh -p22 pi@$STAGING_IP "mkdir /tmp/hautomation-core-deploy"
   - scp -P22 -r build/* pi@$STAGING_IP:/tmp/hautomation-core-deploy/
-  - ssh -p22 pi@$STAGING_IP "cd /tmp/hautomation-core-deploy/install && sh install.sh"
+  - ssh -p22 pi@$STAGING_IP "cd /tmp/hautomation-core-deploy/scripts && sh install.sh"
