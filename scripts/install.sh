@@ -29,7 +29,7 @@ sudo systemctl daemon-reload
 sudo cp -Rf ../* $INSTALLATION_FOLDER
 sudo chown -R $USER:$GROUP $INSTALLATION_FOLDER
 sudo chmod -R 0660 $INSTALLATION_FOLDER
-sudo chmod +x $INSTALLATION_FOLDERhautomation
+sudo chmod +x ${INSTALLATION_FOLDER}hautomation
 sudo systemctl enable hautomation
 sudo systemctl start hautomation
 sudo rm -Rf $INSTALLATION_FOLDER/scripts
