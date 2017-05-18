@@ -22,7 +22,7 @@ USER=$1
 GROUP=$2
 INSTALLATION_FOLDER=$3
 
-sed -e "s@{INSTALLATION_FOLDER}@$INSTALLATION_FOLDER@" ./hautomation.service >./hautomation.service
+sed -e "s@{INSTALLATION_FOLDER}@$INSTALLATION_FOLDER@" ./hautomation.service.tpl > ./hautomation.service
 sudo systemctl stop hautomation
 sudo cp -f ./hautomation.service /etc/systemd/system
 sudo systemctl daemon-reload
