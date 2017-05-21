@@ -43,9 +43,12 @@
     -   [getData](#getdata)
     -   [setData](#setdata)
     -   [removeData](#removedata)
+-   [Device](#device)
+    -   [constructor](#constructor-6)
+    -   [json](#json-1)
 -   [PluginsAPI](#pluginsapi)
 -   [PluginsManager](#pluginsmanager)
-    -   [constructor](#constructor-6)
+    -   [constructor](#constructor-7)
     -   [getPluginsFromDirectory](#getpluginsfromdirectory)
     -   [checkPluginSanity](#checkpluginsanity)
     -   [registerPlugins](#registerplugins)
@@ -56,7 +59,7 @@
     -   [Authentication](#authentication-1)
     -   [APIResponse](#apiresponse)
 -   [User](#user)
-    -   [constructor](#constructor-7)
+    -   [constructor](#constructor-8)
     -   [username](#username-1)
     -   [password](#password)
     -   [level](#level-1)
@@ -64,9 +67,9 @@
     -   [email](#email)
     -   [phone](#phone)
     -   [picture](#picture)
-    -   [json](#json-1)
+    -   [json](#json-2)
 -   [UserManager](#usermanager)
-    -   [constructor](#constructor-8)
+    -   [constructor](#constructor-9)
     -   [confManager](#confmanager-1)
     -   [users](#users)
     -   [removeUser](#removeuser)
@@ -76,7 +79,7 @@
     -   [setUser](#setuser)
     -   [getAdminUser](#getadminuser)
 -   [Service](#service)
-    -   [constructor](#constructor-9)
+    -   [constructor](#constructor-10)
     -   [start](#start-1)
     -   [stop](#stop-1)
     -   [restart](#restart)
@@ -84,14 +87,14 @@
     -   [register](#register-1)
     -   [unregister](#unregister-1)
 -   [APIRegistration](#apiregistration)
-    -   [constructor](#constructor-10)
+    -   [constructor](#constructor-11)
     -   [delegate](#delegate)
     -   [method](#method)
     -   [route](#route)
     -   [authLevel](#authlevel)
     -   [isEqual](#isequal)
 -   [APIRequest](#apirequest)
-    -   [constructor](#constructor-11)
+    -   [constructor](#constructor-12)
     -   [method](#method-1)
     -   [ip](#ip)
     -   [route](#route-1)
@@ -102,13 +105,13 @@
     -   [authenticationData](#authenticationdata-1)
     -   [addAuthenticationData](#addauthenticationdata)
 -   [APIResponse](#apiresponse-1)
-    -   [constructor](#constructor-12)
+    -   [constructor](#constructor-13)
     -   [success](#success)
     -   [response](#response)
     -   [errorCode](#errorcode)
     -   [errorMessage](#errormessage)
 -   [WebServices](#webservices)
-    -   [constructor](#constructor-13)
+    -   [constructor](#constructor-14)
     -   [start](#start-2)
     -   [stop](#stop-2)
     -   [register](#register-2)
@@ -447,6 +450,58 @@ Remove data into object's array (delete). Can throw error.
 -   `comparator` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A comparator function with 2 parameters (obj1, obj2). The comparator must return true if objects are equals. Else false. (optional, default `null`)
 
 Returns **\[[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)]** The Array of Objects updated
+
+## Device
+
+This class is a Device POJO
+
+**Parameters**
+
+-   `id`  
+-   `description`  
+-   `module`  
+-   `protocol`  
+-   `code`  
+-   `subcode`  
+-   `rawCode`  
+-   `status`  
+-   `icon`  
+-   `excludeFromAll`  
+-   `priority`  
+-   `night`  
+-   `visible`  
+
+### constructor
+
+Device POJO
+
+**Parameters**
+
+-   `id` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A timestamp
+-   `description` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Device's description
+-   `module` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The RF module
+-   `protocol` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The RF protocol
+-   `code` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The RF code
+-   `subcode` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The RF sub code (optional, depending on protocol)
+-   `rawCode` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The RF raw code (if code and subcode not provided)
+-   `status` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The status
+-   `icon` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Icon
+-   `excludeFromAll` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Exclude from 'turn all on' or 'turn all off' command
+-   `priority` **int** Priority
+-   `night` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if device command should be enabled onmly on night
+-   `visible` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if device is visible on dashboard, else false
+
+Returns **[Device](#device)** A device object
+
+### json
+
+Transform json raw object to instance
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** JSON object data
+
+Returns **[Device](#device)** A Device instance
 
 ## PluginsAPI
 

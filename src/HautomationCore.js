@@ -8,6 +8,7 @@ var ConfManager = require("./modules/confmanager/ConfManager");
 var UserManager = require("./modules/usermanager/UserManager");
 var AlarmManager = require("./modules/alarmmanager/AlarmManager");
 var PluginsManager = require("./modules/pluginsmanager/PluginsManager");
+var DeviceManager = require("./modules/devicemanager/DeviceManager");
 const CONFIGURATION_FILE = "data/config.json";
 var AppConfiguration = require("./../data/config.json");
 
@@ -42,6 +43,8 @@ class HautomationCore {
         this.alarmManager = new AlarmManager.class(this.confManager, this.webServices);
         // Plugins manager module
         this.pluginsManager = new PluginsManager.class(this.webServices);
+        // Device manager module
+        this.deviceManager = new DeviceManager.class(this.confManager, this.webServices);
 
         // Add WebService to list
         this.services.push(this.webServices);
