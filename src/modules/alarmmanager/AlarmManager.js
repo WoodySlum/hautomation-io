@@ -37,7 +37,7 @@ class AlarmManager {
     }
 
     /**
-     * Set alarm from ageneric JSON object
+     * Set alarm from a generic JSON object
      *
      * @param {Object} object The JSON object
      */

@@ -9,6 +9,7 @@ const PASSWORD = "p";
 //const TOKEN    = "t";
 const AUTH_NO_LEVEL = 0;
 const AUTH_USAGE_LEVEL = 10;
+const AUTH_ADMIN_LEVEL = 80;
 const AUTH_MAX_LEVEL = 100;
 
 /**
@@ -70,4 +71,4 @@ class Authentication {
     }
 }
 
-module.exports = {class:Authentication, AUTH_NO_LEVEL:AUTH_NO_LEVEL, AUTH_USAGE_LEVEL:AUTH_USAGE_LEVEL, AUTH_MAX_LEVEL:AUTH_MAX_LEVEL};
+module.exports = {class:Authentication, AUTH_NO_LEVEL:AUTH_NO_LEVEL, AUTH_USAGE_LEVEL:AUTH_USAGE_LEVEL, AUTH_ADMIN_LEVEL:AUTH_ADMIN_LEVEL, AUTH_MAX_LEVEL:AUTH_MAX_LEVEL};

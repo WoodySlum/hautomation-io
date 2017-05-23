@@ -14,16 +14,19 @@ class PluginsAPI {
     //  *
     //  * @param  {WebServices} webServices     The web services
     //  * @param  {string} identifier       Plugin identifier
+    //  * @param  {string} category       Plugin category
     //  * @param  {version} version          Plugin version
     //  * @param  {string} [description=""] Plugin description
     //  * @returns {PluginAPI}                  Insntance
     //  */
-    constructor(webServices, identifier, version, description = "") {
+    constructor(webServices, identifier, category, version, description = "") {
         PrivateProperties.createPrivateState(this);
 
-        PrivateProperties.oprivate(this).identifier = identifier;
-        PrivateProperties.oprivate(this).version = version;
-        PrivateProperties.oprivate(this).description = description;
+        this.identifier = identifier;
+        this.category = category;
+        this.version = version;
+        this.description = description;
+
         this.webAPI = new WebAPI.class(webServices);
     }
     /* eslint-enable */

@@ -34,5 +34,6 @@ module.exports = (api, options, next) => {
 module.exports.attributes = {
     name: "sample-plugin",
     version: "0.0.0",
+    category: "misc",
     description: "I'm a sample plugin"
 };

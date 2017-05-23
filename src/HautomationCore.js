@@ -44,7 +44,7 @@ class HautomationCore {
         // Plugins manager module
         this.pluginsManager = new PluginsManager.class(this.webServices);
         // Device manager module
-        this.deviceManager = new DeviceManager.class(this.confManager, this.webServices);
+        this.deviceManager = new DeviceManager.class(this.confManager, this.pluginsManager, this.webServices);
 
         // Add WebService to list
         this.services.push(this.webServices);

@@ -24,7 +24,11 @@ class Device {
      * @returns {Device}                A device object
      */
     constructor(id, description, module, protocol, code, subcode, rawCode, status, icon, excludeFromAll, priority, night, visible) {
-        this.id = id;
+        if (id) {
+            this.id = id;
+        } else {
+            this.id = new Date().getTime();
+        }
         this.description = description;
         this.module = module;
         this.protocol = protocol;

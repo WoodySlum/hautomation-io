@@ -62,7 +62,7 @@ class PluginsManager {
      * @param  {Object} p A plugin object as set in require. This method throws errors
      */
     checkPluginSanity(p) {
-        if (!p.attributes.name || !p.attributes.version || !p.attributes.description) {
+        if (!p.attributes.name || !p.attributes.version || !p.attributes.description || !p.attributes.category) {
             throw Error("Missing property name, version or description for plugin");
         } else if(!p || typeof p !== "function") {
             throw Error("Missing plugin class");
@@ -84,6 +84,7 @@ class PluginsManager {
             let pApi = new PluginAPI.class(
                 this.webServices,
                 p.attributes.name,
+                p.attributes.category,
                 p.attributes.version,
                 p.attributes.description
             );
@@ -118,6 +119,41 @@ class PluginsManager {
         let externalPlugins = this.getPluginsFromDirectory(EXTERNAL_PLUGIN_PATH);
         this.registerPlugins(INTERNAL_PLUGIN_PATH, INTERNAL_PLUGINS, true);
         this.registerPlugins(EXTERNAL_PLUGIN_PATH, externalPlugins);
+    }
+
+    /**
+     * Get plugin per gategory
+     *
+     * @param  {string} category A category
+     * @returns {Array}          An array of plugins
+     */
+    getPluginsByCategory(category) {
+        let plugins = [];
+        this.plugins.forEach((plugin) => {
+            if (plugin.category.toLowerCase() === category.toLowerCase()) {
+                plugins.push(plugin);
+            }
+        });
+
+        return plugins;
+    }
+
+    /**
+     * Get a plugin with identifier
+     *
+     * @param  {string} identifier A plugin identifier
+     * @returns {PluginAPI}            A plugin
+     */
+    getPluginByIdentifier(identifier) {
+        let p = null;
+        this.plugins.forEach((plugin) => {
+            if (plugin.identifier.toLowerCase() === identifier.toLowerCase()) {
+                p = plugin;
+                return;
+            }
+        });
+
+        return p;
     }
 
 }
