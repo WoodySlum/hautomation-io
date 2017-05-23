@@ -55,6 +55,7 @@
     "traceur": "^0.0",
     "express": "^4.15",
     "body-parser": "^1.17",
-    "remi":"^2.0"
+    "remi":"^2.0",
+    "remi-runner":"^1.1"
  }
 }

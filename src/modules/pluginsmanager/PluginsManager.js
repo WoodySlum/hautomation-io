@@ -2,6 +2,7 @@
 var fs = require("fs");
 var path = require("path");
 var remi = require("remi");
+var remiRunner = require("remi-runner");
 
 var Logger = require("./../../logger/Logger");
 var PluginAPI = require("./PluginAPI");
@@ -90,22 +91,12 @@ class PluginsManager {
             );
 
             let registrator = this.remi(pApi);
+            registrator.hook(remiRunner());
 
             try {
                 this.checkPluginSanity(p);
-
-                registrator
-                  .register([{
-                      register: p,
-                      options: {}
-                  }])
-                  .then(() => {
-                      this.plugins.push(pApi);
-                      Logger.info("Plugin " + plugin + " was successfully registered");
-                  })
-                  .catch((err) => {
-                      console.error("Failed to load plugin:", err);
-                  });
+                registrator.register(p);
+                this.plugins.push(pApi);
             } catch(e) {
                 Logger.err(e.message + " (" + plugin + ")");
             }

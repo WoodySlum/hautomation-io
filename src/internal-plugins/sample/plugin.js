@@ -26,9 +26,8 @@ class Sample {
     }
 }
 
-module.exports = (api, options, next) => {
+module.exports = (api, options) => {
     let s = new Sample(api.root, options);
-    next();
 };
 
 module.exports.attributes = {

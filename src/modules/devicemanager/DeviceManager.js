@@ -40,9 +40,6 @@ class DeviceManager {
         this.webServices.registerAPI(this, WebServices.GET, ROUTE_GET_METHOD, Authentication.AUTH_ADMIN_LEVEL);
         this.webServices.registerAPI(this, WebServices.POST, ROUTE_POST_METHOD, Authentication.AUTH_ADMIN_LEVEL);
         this.webServices.registerAPI(this, WebServices.POST, ROUTE_POST_STATUS_METHOD, Authentication.AUTH_USAGE_LEVEL);
-
-        console.log("HEY");
-        console.log(this.pluginsManager.getPluginsByCategory("misc"));
     }
 
     deviceComparator(device1, device2) {
