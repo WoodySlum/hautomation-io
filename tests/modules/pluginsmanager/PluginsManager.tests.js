@@ -14,6 +14,7 @@ describe("PluginsManager", function() {
     let pluginB;
     let pluginC;
     let pluginD;
+    let pluginInvalidDependencies;
     let pluginARef = {attributes : {
         loadedCallback: (api) => {},
         name: "a",
@@ -57,6 +58,14 @@ describe("PluginsManager", function() {
         category: "misc",
         description: "desc"
     }};
+    let pluginInvalidDependenciesRef = { attributes : {
+        loadedCallback: (api) => {},
+        name:"invalid-callback",
+        version: "0.0.0",
+        category: "misc",
+        description: "desc",
+        dependencies:["a", "z"]
+    }};
 
 
 
@@ -68,6 +77,7 @@ describe("PluginsManager", function() {
         pluginB = new PluginAPI.class(pluginBRef);
         pluginC = new PluginAPI.class(pluginCRef);
         pluginD = new PluginAPI.class(pluginDRef);
+        pluginInvalidDependencies = new PluginAPI.class(pluginInvalidDependenciesRef);
 
     });
 
@@ -92,6 +102,16 @@ describe("PluginsManager", function() {
             expect(false).to.be.true; // This should not happened because an exception is thrown
         } catch (e) {
             expect(e.message).to.be.equal(PluginsManager.ERROR_NOT_A_FUNCTION);
+        }
+    });
+
+    it("sanitize should detect not loaded depedencies", function() {
+        try {
+            pluginsManager.checkPluginSanity(pluginInvalidDependenciesRef, [pluginA, pluginInvalidDependencies]);
+            expect(false).to.be.true; // This should not happened because an exception is thrown
+        } catch (e) {
+            console.log(e);
+            expect(e.message).to.be.equal(PluginsManager.ERROR_DEPENDENCY_NOT_FOUND);
         }
     });
 

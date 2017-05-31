@@ -15,6 +15,7 @@ const PLUGIN_MAIN = "plugin.js";
 
 const ERROR_MISSING_PROPERTY = "Missing property name, version or description for plugin";
 const ERROR_NOT_A_FUNCTION = "Missing plugin class";
+const ERROR_DEPENDENCY_NOT_FOUND = "Dependency not found";
 
 const INTERNAL_PLUGINS = [
     "rflink",
@@ -66,13 +67,33 @@ class PluginsManager {
      * Check plugin sanity. A plugin should have name, version and description properties and a function as entry point
      *
      * @param  {Object} p A plugin object as set in require. This method throws errors
+     * @param  {[PluginAPI]} [plugins=[]] plugins The plugin API array
      */
-    checkPluginSanity(p) {
+    checkPluginSanity(p, plugins = []) {
+        // Global sanity check
         if (!p.attributes.loadedCallback || !p.attributes.name || !p.attributes.version || !p.attributes.description || !p.attributes.category) {
             throw Error(ERROR_MISSING_PROPERTY);
         } else if(typeof p.attributes.loadedCallback !== "function") {
             throw Error(ERROR_NOT_A_FUNCTION);
         }
+
+        // Check for dependencies
+        if (p.attributes.dependencies && p.attributes.dependencies.length > 0) {
+            p.attributes.dependencies.forEach((pluginIdentifier) => {
+                let found = false;
+                plugins.forEach((plugin) => {
+                    if (plugin.identifier === pluginIdentifier) {
+                        found = true;
+                    }
+                });
+
+                if (!found) {
+                    Logger.err("Unloaded depedency : " + pluginIdentifier);
+                    throw Error(ERROR_DEPENDENCY_NOT_FOUND);
+                }
+            });
+        }
+
     }
 
 
@@ -116,11 +137,11 @@ class PluginsManager {
             registrator.hook(remiRunner());
 
             try {
-                this.checkPluginSanity(plugin.p);
+                this.checkPluginSanity(plugin.p, plugins);
                 registrator.register(plugin.p);
                 registeredPlugins.push(plugin);
             } catch(e) {
-                Logger.err(e.message + " (" + plugin + ")");
+                Logger.err(e.message + " (" + plugin.identifier + ")");
             }
         });
 
@@ -253,4 +274,4 @@ class PluginsManager {
 
 }
 
-module.exports = {class:PluginsManager, ERROR_MISSING_PROPERTY:ERROR_MISSING_PROPERTY, ERROR_NOT_A_FUNCTION:ERROR_NOT_A_FUNCTION};
+module.exports = {class:PluginsManager, ERROR_MISSING_PROPERTY:ERROR_MISSING_PROPERTY, ERROR_NOT_A_FUNCTION:ERROR_NOT_A_FUNCTION, ERROR_DEPENDENCY_NOT_FOUND:ERROR_DEPENDENCY_NOT_FOUND};
