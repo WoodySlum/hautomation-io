@@ -57,6 +57,9 @@
     "body-parser": "^1.17",
     "remi":"^2.0",
     "remi-runner":"^1.1",
-    "toposort":"^1.0"
+    "toposort":"^1.0",
+    "stack-trace":"^0.0",
+    "node-datetime":"^1.0",
+    "columnify":"^1.5"
  }
 }
