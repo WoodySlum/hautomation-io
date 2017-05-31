@@ -110,7 +110,6 @@ describe("PluginsManager", function() {
             pluginsManager.checkPluginSanity(pluginInvalidDependenciesRef, [pluginA, pluginInvalidDependencies]);
             expect(false).to.be.true; // This should not happened because an exception is thrown
         } catch (e) {
-            console.log(e);
             expect(e.message).to.be.equal(PluginsManager.ERROR_DEPENDENCY_NOT_FOUND);
         }
     });

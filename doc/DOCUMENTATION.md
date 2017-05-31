@@ -9,8 +9,10 @@
     -   [startServices](#startservices)
     -   [stopServices](#stopservices)
     -   [configurationLoader](#configurationloader)
+-   [RFLink](#rflink)
 -   [Sample](#sample)
     -   [processAPI](#processapi)
+    -   [test](#test)
 -   [Logger](#logger)
     -   [log](#log)
     -   [warn](#warn)
@@ -46,20 +48,31 @@
 -   [Device](#device)
     -   [constructor](#constructor-6)
     -   [json](#json-1)
--   [PluginsAPI](#pluginsapi)
--   [PluginsManager](#pluginsmanager)
+-   [DeviceManager](#devicemanager)
     -   [constructor](#constructor-7)
+    -   [setDevice](#setdevice)
+    -   [processAPI](#processapi-2)
+-   [PluginsAPI](#pluginsapi)
+    -   [exportClass](#exportclass)
+-   [PluginsManager](#pluginsmanager)
+    -   [constructor](#constructor-8)
     -   [getPluginsFromDirectory](#getpluginsfromdirectory)
     -   [checkPluginSanity](#checkpluginsanity)
+    -   [initPlugins](#initplugins)
     -   [registerPlugins](#registerplugins)
     -   [load](#load)
+    -   [getPluginsByCategory](#getpluginsbycategory)
+    -   [getPluginByIdentifier](#getpluginbyidentifier)
+    -   [prepareToposortArray](#preparetoposortarray)
+    -   [toposort](#toposort)
+    -   [topsortedArrayConverter](#topsortedarrayconverter)
 -   [WebAPI](#webapi)
     -   [register](#register)
     -   [unregister](#unregister)
     -   [Authentication](#authentication-1)
     -   [APIResponse](#apiresponse)
 -   [User](#user)
-    -   [constructor](#constructor-8)
+    -   [constructor](#constructor-9)
     -   [username](#username-1)
     -   [password](#password)
     -   [level](#level-1)
@@ -69,7 +82,7 @@
     -   [picture](#picture)
     -   [json](#json-2)
 -   [UserManager](#usermanager)
-    -   [constructor](#constructor-9)
+    -   [constructor](#constructor-10)
     -   [confManager](#confmanager-1)
     -   [users](#users)
     -   [removeUser](#removeuser)
@@ -79,7 +92,7 @@
     -   [setUser](#setuser)
     -   [getAdminUser](#getadminuser)
 -   [Service](#service)
-    -   [constructor](#constructor-10)
+    -   [constructor](#constructor-11)
     -   [start](#start-1)
     -   [stop](#stop-1)
     -   [restart](#restart)
@@ -87,14 +100,14 @@
     -   [register](#register-1)
     -   [unregister](#unregister-1)
 -   [APIRegistration](#apiregistration)
-    -   [constructor](#constructor-11)
+    -   [constructor](#constructor-12)
     -   [delegate](#delegate)
     -   [method](#method)
     -   [route](#route)
     -   [authLevel](#authlevel)
     -   [isEqual](#isequal)
 -   [APIRequest](#apirequest)
-    -   [constructor](#constructor-12)
+    -   [constructor](#constructor-13)
     -   [method](#method-1)
     -   [ip](#ip)
     -   [route](#route-1)
@@ -105,17 +118,17 @@
     -   [authenticationData](#authenticationdata-1)
     -   [addAuthenticationData](#addauthenticationdata)
 -   [APIResponse](#apiresponse-1)
-    -   [constructor](#constructor-13)
+    -   [constructor](#constructor-14)
     -   [success](#success)
     -   [response](#response)
     -   [errorCode](#errorcode)
     -   [errorMessage](#errormessage)
 -   [WebServices](#webservices)
-    -   [constructor](#constructor-14)
+    -   [constructor](#constructor-15)
     -   [start](#start-2)
+    -   [registerInfos](#registerinfos)
+    -   [processAPI](#processapi-3)
     -   [stop](#stop-2)
-    -   [register](#register-2)
-    -   [unregister](#unregister-2)
     -   [registerAPI](#registerapi)
     -   [unregisterAPI](#unregisterapi)
     -   [manageResponse](#manageresponse)
@@ -153,6 +166,14 @@ Stop all services
 
 Try to overload configuration
 
+## RFLink
+
+This class is a RFLink plugin
+
+**Parameters**
+
+-   `api`  
+
 ## Sample
 
 This class is a sample plugin
@@ -160,7 +181,6 @@ This class is a sample plugin
 **Parameters**
 
 -   `api`  
--   `options`  
 
 ### processAPI
 
@@ -171,6 +191,10 @@ Process API callback
 -   `apiRequest` **\[type]** An APIRequest
 
 Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with an APIResponse object
+
+### test
+
+Shows a test log
 
 ## Logger
 
@@ -267,7 +291,7 @@ Returns **[Alarm](#alarm)** The instance
 
 ### setAlarm
 
-Set alarm from ageneric JSON object
+Set alarm from a generic JSON object
 
 **Parameters**
 
@@ -503,16 +527,62 @@ Transform json raw object to instance
 
 Returns **[Device](#device)** A Device instance
 
+## DeviceManager
+
+This class allows to manage devices
+
+**Parameters**
+
+-   `confManager`  
+-   `pluginsManager`  
+-   `webServices`  
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `confManager` **[ConfManager](#confmanager)** A configuration manager needed for persistence
+-   `pluginsManager` **[PluginsManager](#pluginsmanager)** The plugins manager
+-   `webServices` **[WebServices](#webservices)** The web services to register APIs
+
+Returns **[DeviceManager](#devicemanager)** The instance
+
+### setDevice
+
+Set device from a generic JSON object
+
+**Parameters**
+
+-   `object` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The JSON object
+
+### processAPI
+
+Process web API callback
+
+**Parameters**
+
+-   `apiRequest` **[APIRequest](#apirequest)** An API Request
+
+Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with APIResponse
+
 ## PluginsAPI
 
 This class is an interface for plugins
 
 **Parameters**
 
+-   `p`  
 -   `webServices`  
--   `identifier`  
--   `version`  
--   `description`   (optional, default `""`)
+
+### exportClass
+
+Expose a class to other plugins
+
+**Parameters**
+
+-   `c` **class** A class
 
 ## PluginsManager
 
@@ -549,10 +619,11 @@ Check plugin sanity. A plugin should have name, version and description properti
 **Parameters**
 
 -   `p` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A plugin object as set in require. This method throws errors
+-   `plugins` **\[PluginAPI]** plugins The plugin API array (optional, default `[]`)
 
-### registerPlugins
+### initPlugins
 
-This method register plugins
+Init plugins by doing a require and create a Plugin API object for each registered needed plugins
 
 **Parameters**
 
@@ -560,9 +631,72 @@ This method register plugins
 -   `plugins` **\[[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)]** An array of plugins name
 -   `relative` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if path is relative, else false (optional, default `false`)
 
+Returns **\[PluginAPI]** Returns an array of plugins API
+
+### registerPlugins
+
+Register plugins with remi lib
+
+**Parameters**
+
+-   `plugins` **\[PluginAPI]** The list of PluginAPI correctly sorted
+
+Returns **\[PluginAPI]** The plugin list identical as input, but without elements not sanitized
+
 ### load
 
 Load all plugins (internal and external)
+
+### getPluginsByCategory
+
+Get plugin per gategory
+
+**Parameters**
+
+-   `category` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A category
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of plugins
+
+### getPluginByIdentifier
+
+Get a plugin with identifier
+
+**Parameters**
+
+-   `identifier` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A plugin identifier
+
+Returns **PluginAPI** A plugin
+
+### prepareToposortArray
+
+Return a table prepared for toposort, with dependencies
+
+**Parameters**
+
+-   `plugins` **\[PluginAPI]** A list of PluginAPI objects
+
+Returns **\[[array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)]** An array ready to be sorted, e.g. \[["a", "b"], ["b"], ["c"]]
+
+### toposort
+
+Toposort the array
+
+**Parameters**
+
+-   `toposortArray` **\[[array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)]** A toposort prepared array, processed previously in prepareToposortArray(). All undefined elements will be removed.
+
+Returns **\[[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)]** A toposorted array, sorted with dependencies
+
+### topsortedArrayConverter
+
+Re-create a correctly sorted array of plugins with the previous toposort order
+
+**Parameters**
+
+-   `toposortedArray` **\[[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)]** A toposorted array, build with toposort()
+-   `plugins` **\[PluginAPI]** The unsorted plugins array
+
+Returns **\[PluginAPI]** An array of plugins sorted depending on dependencies
 
 ## WebAPI
 
@@ -990,25 +1124,23 @@ Returns **[WebServices](#webservices)** The instance
 
 Start Web Services
 
+### registerInfos
+
+Register and list informations
+
+### processAPI
+
+Process API callback
+
+**Parameters**
+
+-   `apiRequest` **\[type]** An APIRequest
+
+Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with an APIResponse object
+
 ### stop
 
 Stop Web Services
-
-### register
-
-Override Register service callback
-
-**Parameters**
-
--   `delegate` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The service delegate
-
-### unregister
-
-Override Unregister service callback
-
-**Parameters**
-
--   `delegate` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The service delegate
 
 ### registerAPI
 

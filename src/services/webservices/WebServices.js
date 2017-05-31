@@ -167,6 +167,24 @@ class WebServices extends Service.class {
     }
 
     /**
+     * Override Register service callback
+     *
+     * @param  {Object} delegate The service delegate
+     */
+    register(delegate) {
+        this.registerAPI(delegate);
+    }
+
+    /**
+     * Override Unregister service callback
+     *
+     * @param  {Object} delegate The service delegate
+     */
+    unregister(delegate) {
+        this.unregisterAPI(delegate);
+    }
+
+    /**
      * Register to a specific API to be notified when a route and/or method is called
      *
      * @param  {Object} delegate     A delegate which implements the processAPI(apiRequest) function
