@@ -129,6 +129,8 @@
     -   [registerInfos](#registerinfos)
     -   [processAPI](#processapi-3)
     -   [stop](#stop-2)
+    -   [register](#register-2)
+    -   [unregister](#unregister-2)
     -   [registerAPI](#registerapi)
     -   [unregisterAPI](#unregisterapi)
     -   [manageResponse](#manageresponse)
@@ -1141,6 +1143,22 @@ Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refe
 ### stop
 
 Stop Web Services
+
+### register
+
+Override Register service callback
+
+**Parameters**
+
+-   `delegate` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The service delegate
+
+### unregister
+
+Override Unregister service callback
+
+**Parameters**
+
+-   `delegate` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The service delegate
 
 ### registerAPI
 
