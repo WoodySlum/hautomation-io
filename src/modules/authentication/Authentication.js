@@ -27,7 +27,7 @@ class Authentication {
      * @returns {Authentication} Instance
      */
     constructor(webService, userManager) {
-        webService.register(this);
+        webService.registerAPI(this, "*", "*", AUTH_NO_LEVEL);
         this.userManager = userManager;
     }
 

@@ -32,7 +32,7 @@ function loaded(api) {
             console.log("======> I'm working !");
         }
     }
-    
+
     api.exportClass(Sample);
     let s = new Sample(api);
 }

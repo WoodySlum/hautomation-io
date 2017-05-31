@@ -24,6 +24,8 @@ const POST = "POST";
 
 const API_ERROR_HTTP_CODE = 500;
 
+const INFOS_ENDPOINT = ":/infos/";
+
 /**
  * This class manage Web Services call, and more specifically the external APIs
  * @class
@@ -97,8 +99,56 @@ class WebServices extends Service.class {
             }
 
             super.start();
+
+            // Register informations for helping
+            this.registerInfos();
+
         } else {
             Logger.warn("Web services are already running");
+        }
+    }
+
+    /**
+     * Register and list informations
+     */
+    registerInfos() {
+        this.registerAPI(this, GET, INFOS_ENDPOINT, Authentication.AUTH_NO_LEVEL);
+    }
+
+    /**
+     * Process API callback
+     *
+     * @param  {[type]} apiRequest An APIRequest
+     * @returns {Promise}  A promise with an APIResponse object
+     */
+    processAPI(apiRequest) {
+        if (apiRequest.route === INFOS_ENDPOINT) {
+
+            return new Promise((resolve) => {
+                let registered = {};
+                console.log(this.delegates);
+                this.delegates.forEach((registeredEl) => {
+                    if (!registered[registeredEl.delegate.constructor.name]) {
+                        registered[registeredEl.delegate.constructor.name] = {
+                            method: {
+                                [registeredEl.method]:[
+                                    registeredEl.route
+                                ]
+                            }
+                        };
+                    } else {
+                        if (registered[registeredEl.delegate.constructor.name].method[registeredEl.method]) {
+                            registered[registeredEl.delegate.constructor.name].method[registeredEl.method].push(registeredEl.route);
+                        } else {
+                            registered[registeredEl.delegate.constructor.name].method[registeredEl.method] = [registeredEl.route];
+                        }
+                    }
+
+                });
+
+                // API has been successfully processed by the class, and return a foo bar object
+                resolve(new APIResponse.class(true, registered));
+            });
         }
     }
 
@@ -114,24 +164,6 @@ class WebServices extends Service.class {
         } else {
             Logger.warn("WebServices are not running, nothing to do...");
         }
-    }
-
-    /**
-     * Override Register service callback
-     *
-     * @param  {Object} delegate The service delegate
-     */
-    register(delegate) {
-        this.registerAPI(delegate);
-    }
-
-    /**
-     * Override Unregister service callback
-     *
-     * @param  {Object} delegate The service delegate
-     */
-    unregister(delegate) {
-        this.unregisterAPI(delegate);
     }
 
     /**
@@ -250,14 +282,22 @@ class WebServices extends Service.class {
         let promises = [];
 
         this.delegates.forEach((registeredEl) => {
+
             if ((registeredEl.method === "*"
                 || registeredEl.method === apiRequest.method)
                 && (registeredEl.route === "*"
                 || apiRequest.route.startsWith(registeredEl.route) === true)
                 && registeredEl.delegate != null
                 && typeof registeredEl.delegate.processAPI === "function") {
+                Logger.verbose("API registered for class " + registeredEl.delegate.constructor.name + " level : " + registeredEl.authLevel + " / API Auth level : " + (apiRequest.authenticationData?apiRequest.authenticationData.level:"not defined yet"));
                 if (!apiRequest.authenticationData || apiRequest.authenticationData && registeredEl.authLevel <= apiRequest.authenticationData.level) {
-                    promises.push(registeredEl.delegate.processAPI(apiRequest));
+                    let p = registeredEl.delegate.processAPI(apiRequest);
+                    if (!p) {
+                        p = new Promise((resolve) => {
+                            resolve(new APIResponse.class(true, {}));
+                        });
+                    }
+                    promises.push(p);
                 } else if (apiRequest.authenticationData) {
                     promises.push(new Promise((resolve) => {resolve(new APIResponse.class(false, {}, 812, "Unauthorized"));}));
                 }
