@@ -3,6 +3,7 @@ var fs = require("fs");
 var path = require("path");
 var remi = require("remi");
 var remiRunner = require("remi-runner");
+var toposort = require("toposort");
 
 var Logger = require("./../../logger/Logger");
 var PluginAPI = require("./PluginAPI");
@@ -12,7 +13,11 @@ const EXTERNAL_PLUGIN_PATH = "plugins/node_modules/";
 const PLUGIN_PREFIX = "hautomation-plugin";
 const PLUGIN_MAIN = "plugin.js";
 
+const ERROR_MISSING_PROPERTY = "Missing property name, version or description for plugin";
+const ERROR_NOT_A_FUNCTION = "Missing plugin class";
+
 const INTERNAL_PLUGINS = [
+    "rflink",
     "sample"
 ];
 
@@ -63,53 +68,98 @@ class PluginsManager {
      * @param  {Object} p A plugin object as set in require. This method throws errors
      */
     checkPluginSanity(p) {
-        if (!p.attributes.name || !p.attributes.version || !p.attributes.description || !p.attributes.category) {
-            throw Error("Missing property name, version or description for plugin");
-        } else if(!p || typeof p !== "function") {
-            throw Error("Missing plugin class");
+        if (!p.attributes.loadedCallback || !p.attributes.name || !p.attributes.version || !p.attributes.description || !p.attributes.category) {
+            throw Error(ERROR_MISSING_PROPERTY);
+        } else if(typeof p.attributes.loadedCallback !== "function") {
+            throw Error(ERROR_NOT_A_FUNCTION);
         }
     }
 
+
+
     /**
-     * This method register plugins
+     * Init plugins by doing a require and create a Plugin API object for each registered needed plugins
      *
      * @param  {string}  path             Plugins path
      * @param  {[string]}  plugins        An array of plugins name
      * @param  {boolean} [relative=false] True if path is relative, else false
+     * @returns {[PluginAPI]}             Returns an array of plugins API
      */
-    registerPlugins(path, plugins, relative = false) {
+    initPlugins(path, plugins, relative = false) {
+        let initializedPlugins = [];
         plugins.forEach((plugin) => {
-            let pluginPath = relative ? path + plugins +"/" + PLUGIN_MAIN : this.path.resolve() + "/" + path + plugins +"/" + PLUGIN_MAIN;
+            let pluginPath = relative ? path + plugin +"/" + PLUGIN_MAIN : this.path.resolve() + "/" + path + plugin +"/" + PLUGIN_MAIN;
             Logger.verbose("Loading plugin at path : " + pluginPath);
             let p = require(pluginPath);
+
             let pApi = new PluginAPI.class(
-                this.webServices,
-                p.attributes.name,
-                p.attributes.category,
-                p.attributes.version,
-                p.attributes.description
+                p,
+                this.webServices
             );
 
-            let registrator = this.remi(pApi);
+            initializedPlugins.push(pApi);
+        });
+
+        return initializedPlugins;
+    }
+
+    /**
+     * Register plugins with remi lib
+     *
+     * @param  {[PluginAPI]} plugins The list of PluginAPI correctly sorted
+     * @returns {[PluginAPI]}         The plugin list identical as input, but without elements not sanitized
+     */
+    registerPlugins(plugins) {
+        let registeredPlugins = [];
+        plugins.forEach((plugin) => {
+            let registrator = this.remi(plugin);
             registrator.hook(remiRunner());
 
             try {
-                this.checkPluginSanity(p);
-                registrator.register(p);
-                this.plugins.push(pApi);
+                this.checkPluginSanity(plugin.p);
+                registrator.register(plugin.p);
+                registeredPlugins.push(plugin);
             } catch(e) {
                 Logger.err(e.message + " (" + plugin + ")");
             }
         });
+
+        return registeredPlugins;
     }
 
     /**
      * Load all plugins (internal and external)
      */
     load() {
-        let externalPlugins = this.getPluginsFromDirectory(EXTERNAL_PLUGIN_PATH);
-        this.registerPlugins(INTERNAL_PLUGIN_PATH, INTERNAL_PLUGINS, true);
-        this.registerPlugins(EXTERNAL_PLUGIN_PATH, externalPlugins);
+        let initializedPlugins = [];
+        initializedPlugins = initializedPlugins.concat(this.initPlugins(INTERNAL_PLUGIN_PATH, INTERNAL_PLUGINS, true));
+        initializedPlugins = initializedPlugins.concat(this.initPlugins(EXTERNAL_PLUGIN_PATH, this.getPluginsFromDirectory(EXTERNAL_PLUGIN_PATH)));
+
+        // Sort loading per dependencies
+        let toposortArray = this.prepareToposortArray(initializedPlugins);
+        let toposortedArray = this.toposort(toposortArray);
+        let toposortedPlugins = this.topsortedArrayConverter(toposortedArray, initializedPlugins);
+
+        // Load plugins
+        this.plugins = this.registerPlugins(toposortedPlugins);
+
+        // Consolidate classes
+        let classes = {};
+        this.plugins.forEach((plugin) => {
+            plugin.classes.forEach((c) => {
+                classes[c.name] = c;
+            });
+        });
+
+        // Export classes
+        this.plugins.forEach((plugin) => {
+            plugin.exportClasses(classes);
+        });
+
+        // Load event
+        this.plugins.forEach((plugin) => {
+            plugin.loaded();
+        });
     }
 
     /**
@@ -147,6 +197,60 @@ class PluginsManager {
         return p;
     }
 
+    /*
+     * Toposort
+     */
+
+    /**
+     * Return a table prepared for toposort, with dependencies
+     *
+     * @param  {[PluginAPI]} plugins A list of PluginAPI objects
+     * @returns {[array]}         An array ready to be sorted, e.g. [["a", "b"], ["b"], ["c"]]
+     */
+    prepareToposortArray(plugins) {
+        let toposortArray = [];
+        plugins.forEach((plugin) => {
+            let dependencies = Array.isArray(plugin.dependencies)?plugin.dependencies.slice():[];
+            dependencies.unshift(plugin.identifier);
+            toposortArray.push(dependencies);
+        });
+
+        return toposortArray;
+    }
+
+    /**
+     * Toposort the array
+     *
+     * @param  {[array]} toposortArray A toposort prepared array, processed previously in prepareToposortArray(). All undefined elements will be removed.
+     * @returns {[string]}               A toposorted array, sorted with dependencies
+     */
+    toposort(toposortArray) {
+        return toposort(toposortArray).reverse().filter((element) => {
+            return element !== undefined;
+        });
+    }
+
+    /**
+     * Re-create a correctly sorted array of plugins with the previous toposort order
+     *
+     * @param  {[string]} toposortedArray A toposorted array, build with toposort()
+     * @param  {[PluginAPI]} plugins         The unsorted plugins array
+     * @returns {[PluginAPI]}                 An array of plugins sorted depending on dependencies
+     */
+    topsortedArrayConverter(toposortedArray, plugins) {
+        let sortedArray = [];
+        toposortedArray.forEach((element) => {
+            plugins.forEach((plugin) => {
+                if (element === plugin.identifier) {
+                    sortedArray.push(plugin);
+                }
+            });
+
+        });
+
+        return sortedArray;
+    }
+
 }
 
-module.exports = {class:PluginsManager};
+module.exports = {class:PluginsManager, ERROR_MISSING_PROPERTY:ERROR_MISSING_PROPERTY, ERROR_NOT_A_FUNCTION:ERROR_NOT_A_FUNCTION};
