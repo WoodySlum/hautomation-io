@@ -126,7 +126,7 @@ class WebServices extends Service.class {
 
             return new Promise((resolve) => {
                 let registered = {};
-                console.log(this.delegates);
+                
                 this.delegates.forEach((registeredEl) => {
                     if (!registered[registeredEl.delegate.constructor.name]) {
                         registered[registeredEl.delegate.constructor.name] = {

@@ -38,7 +38,6 @@ describe("UserManager", function() {
             userManager.removeUser("userC");
             expect(false).to.be.true; // This should not happened because an exception is thrown
         } catch(e) {
-            console.log(e.message);
             expect(e.message).to.be.equal(UserManager.ERROR_USER_NOT_FOUND);
         }
         confManager.removeData.restore();
