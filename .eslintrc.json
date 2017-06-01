@@ -6,7 +6,8 @@
     "globals": {
       "require": false,
       "module": false,
-      "console": false
+      "console": false,
+      "process": false
   },
     "plugins": [
         "mocha",
