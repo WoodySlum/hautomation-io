@@ -42,17 +42,19 @@ class Logger {
                 switch(level) {
                 case 0:
                 case 1:
-                case 2:
                     logLine.level = "\x1b[41m\x1b[37m[ERROR]\x1b[0m";
                     break;
-                case 3:
+                case 2:
                     logLine.level = "\x1b[43m\x1b[30m[WARN]\x1b[0m";
                     break;
-                case 4:
+                case 3:
                     logLine.level = "\x1b[46m\x1b[30m[INFO]\x1b[0m";
                     break;
-                case 5:
+                case 4:
                     logLine.level = "\x1b[47m\x1b[30m[VERBOSE]\x1b[0m";
+                    break;
+                case 5:
+                    logLine.level = "\x1b[47m\x1b[30m[DEBUG]\x1b[0m";
                     break;
                 }
                 logLineConfig.config.level = {minWidth: 9};
@@ -60,8 +62,13 @@ class Logger {
 
             // File name
             if (enableFileName) {
-                const explodedFileName = stack.getFileName().split("/");
-                logLine.fileName = "\x1b[35m" + explodedFileName[(explodedFileName.length - 1)].replace(".js", "") + "\x1b[0m";
+                if (stack && stack.getFileName()) {
+                    const explodedFileName = stack.getFileName().split("/");
+                    logLine.fileName = "\x1b[35m" + explodedFileName[(explodedFileName.length - 1)].replace(".js", "") + "\x1b[0m";
+
+                } else {
+                    logLine.fileName = "\x1b[35mProcess\x1b[0m";
+                }
                 logLineConfig.config.fileName = {minWidth: 20, maxWidth: 20, truncate: true};
             }
 
@@ -79,6 +86,11 @@ class Logger {
 
             // Message
             logLine.message = message;
+            logLineConfig.config.message = {preserveNewLines: true};
+
+            if (level >= 5) {
+                logLine.message += "\n" + fullStack.splice(2).join("\n");
+            }
             //logLineConfig.config.lineNumber = {maxWidth: 50};
 
             console.log(columnify([logLine], logLineConfig));
@@ -91,7 +103,7 @@ class Logger {
      * @param  {string} message   A log message
      */
     static warn(message) {
-        this.log(message, 3);
+        this.log(message, 2);
     }
 
     /**
@@ -100,7 +112,7 @@ class Logger {
      * @param  {string} message   A log message
      */
     static err(message) {
-        this.log(message, 2);
+        this.log(message, 1);
     }
 
     /**
@@ -109,7 +121,7 @@ class Logger {
      * @param  {string} message   A log message
      */
     static verbose(message) {
-        this.log(message, 5);
+        this.log(message, 4);
     }
 
     /**
@@ -118,7 +130,16 @@ class Logger {
      * @param  {string} message   A log message
      */
     static info(message) {
-        this.log(message, 4);
+        this.log(message, 3);
+    }
+
+    /**
+     * Log a debug message to a file, with stacktrace
+     *
+     * @param  {string} message   A log message
+     */
+    static debug(message) {
+        this.log(message, 5);
     }
 }
 

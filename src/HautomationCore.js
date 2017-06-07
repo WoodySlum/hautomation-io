@@ -2,6 +2,7 @@
 var fs = require("fs");
 var path = require("path");
 var Logger = require("./logger/Logger");
+var ThreadsManager = require("./modules/threadsmanager/ThreadsManager");
 var WebServices = require("./services/webservices/WebServices");
 var Authentication = require("./modules/authentication/Authentication");
 var ConfManager = require("./modules/confmanager/ConfManager");
@@ -11,6 +12,8 @@ var PluginsManager = require("./modules/pluginsmanager/PluginsManager");
 var DeviceManager = require("./modules/devicemanager/DeviceManager");
 const CONFIGURATION_FILE = "data/config.json";
 var AppConfiguration = require("./../data/config.json");
+
+var InternalService = require("./services/InternalService");
 
 /**
  * The main class for core.
@@ -27,6 +30,8 @@ class HautomationCore {
         this.configurationLoader();
 
         this.services = [];
+
+        this.threadsManager = new ThreadsManager.class();
 
         // Services
         // Web services and API
@@ -47,7 +52,7 @@ class HautomationCore {
         this.deviceManager = new DeviceManager.class(this.confManager, this.pluginsManager, this.webServices);
 
         // Add WebService to list
-        this.services.push(this.webServices);
+        this.services.push(this.webServices, new InternalService.class(this.threadsManager));
     }
 
     /**

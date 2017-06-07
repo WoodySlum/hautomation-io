@@ -19,6 +19,7 @@
     -   [err](#err)
     -   [verbose](#verbose)
     -   [info](#info)
+    -   [debug](#debug)
 -   [Alarm](#alarm)
     -   [constructor](#constructor-1)
     -   [json](#json)
@@ -71,8 +72,15 @@
     -   [unregister](#unregister)
     -   [Authentication](#authentication-1)
     -   [APIResponse](#apiresponse)
--   [User](#user)
+-   [ThreadsManager](#threadsmanager)
     -   [constructor](#constructor-9)
+    -   [stringifyFunc](#stringifyfunc)
+    -   [run](#run)
+    -   [kill](#kill)
+    -   [getPid](#getpid)
+    -   [isRunning](#isrunning)
+-   [User](#user)
+    -   [constructor](#constructor-10)
     -   [username](#username-1)
     -   [password](#password)
     -   [level](#level-1)
@@ -82,7 +90,7 @@
     -   [picture](#picture)
     -   [json](#json-2)
 -   [UserManager](#usermanager)
-    -   [constructor](#constructor-10)
+    -   [constructor](#constructor-11)
     -   [confManager](#confmanager-1)
     -   [users](#users)
     -   [removeUser](#removeuser)
@@ -92,7 +100,7 @@
     -   [setUser](#setuser)
     -   [getAdminUser](#getadminuser)
 -   [Service](#service)
-    -   [constructor](#constructor-11)
+    -   [constructor](#constructor-12)
     -   [start](#start-1)
     -   [stop](#stop-1)
     -   [restart](#restart)
@@ -100,14 +108,14 @@
     -   [register](#register-1)
     -   [unregister](#unregister-1)
 -   [APIRegistration](#apiregistration)
-    -   [constructor](#constructor-12)
+    -   [constructor](#constructor-13)
     -   [delegate](#delegate)
     -   [method](#method)
     -   [route](#route)
     -   [authLevel](#authlevel)
     -   [isEqual](#isequal)
 -   [APIRequest](#apirequest)
-    -   [constructor](#constructor-13)
+    -   [constructor](#constructor-14)
     -   [method](#method-1)
     -   [ip](#ip)
     -   [route](#route-1)
@@ -118,13 +126,13 @@
     -   [authenticationData](#authenticationdata-1)
     -   [addAuthenticationData](#addauthenticationdata)
 -   [APIResponse](#apiresponse-1)
-    -   [constructor](#constructor-14)
+    -   [constructor](#constructor-15)
     -   [success](#success)
     -   [response](#response)
     -   [errorCode](#errorcode)
     -   [errorMessage](#errormessage)
 -   [WebServices](#webservices)
-    -   [constructor](#constructor-15)
+    -   [constructor](#constructor-16)
     -   [start](#start-2)
     -   [registerInfos](#registerinfos)
     -   [processAPI](#processapi-3)
@@ -238,6 +246,14 @@ Log a verbose message to a file
 ### info
 
 Log an information to a file
+
+**Parameters**
+
+-   `message` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A log message
+
+### debug
+
+Log a debug message to a file, with stacktrace
 
 **Parameters**
 
@@ -748,6 +764,73 @@ Create an APIResponse object
 
 Returns **[APIResponse](#apiresponse)** The instance
 
+## ThreadsManager
+
+This class allows to manage threads
+
+### constructor
+
+Constructor
+
+Returns **[ThreadsManager](#threadsmanager)** The thread manager
+
+### stringifyFunc
+
+Stringify a function.
+Convert a class method to standard method definition, for example
+`myFunction(a, b) {}` to `(a,b)=>{}`
+Further detaisl : <https://github.com/andywer/threads.js/issues/57>
+This method can throw an error if the regex fails
+
+**Parameters**
+
+-   `func` **[function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A class method or classic function
+
+Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The normalized function as string, needed to be eval
+
+### run
+
+Run a function or class method in a separated thread
+Each code contains in the function is sanboxed and should communicate through data and/or callback API
+All class methods / data can not be accessed
+Can throw an error
+
+**Parameters**
+
+-   `func` **[function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A class method, or classic function. Prototype example : `run(data, message) {}`
+-   `identifier` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The thread identifier
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Object passed to the threaded code (optional, default `{}`)
+-   `callback` **[function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** The callback when a message is received from the thread. Prototype example : `(tData) => {}` (optional, default `null`)
+
+### kill
+
+Kill the thread
+Throw a ERROR_UNKNOWN_IDENTIFIER error if the identifier is unknown
+
+**Parameters**
+
+-   `identifier` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Thread identifier
+
+### getPid
+
+Returns the pid of the thread
+
+**Parameters**
+
+-   `identifier` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Thread identifier
+
+Returns **int** The pid, if not found send back null
+
+### isRunning
+
+Check if the thread is running or not
+
+**Parameters**
+
+-   `identifier` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Thread identifier
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True or false
+
 ## User
 
 This class is a User POJO
@@ -896,9 +979,23 @@ Returns **[User](#user)** The admin user, null if admin user is disabled
 This class should not be implemented but only inherited.
 This class is used for services, start, stop, ...
 
+**Parameters**
+
+-   `name`  
+-   `threadsManager`   (optional, default `null`)
+-   `mode`   (optional, default `SERVICE_MODE_CLASSIC`)
+-   `command`   (optional, default `null`)
+
 ### constructor
 
 Constructor
+
+**Parameters**
+
+-   `name`  
+-   `threadsManager`   (optional, default `null`)
+-   `mode`   (optional, default `SERVICE_MODE_CLASSIC`)
+-   `command`   (optional, default `null`)
 
 Returns **[Service](#service)** The instance
 
@@ -1104,6 +1201,7 @@ This class manage Web Services call, and more specifically the external APIs
 
 **Parameters**
 
+-   `threadsManager`  
 -   `port`   (optional, default `8080`)
 -   `sslPort`   (optional, default `8043`)
 -   `sslKey`   (optional, default `null`)
@@ -1115,6 +1213,7 @@ Constructor
 
 **Parameters**
 
+-   `threadsManager`  
 -   `port` **int** The listening HTTP port (optional, default `8080`)
 -   `sslPort` **int** The listening HTTPS port (optional, default `8443`)
 -   `sslKey` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The path for SSL key (optional, default `null`)
