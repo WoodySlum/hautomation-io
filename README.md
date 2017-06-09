@@ -50,3 +50,7 @@ In console, type `npm install` and everything should go on.
 #### Configuration manager
 
 [Go to details](src/modules/confmanager/README.md)
+
+#### Threads manager
+
+[Go to details](src/modules/threadsmanager/README.md)

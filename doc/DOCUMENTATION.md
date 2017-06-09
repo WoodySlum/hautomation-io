@@ -76,6 +76,7 @@
     -   [constructor](#constructor-9)
     -   [stringifyFunc](#stringifyfunc)
     -   [run](#run)
+    -   [send](#send)
     -   [kill](#kill)
     -   [getPid](#getpid)
     -   [isRunning](#isrunning)
@@ -102,6 +103,13 @@
 -   [Service](#service)
     -   [constructor](#constructor-12)
     -   [start](#start-1)
+    -   [run](#run-1)
+    -   [threadCallback](#threadcallback)
+    -   [send](#send-1)
+    -   [startThreaded](#startthreaded)
+    -   [stopThreaded](#stopthreaded)
+    -   [startExternal](#startexternal)
+    -   [stopExternal](#stopexternal)
     -   [stop](#stop-1)
     -   [restart](#restart)
     -   [status](#status)
@@ -784,7 +792,7 @@ This method can throw an error if the regex fails
 
 **Parameters**
 
--   `func` **[function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A class method or classic function
+-   `func` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A class method or classic function
 
 Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The normalized function as string, needed to be eval
 
@@ -797,10 +805,29 @@ Can throw an error
 
 **Parameters**
 
--   `func` **[function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A class method, or classic function. Prototype example : `run(data, message) {}`
+-   `func` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A class method, or classic function. Prototype example : `run(data, message) {}`
 -   `identifier` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The thread identifier
 -   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Object passed to the threaded code (optional, default `{}`)
--   `callback` **[function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** The callback when a message is received from the thread. Prototype example : `(tData) => {}` (optional, default `null`)
+-   `callback` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** The callback when a message is received from the thread. Prototype example : `(tData) => {}` (optional, default `null`)
+
+### send
+
+Send data to thread. In the thread method, the `event` should be impelemented as :
+    myFunction(data, message) {
+        this.myEvent = (data) {
+
+        }
+    }
+
+Then call function :
+`threadManager.send("identifier", "myEvent", {value:"foo"})`
+Can throw error if thread does not exists
+
+**Parameters**
+
+-   `identifier` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The thread identifier
+-   `event` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The event's name
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Any data passed to thread (optional, default `null`)
 
 ### kill
 
@@ -992,16 +1019,64 @@ Constructor
 
 **Parameters**
 
--   `name`  
--   `threadsManager`   (optional, default `null`)
--   `mode`   (optional, default `SERVICE_MODE_CLASSIC`)
--   `command`   (optional, default `null`)
+-   `name` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The service identifier
+-   `threadsManager` **ThreadManager** The thread manager, mandatory if using SERVICE_MODE_THREADED mode service (optional, default `null`)
+-   `mode` **int** The service running mode : SERVICE_MODE_CLASSIC, SERVICE_MODE_THREADED, SERVICE_MODE_EXTERNAL (optional, default `SERVICE_MODE_CLASSIC`)
+-   `command` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The external service command to execute, in case of SERVICE_MODE_EXTERNAL (optional, default `null`)
 
 Returns **[Service](#service)** The instance
 
 ### start
 
 Start the service
+
+### run
+
+Run function prototype threaded
+Should be overloaded by service
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A data passed as initial value
+-   `send` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Send a message to parent process
+
+### threadCallback
+
+Retrieve data from process
+Should be overloaded by service
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A data passed as initial value
+
+### send
+
+Send data to sub process
+
+**Parameters**
+
+-   `event` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An event
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A data (optional, default `null`)
+
+### startThreaded
+
+Internal
+Start in threaded mode (sub process)
+
+### stopThreaded
+
+Internal
+Stop in threaded mode (sub process)
+
+### startExternal
+
+Internal
+Start an external command
+
+### stopExternal
+
+Internal
+Stop an external command
 
 ### stop
 
@@ -1201,7 +1276,6 @@ This class manage Web Services call, and more specifically the external APIs
 
 **Parameters**
 
--   `threadsManager`  
 -   `port`   (optional, default `8080`)
 -   `sslPort`   (optional, default `8043`)
 -   `sslKey`   (optional, default `null`)
@@ -1213,7 +1287,6 @@ Constructor
 
 **Parameters**
 
--   `threadsManager`  
 -   `port` **int** The listening HTTP port (optional, default `8080`)
 -   `sslPort` **int** The listening HTTPS port (optional, default `8443`)
 -   `sslKey` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The path for SSL key (optional, default `null`)

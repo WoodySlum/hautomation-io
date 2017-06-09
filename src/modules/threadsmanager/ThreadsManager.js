@@ -33,7 +33,7 @@ class ThreadsManager {
         const regex = /(\()(.*)(\))([^]{0,1})({)([^]+)(\})/mg;
         let regexResults = regex.exec(func.toString());
         if (regexResults.length === 8) {
-            const prototype = "(" + regexResults[2] + ") => {" + regexResults[6] + "}";
+            const prototype = "(" + regexResults[2] + ") => {" + regexResults[6] + " return this;}";
             return prototype;
         } else {
             throw Error(ERROR_STRINGIFY_FUNCTION_THREAD);
@@ -53,13 +53,25 @@ class ThreadsManager {
      */
     run(func, identifier, data = {}, callback = null) {
         const prototype = this.stringifyFunc(func);
-        const thread  = threads.spawn(function() {})
-        .run((input, done, progress) => {
+        const thread  = threads.spawn((input, done, progress) => {
+            const Logger = require(input.dirname + "/../../logger/Logger");
+
             let f = eval(input.prototype);
-            f(input.data, progress);
+            let instance = f(input.data, progress);
+
+            this.process.on("message", (d) => {
+                if (d && d.event) {
+                    if (typeof instance[d.event] === "function") {
+                        instance[d.event](d.data);
+                    } else {
+                        Logger.err("Thread '" + input.identifier + "' has invalid or unimplemented function type for event '" + d.event + "'");
+                    }
+                }
+            });
+
             done(input.identifier);
         })
-        .send({__dirname: __dirname, identifier:identifier, prototype:prototype, data:data})
+        .send({dirname: __dirname, identifier:identifier, prototype:prototype, data:data})
         .on("progress", function message(tData) {
             if (callback) {
                 callback(tData);
@@ -69,17 +81,31 @@ class ThreadsManager {
             Logger.err("Error in thread");
             Logger.err(error.message);
         })
-        .on("done", (identifier) => {
-            /*this.kill(identifier);
-            Logger.info("Thread " + identifier + " has been terminated");*/
+        .on("done", () => {
+
         });
-console.log(thread);
+
         this.threads[identifier] = thread;
     }
 
-    send(identifier, data) {
+    /**
+     * Send data to thread. In the thread method, the `event` should be impelemented as :
+     *     myFunction(data, message) {
+     *         this.myEvent = (data) {
+     *
+     *         }
+     *     }
+     * Then call function :
+     * `threadManager.send("identifier", "myEvent", {value:"foo"})`
+     * Can throw error if thread does not exists
+     *
+     * @param  {string} identifier  The thread identifier
+     * @param  {string} event       The event's name
+     * @param  {Object} [data=null] Any data passed to thread
+     */
+    send(identifier, event, data = null) {
         if (this.threads[identifier] && this.isRunning(identifier)) {
-            this.threads[identifier].send(data);
+            this.threads[identifier].slave.send({event:event, data:data});
         } else {
             throw Error(ERROR_UNKNOWN_IDENTIFIER);
         }
@@ -95,6 +121,7 @@ console.log(thread);
         if (this.threads[identifier] && this.isRunning(identifier)) {
             this.threads[identifier].kill();
             delete this.threads[identifier];
+            Logger.info("Thread " + identifier + " has been terminated");
         } else {
             throw Error(ERROR_UNKNOWN_IDENTIFIER);
         }

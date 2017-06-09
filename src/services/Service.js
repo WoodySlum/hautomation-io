@@ -37,66 +37,107 @@ class Service {
         this.mode = mode;
         this.command = command;
         this.pid = -1;
+        this.childProcess = null;
     }
 
     /**
      * Start the service
      */
     start() {
-        this.status = RUNNING;
-        if (this.mode === SERVICE_MODE_EXTERNAL) {
-            this.startExternal();
-        } else if (this.mode === SERVICE_MODE_THREADED) {
-            this.startThreaded();
+        try {
+            if (this.status == STOPPED) {
+                if (this.mode === SERVICE_MODE_EXTERNAL) {
+                    this.startExternal();
+                } else if (this.mode === SERVICE_MODE_THREADED) {
+                    this.startThreaded();
+                }
+                this.status = RUNNING;
+            } else {
+                throw Error("Service " + this.name + " already started");
+            }
+        } catch(e) {
+            Logger.err(e);
         }
     }
 
-    run(data, message) {
-        //log("HEY");
-        message({a:"bbbb"});
+    /* eslint-disable */
 
-        //
-        var fs = require("fs");
-        var file = "/tmp/titi";
-        fs.writeFileSync(file, new Date().getTime());
-
-
-        // var sleep = require("system-sleep");
-        //
-        //       let i = 0;
-        //       while (true) {
-        //           sleep(10);
-        //           i++;
-        //           if (i > 500) {
-        //             console.log("TICK");
-        //             i = 0;
-        //           }
-        //      }
+    /**
+     * Run function prototype threaded
+     * Should be overloaded by service
+     *
+     * @param  {Object} data    A data passed as initial value
+     * @param  {Function} send Send a message to parent process
+     */
+    run(data, send) {
 
     }
 
+    /**
+     * Retrieve data from process
+     * Should be overloaded by service
+     *
+     * @param  {Object} data    A data passed as initial value
+     */
+    threadCallback(data) {
+
+    }
+
+    /* eslint-enable */
+
+    /**
+     * Send data to sub process
+     *
+     * @param  {string} event       An event
+     * @param  {Object} [data=null] A data
+     */
+    send(event, data = null) {
+        this.threadsManager.send(this.name, event, data);
+    }
+
+    /**
+     * Internal
+     * Start in threaded mode (sub process)
+     */
     startThreaded() {
         if (this.threadsManager) {
             this.threadsManager.run(this.run, this.name, {test:"abc"}, (tData) => {
                 Logger.warn(tData);
             });
             this.pid = this.threadsManager.getPid(this.name);
-            //this.threadsManager.kill(this.name);
-            setTimeout(() => {
-                //this.threadsManager.send(this.name, "toto");
-            }, 10000);
         } else {
             throw Error(ERROR_UNDEFINED_THREADS_MANAGER);
         }
     }
 
+    /**
+     * Internal
+     * Stop in threaded mode (sub process)
+     */
+    stopThreaded() {
+        try {
+            this.threadsManager.kill(this.name);
+        } catch(e) {
+            Logger.err("Could not kill process for service " + this.name);
+        }
+    }
+
+    /**
+     * Internal
+     * Start an external command
+     */
     startExternal() {
         if (this.command) {
             const r = cp.exec(this.command, function callback(error, stdout, stderr){
-                if (error) Logger.err(error);
+                if (error) {
+                    if (error.signal !== "SIGTERM") {
+                        Logger.err(error);
+                    }
+                }
                 if (stderr) Logger.err(stderr);
             });
             this.pid = r.pid;
+            this.childProcess = r;
             Logger.info("PID : " + this.pid);
         } else {
             throw Error(ERROR_EXTERNAL_COMMAND_UNDEF);
@@ -104,9 +145,27 @@ class Service {
     }
 
     /**
+     * Internal
+     * Stop an external command
+     */
+    stopExternal() {
+        if (this.childProcess) {
+            this.childProcess.kill();
+        } else {
+            Logger.err("Empty process for service " + this.name);
+        }
+    }
+
+    /**
      * Stop the service
      */
     stop() {
+        if (this.mode === SERVICE_MODE_EXTERNAL) {
+            this.stopExternal();
+        } else if (this.mode === SERVICE_MODE_THREADED) {
+            this.stopThreaded();
+        }
+        Logger.verbose("Service " + this.name + " stopped");
         this.status = STOPPED;
     }
 

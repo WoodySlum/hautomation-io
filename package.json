@@ -65,9 +65,8 @@
     "remi": "^2.0",
     "remi-runner": "^1.1",
     "stack-trace": "^0.0",
-    "threads": "^0.7",
+    "threads": "git://github.com/WoodySlum/threads.js.git#master",
     "toposort": "^1.0",
-    "traceur": "^0.0",
-    "webworker-threads": "github:audreyt/node-webworker-threads#master"
+    "traceur": "^0.0"
   }
 }

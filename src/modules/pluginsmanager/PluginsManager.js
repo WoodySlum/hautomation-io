@@ -138,7 +138,9 @@ class PluginsManager {
 
             try {
                 this.checkPluginSanity(plugin.p, plugins);
-                registrator.register(plugin.p);
+                registrator.register(plugin.p).catch(() => {
+                    //Logger.err(e.message);
+                });
                 registeredPlugins.push(plugin);
             } catch(e) {
                 Logger.err(e.message + " (" + plugin.identifier + ")");
