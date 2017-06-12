@@ -101,9 +101,7 @@ class Service {
      */
     startThreaded() {
         if (this.threadsManager) {
-            this.threadsManager.run(this.run, this.name, {test:"abc"}, (tData) => {
-                Logger.warn(tData);
-            });
+            this.threadsManager.run(this.run, this.name, {}, this.threadCallback);
             this.pid = this.threadsManager.getPid(this.name);
         } else {
             throw Error(ERROR_UNDEFINED_THREADS_MANAGER);
@@ -151,6 +149,9 @@ class Service {
     stopExternal() {
         if (this.childProcess) {
             this.childProcess.kill();
+            this.pid = null;
+            this.childProcess = null;
+
         } else {
             Logger.err("Empty process for service " + this.name);
         }

@@ -11,19 +11,19 @@ class Foo {
     }
 
     bar(data, send) {
-        console.log("Hello");
+        var a = {};
     }
 }
 
 function bar(data, send) {
-    console.log("Hello");
+    var a = {};
 }
 
 const expectedStringifyClass = `(data, send) => {
-      console.log("Hello");
+      var a = {};
      return this;}`;
 const expectedStringifyFunc = `(data, send) => {
-  console.log("Hello");
+  var a = {};
  return this;}`;
 
 describe("ThreadsManager", function() {
@@ -71,6 +71,16 @@ describe("ThreadsManager", function() {
 
     it("is running should return false", () => {
         expect(threadsManager.isRunning("foo")).to.be.false;
+    });
+
+    it("should run 'run' as well", () => {
+        sinon.spy(threadsManager, "stringifyFunc");
+        threadsManager.run(bar, "foo");
+
+        expect(threadsManager.stringifyFunc.calledOnce).to.be.true;
+        expect(Object.keys(threadsManager.threads).length).to.be.equal(1);
+
+        threadsManager.stringifyFunc.restore();
     });
 
     after(() => {
