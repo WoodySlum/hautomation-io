@@ -2,6 +2,7 @@
 var fs = require("fs");
 var path = require("path");
 var Logger = require("./logger/Logger");
+var ServicesManager = require("./modules/servicesmanager/ServicesManager");
 var ThreadsManager = require("./modules/threadsmanager/ThreadsManager");
 var WebServices = require("./services/webservices/WebServices");
 var Authentication = require("./modules/authentication/Authentication");
@@ -13,7 +14,6 @@ var DeviceManager = require("./modules/devicemanager/DeviceManager");
 const CONFIGURATION_FILE = "data/config.json";
 var AppConfiguration = require("./../data/config.json");
 
-var InternalService = require("./services/InternalService");
 
 /**
  * The main class for core.
@@ -29,7 +29,6 @@ class HautomationCore {
         // Load main configuration
         this.configurationLoader();
 
-        this.services = [];
 
         this.threadsManager = new ThreadsManager.class();
 
@@ -38,6 +37,9 @@ class HautomationCore {
         this.webServices = new WebServices.class(AppConfiguration.port, AppConfiguration.ssl.port, AppConfiguration.ssl.key, AppConfiguration.ssl.cert);
 
         // Init modules
+        // Services manager
+        this.servicesManager = new ServicesManager.class();
+
         // ConfManager module
         this.confManager = new ConfManager.class(AppConfiguration);
         // UserManager module
@@ -47,12 +49,12 @@ class HautomationCore {
         // Alarm module
         this.alarmManager = new AlarmManager.class(this.confManager, this.webServices);
         // Plugins manager module
-        this.pluginsManager = new PluginsManager.class(this.webServices);
+        this.pluginsManager = new PluginsManager.class(this.webServices, this.servicesManager);
         // Device manager module
         this.deviceManager = new DeviceManager.class(this.confManager, this.pluginsManager, this.webServices);
 
-        // Add WebService to list
-        this.services.push(this.webServices, new InternalService.class(this.threadsManager));
+        // Add services to manager
+        this.servicesManager.add(this.webServices);
     }
 
     /**
@@ -60,7 +62,11 @@ class HautomationCore {
      */
     start() {
         Logger.info("Starting core");
-        this.startServices();
+        try {
+            this.servicesManager.start();
+        } catch(e) {
+            Logger.err("Could not start services : " + e.message);
+        }
     }
 
     /**
@@ -68,27 +74,11 @@ class HautomationCore {
      */
     stop() {
         Logger.info("Stopping core");
-        this.stopServices();
-    }
-
-    /**
-     * Start all services
-     */
-    startServices() {
-        Logger.info("Starting services");
-        this.services.forEach((s)=>{
-            s.start();
-        });
-    }
-
-    /**
-     * Stop all services
-     */
-    stopServices() {
-        Logger.info("Stopping services");
-        this.services.forEach((s)=>{
-            s.stop();
-        });
+        try {
+            this.servicesManager.stop();
+        } catch(e) {
+            Logger.err("Could not stop services : " + e.message);
+        }
     }
 
     /**

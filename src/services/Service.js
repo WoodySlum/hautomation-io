@@ -46,6 +46,7 @@ class Service {
     start() {
         try {
             if (this.status == STOPPED) {
+                Logger.info("Starting service " + this.name);
                 if (this.mode === SERVICE_MODE_EXTERNAL) {
                     this.startExternal();
                 } else if (this.mode === SERVICE_MODE_THREADED) {
@@ -161,6 +162,7 @@ class Service {
      * Stop the service
      */
     stop() {
+        Logger.verbose("Stopping service " + this.name);
         if (this.mode === SERVICE_MODE_EXTERNAL) {
             this.stopExternal();
         } else if (this.mode === SERVICE_MODE_THREADED) {

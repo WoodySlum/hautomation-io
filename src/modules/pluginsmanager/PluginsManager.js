@@ -31,14 +31,16 @@ class PluginsManager {
      * Constructor
      *
      * @param  {WebServices} webServices     The web services
+     * @param  {ServicesManager} servicesManager     The services manager
      * @returns {PluginsManager} The instance
      */
-    constructor(webServices) {
+    constructor(webServices, servicesManager) {
         this.fs = fs;
         this.path = path;
         this.remi = remi;
 
         this.webServices = webServices;
+        this.servicesManager = servicesManager;
 
         this.plugins = [];
 
@@ -115,7 +117,8 @@ class PluginsManager {
 
             let pApi = new PluginAPI.class(
                 p,
-                this.webServices
+                this.webServices,
+                this.servicesManager
             );
 
             initializedPlugins.push(pApi);
