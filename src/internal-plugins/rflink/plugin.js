@@ -3,6 +3,15 @@
 
 
 function loaded(api) {
+
+    class RFLinkService extends api.exported.Service {
+        constructor() {
+            super("rflink");
+        }
+    }
+
+    api.servicesManagerAPI.add(new RFLinkService());
+
     /**
      * This class is a RFLink plugin
      * @class

@@ -2,6 +2,8 @@
 
 const PrivateProperties = require("./PrivateProperties");
 var WebAPI = require("./publicapis/WebAPI");
+var ServicesManagerAPI = require("./publicapis/ServicesManagerAPI");
+var Service = require("./../../services/Service");
 var Logger = require("./../../logger/Logger");
 
 /**
@@ -16,7 +18,7 @@ class PluginsAPI {
     //  * @param  {WebServices} webServices     The web services
     //  * @returns {PluginAPI}                  Insntance
     //  */
-    constructor(p, webServices) {
+    constructor(p, webServices, servicesManager) {
         PrivateProperties.createPrivateState(this);
         this.p = p;
 
@@ -29,7 +31,12 @@ class PluginsAPI {
         this.dependencies = (Array.isArray(this.p.attributes.dependencies))?this.p.attributes.dependencies.slice():[];
         this.exported = {};
 
+        // Sub APIs
         this.webAPI = new WebAPI.class(webServices);
+        this.servicesManagerAPI = new ServicesManagerAPI.class(servicesManager);
+
+        // Export classes
+        this.classes.push(Service.class);
     }
 
     // /**

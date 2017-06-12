@@ -19,6 +19,7 @@
     -   [err](#err)
     -   [verbose](#verbose)
     -   [info](#info)
+    -   [debug](#debug)
 -   [Alarm](#alarm)
     -   [constructor](#constructor-1)
     -   [json](#json)
@@ -71,8 +72,16 @@
     -   [unregister](#unregister)
     -   [Authentication](#authentication-1)
     -   [APIResponse](#apiresponse)
--   [User](#user)
+-   [ThreadsManager](#threadsmanager)
     -   [constructor](#constructor-9)
+    -   [stringifyFunc](#stringifyfunc)
+    -   [run](#run)
+    -   [send](#send)
+    -   [kill](#kill)
+    -   [getPid](#getpid)
+    -   [isRunning](#isrunning)
+-   [User](#user)
+    -   [constructor](#constructor-10)
     -   [username](#username-1)
     -   [password](#password)
     -   [level](#level-1)
@@ -82,7 +91,7 @@
     -   [picture](#picture)
     -   [json](#json-2)
 -   [UserManager](#usermanager)
-    -   [constructor](#constructor-10)
+    -   [constructor](#constructor-11)
     -   [confManager](#confmanager-1)
     -   [users](#users)
     -   [removeUser](#removeuser)
@@ -92,22 +101,29 @@
     -   [setUser](#setuser)
     -   [getAdminUser](#getadminuser)
 -   [Service](#service)
-    -   [constructor](#constructor-11)
+    -   [constructor](#constructor-12)
     -   [start](#start-1)
+    -   [run](#run-1)
+    -   [threadCallback](#threadcallback)
+    -   [send](#send-1)
+    -   [startThreaded](#startthreaded)
+    -   [stopThreaded](#stopthreaded)
+    -   [startExternal](#startexternal)
+    -   [stopExternal](#stopexternal)
     -   [stop](#stop-1)
     -   [restart](#restart)
     -   [status](#status)
     -   [register](#register-1)
     -   [unregister](#unregister-1)
 -   [APIRegistration](#apiregistration)
-    -   [constructor](#constructor-12)
+    -   [constructor](#constructor-13)
     -   [delegate](#delegate)
     -   [method](#method)
     -   [route](#route)
     -   [authLevel](#authlevel)
     -   [isEqual](#isequal)
 -   [APIRequest](#apirequest)
-    -   [constructor](#constructor-13)
+    -   [constructor](#constructor-14)
     -   [method](#method-1)
     -   [ip](#ip)
     -   [route](#route-1)
@@ -118,13 +134,13 @@
     -   [authenticationData](#authenticationdata-1)
     -   [addAuthenticationData](#addauthenticationdata)
 -   [APIResponse](#apiresponse-1)
-    -   [constructor](#constructor-14)
+    -   [constructor](#constructor-15)
     -   [success](#success)
     -   [response](#response)
     -   [errorCode](#errorcode)
     -   [errorMessage](#errormessage)
 -   [WebServices](#webservices)
-    -   [constructor](#constructor-15)
+    -   [constructor](#constructor-16)
     -   [start](#start-2)
     -   [registerInfos](#registerinfos)
     -   [processAPI](#processapi-3)
@@ -238,6 +254,14 @@ Log a verbose message to a file
 ### info
 
 Log an information to a file
+
+**Parameters**
+
+-   `message` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A log message
+
+### debug
+
+Log a debug message to a file, with stacktrace
 
 **Parameters**
 
@@ -748,6 +772,92 @@ Create an APIResponse object
 
 Returns **[APIResponse](#apiresponse)** The instance
 
+## ThreadsManager
+
+This class allows to manage threads
+
+### constructor
+
+Constructor
+
+Returns **[ThreadsManager](#threadsmanager)** The thread manager
+
+### stringifyFunc
+
+Stringify a function.
+Convert a class method to standard method definition, for example
+`myFunction(a, b) {}` to `(a,b)=>{}`
+Further detaisl : <https://github.com/andywer/threads.js/issues/57>
+This method can throw an error if the regex fails
+
+**Parameters**
+
+-   `func` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A class method or classic function
+
+Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The normalized function as string, needed to be eval
+
+### run
+
+Run a function or class method in a separated thread
+Each code contains in the function is sanboxed and should communicate through data and/or callback API
+All class methods / data can not be accessed
+Can throw an error
+
+**Parameters**
+
+-   `func` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A class method, or classic function. Prototype example : `run(data, message) {}`
+-   `identifier` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The thread identifier
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Object passed to the threaded code (optional, default `{}`)
+-   `callback` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** The callback when a message is received from the thread. Prototype example : `(tData) => {}` (optional, default `null`)
+
+### send
+
+Send data to thread. In the thread method, the `event` should be impelemented as :
+    myFunction(data, message) {
+        this.myEvent = (data) {
+
+        }
+    }
+
+Then call function :
+`threadManager.send("identifier", "myEvent", {value:"foo"})`
+Can throw error if thread does not exists
+
+**Parameters**
+
+-   `identifier` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The thread identifier
+-   `event` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The event's name
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Any data passed to thread (optional, default `null`)
+
+### kill
+
+Kill the thread
+Throw a ERROR_UNKNOWN_IDENTIFIER error if the identifier is unknown
+
+**Parameters**
+
+-   `identifier` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Thread identifier
+
+### getPid
+
+Returns the pid of the thread
+
+**Parameters**
+
+-   `identifier` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Thread identifier
+
+Returns **int** The pid, if not found send back null
+
+### isRunning
+
+Check if the thread is running or not
+
+**Parameters**
+
+-   `identifier` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Thread identifier
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True or false
+
 ## User
 
 This class is a User POJO
@@ -896,15 +1006,77 @@ Returns **[User](#user)** The admin user, null if admin user is disabled
 This class should not be implemented but only inherited.
 This class is used for services, start, stop, ...
 
+**Parameters**
+
+-   `name`  
+-   `threadsManager`   (optional, default `null`)
+-   `mode`   (optional, default `SERVICE_MODE_CLASSIC`)
+-   `command`   (optional, default `null`)
+
 ### constructor
 
 Constructor
+
+**Parameters**
+
+-   `name` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The service identifier
+-   `threadsManager` **ThreadManager** The thread manager, mandatory if using SERVICE_MODE_THREADED mode service (optional, default `null`)
+-   `mode` **int** The service running mode : SERVICE_MODE_CLASSIC, SERVICE_MODE_THREADED, SERVICE_MODE_EXTERNAL (optional, default `SERVICE_MODE_CLASSIC`)
+-   `command` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The external service command to execute, in case of SERVICE_MODE_EXTERNAL (optional, default `null`)
 
 Returns **[Service](#service)** The instance
 
 ### start
 
 Start the service
+
+### run
+
+Run function prototype threaded
+Should be overloaded by service
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A data passed as initial value
+-   `send` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Send a message to parent process
+
+### threadCallback
+
+Retrieve data from process
+Should be overloaded by service
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A data passed as initial value
+
+### send
+
+Send data to sub process
+
+**Parameters**
+
+-   `event` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An event
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A data (optional, default `null`)
+
+### startThreaded
+
+Internal
+Start in threaded mode (sub process)
+
+### stopThreaded
+
+Internal
+Stop in threaded mode (sub process)
+
+### startExternal
+
+Internal
+Start an external command
+
+### stopExternal
+
+Internal
+Stop an external command
 
 ### stop
 

@@ -42,7 +42,7 @@ class WebServices extends Service.class {
      * @returns {WebServices}            The instance
      */
     constructor(port = 8080, sslPort = 8043, sslKey = null, sslCert = null) {
-        super();
+        super("webservices");
         this.port = port;
         this.sslPort = sslPort;
         let express = require("express");
@@ -86,8 +86,8 @@ class WebServices extends Service.class {
                 this.servers.push(sslServer);
                 Logger.info("Web services are listening on port " + this.sslPort);
             } catch (e) {
-                Logger.err("SSL Server can not started");
-                Logger.err(e);
+                Logger.err("SSL Server can't start");
+                Logger.err(e.message);
             }
 
             try {
@@ -126,7 +126,7 @@ class WebServices extends Service.class {
 
             return new Promise((resolve) => {
                 let registered = {};
-                
+
                 this.delegates.forEach((registeredEl) => {
                     if (!registered[registeredEl.delegate.constructor.name]) {
                         registered[registeredEl.delegate.constructor.name] = {
