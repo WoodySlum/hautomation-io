@@ -34,6 +34,7 @@ function loaded(api) {
     }
 
     api.exportClass(Sample);
+
     let s = new Sample(api);
 }
 

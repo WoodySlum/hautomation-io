@@ -214,6 +214,15 @@ class Service {
             this.delegates.splice(i, 1);
         }
     }
+
+    /**
+     * Set threads manager
+     *
+     * @param {ThreadsManagaer} threadsManager A threads manager
+     */
+    setThreadsManager(threadsManager) {
+        this.threadsManager = threadsManager;
+    }
 }
 
 module.exports = {class:Service, STOPPED:STOPPED, RUNNING:RUNNING,

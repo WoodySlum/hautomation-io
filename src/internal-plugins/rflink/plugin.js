@@ -1,16 +1,10 @@
 /* eslint-disable */
 "use strict";
-
+const RFLinkServiceClass = require("./service.js");
 
 function loaded(api) {
-
-    class RFLinkService extends api.exported.Service {
-        constructor() {
-            super("rflink");
-        }
-    }
-
-    api.servicesManagerAPI.add(new RFLinkService());
+    // console.log("---------->");
+    // console.log(api.exported);
 
     /**
      * This class is a RFLink plugin
@@ -19,16 +13,13 @@ function loaded(api) {
     class RFLink {
         constructor(api) {
             this.api = api;
-
+            const RFLinkService = RFLinkServiceClass(api);
+            api.servicesManagerAPI.add(new RFLinkService(this));
         }
     }
 
     let rfLink = new RFLink(api);
-    //let a = new api.classes[0](api);
-    //a.test();
 }
-
-
 
 module.exports.attributes = {
     loadedCallback: loaded,
@@ -36,5 +27,6 @@ module.exports.attributes = {
     version: "0.0.0",
     category: "radio",
     description: "Manage RFLink devices",
-    dependencies:[]
+    dependencies:[],
+    classes:[]
 };

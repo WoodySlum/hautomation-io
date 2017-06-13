@@ -9,9 +9,13 @@ var Service = require("./../../services/Service");
 class ServicesManager {
     /**
      * Constructor
+     *
+     * @param  {ThreadsManager} [threadsManager=null] A thread manager
+     * @returns {ServicesManager}                       The instance
      */
-    constructor() {
+    constructor(threadsManager = null) {
         this.services = [];
+        this.threadsManager = threadsManager;
     }
 
     /**
@@ -39,6 +43,9 @@ class ServicesManager {
      */
     add(service) {
         if (this.isServiceRegistered(service) === -1) {
+            if (this.threadsManager) {
+                service.setThreadsManager(this.threadsManager);
+            }
             this.services.push(service);
         } else {
             Logger.warn("Service " + service.name + " already registered");

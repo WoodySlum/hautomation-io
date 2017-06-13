@@ -38,7 +38,7 @@ class HautomationCore {
 
         // Init modules
         // Services manager
-        this.servicesManager = new ServicesManager.class();
+        this.servicesManager = new ServicesManager.class(this.threadsManager);
 
         // ConfManager module
         this.confManager = new ConfManager.class(AppConfiguration);

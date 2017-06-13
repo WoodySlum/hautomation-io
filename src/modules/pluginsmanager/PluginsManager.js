@@ -177,14 +177,14 @@ class PluginsManager {
             });
         });
 
-        // Export classes
-        this.plugins.forEach((plugin) => {
-            plugin.exportClasses(classes);
-        });
-
         // Load event
         this.plugins.forEach((plugin) => {
+            Logger.verbose("Loading plugin " + plugin.identifier);
+            plugin.exportClasses(classes);
             plugin.loaded();
+            // Reload exported
+            classes = plugin.exported;
+
         });
     }
 

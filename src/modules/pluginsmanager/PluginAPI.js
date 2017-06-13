@@ -36,7 +36,9 @@ class PluginsAPI {
         this.servicesManagerAPI = new ServicesManagerAPI.class(servicesManager);
 
         // Export classes
-        this.classes.push(Service.class);
+        //this.classes["Service"] = Service;
+        this.exported = Object.assign(this.exported, {"Service": Service});
+        //this.exportClass(Service);
     }
 
     // /**
@@ -50,10 +52,12 @@ class PluginsAPI {
     // /**
     //  * Export a object with key / value containing exported classes
     //  *
-    //  * @param  {Object} classes An object with the following format : {ClassA:ClassA}
+    //  * @param  {Object} classes An array of classes
     //  */
     exportClasses(classes) {
-        this.exported = classes;
+        if (classes) {
+            this.exported = Object.assign(classes, this.exported);
+        }
     }
 
     /* eslint-enable */
