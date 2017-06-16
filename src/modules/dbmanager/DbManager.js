@@ -25,7 +25,7 @@ class DbManager {
         this.db = new sqlite3.Database(appConfiguration.db);
 
         // db.close();
-        var schema = {"history":[
+        /*var schema = {"history":[
 				{"test" : {"type" : "datetime", "version" : "0.0.1"}},
                 {"test2" : {"type" : "string", "version" : "0.0.1"}},
                 {"test3" : {"type" : "string", "version" : "0.0.2"}}
@@ -57,7 +57,7 @@ class DbManager {
 
         // this.delObject("history", test, {id:5}, (err, obj) => {
         //
-        // });
+        // });*/
         /*this.getObjects("history", schema, (err, obj) => {
             //console.log(obj);
         }, "test3 = 'titi'");*/
@@ -84,17 +84,26 @@ class DbManager {
                     .where("id", DbRequestBuilder.EQ, 3)
                     .where("test", DbRequestBuilder.EQ, "foo")
                     .request());*/
-        Logger.err(new DbRequestBuilder.class("history", schema)
+        /*Logger.err(new DbRequestBuilder.class("history", schema)
                     .upsert("test", "test2", "test3")
                     .values("22", "bar", "foobar")
-                    .request());
+                    .request());*/
+    }
+
+    /**
+     * Close database
+     */
+    close() {
+        if (this.db) {
+            this.db.close();
+        }
     }
 
     /**
      * Convert version x.y.z to a numbered version
      *
      * @param  {string} v Version x.y.z
-     * @return {int}   Version
+     * @returns {int}   Version
      */
     numberVersion(v) {
         let n = 0;
@@ -114,6 +123,14 @@ class DbManager {
         return n;
     }
 
+    /**
+     * Create or upgrade a database schema passed in parameter
+     * The oldVersion parameter should be set as string for the module database
+     * Can throw ERROR_NO_FIELD_DETECTED if no fields in database schema
+     *
+     * @param  {Object} schema     A database schema
+     * @param  {string} oldVersion A version like x.y.z
+     */
     createOrUpgrade(schema, oldVersion) {
         if (schema) {
             const tables = Object.keys(schema);
@@ -142,7 +159,7 @@ class DbManager {
                             });
                             // Footer
                             sql = this.removeLastComma(sql);
-        					sql += ");";
+                            sql += ");";
                             Logger.verbose(sql);
 
                             // Execute query
@@ -184,7 +201,7 @@ class DbManager {
      *
      * @param  {string} field A meta field name
      * @param  {Object} meta  Meta for field
-     * @return {string}       A SQLite DB field type
+     * @returns {string}       A SQLite DB field type
      */
     getDbFieldType(field, meta) {
         let sql = "";
@@ -211,14 +228,53 @@ class DbManager {
         return sql;
     }
 
+    /**
+     * Shortcut to create a DbRequestBuilder
+     *
+     * @param {string} table  The table for the request
+     * @param {Object} schema A database schema
+     *
+     * @returns {DbRequestBuilder}       A request builder
+     */
     RequestBuilder(table, schema) {
         return new DbRequestBuilder.class(table, schema);
     }
 
+    /**
+     * Shortcut to access to DbRequestBuilder constants
+     * Here is the list of constants :
+     * EQ
+     * NEQ
+     * LT
+     * GT
+     * LTE
+     * GTE
+     * LIKE
+     * NLIKE
+     * ASC
+     * DESC
+     * AVG
+     * SUM
+     * MIN
+     * MAX
+     * COUNT
+     * FIELD_ID
+     * FIELD_TIMESTAMP
+     *
+     * @returns {Object}       A list of constants
+     */
     Operators() {
         return DbRequestBuilder;
     }
 
+    /**
+     * Save an object in database (upsert mode)
+     *
+     * @param  {string} table     The table
+     * @param  {Object} schema    Database schema
+     * @param  {Object} object    An object macthing schema
+     * @param  {Function} [cb=null] Callback of type `(error) => {}`. Error is null if no errors
+     */
     saveObject(table, schema, object, cb = null) {
         const meta = schema[table];
         if (!meta) {
@@ -242,8 +298,14 @@ class DbManager {
         }
     }
 
-
-
+    /**
+     * Get an object from database
+     *
+     * @param  {string} table     The table
+     * @param  {Object} schema    Database schema
+     * @param  {Object} object    An object macthing schema, with values inside. Example `getObject("myTable", schema, {id:152}, (err, object) => {console.log(object);})`
+     * @param  {Function} [cb=null] Callback of type `(error, object) => {}`. Error is null if no errors
+     */
     getObject(table, schema, object, cb = null) {
         const meta = schema[table];
         if (!meta) {
@@ -268,6 +330,14 @@ class DbManager {
         }
     }
 
+    /**
+     * Get an objects from database
+     *
+     * @param  {string} table     The table
+     * @param  {Object} schema    Database schema
+     * @param  {DbRequestBuilder} request    A request with the desired parameters. For example `RequestBuilder("history", schema).where("value", GT, 32)`
+     * @param  {Function} [cb=null] Callback of type `(error, objects) => {}`. Error is null if no errors
+     */
     getObjects(table, schema, request, cb = null) {
         const meta = schema[table];
         if (!meta) {
@@ -298,6 +368,13 @@ class DbManager {
         }
     }
 
+    /**
+     * Get the last object from database (by timestamp)
+     *
+     * @param  {string} table     The table
+     * @param  {Object} schema    Database schema
+     * @param  {Function} [cb=null] Callback of type `(error, object) => {}`. Error is null if no errors
+     */
     getLastObject(table, schema, cb = null) {
         const meta = schema[table];
         if (!meta) {
@@ -323,6 +400,14 @@ class DbManager {
         }
     }
 
+    /**
+     * Delete an object from database
+     *
+     * @param  {string} table     The table
+     * @param  {Object} schema    Database schema
+     * @param  {Object} object    An object macthing schema, with values inside. Example `getObject("myTable", schema, {id:152}, (err) => {})`
+     * @param  {Function} [cb=null] Callback of type `(error) => {}`. Error is null if no errors
+     */
     delObject(table, schema, object, cb = null) {
         const meta = schema[table];
         if (!meta) {
@@ -346,6 +431,14 @@ class DbManager {
         }
     }
 
+    /**
+     * Delete objects from database
+     *
+     * @param  {string} table     The table
+     * @param  {Object} schema    Database schema
+     * @param  {DbRequestBuilder} request    A request with the desired parameters. For example `RequestBuilder("history", schema).where("value", GT, 32)`
+     * @param  {Function} [cb=null] Callback of type `(error) => {}`. Error is null if no errors
+     */
     delObjects(table, schema, request, cb = null) {
         const meta = schema[table];
         if (!meta) {
@@ -369,14 +462,12 @@ class DbManager {
         }
     }
 
-
-
 }
 
 module.exports = {class:DbManager,
-                    ERROR_UNKNOWN_FIELD_TYPE:ERROR_UNKNOWN_FIELD_TYPE,
-                    ERROR_NO_FIELD_DETECTED:ERROR_NO_FIELD_DETECTED,
-                    ERROR_UNKNOWN_TABLE:ERROR_UNKNOWN_TABLE,
-                    ERROR_UNKNOWN_ID:ERROR_UNKNOWN_ID,
-                    ERROR_INVALID_REQUEST:ERROR_INVALID_REQUEST
-                };
+    ERROR_UNKNOWN_FIELD_TYPE:ERROR_UNKNOWN_FIELD_TYPE,
+    ERROR_NO_FIELD_DETECTED:ERROR_NO_FIELD_DETECTED,
+    ERROR_UNKNOWN_TABLE:ERROR_UNKNOWN_TABLE,
+    ERROR_UNKNOWN_ID:ERROR_UNKNOWN_ID,
+    ERROR_INVALID_REQUEST:ERROR_INVALID_REQUEST
+};

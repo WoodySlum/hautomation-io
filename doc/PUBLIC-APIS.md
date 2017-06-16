@@ -2,6 +2,8 @@
 
 ### Table of Contents
 
+-   [ServicesManagerAPI](#servicesmanagerapi)
+    -   [add](#add)
 -   [WebAPI](#webapi)
     -   [register](#register)
     -   [unregister](#unregister)
@@ -20,6 +22,22 @@
     -   [response](#response)
     -   [errorCode](#errorcode)
     -   [errorMessage](#errormessage)
+
+## ServicesManagerAPI
+
+Public API for services manager
+
+**Parameters**
+
+-   `servicesManager`  
+
+### add
+
+Add a service
+
+**Parameters**
+
+-   `service` **Service** The service
 
 ## WebAPI
 

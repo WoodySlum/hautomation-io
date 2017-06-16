@@ -80,6 +80,7 @@ class HautomationCore {
         Logger.info("Stopping core");
         try {
             this.servicesManager.stop();
+            this.dbManager.close();
         } catch(e) {
             Logger.err("Could not stop services : " + e.message);
         }

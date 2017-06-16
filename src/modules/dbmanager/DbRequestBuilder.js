@@ -1,5 +1,4 @@
 "use strict";
-const Logger = require("../../logger/Logger");
 
 const FIELD_ID = "id";
 const FIELD_ID_META = {"type" : "int", "version" : "0.0.0"};
@@ -7,11 +6,13 @@ const FIELD_TIMESTAMP = "timestamp";
 const FIELD_TIMESTAMP_META = {"type" : "timestamp", "version" : "0.0.0"};
 
 const EQ = "=";
+const NEQ = "!=";
 const LT = "<";
 const GT = ">";
 const LTE = "<=";
 const GTE = ">=";
 const LIKE = "LIKE";
+const NLIKE = "NOT LIKE";
 
 const ASC = "ASC";
 const DESC = "DESC";
@@ -24,9 +25,17 @@ const COUNT = "COUNT";
 
 /**
  * DBRequest builder class
+ * This class generates a SQL query from parameters, but does NOT check that SQL query is valid. Does not throw any error / exception.
  * @class
  */
 class DbRequestBuilder {
+    /**
+     * Constructor
+     *
+     * @param  {string} table  Database table
+     * @param  {Object} schema A JSON Database schema
+     * @returns {DbRequestBuilder}        The instance
+     */
     constructor(table, schema) {
         this.table = table;
         this.metas = schema[this.table];
@@ -45,7 +54,7 @@ class DbRequestBuilder {
      * Remove last comma of parameter
      *
      * @param  {string} sql A SQL request
-     * @return {string}     Result
+     * @returns {string}     Result
      */
     removeLastComma(sql) {
         return sql.replace(/,\s*$/, "");
@@ -55,35 +64,41 @@ class DbRequestBuilder {
      * Escape SQL special characters
      *
      * @param  {string} val Input
-     * @return {string}     Escaped output
+     * @returns {string}     Escaped output
      */
     escapeString(val) {
-      val = val.replace(/[\0\n\r\b\t\\'"\x1a]/g, function (s) {
-        switch (s) {
-          case "\0":
-            return "\\0";
-          case "\n":
-            return "\\n";
-          case "\r":
-            return "\\r";
-          case "\b":
-            return "\\b";
-          case "\t":
-            return "\\t";
-          case "\x1a":
-            return "\\Z";
-          case "'":
-            return "''";
-          case '"':
-            return '""';
-          default:
-            return "\\" + s;
-        }
-      });
-
-      return val;
+        val = val.replace(/[\0\n\r\b\t\\'"\x1a]/g, function (s) { // eslint-disable-line no-control-regex
+            switch (s) {
+            case "\0":
+                return "\\0";
+            case "\n":
+                return "\\n";
+            case "\r":
+                return "\\r";
+            case "\b":
+                return "\\b";
+            case "\t":
+                return "\\t";
+            case "\x1a":
+                return "\\Z";
+            case "'":
+                return "''";
+            case '"': // eslint-disable-line quotes
+                return '""'; // eslint-disable-line quotes
+            default:
+                return "\\" + s;
+            }
+        });
+        return val;
     }
 
+    /**
+     * Encapsulate data. For example, if field is a string << L'envie >>, returns << 'L''envie' >> depending on field type
+     *
+     * @param  {*} value A value
+     * @param  {Object} meta  The field meta data from schema
+     * @returns {string}       The encapsulated value
+     */
     getValueEncapsulated(value, meta) {
         if (value && (meta.type === "int" || meta.type === "float" || meta.type === "double" || meta.type === "timestamp")) {
             return value;
@@ -91,43 +106,15 @@ class DbRequestBuilder {
             return "'" + this.escapeString(value) + "'";
         }
 
-        return 'null';
+        return "null";
     }
 
-    save(obj) {
-        let fields = [];
-        let values = [];
-        Object.keys(obj).forEach((field) => {
-            fields.push(field);
-            values.push(obj[field]);
-        });
-        this.upsert(...fields);
-        this.values(...values);
-        return this;
-    }
-
-    get(obj) {
-        let fields = [];
-        let values = [];
-        Object.keys(obj).forEach((field) => {
-            // where
-            this.where(field, EQ, obj[field]);
-        });
-        this.select();
-        return this;
-    }
-
-    del(obj) {
-        let fields = [];
-        let values = [];
-        Object.keys(obj).forEach((field) => {
-            // where
-            this.where(field, EQ, obj[field]);
-        });
-        this.remove();
-        return this;
-    }
-
+    /**
+     * Internal, get meta data from shcema for a specific field
+     *
+     * @param  {string} field A field
+     * @returns {Object}       Metadata for field, null if nothing match
+     */
     getMetaForField(field) {
         let meta = null;
         if (field === FIELD_ID) {
@@ -146,9 +133,70 @@ class DbRequestBuilder {
         return meta;
     }
 
+    /**
+     * Create a request for saving an object
+     *
+     * @param  {Object} obj An object with some values inside in relation with the database schema
+     * @returns {DbRequestBuilder}     The instance
+     */
+    save(obj) {
+        let fields = [];
+        let values = [];
+        Object.keys(obj).forEach((field) => {
+            fields.push(field);
+            values.push(obj[field]);
+        });
+        this.upsert(...fields);
+        this.values(...values);
+        return this;
+    }
+
+    /**
+     * Create a request with the exact object content and returns from database
+     * The execution of the request will return an object matching the object contents
+     *
+     * @param  {Object} obj An object with some values inside in relation with the database schema
+     * @returns {DbRequestBuilder}     The instance
+     */
+    get(obj) {
+        Object.keys(obj).forEach((field) => {
+            // where
+            this.where(field, EQ, obj[field]);
+        });
+        this.select();
+        return this;
+    }
+
+    /**
+     * Create a request with the exact object content
+     * The execution of the request will delete an object matching the object contents
+     *
+     * @param  {Object} obj An object with some values inside in relation with the database schema
+     * @returns {DbRequestBuilder}     The instance
+     */
+    del(obj) {
+        Object.keys(obj).forEach((field) => {
+            // where
+            this.where(field, EQ, obj[field]);
+        });
+        this.remove();
+        return this;
+    }
+
+    /**
+     * Add select operator closure
+     * Used when need to aggregate some data from database. In the obejcts results, a property alias will be added
+     * Given example : `.selectOp(COUNT, "id", "total")`
+     * Request example : `SELECT operator(field) as alias`
+     *
+     * @param  {string} operator     An operator, (exported constants) : `AVG`, `SUM`, `MIN`, `MAX` or `COUNT`
+     * @param  {string} field        The field to aggregate
+     * @param  {string} [alias=null] An alias for request result. If not provided, will be set into field name
+     * @returns {DbRequestBuilder}     The instance
+     */
     selectOp(operator, field, alias = null) {
         let meta = this.getMetaForField(field);
-        if (meta || (field === FIELD_ID) || (field === FIELD_TIMESTAMP)) {
+        if (meta || (field === FIELD_ID) || (field === FIELD_TIMESTAMP)) {
             if (alias) {
                 this.selectList.push(operator + "(" + field + ") AS " + alias);
             } else {
@@ -158,13 +206,21 @@ class DbRequestBuilder {
         return this;
     }
 
+    /**
+     * Add select closure
+     * If no parameters passed, will provide all fields (`*`) request
+     * Given example : `.select("id", "timestamp") or .select()`
+     *
+     * @param  {...string} fields     Aa list of fields, or nothing if need all fields
+     * @returns {DbRequestBuilder}     The instance
+     */
     select(...fields) {
         if (!fields || fields.length === 0) {
             this.selectList.push("*");
         } else {
             fields.forEach((field) => {
                 let meta = this.getMetaForField(field);
-                if (meta || (field === FIELD_ID) || (field === FIELD_TIMESTAMP)) {
+                if (meta || (field === FIELD_ID) || (field === FIELD_TIMESTAMP)) {
                     this.selectList.push(field);
                 }
             });
@@ -172,6 +228,15 @@ class DbRequestBuilder {
         return this;
     }
 
+    /**
+     * Add insert closure
+     * If this method is called, you need to call also `.values(...)` on this object
+     * If no parameters passed, will provide all fields from schema request
+     * Given example : `.insert("id", "timestamp") or .insert()`
+     *
+     * @param  {...string} fields     Aa list of fields, or nothing if need all fields
+     * @returns {DbRequestBuilder}     The instance
+     */
     insert(...fields) {
         if (!fields || fields.length === 0) {
             this.metas.forEach((field) => {
@@ -188,6 +253,15 @@ class DbRequestBuilder {
         return this;
     }
 
+    /**
+     * Add update closure
+     * If this method is called, you need to call also `.values(...)` on this object
+     * If no parameters passed, will provide all fields from schema request
+     * Given example : `.update("timestamp") or .update()`
+     *
+     * @param  {...string} fields     Aa list of fields, or nothing if need all fields
+     * @returns {DbRequestBuilder}     The instance
+     */
     update(...fields) {
         if (!fields || fields.length === 0) {
             this.updateList.push(FIELD_ID);
@@ -205,6 +279,16 @@ class DbRequestBuilder {
         return this;
     }
 
+    /**
+     * Add upsert (update or insert) closure
+     * If this method is called, you need to call also `.values(...)` on this object
+     * If no parameters passed, will provide all fields from schema request
+     * The update is processed if there is the `id` field into fields list.
+     * Given example : `.upsert("timestamp") or .upsert()`
+     *
+     * @param  {...string} fields     Aa list of fields, or nothing if need all fields
+     * @returns {DbRequestBuilder}     The instance
+     */
     upsert(...fields) {
         if (!fields || fields.length === 0) {
             fields = [FIELD_ID];
@@ -221,11 +305,25 @@ class DbRequestBuilder {
         return this;
     }
 
+    /**
+     * Add delete closure
+     * Usually needs to be combinated with `.where()`
+     *
+     * @returns {DbRequestBuilder}     The instance
+     */
     remove() {
         this.delete = true;
         return this;
     }
 
+    /**
+     * Add values in combination with `insert`, `update` or `upsert` closures
+     * /!\ Remember that the number of values in arguments should be exactly the same, in the same order than fields passed in `insert`, `update` or `upsert`
+     * Given example : `.upsert("myText").values("foobar").where("id", EQ, 5)`
+     *
+     * @param  {...string} values     A list of values
+     * @returns {DbRequestBuilder}     The instance
+     */
     values(...values) {
         if (values || values.length > 0) {
             values.forEach((value) => {
@@ -235,21 +333,53 @@ class DbRequestBuilder {
         return this;
     }
 
+    /**
+     * Add a where closure
+     * Used when need to aggregate some data from database. In the obejcts results, a property alias will be added
+     * Default concatenation will be `AND`, to use `OR, try `.complexWhere()` method
+     * Given example : `.select().where("id", EQ, 5)`
+     *
+     * @param  {string} field        The field to aggregate
+     * @param  {string} operator     An operator, (exported constants) : `EQ`, `NEQ`, `LT`, `GT`, `LTE`, `GTE`, `LIKE` or `NLIKE`
+     * @param  {*} [value]           A value
+     * @returns {DbRequestBuilder}     The instance
+     */
     where(field, operator, value) {
         this.whereList.push(field + " " + operator + " " + this.getValueEncapsulated(value, this.getMetaForField(field)));
         return this;
     }
 
+    /**
+     * Add a complex WHERE clause
+     *
+     * @param  {string} clause A WHERE SQL query part
+     * @returns {DbRequestBuilder}     The instance
+     */
     complexWhere(clause) {
         this.whereList.push(clause);
         return this;
     }
 
+    /**
+     * Add a group by operation closure
+     * Given example : `.select().where("id", EQ, 5).groupOp(AVG, "value")`
+     *
+     * @param  {string} operator        An operator can be (exported constants) : `AVG`, `SUM`, `MIN`, `MAX` or `COUNT`
+     * @param  {string} field           A field
+     * @returns {DbRequestBuilder}     The instance
+     */
     groupOp(operator, field) {
         this.groupList.push(operator + "(" + field +")");
         return this;
     }
 
+    /**
+     * Add a group by closure
+     * Given example : `.select().where("id", EQ, 5).groupOp("value")`
+     *
+     * @param  {...string} fields       A  list of fields
+     * @returns {DbRequestBuilder}     The instance
+     */
     group(...fields) {
         fields.forEach((field) => {
             this.groupList.push(field);
@@ -257,11 +387,27 @@ class DbRequestBuilder {
         return this;
     }
 
+    /**
+     * Add a order by closure
+     * Given example : `.select().order(DESC, "id")`
+     *
+     * @param  {string} operator        An operator can be (exported constants) : `ASC` or `DESC`
+     * @param  {string} field           A field
+     * @returns {DbRequestBuilder}     The instance
+     */
     order(operator, field) {
         this.orderList.push(field + " " + operator);
         return this;
     }
 
+    /**
+     * Add a limit closure
+     * Will retrieve results from `start` to `start + length`
+     *
+     * @param  {int} start  The start index
+     * @param  {int} length The number of database items to retrieve
+     * @returns {DbRequestBuilder}     The instance
+     */
     lim(start, length) {
         this.limit = [];
         this.limit.push(start);
@@ -269,6 +415,12 @@ class DbRequestBuilder {
         return this;
     }
 
+    /**
+     * Will return the first `length` results
+     *
+     * @param  {int} length The number of database items to retrieve from the start
+     * @returns {DbRequestBuilder}     The instance
+     */
     first(length) {
         this.limit = [];
         this.limit.push(0);
@@ -276,6 +428,13 @@ class DbRequestBuilder {
         return this;
     }
 
+    /**
+     * Internal. Clean query for select
+     * Used when a query is passed as parameter before triggering database execution.
+     * For example, passing some where filters
+     *
+     * @returns {DbRequestBuilder}     The instance
+     */
     cleanForSelect() {
         if (this.selectList.length === 0) {
             this.select();
@@ -285,6 +444,13 @@ class DbRequestBuilder {
         return this;
     }
 
+    /**
+     * Internal. Clean query for delete
+     * Used when a query is passed as parameter before triggering database execution.
+     * For example, passing some where filters
+     *
+     * @returns {DbRequestBuilder}     The instance
+     */
     cleanForDelete() {
         this.remove();
         this.sleectist = [];
@@ -293,6 +459,11 @@ class DbRequestBuilder {
         return this;
     }
 
+    /**
+     * Generate SQL request
+     *
+     * @returns {string} The SQL query
+     */
     request() {
         let req = "";
         // Select
@@ -376,11 +547,13 @@ class DbRequestBuilder {
 
 module.exports = {class:DbRequestBuilder,
     EQ:EQ,
+    NEQ:NEQ,
     LT:LT,
     GT:GT,
     LTE:LTE,
     GTE:GTE,
     LIKE:LIKE,
+    NLIKE:NLIKE,
     ASC:ASC,
     DESC:DESC,
     AVG:AVG,
