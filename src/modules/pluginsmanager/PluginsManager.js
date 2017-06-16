@@ -18,7 +18,7 @@ const ERROR_NOT_A_FUNCTION = "Missing plugin class";
 const ERROR_DEPENDENCY_NOT_FOUND = "Dependency not found";
 
 const INTERNAL_PLUGINS = [
-    "rflink",
+    "radio",
     "sample"
 ];
 

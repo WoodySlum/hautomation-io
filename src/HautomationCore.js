@@ -11,6 +11,7 @@ var UserManager = require("./modules/usermanager/UserManager");
 var AlarmManager = require("./modules/alarmmanager/AlarmManager");
 var PluginsManager = require("./modules/pluginsmanager/PluginsManager");
 var DeviceManager = require("./modules/devicemanager/DeviceManager");
+var DbManager = require("./modules/dbmanager/DbManager");
 const CONFIGURATION_FILE = "data/config.json";
 var AppConfiguration = require("./../data/config.json");
 
@@ -37,6 +38,9 @@ class HautomationCore {
         this.webServices = new WebServices.class(AppConfiguration.port, AppConfiguration.ssl.port, AppConfiguration.ssl.key, AppConfiguration.ssl.cert);
 
         // Init modules
+        // Db manager
+        this.dbManager = new DbManager.class(AppConfiguration);
+
         // Services manager
         this.servicesManager = new ServicesManager.class(this.threadsManager);
 

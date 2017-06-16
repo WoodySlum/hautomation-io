@@ -11,6 +11,11 @@ core-node.iml
 # Bin
 build/**
 
+# Database
+data/database.db
+
+# Package lock
+package-lock.json
 
 # Logs
 test-results.xml
