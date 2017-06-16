@@ -122,22 +122,26 @@ class DbManager {
                                 if (fields.length === 1) {
                                     const field = fields[0];
                                     const meta = fieldMeta[field];
-                                    if (this.numberVersion(meta.version) > this.numberVersion(oldVersion)) {
-                                        //let sqlRemove = "ALTER TABLE `" + table + "` DROP COLUMN `" + field + "`;"
-                                        //Logger.verbose(sqlRemove);
-                                        //this.db.run(sqlRemove);
-                                        try {
-                                            let sqlAdd = "ALTER TABLE `" + table + "` ADD " + this.getDbFieldType(field, fieldMeta[field]);
-                                            sqlAdd = this.RequestBuilder(table, schema).removeLastComma(sqlAdd);
-                                            sqlAdd += ";";
-                                            Logger.verbose(sqlAdd);
-                                            this.db.run(sqlAdd, (err) => {
-                                                if (err) {
-                                                    Logger.warn("Could not execute update field query table (" + table + ") field (" + field + ")");
-                                                }
-                                            });
-                                        } catch(e) {
-                                            err = e;
+                                    if (Object.keys(meta).length === 0) {
+                                        err = Error(ERROR_NO_FIELD_DETECTED);
+                                    } else {
+                                        if (this.numberVersion(meta.version) > this.numberVersion(oldVersion)) {
+                                            //let sqlRemove = "ALTER TABLE `" + table + "` DROP COLUMN `" + field + "`;"
+                                            //Logger.verbose(sqlRemove);
+                                            //this.db.run(sqlRemove);
+                                            try {
+                                                let sqlAdd = "ALTER TABLE `" + table + "` ADD " + this.getDbFieldType(field, fieldMeta[field]);
+                                                sqlAdd = this.RequestBuilder(table, schema).removeLastComma(sqlAdd);
+                                                sqlAdd += ";";
+                                                Logger.verbose(sqlAdd);
+                                                this.db.run(sqlAdd, (err) => {
+                                                    if (err) {
+                                                        Logger.warn("Could not execute update field query table (" + table + ") field (" + field + ")");
+                                                    }
+                                                });
+                                            } catch(e) {
+                                                err = e;
+                                            }
                                         }
                                     }
                                 } else {
@@ -175,7 +179,7 @@ class DbManager {
         } else if (meta.type === "datetime") {
             sql += "`" + field + "` DATETIME,";
         } else if (meta.type === "timestamp") {
-            sql += "`" + field + "` BIGINT,";
+            sql += "`" + field + "` TIMESTAMP,";
         } else if (meta.type === "string") {
             sql += "`" + field + "` TEXT,";
         } else if (meta.type === "blob") {
