@@ -264,7 +264,6 @@ class DbRequestBuilder {
      */
     update(...fields) {
         if (!fields || fields.length === 0) {
-            this.updateList.push(FIELD_ID);
             this.metas.forEach((field) => {
                 this.updateList.push(Object.keys(field)[0]);
             });
@@ -453,7 +452,7 @@ class DbRequestBuilder {
      */
     cleanForDelete() {
         this.remove();
-        this.sleectist = [];
+        this.selectList = [];
         this.insertList = [];
         this.updateList = [];
         return this;
@@ -505,7 +504,7 @@ class DbRequestBuilder {
 
                 i++;
             });
-            req += FIELD_TIMESTAMP + EQ + " current_timestamp,";
+            req += FIELD_TIMESTAMP + EQ + "current_timestamp,";
             req = this.removeLastComma(req);
         }
         // Delete

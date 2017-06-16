@@ -19,75 +19,15 @@ class DbManager {
      * Constructor
      *
      * @param  {AppConfiguration} appConfiguration The app configuration object
+     * @param  [{sqlite3}=null] sqlite3lib The database library, for testing only
      * @returns {DbManager} The instance
      */
-    constructor(appConfiguration) {
-        this.db = new sqlite3.Database(appConfiguration.db);
-
-        // db.close();
-        /*var schema = {"history":[
-				{"test" : {"type" : "datetime", "version" : "0.0.1"}},
-                {"test2" : {"type" : "string", "version" : "0.0.1"}},
-                {"test3" : {"type" : "string", "version" : "0.0.2"}}
-                ]
-            };
-        this.createOrUpgrade(schema, "0.0.2");
-
-        this.saveObject("history", schema, {"test":"2012-02-01 12:34:22", "test2":"to'to", "test3":"toutou"});
-        this.getObject("history", schema, {id:2}, (err, obj) => {
-            Logger.log(obj);
-        });
-        this.saveObject("history", schema, {id:2, "test":"2012-02-01 12:34:22", "test2":"to'to", "test3":"titi"});
-        this.saveObject("history", schema, {"test3":"foobar"});
-        this.delObject("history", schema, {test3:"foobar"});
-        this.getObjects("history", schema, this.RequestBuilder("history", schema), (err, obj) => {
-            Logger.log(obj);
-            Logger.log(obj.length);
-        });
-        this.getObjects("history", schema, this.RequestBuilder("history", schema).selectOp(this.Operators().COUNT, this.Operators().FIELD_ID, "nb").where("test3", this.Operators().LIKE, "%ti"), (err, obj) => {
-            Logger.log(obj);
-        });
-
-        this.delObjects("history", schema, this.RequestBuilder("history", schema).where("test3", this.Operators().LIKE, "%ti"), (err, obj) => {
-            Logger.log(obj);
-        });
-        this.getLastObject("history", schema, (err, obj) => {
-            Logger.log(obj);
-        });
-
-        // this.delObject("history", test, {id:5}, (err, obj) => {
-        //
-        // });*/
-        /*this.getObjects("history", schema, (err, obj) => {
-            //console.log(obj);
-        }, "test3 = 'titi'");*/
-        /*Logger.err(new DbRequestBuilder.class("history", schema)
-                    .select()
-                    .selectOp(DbRequestBuilder.OP_SUM, "id", "toto")
-                    .where("id", DbRequestBuilder.GT, 3)
-                    .group("id")
-                    .groupOp(DbRequestBuilder.OP_MAX, "id")
-                    .order(DbRequestBuilder.DESC, "id")
-                    .lim(5,10)
-                    .request());
-        Logger.err(new DbRequestBuilder.class("history", schema)
-                    .insert()
-                    .values("22", "bar", "foobar")
-                    .request());
-        Logger.err(new DbRequestBuilder.class("history", schema)
-                    .update()
-                    .values(5, "22", "bar", "foobar")
-                    .where("id", DbRequestBuilder.EQ, 3)
-                    .request());
-        Logger.err(new DbRequestBuilder.class("history", schema)
-                    .remove()
-                    .where("id", DbRequestBuilder.EQ, 3)
-                    .where("test", DbRequestBuilder.EQ, "foo")
-                    .request());*/
-        /*Logger.err(new DbRequestBuilder.class("history", schema)
-                    .upsert("test", "test2", "test3")
-                    .values("22", "bar", "foobar")
-                    .request());*/
+    constructor(appConfiguration, sqlite3lib = null) {
+        if (sqlite3) { // For testing
+            this.db = sqlite3lib;
+        } else {
+            this.db = new sqlite3.Database(appConfiguration.db);
+        }
     }
 
     /**
@@ -130,16 +70,17 @@ class DbManager {
      *
      * @param  {Object} schema     A database schema
      * @param  {string} oldVersion A version like x.y.z
+     * @param  {Function} [cb=null] Callback of type `(error) => {}`. Error is null if no errors
      */
-    createOrUpgrade(schema, oldVersion) {
+    initSchema(schema, oldVersion, cb = null) {
         if (schema) {
             const tables = Object.keys(schema);
+            let err = null;
             this.db.serialize(() => {
                 // Create table request
                 tables.forEach((table) => {
                     // Create table if exists
                     this.db.get("SELECT * FROM SQLITE_MASTER WHERE tbl_name = ?", table, (err, res) => {
-
                         if (!res) {
                             // Create table
                             // Header + primary key
@@ -149,46 +90,64 @@ class DbManager {
                             // Fields
                             schema[table].forEach((fieldMeta) => {
                                 const fields = Object.keys(fieldMeta);
-                                if (fields.length == 1) {
+                                if (fields.length === 1) {
                                     const field = fields[0];
                                     const meta = fieldMeta[field];
-                                    sql += this.getDbFieldType(field, meta);
+                                    try {
+                                        sql += this.getDbFieldType(field, meta);
+                                    } catch(e) {
+                                        err = e;
+                                    }
                                 } else {
-                                    throw Error(ERROR_NO_FIELD_DETECTED);
+                                    err = Error(ERROR_NO_FIELD_DETECTED);
                                 }
                             });
                             // Footer
-                            sql = this.removeLastComma(sql);
+                            sql = this.RequestBuilder(table, schema).removeLastComma(sql);
                             sql += ");";
                             Logger.verbose(sql);
 
                             // Execute query
-                            this.db.run(sql);
+                            if (!err) {
+                                this.db.run(sql);
+                            }
+
+                            if (cb) {
+                                cb(err);
+                            }
                         } else {
                             // Migrate table if needed
                             schema[table].forEach((fieldMeta) => {
                                 const fields = Object.keys(fieldMeta);
-                                if (fields.length == 1) {
+                                if (fields.length === 1) {
                                     const field = fields[0];
                                     const meta = fieldMeta[field];
                                     if (this.numberVersion(meta.version) > this.numberVersion(oldVersion)) {
                                         //let sqlRemove = "ALTER TABLE `" + table + "` DROP COLUMN `" + field + "`;"
                                         //Logger.verbose(sqlRemove);
                                         //this.db.run(sqlRemove);
-                                        let sqlAdd = "ALTER TABLE `" + table + "` ADD " + this.getDbFieldType(field, fieldMeta[field]);
-                                        sqlAdd = this.removeLastComma(sqlAdd);
-                                        sqlAdd += ";";
-                                        Logger.verbose(sqlAdd);
-                                        this.db.run(sqlAdd, (err) => {
-                                            if (err) {
-                                                Logger.warn("Could not execute update field query table (" + table + ") field (" + field + ")");
-                                            }
-                                        });
+                                        try {
+                                            let sqlAdd = "ALTER TABLE `" + table + "` ADD " + this.getDbFieldType(field, fieldMeta[field]);
+                                            sqlAdd = this.RequestBuilder(table, schema).removeLastComma(sqlAdd);
+                                            sqlAdd += ";";
+                                            Logger.verbose(sqlAdd);
+                                            this.db.run(sqlAdd, (err) => {
+                                                if (err) {
+                                                    Logger.warn("Could not execute update field query table (" + table + ") field (" + field + ")");
+                                                }
+                                            });
+                                        } catch(e) {
+                                            err = e;
+                                        }
                                     }
                                 } else {
-                                    throw Error(ERROR_NO_FIELD_DETECTED);
+                                    err = Error(ERROR_NO_FIELD_DETECTED);
                                 }
                             });
+
+                            if (cb) {
+                                cb(err);
+                            }
                         }
                     });
                 });
