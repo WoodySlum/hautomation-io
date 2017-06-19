@@ -54,7 +54,7 @@ class ThreadsManager {
     run(func, identifier, data = {}, callback = null) {
         const prototype = this.stringifyFunc(func);
         const thread  = threads.spawn((input, done, progress) => {
-            const Logger = require(input.dirname + "/../../logger/Logger");
+            const Logger = require(input.dirname + "/../../logger/Logger", "may-exclude");
 
             let f = eval(input.prototype);
             let instance = f(input.data, progress);

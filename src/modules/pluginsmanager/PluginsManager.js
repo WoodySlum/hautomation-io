@@ -126,7 +126,7 @@ class PluginsManager {
         plugins.forEach((plugin) => {
             let pluginPath = relative ? path + plugin +"/" + PLUGIN_MAIN : this.path.resolve() + "/" + path + plugin +"/" + PLUGIN_MAIN;
             Logger.verbose("Loading plugin at path : " + pluginPath);
-            let p = require(pluginPath);
+            let p = require(pluginPath, "may-exclude");
 
             // Send old version for migration
             const pluginConf = this.confManager.getData(this.pluginsConf, new PluginConf.class(p.attributes.name), PluginConf.comparator);
