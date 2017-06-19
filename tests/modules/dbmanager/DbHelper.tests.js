@@ -27,7 +27,7 @@ describe("DbObject", function() {
 
 
     it("constructor should have correct properties", function() {
-        expect(dbHelper).to.have.property("dbManager").and.to.be.equal(dbManager);
+        //expect(dbHelper).to.have.property("dbManager").and.to.be.equal(dbManager); // DbManager is now private property
         expect(dbHelper).to.have.property("schema").and.to.be.equal(schema);
         expect(dbHelper).to.have.property("table").and.to.be.equal(table);
         expect(dbHelper).to.have.property("dbObjectClass").and.to.be.equal(DbObject.class);

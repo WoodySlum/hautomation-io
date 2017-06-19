@@ -47,28 +47,46 @@
     -   [getData](#getdata)
     -   [setData](#setdata)
     -   [removeData](#removedata)
--   [DbManager](#dbmanager)
+-   [DbHelper](#dbhelper)
     -   [constructor](#constructor-6)
-    -   [numberVersion](#numberversion)
-    -   [createOrUpgrade](#createorupgrade)
-    -   [getDbFieldType](#getdbfieldtype)
     -   [RequestBuilder](#requestbuilder)
     -   [Operators](#operators)
+    -   [getFieldsForTable](#getfieldsfortable)
     -   [saveObject](#saveobject)
     -   [getObject](#getobject)
     -   [getObjects](#getobjects)
     -   [getLastObject](#getlastobject)
     -   [delObject](#delobject)
     -   [delObjects](#delobjects)
--   [DbRequestBuilder](#dbrequestbuilder)
+-   [DbManager](#dbmanager)
     -   [constructor](#constructor-7)
+    -   [close](#close)
+    -   [getFieldsForTable](#getfieldsfortable-1)
+    -   [numberVersion](#numberversion)
+    -   [initSchema](#initschema)
+    -   [getDbFieldType](#getdbfieldtype)
+    -   [RequestBuilder](#requestbuilder-1)
+    -   [Operators](#operators-1)
+    -   [saveObject](#saveobject-1)
+    -   [getObject](#getobject-1)
+    -   [getObjects](#getobjects-1)
+    -   [getLastObject](#getlastobject-1)
+    -   [delObject](#delobject-1)
+    -   [delObjects](#delobjects-1)
+-   [DbObject](#dbobject)
+    -   [constructor](#constructor-8)
+    -   [base](#base)
+    -   [save](#save)
+    -   [del](#del)
+-   [DbRequestBuilder](#dbrequestbuilder)
+    -   [constructor](#constructor-9)
     -   [removeLastComma](#removelastcomma)
     -   [escapeString](#escapestring)
     -   [getValueEncapsulated](#getvalueencapsulated)
     -   [getMetaForField](#getmetaforfield)
-    -   [save](#save)
+    -   [save](#save-1)
     -   [get](#get)
-    -   [del](#del)
+    -   [del](#del-1)
     -   [selectOp](#selectop)
     -   [select](#select)
     -   [insert](#insert)
@@ -87,16 +105,19 @@
     -   [cleanForDelete](#cleanfordelete)
     -   [request](#request)
 -   [Device](#device)
-    -   [constructor](#constructor-8)
+    -   [constructor](#constructor-10)
     -   [json](#json-1)
 -   [DeviceManager](#devicemanager)
-    -   [constructor](#constructor-9)
+    -   [constructor](#constructor-11)
     -   [setDevice](#setdevice)
     -   [processAPI](#processapi-2)
 -   [PluginsAPI](#pluginsapi)
     -   [exportClass](#exportclass)
+-   [PluginConf](#pluginconf)
+    -   [constructor](#constructor-12)
+    -   [json](#json-2)
 -   [PluginsManager](#pluginsmanager)
-    -   [constructor](#constructor-10)
+    -   [constructor](#constructor-13)
     -   [getPluginsFromDirectory](#getpluginsfromdirectory)
     -   [checkPluginSanity](#checkpluginsanity)
     -   [initPlugins](#initplugins)
@@ -107,6 +128,9 @@
     -   [prepareToposortArray](#preparetoposortarray)
     -   [toposort](#toposort)
     -   [topsortedArrayConverter](#topsortedarrayconverter)
+-   [DatabaseAPI](#databaseapi)
+    -   [schema](#schema)
+    -   [dbHelper](#dbhelper-1)
 -   [ServicesManagerAPI](#servicesmanagerapi)
     -   [add](#add)
 -   [WebAPI](#webapi)
@@ -115,7 +139,7 @@
     -   [Authentication](#authentication-1)
     -   [APIResponse](#apiresponse)
 -   [ServicesManager](#servicesmanager)
-    -   [constructor](#constructor-11)
+    -   [constructor](#constructor-14)
     -   [isServiceRegistered](#isserviceregistered)
     -   [add](#add-1)
     -   [remove](#remove-1)
@@ -124,7 +148,7 @@
     -   [restart](#restart)
     -   [getService](#getservice)
 -   [ThreadsManager](#threadsmanager)
-    -   [constructor](#constructor-12)
+    -   [constructor](#constructor-15)
     -   [stringifyFunc](#stringifyfunc)
     -   [run](#run-1)
     -   [send](#send)
@@ -132,7 +156,7 @@
     -   [getPid](#getpid)
     -   [isRunning](#isrunning)
 -   [User](#user)
-    -   [constructor](#constructor-13)
+    -   [constructor](#constructor-16)
     -   [username](#username-1)
     -   [password](#password)
     -   [level](#level-1)
@@ -140,9 +164,9 @@
     -   [email](#email)
     -   [phone](#phone)
     -   [picture](#picture)
-    -   [json](#json-2)
+    -   [json](#json-3)
 -   [UserManager](#usermanager)
-    -   [constructor](#constructor-14)
+    -   [constructor](#constructor-17)
     -   [confManager](#confmanager-1)
     -   [users](#users)
     -   [removeUser](#removeuser)
@@ -152,7 +176,7 @@
     -   [setUser](#setuser)
     -   [getAdminUser](#getadminuser)
 -   [Service](#service)
-    -   [constructor](#constructor-15)
+    -   [constructor](#constructor-18)
     -   [start](#start-2)
     -   [run](#run-2)
     -   [threadCallback](#threadcallback-1)
@@ -168,14 +192,14 @@
     -   [unregister](#unregister-1)
     -   [setThreadsManager](#setthreadsmanager)
 -   [APIRegistration](#apiregistration)
-    -   [constructor](#constructor-16)
+    -   [constructor](#constructor-19)
     -   [delegate](#delegate)
     -   [method](#method)
     -   [route](#route)
     -   [authLevel](#authlevel)
     -   [isEqual](#isequal)
 -   [APIRequest](#apirequest)
-    -   [constructor](#constructor-17)
+    -   [constructor](#constructor-20)
     -   [method](#method-1)
     -   [ip](#ip)
     -   [route](#route-1)
@@ -186,13 +210,13 @@
     -   [authenticationData](#authenticationdata-1)
     -   [addAuthenticationData](#addauthenticationdata)
 -   [APIResponse](#apiresponse-1)
-    -   [constructor](#constructor-18)
+    -   [constructor](#constructor-21)
     -   [success](#success)
     -   [response](#response)
     -   [errorCode](#errorcode)
     -   [errorMessage](#errormessage)
 -   [WebServices](#webservices)
-    -   [constructor](#constructor-19)
+    -   [constructor](#constructor-22)
     -   [start](#start-3)
     -   [registerInfos](#registerinfos)
     -   [processAPI](#processapi-3)
@@ -573,6 +597,119 @@ Remove data into object's array (delete). Can throw error.
 
 Returns **\[[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)]** The Array of Objects updated
 
+## DbHelper
+
+Public API for database manager
+
+**Parameters**
+
+-   `dbManager`  
+-   `schema`  
+-   `table`  
+-   `dbObjectClass`   (optional, default `null`)
+
+### constructor
+
+Encapsulate DbManager to be more easier
+
+**Parameters**
+
+-   `dbManager` **[DbManager](#dbmanager)** A DbManager instance
+-   `schema` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A database schema
+-   `table` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A table
+-   `dbObjectClass` **Class** A DbObject extended class. If not provided, a classic DbObject will be provided (optional, default `null`)
+
+Returns **[DbHelper](#dbhelper)** The instance
+
+### RequestBuilder
+
+Shortcut to create a DbRequestBuilder
+
+Returns **[DbRequestBuilder](#dbrequestbuilder)** A request builder
+
+### Operators
+
+Shortcut to access to DbRequestBuilder constants
+Here is the list of constants :
+EQ
+NEQ
+LT
+GT
+LTE
+GTE
+LIKE
+NLIKE
+ASC
+DESC
+AVG
+SUM
+MIN
+MAX
+COUNT
+FIELD_ID
+FIELD_TIMESTAMP
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A list of constants
+
+### getFieldsForTable
+
+Return the list of fields for a shema
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** A list of fields
+
+### saveObject
+
+Save an object in database (upsert mode)
+
+**Parameters**
+
+-   `object` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An object macthing schema
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Callback of type `(error) => {}`. Error is null if no errors (optional, default `null`)
+
+### getObject
+
+Get an object from database
+
+**Parameters**
+
+-   `object` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An object macthing schema, with values inside. Example `getObject("myTable", schema, {id:152}, (err, object) => {console.log(object);})`
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Callback of type `(error, object) => {}`. Error is null if no errors (optional, default `null`)
+
+### getObjects
+
+Get an objects from database
+
+**Parameters**
+
+-   `request` **[DbRequestBuilder](#dbrequestbuilder)** A request with the desired parameters. For example `RequestBuilder("history", schema).where("value", GT, 32)`
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Callback of type `(error, objects) => {}`. Error is null if no errors (optional, default `null`)
+
+### getLastObject
+
+Get the last object from database (by timestamp)
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Callback of type `(error, object) => {}`. Error is null if no errors (optional, default `null`)
+
+### delObject
+
+Delete an object from database
+
+**Parameters**
+
+-   `object` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An object macthing schema, with values inside. Example `getObject("myTable", schema, {id:152}, (err) => {})`
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Callback of type `(error) => {}`. Error is null if no errors (optional, default `null`)
+
+### delObjects
+
+Delete objects from database
+
+**Parameters**
+
+-   `request` **[DbRequestBuilder](#dbrequestbuilder)** A request with the desired parameters. For example `RequestBuilder("history", schema).where("value", GT, 32)`
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Callback of type `(error) => {}`. Error is null if no errors (optional, default `null`)
+
 ## DbManager
 
 Public API for database manager
@@ -580,6 +717,7 @@ Public API for database manager
 **Parameters**
 
 -   `appConfiguration`  
+-   `sqlite3lib`   (optional, default `null`)
 
 ### constructor
 
@@ -588,8 +726,24 @@ Constructor
 **Parameters**
 
 -   `appConfiguration` **AppConfiguration** The app configuration object
+-   `sqlite3lib` **sqlite3** sqlite3lib The database library, for testing only (optional, default `null`)
 
 Returns **[DbManager](#dbmanager)** The instance
+
+### close
+
+Close database
+
+### getFieldsForTable
+
+Return the list of fields for a schema
+
+**Parameters**
+
+-   `table` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A database table
+-   `schema` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A database schema
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of fields
 
 ### numberVersion
 
@@ -601,7 +755,7 @@ Convert version x.y.z to a numbered version
 
 Returns **int** Version
 
-### createOrUpgrade
+### initSchema
 
 Create or upgrade a database schema passed in parameter
 The oldVersion parameter should be set as string for the module database
@@ -611,6 +765,7 @@ Can throw ERROR_NO_FIELD_DETECTED if no fields in database schema
 
 -   `schema` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A database schema
 -   `oldVersion` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A version like x.y.z
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Callback of type `(error) => {}`. Error is null if no errors (optional, default `null`)
 
 ### getDbFieldType
 
@@ -721,6 +876,47 @@ Delete objects from database
 -   `table` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The table
 -   `schema` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Database schema
 -   `request` **[DbRequestBuilder](#dbrequestbuilder)** A request with the desired parameters. For example `RequestBuilder("history", schema).where("value", GT, 32)`
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Callback of type `(error) => {}`. Error is null if no errors (optional, default `null`)
+
+## DbObject
+
+Database objects
+This class must be extended
+
+**Parameters**
+
+-   `dbHelper`   (optional, default `null`)
+-   `values` **...any** 
+
+### constructor
+
+**Parameters**
+
+-   `dbHelper` **[DbHelper](#dbhelper)** A database helper object (optional, default `null`)
+-   `values` **...any** A list of values
+
+Returns **[DbObject](#dbobject)** The instance
+
+### base
+
+Creates an object cloned with only field properties
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A cloned object without any methods
+
+### save
+
+Save the database object
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Callback of type `(error) => {}`. Error is null if no errors (optional, default `null`)
+
+### del
+
+Delete the database object
+
+**Parameters**
+
 -   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Callback of type `(error) => {}`. Error is null if no errors (optional, default `null`)
 
 ## DbRequestBuilder
@@ -1105,9 +1301,11 @@ This class is an interface for plugins
 
 **Parameters**
 
+-   `previousVersion`  
 -   `p`  
 -   `webServices`  
 -   `servicesManager`  
+-   `dbManager`  
 
 ### exportClass
 
@@ -1117,14 +1315,14 @@ Expose a class to other plugins
 
 -   `c` **class** A class
 
-## PluginsManager
+## PluginConf
 
-This class manage plugins
+This class is a Plugin POJO
 
 **Parameters**
 
--   `webServices`  
--   `servicesManager`  
+-   `identifier`   (optional, default `null`)
+-   `version`   (optional, default `null`)
 
 ### constructor
 
@@ -1132,8 +1330,42 @@ Constructor
 
 **Parameters**
 
+-   `identifier` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Plugin identifier (optional, default `null`)
+-   `version` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Plugin version (optional, default `null`)
+
+Returns **[User](#user)** The instance
+
+### json
+
+Transform json raw object to instance
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** JSON object data
+
+Returns **[User](#user)** A User instance
+
+## PluginsManager
+
+This class manage plugins
+
+**Parameters**
+
+-   `confManager`  
+-   `webServices`  
+-   `servicesManager`  
+-   `dbManager`  
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `confManager` **[ConfManager](#confmanager)** The configuration manager
 -   `webServices` **[WebServices](#webservices)** The web services
 -   `servicesManager` **[ServicesManager](#servicesmanager)** The services manager
+-   `dbManager` **[DbManager](#dbmanager)** The database manager
 
 Returns **[PluginsManager](#pluginsmanager)** The instance
 
@@ -1232,6 +1464,37 @@ Re-create a correctly sorted array of plugins with the previous toposort order
 -   `plugins` **\[PluginAPI]** The unsorted plugins array
 
 Returns **\[PluginAPI]** An array of plugins sorted depending on dependencies
+
+## DatabaseAPI
+
+Public API for database
+
+**Parameters**
+
+-   `dbManager`  
+-   `previousVersion`  
+
+### schema
+
+Set database schema
+
+**Parameters**
+
+-   `schema` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A database schema (read database documentation)
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback with an error in parameter : \`(err) => {}`` (optional, default `null`)
+
+### dbHelper
+
+Creates a new DbHelper object.
+Call the `schema(...)` method before calling this one.
+The DbHelper object allows you to create, update, delete or execute queries on the database
+
+**Parameters**
+
+-   `table` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The table
+-   `dbObjectClass` **[DbObject](#dbobject)** A database object extended class. Please read documentation (optional, default `null`)
+
+Returns **[DbHelper](#dbhelper)** A DbHelper object
 
 ## ServicesManagerAPI
 

@@ -23,7 +23,7 @@ class DbManager {
      * @returns {DbManager} The instance
      */
     constructor(appConfiguration, sqlite3lib = null) {
-        if (sqlite3) { // For testing
+        if (sqlite3lib) { // For testing
             this.db = sqlite3lib;
         } else {
             this.db = new sqlite3.Database(appConfiguration.db);

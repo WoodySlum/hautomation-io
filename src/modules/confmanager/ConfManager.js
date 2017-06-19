@@ -173,7 +173,7 @@ class ConfManager {
             try {
                 this.removeData(key, object, datas, comparator);
             } catch (e) {
-                Logger.verbose(e);
+                Logger.verbose(e.message);
             }
             datas.push(object);
             this.saveData(datas, key);

@@ -1,6 +1,7 @@
 "use strict";
 
 const DbObject =  require("./DbObject");
+const PrivateProperties = require("./../pluginsmanager/PrivateProperties");
 
 /**
  * Public API for database manager
@@ -17,7 +18,8 @@ class DbHelper {
      * @returns {DbHelper}           The instance
      */
     constructor(dbManager, schema, table, dbObjectClass = null) {
-        this.dbManager = dbManager;
+        PrivateProperties.createPrivateState(this);
+        PrivateProperties.oprivate(this).dbManager = dbManager;
         this.schema = schema;
         this.table = table;
         if (!dbObjectClass) {
@@ -33,7 +35,7 @@ class DbHelper {
      * @returns {DbRequestBuilder}       A request builder
      */
     RequestBuilder() {
-        return this.dbManager.RequestBuilder(this.table, this.schema);
+        return PrivateProperties.oprivate(this).dbManager.RequestBuilder(this.table, this.schema);
     }
 
     /**
@@ -60,7 +62,7 @@ class DbHelper {
      * @returns {Object}       A list of constants
      */
     Operators() {
-        return this.dbManager.Operators();
+        return PrivateProperties.oprivate(this).dbManager.Operators();
     }
 
     /**
@@ -69,7 +71,7 @@ class DbHelper {
      * @returns {Array} A list of fields
      */
     getFieldsForTable() {
-        return this.dbManager.getFieldsForTable(this.table, this.schema);
+        return PrivateProperties.oprivate(this).dbManager.getFieldsForTable(this.table, this.schema);
     }
 
     /**
@@ -79,7 +81,16 @@ class DbHelper {
      * @param  {Function} [cb=null] Callback of type `(error) => {}`. Error is null if no errors
      */
     saveObject(object, cb = null) {
-        this.dbManager.saveObject(this.table, this.schema, object, cb);
+        // Remove null values for critical fields
+        if (!object[this.Operators().FIELD_ID]) {
+            delete object[this.Operators().FIELD_ID];
+        }
+
+        if (!object[this.Operators().FIELD_TIMESTAMP]) {
+            delete object[this.Operators().FIELD_TIMESTAMP];
+        }
+
+        PrivateProperties.oprivate(this).dbManager.saveObject(this.table, this.schema, object, cb);
     }
 
     /**
@@ -89,7 +100,7 @@ class DbHelper {
      * @param  {Function} [cb=null] Callback of type `(error, object) => {}`. Error is null if no errors
      */
     getObject(object, cb = null) {
-        this.dbManager.getObject(this.table, this.schema, object, (error, object) => {
+        PrivateProperties.oprivate(this).dbManager.getObject(this.table, this.schema, object, (error, object) => {
             if (this.dbObjectClass) {
                 if (object) {
                     // Cast object to specific object class if provided
@@ -115,7 +126,7 @@ class DbHelper {
      * @param  {Function} [cb=null] Callback of type `(error, objects) => {}`. Error is null if no errors
      */
     getObjects(request, cb = null) {
-        this.dbManager.getObjects(this.table, this.schema, request, (error, objects) => {
+        PrivateProperties.oprivate(this).dbManager.getObjects(this.table, this.schema, request, (error, objects) => {
             if (this.dbObjectClass) {
                 let castObjects = [];
                 if (objects) {
@@ -144,7 +155,7 @@ class DbHelper {
      * @param  {Function} [cb=null] Callback of type `(error, object) => {}`. Error is null if no errors
      */
     getLastObject(cb = null) {
-        this.dbManager.getLastObject(this.table, this.schema, (error, object) => {
+        PrivateProperties.oprivate(this).dbManager.getLastObject(this.table, this.schema, (error, object) => {
             if (this.dbObjectClass) {
                 if (object) {
                     // Cast object to specific object class if provided
@@ -170,7 +181,7 @@ class DbHelper {
      * @param  {Function} [cb=null] Callback of type `(error) => {}`. Error is null if no errors
      */
     delObject(object, cb = null) {
-        this.dbManager.delObject(this.table, this.schema, object, cb);
+        PrivateProperties.oprivate(this).dbManager.delObject(this.table, this.schema, object, cb);
     }
 
     /**
@@ -180,7 +191,7 @@ class DbHelper {
      * @param  {Function} [cb=null] Callback of type `(error) => {}`. Error is null if no errors
      */
     delObjects(request, cb = null) {
-        this.dbManager.delObjects(this.table, this.schema, request, cb);
+        PrivateProperties.oprivate(this).dbManager.delObjects(this.table, this.schema, request, cb);
     }
 }
 

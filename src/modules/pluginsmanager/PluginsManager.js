@@ -7,6 +7,9 @@ var toposort = require("toposort");
 
 var Logger = require("./../../logger/Logger");
 var PluginAPI = require("./PluginAPI");
+var PluginConf = require("./PluginConf");
+
+const CONF_KEY = "plugins";
 
 const INTERNAL_PLUGIN_PATH = "./../../internal-plugins/";
 const EXTERNAL_PLUGIN_PATH = "plugins/node_modules/";
@@ -18,6 +21,7 @@ const ERROR_NOT_A_FUNCTION = "Missing plugin class";
 const ERROR_DEPENDENCY_NOT_FOUND = "Dependency not found";
 
 const INTERNAL_PLUGINS = [
+    "rflink",
     "radio",
     "sample"
 ];
@@ -30,19 +34,28 @@ class PluginsManager {
     /**
      * Constructor
      *
+     * @param  {ConfManager} confManager     The configuration manager
      * @param  {WebServices} webServices     The web services
      * @param  {ServicesManager} servicesManager     The services manager
+     * @param  {DbManager} dbManager     The database manager
      * @returns {PluginsManager} The instance
      */
-    constructor(webServices, servicesManager) {
+    constructor(confManager, webServices, servicesManager, dbManager) {
         this.fs = fs;
         this.path = path;
         this.remi = remi;
 
         this.webServices = webServices;
         this.servicesManager = servicesManager;
+        this.confManager = confManager;
+        this.dbManager = dbManager;
 
         this.plugins = [];
+        try {
+            this.pluginsConf = this.confManager.loadData(PluginConf.class, CONF_KEY);
+        } catch(e) {
+            this.pluginsConf = [];
+        }
 
         this.load();
     }
@@ -115,10 +128,19 @@ class PluginsManager {
             Logger.verbose("Loading plugin at path : " + pluginPath);
             let p = require(pluginPath);
 
+            // Send old version for migration
+            const pluginConf = this.confManager.getData(this.pluginsConf, new PluginConf.class(p.attributes.name), PluginConf.comparator);
+            let oldVersion = "0.0.0";
+            if (pluginConf && pluginConf.version) {
+                oldVersion = pluginConf.version;
+            }
+
             let pApi = new PluginAPI.class(
+                oldVersion,
                 p,
                 this.webServices,
-                this.servicesManager
+                this.servicesManager,
+                this.dbManager
             );
 
             initializedPlugins.push(pApi);
@@ -181,6 +203,10 @@ class PluginsManager {
         this.plugins.forEach((plugin) => {
             Logger.verbose("Loading plugin " + plugin.identifier);
             plugin.exportClasses(classes);
+            // Save configuration meta data
+            const pluginConf = new PluginConf.class(plugin.identifier, plugin.version);
+            this.confManager.setData(CONF_KEY, pluginConf, this.pluginsConf, PluginConf.comparator);
+            // Load
             plugin.loaded();
             // Reload exported
             classes = plugin.exported;
