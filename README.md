@@ -58,3 +58,7 @@ In console, type `npm install` and everything should go on.
 #### Services
 
 [Go to details](src/services/README.md)
+
+#### Database manager
+
+[Go to details](src/modules/dbmanager/README.md)
