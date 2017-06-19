@@ -19,7 +19,7 @@ class DbManager {
      * Constructor
      *
      * @param  {AppConfiguration} appConfiguration The app configuration object
-     * @param  [{sqlite3}=null] sqlite3lib The database library, for testing only
+     * @param  {sqlite3} [sqlite3lib=null] sqlite3lib The database library, for testing only
      * @returns {DbManager} The instance
      */
     constructor(appConfiguration, sqlite3lib = null) {
@@ -37,6 +37,31 @@ class DbManager {
         if (this.db) {
             this.db.close();
         }
+    }
+
+    /**
+     * Return the list of fields for a schema
+     *
+     * @param  {string} table  A database table
+     * @param  {Object} schema A database schema
+     * @returns {Array}        An array of fields
+     */
+    getFieldsForTable(table, schema) {
+        const meta = schema[table];
+        let fields = [];
+        if (!meta) {
+            throw Error(ERROR_UNKNOWN_TABLE);
+        } else {
+            fields.push(DbRequestBuilder.FIELD_ID);
+            fields.push(DbRequestBuilder.FIELD_TIMESTAMP);
+            meta.forEach((f) => {
+                const key = Object.keys(f);
+                if (key.length === 1) {
+                    fields.push(key[0]);
+                }
+            });
+        }
+        return fields;
     }
 
     /**
@@ -75,7 +100,7 @@ class DbManager {
     initSchema(schema, oldVersion, cb = null) {
         if (schema) {
             const tables = Object.keys(schema);
-            let err = null;
+            let error = null;
             this.db.serialize(() => {
                 // Create table request
                 tables.forEach((table) => {
@@ -96,10 +121,10 @@ class DbManager {
                                     try {
                                         sql += this.getDbFieldType(field, meta);
                                     } catch(e) {
-                                        err = e;
+                                        error = e;
                                     }
                                 } else {
-                                    err = Error(ERROR_NO_FIELD_DETECTED);
+                                    error = Error(ERROR_NO_FIELD_DETECTED);
                                 }
                             });
                             // Footer
@@ -113,7 +138,7 @@ class DbManager {
                             }
 
                             if (cb) {
-                                cb(err);
+                                cb(error);
                             }
                         } else {
                             // Migrate table if needed
@@ -123,7 +148,7 @@ class DbManager {
                                     const field = fields[0];
                                     const meta = fieldMeta[field];
                                     if (Object.keys(meta).length === 0) {
-                                        err = Error(ERROR_NO_FIELD_DETECTED);
+                                        error = Error(ERROR_NO_FIELD_DETECTED);
                                     } else {
                                         if (this.numberVersion(meta.version) > this.numberVersion(oldVersion)) {
                                             //let sqlRemove = "ALTER TABLE `" + table + "` DROP COLUMN `" + field + "`;"
@@ -140,17 +165,17 @@ class DbManager {
                                                     }
                                                 });
                                             } catch(e) {
-                                                err = e;
+                                                error = e;
                                             }
                                         }
                                     }
                                 } else {
-                                    err = Error(ERROR_NO_FIELD_DETECTED);
+                                    error = Error(ERROR_NO_FIELD_DETECTED);
                                 }
                             });
 
                             if (cb) {
-                                cb(err);
+                                cb(error);
                             }
                         }
                     });

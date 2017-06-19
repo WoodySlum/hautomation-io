@@ -210,6 +210,17 @@ describe("DbManager", function() {
         });
     });
 
+    it("should return a list of fields for specific table", function() {
+        const fields = dbManager.getFieldsForTable(table, schema);
+        expect(fields.length).to.be.equal(4);
+        expect(fields[0]).to.be.equal(DbRequestBuilder.FIELD_ID);
+        expect(fields[1]).to.be.equal(DbRequestBuilder.FIELD_TIMESTAMP);
+        expect(fields[2]).to.be.equal("foo");
+        expect(fields[3]).to.be.equal("bar");
+    });
+
+
+
     it("constructor should close database", function() {
         sinon.spy(sqlite3ob, "close");
         dbManager.close();
