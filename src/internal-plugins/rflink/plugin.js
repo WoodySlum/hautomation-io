@@ -3,15 +3,13 @@
 const RFLinkServiceClass = require("./service.js");
 
 function loaded(api) {
-    // console.log("---------->");
-    // console.log(api.exported);
-
     /**
      * This class is a RFLink plugin
      * @class
      */
-    class RFLink {
+    class RFLink extends api.exported.Radio {
         constructor(api) {
+            super(api);
             this.api = api;
             const RFLinkService = RFLinkServiceClass(api);
             api.servicesManagerAPI.add(new RFLinkService(this));
@@ -27,6 +25,6 @@ module.exports.attributes = {
     version: "0.0.0",
     category: "radio",
     description: "Manage RFLink devices",
-    dependencies:[],
+    dependencies:["radio"],
     classes:[]
 };

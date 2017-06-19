@@ -11,6 +11,7 @@ var UserManager = require("./modules/usermanager/UserManager");
 var AlarmManager = require("./modules/alarmmanager/AlarmManager");
 var PluginsManager = require("./modules/pluginsmanager/PluginsManager");
 var DeviceManager = require("./modules/devicemanager/DeviceManager");
+var DbManager = require("./modules/dbmanager/DbManager");
 const CONFIGURATION_FILE = "data/config.json";
 var AppConfiguration = require("./../data/config.json");
 
@@ -37,6 +38,9 @@ class HautomationCore {
         this.webServices = new WebServices.class(AppConfiguration.port, AppConfiguration.ssl.port, AppConfiguration.ssl.key, AppConfiguration.ssl.cert);
 
         // Init modules
+        // Db manager
+        this.dbManager = new DbManager.class(AppConfiguration);
+
         // Services manager
         this.servicesManager = new ServicesManager.class(this.threadsManager);
 
@@ -49,7 +53,7 @@ class HautomationCore {
         // Alarm module
         this.alarmManager = new AlarmManager.class(this.confManager, this.webServices);
         // Plugins manager module
-        this.pluginsManager = new PluginsManager.class(this.webServices, this.servicesManager);
+        this.pluginsManager = new PluginsManager.class(this.confManager, this.webServices, this.servicesManager, this.dbManager);
         // Device manager module
         this.deviceManager = new DeviceManager.class(this.confManager, this.pluginsManager, this.webServices);
 
@@ -76,6 +80,7 @@ class HautomationCore {
         Logger.info("Stopping core");
         try {
             this.servicesManager.stop();
+            this.dbManager.close();
         } catch(e) {
             Logger.err("Could not stop services : " + e.message);
         }

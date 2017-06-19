@@ -3,7 +3,9 @@
 const PrivateProperties = require("./PrivateProperties");
 var WebAPI = require("./publicapis/WebAPI");
 var ServicesManagerAPI = require("./publicapis/ServicesManagerAPI");
+var DatabaseAPI = require("./publicapis/DatabaseAPI");
 var Service = require("./../../services/Service");
+var DbObject = require("./../dbmanager/DbObject");
 var Logger = require("./../../logger/Logger");
 
 /**
@@ -14,12 +16,16 @@ class PluginsAPI {
     /* eslint-disable */
     // /**
     //  * Constructor
+    //  * @param  {string} previousVersion The plugin's previous version, used for migration
     //  * @param  {object} p The plugin require value
     //  * @param  {WebServices} webServices     The web services
+    //  * @param  {ServicesManager} servicesManager     The services manager
+    //  * @param  {DbManager} webServices     The database manager
     //  * @returns {PluginAPI}                  Insntance
     //  */
-    constructor(p, webServices, servicesManager) {
+    constructor(previousVersion, p, webServices, servicesManager, dbManager) {
         PrivateProperties.createPrivateState(this);
+        this.previousVersion = previousVersion;
         this.p = p;
 
         PrivateProperties.oprivate(this).loadedCallback = this.p.attributes.loadedCallback;
@@ -31,14 +37,16 @@ class PluginsAPI {
         this.dependencies = (Array.isArray(this.p.attributes.dependencies))?this.p.attributes.dependencies.slice():[];
         this.exported = {};
 
+        // Export classes
+        this.exported = Object.assign(this.exported,
+            {Service: Service},
+            {DbObject: DbObject}
+        );
+
         // Sub APIs
         this.webAPI = new WebAPI.class(webServices);
         this.servicesManagerAPI = new ServicesManagerAPI.class(servicesManager);
-
-        // Export classes
-        //this.classes["Service"] = Service;
-        this.exported = Object.assign(this.exported, {"Service": Service});
-        //this.exportClass(Service);
+        this.databaseAPI = new DatabaseAPI.class(dbManager, this.previousVersion);
     }
 
     // /**
