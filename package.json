@@ -28,7 +28,8 @@
     ],
     "assets": [
       "./src/internal-plugins/**/*.js",
-      "./node_modules/threads/lib/worker.node/slave.js"
+      "./node_modules/threads/lib/worker.node/slave.js",
+      "./**/*.json"
     ]
   },
   "repository": {
@@ -45,8 +46,8 @@
     "chai": "^3.5",
     "documentation": "^4.0.0-rc.1",
     "eslint": "^3.19",
-    "eslint-plugin-jsdoc": "^3.0",
-    "eslint-plugin-mocha": "^4.10.1",
+    "eslint-plugin-jsdoc": "^3.1.1",
+    "eslint-plugin-mocha": "^4.11.0",
     "eslint-plugin-require-jsdoc": "^1.0",
     "istanbul": "^1.1.0-alpha.1",
     "mocha": "^3.3",
@@ -54,10 +55,12 @@
     "mocha-traceur": "2.1",
     "nodemon": "^1.11.0",
     "pkg": "^3.0",
-    "sinon": "^2.3.4"
+    "sinon": "^2.3.5"
   },
   "dependencies": {
+    "annotation": "git+https://github.com/WoodySlum/node-annotation.git#master",
     "body-parser": "^1.17",
+    "callsite": "^1.0.0",
     "columnify": "^1.5",
     "express": "^4.15",
     "is-running": "^2.1.0",

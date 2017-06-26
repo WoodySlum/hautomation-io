@@ -3,6 +3,8 @@
 const RFLinkServiceClass = require("./service.js");
 
 function loaded(api) {
+    api.init();
+    
     /**
      * This class is a RFLink plugin
      * @class

@@ -49,6 +49,9 @@
     -   [request](#request)
 -   [ServicesManagerAPI](#servicesmanagerapi)
     -   [add](#add)
+-   [TranslateAPI](#translateapi)
+    -   [load](#load)
+    -   [t](#t)
 -   [WebAPI](#webapi)
     -   [register](#register)
     -   [unregister](#unregister)
@@ -552,6 +555,29 @@ Add a service
 **Parameters**
 
 -   `service` **Service** The service
+
+## TranslateAPI
+
+Public API for translations
+
+**Parameters**
+
+-   `translateManager`  
+
+### load
+
+Load translations. Called automatically when calling `api.init()`
+
+### t
+
+Return a translation value
+
+**Parameters**
+
+-   `key` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** the key where values containe possible `%@` placeholders
+-   `values` **...[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Optional, the placeholders values. Each `%@` will be sequentially replaced by thos values
+
+Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A translation
 
 ## WebAPI
 

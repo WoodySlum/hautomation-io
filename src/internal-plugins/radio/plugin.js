@@ -8,6 +8,8 @@ const dbSchema = {"radio":[
 };
 
 function loaded(api) {
+    api.init();
+
     class DbRadio extends api.exported.DbObject.class {
 
     }

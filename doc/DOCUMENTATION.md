@@ -2,6 +2,19 @@
 
 ### Table of Contents
 
+-   [b](#b)
+-   [a](#a)
+-   [e](#e)
+-   [c](#c)
+-   [d](#d)
+-   [f](#f)
+-   [g](#g)
+-   [h](#h)
+-   [i](#i)
+-   [j](#j)
+-   [k](#k)
+-   [l](#l)
+-   [m](#m)
 -   [HautomationCore](#hautomationcore)
     -   [constructor](#constructor)
     -   [start](#start)
@@ -111,8 +124,10 @@
     -   [constructor](#constructor-11)
     -   [setDevice](#setdevice)
     -   [processAPI](#processapi-2)
+-   [FormManager](#formmanager)
 -   [PluginsAPI](#pluginsapi)
     -   [exportClass](#exportclass)
+    -   [init](#init)
 -   [PluginConf](#pluginconf)
     -   [constructor](#constructor-12)
     -   [json](#json-2)
@@ -133,6 +148,9 @@
     -   [dbHelper](#dbhelper-1)
 -   [ServicesManagerAPI](#servicesmanagerapi)
     -   [add](#add)
+-   [TranslateAPI](#translateapi)
+    -   [load](#load-1)
+    -   [t](#t)
 -   [WebAPI](#webapi)
     -   [register](#register)
     -   [unregister](#unregister)
@@ -155,8 +173,12 @@
     -   [kill](#kill)
     -   [getPid](#getpid)
     -   [isRunning](#isrunning)
--   [User](#user)
+-   [TranslateManager](#translatemanager)
     -   [constructor](#constructor-16)
+    -   [addTranslations](#addtranslations)
+    -   [t](#t-1)
+-   [User](#user)
+    -   [constructor](#constructor-17)
     -   [username](#username-1)
     -   [password](#password)
     -   [level](#level-1)
@@ -166,7 +188,7 @@
     -   [picture](#picture)
     -   [json](#json-3)
 -   [UserManager](#usermanager)
-    -   [constructor](#constructor-17)
+    -   [constructor](#constructor-18)
     -   [confManager](#confmanager-1)
     -   [users](#users)
     -   [removeUser](#removeuser)
@@ -176,7 +198,7 @@
     -   [setUser](#setuser)
     -   [getAdminUser](#getadminuser)
 -   [Service](#service)
-    -   [constructor](#constructor-18)
+    -   [constructor](#constructor-19)
     -   [start](#start-2)
     -   [run](#run-2)
     -   [threadCallback](#threadcallback-1)
@@ -192,14 +214,14 @@
     -   [unregister](#unregister-1)
     -   [setThreadsManager](#setthreadsmanager)
 -   [APIRegistration](#apiregistration)
-    -   [constructor](#constructor-19)
+    -   [constructor](#constructor-20)
     -   [delegate](#delegate)
     -   [method](#method)
     -   [route](#route)
     -   [authLevel](#authlevel)
     -   [isEqual](#isequal)
 -   [APIRequest](#apirequest)
-    -   [constructor](#constructor-20)
+    -   [constructor](#constructor-21)
     -   [method](#method-1)
     -   [ip](#ip)
     -   [route](#route-1)
@@ -210,13 +232,13 @@
     -   [authenticationData](#authenticationdata-1)
     -   [addAuthenticationData](#addauthenticationdata)
 -   [APIResponse](#apiresponse-1)
-    -   [constructor](#constructor-21)
+    -   [constructor](#constructor-22)
     -   [success](#success)
     -   [response](#response)
     -   [errorCode](#errorcode)
     -   [errorMessage](#errormessage)
 -   [WebServices](#webservices)
-    -   [constructor](#constructor-22)
+    -   [constructor](#constructor-23)
     -   [start](#start-3)
     -   [registerInfos](#registerinfos)
     -   [processAPI](#processapi-3)
@@ -229,6 +251,32 @@
     -   [buildPromises](#buildpromises)
     -   [runPromises](#runpromises)
     -   [sendAPIResponse](#sendapiresponse)
+
+## b
+
+## a
+
+## e
+
+## c
+
+## d
+
+## f
+
+## g
+
+## h
+
+## i
+
+## j
+
+## k
+
+## l
+
+## m
 
 ## HautomationCore
 
@@ -1295,6 +1343,12 @@ Process web API callback
 
 Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with APIResponse
 
+## FormManager
+
+**Parameters**
+
+-   `translateManager`  
+
 ## PluginsAPI
 
 This class is an interface for plugins
@@ -1306,6 +1360,7 @@ This class is an interface for plugins
 -   `webServices`  
 -   `servicesManager`  
 -   `dbManager`  
+-   `translateManager`  
 
 ### exportClass
 
@@ -1314,6 +1369,10 @@ Expose a class to other plugins
 **Parameters**
 
 -   `c` **class** A class
+
+### init
+
+Init APIs
 
 ## PluginConf
 
@@ -1355,6 +1414,7 @@ This class manage plugins
 -   `webServices`  
 -   `servicesManager`  
 -   `dbManager`  
+-   `translateManager`  
 
 ### constructor
 
@@ -1366,6 +1426,7 @@ Constructor
 -   `webServices` **[WebServices](#webservices)** The web services
 -   `servicesManager` **[ServicesManager](#servicesmanager)** The services manager
 -   `dbManager` **[DbManager](#dbmanager)** The database manager
+-   `translateManager` **[TranslateManager](#translatemanager)** The translate manager
 
 Returns **[PluginsManager](#pluginsmanager)** The instance
 
@@ -1511,6 +1572,29 @@ Add a service
 **Parameters**
 
 -   `service` **[Service](#service)** The service
+
+## TranslateAPI
+
+Public API for translations
+
+**Parameters**
+
+-   `translateManager`  
+
+### load
+
+Load translations. Called automatically when calling `api.init()`
+
+### t
+
+Return a translation value
+
+**Parameters**
+
+-   `key` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** the key where values containe possible `%@` placeholders
+-   `values` **...[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Optional, the placeholders values. Each `%@` will be sequentially replaced by thos values
+
+Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A translation
 
 ## WebAPI
 
@@ -1714,6 +1798,43 @@ Check if the thread is running or not
 -   `identifier` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Thread identifier
 
 Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True or false
+
+## TranslateManager
+
+This class manage translations
+
+**Parameters**
+
+-   `lng`  
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `lng` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The language
+
+Returns **TranslatorManager** The instance
+
+### addTranslations
+
+Add translation data
+
+**Parameters**
+
+-   `folder` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The folder where translation is, should be usually `__dirname`, and get the following structure : lng/[code].json
+
+### t
+
+Return a translation value
+
+**Parameters**
+
+-   `key` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** the key where values containe possible `%@` placeholders
+-   `values` **...[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Optional, the placeholders values. Each `%@` will be sequentially replaced by thos values
+
+Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A translation
 
 ## User
 

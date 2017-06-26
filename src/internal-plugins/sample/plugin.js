@@ -2,6 +2,8 @@
 "use strict";
 
 function loaded(api) {
+    api.init();
+    
     /**
      * This class is a sample plugin
      * @class
