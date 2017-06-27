@@ -2,25 +2,6 @@
 
 ### Table of Contents
 
--   [b](#b)
--   [a](#a)
--   [e](#e)
--   [c](#c)
--   [d](#d)
--   [f](#f)
--   [g](#g)
--   [h](#h)
--   [i](#i)
--   [j](#j)
--   [k](#k)
--   [l](#l)
--   [m](#m)
--   [n](#n)
--   [o](#o)
--   [o](#o-1)
--   [zzi](#zzi)
--   [zzj](#zzj)
--   [xo](#xo)
 -   [HautomationCore](#hautomationcore)
     -   [constructor](#constructor)
     -   [start](#start)
@@ -266,44 +247,6 @@
     -   [buildPromises](#buildpromises)
     -   [runPromises](#runpromises)
     -   [sendAPIResponse](#sendapiresponse)
-
-## b
-
-## a
-
-## e
-
-## c
-
-## d
-
-## f
-
-## g
-
-## h
-
-## i
-
-## j
-
-## k
-
-## l
-
-## m
-
-## n
-
-## o
-
-## o
-
-## zzi
-
-## zzj
-
-## xo
 
 ## HautomationCore
 

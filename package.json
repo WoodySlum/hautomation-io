@@ -13,9 +13,9 @@
   "scripts": {
     "dev": "nodemon --config .nodemon.json  HautomationRunner.js",
     "start": "node HautomationRunner.js",
-    "test": "env NO_LOG=1 mocha --reporter progress --compilers js:mocha-traceur $(find tests -name '*.tests.js')",
-    "test-ci": "env NO_LOG=1 istanbul cover _mocha -- --reporter mocha-junit-reporter --compilers js:mocha-traceur $(find tests -name '*.tests.js')",
-    "coverage": "env NO_LOG=1 istanbul cover _mocha -- --compilers js:mocha-traceur $(find tests -name '*.tests.js')",
+    "test": "env NO_LOG=1 mocha --reporter progress $(find tests -name '*.tests.js')",
+    "test-ci": "env NO_LOG=1 istanbul cover _mocha -- --reporter mocha-junit-reporter $(find tests -name '*.tests.js')",
+    "coverage": "env NO_LOG=1 istanbul cover _mocha -- $(find tests -name '*.tests.js')",
     "lint": "eslint ./src/ --ext .js",
     "doc": "documentation build ./src/** -f md -o ./doc/DOCUMENTATION.md && documentation build ./src/modules/pluginsmanager/publicapis/** -f md -o ./doc/PUBLIC-APIS.md",
     "pre-build": "npm run doc && rm -Rf ./build/* && mkdir -p ./build/plugins && mkdir -p ./build/doc && cp -R ./data ./build/ && cp ./doc/PUBLIC-APIS.md ./build/doc/ && cp -R ./scripts ./build/ && find ./node_modules -name '*.node' -exec cp -Rf {} ./build/ \\;",
@@ -52,7 +52,6 @@
     "istanbul": "^1.1.0-alpha.1",
     "mocha": "^3.3",
     "mocha-junit-reporter": "^1.13",
-    "mocha-traceur": "2.1",
     "nodemon": "^1.11.0",
     "pkg": "^3.0",
     "sinon": "^2.3.5"
@@ -71,7 +70,6 @@
     "sqlite3": "^3.1.8",
     "stack-trace": "^0.0",
     "threads": "git://github.com/WoodySlum/threads.js.git#master",
-    "toposort": "^1.0",
-    "traceur": "^0.0"
+    "toposort": "^1.0"
   }
 }
