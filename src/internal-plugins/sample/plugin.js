@@ -3,7 +3,26 @@
 
 function loaded(api) {
     api.init();
-    
+
+    class SampleForm {
+        constructor(xo) {
+            /**
+             * @Property("xo");
+             * @Type("string");
+             * @Title("Another extended form");
+             */
+            this.xo = xo;
+        }
+
+        json(data) {
+            return new SampleForm(data.xo);
+        }
+    }
+
+    api.configurationAPI.register(SampleForm);
+
+
+
     /**
      * This class is a sample plugin
      * @class

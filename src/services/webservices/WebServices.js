@@ -118,7 +118,7 @@ class WebServices extends Service.class {
     /**
      * Process API callback
      *
-     * @param  {[type]} apiRequest An APIRequest
+     * @param  {APIRequest} apiRequest An APIRequest
      * @returns {Promise}  A promise with an APIResponse object
      */
     processAPI(apiRequest) {
@@ -272,6 +272,7 @@ class WebServices extends Service.class {
         }
 
         let data = {};
+
         if (method === "POST" && req.headers[CONTENT_TYPE] === HEADER_APPLICATION_JSON && req.body) {
             methodConstant = POST;
 
@@ -311,6 +312,7 @@ class WebServices extends Service.class {
                 if (!apiRequest.authenticationData || apiRequest.authenticationData && registeredEl.authLevel <= apiRequest.authenticationData.level) {
                     let p = registeredEl.delegate.processAPI(apiRequest);
                     if (!p) {
+                        Logger.err("Error in web service api response");
                         p = new Promise((resolve) => {
                             resolve(new APIResponse.class(true, {}));
                         });

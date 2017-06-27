@@ -5,6 +5,7 @@ var WebAPI = require("./publicapis/WebAPI");
 var ServicesManagerAPI = require("./publicapis/ServicesManagerAPI");
 var DatabaseAPI = require("./publicapis/DatabaseAPI");
 var TranslateAPI = require("./publicapis/TranslateAPI");
+var ConfigurationAPI = require("./publicapis/ConfigurationAPI");
 var Service = require("./../../services/Service");
 var DbObject = require("./../dbmanager/DbObject");
 var Logger = require("./../../logger/Logger");
@@ -23,9 +24,11 @@ class PluginsAPI {
     //  * @param  {ServicesManager} servicesManager     The services manager
     //  * @param  {DbManager} webServices     The database manager
     //  * @param  {TranslateManager} translateManager     The translate manager
+    //  * @param  {FormManager} formManager     The form manager
+    //  * @param  {ConfManager} confManager     The configuration manager
     //  * @returns {PluginAPI}                  Insntance
     //  */
-    constructor(previousVersion, p, webServices, servicesManager, dbManager, translateManager) {
+    constructor(previousVersion, p, webServices, servicesManager, dbManager, translateManager, formManager, confManager) {
         PrivateProperties.createPrivateState(this);
         this.previousVersion = previousVersion;
         this.p = p;
@@ -50,6 +53,7 @@ class PluginsAPI {
         this.servicesManagerAPI = new ServicesManagerAPI.class(servicesManager);
         this.databaseAPI = new DatabaseAPI.class(dbManager, this.previousVersion);
         this.translateAPI = new TranslateAPI.class(translateManager);
+        this.configurationAPI = new ConfigurationAPI.class(confManager, formManager, webServices, this.identifier);
     }
 
     // /**

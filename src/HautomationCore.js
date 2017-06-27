@@ -37,7 +37,7 @@ class HautomationCore {
 
         // Form
         this.formManager = new FormManager.class(this.translateManager);
-        
+
         // Threads
         this.threadsManager = new ThreadsManager.class();
 
@@ -61,7 +61,7 @@ class HautomationCore {
         // Alarm module
         this.alarmManager = new AlarmManager.class(this.confManager, this.webServices);
         // Plugins manager module
-        this.pluginsManager = new PluginsManager.class(this.confManager, this.webServices, this.servicesManager, this.dbManager, this.translateManager);
+        this.pluginsManager = new PluginsManager.class(this.confManager, this.webServices, this.servicesManager, this.dbManager, this.translateManager, this.formManager);
         // Device manager module
         this.deviceManager = new DeviceManager.class(this.confManager, this.pluginsManager, this.webServices);
 

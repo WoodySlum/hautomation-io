@@ -39,9 +39,10 @@ class PluginsManager {
      * @param  {ServicesManager} servicesManager     The services manager
      * @param  {DbManager} dbManager     The database manager
      * @param  {TranslateManager} translateManager     The translate manager
+     * @param  {FormManager} formManager     The form manager
      * @returns {PluginsManager} The instance
      */
-    constructor(confManager, webServices, servicesManager, dbManager, translateManager) {
+    constructor(confManager, webServices, servicesManager, dbManager, translateManager, formManager) {
         this.fs = fs;
         this.path = path;
         this.remi = remi;
@@ -51,6 +52,7 @@ class PluginsManager {
         this.confManager = confManager;
         this.dbManager = dbManager;
         this.translateManager = translateManager;
+        this.formManager = formManager;
 
         this.plugins = [];
         try {
@@ -143,7 +145,9 @@ class PluginsManager {
                 this.webServices,
                 this.servicesManager,
                 this.dbManager,
-                this.translateManager
+                this.translateManager,
+                this.formManager,
+                this.confManager
             );
 
             initializedPlugins.push(pApi);
