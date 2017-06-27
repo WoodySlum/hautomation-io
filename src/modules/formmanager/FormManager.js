@@ -1,35 +1,44 @@
 "use strict";
-var Logger = require("./../../logger/Logger");
+//var Logger = require("./../../logger/Logger");
 const Annotation = require("annotation");
 
 /**
- *
+ * Generate forms from a specific object
+ * The generated form is compatible with https://mozilla-services.github.io/react-jsonschema-form/ library
  * @class
  */
 class FormManager {
+    /**
+     * Constructor
+     *
+     * @param  {TranslateManager} translateManager A translate manager
+     * @returns {FormManager}                  A form manager
+     */
     constructor(translateManager) {
         this.translateManager = translateManager;
         this.registeredForms = {};
     }
 
+    /**
+     * Convert key / values object into a single one. Example `[{key:"Foo", value:"Bar"}]` will become `{Foo:"Bar"}`
+     *
+     * @param  {Object} inputObject An input object
+     * @returns {Object}             An output object
+     */
     convertProperties(inputObject) {
         let output = {};
         inputObject.forEach((p) => {
-            const keys = Object.keys(p);
             output[p.key] = p.value;
         });
         return output;
     }
 
-    translateArray(arr) {
-        let translatedElements = [];
-        arr.forEach((el) => {
-            translatedElements.push(this.translateManager.t(el));
-        });
-
-        return translatedElements;
-    }
-
+    /**
+     * Register a form class
+     *
+     * @param  {Class} cl     A class with form annotations
+     * @param  {...Object} inject Parameters injection on static methods
+     */
     register(cl, ...inject) {
         this.registeredForms[cl.name] = {
             class: cl,
@@ -37,8 +46,14 @@ class FormManager {
         };
     }
 
+    /**
+     * Get the extended class (parent) from a class
+     *
+     * @param  {Class} cl A class
+     * @returns {string}    Extended class
+     */
     getExtendedClass(cl) {
-        let c = cl.toString();
+        let c = cl.toString();console.log(c);
         let extendedClassFound = null;
         // Extend class lookup
         const regex = /(.*)(extends)([ ]+)([a-zA-Z0-9]+)(.*)/g;
@@ -50,14 +65,32 @@ class FormManager {
         return extendedClassFound;
     }
 
+
+    /**
+     * Init schema
+     *
+     * @returns {Object} An initialized schema
+     */
     initSchema() {
         return {type:"object", required:[], properties:{}};
     }
 
+    /**
+     * Init UI schema
+     *
+     * @returns {Object} An initialized schema
+     */
     initSchemaUI() {
         return {};
     }
 
+    /**
+     * Get a form object
+     *
+     * @param  {Class} cl     A class with form annotations
+     * @param  {...Object} inject Parameters injection on static methods
+     * @returns {Object}        A form object with the properties `schema` and `schemaUI`
+     */
     getForm(cl, ...inject) {
         if (!this.registeredForms[cl.name]) {
             this.register(cl, ...inject);
@@ -89,6 +122,15 @@ class FormManager {
         return form;
     }
 
+    /**
+     * Generates a form for a specific class
+     *
+     * @param  {Class} cl     A class with form annotations
+     * @param  {Object} schema   Current schema (append)
+     * @param  {Object} schemaUI   Current UI schema (append)
+     * @param  {...Object} inject Parameters injection on static methods
+     * @returns {Object}        A form object with the properties `schema` and `schemaUI`
+     */
     generateForm(cl, schema, schemaUI, ...inject) {
         let c = cl.toString();
 
@@ -189,9 +231,9 @@ class FormManager {
                         // Enum names
                         if (meta.EnumNames) {
                             if (meta.EnumNames instanceof Array) {
-                                schema.properties[prop].enumNames = self.translateArray(meta.EnumNames);
+                                schema.properties[prop].enumNames = self.translateManager.translateArray(meta.EnumNames);
                             } else {
-                                schema.properties[prop].enumNames = self.translateArray(cl[meta.EnumNames](...inject));
+                                schema.properties[prop].enumNames = self.translateManager.translateArray(cl[meta.EnumNames](...inject));
                             }
                         }
 

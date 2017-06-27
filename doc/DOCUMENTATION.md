@@ -15,6 +15,12 @@
 -   [k](#k)
 -   [l](#l)
 -   [m](#m)
+-   [n](#n)
+-   [o](#o)
+-   [o](#o-1)
+-   [zzi](#zzi)
+-   [zzj](#zzj)
+-   [xo](#xo)
 -   [HautomationCore](#hautomationcore)
     -   [constructor](#constructor)
     -   [start](#start)
@@ -125,14 +131,22 @@
     -   [setDevice](#setdevice)
     -   [processAPI](#processapi-2)
 -   [FormManager](#formmanager)
+    -   [constructor](#constructor-12)
+    -   [convertProperties](#convertproperties)
+    -   [register](#register)
+    -   [getExtendedClass](#getextendedclass)
+    -   [initSchema](#initschema-1)
+    -   [initSchemaUI](#initschemaui)
+    -   [getForm](#getform)
+    -   [generateForm](#generateform)
 -   [PluginsAPI](#pluginsapi)
     -   [exportClass](#exportclass)
     -   [init](#init)
 -   [PluginConf](#pluginconf)
-    -   [constructor](#constructor-12)
+    -   [constructor](#constructor-13)
     -   [json](#json-2)
 -   [PluginsManager](#pluginsmanager)
-    -   [constructor](#constructor-13)
+    -   [constructor](#constructor-14)
     -   [getPluginsFromDirectory](#getpluginsfromdirectory)
     -   [checkPluginSanity](#checkpluginsanity)
     -   [initPlugins](#initplugins)
@@ -152,12 +166,12 @@
     -   [load](#load-1)
     -   [t](#t)
 -   [WebAPI](#webapi)
-    -   [register](#register)
+    -   [register](#register-1)
     -   [unregister](#unregister)
     -   [Authentication](#authentication-1)
     -   [APIResponse](#apiresponse)
 -   [ServicesManager](#servicesmanager)
-    -   [constructor](#constructor-14)
+    -   [constructor](#constructor-15)
     -   [isServiceRegistered](#isserviceregistered)
     -   [add](#add-1)
     -   [remove](#remove-1)
@@ -166,7 +180,7 @@
     -   [restart](#restart)
     -   [getService](#getservice)
 -   [ThreadsManager](#threadsmanager)
-    -   [constructor](#constructor-15)
+    -   [constructor](#constructor-16)
     -   [stringifyFunc](#stringifyfunc)
     -   [run](#run-1)
     -   [send](#send)
@@ -174,11 +188,12 @@
     -   [getPid](#getpid)
     -   [isRunning](#isrunning)
 -   [TranslateManager](#translatemanager)
-    -   [constructor](#constructor-16)
+    -   [constructor](#constructor-17)
     -   [addTranslations](#addtranslations)
     -   [t](#t-1)
+    -   [translateArray](#translatearray)
 -   [User](#user)
-    -   [constructor](#constructor-17)
+    -   [constructor](#constructor-18)
     -   [username](#username-1)
     -   [password](#password)
     -   [level](#level-1)
@@ -188,7 +203,7 @@
     -   [picture](#picture)
     -   [json](#json-3)
 -   [UserManager](#usermanager)
-    -   [constructor](#constructor-18)
+    -   [constructor](#constructor-19)
     -   [confManager](#confmanager-1)
     -   [users](#users)
     -   [removeUser](#removeuser)
@@ -198,7 +213,7 @@
     -   [setUser](#setuser)
     -   [getAdminUser](#getadminuser)
 -   [Service](#service)
-    -   [constructor](#constructor-19)
+    -   [constructor](#constructor-20)
     -   [start](#start-2)
     -   [run](#run-2)
     -   [threadCallback](#threadcallback-1)
@@ -210,18 +225,18 @@
     -   [stop](#stop-2)
     -   [restart](#restart-1)
     -   [status](#status)
-    -   [register](#register-1)
+    -   [register](#register-2)
     -   [unregister](#unregister-1)
     -   [setThreadsManager](#setthreadsmanager)
 -   [APIRegistration](#apiregistration)
-    -   [constructor](#constructor-20)
+    -   [constructor](#constructor-21)
     -   [delegate](#delegate)
     -   [method](#method)
     -   [route](#route)
     -   [authLevel](#authlevel)
     -   [isEqual](#isequal)
 -   [APIRequest](#apirequest)
-    -   [constructor](#constructor-21)
+    -   [constructor](#constructor-22)
     -   [method](#method-1)
     -   [ip](#ip)
     -   [route](#route-1)
@@ -232,18 +247,18 @@
     -   [authenticationData](#authenticationdata-1)
     -   [addAuthenticationData](#addauthenticationdata)
 -   [APIResponse](#apiresponse-1)
-    -   [constructor](#constructor-22)
+    -   [constructor](#constructor-23)
     -   [success](#success)
     -   [response](#response)
     -   [errorCode](#errorcode)
     -   [errorMessage](#errormessage)
 -   [WebServices](#webservices)
-    -   [constructor](#constructor-23)
+    -   [constructor](#constructor-24)
     -   [start](#start-3)
     -   [registerInfos](#registerinfos)
     -   [processAPI](#processapi-3)
     -   [stop](#stop-3)
-    -   [register](#register-2)
+    -   [register](#register-3)
     -   [unregister](#unregister-2)
     -   [registerAPI](#registerapi)
     -   [unregisterAPI](#unregisterapi)
@@ -277,6 +292,18 @@
 ## l
 
 ## m
+
+## n
+
+## o
+
+## o
+
+## zzi
+
+## zzj
+
+## xo
 
 ## HautomationCore
 
@@ -1345,9 +1372,87 @@ Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refe
 
 ## FormManager
 
+Generate forms from a specific object
+The generated form is compatible with <https://mozilla-services.github.io/react-jsonschema-form/> library
+
 **Parameters**
 
 -   `translateManager`  
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `translateManager` **[TranslateManager](#translatemanager)** A translate manager
+
+Returns **[FormManager](#formmanager)** A form manager
+
+### convertProperties
+
+Convert key / values object into a single one. Example `[{key:"Foo", value:"Bar"}]` will become `{Foo:"Bar"}`
+
+**Parameters**
+
+-   `inputObject` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An input object
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An output object
+
+### register
+
+Register a form class
+
+**Parameters**
+
+-   `cl` **Class** A class with form annotations
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Parameters injection on static methods
+
+### getExtendedClass
+
+Get the extended class (parent) from a class
+
+**Parameters**
+
+-   `cl` **Class** A class
+
+Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Extended class
+
+### initSchema
+
+Init schema
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An initialized schema
+
+### initSchemaUI
+
+Init UI schema
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An initialized schema
+
+### getForm
+
+Get a form object
+
+**Parameters**
+
+-   `cl` **Class** A class with form annotations
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Parameters injection on static methods
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A form object with the properties `schema` and `schemaUI`
+
+### generateForm
+
+Generates a form for a specific class
+
+**Parameters**
+
+-   `cl` **Class** A class with form annotations
+-   `schema` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Current schema (append)
+-   `schemaUI` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Current UI schema (append)
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Parameters injection on static methods
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A form object with the properties `schema` and `schemaUI`
 
 ## PluginsAPI
 
@@ -1835,6 +1940,16 @@ Return a translation value
 -   `values` **...[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Optional, the placeholders values. Each `%@` will be sequentially replaced by thos values
 
 Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A translation
+
+### translateArray
+
+Translate an arraay of elements
+
+**Parameters**
+
+-   `arr` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of elements
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of translated elements
 
 ## User
 

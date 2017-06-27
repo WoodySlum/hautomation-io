@@ -11,7 +11,8 @@ describe("Translatemanager", function() {
     before(() => {
         translateManager.translations = {
             "foo":"bar",
-            "hello":"My name is %@ and firstname %@"
+            "hello":"My name is %@ and firstname %@",
+            "foobar":"FooBar"
         }
     });
 
@@ -25,6 +26,13 @@ describe("Translatemanager", function() {
 
     it("should return key when not found", function() {
         expect(translateManager.t("abc", "woody", "slum")).to.be.equal("abc");
+    });
+
+    it("should translate an array of items", function() {
+        const tArray = translateManager.translateArray(["foo", "foobar"]);
+        expect(tArray.length).to.be.equal(2);
+        expect(tArray[0]).to.be.equal("bar");
+        expect(tArray[1]).to.be.equal("FooBar");
     });
 
     after(function () {

@@ -56,6 +56,21 @@ class TranslateManager {
             return key;
         }
     }
+
+    /**
+     * Translate an arraay of elements
+     *
+     * @param  {Array} arr An array of elements
+     * @returns {Array}     An array of translated elements
+     */
+    translateArray(arr) {
+        let translatedElements = [];
+        arr.forEach((el) => {
+            translatedElements.push(this.t(el));
+        });
+
+        return translatedElements;
+    }
 }
 
 module.exports = {class:TranslateManager};
