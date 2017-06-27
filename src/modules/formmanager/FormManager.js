@@ -53,7 +53,7 @@ class FormManager {
      * @returns {string}    Extended class
      */
     getExtendedClass(cl) {
-        let c = cl.toString();console.log(c);
+        let c = cl.toString();
         let extendedClassFound = null;
         // Extend class lookup
         const regex = /(.*)(extends)([ ]+)([a-zA-Z0-9]+)(.*)/g;

@@ -62,3 +62,11 @@ In console, type `npm install` and everything should go on.
 #### Database manager
 
 [Go to details](src/modules/dbmanager/README.md)
+
+#### Translate manager
+
+[Go to details](src/modules/translatemanager/README.md)
+
+#### Form manager
+
+[Go to details](src/modules/formmanager/README.md)

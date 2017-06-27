@@ -17,9 +17,6 @@ var FormManager = require("./modules/formmanager/FormManager");
 const CONFIGURATION_FILE = "data/config.json";
 var AppConfiguration = require("./../data/config.json");
 
-
-
-
 /**
  * The main class for core.
  * @class
@@ -40,11 +37,7 @@ class HautomationCore {
 
         // Form
         this.formManager = new FormManager.class(this.translateManager);
-        /*this.formManager.register(BarFoo);
-        this.formManager.register(Foo, "WOODY", "SLUM");
-        this.formManager.register(Bar);
-        this.formManager.register(FooBar);
-        require("fs").writeFileSync("/Users/smizrahi/Desktop/form.json", JSON.stringify(this.formManager.getForm(FooBar), null, 2));*/
+        
         // Threads
         this.threadsManager = new ThreadsManager.class();
 

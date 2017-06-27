@@ -197,6 +197,7 @@ class BarFoo {
 
 describe("FormManager", function() {
     let translateManager = new TranslateManager.class("en");
+    translateManager.translations = {"const.test":"Translated value","Foo":"BARFOO","WOODY":"DUBOIS"};
     let formManager = new FormManager.class(translateManager);
 
     before(() => {
@@ -224,6 +225,31 @@ describe("FormManager", function() {
 
     it("get extended class should return the extended class", function() {
         expect(formManager.getExtendedClass(Bar)).to.be.equal("Foo");
+    });
+
+    it("should generate a valid form (functional test)", function() {
+        formManager.register(Foo, "WOODY", "SLUM");
+        formManager.register(Bar);
+        formManager.register(FooBar);
+        sinon.spy(formManager, "initSchema");
+        sinon.spy(formManager, "initSchemaUI");
+        sinon.spy(formManager, "generateForm");
+        sinon.spy(formManager, "getExtendedClass");
+
+        const generatedForm = formManager.getForm(FooBar);
+        expect(formManager.initSchema.calledThrice).to.be.true;
+        expect(formManager.initSchemaUI.calledThrice).to.be.true;
+        expect(formManager.generateForm.callCount).to.be.equal(5);
+        expect(formManager.getExtendedClass.callCount).to.be.equal(3);
+
+        // Check generation from template
+        expect(JSON.stringify(generatedForm, null, 2)).to.be.equal(JSON.stringify(require("./GeneratedForm.json"), null, 2));
+
+        formManager.initSchema.restore();
+        formManager.initSchemaUI.restore();
+        formManager.generateForm.restore();
+        formManager.getExtendedClass.restore();
+
     });
 
     after(() => {
