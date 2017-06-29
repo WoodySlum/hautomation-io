@@ -42,6 +42,17 @@ class ConfigurationAPI {
         );
         PrivateProperties.oprivate(this).formConfiguration.registerForm(formClass, ...inject);
     }
+
+    /**
+     * Returns the configuration
+     *
+     * @returns {Object} Configuration object
+     */
+    getConfiguration() {
+        return PrivateProperties.oprivate(this).formConfiguration.getConfig();
+    }
+
+
 }
 
 module.exports = {class:ConfigurationAPI};

@@ -4,6 +4,7 @@
 
 -   [ConfigurationAPI](#configurationapi)
     -   [register](#register)
+    -   [getConfiguration](#getconfiguration)
 -   [FormConfiguration](#formconfiguration)
     -   [constructor](#constructor)
     -   [loadConfig](#loadconfig)
@@ -155,6 +156,12 @@ Register a form
 
 -   `formClass` **Class** A form annotation's implemented class
 -   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The injected objects
+
+### getConfiguration
+
+Returns the configuration
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Configuration object
 
 ## FormConfiguration
 

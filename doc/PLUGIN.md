@@ -95,4 +95,63 @@ You'll need to notify core that you need dependency for the plugin that export c
 
 ### Creating a form and accessing to configuration
 
+You can create a form shema in a specific class. This schema will be automatically managed by the core and user will be able to configure through a form the plugin.
+
+The class must implement :
+
+* An extend of `FormObject` class or a class that extends `FormObject` class
+* A json method for serialization
+* Annotations (read specific form documentation to get more informations on this) 
+
+**Form.js**
+
+	"use strict";
+	
+	function loaded(api) {
+		
+	    class MyForm extends api.exported.FormObject.class {
+			constructor(id, myParameter) {
+				/**
+	             * @Property("myParameter");
+	             * @Type("string");
+	             * @Title("A parameter sample");
+	             */
+	        	this.myParameter = myParameter;
+			}
+
+			json(data) {
+				return new MyForm(data.id, data.myParameter);
+			}	
+		}
+
+		return MyForm;
+	}
+
+	module.exports = loaded;
+	
+
+**plugin.js**
+
+	"use strict";
+	const MyFormClass = require("./Form.js");
+	
+	function loaded(api) {
+	    api.init();
+		// Register a form
+		api.configurationAPI.register(MyFormClass(api));
+
+		// Get the configuration
+		const config = api.configurationAPI.getConfiguration();
+	}
+	
+	module.exports.attributes = {
+	    loadedCallback: loaded,
+	    name: "my-plugin",
+	    version: "0.0.1",
+	    category: "misc",
+	    description: "My first hautomation plugin",
+		dependencies:[],
+	    classes:[]
+	};
+
 
