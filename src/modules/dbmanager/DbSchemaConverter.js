@@ -22,7 +22,7 @@ class DbSchemaConverter {
      * Convert DbObject annotations to db schema
      *
      * @param  {DbObject} dbObjectClass A class extending DbObject
-     * @return {Object}               A database schema
+     * @returns {Object}               A database schema
      */
     static toSchema(dbObjectClass) {
         let schema = {};
@@ -36,7 +36,7 @@ class DbSchemaConverter {
                 if (meta.Type && meta.Version) {
                     let localSchema = {};
                     localSchema[prop] = {type : meta.Type, version : meta.Version};
-                    schema[table].push(localSchema)
+                    schema[table].push(localSchema);
                 }
             });
         });
