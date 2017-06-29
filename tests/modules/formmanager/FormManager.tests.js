@@ -236,13 +236,6 @@ describe("FormManager", function() {
 
     });
 
-    it("convert properties should convert a key/value array into a single object", function() {
-        const input = [{key:"foo", value:"bar"}, {key:"bar", value:"foo"}];
-        const output = formManager.convertProperties(input);
-        expect(output.foo).to.be.equal("bar");
-        expect(output.bar).to.be.equal("foo");
-    });
-
     it("should register a form", function() {
         formManager.register(BarFoo, "foo", "bar");
         expect(formManager.registeredForms["BarFoo"].class).to.be.equal(BarFoo);

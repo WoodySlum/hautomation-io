@@ -11,7 +11,24 @@ function loaded(api) {
     api.init();
 
     class DbRadio extends api.exported.DbObject.class {
+        constructor(dbHelper = null, ...values) {
+            super(dbHelper, ...values);
 
+            /**
+             * @Property("module");
+             * @Type("string");
+             * @Version("0.0.0");
+             */
+            this.module;
+
+            /**
+             * @Property("status");
+             * @Type("int");
+             * @Version("0.0.0");
+             */
+            this.status;
+
+        }
     }
 
     /**
@@ -22,10 +39,11 @@ function loaded(api) {
         constructor(api) {
             this.api = api;
             this.module = api.identifier;
-            this.api.databaseAPI.schema(dbSchema);
+            this.api.databaseAPI.register(DbRadio);
 
-            let dbHelper = this.api.databaseAPI.dbHelper("radio", DbRadio);
-            //let r = new DbRadio(dbHelper, "rflink", 1);
+            let dbHelper = this.api.databaseAPI.dbHelper(DbRadio);
+            let r = new DbRadio(dbHelper, "rflink", 1);
+            //r.save();
             dbHelper.getLastObject((err, obj) => {
                 //console.log(obj);
             });

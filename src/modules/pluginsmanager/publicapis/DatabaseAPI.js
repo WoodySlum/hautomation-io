@@ -1,6 +1,7 @@
 "use strict";
 const PrivateProperties = require("./../PrivateProperties");
 const DbHelper = require("./../../dbmanager/DbHelper");
+const DbSchemaConverter = require("./../../dbmanager/DbSchemaConverter");
 
 /**
  * Public API for database
@@ -24,13 +25,13 @@ class DatabaseAPI {
     /* eslint-enable */
 
     /**
-     * Set database schema
+     * Register database object and create associated schema (annotations)
      *
-     * @param  {Object} schema    A database schema (read database documentation)
-     * @param  {Function} [cb=null] A callback with an error in parameter : `(err) => {}``
+     * @param  {DbObject} dbObjectClass A class extending DbObject
+     * @param  {Function} [cb=null] A callback with an error in parameter : `(err) => {}`
      */
-    schema(schema, cb = null) {
-        this.registeredSchema = schema;
+    register(dbObjectClass, cb = null) {
+        this.registeredSchema = DbSchemaConverter.class.toSchema(dbObjectClass);
         PrivateProperties.oprivate(this).dbManager.initSchema(this.registeredSchema, PrivateProperties.oprivate(this).previousVersion, cb);
     }
 
@@ -39,15 +40,14 @@ class DatabaseAPI {
      * Call the `schema(...)` method before calling this one.
      * The DbHelper object allows you to create, update, delete or execute queries on the database
      *
-     * @param {string} table                The table
-     * @param {DbObject} [dbObjectClass=null] A database object extended class. Please read documentation
+     * @param {DbObject} dbObjectClass A database object extended class with annotations. Please read documentation
      * @returns {DbHelper}             A DbHelper object
      */
-    dbHelper(table, dbObjectClass = null) {
+    dbHelper(dbObjectClass) {
         if (this.registeredSchema) {
-            return new DbHelper.class(PrivateProperties.oprivate(this).dbManager, this.registeredSchema, table, dbObjectClass);
+            return new DbHelper.class(PrivateProperties.oprivate(this).dbManager, this.registeredSchema, DbSchemaConverter.class.tableName(dbObjectClass), dbObjectClass);
         } else {
-            throw Error("Call schema() method first");
+            throw Error("Call register() method first");
         }
     }
 }

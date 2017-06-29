@@ -2,6 +2,7 @@
 //var Logger = require("./../../logger/Logger");
 const Annotation = require("annotation");
 const FormObject = require("./FormObject");
+const Convert = require("./../../utils/Convert");
 
 const ERROR_NO_JSON_METHOD = "No `json` method implemented";
 const ERROR_NO_FORMOBJECT_EXTEND = "The form class does not extend `FormObject` class";
@@ -23,20 +24,6 @@ class FormManager {
         this.translateManager = translateManager;
         this.registeredForms = {};
         this.register(FormObject.class);
-    }
-
-    /**
-     * Convert key / values object into a single one. Example `[{key:"Foo", value:"Bar"}]` will become `{Foo:"Bar"}`
-     *
-     * @param  {Object} inputObject An input object
-     * @returns {Object}             An output object
-     */
-    convertProperties(inputObject) {
-        let output = {};
-        inputObject.forEach((p) => {
-            output[p.key] = p.value;
-        });
-        return output;
     }
 
     /**
@@ -197,7 +184,7 @@ class FormManager {
         Annotation(c, function(AnnotationReader) {
             const properties = AnnotationReader.comments.properties;
             Object.keys(AnnotationReader.comments.properties).forEach((prop) => {
-                const meta = self.convertProperties(properties[prop]);
+                const meta = Convert.convertProperties(properties[prop]);
                 if (meta.Type) {
                     const type = meta.Type.toLowerCase();
                     let exist = false;
