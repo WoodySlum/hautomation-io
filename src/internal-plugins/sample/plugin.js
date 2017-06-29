@@ -2,6 +2,28 @@
 "use strict";
 
 function loaded(api) {
+    api.init();
+
+    class SampleForm extends api.exported.FormObject.class {
+        constructor(id, xo) {
+            super(id);
+            /**
+             * @Property("xo");
+             * @Type("string");
+             * @Title("Another extended form");
+             */
+            this.xo = xo;
+        }
+
+        json(data) {
+            return new SampleForm(data.id, data.xo);
+        }
+    }
+
+    api.configurationAPI.register(SampleForm);
+
+
+
     /**
      * This class is a sample plugin
      * @class

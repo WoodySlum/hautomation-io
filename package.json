@@ -13,12 +13,12 @@
   "scripts": {
     "dev": "nodemon --config .nodemon.json  HautomationRunner.js",
     "start": "node HautomationRunner.js",
-    "test": "env NO_LOG=1 mocha --reporter progress --compilers js:mocha-traceur $(find tests -name '*.tests.js')",
-    "test-ci": "env NO_LOG=1 istanbul cover _mocha -- --reporter mocha-junit-reporter --compilers js:mocha-traceur $(find tests -name '*.tests.js')",
-    "coverage": "env NO_LOG=1 istanbul cover _mocha -- --compilers js:mocha-traceur $(find tests -name '*.tests.js')",
+    "test": "env NO_LOG=1 mocha --reporter progress $(find tests -name '*.tests.js')",
+    "test-ci": "env NO_LOG=1 istanbul cover _mocha -- --reporter mocha-junit-reporter $(find tests -name '*.tests.js')",
+    "coverage": "env NO_LOG=1 istanbul cover _mocha -- $(find tests -name '*.tests.js')",
     "lint": "eslint ./src/ --ext .js",
     "doc": "documentation build ./src/** -f md -o ./doc/DOCUMENTATION.md && documentation build ./src/modules/pluginsmanager/publicapis/** -f md -o ./doc/PUBLIC-APIS.md",
-    "pre-build": "npm run doc && rm -Rf ./build/* && mkdir -p ./build/plugins && mkdir -p ./build/doc && cp -R ./data ./build/ && cp ./doc/PUBLIC-APIS.md ./build/doc/ && cp -R ./scripts ./build/ && find ./node_modules -name '*.node' -exec cp -Rf {} ./build/ \\;",
+    "pre-build": "npm run doc && rm -Rf ./build/* && mkdir -p ./build/plugins && mkdir -p ./build/doc && cp -R ./data ./build/ && cp ./doc/PLUGIN.md ./build/doc/ && cp ./doc/PUBLIC-APIS.md ./build/doc/ && cp -R ./scripts ./build/ && find ./node_modules -name '*.node' -exec cp -Rf {} ./build/ \\;",
     "build": "npm run pre-build && pkg -o ./build/hautomation ."
   },
   "bin": "HautomationRunner.js",
@@ -28,7 +28,8 @@
     ],
     "assets": [
       "./src/internal-plugins/**/*.js",
-      "./node_modules/threads/lib/worker.node/slave.js"
+      "./node_modules/threads/lib/worker.node/slave.js",
+      "./**/*.json"
     ]
   },
   "repository": {
@@ -45,19 +46,20 @@
     "chai": "^3.5",
     "documentation": "^4.0.0-rc.1",
     "eslint": "^3.19",
-    "eslint-plugin-jsdoc": "^3.0",
-    "eslint-plugin-mocha": "^4.10.1",
+    "eslint-plugin-jsdoc": "^3.1.1",
+    "eslint-plugin-mocha": "^4.11.0",
     "eslint-plugin-require-jsdoc": "^1.0",
     "istanbul": "^1.1.0-alpha.1",
     "mocha": "^3.3",
     "mocha-junit-reporter": "^1.13",
-    "mocha-traceur": "2.1",
     "nodemon": "^1.11.0",
     "pkg": "^3.0",
-    "sinon": "^2.3.4"
+    "sinon": "^2.3.5"
   },
   "dependencies": {
+    "annotation": "git+https://github.com/WoodySlum/node-annotation.git#master",
     "body-parser": "^1.17",
+    "callsite": "^1.0.0",
     "columnify": "^1.5",
     "express": "^4.15",
     "is-running": "^2.1.0",
@@ -68,7 +70,6 @@
     "sqlite3": "^3.1.8",
     "stack-trace": "^0.0",
     "threads": "git://github.com/WoodySlum/threads.js.git#master",
-    "toposort": "^1.0",
-    "traceur": "^0.0"
+    "toposort": "^1.0"
   }
 }

@@ -20,10 +20,10 @@ function bar(data, send) {
 }
 
 const expectedStringifyClass = `(data, send) => {
-      var a = {};
+        var a = {};
      return this;}`;
 const expectedStringifyFunc = `(data, send) => {
-  var a = {};
+    var a = {};
  return this;}`;
 
 describe("ThreadsManager", function() {

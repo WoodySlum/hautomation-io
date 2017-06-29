@@ -12,9 +12,10 @@ var AlarmManager = require("./modules/alarmmanager/AlarmManager");
 var PluginsManager = require("./modules/pluginsmanager/PluginsManager");
 var DeviceManager = require("./modules/devicemanager/DeviceManager");
 var DbManager = require("./modules/dbmanager/DbManager");
+var TranslateManager = require("./modules/translatemanager/TranslateManager");
+var FormManager = require("./modules/formmanager/FormManager");
 const CONFIGURATION_FILE = "data/config.json";
 var AppConfiguration = require("./../data/config.json");
-
 
 /**
  * The main class for core.
@@ -30,7 +31,14 @@ class HautomationCore {
         // Load main configuration
         this.configurationLoader();
 
+        // Translation
+        this.translateManager = new TranslateManager.class(AppConfiguration.lng);
+        this.translateManager.addTranslations(__dirname + "/.."); // Base translations
 
+        // Form
+        this.formManager = new FormManager.class(this.translateManager);
+
+        // Threads
         this.threadsManager = new ThreadsManager.class();
 
         // Services
@@ -53,7 +61,7 @@ class HautomationCore {
         // Alarm module
         this.alarmManager = new AlarmManager.class(this.confManager, this.webServices);
         // Plugins manager module
-        this.pluginsManager = new PluginsManager.class(this.confManager, this.webServices, this.servicesManager, this.dbManager);
+        this.pluginsManager = new PluginsManager.class(this.confManager, this.webServices, this.servicesManager, this.dbManager, this.translateManager, this.formManager);
         // Device manager module
         this.deviceManager = new DeviceManager.class(this.confManager, this.pluginsManager, this.webServices);
 

@@ -1,0 +1,198 @@
+{
+  "schema": {
+    "type": "object",
+    "required": [
+      "b",
+      "a",
+      "e"
+    ],
+    "properties": {
+      "id": {
+        "type": "number"
+      },
+      "b": {
+        "type": "string",
+        "title": "BARFOO",
+        "default": "FooBar",
+        "maxLength": 5
+      },
+      "a": {
+        "type": "integer",
+        "title": "Translated value"
+      },
+      "e": {
+        "type": "number",
+        "title": "Translated value",
+        "minimum": 1,
+        "maximum": 10
+      },
+      "c": {
+        "type": "string",
+        "title": "Bar",
+        "enum": [
+          "foo",
+          "bar"
+        ],
+        "enumNames": [
+          "BARFOO",
+          "Bar"
+        ]
+      },
+      "d": {
+        "type": "string",
+        "title": "Bar",
+        "enum": [
+          [
+            "WOODY",
+            "SLUM"
+          ],
+          null
+        ],
+        "enumNames": [
+          "DUBOIS",
+          "Bar"
+        ]
+      },
+      "f": {},
+      "g": {
+        "type": "string",
+        "title": "I'm a radio",
+        "enum": [
+          "a",
+          "b"
+        ],
+        "enumNames": [
+          "Option A",
+          "Option B"
+        ]
+      },
+      "h": {
+        "type": "string",
+        "title": "I'm disabled",
+        "default": "FooBar"
+      },
+      "i": {
+        "type": "string",
+        "title": "I'm read only",
+        "default": "FooBar"
+      },
+      "j": {
+        "type": "string",
+        "title": "I'm hidden",
+        "default": "FooBar"
+      },
+      "k": {
+        "type": "string",
+        "title": "I'm a textarea",
+        "default": "FooBar"
+      },
+      "l": {
+        "type": "array",
+        "title": "Bar",
+        "items": {
+          "type": "string",
+          "enum": [
+            [
+              "WOODY",
+              "SLUM"
+            ],
+            null
+          ],
+          "enumNames": [
+            "DUBOIS",
+            "Bar"
+          ]
+        },
+        "uniqueItems": false
+      },
+      "m": {
+        "type": "string",
+        "title": "I'm a color picker",
+        "default": "#FF0000"
+      },
+      "n": {
+        "type": "string",
+        "format": "date",
+        "title": "Pick a date"
+      },
+      "o": {
+        "type": "string",
+        "format": "date-time",
+        "title": "Pick a date time"
+      },
+      "zz": {
+        "type": "string",
+        "format": "date-time",
+        "title": "Another extended form"
+      },
+      "zzi": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [],
+          "properties": {
+            "xo": {
+              "type": "string",
+              "title": "Another extended form"
+            }
+          }
+        },
+        "title": "Pick sub objects !"
+      },
+      "zzj": {
+        "type": "object",
+        "required": [],
+        "properties": {
+          "xo": {
+            "type": "string",
+            "title": "Another extended form"
+          }
+        },
+        "title": "Pick only one sub object !"
+      }
+    }
+  },
+  "schemaUI": {
+    "id": {
+      "ui:widget": "hidden"
+    },
+    "b": {},
+    "a": {},
+    "e": {},
+    "c": {},
+    "d": {},
+    "f": {},
+    "g": {
+      "ui:widget": "radio"
+    },
+    "h": {
+      "ui:disabled": true
+    },
+    "i": {
+      "ui:readonly": true
+    },
+    "j": {
+      "ui:widget": "hidden"
+    },
+    "k": {
+      "ui:widget": "textarea"
+    },
+    "l": {
+      "ui:widget": "checkboxes"
+    },
+    "m": {
+      "ui:widget": "color"
+    },
+    "n": {},
+    "o": {},
+    "zz": {},
+    "zzi": {
+      "items": {
+        "xo": {}
+      }
+    },
+    "zzj": {
+      "xo": {}
+    }
+  }
+}

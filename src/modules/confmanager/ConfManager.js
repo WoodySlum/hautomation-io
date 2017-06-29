@@ -166,7 +166,7 @@ class ConfManager {
      * @param  {Object} object     The object to search
      * @param  {Array} [datas=null]      An array of objects
      * @param  {Function} [comparator=null] A comparator function with 2 parameters (obj1, obj2). The comparator must return true if objects are equals. Else false.
-     * @returns {[Object]}     The Array of Objects updated, null if object savec
+     * @returns {[Object]}     The Array of Objects updated, or single object
      */
     setData(key, object, datas = null, comparator = null) {
         if (datas) {
@@ -175,11 +175,13 @@ class ConfManager {
             } catch (e) {
                 Logger.verbose(e.message);
             }
+            
             datas.push(object);
             this.saveData(datas, key);
             return datas;
         } else {
             this.saveData(object, key);
+            return object;
         }
     }
 

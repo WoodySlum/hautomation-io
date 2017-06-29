@@ -11,6 +11,7 @@
 -   [RFLink](#rflink)
 -   [run](#run)
 -   [threadCallback](#threadcallback)
+-   [xo](#xo)
 -   [Sample](#sample)
     -   [processAPI](#processapi)
     -   [test](#test)
@@ -111,13 +112,36 @@
     -   [constructor](#constructor-11)
     -   [setDevice](#setdevice)
     -   [processAPI](#processapi-2)
+-   [FormConfiguration](#formconfiguration)
+    -   [constructor](#constructor-12)
+    -   [loadConfig](#loadconfig)
+    -   [saveConfig](#saveconfig)
+    -   [comparator](#comparator)
+    -   [registerForm](#registerform)
+    -   [processAPI](#processapi-3)
+    -   [getConfig](#getconfig)
+-   [FormManager](#formmanager)
+    -   [constructor](#constructor-13)
+    -   [convertProperties](#convertproperties)
+    -   [register](#register)
+    -   [sanitize](#sanitize)
+    -   [getExtendedClass](#getextendedclass)
+    -   [initSchema](#initschema-1)
+    -   [initSchemaUI](#initschemaui)
+    -   [getForm](#getform)
+    -   [generateForm](#generateform)
+-   [FormObject](#formobject)
+    -   [constructor](#constructor-14)
+    -   [json](#json-2)
+-   [id](#id)
 -   [PluginsAPI](#pluginsapi)
     -   [exportClass](#exportclass)
+    -   [init](#init)
 -   [PluginConf](#pluginconf)
-    -   [constructor](#constructor-12)
-    -   [json](#json-2)
+    -   [constructor](#constructor-15)
+    -   [json](#json-3)
 -   [PluginsManager](#pluginsmanager)
-    -   [constructor](#constructor-13)
+    -   [constructor](#constructor-16)
     -   [getPluginsFromDirectory](#getpluginsfromdirectory)
     -   [checkPluginSanity](#checkpluginsanity)
     -   [initPlugins](#initplugins)
@@ -128,18 +152,24 @@
     -   [prepareToposortArray](#preparetoposortarray)
     -   [toposort](#toposort)
     -   [topsortedArrayConverter](#topsortedarrayconverter)
+-   [ConfigurationAPI](#configurationapi)
+    -   [register](#register-1)
+    -   [getConfiguration](#getconfiguration)
 -   [DatabaseAPI](#databaseapi)
     -   [schema](#schema)
     -   [dbHelper](#dbhelper-1)
 -   [ServicesManagerAPI](#servicesmanagerapi)
     -   [add](#add)
+-   [TranslateAPI](#translateapi)
+    -   [load](#load-1)
+    -   [t](#t)
 -   [WebAPI](#webapi)
-    -   [register](#register)
+    -   [register](#register-2)
     -   [unregister](#unregister)
     -   [Authentication](#authentication-1)
     -   [APIResponse](#apiresponse)
 -   [ServicesManager](#servicesmanager)
-    -   [constructor](#constructor-14)
+    -   [constructor](#constructor-17)
     -   [isServiceRegistered](#isserviceregistered)
     -   [add](#add-1)
     -   [remove](#remove-1)
@@ -148,15 +178,20 @@
     -   [restart](#restart)
     -   [getService](#getservice)
 -   [ThreadsManager](#threadsmanager)
-    -   [constructor](#constructor-15)
+    -   [constructor](#constructor-18)
     -   [stringifyFunc](#stringifyfunc)
     -   [run](#run-1)
     -   [send](#send)
     -   [kill](#kill)
     -   [getPid](#getpid)
     -   [isRunning](#isrunning)
+-   [TranslateManager](#translatemanager)
+    -   [constructor](#constructor-19)
+    -   [addTranslations](#addtranslations)
+    -   [t](#t-1)
+    -   [translateArray](#translatearray)
 -   [User](#user)
-    -   [constructor](#constructor-16)
+    -   [constructor](#constructor-20)
     -   [username](#username-1)
     -   [password](#password)
     -   [level](#level-1)
@@ -164,9 +199,9 @@
     -   [email](#email)
     -   [phone](#phone)
     -   [picture](#picture)
-    -   [json](#json-3)
+    -   [json](#json-4)
 -   [UserManager](#usermanager)
-    -   [constructor](#constructor-17)
+    -   [constructor](#constructor-21)
     -   [confManager](#confmanager-1)
     -   [users](#users)
     -   [removeUser](#removeuser)
@@ -176,7 +211,7 @@
     -   [setUser](#setuser)
     -   [getAdminUser](#getadminuser)
 -   [Service](#service)
-    -   [constructor](#constructor-18)
+    -   [constructor](#constructor-22)
     -   [start](#start-2)
     -   [run](#run-2)
     -   [threadCallback](#threadcallback-1)
@@ -188,18 +223,18 @@
     -   [stop](#stop-2)
     -   [restart](#restart-1)
     -   [status](#status)
-    -   [register](#register-1)
+    -   [register](#register-3)
     -   [unregister](#unregister-1)
     -   [setThreadsManager](#setthreadsmanager)
 -   [APIRegistration](#apiregistration)
-    -   [constructor](#constructor-19)
+    -   [constructor](#constructor-23)
     -   [delegate](#delegate)
     -   [method](#method)
     -   [route](#route)
     -   [authLevel](#authlevel)
     -   [isEqual](#isequal)
 -   [APIRequest](#apirequest)
-    -   [constructor](#constructor-20)
+    -   [constructor](#constructor-24)
     -   [method](#method-1)
     -   [ip](#ip)
     -   [route](#route-1)
@@ -210,18 +245,18 @@
     -   [authenticationData](#authenticationdata-1)
     -   [addAuthenticationData](#addauthenticationdata)
 -   [APIResponse](#apiresponse-1)
-    -   [constructor](#constructor-21)
+    -   [constructor](#constructor-25)
     -   [success](#success)
     -   [response](#response)
     -   [errorCode](#errorcode)
     -   [errorMessage](#errormessage)
 -   [WebServices](#webservices)
-    -   [constructor](#constructor-22)
+    -   [constructor](#constructor-26)
     -   [start](#start-3)
     -   [registerInfos](#registerinfos)
-    -   [processAPI](#processapi-3)
+    -   [processAPI](#processapi-4)
     -   [stop](#stop-3)
-    -   [register](#register-2)
+    -   [register](#register-4)
     -   [unregister](#unregister-2)
     -   [registerAPI](#registerapi)
     -   [unregisterAPI](#unregisterapi)
@@ -287,6 +322,8 @@ Should be overloaded by service
 **Parameters**
 
 -   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A data passed as initial value
+
+## xo
 
 ## Sample
 
@@ -582,7 +619,7 @@ Set data (save)
 -   `datas` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of objects (optional, default `null`)
 -   `comparator` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A comparator function with 2 parameters (obj1, obj2). The comparator must return true if objects are equals. Else false. (optional, default `null`)
 
-Returns **\[[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)]** The Array of Objects updated, null if object savec
+Returns **\[[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)]** The Array of Objects updated, or single object
 
 ### removeData
 
@@ -1295,6 +1332,205 @@ Process web API callback
 
 Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with APIResponse
 
+## FormConfiguration
+
+This class allows to manage form configuration
+
+**Parameters**
+
+-   `confManager`  
+-   `formManager`  
+-   `webServices`  
+-   `name`  
+-   `list`   (optional, default `false`)
+-   `formClass`   (optional, default `null`)
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `confManager` **[ConfManager](#confmanager)** A configuration manager
+-   `formManager` **[FormManager](#formmanager)** A form manager
+-   `webServices` **[WebServices](#webservices)** Web services instance
+-   `name` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A name or identifier
+-   `list` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if form configuration manage a list, false otherwise (optional, default `false`)
+-   `formClass` **Class** A form annotation's implemented class. Can be called later through `register` method (optional, default `null`)
+
+Returns **[FormConfiguration](#formconfiguration)** The instance
+
+### loadConfig
+
+Load configuration (data from file)
+
+### saveConfig
+
+Save configuration
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Object data
+
+### comparator
+
+List comparator for ConfManager
+
+**Parameters**
+
+-   `obj1` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An first object
+-   `obj2` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A second object
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if equals, false otherwise
+
+### registerForm
+
+Register a form shortcut
+
+**Parameters**
+
+-   `formClass` **Class** A form annotation's implemented class
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The inject objects
+
+### processAPI
+
+Process API callback
+
+**Parameters**
+
+-   `apiRequest` **[APIRequest](#apirequest)** An APIRequest
+
+Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with an APIResponse object
+
+### getConfig
+
+Return configuration
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A configuration
+
+## FormManager
+
+Generate forms from a specific object
+The generated form is compatible with <https://mozilla-services.github.io/react-jsonschema-form/> library
+
+**Parameters**
+
+-   `translateManager`  
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `translateManager` **[TranslateManager](#translatemanager)** A translate manager
+
+Returns **[FormManager](#formmanager)** A form manager
+
+### convertProperties
+
+Convert key / values object into a single one. Example `[{key:"Foo", value:"Bar"}]` will become `{Foo:"Bar"}`
+
+**Parameters**
+
+-   `inputObject` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An input object
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An output object
+
+### register
+
+Register a form class
+
+**Parameters**
+
+-   `cl` **Class** A class with form annotations
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Parameters injection on static methods
+
+### sanitize
+
+Check if the register class is valid
+
+**Parameters**
+
+-   `cl` **Class** A class
+
+### getExtendedClass
+
+Get the extended class (parent) from a class
+
+**Parameters**
+
+-   `cl` **Class** A class
+
+Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Extended class
+
+### initSchema
+
+Init schema
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An initialized schema
+
+### initSchemaUI
+
+Init UI schema
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An initialized schema
+
+### getForm
+
+Get a form object
+
+**Parameters**
+
+-   `cl` **Class** A class with form annotations
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Parameters injection on static methods
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A form object with the properties `schema` and `schemaUI`
+
+### generateForm
+
+Generates a form for a specific class
+
+**Parameters**
+
+-   `cl` **Class** A class with form annotations
+-   `schema` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Current schema (append)
+-   `schemaUI` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Current UI schema (append)
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Parameters injection on static methods
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A form object with the properties `schema` and `schemaUI`
+
+## FormObject
+
+Form objects
+This class must be extended
+
+**Parameters**
+
+-   `id`   (optional, default `null`)
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `id` **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** An identifier (optional, default `null`)
+
+Returns **[FormObject](#formobject)** The instance
+
+### json
+
+Convert json data
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some key / value data
+
+Returns **[FormObject](#formobject)** A form object
+
+## id
+
 ## PluginsAPI
 
 This class is an interface for plugins
@@ -1306,6 +1542,9 @@ This class is an interface for plugins
 -   `webServices`  
 -   `servicesManager`  
 -   `dbManager`  
+-   `translateManager`  
+-   `formManager`  
+-   `confManager`  
 
 ### exportClass
 
@@ -1314,6 +1553,10 @@ Expose a class to other plugins
 **Parameters**
 
 -   `c` **class** A class
+
+### init
+
+Init APIs
 
 ## PluginConf
 
@@ -1355,6 +1598,8 @@ This class manage plugins
 -   `webServices`  
 -   `servicesManager`  
 -   `dbManager`  
+-   `translateManager`  
+-   `formManager`  
 
 ### constructor
 
@@ -1366,6 +1611,8 @@ Constructor
 -   `webServices` **[WebServices](#webservices)** The web services
 -   `servicesManager` **[ServicesManager](#servicesmanager)** The services manager
 -   `dbManager` **[DbManager](#dbmanager)** The database manager
+-   `translateManager` **[TranslateManager](#translatemanager)** The translate manager
+-   `formManager` **[FormManager](#formmanager)** The form manager
 
 Returns **[PluginsManager](#pluginsmanager)** The instance
 
@@ -1465,6 +1712,32 @@ Re-create a correctly sorted array of plugins with the previous toposort order
 
 Returns **\[PluginAPI]** An array of plugins sorted depending on dependencies
 
+## ConfigurationAPI
+
+Public API for configuration
+
+**Parameters**
+
+-   `confManager`  
+-   `formManager`  
+-   `webServices`  
+-   `name`  
+
+### register
+
+Register a form
+
+**Parameters**
+
+-   `formClass` **Class** A form annotation's implemented class
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The injected objects
+
+### getConfiguration
+
+Returns the configuration
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Configuration object
+
 ## DatabaseAPI
 
 Public API for database
@@ -1511,6 +1784,29 @@ Add a service
 **Parameters**
 
 -   `service` **[Service](#service)** The service
+
+## TranslateAPI
+
+Public API for translations
+
+**Parameters**
+
+-   `translateManager`  
+
+### load
+
+Load translations. Called automatically when calling `api.init()`
+
+### t
+
+Return a translation value
+
+**Parameters**
+
+-   `key` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** the key where values containe possible `%@` placeholders
+-   `values` **...[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Optional, the placeholders values. Each `%@` will be sequentially replaced by thos values
+
+Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A translation
 
 ## WebAPI
 
@@ -1714,6 +2010,53 @@ Check if the thread is running or not
 -   `identifier` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Thread identifier
 
 Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True or false
+
+## TranslateManager
+
+This class manage translations
+
+**Parameters**
+
+-   `lng`  
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `lng` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The language
+
+Returns **TranslatorManager** The instance
+
+### addTranslations
+
+Add translation data
+
+**Parameters**
+
+-   `folder` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The folder where translation is, should be usually `__dirname`, and get the following structure : lng/[code].json
+
+### t
+
+Return a translation value
+
+**Parameters**
+
+-   `key` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** the key where values containe possible `%@` placeholders
+-   `values` **...[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Optional, the placeholders values. Each `%@` will be sequentially replaced by thos values
+
+Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A translation
+
+### translateArray
+
+Translate an arraay of elements
+
+**Parameters**
+
+-   `arr` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of elements
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of translated elements
 
 ## User
 
@@ -2173,7 +2516,7 @@ Process API callback
 
 **Parameters**
 
--   `apiRequest` **\[type]** An APIRequest
+-   `apiRequest` **[APIRequest](#apirequest)** An APIRequest
 
 Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with an APIResponse object
 

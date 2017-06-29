@@ -4,9 +4,12 @@ const PrivateProperties = require("./PrivateProperties");
 var WebAPI = require("./publicapis/WebAPI");
 var ServicesManagerAPI = require("./publicapis/ServicesManagerAPI");
 var DatabaseAPI = require("./publicapis/DatabaseAPI");
+var TranslateAPI = require("./publicapis/TranslateAPI");
+var ConfigurationAPI = require("./publicapis/ConfigurationAPI");
 var Service = require("./../../services/Service");
 var DbObject = require("./../dbmanager/DbObject");
 var Logger = require("./../../logger/Logger");
+var FormObject = require("./../formmanager/FormObject");
 
 /**
  * This class is an interface for plugins
@@ -21,9 +24,12 @@ class PluginsAPI {
     //  * @param  {WebServices} webServices     The web services
     //  * @param  {ServicesManager} servicesManager     The services manager
     //  * @param  {DbManager} webServices     The database manager
+    //  * @param  {TranslateManager} translateManager     The translate manager
+    //  * @param  {FormManager} formManager     The form manager
+    //  * @param  {ConfManager} confManager     The configuration manager
     //  * @returns {PluginAPI}                  Insntance
     //  */
-    constructor(previousVersion, p, webServices, servicesManager, dbManager) {
+    constructor(previousVersion, p, webServices, servicesManager, dbManager, translateManager, formManager, confManager) {
         PrivateProperties.createPrivateState(this);
         this.previousVersion = previousVersion;
         this.p = p;
@@ -40,13 +46,16 @@ class PluginsAPI {
         // Export classes
         this.exported = Object.assign(this.exported,
             {Service: Service},
-            {DbObject: DbObject}
+            {DbObject: DbObject},
+            {FormObject: FormObject}
         );
 
         // Sub APIs
         this.webAPI = new WebAPI.class(webServices);
         this.servicesManagerAPI = new ServicesManagerAPI.class(servicesManager);
         this.databaseAPI = new DatabaseAPI.class(dbManager, this.previousVersion);
+        this.translateAPI = new TranslateAPI.class(translateManager);
+        this.configurationAPI = new ConfigurationAPI.class(confManager, formManager, webServices, this.identifier);
     }
 
     // /**
@@ -79,6 +88,14 @@ class PluginsAPI {
      */
     exportClass(c) {
         this.exported[c.name] = c;
+    }
+
+    /**
+     * Init APIs
+     */
+    init() {
+        // Load translations
+        this.translateAPI.load();
     }
 }
 
