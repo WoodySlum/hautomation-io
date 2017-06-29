@@ -4,8 +4,9 @@
 function loaded(api) {
     api.init();
 
-    class SampleForm {
-        constructor(xo) {
+    class SampleForm extends api.exported.FormObject.class {
+        constructor(id, xo) {
+            super(id);
             /**
              * @Property("xo");
              * @Type("string");
@@ -15,7 +16,7 @@ function loaded(api) {
         }
 
         json(data) {
-            return new SampleForm(data.xo);
+            return new SampleForm(data.id, data.xo);
         }
     }
 

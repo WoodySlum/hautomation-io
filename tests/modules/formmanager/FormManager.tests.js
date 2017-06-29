@@ -5,8 +5,9 @@ var sinon = require("sinon");
 
 var TranslateManager = require("./../../../src/modules/translatemanager/TranslateManager");
 var FormManager = require("./../../../src/modules/formmanager/FormManager");
+var FormObject = require("./../../../src/modules/formmanager/FormObject");
 
-class Foo {
+class Foo extends FormObject.class {
     constructor() {
         /**
          * @Property("b");
@@ -148,6 +149,10 @@ class Foo {
     static getValues(...inject) {
         return [inject[0], inject[1]];
     }
+
+    json() {
+
+    }
 }
 
 class Bar extends Foo {
@@ -176,15 +181,23 @@ class Bar extends Foo {
          */
         this.zzj = null;
     }
+
+    json() {
+
+    }
 }
 
 class FooBar extends Bar {
     constructor() {
         super();
     }
+
+    json() {
+
+    }
 }
 
-class BarFoo {
+class BarFoo extends FormObject.class {
     constructor() {
         /**
          * @Property("xo");
@@ -192,6 +205,25 @@ class BarFoo {
          * @Title("Another extended form");
          */
         this.xo = null;
+    }
+
+    json() {
+
+    }
+}
+const apiSim = {exported : {FormObject : FormObject}};
+class BarFooExtended extends apiSim.exported.FormObject.class {
+    constructor() {
+        /**
+         * @Property("xo");
+         * @Type("string");
+         * @Title("Another extended form");
+         */
+        this.xo = null;
+    }
+
+    json() {
+
     }
 }
 
@@ -219,12 +251,12 @@ describe("FormManager", function() {
         expect(formManager.registeredForms["BarFoo"].inject[1]).to.be.equal("bar");
     });
 
-    it("get extended class should return null", function() {
-        expect(formManager.getExtendedClass(BarFoo)).to.be.null;
-    });
-
     it("get extended class should return the extended class", function() {
         expect(formManager.getExtendedClass(Bar)).to.be.equal("Foo");
+    });
+
+    it("get extended class should return the extended class fro mAPI", function() {
+        expect(formManager.getExtendedClass(BarFooExtended)).to.be.equal("FormObject");
     });
 
     it("should generate a valid form (functional test)", function() {
@@ -239,8 +271,8 @@ describe("FormManager", function() {
         const generatedForm = formManager.getForm(FooBar);
         expect(formManager.initSchema.calledThrice).to.be.true;
         expect(formManager.initSchemaUI.calledThrice).to.be.true;
-        expect(formManager.generateForm.callCount).to.be.equal(5);
-        expect(formManager.getExtendedClass.callCount).to.be.equal(3);
+        expect(formManager.generateForm.callCount).to.be.equal(6);
+        expect(formManager.getExtendedClass.callCount).to.be.equal(4);
 
         // Check generation from template
         expect(JSON.stringify(generatedForm, null, 2)).to.be.equal(JSON.stringify(require("./GeneratedForm.json"), null, 2));
@@ -249,7 +281,84 @@ describe("FormManager", function() {
         formManager.initSchemaUI.restore();
         formManager.generateForm.restore();
         formManager.getExtendedClass.restore();
+    });
 
+    it("sanitize should return bad extend error", function() {
+        class Babar {
+            constructor() {
+                /**
+                 * @Property("zz");
+                 * @Type("datetime");
+                 * @Title("Another extended form");
+                 */
+                this.o = null;
+            }
+
+            json() {
+
+            }
+        }
+
+        try {
+            formManager.sanitize(Babar);
+            extepect(false).to.be.true;
+        } catch(e) {
+            expect(e.message).to.be.equal(FormManager.ERROR_NO_FORMOBJECT_EXTEND);
+        }
+    });
+
+    it("sanitize should return not registered parent class", function() {
+        class Foofoo {
+            constructor() {
+
+            }
+
+            json() {
+
+            }
+        }
+
+        class Babar extends Foofoo {
+            constructor() {
+                /**
+                 * @Property("zz");
+                 * @Type("datetime");
+                 * @Title("Another extended form");
+                 */
+                this.o = null;
+            }
+
+            json() {
+
+            }
+        }
+
+        try {
+            formManager.sanitize(Babar);
+            extepect(false).to.be.true;
+        } catch(e) {
+            expect(e.message).to.be.equal(FormManager.ERROR_PARENT_CLASS_NOT_REGISTERED);
+        }
+    });
+
+    it("sanitize should raise an error due to missing json method", function() {
+        class Babar extends FormObject.class {
+            constructor() {
+                /**
+                 * @Property("zz");
+                 * @Type("datetime");
+                 * @Title("Another extended form");
+                 */
+                this.o = null;
+            }
+        }
+
+        try {
+            formManager.sanitize(Babar);
+            extepect(false).to.be.true;
+        } catch(e) {
+            expect(e.message).to.be.equal(FormManager.ERROR_NO_JSON_METHOD);
+        }
     });
 
     after(() => {

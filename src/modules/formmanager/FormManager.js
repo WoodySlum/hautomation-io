@@ -1,6 +1,11 @@
 "use strict";
 //var Logger = require("./../../logger/Logger");
 const Annotation = require("annotation");
+const FormObject = require("./FormObject");
+
+const ERROR_NO_JSON_METHOD = "No `json` method implemented";
+const ERROR_NO_FORMOBJECT_EXTEND = "The form class does not extend `FormObject` class";
+const ERROR_PARENT_CLASS_NOT_REGISTERED = "The parent form class is not registered";
 
 /**
  * Generate forms from a specific object
@@ -17,6 +22,7 @@ class FormManager {
     constructor(translateManager) {
         this.translateManager = translateManager;
         this.registeredForms = {};
+        this.register(FormObject.class);
     }
 
     /**
@@ -40,10 +46,53 @@ class FormManager {
      * @param  {...Object} inject Parameters injection on static methods
      */
     register(cl, ...inject) {
+        this.sanitize(cl);
         this.registeredForms[cl.name] = {
             class: cl,
             inject:inject
         };
+    }
+
+    /**
+     * Check if the register class is valid
+     *
+     * @param  {Class} cl A class
+     */
+    sanitize(cl) {
+        //console.log(cl.name);
+        // Check if json method is implemented
+        const methods = Object.getOwnPropertyNames(cl.prototype);
+        if (methods.indexOf("json") == -1) {
+            throw Error(ERROR_NO_JSON_METHOD);
+        }
+
+        // Check if object inherits from FormObject
+        if (cl.name !== "FormObject") {
+            let extendedFound = true;
+            let lastExtendedClass = null;
+            try {
+                while(extendedFound) {
+                    let extendedClass = this.getExtendedClass(cl);
+                    if (extendedClass) {
+                        lastExtendedClass = extendedClass;
+
+                        if (!this.registeredForms[extendedClass]) {
+                            throw Error(ERROR_PARENT_CLASS_NOT_REGISTERED);
+                        } else {
+                            cl = this.registeredForms[extendedClass].class;
+                        }
+                    } else {
+                        extendedFound = false;
+                    }
+                }
+            } catch(e) {
+                throw e;
+            }
+
+            if (lastExtendedClass !== "FormObject") {
+                throw Error(ERROR_NO_FORMOBJECT_EXTEND);
+            }
+        }
     }
 
     /**
@@ -56,10 +105,20 @@ class FormManager {
         let c = cl.toString();
         let extendedClassFound = null;
         // Extend class lookup
-        const regex = /(.*)(extends)([ ]+)([a-zA-Z0-9]+)(.*)/g;
-        const regexRes = regex.exec(c);
-        if (regexRes && regexRes.length > 4) {
-            extendedClassFound = regexRes[4];
+        // Classic regex : class A extends B {
+        let regex = /(.*)(extends)([ ]+)([a-zA-Z0-9]+)(.*)({)/g;
+        let regexRes = regex.exec(c);
+        if (regexRes && regexRes.length > 5) {
+            if (regexRes[5] && (regexRes[5].trim() !== ".class") && (regexRes[5].trim().indexOf(".")  > -1)) {
+                // Exported class regex : class A extends obj.B.class {
+                let regex = /(.*)(extends)([ ]+)(.*)(\.)([a-zA-Z0-9.]+)(\.class)(.*)/g;
+                let regexRes = regex.exec(c);
+                if (regexRes && regexRes.length > 5) {
+                    extendedClassFound = regexRes[6].trim();
+                }
+            } else {
+                extendedClassFound = regexRes[4].trim();
+            }
         }
 
         return extendedClassFound;
@@ -318,4 +377,4 @@ class FormManager {
         return {schema:schema, schemaUI:schemaUI};
     }
 }
-module.exports = {class:FormManager};
+module.exports = {class:FormManager, ERROR_NO_JSON_METHOD:ERROR_NO_JSON_METHOD, ERROR_NO_FORMOBJECT_EXTEND:ERROR_NO_FORMOBJECT_EXTEND, ERROR_PARENT_CLASS_NOT_REGISTERED:ERROR_PARENT_CLASS_NOT_REGISTERED};

@@ -18,8 +18,10 @@ Then, you need to register the form before calling the `getForm` method.
 
 As some list and other stuff can be dynamic, you need to create static methods with parameters, that will be called automatically through the `inject` method.
 
-    class Foo {
-        constructor(bar) {
+    class Foo extends api.exported.FormObject.class {
+        constructor(id, bar) {
+            super(id);
+
             /**
              * @Property("bar");
              * @Type("string");
@@ -45,8 +47,10 @@ Create an ES6 class with some properties in constructor. Every properties will n
 
 Example :
 
-    class Foo {
-        constructor(bar) {
+    class Foo extends api.exported.FormObject.class {
+        constructor(id, bar) {
+            super(id);
+
             /**
              * @Property("bar");
              * @Type("string");
@@ -64,8 +68,9 @@ Fast and easy !
 
 #### Text box
 
-    class Foo {
-        constructor(bar) {
+    class Foo extends api.exported.FormObject.class {
+        constructor(id, bar) {
+            super(id);
             /**
              * @Property("bar");
              * @Type("string");
@@ -77,8 +82,9 @@ Fast and easy !
 
 #### Text area
 
-    class Foo {
-        constructor(bar) {
+    class Foo extends api.exported.FormObject.class {
+        constructor(id, bar) {
+            super(id);
             /**
              * @Property("bar");
              * @Type("string");
@@ -91,8 +97,9 @@ Fast and easy !
 
 #### Integer
 
-    class Foo {
-        constructor(bar) {
+    class Foo extends api.exported.FormObject.class {
+        constructor(id, bar) {
+            super(id);
             /**
              * @Property("bar");
              * @Type("integer");
@@ -106,8 +113,9 @@ Fast and easy !
 
 Number can have floating values.
 
-    class Foo {
-        constructor(bar) {
+    class Foo extends api.exported.FormObject.class {
+        constructor(id, bar) {
+            super(id);
             /**
              * @Property("bar");
              * @Type("number");
@@ -119,8 +127,9 @@ Number can have floating values.
 
 #### Boolean
 
-    class Foo {
-        constructor(bar) {
+    class Foo extends api.exported.FormObject.class {
+        constructor(id, bar) {
+            super(id);
             /**
              * @Property("bar");
              * @Type("boolean");
@@ -132,8 +141,9 @@ Number can have floating values.
 
 #### List with static values
 
-    class Foo {
-        constructor(bar) {
+    class Foo extends api.exported.FormObject.class {
+        constructor(id, bar) {
+            super(id);
             /**
              * @Property("bar");
              * @Type("string");
@@ -149,8 +159,9 @@ Number can have floating values.
 
 You can set a static method to make list more dynamic. The static method will be called with the `inject` parameters when registering form.
 
-    class Foo {
-        constructor(bar) {
+    class Foo extends api.exported.FormObject.class {
+        constructor(id, bar) {
+            super(id);
             /**
              * @Property("bar");
              * @Type("string");
@@ -178,8 +189,9 @@ Remember than `inject` is global.
 
 Can be static or dynamic, as lists.
 
-    class Foo {
-        constructor(bar) {
+    class Foo extends api.exported.FormObject.class {
+        constructor(id, bar) {
+            super(id);
             /**
              * @Property("bar");
              * @Type("string");
@@ -196,8 +208,9 @@ Can be static or dynamic, as lists.
 
 Can be static or dynamic, as lists.
 
-    class Foo {
-        constructor(bar) {
+    class Foo extends api.exported.FormObject.class {
+        constructor(id, bar) {
+            super(id);
             /**
              * @Property("bar");
              * @Type("string");
@@ -212,8 +225,9 @@ Can be static or dynamic, as lists.
 
 #### Date
 
-    class Foo {
-        constructor(bar) {
+    class Foo extends api.exported.FormObject.class {
+        constructor(id, bar) {
+            super(id);
             /**
              * @Property("bar");
              * @Type("date");
@@ -225,8 +239,9 @@ Can be static or dynamic, as lists.
 
 #### Date time
 
-    class Foo {
-        constructor(bar) {
+    class Foo extends api.exported.FormObject.class {
+        constructor(id, bar) {
+            super(id);
             /**
              * @Property("bar");
              * @Type("datetime");
@@ -238,8 +253,9 @@ Can be static or dynamic, as lists.
 
 #### Color
 
-    class Foo {
-        constructor(bar) {
+    class Foo extends api.exported.FormObject.class {
+        constructor(id, bar) {
+            super(id);
             /**
              * @Property("bar");
              * @Type("string");
@@ -268,12 +284,17 @@ Can be static or dynamic, as lists.
 
     @Readonly(true);
 
+#### Hidden
+
+    @Hidden(true);
+
 ### Add multiple list elements
 
 You can use the `@Unique` tag to get the possibility to add multiple elements to a list :
 
-    class Foo {
-        constructor(bar) {
+    class Foo extends api.exported.FormObject.class {
+        constructor(id, bar) {
+            super(id);
             /**
              * @Property("bar");
              * @Type("string");
@@ -293,8 +314,9 @@ The parent class must be registered **before** calling the `getForm` method.
 
 Example :
 
-    class Foo {
-        constructor(xo) {
+    class Foo extends api.exported.FormObject.class {
+        constructor(id, xo) {
+            super(id);
             /**
              * @Property("xo");
              * @Type("string");
@@ -305,8 +327,8 @@ Example :
     }
 
     class Bar extends Foo {
-        constructor(xo, xp) {
-            super(xo);
+        constructor(id, xo, xp) {
+            super(id, xo);
 
             /**
              * @Property("xp");
@@ -330,8 +352,9 @@ The subform class must be registered **before** calling the `getForm` method.
 
 Example :
 
-    class Foo {
-        constructor(xo) {
+    class Foo extends api.exported.FormObject.class {
+        constructor(id, xo) {
+            super(id);
             /**
              * @Property("xo");
              * @Type("string");
@@ -341,8 +364,9 @@ Example :
         }
     }
 
-    class Bar {
-        constructor(xo, xp) {
+    class Bar extends api.exported.FormObject.class {
+        constructor(id, xo, xp) {
+            super(id);
             /**
              * @Property("xp");
              * @Type("string");
@@ -371,8 +395,9 @@ The subform class must be registered **before** calling the `getForm` method.
 
 Example :
 
-    class Foo {
-        constructor(xo) {
+    class Foo extends api.exported.FormObject.class {
+        constructor(id, xo) {
+            super(id);
             /**
              * @Property("xo");
              * @Type("string");
@@ -382,8 +407,9 @@ Example :
         }
     }
 
-    class Bar {
-        constructor(xo, xp) {
+    class Bar extends api.exported.FormObject.class {
+        constructor(id, xo, xp) {
+            super(id);
             /**
              * @Property("xp");
              * @Type("string");

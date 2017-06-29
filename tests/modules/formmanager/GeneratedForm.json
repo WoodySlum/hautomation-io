@@ -7,6 +7,9 @@
       "e"
     ],
     "properties": {
+      "id": {
+        "type": "number"
+      },
       "b": {
         "type": "string",
         "title": "BARFOO",
@@ -150,6 +153,9 @@
     }
   },
   "schemaUI": {
+    "id": {
+      "ui:widget": "hidden"
+    },
     "b": {},
     "a": {},
     "e": {},

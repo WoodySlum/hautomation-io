@@ -9,6 +9,7 @@ var ConfigurationAPI = require("./publicapis/ConfigurationAPI");
 var Service = require("./../../services/Service");
 var DbObject = require("./../dbmanager/DbObject");
 var Logger = require("./../../logger/Logger");
+var FormObject = require("./../formmanager/FormObject");
 
 /**
  * This class is an interface for plugins
@@ -45,7 +46,8 @@ class PluginsAPI {
         // Export classes
         this.exported = Object.assign(this.exported,
             {Service: Service},
-            {DbObject: DbObject}
+            {DbObject: DbObject},
+            {FormObject: FormObject}
         );
 
         // Sub APIs
