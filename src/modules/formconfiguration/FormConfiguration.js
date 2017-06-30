@@ -77,13 +77,17 @@ class FormConfiguration {
         if (!data.id) {
             data.id = Math.floor(Date.now() + (Math.random()*100));
         }
-        if (data instanceof Array) {
-            data.forEach((d) => {
-                this.data = this.confManager.setData(this.confKey, new (this.formClass)().json(d), this.data, this.comparator);
-            });
+        if (this.list) {
+            if (data instanceof Array) {
+                data.forEach((d) => {
+                    this.data = this.confManager.setData(this.confKey, new (this.formClass)().json(d), this.data, this.comparator);
+                });
 
+            } else {
+                this.data = this.confManager.setData(this.confKey, new (this.formClass)().json(data), this.data, this.comparator);
+            }
         } else {
-            this.data = this.confManager.setData(this.confKey, new (this.formClass)().json(data), this.data, this.comparator);
+            this.data = this.confManager.setData(this.confKey, new (this.formClass)().json(data));
         }
     }
 

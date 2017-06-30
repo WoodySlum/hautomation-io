@@ -7,6 +7,9 @@
     -   [start](#start)
     -   [stop](#stop)
     -   [configurationLoader](#configurationloader)
+-   [myParameter](#myparameter)
+-   [module](#module)
+-   [status](#status)
 -   [Radio](#radio)
 -   [RFLink](#rflink)
 -   [run](#run)
@@ -105,6 +108,9 @@
     -   [cleanForSelect](#cleanforselect)
     -   [cleanForDelete](#cleanfordelete)
     -   [request](#request)
+-   [DbSchemaConverter](#dbschemaconverter)
+    -   [tableName](#tablename)
+    -   [toSchema](#toschema)
 -   [Device](#device)
     -   [constructor](#constructor-10)
     -   [json](#json-1)
@@ -122,7 +128,6 @@
     -   [getConfig](#getconfig)
 -   [FormManager](#formmanager)
     -   [constructor](#constructor-13)
-    -   [convertProperties](#convertproperties)
     -   [register](#register)
     -   [sanitize](#sanitize)
     -   [getExtendedClass](#getextendedclass)
@@ -156,16 +161,20 @@
     -   [register](#register-1)
     -   [getConfiguration](#getconfiguration)
 -   [DatabaseAPI](#databaseapi)
-    -   [schema](#schema)
+    -   [register](#register-2)
     -   [dbHelper](#dbhelper-1)
 -   [ServicesManagerAPI](#servicesmanagerapi)
     -   [add](#add)
+-   [TimeEventAPI](#timeeventapi)
+    -   [register](#register-3)
+    -   [unregister](#unregister)
+    -   [constants](#constants)
 -   [TranslateAPI](#translateapi)
     -   [load](#load-1)
     -   [t](#t)
 -   [WebAPI](#webapi)
-    -   [register](#register-2)
-    -   [unregister](#unregister)
+    -   [register](#register-4)
+    -   [unregister](#unregister-1)
     -   [Authentication](#authentication-1)
     -   [APIResponse](#apiresponse)
 -   [ServicesManager](#servicesmanager)
@@ -222,19 +231,29 @@
     -   [stopExternal](#stopexternal)
     -   [stop](#stop-2)
     -   [restart](#restart-1)
-    -   [status](#status)
-    -   [register](#register-3)
-    -   [unregister](#unregister-1)
+    -   [status](#status-1)
+    -   [register](#register-5)
+    -   [unregister](#unregister-2)
     -   [setThreadsManager](#setthreadsmanager)
--   [APIRegistration](#apiregistration)
+-   [TimeEventService](#timeeventservice)
     -   [constructor](#constructor-23)
+    -   [start](#start-3)
+    -   [stop](#stop-3)
+    -   [hash](#hash)
+    -   [elementForHash](#elementforhash)
+    -   [register](#register-6)
+    -   [unregister](#unregister-3)
+    -   [convertMode](#convertmode)
+    -   [timeEvent](#timeevent)
+-   [APIRegistration](#apiregistration)
+    -   [constructor](#constructor-24)
     -   [delegate](#delegate)
     -   [method](#method)
     -   [route](#route)
     -   [authLevel](#authlevel)
     -   [isEqual](#isequal)
 -   [APIRequest](#apirequest)
-    -   [constructor](#constructor-24)
+    -   [constructor](#constructor-25)
     -   [method](#method-1)
     -   [ip](#ip)
     -   [route](#route-1)
@@ -245,25 +264,29 @@
     -   [authenticationData](#authenticationdata-1)
     -   [addAuthenticationData](#addauthenticationdata)
 -   [APIResponse](#apiresponse-1)
-    -   [constructor](#constructor-25)
+    -   [constructor](#constructor-26)
     -   [success](#success)
     -   [response](#response)
     -   [errorCode](#errorcode)
     -   [errorMessage](#errormessage)
 -   [WebServices](#webservices)
-    -   [constructor](#constructor-26)
-    -   [start](#start-3)
+    -   [constructor](#constructor-27)
+    -   [start](#start-4)
     -   [registerInfos](#registerinfos)
     -   [processAPI](#processapi-4)
-    -   [stop](#stop-3)
-    -   [register](#register-4)
-    -   [unregister](#unregister-2)
+    -   [stop](#stop-4)
+    -   [register](#register-7)
+    -   [unregister](#unregister-4)
     -   [registerAPI](#registerapi)
     -   [unregisterAPI](#unregisterapi)
     -   [manageResponse](#manageresponse)
     -   [buildPromises](#buildpromises)
     -   [runPromises](#runpromises)
     -   [sendAPIResponse](#sendapiresponse)
+-   [Cleaner](#cleaner)
+    -   [exportConstants](#exportconstants)
+-   [Convert](#convert)
+    -   [convertProperties](#convertproperties)
 
 ## HautomationCore
 
@@ -286,6 +309,12 @@ Stop automation core
 ### configurationLoader
 
 Try to overload configuration
+
+## myParameter
+
+## module
+
+## status
 
 ## Radio
 
@@ -1240,6 +1269,30 @@ Generate SQL request
 
 Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The SQL query
 
+## DbSchemaConverter
+
+Convert a DbObject with annotations into a JSON schema (adapter)
+
+### tableName
+
+Get a table name from a DbObject extended class
+
+**Parameters**
+
+-   `dbObjectClass` **[DbObject](#dbobject)** A class extending DbObject
+
+Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The table name
+
+### toSchema
+
+Convert DbObject annotations to db schema
+
+**Parameters**
+
+-   `dbObjectClass` **[DbObject](#dbobject)** A class extending DbObject
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A database schema
+
 ## Device
 
 This class is a Device POJO
@@ -1427,16 +1480,6 @@ Constructor
 
 Returns **[FormManager](#formmanager)** A form manager
 
-### convertProperties
-
-Convert key / values object into a single one. Example `[{key:"Foo", value:"Bar"}]` will become `{Foo:"Bar"}`
-
-**Parameters**
-
--   `inputObject` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An input object
-
-Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An output object
-
 ### register
 
 Register a form class
@@ -1545,6 +1588,7 @@ This class is an interface for plugins
 -   `translateManager`  
 -   `formManager`  
 -   `confManager`  
+-   `timeEventService`  
 
 ### exportClass
 
@@ -1600,6 +1644,7 @@ This class manage plugins
 -   `dbManager`  
 -   `translateManager`  
 -   `formManager`  
+-   `timeEventService`  
 
 ### constructor
 
@@ -1613,6 +1658,7 @@ Constructor
 -   `dbManager` **[DbManager](#dbmanager)** The database manager
 -   `translateManager` **[TranslateManager](#translatemanager)** The translate manager
 -   `formManager` **[FormManager](#formmanager)** The form manager
+-   `timeEventService` **[TimeEventService](#timeeventservice)** The time event service
 
 Returns **[PluginsManager](#pluginsmanager)** The instance
 
@@ -1747,14 +1793,14 @@ Public API for database
 -   `dbManager`  
 -   `previousVersion`  
 
-### schema
+### register
 
-Set database schema
+Register database object and create associated schema (annotations)
 
 **Parameters**
 
--   `schema` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A database schema (read database documentation)
--   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback with an error in parameter : \`(err) => {}`` (optional, default `null`)
+-   `dbObjectClass` **[DbObject](#dbobject)** A class extending DbObject
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback with an error in parameter : `(err) => {}` (optional, default `null`)
 
 ### dbHelper
 
@@ -1764,8 +1810,7 @@ The DbHelper object allows you to create, update, delete or execute queries on t
 
 **Parameters**
 
--   `table` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The table
--   `dbObjectClass` **[DbObject](#dbobject)** A database object extended class. Please read documentation (optional, default `null`)
+-   `dbObjectClass` **[DbObject](#dbobject)** A database object extended class with annotations. Please read documentation
 
 Returns **[DbHelper](#dbhelper)** A DbHelper object
 
@@ -1784,6 +1829,45 @@ Add a service
 **Parameters**
 
 -   `service` **[Service](#service)** The service
+
+## TimeEventAPI
+
+Public API for time events
+
+**Parameters**
+
+-   `timeEventService`  
+
+### register
+
+Register an timer element
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback triggered when conditions are reached (context will be set back as parameter). Example : `cb(self) {}`
+-   `context` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The context to exectue the callback
+-   `mode` **int** Mode (enum) : `EVERY_SECONDS`, `EVERY_MINUTES`, `EVERY_HOURS`, `EVERY_DAYS` or `CUSTOM`
+-   `hour` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The hour value. `*` for all (optional, default `null`)
+-   `minute` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The minute value. `*` for all (optional, default `null`)
+-   `second` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The second value. `*` for all (optional, default `null`)
+
+### unregister
+
+Unegister an timer element
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback triggered when conditions are reached
+-   `mode` **int** Mode (enum) : `EVERY_SECONDS`, `EVERY_MINUTES`, `EVERY_HOURS`, `EVERY_DAYS` or `CUSTOM`
+-   `hour` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The hour value. `*` for all (optional, default `null`)
+-   `minute` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The minute value. `*` for all (optional, default `null`)
+-   `second` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The second value. `*` for all (optional, default `null`)
+
+### constants
+
+Expose a list of constants : `EVERY_SECONDS`, `EVERY_MINUTES`, `EVERY_HOURS`, `EVERY_DAYS` or `CUSTOM`
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Constants
 
 ## TranslateAPI
 
@@ -2316,6 +2400,93 @@ Set threads manager
 
 -   `threadsManager` **ThreadsManagaer** A threads manager
 
+## TimeEventService
+
+**Extends Service.class**
+
+This class allows registered items to be notified on tile recursively
+
+### constructor
+
+Constructor
+
+Returns **[TimeEventService](#timeeventservice)** The instance
+
+### start
+
+Start the service
+
+### stop
+
+Stop the service
+
+### hash
+
+Compute a SHA256 hash for the registered object
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback
+-   `mode` **int** Mode (enum) : `EVERY_SECONDS`, `EVERY_MINUTES`, `EVERY_HOURS`, `EVERY_DAYS` or `CUSTOM`
+-   `hour` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An hour (optional, default `null`)
+-   `minute` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A minute (optional, default `null`)
+-   `second` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A second (optional, default `null`)
+
+Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A SHA256 hash key
+
+### elementForHash
+
+Check if the element is already registered
+
+**Parameters**
+
+-   `hash` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A registered element hash
+
+Returns **int** The index of the element in array. If not found, returns -1
+
+### register
+
+Register an timer element
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback triggered when conditions are reached (context will be set back as parameter). Example : `cb(self) {}`
+-   `context` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The context to exectue the callback
+-   `mode` **int** Mode (enum) : `EVERY_SECONDS`, `EVERY_MINUTES`, `EVERY_HOURS`, `EVERY_DAYS` or `CUSTOM`
+-   `hour` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The hour value. `*` for all (optional, default `null`)
+-   `minute` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The minute value. `*` for all (optional, default `null`)
+-   `second` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The second value. `*` for all (optional, default `null`)
+
+### unregister
+
+Unegister an timer element
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback triggered when conditions are reached (context will be set back as parameter). Example : `cb(self) {}`
+-   `mode` **int** Mode (enum) : `EVERY_SECONDS`, `EVERY_MINUTES`, `EVERY_HOURS`, `EVERY_DAYS` or `CUSTOM`
+-   `hour` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The hour value. `*` for all (optional, default `null`)
+-   `minute` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The minute value. `*` for all (optional, default `null`)
+-   `second` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The second value. `*` for all (optional, default `null`)
+
+### convertMode
+
+Convert values fro menum to valid hour, minute and seconds
+
+**Parameters**
+
+-   `obj` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A TimerEvent object
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A converted timerEvent object
+
+### timeEvent
+
+Called when services starts, every seconds and trigger time vents
+
+**Parameters**
+
+-   `self` **TimerEventService** Current timer event service reference (context)
+
 ## APIRegistration
 
 This class is a POJO representing an APIRegistration item
@@ -2600,3 +2771,31 @@ Process sending results in JSON to API caller
 
 -   `apiResponses` **\[[APIResponse](#apiresponse)]** The API responses
 -   `res` **[Response](https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/HTML5)** The response
+
+## Cleaner
+
+Utility class for cleaning stuff
+
+### exportConstants
+
+Clean an exported class by removing the `class` property
+
+**Parameters**
+
+-   `exported` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An exported object with `class` property
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A clean object
+
+## Convert
+
+Utility class for conversion
+
+### convertProperties
+
+Convert key / values object into a single one. Example `[{key:"Foo", value:"Bar"}]` will become `{Foo:"Bar"}`
+
+**Parameters**
+
+-   `inputObject` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An input object
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An output object

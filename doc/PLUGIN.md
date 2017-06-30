@@ -125,7 +125,7 @@ You can create a form schema in a specific class. This schema will be automatica
 
 The class must implement :
 
-* An extend of `FormObject` class or a class that extends `FormObject` class
+* An extend of `FormObject` class or an existing class that extends `FormObject` class
 * A json method for serialization
 * Annotations (read specific form documentation to get more informations on this)
 
@@ -137,6 +137,7 @@ The class must implement :
 
 	    class MyForm extends api.exported.FormObject.class {
 			constructor(id, myParameter) {
+                super(id);
 				/**
 	             * @Property("myParameter");
 	             * @Type("string");
@@ -168,6 +169,9 @@ The class must implement :
 
 		// Get the configuration
 		const config = api.configurationAPI.getConfiguration();
+        if (config) {
+            console.log(config.myParameter);
+        }
 	}
 
 	module.exports.attributes = {
@@ -179,3 +183,89 @@ The class must implement :
 		dependencies:[],
 	    classes:[]
 	};
+
+### Using database
+
+As forms, you can create a simple database schema using annotations.
+
+1. The schema (or class with annotations) must be registered
+2. You need to retrieve the `DbHelper` instance
+3. Manage request using `DbRequestBuilder` object
+
+On the annotations, you have to specify on wich version field is introduced. The core will automatically manage databse schema update depending on the versions of your plugin.
+
+**Database.js**
+
+	"use strict";
+
+	function loaded(api) {
+
+	    class MyTable extends api.exported.DbObject.class {
+	        constructor(dbHelper = null, ...values) {
+	            super(dbHelper, ...values);
+	
+	            /**
+	             * @Property("text");
+	             * @Type("string");
+	             * @Version("0.0.0");
+	             */
+	            this.text;
+	
+	            /**
+	             * @Property("number");
+	             * @Type("int");
+	             * @Version("0.0.0");
+	             */
+	            this.number;
+	        }
+	    }
+	
+		return MyTable;
+	}
+
+	module.exports = loaded;
+
+
+**plugin.js**
+
+	"use strict";
+	const MyTableClass = require("./Database.js");
+
+	function loaded(api) {
+	    api.init();
+		const MyTable = MyTableClass(api);
+
+		// Register a schema
+		api.databaseAPI.register(MyTable);
+
+		// Retrieve DbHelper
+		const dbHelper = api.databaseAPI.dbHelper(MyTable);
+
+		// Creating an object
+		// "A Sample text" will be mapped to text property, 2015 will be mapped to number property
+		const dbObject = new MyTable(dbHelper, "A sample text", 2015);
+		
+		// Save the object in database
+		dbObject.save();
+
+		// Get the last inserted object
+		dbHelper.getLastObject((err, obj) => {
+        	if (!err) {
+				console.log("Last object text : " + obj.text);
+				console.log("Last object number : " + obj.number);
+			}
+        });
+
+	}
+
+	module.exports.attributes = {
+	    loadedCallback: loaded,
+	    name: "my-plugin",
+	    version: "0.0.1",
+	    category: "misc",
+	    description: "My first hautomation plugin",
+		dependencies:[],
+	    classes:[]
+	};
+
+
