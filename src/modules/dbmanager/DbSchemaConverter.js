@@ -32,7 +32,7 @@ class DbSchemaConverter {
         Annotation(c, function(AnnotationReader) {
             const properties = AnnotationReader.comments.properties;
             Object.keys(AnnotationReader.comments.properties).forEach((prop) => {
-                const meta = Convert.convertProperties(properties[prop]);
+                const meta = Convert.class.convertProperties(properties[prop]);
                 if (meta.Type && meta.Version) {
                     let localSchema = {};
                     localSchema[prop] = {type : meta.Type, version : meta.Version};

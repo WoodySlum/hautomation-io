@@ -13,7 +13,7 @@ describe("Convert", function() {
 
     it("convert properties should convert a key/value array into a single object", function() {
         const input = [{key:"foo", value:"bar"}, {key:"bar", value:"foo"}];
-        const output = Convert.convertProperties(input);
+        const output = Convert.class.convertProperties(input);
         expect(output.foo).to.be.equal("bar");
         expect(output.bar).to.be.equal("foo");
     });
