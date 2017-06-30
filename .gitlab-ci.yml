@@ -5,6 +5,7 @@ cache:
   - ~/.pkg-cache/
 
 before_script:
+  - rm -Rf node_modules
   - npm install
   - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
   - mkdir -p ~/.ssh
