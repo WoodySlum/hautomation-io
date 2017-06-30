@@ -93,6 +93,32 @@ You'll need to notify core that you need dependency for the plugin that export c
 	};
 
 
+### Trigger regularly task
+
+You can `cron` some tasks by registering through the `TimeEventAPI`.
+
+To register, use this as follow :
+
+    function repeat(self) {
+        console.log("Hello every seconds :)");
+    }
+
+    api.timeEventAPI.register(repeat, this, api.timeEventAPI.constants().EVERY_SECONDS);
+
+The `repeat` function will be called every seconds.
+You can use the following constants : `EVERY_SECONDS`, `EVERY_MINUTES`, `EVERY_HOURS`, `EVERY_DAYS` or `CUSTOM`
+
+The context (second parameter, `this` in the example above) is used when using a class function. You'll not able to use `this` inside `repeat` function because of changing scope. The context is passed through the callback parameter.
+
+#### Using custom and go further
+
+You can also specify exactly when you want to be called back through the custom option.
+
+    api.timeEventAPI.register(repeat, this, api.timeEventAPI.constants().CUSTOM, "*", 10, 0);
+
+The method will be called every hour, when minutes will be equals to 10 and seconds to 0.
+
+
 ### Creating a form and accessing to configuration
 
 You can create a form schema in a specific class. This schema will be automatically managed by the core and user will be able to configure through a form the plugin.
