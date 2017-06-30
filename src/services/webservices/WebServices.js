@@ -161,6 +161,7 @@ class WebServices extends Service.class {
                 server.close();
             });
             this.servers = [];
+            super.stop();
         } else {
             Logger.warn("WebServices are not running, nothing to do...");
         }

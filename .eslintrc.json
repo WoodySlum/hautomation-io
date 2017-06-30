@@ -10,6 +10,8 @@
       "process": false,
       "setTimeout": false,
       "setInterval": false,
+      "clearTimeout": false,
+      "clearInterval": false,
       "__dirname":false
   },
     "plugins": [

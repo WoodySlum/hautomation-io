@@ -10,6 +10,7 @@ var Service = require("./../../services/Service");
 var DbObject = require("./../dbmanager/DbObject");
 var Logger = require("./../../logger/Logger");
 var FormObject = require("./../formmanager/FormObject");
+var TimeEventAPI = require("./publicapis/TimeEventAPI");
 
 /**
  * This class is an interface for plugins
@@ -27,9 +28,10 @@ class PluginsAPI {
     //  * @param  {TranslateManager} translateManager     The translate manager
     //  * @param  {FormManager} formManager     The form manager
     //  * @param  {ConfManager} confManager     The configuration manager
+    //  * @param  {TimeEventService} timeEventService     The time event service
     //  * @returns {PluginAPI}                  Insntance
     //  */
-    constructor(previousVersion, p, webServices, servicesManager, dbManager, translateManager, formManager, confManager) {
+    constructor(previousVersion, p, webServices, servicesManager, dbManager, translateManager, formManager, confManager, timeEventService) {
         PrivateProperties.createPrivateState(this);
         this.previousVersion = previousVersion;
         this.p = p;
@@ -56,6 +58,7 @@ class PluginsAPI {
         this.databaseAPI = new DatabaseAPI.class(dbManager, this.previousVersion);
         this.translateAPI = new TranslateAPI.class(translateManager);
         this.configurationAPI = new ConfigurationAPI.class(confManager, formManager, webServices, this.identifier);
+        this.timeEventAPI = new TimeEventAPI.class(timeEventService);
     }
 
     // /**

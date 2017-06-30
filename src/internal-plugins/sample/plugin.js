@@ -32,6 +32,8 @@ function loaded(api) {
         constructor(api) {
             this.api = api;
             this.api.webAPI.register(this, "*", ":/test/", this.api.webAPI.Authentication().AUTH_NO_LEVEL);
+            this.message = "pong";
+            //api.timeEventAPI.register(this.ping, this, api.timeEventAPI.constants().EVERY_SECONDS);
         }
 
         /**
@@ -53,11 +55,16 @@ function loaded(api) {
         test() {
             console.log("======> I'm working !");
         }
+
+        ping(self) {
+            console.log(self.message);
+        }
     }
 
     api.exportClass(Sample);
 
     let s = new Sample(api);
+
 }
 
 module.exports.attributes = {

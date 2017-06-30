@@ -70,6 +70,7 @@
     "sqlite3": "^3.1.8",
     "stack-trace": "^0.0",
     "threads": "git://github.com/WoodySlum/threads.js.git#master",
-    "toposort": "^1.0"
+    "toposort": "^1.0",
+    "sha256": "^0.2"
   }
 }
