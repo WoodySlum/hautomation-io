@@ -6,6 +6,7 @@ var ServicesManager = require("./modules/servicesmanager/ServicesManager");
 var ThreadsManager = require("./modules/threadsmanager/ThreadsManager");
 var WebServices = require("./services/webservices/WebServices");
 var TimeEventService = require("./services/timeeventservice/TimeEventService");
+var SchedulerService = require("./services/schedulerservice/SchedulerService");
 var Authentication = require("./modules/authentication/Authentication");
 var ConfManager = require("./modules/confmanager/ConfManager");
 var UserManager = require("./modules/usermanager/UserManager");
@@ -53,6 +54,9 @@ class HautomationCore {
         // Db manager
         this.dbManager = new DbManager.class(AppConfiguration);
 
+        // Scheduler service
+        this.schedulerService = new SchedulerService.class(this.dbManager, this.timeEventService);
+
         // Services manager
         this.servicesManager = new ServicesManager.class(this.threadsManager);
 
@@ -65,13 +69,14 @@ class HautomationCore {
         // Alarm module
         this.alarmManager = new AlarmManager.class(this.confManager, this.webServices);
         // Plugins manager module
-        this.pluginsManager = new PluginsManager.class(this.confManager, this.webServices, this.servicesManager, this.dbManager, this.translateManager, this.formManager, this.timeEventService);
+        this.pluginsManager = new PluginsManager.class(this.confManager, this.webServices, this.servicesManager, this.dbManager, this.translateManager, this.formManager, this.timeEventService, this.schedulerService);
         // Device manager module
         this.deviceManager = new DeviceManager.class(this.confManager, this.pluginsManager, this.webServices);
 
         // Add services to manager
         this.servicesManager.add(this.webServices);
         this.servicesManager.add(this.timeEventService);
+        this.servicesManager.add(this.schedulerService);
     }
 
     /**

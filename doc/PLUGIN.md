@@ -118,6 +118,27 @@ You can also specify exactly when you want to be called back through the custom 
 
 The method will be called every hour, when minutes will be equals to 10 and seconds to 0.
 
+### Schedule an operation
+
+Core gives you the possibility to schedule a single operation in the future. For example, of you want to turn lights after a certain delay, this API is the one.
+Operations are resumed if Hautomation restarts.
+
+You need first to register with a unique id the callback :
+
+	function scheduledOperation(data) {
+        console.log("My name is " + data.name);
+    }
+	
+	api.schedulerAPI.register("display-a-name", scheduledOperation);
+
+Then you can schedule your operation :
+	
+	api.schedulerAPI.schedule("display-a-name", api.schedulerAPI.constants().IN_A_MINUTE, {name:"Foobar"});
+
+Or at a specific timestamp :
+
+	api.schedulerAPI.schedule("display-a-name", 1499018983, {name:"Foobar"});
+
 
 ### Creating a form and accessing to configuration
 

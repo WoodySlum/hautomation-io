@@ -67,7 +67,7 @@ class DbRequestBuilder {
      * @returns {string}     Escaped output
      */
     escapeString(val) {
-        val = val.replace(/[\0\n\r\b\t\\'"\x1a]/g, function (s) { // eslint-disable-line no-control-regex
+        val = val.replace(/[\0\n\r\b\t\\'\x1a]/g, function (s) { // eslint-disable-line no-control-regex
             switch (s) {
             case "\0":
                 return "\\0";
@@ -83,8 +83,8 @@ class DbRequestBuilder {
                 return "\\Z";
             case "'":
                 return "''";
-            case '"': // eslint-disable-line quotes
-                return '""'; // eslint-disable-line quotes
+            // case '"': // eslint-disable-line quotes
+            //     return '""'; // eslint-disable-line quotes
             default:
                 return "\\" + s;
             }

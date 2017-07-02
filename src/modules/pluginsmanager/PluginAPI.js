@@ -11,6 +11,7 @@ var DbObject = require("./../dbmanager/DbObject");
 var Logger = require("./../../logger/Logger");
 var FormObject = require("./../formmanager/FormObject");
 var TimeEventAPI = require("./publicapis/TimeEventAPI");
+var SchedulerAPI = require("./publicapis/SchedulerAPI");
 
 /**
  * This class is an interface for plugins
@@ -29,9 +30,10 @@ class PluginsAPI {
     //  * @param  {FormManager} formManager     The form manager
     //  * @param  {ConfManager} confManager     The configuration manager
     //  * @param  {TimeEventService} timeEventService     The time event service
+    //  * @param  {SchedulerService} schedulerService     The scheduler service
     //  * @returns {PluginAPI}                  Insntance
     //  */
-    constructor(previousVersion, p, webServices, servicesManager, dbManager, translateManager, formManager, confManager, timeEventService) {
+    constructor(previousVersion, p, webServices, servicesManager, dbManager, translateManager, formManager, confManager, timeEventService, schedulerService) {
         PrivateProperties.createPrivateState(this);
         this.previousVersion = previousVersion;
         this.p = p;
@@ -52,13 +54,14 @@ class PluginsAPI {
             {FormObject: FormObject}
         );
 
-        // Sub APIs
+        // API part
         this.webAPI = new WebAPI.class(webServices);
         this.servicesManagerAPI = new ServicesManagerAPI.class(servicesManager);
         this.databaseAPI = new DatabaseAPI.class(dbManager, this.previousVersion);
         this.translateAPI = new TranslateAPI.class(translateManager);
         this.configurationAPI = new ConfigurationAPI.class(confManager, formManager, webServices, this.identifier);
         this.timeEventAPI = new TimeEventAPI.class(timeEventService);
+        this.schedulerAPI = new SchedulerAPI.class(schedulerService);
     }
 
     // /**
