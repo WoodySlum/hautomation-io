@@ -2,6 +2,8 @@
 const PrivateProperties = require("./../PrivateProperties");
 const Authentication = require("./../../authentication/Authentication");
 const APIResponse = require("../../../services/webservices/APIResponse");
+const Cleaner = require("./../../../utils/Cleaner");
+const WebServices = require("./../../../services/webservices/WebServices");
 
 /**
  * Public API for Web services
@@ -64,6 +66,15 @@ class WebAPI {
      */
     APIResponse(success = false, response = {}, errorCode = -1, errorMessage = null) {
         return new APIResponse.class(success, response, errorCode, errorMessage);
+    }
+
+    /**
+     * Access to web services constants
+     *
+     * @returns {Object} The constants
+     */
+    constants() {
+        return Cleaner.class.exportConstants(WebServices.class);
     }
 
 }

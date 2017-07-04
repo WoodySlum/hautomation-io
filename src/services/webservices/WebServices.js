@@ -132,15 +132,15 @@ class WebServices extends Service.class {
                         registered[registeredEl.delegate.constructor.name] = {
                             method: {
                                 [registeredEl.method]:[
-                                    registeredEl.route
+                                    {route:registeredEl.route, parameters:registeredEl.parameters}
                                 ]
                             }
                         };
                     } else {
                         if (registered[registeredEl.delegate.constructor.name].method[registeredEl.method]) {
-                            registered[registeredEl.delegate.constructor.name].method[registeredEl.method].push(registeredEl.route);
+                            registered[registeredEl.delegate.constructor.name].method[registeredEl.method].push({route:registeredEl.route, parameters:registeredEl.parameters});
                         } else {
-                            registered[registeredEl.delegate.constructor.name].method[registeredEl.method] = [registeredEl.route];
+                            registered[registeredEl.delegate.constructor.name].method[registeredEl.method] = [{route:registeredEl.route, parameters:registeredEl.parameters}];
                         }
                     }
 
@@ -258,7 +258,7 @@ class WebServices extends Service.class {
             if (path.length > 0) {
                 action = path[0];
                 path.splice(0,1);
-            }            
+            }
         }
 
         let methodConstant = null;

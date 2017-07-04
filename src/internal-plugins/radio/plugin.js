@@ -82,9 +82,9 @@ function loaded(api) {
             this.module = api.identifier;
             this.api.databaseAPI.register(DbRadio);
             this.dbHelper = this.api.databaseAPI.dbHelper(DbRadio);
-            this.api.webAPI.register(this, "*", ":/radio/get/" + this.module + "/protocol/", this.api.webAPI.Authentication().AUTH_ADMIN_LEVEL);
+            this.api.webAPI.register(this, this.api.webAPI.constants().GET, ":/radio/get/" + this.module + "/protocol/", this.api.webAPI.Authentication().AUTH_ADMIN_LEVEL);
             // Example : http://localhost:8100/api/radio/set/rflink/blyss/134343/123/1/
-            this.api.webAPI.register(this, "*", ":/radio/set/" + this.module + "/", this.api.webAPI.Authentication().AUTH_NO_LEVEL);
+            this.api.webAPI.register(this, this.api.webAPI.constants().POST, ":/radio/set/" + this.module + "/[frequency]/[protocol]/[deviceId]/[switchId]/[status]/", this.api.webAPI.Authentication().AUTH_USAGE_LEVEL);
         }
 
         getProtocolList(cb) {
@@ -127,7 +127,6 @@ function loaded(api) {
                 });
             } else if (apiRequest.route.startsWith(":/radio/set/" + this.module + "/")) {
                 if (apiRequest.path.length === 7) {
-
                     const frequency = parseFloat(apiRequest.path[2]);
                     const protocol = apiRequest.path[3];
                     const deviceId = apiRequest.path[4];
@@ -135,11 +134,30 @@ function loaded(api) {
                     const status = parseFloat(apiRequest.path[6]);
                     this.trigger(frequency, protocol, deviceId, switchId, status);
                     return new Promise((resolve, reject) => {
-                        resolve(this.api.webAPI.APIResponse(true, {}));
+                        resolve(this.api.webAPI.APIResponse(true, {success:true}));
                     });
+                } else {
+                    if (apiRequest.data.protocol && apiRequest.data.deviceId && apiRequest.data.switchId && apiRequest.data.status) {
+                        const frequency = apiRequest.data.frequency?apiRequest.data.frequency:this.defaultFrequency();
+                        this.trigger(frequency, apiRequest.data.protocol, apiRequest.data.deviceId, apiRequest.data.switchId, apiRequest.data.status);
+                        return new Promise((resolve, reject) => {
+                            resolve(this.api.webAPI.APIResponse(true, {success:true}));
+                        });
+                    } else {
+                        return new Promise((resolve, reject) => {
+                            reject(this.api.webAPI.APIResponse(false, {}, 4602, "Missing parameters. Parameters needed : protocol, deviceId, switchId, status. Parameters optional : frequency"));
+                        });
+                    }
                 }
-
+            } else {
+                return new Promise((resolve, reject) => {
+                    reject(this.api.webAPI.APIResponse(false, {}, 4603, "Unknown method"));
+                });
             }
+        }
+
+        defaultFrequency() {
+            return 433.92;
         }
 
         save(frequency, protocol, deviceId, switchId, value, status) {

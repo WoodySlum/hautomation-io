@@ -36,6 +36,18 @@ class APIRegistration {
          * @type {int} An Authentication constant
          */
         this.authLevel = authLevel;
+
+        this.parameters = [];
+
+        this.route.split("/").forEach((routeElement) => {
+            const regex = /(\[)([a-zA-Z\-]+)(\])/g;
+            //console.log(routeElement);
+            let r = regex.exec(routeElement);
+            if (r && r.length > 2) {
+                this.route = this.route.replace("/" + routeElement, "");
+                this.parameters.push(r[2]);
+            }
+        });
     }
 
     /**
