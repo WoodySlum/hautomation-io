@@ -258,7 +258,7 @@ class WebServices extends Service.class {
             if (path.length > 0) {
                 action = path[0];
                 path.splice(0,1);
-            }
+            }            
         }
 
         let methodConstant = null;

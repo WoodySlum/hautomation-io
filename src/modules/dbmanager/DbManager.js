@@ -197,6 +197,8 @@ class DbManager {
             sql += "`" + field + "` BIGINT,";
         } else if (meta.type === "float") {
             sql += "`" + field + "` FLOAT,";
+        } else if (meta.type === "number") {
+            sql += "`" + field + "` DOUBLE,";
         } else if (meta.type === "double") {
             sql += "`" + field + "` DOUBLE,";
         } else if (meta.type === "date") {

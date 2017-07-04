@@ -105,8 +105,12 @@ class DbHelper {
                 if (object) {
                     // Cast object to specific object class if provided
                     let values = [];
-                    Object.keys(object).forEach((field) => {
-                        values.push(object[field]);
+                    this.getFieldsForTable().forEach((field) => {
+                        if (object[field]) {
+                            values.push(object[field]);
+                        } else {
+                            values.push(null);
+                        }
                     });
                     // Creates a new DBobject class
                     cb(error, new this.dbObjectClass(this, values));
@@ -133,8 +137,12 @@ class DbHelper {
                     objects.forEach((object) => {
                         // Cast object to specific object class if provided
                         let values = [];
-                        Object.keys(object).forEach((field) => {
-                            values.push(object[field]);
+                        this.getFieldsForTable().forEach((field) => {
+                            if (object[field]) {
+                                values.push(object[field]);
+                            } else {
+                                values.push(null);
+                            }
                         });
                         // Creates a new DBobject class
                         castObjects.push(new this.dbObjectClass(this, values));
@@ -160,8 +168,12 @@ class DbHelper {
                 if (object) {
                     // Cast object to specific object class if provided
                     let values = [];
-                    Object.keys(object).forEach((field) => {
-                        values.push(object[field]);
+                    this.getFieldsForTable().forEach((field) => {
+                        if (object[field]) {
+                            values.push(object[field]);
+                        } else {
+                            values.push(null);
+                        }
                     });
                     // Creates a new DBobject class
                     cb(error, new this.dbObjectClass(this, values));

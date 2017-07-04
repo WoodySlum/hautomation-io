@@ -48,6 +48,7 @@ class DbRequestBuilder {
         this.orderList = [];
         this.delete = false;
         this.limit = [];
+        this.distinctEnabled = false;
     }
 
     /**
@@ -444,6 +445,16 @@ class DbRequestBuilder {
     }
 
     /**
+     * De-duplicate values
+     *
+     * @returns {DbRequestBuilder}     The instance
+     */
+    distinct() {
+        this.distinctEnabled = true;
+        return this;
+    }
+
+    /**
      * Internal. Clean query for delete
      * Used when a query is passed as parameter before triggering database execution.
      * For example, passing some where filters
@@ -468,6 +479,9 @@ class DbRequestBuilder {
         // Select
         if (this.selectList.length > 0) {
             req += "SELECT ";
+            if (this.distinctEnabled) {
+                req += "DISTINCT ";
+            }
             this.selectList.forEach((field) => {
                 req += field + ",";
             });
