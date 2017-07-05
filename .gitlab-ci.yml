@@ -21,18 +21,18 @@ stages:
 test:
   stage: test
   script:
-  - npm run test-ci
+  - npm run --verbose test-ci
   coverage: '/Statements   : \d+\.\d+/'
 
 lint:
   stage: lint
   script:
-  - npm run lint
+  - npm run --verbose lint
 
 build:
   stage: build
   script:
-  - npm run build
+  - npm run --verbose build
   artifacts:
     paths:
     - build/*
