@@ -15,3 +15,9 @@ process.on("SIGTERM", function () {
     core.stop();
     process.exit(0);
 });
+
+process.on('uncaughtException', (err) => {
+  if (process.env.NODE_ENV !== 'test') {
+    process.exit(1);
+  }
+});
