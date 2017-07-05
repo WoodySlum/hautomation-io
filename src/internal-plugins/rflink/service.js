@@ -317,7 +317,7 @@ function loaded(api) {
             };
 
             try {
-                sclient = new sp("/dev/tty.usbmodem1421", {
+                sclient = new sp("/dev/ttyACM0", {
                     baudrate: 57600,
                     databits: 8,
                     parity: "none",
