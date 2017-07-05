@@ -69,6 +69,10 @@ class ThreadsManager {
                 }
             });
 
+            this.process.on("uncaughtException", (err) => {
+                process.exit(1);
+            });
+
             done(input.identifier);
         })
         .send({dirname: __dirname, identifier:identifier, prototype:prototype, data:data})
