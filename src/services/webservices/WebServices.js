@@ -311,13 +311,40 @@ class WebServices extends Service.class {
                 && typeof registeredEl.delegate.processAPI === "function") {
                 Logger.verbose("API registered for class " + registeredEl.delegate.constructor.name + " level : " + registeredEl.authLevel + " / API Auth level : " + (apiRequest.authenticationData?apiRequest.authenticationData.level:"not defined yet"));
                 if (!apiRequest.authenticationData || apiRequest.authenticationData && registeredEl.authLevel <= apiRequest.authenticationData.level) {
-                    let p = registeredEl.delegate.processAPI(apiRequest);
+                    let p;
+                    if (registeredEl.parameters && registeredEl.parameters.length > 0) {
+                        // This code part is looking for URL parameters (dynamic) like /endpoint/[parameter]/
+                        Logger.info("Parameters found " + registeredEl.parameters);
+                        if ((apiRequest.path.length + 1) >= (registeredEl.routeBase.length - registeredEl.nbParametersOptional)) {
+                            let baseIndex = registeredEl.routeBase.length - registeredEl.parameters.length -1; // -1 fot action (removed)
+                            for (let i = 0 ; i < registeredEl.parameters.length ; i++) {
+                                apiRequest.data[registeredEl.parameters[i].name] = apiRequest.path[i+baseIndex]?apiRequest.path[i+baseIndex]:null;
+                            }
+                            p = registeredEl.delegate.processAPI(apiRequest);
+                        } else {
+                            p = new Promise((resolve, reject) => {
+                                let parameters = [];
+                                registeredEl.parameters.forEach((parameter) => {
+                                    if (parameter.optional) {
+                                        parameters.push(parameter.name + " (optional)");
+                                    } else {
+                                        parameters.push(parameter.name);
+                                    }
+                                });
+                                reject(new APIResponse.class(false, {}, 7258, "Invalid parameters. Expected : " + parameters.join(", ")));
+                            });
+                        }
+                    } else {
+                        p = registeredEl.delegate.processAPI(apiRequest);
+                    }
+
                     if (!p) {
                         Logger.err("Error in web service api response");
                         p = new Promise((resolve) => {
                             resolve(new APIResponse.class(true, {}));
                         });
                     }
+
                     promises.push(p);
                 } else if (apiRequest.authenticationData) {
                     promises.push(new Promise((resolve) => {resolve(new APIResponse.class(false, {}, 812, "Unauthorized"));}));

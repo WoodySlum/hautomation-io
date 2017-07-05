@@ -13,50 +13,11 @@
     -   [registerForm](#registerform)
     -   [processAPI](#processapi)
     -   [getConfig](#getconfig)
--   [Logger](#logger)
-    -   [log](#log)
-    -   [warn](#warn)
-    -   [err](#err)
-    -   [verbose](#verbose)
-    -   [info](#info)
-    -   [debug](#debug)
--   [WebServices](#webservices)
-    -   [constructor](#constructor-1)
-    -   [start](#start)
-    -   [registerInfos](#registerinfos)
-    -   [processAPI](#processapi-1)
-    -   [stop](#stop)
-    -   [register](#register-1)
-    -   [unregister](#unregister)
-    -   [registerAPI](#registerapi)
-    -   [unregisterAPI](#unregisterapi)
-    -   [manageResponse](#manageresponse)
-    -   [buildPromises](#buildpromises)
-    -   [runPromises](#runpromises)
-    -   [sendAPIResponse](#sendapiresponse)
--   [APIRequest](#apirequest)
-    -   [constructor](#constructor-2)
-    -   [method](#method)
-    -   [ip](#ip)
-    -   [route](#route)
-    -   [path](#path)
-    -   [action](#action)
-    -   [params](#params)
-    -   [data](#data)
-    -   [authenticationData](#authenticationdata)
-    -   [addAuthenticationData](#addauthenticationdata)
--   [APIRegistration](#apiregistration)
-    -   [constructor](#constructor-3)
-    -   [delegate](#delegate)
-    -   [method](#method-1)
-    -   [route](#route-1)
-    -   [authLevel](#authlevel)
-    -   [isEqual](#isequal)
 -   [DatabaseAPI](#databaseapi)
-    -   [register](#register-2)
+    -   [register](#register-1)
     -   [dbHelper](#dbhelper)
 -   [DbHelper](#dbhelper-1)
-    -   [constructor](#constructor-4)
+    -   [constructor](#constructor-1)
     -   [RequestBuilder](#requestbuilder)
     -   [Operators](#operators)
     -   [getFieldsForTable](#getfieldsfortable)
@@ -67,12 +28,12 @@
     -   [delObject](#delobject)
     -   [delObjects](#delobjects)
 -   [DbObject](#dbobject)
-    -   [constructor](#constructor-5)
+    -   [constructor](#constructor-2)
     -   [base](#base)
     -   [save](#save)
     -   [del](#del)
 -   [DbRequestBuilder](#dbrequestbuilder)
-    -   [constructor](#constructor-6)
+    -   [constructor](#constructor-3)
     -   [removeLastComma](#removelastcomma)
     -   [escapeString](#escapestring)
     -   [getValueEncapsulated](#getvalueencapsulated)
@@ -95,6 +56,7 @@
     -   [lim](#lim)
     -   [first](#first)
     -   [cleanForSelect](#cleanforselect)
+    -   [distinct](#distinct)
     -   [cleanForDelete](#cleanfordelete)
     -   [request](#request)
 -   [DbSchemaConverter](#dbschemaconverter)
@@ -102,40 +64,42 @@
     -   [toSchema](#toschema)
 -   [Convert](#convert)
     -   [convertProperties](#convertproperties)
+-   [SchedulerAPI](#schedulerapi)
+    -   [register](#register-2)
+    -   [unregister](#unregister)
+    -   [schedule](#schedule)
+    -   [constants](#constants)
+-   [SchedulerService](#schedulerservice)
+    -   [constructor](#constructor-4)
+    -   [start](#start)
+    -   [stop](#stop)
+    -   [register](#register-3)
+    -   [unregister](#unregister-1)
+    -   [schedule](#schedule-1)
+    -   [timeEvent](#timeevent)
+-   [SchedulerDbObject](#schedulerdbobject)
+    -   [constructor](#constructor-5)
+-   [identifier](#identifier)
+-   [data](#data)
+-   [triggerDate](#triggerdate)
+-   [DateUtils](#dateutils)
+    -   [timestamp](#timestamp)
 -   [ServicesManagerAPI](#servicesmanagerapi)
     -   [add](#add)
 -   [TimeEventAPI](#timeeventapi)
-    -   [register](#register-3)
-    -   [unregister](#unregister-1)
-    -   [constants](#constants)
--   [Cleaner](#cleaner)
-    -   [exportConstants](#exportconstants)
+    -   [register](#register-4)
+    -   [unregister](#unregister-2)
+    -   [constants](#constants-1)
 -   [TimeEventService](#timeeventservice)
-    -   [constructor](#constructor-7)
+    -   [constructor](#constructor-6)
     -   [start](#start-1)
     -   [stop](#stop-1)
     -   [hash](#hash)
     -   [elementForHash](#elementforhash)
-    -   [register](#register-4)
-    -   [unregister](#unregister-2)
-    -   [convertMode](#convertmode)
-    -   [timeEvent](#timeevent)
--   [Service](#service)
-    -   [constructor](#constructor-8)
-    -   [start](#start-2)
-    -   [run](#run)
-    -   [threadCallback](#threadcallback)
-    -   [send](#send)
-    -   [startThreaded](#startthreaded)
-    -   [stopThreaded](#stopthreaded)
-    -   [startExternal](#startexternal)
-    -   [stopExternal](#stopexternal)
-    -   [stop](#stop-2)
-    -   [restart](#restart)
-    -   [status](#status)
     -   [register](#register-5)
     -   [unregister](#unregister-3)
-    -   [setThreadsManager](#setthreadsmanager)
+    -   [convertMode](#convertmode)
+    -   [timeEvent](#timeevent-1)
 -   [TranslateAPI](#translateapi)
     -   [load](#load)
     -   [t](#t)
@@ -144,19 +108,77 @@
     -   [unregister](#unregister-4)
     -   [Authentication](#authentication)
     -   [APIResponse](#apiresponse)
+    -   [constants](#constants-2)
 -   [Authentication](#authentication-1)
-    -   [constructor](#constructor-9)
--   [AuthenticationData](#authenticationdata-1)
-    -   [constructor](#constructor-10)
+    -   [constructor](#constructor-7)
+-   [AuthenticationData](#authenticationdata)
+    -   [constructor](#constructor-8)
     -   [authorized](#authorized)
     -   [username](#username)
     -   [level](#level)
 -   [APIResponse](#apiresponse-1)
-    -   [constructor](#constructor-11)
+    -   [constructor](#constructor-9)
     -   [success](#success)
     -   [response](#response)
     -   [errorCode](#errorcode)
     -   [errorMessage](#errormessage)
+-   [Cleaner](#cleaner)
+    -   [exportConstants](#exportconstants)
+-   [WebServices](#webservices)
+    -   [constructor](#constructor-10)
+    -   [start](#start-2)
+    -   [registerInfos](#registerinfos)
+    -   [processAPI](#processapi-1)
+    -   [stop](#stop-2)
+    -   [register](#register-7)
+    -   [unregister](#unregister-5)
+    -   [registerAPI](#registerapi)
+    -   [unregisterAPI](#unregisterapi)
+    -   [manageResponse](#manageresponse)
+    -   [buildPromises](#buildpromises)
+    -   [runPromises](#runpromises)
+    -   [sendAPIResponse](#sendapiresponse)
+-   [Logger](#logger)
+    -   [log](#log)
+    -   [warn](#warn)
+    -   [err](#err)
+    -   [verbose](#verbose)
+    -   [info](#info)
+    -   [debug](#debug)
+-   [Service](#service)
+    -   [constructor](#constructor-11)
+    -   [start](#start-3)
+    -   [run](#run)
+    -   [threadCallback](#threadcallback)
+    -   [send](#send)
+    -   [startThreaded](#startthreaded)
+    -   [stopThreaded](#stopthreaded)
+    -   [startExternal](#startexternal)
+    -   [stopExternal](#stopexternal)
+    -   [stop](#stop-3)
+    -   [restart](#restart)
+    -   [status](#status)
+    -   [register](#register-8)
+    -   [unregister](#unregister-6)
+    -   [setThreadsManager](#setthreadsmanager)
+-   [APIRequest](#apirequest)
+    -   [constructor](#constructor-12)
+    -   [method](#method)
+    -   [ip](#ip)
+    -   [route](#route)
+    -   [path](#path)
+    -   [action](#action)
+    -   [params](#params)
+    -   [data](#data-1)
+    -   [authenticationData](#authenticationdata-1)
+    -   [addAuthenticationData](#addauthenticationdata)
+-   [APIRegistration](#apiregistration)
+    -   [constructor](#constructor-13)
+    -   [delegate](#delegate)
+    -   [method](#method-1)
+    -   [route](#route-1)
+    -   [authLevel](#authlevel)
+    -   [isEqual](#isequal)
 
 ## ConfigurationAPI
 
@@ -259,304 +281,6 @@ Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refe
 Return configuration
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A configuration
-
-## Logger
-
-This class provides static methods to log into a file.
-
-### log
-
-Log to a file
-
-**Parameters**
-
--   `message` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A log message
--   `level` **int** Log level between 0 to 5 (optional, default `3`)
-
-### warn
-
-Log a warning to a file
-
-**Parameters**
-
--   `message` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A log message
-
-### err
-
-Log an error to a file
-
-**Parameters**
-
--   `message` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A log message
-
-### verbose
-
-Log a verbose message to a file
-
-**Parameters**
-
--   `message` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A log message
-
-### info
-
-Log an information to a file
-
-**Parameters**
-
--   `message` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A log message
-
-### debug
-
-Log a debug message to a file, with stacktrace
-
-**Parameters**
-
--   `message` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A log message
-
-## WebServices
-
-**Extends Service.class**
-
-This class manage Web Services call, and more specifically the external APIs
-
-**Parameters**
-
--   `port`   (optional, default `8080`)
--   `sslPort`   (optional, default `8043`)
--   `sslKey`   (optional, default `null`)
--   `sslCert`   (optional, default `null`)
-
-### constructor
-
-Constructor
-
-**Parameters**
-
--   `port` **int** The listening HTTP port (optional, default `8080`)
--   `sslPort` **int** The listening HTTPS port (optional, default `8443`)
--   `sslKey` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The path for SSL key (optional, default `null`)
--   `sslCert` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The path for sslCert key (optional, default `null`)
-
-Returns **[WebServices](#webservices)** The instance
-
-### start
-
-Start Web Services
-
-### registerInfos
-
-Register and list informations
-
-### processAPI
-
-Process API callback
-
-**Parameters**
-
--   `apiRequest` **[APIRequest](#apirequest)** An APIRequest
-
-Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with an APIResponse object
-
-### stop
-
-Stop Web Services
-
-### register
-
-Override Register service callback
-
-**Parameters**
-
--   `delegate` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The service delegate
-
-### unregister
-
-Override Unregister service callback
-
-**Parameters**
-
--   `delegate` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The service delegate
-
-### registerAPI
-
-Register to a specific API to be notified when a route and/or method is called
-
-**Parameters**
-
--   `delegate` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A delegate which implements the processAPI(apiRequest) function
--   `method` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A method (\*, WebServices.GET / WebServices.POST) (optional, default `"*"`)
--   `route` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A route (\*, :/my/route/) (optional, default `"*"`)
--   `authLevel` **int** An authentification level (optional, default `Authentication.AUTH_USAGE_LEVEL`)
-
-### unregisterAPI
-
-Unregister a specific API to be not notified when a route and/or method is called
-
-**Parameters**
-
--   `delegate` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A delegate which implements the processAPI(apiRequest) function
--   `method` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A method (\*, WebServices.GET / WebServices.POST) (optional, default `"*"`)
--   `route` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A route (\*, :/my/route/) (optional, default `"*"`)
-
-### manageResponse
-
-Create an API
-
-**Parameters**
-
--   `req` **[Request](https://developer.mozilla.org/en-US/Add-ons/SDK/High-Level_APIs/request)** The WS request
--   `endpoint` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The WS endpoint
-
-Returns **[APIRequest](#apirequest)** An API Request
-
-### buildPromises
-
-Build a promise array from delegates
-
-**Parameters**
-
--   `apiRequest` **[APIRequest](#apirequest)** The apiRequest
-
-Returns **\[[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)]** An array of promises
-
-### runPromises
-
-Run promises sequentially
-
-**Parameters**
-
--   `apiRequest` **\[[APIRequest](#apirequest)]** The API Request object
--   `promises` **\[promises]** An array of promises (delegates callees)
--   `res` **[Response](https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/HTML5)** The response
-
-### sendAPIResponse
-
-Process sending results in JSON to API caller
-
-**Parameters**
-
--   `apiResponses` **\[[APIResponse](#apiresponse)]** The API responses
--   `res` **[Response](https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/HTML5)** The response
-
-## APIRequest
-
-This class is a POJO representing an APIRequest item
-
-**Parameters**
-
--   `method`  
--   `ip`  
--   `route`  
--   `path`  
--   `action`  
--   `params`  
--   `data`   (optional, default `null`)
-
-### constructor
-
-Constructor
-
-**Parameters**
-
--   `method` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The method
--   `ip` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** IP address
--   `route` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The route
--   `path` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** The path (route splitted in array)
--   `action` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The action (first element of route)
--   `params` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The parameters under key / value format
--   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The object sent (optional, default `null`)
-
-Returns **[APIRequest](#apirequest)** The instance
-
-### method
-
-method
-
-### ip
-
-ip
-
-### route
-
-route
-
-### path
-
-path
-
-### action
-
-action
-
-### params
-
-params
-
-### data
-
-data
-
-### authenticationData
-
-Authentication data
-
-### addAuthenticationData
-
-Add authentication data to request
-
-**Parameters**
-
--   `authenticationData` **[AuthenticationData](#authenticationdata)** The data authentication
-
-## APIRegistration
-
-This class is a POJO representing an APIRegistration item
-
-**Parameters**
-
--   `delegate`  
--   `method`   (optional, default `"*"`)
--   `route`   (optional, default `"*"`)
--   `authLevel`   (optional, default `Authentication.AUTH_USAGE_LEVEL`)
-
-### constructor
-
-Constructor
-
-**Parameters**
-
--   `delegate` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The object which implements the processAPI callback
--   `method` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The method (GET, POST, ...) (optional, default `"*"`)
--   `route` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The needed route (:/foo/bar) (optional, default `"*"`)
--   `authLevel` **int** The authentication level needed to be called (optional, default `Authentication.AUTH_USAGE_LEVEL`)
-
-Returns **[APIRegistration](#apiregistration)** The instance
-
-### delegate
-
-delegate
-
-### method
-
-method
-
-### route
-
-route
-
-### authLevel
-
-Authentication level requested for API
-
-### isEqual
-
-Check if the parameter equality
-
-**Parameters**
-
--   `obj` **[APIRegistration](#apiregistration)** An APIRegistration object
-
-Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** true or false
 
 ## DatabaseAPI
 
@@ -1012,6 +736,12 @@ For example, passing some where filters
 
 Returns **[DbRequestBuilder](#dbrequestbuilder)** The instance
 
+### distinct
+
+De-duplicate values
+
+Returns **[DbRequestBuilder](#dbrequestbuilder)** The instance
+
 ### cleanForDelete
 
 Internal. Clean query for delete
@@ -1063,6 +793,150 @@ Convert key / values object into a single one. Example `[{key:"Foo", value:"Bar"
 -   `inputObject` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An input object
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An output object
+
+## SchedulerAPI
+
+Public API for time events
+
+**Parameters**
+
+-   `schedulerService`  
+
+### register
+
+Register a scheduler callback
+
+**Parameters**
+
+-   `id` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An identifier (must be unique)
+-   `callback` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback with an object in parameter : \`(data) => {}``
+
+### unregister
+
+Unregister a scheduler callback
+
+**Parameters**
+
+-   `id` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An identifier (must be unique)
+
+### schedule
+
+Schedule an operation for a registered callback
+
+**Parameters**
+
+-   `id` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An identifier (must be unique)
+-   `timestamp` **timestamp** A timestamp or a constant : `IN_A_MINUTE`, `IN_FIVE_MINUTES`, `IN_TEN_MINUTES`, `IN_THIRTY_MINUTES`, `IN_A_HOUR`, `IN_TWELVE_HOUR`, `IN_A_DAY`
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A data passed to callback when triggered (optional, default `{}`)
+
+### constants
+
+Expose a list of constants : `IN_A_MINUTE`, `IN_FIVE_MINUTES`, `IN_TEN_MINUTES`, `IN_THIRTY_MINUTES`, `IN_A_HOUR`, `IN_TWELVE_HOUR`, `IN_A_DAY`
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Constants
+
+## SchedulerService
+
+**Extends Service.class**
+
+This class allows to execute some operations in future
+
+**Parameters**
+
+-   `dbManager`  
+-   `timeEventService`  
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `dbManager` **DbManager** A DbManager object
+-   `timeEventService` **[TimeEventService](#timeeventservice)** The TimeEventService instan e
+
+Returns **[SchedulerService](#schedulerservice)** The instance
+
+### start
+
+Start the service
+
+### stop
+
+Stop the service
+
+### register
+
+Register a scheduler callback
+
+**Parameters**
+
+-   `id` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An identifier (must be unique)
+-   `callback` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback with an object in parameter : \`(data) => {}``
+
+### unregister
+
+Unregister a scheduler callback
+
+**Parameters**
+
+-   `id` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An identifier (must be unique)
+
+### schedule
+
+Schedule an operation for a registered callback
+
+**Parameters**
+
+-   `id` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An identifier (must be unique)
+-   `timestamp` **timestamp** A timestamp or a constant : `IN_A_MINUTE`, `IN_FIVE_MINUTES`, `IN_TEN_MINUTES`, `IN_THIRTY_MINUTES`, `IN_A_HOUR`, `IN_TWELVE_HOUR`, `IN_A_DAY`
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A data passed to callback when triggered (optional, default `{}`)
+
+### timeEvent
+
+Timer event registered
+
+**Parameters**
+
+-   `self` **[SchedulerService](#schedulerservice)** The SchedulerService instance
+
+## SchedulerDbObject
+
+**Extends DbObject.class**
+
+Database object and schema for scheduler
+
+**Parameters**
+
+-   `dbHelper`   (optional, default `null`)
+-   `values` **...any** 
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `dbHelper` **[DbHelper](#dbhelper)** A DbHelper object mapping (optional, default `null`)
+-   `values` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The values
+
+Returns **[SchedulerDbObject](#schedulerdbobject)** The instance
+
+## identifier
+
+## data
+
+## triggerDate
+
+## DateUtils
+
+Utility class for dates
+
+### timestamp
+
+Return the current timestamp
+
+Returns **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** The current timestamp
 
 ## ServicesManagerAPI
 
@@ -1118,20 +992,6 @@ Unegister an timer element
 Expose a list of constants : `EVERY_SECONDS`, `EVERY_MINUTES`, `EVERY_HOURS`, `EVERY_DAYS` or `CUSTOM`
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Constants
-
-## Cleaner
-
-Utility class for cleaning stuff
-
-### exportConstants
-
-Clean an exported class by removing the `class` property
-
-**Parameters**
-
--   `exported` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An exported object with `class` property
-
-Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A clean object
 
 ## TimeEventService
 
@@ -1219,6 +1079,369 @@ Called when services starts, every seconds and trigger time vents
 **Parameters**
 
 -   `self` **TimerEventService** Current timer event service reference (context)
+
+## TranslateAPI
+
+Public API for translations
+
+**Parameters**
+
+-   `translateManager`  
+
+### load
+
+Load translations. Called automatically when calling `api.init()`
+
+### t
+
+Return a translation value
+
+**Parameters**
+
+-   `key` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** the key where values containe possible `%@` placeholders
+-   `values` **...[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Optional, the placeholders values. Each `%@` will be sequentially replaced by thos values
+
+Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A translation
+
+## WebAPI
+
+Public API for Web services
+
+**Parameters**
+
+-   `webServices`  
+
+### register
+
+Register to a specific web service be notified when a route and/or method is called
+
+**Parameters**
+
+-   `delegate` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A delegate which implements the processAPI(apiRequest) function
+-   `method` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A method (\*, WebServices.GET / WebServices.POST) (optional, default `"*"`)
+-   `route` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A route (\*, :/my/route/) (optional, default `"*"`)
+-   `authLevel` **int** An authentification level (optional, default `Authentication.AUTH_USAGE_LEVEL`)
+
+### unregister
+
+Unregister to a specific web service be notified when a route and/or method is called
+
+**Parameters**
+
+-   `delegate` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A delegate which implements the processAPI(apiRequest) function
+-   `method` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A method (\*, WebServices.GET / WebServices.POST) (optional, default `"*"`)
+-   `route` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A route (\*, :/my/route/) (optional, default `"*"`)
+
+### Authentication
+
+Get authentication constants : e.g. :  this.webApi.Authentication().AUTH_NO_LEVEL
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** All constants as properties
+
+### APIResponse
+
+Create an APIResponse object
+
+**Parameters**
+
+-   `success` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Set to true if API success, else false (optional, default `false`)
+-   `response` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A response object to transmit (optional) (optional, default `{}`)
+-   `errorCode` **int** The error code (optional) (optional, default `-1`)
+-   `errorMessage` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The error message (optional) (optional, default `null`)
+
+Returns **[APIResponse](#apiresponse)** The instance
+
+### constants
+
+Access to web services constants
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The constants
+
+## Authentication
+
+This class manage authentication for Web Services
+
+**Parameters**
+
+-   `webService`  
+-   `userManager`  
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `webService` **WebService** The web service instance
+-   `userManager` **UserManager** User manager
+
+Returns **[Authentication](#authentication)** Instance
+
+## AuthenticationData
+
+This class encapsulate authentication data
+
+**Parameters**
+
+-   `authorized`   (optional, default `false`)
+-   `username`   (optional, default `null`)
+-   `level`   (optional, default `-1`)
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `authorized` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if authorized, else false (optional, default `false`)
+-   `username` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Username (optional, default `null`)
+-   `level` **inr** Authorization level (optional, default `-1`)
+
+Returns **[Authentication](#authentication)** The instance
+
+### authorized
+
+Authorized
+
+### username
+
+Username
+
+### level
+
+App access level
+
+## APIResponse
+
+This class is a POJO representing an APIResponse item
+
+**Parameters**
+
+-   `success`   (optional, default `false`)
+-   `response`   (optional, default `{}`)
+-   `errorCode`   (optional, default `-1`)
+-   `errorMessage`   (optional, default `null`)
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `success` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Set to true if API success, else false (optional, default `false`)
+-   `response` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A response object to transmit (optional) (optional, default `{}`)
+-   `errorCode` **int** The error code (optional) (optional, default `-1`)
+-   `errorMessage` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The error message (optional) (optional, default `null`)
+
+Returns **[APIResponse](#apiresponse)** The instance
+
+### success
+
+Success
+
+### response
+
+Response
+
+### errorCode
+
+Error code
+
+### errorMessage
+
+The error message
+
+## Cleaner
+
+Utility class for cleaning stuff
+
+### exportConstants
+
+Clean an exported class by removing the `class` property
+
+**Parameters**
+
+-   `exported` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An exported object with `class` property
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A clean object
+
+## WebServices
+
+**Extends Service.class**
+
+This class manage Web Services call, and more specifically the external APIs
+
+**Parameters**
+
+-   `port`   (optional, default `8080`)
+-   `sslPort`   (optional, default `8043`)
+-   `sslKey`   (optional, default `null`)
+-   `sslCert`   (optional, default `null`)
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `port` **int** The listening HTTP port (optional, default `8080`)
+-   `sslPort` **int** The listening HTTPS port (optional, default `8443`)
+-   `sslKey` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The path for SSL key (optional, default `null`)
+-   `sslCert` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The path for sslCert key (optional, default `null`)
+
+Returns **[WebServices](#webservices)** The instance
+
+### start
+
+Start Web Services
+
+### registerInfos
+
+Register and list informations
+
+### processAPI
+
+Process API callback
+
+**Parameters**
+
+-   `apiRequest` **[APIRequest](#apirequest)** An APIRequest
+
+Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with an APIResponse object
+
+### stop
+
+Stop Web Services
+
+### register
+
+Override Register service callback
+
+**Parameters**
+
+-   `delegate` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The service delegate
+
+### unregister
+
+Override Unregister service callback
+
+**Parameters**
+
+-   `delegate` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The service delegate
+
+### registerAPI
+
+Register to a specific API to be notified when a route and/or method is called
+
+**Parameters**
+
+-   `delegate` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A delegate which implements the processAPI(apiRequest) function
+-   `method` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A method (\*, WebServices.GET / WebServices.POST) (optional, default `"*"`)
+-   `route` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A route (\*, :/my/route/) (optional, default `"*"`)
+-   `authLevel` **int** An authentification level (optional, default `Authentication.AUTH_USAGE_LEVEL`)
+
+### unregisterAPI
+
+Unregister a specific API to be not notified when a route and/or method is called
+
+**Parameters**
+
+-   `delegate` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A delegate which implements the processAPI(apiRequest) function
+-   `method` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A method (\*, WebServices.GET / WebServices.POST) (optional, default `"*"`)
+-   `route` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A route (\*, :/my/route/) (optional, default `"*"`)
+
+### manageResponse
+
+Create an API
+
+**Parameters**
+
+-   `req` **[Request](https://developer.mozilla.org/en-US/Add-ons/SDK/High-Level_APIs/request)** The WS request
+-   `endpoint` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The WS endpoint
+
+Returns **[APIRequest](#apirequest)** An API Request
+
+### buildPromises
+
+Build a promise array from delegates
+
+**Parameters**
+
+-   `apiRequest` **[APIRequest](#apirequest)** The apiRequest
+
+Returns **\[[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)]** An array of promises
+
+### runPromises
+
+Run promises sequentially
+
+**Parameters**
+
+-   `apiRequest` **\[[APIRequest](#apirequest)]** The API Request object
+-   `promises` **\[promises]** An array of promises (delegates callees)
+-   `res` **[Response](https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/HTML5)** The response
+
+### sendAPIResponse
+
+Process sending results in JSON to API caller
+
+**Parameters**
+
+-   `apiResponses` **\[[APIResponse](#apiresponse)]** The API responses
+-   `res` **[Response](https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/HTML5)** The response
+
+## Logger
+
+This class provides static methods to log into a file.
+
+### log
+
+Log to a file
+
+**Parameters**
+
+-   `message` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A log message
+-   `level` **int** Log level between 0 to 5 (optional, default `3`)
+
+### warn
+
+Log a warning to a file
+
+**Parameters**
+
+-   `message` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A log message
+
+### err
+
+Log an error to a file
+
+**Parameters**
+
+-   `message` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A log message
+
+### verbose
+
+Log a verbose message to a file
+
+**Parameters**
+
+-   `message` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A log message
+
+### info
+
+Log an information to a file
+
+**Parameters**
+
+-   `message` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A log message
+
+### debug
+
+Log a debug message to a file, with stacktrace
+
+**Parameters**
+
+-   `message` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A log message
 
 ## Service
 
@@ -1335,85 +1558,19 @@ Set threads manager
 
 -   `threadsManager` **ThreadsManagaer** A threads manager
 
-## TranslateAPI
+## APIRequest
 
-Public API for translations
-
-**Parameters**
-
--   `translateManager`  
-
-### load
-
-Load translations. Called automatically when calling `api.init()`
-
-### t
-
-Return a translation value
+This class is a POJO representing an APIRequest item
 
 **Parameters**
 
--   `key` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** the key where values containe possible `%@` placeholders
--   `values` **...[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Optional, the placeholders values. Each `%@` will be sequentially replaced by thos values
-
-Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A translation
-
-## WebAPI
-
-Public API for Web services
-
-**Parameters**
-
--   `webServices`  
-
-### register
-
-Register to a specific web service be notified when a route and/or method is called
-
-**Parameters**
-
--   `delegate` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A delegate which implements the processAPI(apiRequest) function
--   `method` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A method (\*, WebServices.GET / WebServices.POST) (optional, default `"*"`)
--   `route` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A route (\*, :/my/route/) (optional, default `"*"`)
--   `authLevel` **int** An authentification level (optional, default `Authentication.AUTH_USAGE_LEVEL`)
-
-### unregister
-
-Unregister to a specific web service be notified when a route and/or method is called
-
-**Parameters**
-
--   `delegate` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A delegate which implements the processAPI(apiRequest) function
--   `method` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A method (\*, WebServices.GET / WebServices.POST) (optional, default `"*"`)
--   `route` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A route (\*, :/my/route/) (optional, default `"*"`)
-
-### Authentication
-
-Get authentication constants : e.g. :  this.webApi.Authentication().AUTH_NO_LEVEL
-
-Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** All constants as properties
-
-### APIResponse
-
-Create an APIResponse object
-
-**Parameters**
-
--   `success` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Set to true if API success, else false (optional, default `false`)
--   `response` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A response object to transmit (optional) (optional, default `{}`)
--   `errorCode` **int** The error code (optional) (optional, default `-1`)
--   `errorMessage` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The error message (optional) (optional, default `null`)
-
-Returns **[APIResponse](#apiresponse)** The instance
-
-## Authentication
-
-This class manage authentication for Web Services
-
-**Parameters**
-
--   `webService`  
--   `userManager`  
+-   `method`  
+-   `ip`  
+-   `route`  
+-   `path`  
+-   `action`  
+-   `params`  
+-   `data`   (optional, default `null`)
 
 ### constructor
 
@@ -1421,20 +1578,66 @@ Constructor
 
 **Parameters**
 
--   `webService` **WebService** The web service instance
--   `userManager` **UserManager** User manager
+-   `method` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The method
+-   `ip` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** IP address
+-   `route` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The route
+-   `path` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** The path (route splitted in array)
+-   `action` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The action (first element of route)
+-   `params` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The parameters under key / value format
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The object sent (optional, default `null`)
 
-Returns **[Authentication](#authentication)** Instance
+Returns **[APIRequest](#apirequest)** The instance
 
-## AuthenticationData
+### method
 
-This class encapsulate authentication data
+method
+
+### ip
+
+ip
+
+### route
+
+route
+
+### path
+
+path
+
+### action
+
+action
+
+### params
+
+params
+
+### data
+
+data
+
+### authenticationData
+
+Authentication data
+
+### addAuthenticationData
+
+Add authentication data to request
 
 **Parameters**
 
--   `authorized`   (optional, default `false`)
--   `username`   (optional, default `null`)
--   `level`   (optional, default `-1`)
+-   `authenticationData` **[AuthenticationData](#authenticationdata)** The data authentication
+
+## APIRegistration
+
+This class is a POJO representing an APIRegistration item
+
+**Parameters**
+
+-   `delegate`  
+-   `method`   (optional, default `"*"`)
+-   `route`   (optional, default `"*"`)
+-   `authLevel`   (optional, default `Authentication.AUTH_USAGE_LEVEL`)
 
 ### constructor
 
@@ -1442,60 +1645,35 @@ Constructor
 
 **Parameters**
 
--   `authorized` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if authorized, else false (optional, default `false`)
--   `username` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Username (optional, default `null`)
--   `level` **inr** Authorization level (optional, default `-1`)
+-   `delegate` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The object which implements the processAPI callback
+-   `method` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The method (GET, POST, ...) (optional, default `"*"`)
+-   `route` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The needed route (:/foo/bar) (optional, default `"*"`)
+-   `authLevel` **int** The authentication level needed to be called (optional, default `Authentication.AUTH_USAGE_LEVEL`)
 
-Returns **[Authentication](#authentication)** The instance
+Returns **[APIRegistration](#apiregistration)** The instance
 
-### authorized
+### delegate
 
-Authorized
+delegate
 
-### username
+### method
 
-Username
+method
 
-### level
+### route
 
-App access level
+route
 
-## APIResponse
+### authLevel
 
-This class is a POJO representing an APIResponse item
+Authentication level requested for API
 
-**Parameters**
+### isEqual
 
--   `success`   (optional, default `false`)
--   `response`   (optional, default `{}`)
--   `errorCode`   (optional, default `-1`)
--   `errorMessage`   (optional, default `null`)
-
-### constructor
-
-Constructor
+Check if the parameter equality
 
 **Parameters**
 
--   `success` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Set to true if API success, else false (optional, default `false`)
--   `response` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A response object to transmit (optional) (optional, default `{}`)
--   `errorCode` **int** The error code (optional) (optional, default `-1`)
--   `errorMessage` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The error message (optional) (optional, default `null`)
+-   `obj` **[APIRegistration](#apiregistration)** An APIRegistration object
 
-Returns **[APIResponse](#apiresponse)** The instance
-
-### success
-
-Success
-
-### response
-
-Response
-
-### errorCode
-
-Error code
-
-### errorMessage
-
-The error message
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** true or false

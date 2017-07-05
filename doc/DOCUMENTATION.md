@@ -7,16 +7,43 @@
     -   [start](#start)
     -   [stop](#stop)
     -   [configurationLoader](#configurationloader)
+-   [text](#text)
+-   [number](#number)
 -   [myParameter](#myparameter)
+-   [loaded](#loaded)
+-   [loaded](#loaded-1)
+-   [loaded](#loaded-2)
+-   [DbRadio](#dbradio)
+    -   [constructor](#constructor-1)
 -   [module](#module)
+-   [frequency](#frequency)
+-   [protocol](#protocol)
+-   [deviceId](#deviceid)
+-   [switchId](#switchid)
+-   [value](#value)
 -   [status](#status)
 -   [Radio](#radio)
+    -   [constructor](#constructor-2)
+    -   [getProtocolList](#getprotocollist)
+    -   [processAPI](#processapi)
+    -   [defaultFrequency](#defaultfrequency)
+    -   [emit](#emit)
+    -   [onRadioEvent](#onradioevent)
+    -   [constants](#constants)
 -   [RFLink](#rflink)
--   [run](#run)
--   [threadCallback](#threadcallback)
+    -   [constructor](#constructor-3)
+    -   [rflinkStatusToRadioStatus](#rflinkstatustoradiostatus)
+    -   [radioStatusToRflinkStatus](#radiostatustorflinkstatus)
+    -   [formatRadioObjectBeforeSending](#formatradioobjectbeforesending)
+    -   [onRflinkReceive](#onrflinkreceive)
+    -   [emit](#emit-1)
+-   [RFLinkService](#rflinkservice)
+    -   [constructor](#constructor-4)
+    -   [run](#run)
+    -   [threadCallback](#threadcallback)
 -   [xo](#xo)
 -   [Sample](#sample)
-    -   [processAPI](#processapi)
+    -   [processAPI](#processapi-1)
     -   [test](#test)
 -   [Logger](#logger)
     -   [log](#log)
@@ -26,21 +53,21 @@
     -   [info](#info)
     -   [debug](#debug)
 -   [Alarm](#alarm)
-    -   [constructor](#constructor-1)
+    -   [constructor](#constructor-5)
     -   [json](#json)
 -   [AlarmManager](#alarmmanager)
-    -   [constructor](#constructor-2)
+    -   [constructor](#constructor-6)
     -   [setAlarm](#setalarm)
-    -   [processAPI](#processapi-1)
+    -   [processAPI](#processapi-2)
 -   [Authentication](#authentication)
-    -   [constructor](#constructor-3)
+    -   [constructor](#constructor-7)
 -   [AuthenticationData](#authenticationdata)
-    -   [constructor](#constructor-4)
+    -   [constructor](#constructor-8)
     -   [authorized](#authorized)
     -   [username](#username)
     -   [level](#level)
 -   [ConfManager](#confmanager)
-    -   [constructor](#constructor-5)
+    -   [constructor](#constructor-9)
     -   [appConfiguration](#appconfiguration)
     -   [fs](#fs)
     -   [getFilePath](#getfilepath)
@@ -52,7 +79,7 @@
     -   [setData](#setdata)
     -   [removeData](#removedata)
 -   [DbHelper](#dbhelper)
-    -   [constructor](#constructor-6)
+    -   [constructor](#constructor-10)
     -   [RequestBuilder](#requestbuilder)
     -   [Operators](#operators)
     -   [getFieldsForTable](#getfieldsfortable)
@@ -63,7 +90,7 @@
     -   [delObject](#delobject)
     -   [delObjects](#delobjects)
 -   [DbManager](#dbmanager)
-    -   [constructor](#constructor-7)
+    -   [constructor](#constructor-11)
     -   [close](#close)
     -   [getFieldsForTable](#getfieldsfortable-1)
     -   [numberVersion](#numberversion)
@@ -78,12 +105,12 @@
     -   [delObject](#delobject-1)
     -   [delObjects](#delobjects-1)
 -   [DbObject](#dbobject)
-    -   [constructor](#constructor-8)
+    -   [constructor](#constructor-12)
     -   [base](#base)
     -   [save](#save)
     -   [del](#del)
 -   [DbRequestBuilder](#dbrequestbuilder)
-    -   [constructor](#constructor-9)
+    -   [constructor](#constructor-13)
     -   [removeLastComma](#removelastcomma)
     -   [escapeString](#escapestring)
     -   [getValueEncapsulated](#getvalueencapsulated)
@@ -106,28 +133,29 @@
     -   [lim](#lim)
     -   [first](#first)
     -   [cleanForSelect](#cleanforselect)
+    -   [distinct](#distinct)
     -   [cleanForDelete](#cleanfordelete)
     -   [request](#request)
 -   [DbSchemaConverter](#dbschemaconverter)
     -   [tableName](#tablename)
     -   [toSchema](#toschema)
 -   [Device](#device)
-    -   [constructor](#constructor-10)
+    -   [constructor](#constructor-14)
     -   [json](#json-1)
 -   [DeviceManager](#devicemanager)
-    -   [constructor](#constructor-11)
+    -   [constructor](#constructor-15)
     -   [setDevice](#setdevice)
-    -   [processAPI](#processapi-2)
+    -   [processAPI](#processapi-3)
 -   [FormConfiguration](#formconfiguration)
-    -   [constructor](#constructor-12)
+    -   [constructor](#constructor-16)
     -   [loadConfig](#loadconfig)
     -   [saveConfig](#saveconfig)
     -   [comparator](#comparator)
     -   [registerForm](#registerform)
-    -   [processAPI](#processapi-3)
+    -   [processAPI](#processapi-4)
     -   [getConfig](#getconfig)
 -   [FormManager](#formmanager)
-    -   [constructor](#constructor-13)
+    -   [constructor](#constructor-17)
     -   [register](#register)
     -   [sanitize](#sanitize)
     -   [getExtendedClass](#getextendedclass)
@@ -136,17 +164,17 @@
     -   [getForm](#getform)
     -   [generateForm](#generateform)
 -   [FormObject](#formobject)
-    -   [constructor](#constructor-14)
+    -   [constructor](#constructor-18)
     -   [json](#json-2)
 -   [id](#id)
 -   [PluginsAPI](#pluginsapi)
     -   [exportClass](#exportclass)
     -   [init](#init)
 -   [PluginConf](#pluginconf)
-    -   [constructor](#constructor-15)
+    -   [constructor](#constructor-19)
     -   [json](#json-3)
 -   [PluginsManager](#pluginsmanager)
-    -   [constructor](#constructor-16)
+    -   [constructor](#constructor-20)
     -   [getPluginsFromDirectory](#getpluginsfromdirectory)
     -   [checkPluginSanity](#checkpluginsanity)
     -   [initPlugins](#initplugins)
@@ -163,22 +191,28 @@
 -   [DatabaseAPI](#databaseapi)
     -   [register](#register-2)
     -   [dbHelper](#dbhelper-1)
+-   [SchedulerAPI](#schedulerapi)
+    -   [register](#register-3)
+    -   [unregister](#unregister)
+    -   [schedule](#schedule)
+    -   [constants](#constants-1)
 -   [ServicesManagerAPI](#servicesmanagerapi)
     -   [add](#add)
 -   [TimeEventAPI](#timeeventapi)
-    -   [register](#register-3)
-    -   [unregister](#unregister)
-    -   [constants](#constants)
+    -   [register](#register-4)
+    -   [unregister](#unregister-1)
+    -   [constants](#constants-2)
 -   [TranslateAPI](#translateapi)
     -   [load](#load-1)
     -   [t](#t)
 -   [WebAPI](#webapi)
-    -   [register](#register-4)
-    -   [unregister](#unregister-1)
+    -   [register](#register-5)
+    -   [unregister](#unregister-2)
     -   [Authentication](#authentication-1)
     -   [APIResponse](#apiresponse)
+    -   [constants](#constants-3)
 -   [ServicesManager](#servicesmanager)
-    -   [constructor](#constructor-17)
+    -   [constructor](#constructor-21)
     -   [isServiceRegistered](#isserviceregistered)
     -   [add](#add-1)
     -   [remove](#remove-1)
@@ -187,7 +221,7 @@
     -   [restart](#restart)
     -   [getService](#getservice)
 -   [ThreadsManager](#threadsmanager)
-    -   [constructor](#constructor-18)
+    -   [constructor](#constructor-22)
     -   [stringifyFunc](#stringifyfunc)
     -   [run](#run-1)
     -   [send](#send)
@@ -195,12 +229,12 @@
     -   [getPid](#getpid)
     -   [isRunning](#isrunning)
 -   [TranslateManager](#translatemanager)
-    -   [constructor](#constructor-19)
+    -   [constructor](#constructor-23)
     -   [addTranslations](#addtranslations)
     -   [t](#t-1)
     -   [translateArray](#translatearray)
 -   [User](#user)
-    -   [constructor](#constructor-20)
+    -   [constructor](#constructor-24)
     -   [username](#username-1)
     -   [password](#password)
     -   [level](#level-1)
@@ -210,7 +244,7 @@
     -   [picture](#picture)
     -   [json](#json-4)
 -   [UserManager](#usermanager)
-    -   [constructor](#constructor-21)
+    -   [constructor](#constructor-25)
     -   [confManager](#confmanager-1)
     -   [users](#users)
     -   [removeUser](#removeuser)
@@ -219,9 +253,22 @@
     -   [getUser](#getuser)
     -   [setUser](#setuser)
     -   [getAdminUser](#getadminuser)
--   [Service](#service)
-    -   [constructor](#constructor-22)
+-   [SchedulerDbObject](#schedulerdbobject)
+    -   [constructor](#constructor-26)
+-   [identifier](#identifier)
+-   [data](#data)
+-   [triggerDate](#triggerdate)
+-   [SchedulerService](#schedulerservice)
+    -   [constructor](#constructor-27)
     -   [start](#start-2)
+    -   [stop](#stop-2)
+    -   [register](#register-6)
+    -   [unregister](#unregister-3)
+    -   [schedule](#schedule-1)
+    -   [timeEvent](#timeevent)
+-   [Service](#service)
+    -   [constructor](#constructor-28)
+    -   [start](#start-3)
     -   [run](#run-2)
     -   [threadCallback](#threadcallback-1)
     -   [send](#send-1)
@@ -229,54 +276,54 @@
     -   [stopThreaded](#stopthreaded)
     -   [startExternal](#startexternal)
     -   [stopExternal](#stopexternal)
-    -   [stop](#stop-2)
+    -   [stop](#stop-3)
     -   [restart](#restart-1)
     -   [status](#status-1)
-    -   [register](#register-5)
-    -   [unregister](#unregister-2)
+    -   [register](#register-7)
+    -   [unregister](#unregister-4)
     -   [setThreadsManager](#setthreadsmanager)
 -   [TimeEventService](#timeeventservice)
-    -   [constructor](#constructor-23)
-    -   [start](#start-3)
-    -   [stop](#stop-3)
+    -   [constructor](#constructor-29)
+    -   [start](#start-4)
+    -   [stop](#stop-4)
     -   [hash](#hash)
     -   [elementForHash](#elementforhash)
-    -   [register](#register-6)
-    -   [unregister](#unregister-3)
+    -   [register](#register-8)
+    -   [unregister](#unregister-5)
     -   [convertMode](#convertmode)
-    -   [timeEvent](#timeevent)
+    -   [timeEvent](#timeevent-1)
 -   [APIRegistration](#apiregistration)
-    -   [constructor](#constructor-24)
+    -   [constructor](#constructor-30)
     -   [delegate](#delegate)
     -   [method](#method)
     -   [route](#route)
     -   [authLevel](#authlevel)
     -   [isEqual](#isequal)
 -   [APIRequest](#apirequest)
-    -   [constructor](#constructor-25)
+    -   [constructor](#constructor-31)
     -   [method](#method-1)
     -   [ip](#ip)
     -   [route](#route-1)
     -   [path](#path)
     -   [action](#action)
     -   [params](#params)
-    -   [data](#data)
+    -   [data](#data-1)
     -   [authenticationData](#authenticationdata-1)
     -   [addAuthenticationData](#addauthenticationdata)
 -   [APIResponse](#apiresponse-1)
-    -   [constructor](#constructor-26)
+    -   [constructor](#constructor-32)
     -   [success](#success)
     -   [response](#response)
     -   [errorCode](#errorcode)
     -   [errorMessage](#errormessage)
 -   [WebServices](#webservices)
-    -   [constructor](#constructor-27)
-    -   [start](#start-4)
+    -   [constructor](#constructor-33)
+    -   [start](#start-5)
     -   [registerInfos](#registerinfos)
-    -   [processAPI](#processapi-4)
-    -   [stop](#stop-4)
-    -   [register](#register-7)
-    -   [unregister](#unregister-4)
+    -   [processAPI](#processapi-5)
+    -   [stop](#stop-5)
+    -   [register](#register-9)
+    -   [unregister](#unregister-6)
     -   [registerAPI](#registerapi)
     -   [unregisterAPI](#unregisterapi)
     -   [manageResponse](#manageresponse)
@@ -287,6 +334,8 @@
     -   [exportConstants](#exportconstants)
 -   [Convert](#convert)
     -   [convertProperties](#convertproperties)
+-   [DateUtils](#dateutils)
+    -   [timestamp](#timestamp)
 
 ## HautomationCore
 
@@ -310,9 +359,70 @@ Stop automation core
 
 Try to overload configuration
 
+## text
+
+## number
+
 ## myParameter
 
+## loaded
+
+Loaded plugin function
+
+**Parameters**
+
+-   `api` **PluginAPI** The core APIs
+
+## loaded
+
+Loaded plugin function
+
+**Parameters**
+
+-   `api` **PluginAPI** The core APIs
+
+## loaded
+
+Loaded plugin function
+
+**Parameters**
+
+-   `api` **PluginAPI** The core APIs
+
+## DbRadio
+
+**Extends api.exported.DbObject.class**
+
+This class should not be implemented but only inherited.
+This class is used for radio database
+
+**Parameters**
+
+-   `dbHelper`   (optional, default `null`)
+-   `values` **...any** 
+
+### constructor
+
+Radio table descriptor
+
+**Parameters**
+
+-   `dbHelper` **[DbHelper](#dbhelper)** A database helper (optional, default `null`)
+-   `values` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The values
+
+Returns **[DbObject](#dbobject)** A database object
+
 ## module
+
+## frequency
+
+## protocol
+
+## deviceId
+
+## switchId
+
+## value
 
 ## status
 
@@ -323,18 +433,163 @@ This class shoud be extended by radio modules
 **Parameters**
 
 -   `api`  
+-   `module`  
+
+### constructor
+
+Constructor (called with super)
+
+**Parameters**
+
+-   `api` **PluginAPI** The core APIs
+-   `module` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A module name
+
+Returns **[Radio](#radio)** The instance
+
+### getProtocolList
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback function `(err, protocols) => {}`
+
+### processAPI
+
+Process API callback
+
+**Parameters**
+
+-   `apiRequest` **[APIRequest](#apirequest)** An APIRequest
+
+Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with an APIResponse object
+
+### defaultFrequency
+
+Returns **[number](#number)** Default frequency
+
+### emit
+
+**Parameters**
+
+-   `frequency` **[number](#number)** The frequency
+-   `protocol` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The protocol
+-   `deviceId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The device ID
+-   `switchId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The switch ID
+-   `status` **[number](#number)** The status (or enum called through `constants()`
+
+Returns **[DbRadio](#dbradio)** A radio  object
+
+### onRadioEvent
+
+**Parameters**
+
+-   `frequency` **[number](#number)** The frequency
+-   `protocol` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The protocol
+-   `deviceId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The device ID
+-   `switchId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The switch ID
+-   `value` **[number](#number)** The value
+-   `status` **[number](#number)** The status (or enum called through `constants()`
+
+Returns **[DbRadio](#dbradio)** A radio  object
+
+### constants
+
+Return the constants
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The constants
 
 ## RFLink
 
 **Extends api.exported.Radio**
 
-This class is a RFLink plugin
+This class manage RFLink
 
 **Parameters**
 
 -   `api`  
 
-## run
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `api` **PluginAPI** The core APIs
+
+Returns **[RFLink](#rflink)** The instance
+
+### rflinkStatusToRadioStatus
+
+Convert RFLink radio status to hautomation radio statuses
+
+**Parameters**
+
+-   `rflinkStatus` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** RFLink status
+
+Returns **[number](#number)** Hautomationr adio status
+
+### radioStatusToRflinkStatus
+
+Convert Hautomation radio status to reflink format
+
+**Parameters**
+
+-   `status` **[number](#number)** Hautomation radio status
+
+Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** RFLink format status
+
+### formatRadioObjectBeforeSending
+
+Format a DBObject to RFLink serial format
+
+**Parameters**
+
+-   `radioObject` **[DbRadio](#dbradio)** A radio object
+
+Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The RFLink formatted instruction
+
+### onRflinkReceive
+
+Callback when an information is received from rf link service thread
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A data object containing radio informations
+
+### emit
+
+Emit RFLink request
+
+**Parameters**
+
+-   `frequency` **[number](#number)** The frequency
+-   `protocol` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The protocol
+-   `deviceId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The device ID
+-   `switchId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The switch ID
+-   `status` **[number](#number)** The status (or enum called through `constants()`
+
+Returns **[DbRadio](#dbradio)** A radio  object
+
+## RFLinkService
+
+**Extends api.exported.Service.class**
+
+This class conect to RFLink using serial port on a pseicif thread.
+
+**Parameters**
+
+-   `plugin`  
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `plugin` **[RFLink](#rflink)** The RFLink plugin
+
+Returns **[RFLinkService](#rflinkservice)** The instance
+
+### run
 
 Main threaded loop
 
@@ -343,7 +598,7 @@ Main threaded loop
 -   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A data passed as initial value
 -   `send` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Send a message to parent process
 
-## threadCallback
+### threadCallback
 
 Retrieve data from process
 Should be overloaded by service
@@ -1255,6 +1510,12 @@ For example, passing some where filters
 
 Returns **[DbRequestBuilder](#dbrequestbuilder)** The instance
 
+### distinct
+
+De-duplicate values
+
+Returns **[DbRequestBuilder](#dbrequestbuilder)** The instance
+
 ### cleanForDelete
 
 Internal. Clean query for delete
@@ -1558,7 +1819,7 @@ Constructor
 
 **Parameters**
 
--   `id` **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** An identifier (optional, default `null`)
+-   `id` **[number](#number)** An identifier (optional, default `null`)
 
 Returns **[FormObject](#formobject)** The instance
 
@@ -1589,6 +1850,7 @@ This class is an interface for plugins
 -   `formManager`  
 -   `confManager`  
 -   `timeEventService`  
+-   `schedulerService`  
 
 ### exportClass
 
@@ -1645,6 +1907,7 @@ This class manage plugins
 -   `translateManager`  
 -   `formManager`  
 -   `timeEventService`  
+-   `schedulerService`  
 
 ### constructor
 
@@ -1659,6 +1922,7 @@ Constructor
 -   `translateManager` **[TranslateManager](#translatemanager)** The translate manager
 -   `formManager` **[FormManager](#formmanager)** The form manager
 -   `timeEventService` **[TimeEventService](#timeeventservice)** The time event service
+-   `schedulerService` **[SchedulerService](#schedulerservice)** The scheduler service
 
 Returns **[PluginsManager](#pluginsmanager)** The instance
 
@@ -1814,6 +2078,47 @@ The DbHelper object allows you to create, update, delete or execute queries on t
 
 Returns **[DbHelper](#dbhelper)** A DbHelper object
 
+## SchedulerAPI
+
+Public API for time events
+
+**Parameters**
+
+-   `schedulerService`  
+
+### register
+
+Register a scheduler callback
+
+**Parameters**
+
+-   `id` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An identifier (must be unique)
+-   `callback` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback with an object in parameter : \`(data) => {}``
+
+### unregister
+
+Unregister a scheduler callback
+
+**Parameters**
+
+-   `id` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An identifier (must be unique)
+
+### schedule
+
+Schedule an operation for a registered callback
+
+**Parameters**
+
+-   `id` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An identifier (must be unique)
+-   `timestamp` **timestamp** A timestamp or a constant : `IN_A_MINUTE`, `IN_FIVE_MINUTES`, `IN_TEN_MINUTES`, `IN_THIRTY_MINUTES`, `IN_A_HOUR`, `IN_TWELVE_HOUR`, `IN_A_DAY`
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A data passed to callback when triggered (optional, default `{}`)
+
+### constants
+
+Expose a list of constants : `IN_A_MINUTE`, `IN_FIVE_MINUTES`, `IN_TEN_MINUTES`, `IN_THIRTY_MINUTES`, `IN_A_HOUR`, `IN_TWELVE_HOUR`, `IN_A_DAY`
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Constants
+
 ## ServicesManagerAPI
 
 Public API for services manager
@@ -1939,6 +2244,12 @@ Create an APIResponse object
 -   `errorMessage` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The error message (optional) (optional, default `null`)
 
 Returns **[APIResponse](#apiresponse)** The instance
+
+### constants
+
+Access to web services constants
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The constants
 
 ## ServicesManager
 
@@ -2284,6 +2595,99 @@ Set user and store into json
 Get the admin user
 
 Returns **[User](#user)** The admin user, null if admin user is disabled
+
+## SchedulerDbObject
+
+**Extends DbObject.class**
+
+Database object and schema for scheduler
+
+**Parameters**
+
+-   `dbHelper`   (optional, default `null`)
+-   `values` **...any** 
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `dbHelper` **[DbHelper](#dbhelper)** A DbHelper object mapping (optional, default `null`)
+-   `values` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The values
+
+Returns **[SchedulerDbObject](#schedulerdbobject)** The instance
+
+## identifier
+
+## data
+
+## triggerDate
+
+## SchedulerService
+
+**Extends Service.class**
+
+This class allows to execute some operations in future
+
+**Parameters**
+
+-   `dbManager`  
+-   `timeEventService`  
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `dbManager` **[DbManager](#dbmanager)** A DbManager object
+-   `timeEventService` **[TimeEventService](#timeeventservice)** The TimeEventService instan e
+
+Returns **[SchedulerService](#schedulerservice)** The instance
+
+### start
+
+Start the service
+
+### stop
+
+Stop the service
+
+### register
+
+Register a scheduler callback
+
+**Parameters**
+
+-   `id` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An identifier (must be unique)
+-   `callback` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback with an object in parameter : \`(data) => {}``
+
+### unregister
+
+Unregister a scheduler callback
+
+**Parameters**
+
+-   `id` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An identifier (must be unique)
+
+### schedule
+
+Schedule an operation for a registered callback
+
+**Parameters**
+
+-   `id` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An identifier (must be unique)
+-   `timestamp` **timestamp** A timestamp or a constant : `IN_A_MINUTE`, `IN_FIVE_MINUTES`, `IN_TEN_MINUTES`, `IN_THIRTY_MINUTES`, `IN_A_HOUR`, `IN_TWELVE_HOUR`, `IN_A_DAY`
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A data passed to callback when triggered (optional, default `{}`)
+
+### timeEvent
+
+Timer event registered
+
+**Parameters**
+
+-   `self` **[SchedulerService](#schedulerservice)** The SchedulerService instance
 
 ## Service
 
@@ -2799,3 +3203,13 @@ Convert key / values object into a single one. Example `[{key:"Foo", value:"Bar"
 -   `inputObject` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An input object
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An output object
+
+## DateUtils
+
+Utility class for dates
+
+### timestamp
+
+Return the current timestamp
+
+Returns **[number](#number)** The current timestamp

@@ -1,15 +1,25 @@
-/* eslint-disable */
 "use strict";
 const RFLinkServiceClass = require("./service.js");
 
+/**
+ * Loaded plugin function
+ *
+ * @param  {PluginAPI} api The core APIs
+ */
 function loaded(api) {
     api.init();
 
     /**
-     * This class is a RFLink plugin
+     * This class manage RFLink
      * @class
      */
     class RFLink extends api.exported.Radio {
+        /**
+         * Constructor
+         *
+         * @param  {PluginAPI} api The core APIs
+         * @returns {RFLink}        The instance
+         */
         constructor(api) {
             super(api, "rflink");
             this.api = api;
@@ -18,63 +28,103 @@ function loaded(api) {
             api.servicesManagerAPI.add(this.service);
         }
 
+        /**
+         * Convert RFLink radio status to hautomation radio statuses
+         *
+         * @param  {string} rflinkStatus RFLink status
+         * @returns {number}              Hautomationr adio status
+         */
         rflinkStatusToRadioStatus(rflinkStatus) {
+            let status;
             switch (rflinkStatus) {
-                case "ON":
-                    return this.constants().STATUS_ON;
-                    break;
-                case "OFF":
-                    return this.constants().STATUS_OFF;
-                    break;
-                case "ALLON":
-                    return this.constants().STATUS_ALL_ON;
-                    break;
-                case "ALLOFF":
-                    return this.constants().STATUS_ALL_OFF;
-                    break;
-                default:
-                    return this.constants().STATUS_ON;
-                    break;
+            case "ON":
+                status = this.constants().STATUS_ON;
+                break;
+            case "OFF":
+                status = this.constants().STATUS_OFF;
+                break;
+            case "ALLON":
+                status = this.constants().STATUS_ALL_ON;
+                break;
+            case "ALLOFF":
+                status = this.constants().STATUS_ALL_OFF;
+                break;
+            default:
+                status = this.constants().STATUS_ON;
+                break;
             }
+
+            return status;
         }
 
-        radioStatusToRflinkStatus(rflinkStatus) {
-            switch (rflinkStatus) {
-                case this.constants().STATUS_ON:
-                    return "ON";
-                    break;
-                case this.constants().STATUS_OFF:
-                    return "OFF";
-                    break;
-                case this.constants().STATUS_ALL_ON:
-                    return "ALLON";
-                    break;
-                case this.constants().STATUS_ALL_OFF:
-                    return "ALLOFF";
-                    break;
-                default:
-                    this.constants().STATUS_ON;
-                    break;
+        /**
+         * Convert Hautomation radio status to reflink format
+         *
+         * @param  {number} status Hautomation radio status
+         * @returns {string}              RFLink format status
+         */
+        radioStatusToRflinkStatus(status) {
+            let rflinkStatus;
+            switch (status) {
+            case this.constants().STATUS_ON:
+                rflinkStatus = "ON";
+                break;
+            case this.constants().STATUS_OFF:
+                rflinkStatus = "OFF";
+                break;
+            case this.constants().STATUS_ALL_ON:
+                rflinkStatus = "ALLON";
+                break;
+            case this.constants().STATUS_ALL_OFF:
+                rflinkStatus = "ALLOFF";
+                break;
+            default:
+                rflinkStatus = this.constants().STATUS_ON;
+                break;
             }
+
+            return rflinkStatus;
         }
 
+        /**
+         * Format a DBObject to RFLink serial format
+         *
+         * @param  {DbRadio} radioObject A radio object
+         * @returns {string}             The RFLink formatted instruction
+         */
         formatRadioObjectBeforeSending(radioObject) {
             return "10;" + radioObject.protocol + ";" + radioObject.deviceId + ";" + radioObject.switchId + ";" + this.radioStatusToRflinkStatus(radioObject.status) + ";";
         }
 
+        /**
+         * Callback when an information is received from rf link service thread
+         *
+         * @param  {Object} data A data object containing radio informations
+         */
         onRflinkReceive(data) {
             // TODO: Support values and sensors
-            const dbObject = this.save("433.92", data.protocol, data.code, data.subcode, null, this.rflinkStatusToRadioStatus(data.status));
+            super.onRadioEvent(this.defaultFrequency(), data.protocol, data.code, data.subcode, null, this.rflinkStatusToRadioStatus(data.status));
         }
 
-        onRadioTrigger(radioObject) {
-            super.onRadioTrigger(radioObject);
+        /**
+         * Emit RFLink request
+         *
+         * @param  {number} frequency The frequency
+         * @param  {string} protocol  The protocol
+         * @param  {string} deviceId  The device ID
+         * @param  {string} switchId  The switch ID
+         * @param  {number} status    The status (or enum called through `constants()`
+         * @returns {DbRadio}           A radio  object
+         */
+        emit(frequency, protocol, deviceId, switchId, status) {
+            const radioObject = super.emit(frequency, protocol, deviceId, switchId, status);
             this.service.send("rflinkSend", this.formatRadioObjectBeforeSending(radioObject));
+            return radioObject;
         }
     }
 
     // Instantiate
-    let rflink = new RFLink(api);
+    api.instance = new RFLink(api);
 }
 
 module.exports.attributes = {

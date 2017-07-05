@@ -150,6 +150,67 @@ describe("WebServices", function() {
         expect(p[0]).to.be.an("Promise");
     });
 
+    it("buildPromises should return the params as specified in routing", function(done) {
+        let w = new WebServices.class(9090);
+
+        w.registerAPI({
+            processAPI : function(apiRequest) {
+                expect(apiRequest.data.param1).to.be.equal("foo");
+                expect(apiRequest.data.param2).to.be.equal("bar");
+                expect(apiRequest.data.param3).to.be.equal("foobar");
+                done();
+                return new Promise((resolve, reject) => {
+                    resolve(new APIResponse.class(true, {"foo":"bar"}));
+                 } );
+            }
+        }, "*", ":/test/[param1]/[param2]/[param3*]/");
+
+        let r = w.manageResponse({method:"POST", ip:"127.0.0.1", path:"/api/test/foo/bar/foobar/", body:{"foo":"bar"}, headers:contentTypePost}, "/api/");
+        let p = w.buildPromises(r);
+    });
+
+    it("buildPromises should return the params as specified in routing with optional values", function(done) {
+        let w = new WebServices.class(9090);
+
+        w.registerAPI({
+            processAPI : function(apiRequest) {
+                expect(apiRequest.data.param1).to.be.equal("foo");
+                expect(apiRequest.data.param2).to.be.equal("bar");
+                expect(apiRequest.data.param3).to.be.null;
+                done();
+                return new Promise((resolve, reject) => {
+                    resolve(new APIResponse.class(true, {"foo":"bar"}));
+                 } );
+            }
+        }, "*", ":/test/[param1]/[param2]/[param3*]/");
+
+        let r = w.manageResponse({method:"POST", ip:"127.0.0.1", path:"/api/test/foo/bar", body:{"foo":"bar"}, headers:contentTypePost}, "/api/");
+        let p = w.buildPromises(r);
+    });
+
+    it("buildPromises should fail due to missing parameters", function() {
+        let w = new WebServices.class(9090);
+
+        w.registerAPI({
+            processAPI : function(apiRequest) {
+                expect(false).to.be.true;
+                return new Promise((resolve, reject) => {
+                    resolve(new APIResponse.class(true, {"foo":"bar"}));
+                 } );
+            }
+        }, "*", ":/test/[param1]/[param2]/[param3*]/");
+
+        let r = w.manageResponse({method:"POST", ip:"127.0.0.1", path:"/api/test/foo/", body:{"foo":"bar"}, headers:contentTypePost}, "/api/");
+        let p = w.buildPromises(r);
+
+        expect(p.length).to.be.equal(1);
+        p[0].then((resolve, reject) => {
+            expect(false).to.be.true;
+        }).catch((e) =>{
+            expect(e).to.be.not.null;
+        });
+    });
+
     /**
      * Run promises tests
      */
