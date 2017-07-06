@@ -12,8 +12,7 @@ const SchedulerService = require("./../../../src/services/schedulerservice/Sched
 const DateUtils = require("./../../../src/utils/DateUtils");
 
 describe("SchedulerService", function() {
-    let sqlite3ob = new sqlite3.Database(":memory:");
-    const dbManager = new DbManager.class({db:""}, sqlite3ob);
+    const dbManager = new DbManager.class({db:""});
     const timeEventService = new TimeEventService.class();
     let schedulerService;
 
@@ -59,7 +58,7 @@ describe("SchedulerService", function() {
         schedulerService.dbHelper.saveObject.restore();
 
     });
-    
+
     after(() => {
         dbManager.initSchema.restore();
     });

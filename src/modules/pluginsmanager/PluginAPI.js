@@ -46,6 +46,7 @@ class PluginsAPI {
         this.classes = Array.isArray(this.p.attributes.classes)?this.p.attributes.classes.slice():[];
         this.dependencies = (Array.isArray(this.p.attributes.dependencies))?this.p.attributes.dependencies.slice():[];
         this.exported = {};
+        this.instance = null;
 
         // Export classes
         this.exported = Object.assign(this.exported,
@@ -62,6 +63,7 @@ class PluginsAPI {
         this.configurationAPI = new ConfigurationAPI.class(confManager, formManager, webServices, this.identifier);
         this.timeEventAPI = new TimeEventAPI.class(timeEventService);
         this.schedulerAPI = new SchedulerAPI.class(schedulerService);
+        this.logger = Logger;
     }
 
     // /**
@@ -102,6 +104,15 @@ class PluginsAPI {
     init() {
         // Load translations
         this.translateAPI.load();
+    }
+
+    /**
+     * Register an instance as Entry point.
+     *
+     * @param  {Object} i An instance
+     */
+    registerInstance(i) {
+        this.instance = i;
     }
 }
 

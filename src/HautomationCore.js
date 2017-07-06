@@ -77,7 +77,16 @@ class HautomationCore {
         this.servicesManager.add(this.webServices);
         this.servicesManager.add(this.timeEventService);
         this.servicesManager.add(this.schedulerService);
+
+        // this.pluginsManager.getPluginsByCategory("radio").forEach((p) => {
+        //     p.instance.register(this);
+        // });
     }
+
+    // onRadioEvent(radioObject) {
+    //     Logger.err("YES");
+    //     Logger.err(radioObject);
+    // }
 
     /**
      * Start Hautomation core

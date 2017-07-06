@@ -25,6 +25,8 @@ class DbManager {
     constructor(appConfiguration, sqlite3lib = null) {
         if (sqlite3lib) { // For testing
             this.db = sqlite3lib;
+        } else if (process.env.TEST) { // For testing
+            this.db = new sqlite3.Database(":memory:");
         } else {
             this.db = new sqlite3.Database(appConfiguration.db);
         }

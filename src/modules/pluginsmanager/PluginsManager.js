@@ -236,7 +236,7 @@ class PluginsManager {
     getPluginsByCategory(category) {
         let plugins = [];
         this.plugins.forEach((plugin) => {
-            if (plugin.category.toLowerCase() === category.toLowerCase()) {
+            if (plugin.category.toLowerCase() === category.toLowerCase() && plugin.instance) {
                 plugins.push(plugin);
             }
         });
@@ -248,12 +248,13 @@ class PluginsManager {
      * Get a plugin with identifier
      *
      * @param  {string} identifier A plugin identifier
+     * @param  {boolean} [checkInstance=true] True if return with instance, false otherwise. If set to true (default), it will check that there is an instance. False for testing is recommended.
      * @returns {PluginAPI}            A plugin
      */
-    getPluginByIdentifier(identifier) {
+    getPluginByIdentifier(identifier, checkInstance = true) {
         let p = null;
         this.plugins.forEach((plugin) => {
-            if (plugin.identifier.toLowerCase() === identifier.toLowerCase()) {
+            if (plugin.identifier.toLowerCase() === identifier.toLowerCase() && (!checkInstance || (checkInstance && plugin.instance))) {
                 p = plugin;
                 return;
             }

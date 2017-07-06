@@ -90,18 +90,18 @@ function loaded(api) {
          * Constructor (called with super)
          *
          * @param  {PluginAPI} api The core APIs
-         * @param  {string} module A module name
          * @returns {Radio}        The instance
          */
-        constructor(api, module) {
+        constructor(api) {
             this.api = api;
-            this.module = module;
             this.module = api.identifier;
             this.api.databaseAPI.register(DbRadio);
             this.dbHelper = this.api.databaseAPI.dbHelper(DbRadio);
             this.api.webAPI.register(this, this.api.webAPI.constants().GET, ":/radio/get/" + this.module + "/protocol/", this.api.webAPI.Authentication().AUTH_ADMIN_LEVEL);
             // Example : http://localhost:8100/api/radio/set/rflink/blyss/134343/123/1/
             this.api.webAPI.register(this, this.api.webAPI.constants().POST, ":/radio/set/" + this.module + "/[protocol]/[deviceId]/[switchId]/[status]/[frequency*]/", this.api.webAPI.Authentication().AUTH_USAGE_LEVEL);
+            this.registered = [];
+            this.api.registerInstance(this);
         }
 
         /**
@@ -204,6 +204,12 @@ function loaded(api) {
          */
         onRadioEvent(frequency, protocol, deviceId, switchId, value, status) {
             let dbObject = new DbRadio(this.dbHelper, this.module, frequency, protocol, deviceId, switchId, value, status);
+            this.registered.forEach((register) => {
+                if (register.onRadioEvent instanceof Function) {
+                    register.onRadioEvent(dbObject);
+                }
+            });
+
             dbObject.save();
             return dbObject;
         }
@@ -220,6 +226,29 @@ function loaded(api) {
                 STATUS_ALL_ON:STATUS_ALL_ON,
                 STATUS_ALL_OFF:STATUS_ALL_OFF
             };
+        }
+
+        /**
+         * Register an object to radio events
+         *
+         * @param  {Object} o An object that implements callback
+         */
+        register(o) {
+            if (this.registered.indexOf(o) === -1) {
+                this.registered.push(o);
+            }
+        }
+
+        /**
+         * Unregister an object to radio events
+         *
+         * @param  {Object} o An object that implements callback
+         */
+        unregister(o) {
+            const index = this.registered.indexOf(o);
+            if (index !== -1) {
+                this.registered.splice(index, 1);
+            }
         }
     }
 

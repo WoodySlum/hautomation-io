@@ -21,7 +21,7 @@ function loaded(api) {
          * @returns {RFLink}        The instance
          */
         constructor(api) {
-            super(api, "rflink");
+            super(api);
             this.api = api;
             const RFLinkService = RFLinkServiceClass(api);
             this.service = new RFLinkService(this);
@@ -123,8 +123,8 @@ function loaded(api) {
         }
     }
 
-    // Instantiate
-    api.instance = new RFLink(api);
+    // Instantiate. Parent will store instanciation.
+    new RFLink(api);
 }
 
 module.exports.attributes = {

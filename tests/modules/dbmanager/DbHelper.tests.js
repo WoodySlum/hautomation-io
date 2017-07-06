@@ -18,10 +18,10 @@ describe("DbObject", function() {
             {"bar" : {"type" : "int", "version" : "0.0.0"}}
         ]
     };
+    dbManager = new DbManager.class({db:""}, sqlite3ob);
+    dbManager.initSchema(schema, "0.0.0");
 
     before(() => {
-        dbManager = new DbManager.class({db:""}, sqlite3ob);
-        dbManager.initSchema(schema, "0.0.0");
         dbHelper = new DbHelper.class(dbManager, schema, table);
     });
 
