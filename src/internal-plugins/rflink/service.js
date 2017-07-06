@@ -328,6 +328,7 @@ function loaded(api) {
 
                 sclient.on("data", function(line) {
                     Logger.verbose("Received RFLink data : " + line);
+                    send(processData(line));
                 });
 
                 sclient.on("open", function() {
@@ -342,7 +343,7 @@ function loaded(api) {
             };
 
             // Logger.warn(JSON.stringify(processData("20;01;Blyss;ID=6968;SWITCH=C4;CMD=ON;")));
-            send(processData("20;01;Blyss;ID=6968;SWITCH=C4;CMD=ON;"));
+            //send(processData("20;01;Blyss;ID=6968;SWITCH=C4;CMD=ON;"));
             //send(processData("20;03;Cresta;ID=8301;WINDIR=0005;WINSP=0000;WINGS=0000;WINTMP=00c3;WINCHL=00c3;BAT=LOW;"));
             //Logger.warn(JSON.stringify(processData("20;03;Cresta;ID=8301;WINDIR=0005;WINSP=0000;WINGS=0000;WINTMP=00c3;WINCHL=00c3;BAT=LOW;")));
             // 20;00;Nodo RadioFrequencyLink - RFLink Gateway V1.1 - R46;
