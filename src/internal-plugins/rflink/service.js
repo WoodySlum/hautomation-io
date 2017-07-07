@@ -48,6 +48,10 @@ function loaded(api) {
                     idx,
                     name,
                     value;
+                const a = [];
+                let b = a[23];
+                let c = a[23];
+                let d = a[23];
 
                 if(telegram.length > 0) {
                     var tg = telegram.split(";");
@@ -57,8 +61,9 @@ function loaded(api) {
                     rflink_id = tg[0];
                     sensor_id = tg[1];
                     name_id = (tg[2].toLowerCase().replace(/ /g,"_")).replace(/\//g,"_"); //lowercase, replace spaces and slashes
-
-                    device_id = tg[3].split("=")[1];
+                    if (tg[3]) {
+                        device_id = tg[3].split("=")[1];
+                    }
 
                     if (name_id.includes("nodo_radiofrequencylink") )
                     {
@@ -345,6 +350,7 @@ function loaded(api) {
             // Logger.warn(JSON.stringify(processData("20;01;Blyss;ID=6968;SWITCH=C4;CMD=ON;")));
             //send(processData("20;01;Blyss;ID=6968;SWITCH=C4;CMD=ON;"));
             //send(processData("20;03;Cresta;ID=8301;WINDIR=0005;WINSP=0000;WINGS=0000;WINTMP=00c3;WINCHL=00c3;BAT=LOW;"));
+            send(processData("06;CMD=ON;"));
             //Logger.warn(JSON.stringify(processData("20;03;Cresta;ID=8301;WINDIR=0005;WINSP=0000;WINGS=0000;WINTMP=00c3;WINCHL=00c3;BAT=LOW;")));
             // 20;00;Nodo RadioFrequencyLink - RFLink Gateway V1.1 - R46;
             // 20;01;Blyss;ID=6968;SWITCH=C4;CMD=ON;

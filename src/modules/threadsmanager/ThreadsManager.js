@@ -55,20 +55,27 @@ class ThreadsManager {
         const prototype = this.stringifyFunc(func);
         const thread  = threads.spawn((input, done, progress) => {
             const Logger = require(input.dirname + "/../../logger/Logger", "may-exclude");
+            try {
+                let f = eval(input.prototype);
+                let instance = f(input.data, progress);
 
-            let f = eval(input.prototype);
-            let instance = f(input.data, progress);
-
-            this.process.on("message", (d) => {
-                if (d && d.event) {
-                    if (typeof instance[d.event] === "function") {
-                        instance[d.event](d.data);
-                    } else {
-                        Logger.err("Thread '" + input.identifier + "' has invalid or unimplemented function type for event '" + d.event + "'");
+                this.process.on("message", (d) => {
+                    if (d && d.event) {
+                        if (typeof instance[d.event] === "function") {
+                            instance[d.event](d.data);
+                        } else {
+                            Logger.err("Thread '" + input.identifier + "' has invalid or unimplemented function type for event '" + d.event + "'");
+                        }
                     }
-                }
-            });
-
+                });
+            } catch(e) {
+                // Log thread error !
+                const regex = /(.*)(:)([0-9]+)(:)(.*)/g;
+                const lineStack = e.stack.toString().split("\n")[1];
+                const lineIdentified = parseInt(regex.exec(lineStack)[3]) - 1;
+                let code = input.prototype.split("\n")[lineIdentified];
+                Logger.err("Exception '" + e.message + "' in thread " + input.identifier + " on l." + lineIdentified + ". Code : " + code);
+            }
             done(input.identifier);
         })
         .send({dirname: __dirname, identifier:identifier, prototype:prototype, data:data})
