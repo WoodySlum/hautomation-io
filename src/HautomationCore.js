@@ -12,10 +12,12 @@ var ConfManager = require("./modules/confmanager/ConfManager");
 var UserManager = require("./modules/usermanager/UserManager");
 var AlarmManager = require("./modules/alarmmanager/AlarmManager");
 var PluginsManager = require("./modules/pluginsmanager/PluginsManager");
+var RadioManager = require("./modules/radiomanager/RadioManager");
 var DeviceManager = require("./modules/devicemanager/DeviceManager");
 var DbManager = require("./modules/dbmanager/DbManager");
 var TranslateManager = require("./modules/translatemanager/TranslateManager");
 var FormManager = require("./modules/formmanager/FormManager");
+var IconFormManager = require("./forms/IconFormManager");
 const CONFIGURATION_FILE = "data/config.json";
 var AppConfiguration = require("./../data/config.json");
 
@@ -39,6 +41,8 @@ class HautomationCore {
 
         // Form
         this.formManager = new FormManager.class(this.translateManager);
+        // Forms
+        this.IconFormManager = new IconFormManager.class(this.formManager);
 
         // Threads
         this.threadsManager = new ThreadsManager.class();
@@ -70,17 +74,15 @@ class HautomationCore {
         this.alarmManager = new AlarmManager.class(this.confManager, this.webServices);
         // Plugins manager module
         this.pluginsManager = new PluginsManager.class(this.confManager, this.webServices, this.servicesManager, this.dbManager, this.translateManager, this.formManager, this.timeEventService, this.schedulerService);
+        // RadioManager
+        this.radioManager = new RadioManager.class(this.pluginsManager, this.formManager);
         // Device manager module
-        this.deviceManager = new DeviceManager.class(this.confManager, this.pluginsManager, this.webServices);
+        this.deviceManager = new DeviceManager.class(this.confManager, this.formManager, this.webServices, this.radioManager);
 
         // Add services to manager
         this.servicesManager.add(this.webServices);
         this.servicesManager.add(this.timeEventService);
         this.servicesManager.add(this.schedulerService);
-
-        // this.pluginsManager.getPluginsByCategory("radio").forEach((p) => {
-        //     p.instance.register(this);
-        // });
     }
 
     // onRadioEvent(radioObject) {

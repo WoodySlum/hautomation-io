@@ -160,7 +160,7 @@ class FormManager {
         classesList.forEach((className) => {
             const c = this.registeredForms[className].class;
             const inject = this.registeredForms[className].inject;
-            form = this.generateForm(c, schema, schemaUI, inject);
+            form = this.generateForm(c, schema, schemaUI, ...inject);
             schema = form.schema;
             schemaUI = form.schemaUI;
         });
@@ -200,6 +200,9 @@ class FormManager {
                     } else if (type === "number" || type === "double" || type === "float") {
                         schema.properties[prop].type = "number";
                         exist = true;
+                    } else if (type === "boolean" || type === "bool") {
+                        schema.properties[prop].type = "boolean";
+                        exist = true;
                     } else if (type === "datetime") {
                         schema.properties[prop].type = "string";
                         schema.properties[prop].format = "date-time";
@@ -210,13 +213,13 @@ class FormManager {
                         exist = true;
                     } else if (type === "objects" && meta.Cl) {
                         schema.properties[prop].type = "array";
-                        const subForm =  self.generateForm(self.registeredForms[meta.Cl].class, self.initSchema(), self.initSchemaUI(), self.registeredForms[meta.Cl].inject);
+                        const subForm =  self.generateForm(self.registeredForms[meta.Cl].class, self.initSchema(), self.initSchemaUI(), ...self.registeredForms[meta.Cl].inject);
                         schema.properties[prop].items = subForm.schema;
                         schemaUI[prop].items = subForm.schemaUI;
 
                         exist = true;
                     } else if (type === "object" && meta.Cl) {
-                        const subForm =  self.generateForm(self.registeredForms[meta.Cl].class, self.initSchema(), self.initSchemaUI(), self.registeredForms[meta.Cl].inject);
+                        const subForm =  self.generateForm(self.registeredForms[meta.Cl].class, self.initSchema(), self.initSchemaUI(), ...self.registeredForms[meta.Cl].inject);
                         schema.properties[prop] = subForm.schema;
                         schema.properties[prop].type = "object";
                         schemaUI[prop] = subForm.schemaUI;

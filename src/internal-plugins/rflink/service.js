@@ -48,10 +48,6 @@ function loaded(api) {
                     idx,
                     name,
                     value;
-                const a = [];
-                let b = a[23];
-                let c = a[23];
-                let d = a[23];
 
                 if(telegram.length > 0) {
                     var tg = telegram.split(";");
@@ -344,6 +340,7 @@ function loaded(api) {
             }
 
             this.rflinkSend = (data) => {
+                Logger.info("RFLink sending data : " + data);
                 sclient.write(data + "\r\n");
             };
 

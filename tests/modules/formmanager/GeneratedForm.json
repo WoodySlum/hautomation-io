@@ -42,18 +42,19 @@
         "type": "string",
         "title": "Bar",
         "enum": [
-          [
             "WOODY",
             "SLUM"
-          ],
-          null
         ],
         "enumNames": [
           "DUBOIS",
           "Bar"
         ]
       },
-      "f": {},
+      "f": {
+          "type": "boolean",
+          "title": "I'm a boolean",
+          "default": true
+      },
       "g": {
         "type": "string",
         "title": "I'm a radio",
@@ -92,11 +93,8 @@
         "items": {
           "type": "string",
           "enum": [
-            [
               "WOODY",
               "SLUM"
-            ],
-            null
           ],
           "enumNames": [
             "DUBOIS",

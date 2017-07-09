@@ -1,16 +1,14 @@
-/* eslint-disable */
 "use strict";
-var Logger = require("./../../logger/Logger");
-var Device = require("./Device");
-var WebServices = require("./../../services/webservices/WebServices");
-var Authentication = require("./../authentication/Authentication");
-var APIResponse = require("../../services/webservices/APIResponse");
+// const Logger = require("./../../logger/Logger");
+const DeviceForm = require("./DeviceForm");
+const FormConfiguration = require("./../formconfiguration/FormConfiguration");
+const WebServices = require("./../../services/webservices/WebServices");
+const Authentication = require("./../authentication/Authentication");
+const APIResponse = require("./../../services/webservices/APIResponse");
+const Radio = require("./../../internal-plugins/radio/plugin");
 
-const CONF_KEY = "devices";
-const ROUTE_GET_METHOD = ":/devices/get/";
-const ROUTE_POST_METHOD = ":/devices/set/";
-// /api/devices/id/status/
-const ROUTE_POST_STATUS_METHOD = ":/devices/status/";
+const STATUS_ON = "on";
+const STATUS_OFF = "off";
 
 /**
  * This class allows to manage devices
@@ -20,83 +18,64 @@ class DeviceManager {
     /**
      * Constructor
      *
-     * @param  {ConfManager} confManager A configuration manager needed for persistence
-     * @param  {PluginsManager} pluginsManager The plugins manager
-     * @param  {WebServices} webServices The web services to register APIs
-     * @returns {DeviceManager} The instance
+     * @param  {ConfManager} confManager  A configuration manager
+     * @param  {FormManager} formManager  A form manager
+     * @param  {WebServices} webServices  The web services
+     * @param  {RadioManager} radioManager The radio manager
+     * @returns {DeviceManager}              The instance
      */
-    constructor(confManager, pluginsManager, webServices) {
-        this.confManager = confManager;
-        this.webServices = webServices;
-        this.pluginsManager = pluginsManager;
+    constructor(confManager, formManager, webServices, radioManager) {
+        this.formConfiguration = new FormConfiguration.class(confManager, formManager, webServices, "devices", true, DeviceForm.class);
+        this.radioManager = radioManager;
 
-        try {
-            this.devices = this.confManager.loadData(Device.class, CONF_KEY);
-        } catch(e) {
-            Logger.warn("Load devices error : " + e.message);
-            this.devices = [];
+        webServices.registerAPI(this, WebServices.POST, ":/device/set/[id]/[status*]/", Authentication.AUTH_USAGE_LEVEL);
+    }
+
+    /**
+     * Switch a device radio status
+     *
+     * @param  {number} id            A device identifier
+     * @param  {string} [status=null] A status  (`on`, `off` or radio status)
+     */
+    switchDevice(id, status = null) {
+        if (status.toLowerCase() === STATUS_ON) {
+            status = Radio.STATUS_ON;
+        } else if (status.toLowerCase() === STATUS_OFF) {
+            status = Radio.STATUS_OFF;
         }
 
-        // Register APIs
-        this.webServices.registerAPI(this, WebServices.GET, ROUTE_GET_METHOD, Authentication.AUTH_ADMIN_LEVEL);
-        this.webServices.registerAPI(this, WebServices.POST, ROUTE_POST_METHOD, Authentication.AUTH_ADMIN_LEVEL);
-        this.webServices.registerAPI(this, WebServices.POST, ROUTE_POST_STATUS_METHOD, Authentication.AUTH_USAGE_LEVEL);
-    }
+        this.formConfiguration.data.forEach((device) => {
+            if (parseInt(device.id) === parseInt(id)) {
+                let newStatus = null;
+                device.radio.forEach((radio) => {
+                    const radioObject = this.radioManager.switchDevice(radio.module, radio.protocol, radio.deviceId, radio.switchId, status, radio.frequency, device.status);
+                    if (radioObject.status) {
+                        newStatus = radioObject.status;
+                    }
+                });
 
-    deviceComparator(device1, device2) {
-        return device1.id === device2.id;
-    }
-
-    /**
-     * Set device from a generic JSON object
-     *
-     * @param {Object} object The JSON object
-     */
-    setDevice(object) {
-        Logger.info("Saving device");
-        const device = new Device.class().json(object);
-        this.confManager.setData(CONF_KEY, device, this.devices, this.deviceComparator);
+                if (newStatus) {
+                    device.status = newStatus;
+                    this.formConfiguration.saveConfig(device);
+                }
+            }
+        });
     }
 
     /**
-     * Process web API callback
+     * Process API callback
      *
-     * @param  {APIRequest} apiRequest An API Request
-     * @returns {Promise}            A promise with APIResponse
+     * @param  {APIRequest} apiRequest An APIRequest
+     * @returns {Promise}  A promise with an APIResponse object
      */
     processAPI(apiRequest) {
-        if (apiRequest.method === WebServices.GET && apiRequest.route === ROUTE_GET_METHOD) {
+        if (apiRequest.route.startsWith( ":/device/set/")) {
+            const self = this;
             return new Promise((resolve) => {
-                resolve(new APIResponse.class(true, this.devices));
+                self.switchDevice(apiRequest.data.id, apiRequest.data.status);
+                resolve(new APIResponse.class(true, {success:true}));
             });
         }
-
-        if (apiRequest.method === WebServices.POST && apiRequest.route === ROUTE_POST_METHOD) {
-            return new Promise((resolve) => {
-                this.setDevice(apiRequest.data);
-                resolve(new APIResponse.class(true, this.devices));
-            });
-        }
-
-        if (apiRequest.method === WebServices.POST && apiRequest.route.startsWith(ROUTE_POST_STATUS_METHOD)) {
-            return new Promise((resolve) => {
-                if (apiRequest.path.length == 3) {
-                    const id = apiRequest.path[1];
-                    const status = apiRequest.path[2];
-
-                    // Get data
-                    let device = this.confManager.getData(this.devices, new Device.class(id), this.deviceComparator);
-                    this.changeStatus(device, status);
-                    resolve(new APIResponse.class(true, this.devices));
-                } else {
-                    resolve(new APIResponse.class(false, {}, 819, "Invalid API call. Needed id and status"));
-                }
-            });
-        }
-    }
-
-    changeStatus(device, status) {
-
     }
 }
 

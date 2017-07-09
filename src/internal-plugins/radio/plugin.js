@@ -181,10 +181,14 @@ function loaded(api) {
          * @param  {string} protocol  The protocol
          * @param  {string} deviceId  The device ID
          * @param  {string} switchId  The switch ID
-         * @param  {number} status    The status (or enum called through `constants()`
+         * @param  {number} [status=null]    The status (or enum called through `constants()`)
+         * @param  {number} [previousStatus=null]    The previous object status, used if status is null to invert
          * @returns {DbRadio}           A radio  object
          */
-        emit(frequency, protocol, deviceId, switchId, status) {
+        emit(frequency, protocol, deviceId, switchId, status = null, previousStatus = null) {
+            if (!status && previousStatus) {
+                status = -1 * previousStatus;
+            }
             let dbObject = new DbRadio(this.dbHelper, this.module, frequency, protocol, deviceId, switchId, null, status);
             this.onRadioEvent(frequency, protocol, deviceId, switchId, null, status);
             return dbObject;
@@ -199,7 +203,7 @@ function loaded(api) {
          * @param  {string} deviceId  The device ID
          * @param  {string} switchId  The switch ID
          * @param  {number} value  The value
-         * @param  {number} status    The status (or enum called through `constants()`
+         * @param  {number} status    The status (or enum called through `constants()`)
          * @returns {DbRadio}           A radio  object
          */
         onRadioEvent(frequency, protocol, deviceId, switchId, value, status) {
@@ -257,6 +261,7 @@ function loaded(api) {
     api.exportClass(Radio);
 }
 
+module.exports = {STATUS_ON:STATUS_ON, STATUS_OFF:STATUS_OFF, STATUS_ALL_ON:STATUS_ALL_ON, STATUS_ALL_OFF:STATUS_ALL_OFF};
 module.exports.attributes = {
     loadedCallback: loaded,
     name: "radio",

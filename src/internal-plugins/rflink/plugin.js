@@ -65,7 +65,7 @@ function loaded(api) {
          */
         radioStatusToRflinkStatus(status) {
             let rflinkStatus;
-            switch (status) {
+            switch (parseInt(status)) {
             case this.constants().STATUS_ON:
                 rflinkStatus = "ON";
                 break;
@@ -106,18 +106,19 @@ function loaded(api) {
             super.onRadioEvent(this.defaultFrequency(), data.protocol, data.code, data.subcode, null, this.rflinkStatusToRadioStatus(data.status));
         }
 
-        /**
-         * Emit RFLink request
-         *
-         * @param  {number} frequency The frequency
-         * @param  {string} protocol  The protocol
-         * @param  {string} deviceId  The device ID
-         * @param  {string} switchId  The switch ID
-         * @param  {number} status    The status (or enum called through `constants()`
-         * @returns {DbRadio}           A radio  object
-         */
-        emit(frequency, protocol, deviceId, switchId, status) {
-            const radioObject = super.emit(frequency, protocol, deviceId, switchId, status);
+       /**
+        * Emit radio request
+        *
+        * @param  {number} frequency The frequency
+        * @param  {string} protocol  The protocol
+        * @param  {string} deviceId  The device ID
+        * @param  {string} switchId  The switch ID
+        * @param  {number} [status=null]    The status (or enum called through `constants()`)
+        * @param  {number} [previousStatus=null]    The previous object status, used if status is null to invert
+        * @returns {DbRadio}           A radio  object
+        */
+        emit(frequency, protocol, deviceId, switchId, status = null, previousStatus = null) {
+            const radioObject = super.emit(frequency, protocol, deviceId, switchId, status, previousStatus);
             this.service.send("rflinkSend", this.formatRadioObjectBeforeSending(radioObject));
             return radioObject;
         }

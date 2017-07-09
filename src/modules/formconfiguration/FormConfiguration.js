@@ -23,9 +23,10 @@ class FormConfiguration {
      * @param  {string} name        A name or identifier
      * @param  {boolean} [list=false]     True if form configuration manage a list, false otherwise
      * @param  {Class} formClass A form annotation's implemented class. Can be called later through `register` method
+     * @param  {...Object} inject Parameters injection on static methods
      * @returns {FormConfiguration}             The instance
      */
-    constructor(confManager, formManager, webServices, name, list = false, formClass = null) {
+    constructor(confManager, formManager, webServices, name, list = false, formClass = null, ...inject) {
         this.confManager = confManager;
         this.formManager = formManager;
         this.webServices = webServices;
@@ -50,7 +51,7 @@ class FormConfiguration {
         }
 
         if (formClass) {
-            this.registerForm(formClass);
+            this.registerForm(formClass, ...inject);
         } else {
             this.formClass = null;
         }
