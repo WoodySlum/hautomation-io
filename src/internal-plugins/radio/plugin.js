@@ -122,7 +122,7 @@ function loaded(api) {
                     const protocolList = [];
                     dbRadioObjects.forEach((dbRadioObject) => {
                         protocolList.push(dbRadioObject.protocol);
-                    });console.log(cb);
+                    });
                     cb(null, protocolList);
                 } else {
                     cb(err);
@@ -188,6 +188,9 @@ function loaded(api) {
         emit(frequency, protocol, deviceId, switchId, status = null, previousStatus = null) {
             if (!status && previousStatus) {
                 status = -1 * previousStatus;
+            }
+            if (!frequency) {
+                frequency = this.defaultFrequency();
             }
             let dbObject = new DbRadio(this.dbHelper, this.module, frequency, protocol, deviceId, switchId, null, status);
             this.onRadioEvent(frequency, protocol, deviceId, switchId, null, status);
