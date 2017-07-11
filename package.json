@@ -71,6 +71,7 @@
     "stack-trace": "^0.0",
     "threads": "git://github.com/WoodySlum/threads.js.git#master",
     "toposort": "^1.0",
-    "sha256": "^0.2"
+    "sha256": "^0.2",
+    "moment":"^2.18"
   }
 }

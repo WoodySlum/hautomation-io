@@ -12,9 +12,10 @@ class APIResponse {
      * @param  {Object}  [response={}]       A response object to transmit (optional)
      * @param  {int}  [errorCode=-1]         The error code (optional)
      * @param  {string}  [errorMessage=null] The error message (optional)
+     * @param  {boolean}  [upToDate=false] True will return 304 no content.
      * @returns {APIResponse}                 The instance
      */
-    constructor(success = false, response = {}, errorCode = -1, errorMessage = null) {
+    constructor(success = false, response = {}, errorCode = -1, errorMessage = null, upToDate = false) {
         /**
          * Success
          * @type {bool} sucess True if no errors
@@ -35,6 +36,7 @@ class APIResponse {
          * @type {string} errorMessage The error message
          */
         this.errorMessage = errorMessage;
+        this.upToDate = upToDate;
     }
 
 }

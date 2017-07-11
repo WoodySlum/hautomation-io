@@ -40,9 +40,9 @@ class FormConfiguration {
         this.setRoute = ":/" + ROUTE_BASE_PATH + "/" + this.name + "/" + ROUTE_BASE_SET + "/";
 
 
-        this.webServices.registerAPI(this, WebServices.GET, this.formRoute, Authentication.AUTH_NO_LEVEL);
-        this.webServices.registerAPI(this, WebServices.GET, this.getRoute, Authentication.AUTH_NO_LEVEL);
-        this.webServices.registerAPI(this, WebServices.POST, this.setRoute, Authentication.AUTH_NO_LEVEL);
+        this.webServices.registerAPI(this, WebServices.GET, this.formRoute, Authentication.AUTH_ADMIN_LEVEL);
+        this.webServices.registerAPI(this, WebServices.GET, this.getRoute, Authentication.AUTH_ADMIN_LEVEL);
+        this.webServices.registerAPI(this, WebServices.POST, this.setRoute, Authentication.AUTH_ADMIN_LEVEL);
 
         if (this.list) {
             this.data = [];

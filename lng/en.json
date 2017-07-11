@@ -1,6 +1,3 @@
 {
-    "foo":"Hello %@ and %@",
-    "const.test":"Translated value",
-    "Foo":"TOTO",
-    "WOODY":"DUBOIS"
+    "datetime.format":"YYYY-MM-DD HH:mm:ss"
 }
