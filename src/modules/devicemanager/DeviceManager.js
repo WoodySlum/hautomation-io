@@ -38,9 +38,9 @@ class DeviceManager {
      * @param  {string} [status=null] A status  (`on`, `off` or radio status)
      */
     switchDevice(id, status = null) {
-        if (status.toLowerCase() === STATUS_ON) {
+        if (status && status.toLowerCase() === STATUS_ON) {
             status = Radio.STATUS_ON;
-        } else if (status.toLowerCase() === STATUS_OFF) {
+        } else if (status && status.toLowerCase() === STATUS_OFF) {
             status = Radio.STATUS_OFF;
         }
 
@@ -79,4 +79,4 @@ class DeviceManager {
     }
 }
 
-module.exports = {class:DeviceManager};
+module.exports = {class:DeviceManager, STATUS_ON:STATUS_ON, STATUS_OFF:STATUS_OFF};
