@@ -18,6 +18,8 @@ var DbManager = require("./modules/dbmanager/DbManager");
 var TranslateManager = require("./modules/translatemanager/TranslateManager");
 var FormManager = require("./modules/formmanager/FormManager");
 var IconFormManager = require("./forms/IconFormManager");
+var DashboardManager = require("./modules/dashboardmanager/DashboardManager");
+var ThemeManager = require("./modules/thememanager/ThemeManager");
 const CONFIGURATION_FILE = "data/config.json";
 var AppConfiguration = require("./../data/config.json");
 
@@ -34,6 +36,9 @@ class HautomationCore {
     constructor() {
         // Load main configuration
         this.configurationLoader();
+
+        // Theme manager
+        this.themeManager = new ThemeManager.class(AppConfiguration);
 
         // Translation
         this.translateManager = new TranslateManager.class(AppConfiguration.lng);
@@ -55,6 +60,7 @@ class HautomationCore {
         this.timeEventService = new TimeEventService.class();
 
         // Init modules
+
         // Db manager
         this.dbManager = new DbManager.class(AppConfiguration);
 
@@ -76,8 +82,11 @@ class HautomationCore {
         this.pluginsManager = new PluginsManager.class(this.confManager, this.webServices, this.servicesManager, this.dbManager, this.translateManager, this.formManager, this.timeEventService, this.schedulerService);
         // RadioManager
         this.radioManager = new RadioManager.class(this.pluginsManager, this.formManager);
+        // Dashboard manager
+        this.dashboardManager = new DashboardManager.class(this.themeManager, this.webServices, this.translateManager);
         // Device manager module
-        this.deviceManager = new DeviceManager.class(this.confManager, this.formManager, this.webServices, this.radioManager);
+        this.deviceManager = new DeviceManager.class(this.confManager, this.formManager, this.webServices, this.radioManager, this.dashboardManager);
+
 
         // Add services to manager
         this.servicesManager.add(this.webServices);

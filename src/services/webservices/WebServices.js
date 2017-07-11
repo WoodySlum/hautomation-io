@@ -22,6 +22,7 @@ const DATA_FIELD = "data";
 const GET = "GET";
 const POST = "POST";
 
+const API_UP_TO_DATE = 304;
 const API_ERROR_HTTP_CODE = 500;
 
 const INFOS_ENDPOINT = ":/infos/";
@@ -369,6 +370,9 @@ class WebServices extends Service.class {
                 this.sendAPIResponse(apiResponse, res);
             }
         }).catch((apiResponse) => {
+            if (apiResponse.stack) {
+                Logger.err(apiResponse.stack);
+            }
 
             if (apiResponse) {
                 this.sendAPIResponse([apiResponse], res);
@@ -401,7 +405,11 @@ class WebServices extends Service.class {
 
         Logger.info(apiResponse);
         if (apiResponse.success) {
-            res.json(apiResponse.response);
+            if (apiResponse.upToDate) {
+                res.status(API_UP_TO_DATE).send();
+            } else {
+                res.json(apiResponse.response);
+            }
         } else {
             res.status(API_ERROR_HTTP_CODE).json({"code":apiResponse.errorCode,"message":apiResponse.errorMessage});
         }
@@ -411,6 +419,7 @@ class WebServices extends Service.class {
 module.exports = {class:WebServices, CONTENT_TYPE:CONTENT_TYPE,
     HEADER_APPLICATION_JSON:HEADER_APPLICATION_JSON, HEADER_APPLICATION_FORM:HEADER_APPLICATION_FORM,
     API_ERROR_HTTP_CODE:API_ERROR_HTTP_CODE,
+    API_UP_TO_DATE:API_UP_TO_DATE,
     GET:GET,
     POST:POST
 };
