@@ -38,18 +38,7 @@ class DashboardManager {
      * @param  {Tile} tile A tile object
      */
     registerTile(tile) {
-        const indexes = [];
-        // Collect registered indexes
-        for (let i = 0 ; i < this.tiles.length ; i++) {
-            if (this.tiles[i].identifier === tile.identifier) {
-                indexes.push(i);
-            }
-        }
-
-        // Remove existing tiles
-        indexes.forEach((index) => {
-            this.tiles.splice(index, 1);
-        });
+        this.unregisterTile(tile.identifier);
 
         // Add tile
         this.tiles.push(tile.get());
@@ -60,6 +49,30 @@ class DashboardManager {
         });
 
         Logger.verbose("Tile " + tile.identifier + " registered");
+
+        // Save generation date
+        this.lastGenerated = DateUtils.class.timestamp();
+    }
+
+    /**
+     * Remove a tile with identifier
+     *
+     * @param  {string} identifier A tile identifier
+     */
+    unregisterTile(identifier) {
+        const indexes = [];
+
+        // Collect registered indexes
+        for (let i = 0 ; i < this.tiles.length ; i++) {
+            if (this.tiles[i].identifier === identifier) {
+                indexes.push(i);
+            }
+        }
+
+        // Remove existing tiles
+        indexes.forEach((index) => {
+            this.tiles.splice(index, 1);
+        });
 
         // Save generation date
         this.lastGenerated = DateUtils.class.timestamp();

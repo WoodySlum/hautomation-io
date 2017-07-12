@@ -15,7 +15,7 @@ const devices = [
       "id":1981,
       "name":"FooBar",
       "excludeFromAll":null,
-      "visible":null,
+      "visible":true,
       "worksOnlyOnDayNight":null,
       "icon":{
          "icon":59398
@@ -89,6 +89,13 @@ describe("DeviceManager", function() {
         });
         deviceManager.switchDevice(1981);
         deviceManager.formConfiguration.saveConfig.restore();
+    });
+
+    it("switchDevice should update dashboard", function() {
+        sinon.spy(deviceManager.dashboardManager, "registerTile");
+        deviceManager.switchDevice(1981, "Off");
+        expect(deviceManager.dashboardManager.registerTile.calledOnce).to.be.true;
+        deviceManager.dashboardManager.registerTile.restore();
     });
 
     after(() => {

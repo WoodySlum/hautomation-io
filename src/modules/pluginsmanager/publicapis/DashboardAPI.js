@@ -31,6 +31,15 @@ class DashboardAPI {
     }
 
     /**
+     * Unregister a tile
+     *
+     * @param  {string} tile A tile identifier
+     */
+    unregisterTile(identifier) {
+        PrivateProperties.oprivate(this).dashboardManager.unregisterTile(identifier);
+    }
+
+    /**
      * Constructor
      *
      * @param  {string} identifier                The tile identifier (must be unique)
