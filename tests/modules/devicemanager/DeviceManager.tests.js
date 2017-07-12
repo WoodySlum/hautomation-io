@@ -95,6 +95,7 @@ describe("DeviceManager", function() {
         sinon.spy(deviceManager.dashboardManager, "registerTile");
         deviceManager.switchDevice(1981, "Off");
         expect(deviceManager.dashboardManager.registerTile.calledOnce).to.be.true;
+        expect(false).to.be.true;
         deviceManager.dashboardManager.registerTile.restore();
     });
 
