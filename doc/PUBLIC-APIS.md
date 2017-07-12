@@ -13,11 +13,19 @@
     -   [registerForm](#registerform)
     -   [processAPI](#processapi)
     -   [getConfig](#getconfig)
+-   [DashboardAPI](#dashboardapi)
+    -   [registerTile](#registertile)
+    -   [unregisterTile](#unregistertile)
+    -   [Tile](#tile)
+    -   [TileType](#tiletype)
+-   [Tile](#tile-1)
+    -   [constructor](#constructor-1)
+    -   [get](#get)
 -   [DatabaseAPI](#databaseapi)
     -   [register](#register-1)
     -   [dbHelper](#dbhelper)
 -   [DbHelper](#dbhelper-1)
-    -   [constructor](#constructor-1)
+    -   [constructor](#constructor-2)
     -   [RequestBuilder](#requestbuilder)
     -   [Operators](#operators)
     -   [getFieldsForTable](#getfieldsfortable)
@@ -28,18 +36,18 @@
     -   [delObject](#delobject)
     -   [delObjects](#delobjects)
 -   [DbObject](#dbobject)
-    -   [constructor](#constructor-2)
+    -   [constructor](#constructor-3)
     -   [base](#base)
     -   [save](#save)
     -   [del](#del)
 -   [DbRequestBuilder](#dbrequestbuilder)
-    -   [constructor](#constructor-3)
+    -   [constructor](#constructor-4)
     -   [removeLastComma](#removelastcomma)
     -   [escapeString](#escapestring)
     -   [getValueEncapsulated](#getvalueencapsulated)
     -   [getMetaForField](#getmetaforfield)
     -   [save](#save-1)
-    -   [get](#get)
+    -   [get](#get-1)
     -   [del](#del-1)
     -   [selectOp](#selectop)
     -   [select](#select)
@@ -70,7 +78,7 @@
     -   [schedule](#schedule)
     -   [constants](#constants)
 -   [SchedulerService](#schedulerservice)
-    -   [constructor](#constructor-4)
+    -   [constructor](#constructor-5)
     -   [start](#start)
     -   [stop](#stop)
     -   [register](#register-3)
@@ -78,12 +86,13 @@
     -   [schedule](#schedule-1)
     -   [timeEvent](#timeevent)
 -   [SchedulerDbObject](#schedulerdbobject)
-    -   [constructor](#constructor-5)
+    -   [constructor](#constructor-6)
 -   [identifier](#identifier)
 -   [data](#data)
 -   [triggerDate](#triggerdate)
 -   [DateUtils](#dateutils)
     -   [timestamp](#timestamp)
+    -   [dateFormatted](#dateformatted)
 -   [ServicesManagerAPI](#servicesmanagerapi)
     -   [add](#add)
 -   [TimeEventAPI](#timeeventapi)
@@ -91,7 +100,7 @@
     -   [unregister](#unregister-2)
     -   [constants](#constants-1)
 -   [TimeEventService](#timeeventservice)
-    -   [constructor](#constructor-6)
+    -   [constructor](#constructor-7)
     -   [start](#start-1)
     -   [stop](#stop-1)
     -   [hash](#hash)
@@ -110,14 +119,14 @@
     -   [APIResponse](#apiresponse)
     -   [constants](#constants-2)
 -   [Authentication](#authentication-1)
-    -   [constructor](#constructor-7)
--   [AuthenticationData](#authenticationdata)
     -   [constructor](#constructor-8)
+-   [AuthenticationData](#authenticationdata)
+    -   [constructor](#constructor-9)
     -   [authorized](#authorized)
     -   [username](#username)
     -   [level](#level)
 -   [APIResponse](#apiresponse-1)
-    -   [constructor](#constructor-9)
+    -   [constructor](#constructor-10)
     -   [success](#success)
     -   [response](#response)
     -   [errorCode](#errorcode)
@@ -125,7 +134,7 @@
 -   [Cleaner](#cleaner)
     -   [exportConstants](#exportconstants)
 -   [WebServices](#webservices)
-    -   [constructor](#constructor-10)
+    -   [constructor](#constructor-11)
     -   [start](#start-2)
     -   [registerInfos](#registerinfos)
     -   [processAPI](#processapi-1)
@@ -146,7 +155,7 @@
     -   [info](#info)
     -   [debug](#debug)
 -   [Service](#service)
-    -   [constructor](#constructor-11)
+    -   [constructor](#constructor-12)
     -   [start](#start-3)
     -   [run](#run)
     -   [threadCallback](#threadcallback)
@@ -162,7 +171,7 @@
     -   [unregister](#unregister-6)
     -   [setThreadsManager](#setthreadsmanager)
 -   [APIRequest](#apirequest)
-    -   [constructor](#constructor-12)
+    -   [constructor](#constructor-13)
     -   [method](#method)
     -   [ip](#ip)
     -   [route](#route)
@@ -173,7 +182,7 @@
     -   [authenticationData](#authenticationdata-1)
     -   [addAuthenticationData](#addauthenticationdata)
 -   [APIRegistration](#apiregistration)
-    -   [constructor](#constructor-13)
+    -   [constructor](#constructor-14)
     -   [delegate](#delegate)
     -   [method](#method-1)
     -   [route](#route-1)
@@ -218,6 +227,7 @@ This class allows to manage form configuration
 -   `name`  
 -   `list`   (optional, default `false`)
 -   `formClass`   (optional, default `null`)
+-   `inject` **...any** 
 
 ### constructor
 
@@ -231,6 +241,7 @@ Constructor
 -   `name` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A name or identifier
 -   `list` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if form configuration manage a list, false otherwise (optional, default `false`)
 -   `formClass` **Class** A form annotation's implemented class. Can be called later through `register` method (optional, default `null`)
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Parameters injection on static methods
 
 Returns **[FormConfiguration](#formconfiguration)** The instance
 
@@ -281,6 +292,105 @@ Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refe
 Return configuration
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A configuration
+
+## DashboardAPI
+
+Public API for dashboard
+
+**Parameters**
+
+-   `dashboardManager`  
+
+### registerTile
+
+Register a tile
+
+**Parameters**
+
+-   `tile` **[Tile](#tile)** A tile object
+
+### unregisterTile
+
+Unregister a tile
+
+**Parameters**
+
+-   `identifier` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A tile identifier
+
+### Tile
+
+Constructor
+
+**Parameters**
+
+-   `identifier` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The tile identifier (must be unique)
+-   `type` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The tile's model (or type). Models cosntants can be retrieved through `TileType()` (optional, default `TILE_INFO_ONE_TEXT`)
+-   `icon` **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** The icon. Use `api.exported.Icons.class.list()` to retrieve icon list. (optional, default `null`)
+-   `subIcon` **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** The subicon. Use `api.exported.Icons.class.list()` to retrieve icon list. (optional, default `null`)
+-   `text` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The text (optional, default `null`)
+-   `subText` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The sub text (optional, default `null`)
+-   `picture` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A picture in base64 format (optional, default `null`)
+-   `pictures` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** A list of Base64 pictures (optional, default `null`)
+-   `status` **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** A status (0, 1, ...) (optional, default `0`)
+-   `order` **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** A number that represents the place of the tile. 1 is on top, 999999 is on bottom :) (optional, default `1`)
+-   `action` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The action (route endpoint without `:`) (optional, default `null`)
+-   `object` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An object (optional, default `null`)
+
+Returns **[Tile](#tile)** A tile
+
+### TileType
+
+Expose a list of tile's type : `TILE_INFO_ONE_TEXT`, `TILE_INFO_TWO_TEXT`, `TILE_INFO_TWO_ICONS`, `TILE_ACTION_ONE_ICON`, `TILE_PICTURE_TEXT`, `TILE_PICTURES`, `TILE_GENERIC_ACTION` or `TILE_GENERIC_ACTION_STATUS`
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Constants
+
+## Tile
+
+This class describes tiles
+
+**Parameters**
+
+-   `themeManager`  
+-   `identifier`  
+-   `type`   (optional, default `TILE_INFO_ONE_TEXT`)
+-   `icon`   (optional, default `null`)
+-   `subIcon`   (optional, default `null`)
+-   `text`   (optional, default `null`)
+-   `subText`   (optional, default `null`)
+-   `picture`   (optional, default `null`)
+-   `pictures`   (optional, default `null`)
+-   `status`   (optional, default `0`)
+-   `order`   (optional, default `1`)
+-   `action`   (optional, default `null`)
+-   `object`   (optional, default `null`)
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `themeManager` **ThemeManager** The theme manager
+-   `identifier` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The tile identifier (must be unique)
+-   `type` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The tile's model (or type). Check enum. (optional, default `TILE_INFO_ONE_TEXT`)
+-   `icon` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The icon (optional, default `null`)
+-   `subIcon` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The subicon (optional, default `null`)
+-   `text` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The text (optional, default `null`)
+-   `subText` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The sub text (optional, default `null`)
+-   `picture` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A picture in base64 format (optional, default `null`)
+-   `pictures` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** A list of Base64 pictures (optional, default `null`)
+-   `status` **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** A status (0, 1, ...) (optional, default `0`)
+-   `order` **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** A number that represents the place of the tile. 1 is on top, 999999 is on bottom :) (optional, default `1`)
+-   `action` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The action (route endpoint without `:`) (optional, default `null`)
+-   `object` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An object (optional, default `null`)
+
+Returns **[Tile](#tile)** A tile
+
+### get
+
+Get the tile without useless informations
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A tile ready to be serialized
 
 ## DatabaseAPI
 
@@ -938,6 +1048,17 @@ Return the current timestamp
 
 Returns **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** The current timestamp
 
+### dateFormatted
+
+Format the current date with parameter
+
+**Parameters**
+
+-   `format` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A format (Y for year, m for month, d for day, H for hour, i for minutes, s for seconds)
+-   `timestamp` **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** A timestamp. If not provided, use current timestamp. (optional, default `null`)
+
+Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The formatted date
+
 ## ServicesManagerAPI
 
 Public API for services manager
@@ -1221,6 +1342,7 @@ This class is a POJO representing an APIResponse item
 -   `response`   (optional, default `{}`)
 -   `errorCode`   (optional, default `-1`)
 -   `errorMessage`   (optional, default `null`)
+-   `upToDate`   (optional, default `false`)
 
 ### constructor
 
@@ -1232,6 +1354,7 @@ Constructor
 -   `response` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A response object to transmit (optional) (optional, default `{}`)
 -   `errorCode` **int** The error code (optional) (optional, default `-1`)
 -   `errorMessage` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The error message (optional) (optional, default `null`)
+-   `upToDate` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True will return 304 no content. (optional, default `false`)
 
 Returns **[APIResponse](#apiresponse)** The instance
 

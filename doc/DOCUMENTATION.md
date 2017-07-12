@@ -2,8 +2,15 @@
 
 ### Table of Contents
 
--   [HautomationCore](#hautomationcore)
+-   [IconForm](#iconform)
     -   [constructor](#constructor)
+    -   [icon](#icon)
+    -   [json](#json)
+    -   [getIcons](#geticons)
+-   [IconFormManager](#iconformmanager)
+    -   [constructor](#constructor-1)
+-   [HautomationCore](#hautomationcore)
+    -   [constructor](#constructor-2)
     -   [start](#start)
     -   [stop](#stop)
     -   [configurationLoader](#configurationloader)
@@ -14,7 +21,7 @@
 -   [loaded](#loaded-1)
 -   [loaded](#loaded-2)
 -   [DbRadio](#dbradio)
-    -   [constructor](#constructor-1)
+    -   [constructor](#constructor-3)
 -   [module](#module)
 -   [frequency](#frequency)
 -   [protocol](#protocol)
@@ -23,22 +30,24 @@
 -   [value](#value)
 -   [status](#status)
 -   [Radio](#radio)
-    -   [constructor](#constructor-2)
+    -   [constructor](#constructor-4)
     -   [getProtocolList](#getprotocollist)
     -   [processAPI](#processapi)
     -   [defaultFrequency](#defaultfrequency)
     -   [emit](#emit)
     -   [onRadioEvent](#onradioevent)
     -   [constants](#constants)
+    -   [register](#register)
+    -   [unregister](#unregister)
 -   [RFLink](#rflink)
-    -   [constructor](#constructor-3)
+    -   [constructor](#constructor-5)
     -   [rflinkStatusToRadioStatus](#rflinkstatustoradiostatus)
     -   [radioStatusToRflinkStatus](#radiostatustorflinkstatus)
     -   [formatRadioObjectBeforeSending](#formatradioobjectbeforesending)
     -   [onRflinkReceive](#onrflinkreceive)
     -   [emit](#emit-1)
 -   [RFLinkService](#rflinkservice)
-    -   [constructor](#constructor-4)
+    -   [constructor](#constructor-6)
     -   [run](#run)
     -   [threadCallback](#threadcallback)
 -   [xo](#xo)
@@ -53,21 +62,21 @@
     -   [info](#info)
     -   [debug](#debug)
 -   [Alarm](#alarm)
-    -   [constructor](#constructor-5)
-    -   [json](#json)
+    -   [constructor](#constructor-7)
+    -   [json](#json-1)
 -   [AlarmManager](#alarmmanager)
-    -   [constructor](#constructor-6)
+    -   [constructor](#constructor-8)
     -   [setAlarm](#setalarm)
     -   [processAPI](#processapi-2)
 -   [Authentication](#authentication)
-    -   [constructor](#constructor-7)
+    -   [constructor](#constructor-9)
 -   [AuthenticationData](#authenticationdata)
-    -   [constructor](#constructor-8)
+    -   [constructor](#constructor-10)
     -   [authorized](#authorized)
     -   [username](#username)
     -   [level](#level)
 -   [ConfManager](#confmanager)
-    -   [constructor](#constructor-9)
+    -   [constructor](#constructor-11)
     -   [appConfiguration](#appconfiguration)
     -   [fs](#fs)
     -   [getFilePath](#getfilepath)
@@ -78,8 +87,17 @@
     -   [getData](#getdata)
     -   [setData](#setdata)
     -   [removeData](#removedata)
+-   [DashboardManager](#dashboardmanager)
+    -   [constructor](#constructor-12)
+    -   [registerTile](#registertile)
+    -   [unregisterTile](#unregistertile)
+    -   [buildDashboard](#builddashboard)
+    -   [processAPI](#processapi-3)
+-   [Tile](#tile)
+    -   [constructor](#constructor-13)
+    -   [get](#get)
 -   [DbHelper](#dbhelper)
-    -   [constructor](#constructor-10)
+    -   [constructor](#constructor-14)
     -   [RequestBuilder](#requestbuilder)
     -   [Operators](#operators)
     -   [getFieldsForTable](#getfieldsfortable)
@@ -90,7 +108,7 @@
     -   [delObject](#delobject)
     -   [delObjects](#delobjects)
 -   [DbManager](#dbmanager)
-    -   [constructor](#constructor-11)
+    -   [constructor](#constructor-15)
     -   [close](#close)
     -   [getFieldsForTable](#getfieldsfortable-1)
     -   [numberVersion](#numberversion)
@@ -105,18 +123,18 @@
     -   [delObject](#delobject-1)
     -   [delObjects](#delobjects-1)
 -   [DbObject](#dbobject)
-    -   [constructor](#constructor-12)
+    -   [constructor](#constructor-16)
     -   [base](#base)
     -   [save](#save)
     -   [del](#del)
 -   [DbRequestBuilder](#dbrequestbuilder)
-    -   [constructor](#constructor-13)
+    -   [constructor](#constructor-17)
     -   [removeLastComma](#removelastcomma)
     -   [escapeString](#escapestring)
     -   [getValueEncapsulated](#getvalueencapsulated)
     -   [getMetaForField](#getmetaforfield)
     -   [save](#save-1)
-    -   [get](#get)
+    -   [get](#get-1)
     -   [del](#del-1)
     -   [selectOp](#selectop)
     -   [select](#select)
@@ -139,24 +157,33 @@
 -   [DbSchemaConverter](#dbschemaconverter)
     -   [tableName](#tablename)
     -   [toSchema](#toschema)
--   [Device](#device)
-    -   [constructor](#constructor-14)
-    -   [json](#json-1)
+-   [DeviceForm](#deviceform)
+    -   [constructor](#constructor-18)
+    -   [name](#name)
+    -   [excludeFromAll](#excludefromall)
+    -   [visible](#visible)
+    -   [worksOnlyOnDayNight](#worksonlyondaynight)
+    -   [icon](#icon-1)
+    -   [radio](#radio-1)
+    -   [status](#status-1)
+    -   [json](#json-2)
 -   [DeviceManager](#devicemanager)
-    -   [constructor](#constructor-15)
-    -   [setDevice](#setdevice)
-    -   [processAPI](#processapi-3)
+    -   [constructor](#constructor-19)
+    -   [registerDeviceTiles](#registerdevicetiles)
+    -   [registerDeviceTile](#registerdevicetile)
+    -   [switchDevice](#switchdevice)
+    -   [processAPI](#processapi-4)
 -   [FormConfiguration](#formconfiguration)
-    -   [constructor](#constructor-16)
+    -   [constructor](#constructor-20)
     -   [loadConfig](#loadconfig)
     -   [saveConfig](#saveconfig)
     -   [comparator](#comparator)
     -   [registerForm](#registerform)
-    -   [processAPI](#processapi-4)
+    -   [processAPI](#processapi-5)
     -   [getConfig](#getconfig)
 -   [FormManager](#formmanager)
-    -   [constructor](#constructor-17)
-    -   [register](#register)
+    -   [constructor](#constructor-21)
+    -   [register](#register-1)
     -   [sanitize](#sanitize)
     -   [getExtendedClass](#getextendedclass)
     -   [initSchema](#initschema-1)
@@ -164,17 +191,18 @@
     -   [getForm](#getform)
     -   [generateForm](#generateform)
 -   [FormObject](#formobject)
-    -   [constructor](#constructor-18)
-    -   [json](#json-2)
+    -   [constructor](#constructor-22)
+    -   [json](#json-3)
 -   [id](#id)
 -   [PluginsAPI](#pluginsapi)
     -   [exportClass](#exportclass)
     -   [init](#init)
+    -   [registerInstance](#registerinstance)
 -   [PluginConf](#pluginconf)
-    -   [constructor](#constructor-19)
-    -   [json](#json-3)
+    -   [constructor](#constructor-23)
+    -   [json](#json-4)
 -   [PluginsManager](#pluginsmanager)
-    -   [constructor](#constructor-20)
+    -   [constructor](#constructor-24)
     -   [getPluginsFromDirectory](#getpluginsfromdirectory)
     -   [checkPluginSanity](#checkpluginsanity)
     -   [initPlugins](#initplugins)
@@ -186,33 +214,56 @@
     -   [toposort](#toposort)
     -   [topsortedArrayConverter](#topsortedarrayconverter)
 -   [ConfigurationAPI](#configurationapi)
-    -   [register](#register-1)
-    -   [getConfiguration](#getconfiguration)
--   [DatabaseAPI](#databaseapi)
     -   [register](#register-2)
+    -   [getConfiguration](#getconfiguration)
+-   [DashboardAPI](#dashboardapi)
+    -   [registerTile](#registertile-1)
+    -   [unregisterTile](#unregistertile-1)
+    -   [Tile](#tile-1)
+    -   [TileType](#tiletype)
+-   [DatabaseAPI](#databaseapi)
+    -   [register](#register-3)
     -   [dbHelper](#dbhelper-1)
 -   [SchedulerAPI](#schedulerapi)
-    -   [register](#register-3)
-    -   [unregister](#unregister)
+    -   [register](#register-4)
+    -   [unregister](#unregister-1)
     -   [schedule](#schedule)
     -   [constants](#constants-1)
 -   [ServicesManagerAPI](#servicesmanagerapi)
     -   [add](#add)
 -   [TimeEventAPI](#timeeventapi)
-    -   [register](#register-4)
-    -   [unregister](#unregister-1)
+    -   [register](#register-5)
+    -   [unregister](#unregister-2)
     -   [constants](#constants-2)
 -   [TranslateAPI](#translateapi)
     -   [load](#load-1)
     -   [t](#t)
 -   [WebAPI](#webapi)
-    -   [register](#register-5)
-    -   [unregister](#unregister-2)
+    -   [register](#register-6)
+    -   [unregister](#unregister-3)
     -   [Authentication](#authentication-1)
     -   [APIResponse](#apiresponse)
     -   [constants](#constants-3)
+-   [RadioForm](#radioform)
+    -   [constructor](#constructor-25)
+    -   [module](#module-1)
+    -   [protocol](#protocol-1)
+    -   [deviceId](#deviceid-1)
+    -   [switchId](#switchid-1)
+    -   [json](#json-5)
+    -   [getModules](#getmodules)
+    -   [getProtocols](#getprotocols)
+-   [RadioManager](#radiomanager)
+    -   [constructor](#constructor-26)
+    -   [pluginsLoaded](#pluginsloaded)
+    -   [registerRadioEvents](#registerradioevents)
+    -   [unregisterRadioEvents](#unregisterradioevents)
+    -   [onRadioEvent](#onradioevent-1)
+    -   [getModules](#getmodules-1)
+    -   [getProtocols](#getprotocols-1)
+    -   [switchDevice](#switchdevice-1)
 -   [ServicesManager](#servicesmanager)
-    -   [constructor](#constructor-21)
+    -   [constructor](#constructor-27)
     -   [isServiceRegistered](#isserviceregistered)
     -   [add](#add-1)
     -   [remove](#remove-1)
@@ -220,8 +271,11 @@
     -   [stop](#stop-1)
     -   [restart](#restart)
     -   [getService](#getservice)
+-   [ThemeManager](#thememanager)
+    -   [constructor](#constructor-28)
+    -   [getColors](#getcolors)
 -   [ThreadsManager](#threadsmanager)
-    -   [constructor](#constructor-22)
+    -   [constructor](#constructor-29)
     -   [stringifyFunc](#stringifyfunc)
     -   [run](#run-1)
     -   [send](#send)
@@ -229,12 +283,12 @@
     -   [getPid](#getpid)
     -   [isRunning](#isrunning)
 -   [TranslateManager](#translatemanager)
-    -   [constructor](#constructor-23)
+    -   [constructor](#constructor-30)
     -   [addTranslations](#addtranslations)
     -   [t](#t-1)
     -   [translateArray](#translatearray)
 -   [User](#user)
-    -   [constructor](#constructor-24)
+    -   [constructor](#constructor-31)
     -   [username](#username-1)
     -   [password](#password)
     -   [level](#level-1)
@@ -242,9 +296,9 @@
     -   [email](#email)
     -   [phone](#phone)
     -   [picture](#picture)
-    -   [json](#json-4)
+    -   [json](#json-6)
 -   [UserManager](#usermanager)
-    -   [constructor](#constructor-25)
+    -   [constructor](#constructor-32)
     -   [confManager](#confmanager-1)
     -   [users](#users)
     -   [removeUser](#removeuser)
@@ -254,20 +308,20 @@
     -   [setUser](#setuser)
     -   [getAdminUser](#getadminuser)
 -   [SchedulerDbObject](#schedulerdbobject)
-    -   [constructor](#constructor-26)
+    -   [constructor](#constructor-33)
 -   [identifier](#identifier)
 -   [data](#data)
 -   [triggerDate](#triggerdate)
 -   [SchedulerService](#schedulerservice)
-    -   [constructor](#constructor-27)
+    -   [constructor](#constructor-34)
     -   [start](#start-2)
     -   [stop](#stop-2)
-    -   [register](#register-6)
-    -   [unregister](#unregister-3)
+    -   [register](#register-7)
+    -   [unregister](#unregister-4)
     -   [schedule](#schedule-1)
     -   [timeEvent](#timeevent)
 -   [Service](#service)
-    -   [constructor](#constructor-28)
+    -   [constructor](#constructor-35)
     -   [start](#start-3)
     -   [run](#run-2)
     -   [threadCallback](#threadcallback-1)
@@ -278,29 +332,29 @@
     -   [stopExternal](#stopexternal)
     -   [stop](#stop-3)
     -   [restart](#restart-1)
-    -   [status](#status-1)
-    -   [register](#register-7)
-    -   [unregister](#unregister-4)
+    -   [status](#status-2)
+    -   [register](#register-8)
+    -   [unregister](#unregister-5)
     -   [setThreadsManager](#setthreadsmanager)
 -   [TimeEventService](#timeeventservice)
-    -   [constructor](#constructor-29)
+    -   [constructor](#constructor-36)
     -   [start](#start-4)
     -   [stop](#stop-4)
     -   [hash](#hash)
     -   [elementForHash](#elementforhash)
-    -   [register](#register-8)
-    -   [unregister](#unregister-5)
+    -   [register](#register-9)
+    -   [unregister](#unregister-6)
     -   [convertMode](#convertmode)
     -   [timeEvent](#timeevent-1)
 -   [APIRegistration](#apiregistration)
-    -   [constructor](#constructor-30)
+    -   [constructor](#constructor-37)
     -   [delegate](#delegate)
     -   [method](#method)
     -   [route](#route)
     -   [authLevel](#authlevel)
     -   [isEqual](#isequal)
 -   [APIRequest](#apirequest)
-    -   [constructor](#constructor-31)
+    -   [constructor](#constructor-38)
     -   [method](#method-1)
     -   [ip](#ip)
     -   [route](#route-1)
@@ -311,19 +365,19 @@
     -   [authenticationData](#authenticationdata-1)
     -   [addAuthenticationData](#addauthenticationdata)
 -   [APIResponse](#apiresponse-1)
-    -   [constructor](#constructor-32)
+    -   [constructor](#constructor-39)
     -   [success](#success)
     -   [response](#response)
     -   [errorCode](#errorcode)
     -   [errorMessage](#errormessage)
 -   [WebServices](#webservices)
-    -   [constructor](#constructor-33)
+    -   [constructor](#constructor-40)
     -   [start](#start-5)
     -   [registerInfos](#registerinfos)
-    -   [processAPI](#processapi-5)
+    -   [processAPI](#processapi-6)
     -   [stop](#stop-5)
-    -   [register](#register-9)
-    -   [unregister](#unregister-6)
+    -   [register](#register-10)
+    -   [unregister](#unregister-7)
     -   [registerAPI](#registerapi)
     -   [unregisterAPI](#unregisterapi)
     -   [manageResponse](#manageresponse)
@@ -336,6 +390,72 @@
     -   [convertProperties](#convertproperties)
 -   [DateUtils](#dateutils)
     -   [timestamp](#timestamp)
+    -   [dateFormatted](#dateformatted)
+-   [Icons](#icons)
+    -   [list](#list)
+    -   [raw](#raw)
+
+## IconForm
+
+**Extends FormObject.class**
+
+This class provides an icon select box form part
+
+**Parameters**
+
+-   `id`   (optional, default `null`)
+-   `icon`   (optional, default `null`)
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `id` **[number](#number)** An identifier (optional, default `null`)
+-   `icon` **[number](#number)** An icon number (optional, default `null`)
+
+Returns **[IconForm](#iconform)** The instance
+
+### icon
+
+### json
+
+Convert json data
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some key / value data
+
+Returns **[FormObject](#formobject)** A form object
+
+### getIcons
+
+Form injection method
+
+**Parameters**
+
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The icons list array
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of icons
+
+## IconFormManager
+
+This class allows to generate a form part with an icon select box
+
+**Parameters**
+
+-   `formManager`  
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `formManager` **[FormManager](#formmanager)** A form manager
+
+Returns **[IconFormManager](#iconformmanager)** The instance
 
 ## HautomationCore
 
@@ -433,7 +553,6 @@ This class shoud be extended by radio modules
 **Parameters**
 
 -   `api`  
--   `module`  
 
 ### constructor
 
@@ -442,7 +561,6 @@ Constructor (called with super)
 **Parameters**
 
 -   `api` **PluginAPI** The core APIs
--   `module` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A module name
 
 Returns **[Radio](#radio)** The instance
 
@@ -474,7 +592,8 @@ Returns **[number](#number)** Default frequency
 -   `protocol` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The protocol
 -   `deviceId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The device ID
 -   `switchId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The switch ID
--   `status` **[number](#number)** The status (or enum called through `constants()`
+-   `status` **[number](#number)** The status (or enum called through `constants()`) (optional, default `null`)
+-   `previousStatus` **[number](#number)** The previous object status, used if status is null to invert (optional, default `null`)
 
 Returns **[DbRadio](#dbradio)** A radio  object
 
@@ -487,7 +606,7 @@ Returns **[DbRadio](#dbradio)** A radio  object
 -   `deviceId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The device ID
 -   `switchId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The switch ID
 -   `value` **[number](#number)** The value
--   `status` **[number](#number)** The status (or enum called through `constants()`
+-   `status` **[number](#number)** The status (or enum called through `constants()`)
 
 Returns **[DbRadio](#dbradio)** A radio  object
 
@@ -496,6 +615,22 @@ Returns **[DbRadio](#dbradio)** A radio  object
 Return the constants
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The constants
+
+### register
+
+Register an object to radio events
+
+**Parameters**
+
+-   `o` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An object that implements callback
+
+### unregister
+
+Unregister an object to radio events
+
+**Parameters**
+
+-   `o` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An object that implements callback
 
 ## RFLink
 
@@ -557,7 +692,7 @@ Callback when an information is received from rf link service thread
 
 ### emit
 
-Emit RFLink request
+Emit radio request
 
 **Parameters**
 
@@ -565,7 +700,8 @@ Emit RFLink request
 -   `protocol` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The protocol
 -   `deviceId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The device ID
 -   `switchId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The switch ID
--   `status` **[number](#number)** The status (or enum called through `constants()`
+-   `status` **[number](#number)** The status (or enum called through `constants()`) (optional, default `null`)
+-   `previousStatus` **[number](#number)** The previous object status, used if status is null to invert (optional, default `null`)
 
 Returns **[DbRadio](#dbradio)** A radio  object
 
@@ -917,6 +1053,108 @@ Remove data into object's array (delete). Can throw error.
 -   `comparator` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A comparator function with 2 parameters (obj1, obj2). The comparator must return true if objects are equals. Else false. (optional, default `null`)
 
 Returns **\[[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)]** The Array of Objects updated
+
+## DashboardManager
+
+This class generates dashboard from tiles
+
+**Parameters**
+
+-   `themeManager`  
+-   `webServices`  
+-   `translateManager`  
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `themeManager` **[ThemeManager](#thememanager)** A theme manager
+-   `webServices` **[WebServices](#webservices)** Web services instance
+-   `translateManager` **[TranslateManager](#translatemanager)** A translate manager
+
+Returns **[DashboardManager](#dashboardmanager)** The instance
+
+### registerTile
+
+Register a tile locally, replace if exists and order array
+
+**Parameters**
+
+-   `tile` **[Tile](#tile)** A tile object
+
+### unregisterTile
+
+Remove a tile with identifier
+
+**Parameters**
+
+-   `identifier` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A tile identifier
+
+### buildDashboard
+
+Build a dashboard object
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A dashboard object
+
+### processAPI
+
+Process API callback
+
+**Parameters**
+
+-   `apiRequest` **[APIRequest](#apirequest)** An APIRequest
+
+Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with an APIResponse object
+
+## Tile
+
+This class describes tiles
+
+**Parameters**
+
+-   `themeManager`  
+-   `identifier`  
+-   `type`   (optional, default `TILE_INFO_ONE_TEXT`)
+-   `icon`   (optional, default `null`)
+-   `subIcon`   (optional, default `null`)
+-   `text`   (optional, default `null`)
+-   `subText`   (optional, default `null`)
+-   `picture`   (optional, default `null`)
+-   `pictures`   (optional, default `null`)
+-   `status`   (optional, default `0`)
+-   `order`   (optional, default `1`)
+-   `action`   (optional, default `null`)
+-   `object`   (optional, default `null`)
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `themeManager` **[ThemeManager](#thememanager)** The theme manager
+-   `identifier` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The tile identifier (must be unique)
+-   `type` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The tile's model (or type). Check enum. (optional, default `TILE_INFO_ONE_TEXT`)
+-   `icon` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The icon (optional, default `null`)
+-   `subIcon` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The subicon (optional, default `null`)
+-   `text` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The text (optional, default `null`)
+-   `subText` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The sub text (optional, default `null`)
+-   `picture` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A picture in base64 format (optional, default `null`)
+-   `pictures` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** A list of Base64 pictures (optional, default `null`)
+-   `status` **[number](#number)** A status (0, 1, ...) (optional, default `0`)
+-   `order` **[number](#number)** A number that represents the place of the tile. 1 is on top, 999999 is on bottom :) (optional, default `1`)
+-   `action` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The action (route endpoint without `:`) (optional, default `null`)
+-   `object` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An object (optional, default `null`)
+
+Returns **[Tile](#tile)** A tile
+
+### get
+
+Get the tile without useless informations
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A tile ready to be serialized
 
 ## DbHelper
 
@@ -1554,57 +1792,63 @@ Convert DbObject annotations to db schema
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A database schema
 
-## Device
+## DeviceForm
 
-This class is a Device POJO
+**Extends FormObject.class**
+
+This class provides a form for one device
 
 **Parameters**
 
--   `id`  
--   `description`  
--   `module`  
--   `protocol`  
--   `code`  
--   `subcode`  
--   `rawCode`  
--   `status`  
--   `icon`  
--   `excludeFromAll`  
--   `priority`  
--   `night`  
--   `visible`  
+-   `id`   (optional, default `null`)
+-   `name`   (optional, default `null`)
+-   `excludeFromAll`   (optional, default `null`)
+-   `visible`   (optional, default `null`)
+-   `worksOnlyOnDayNight`   (optional, default `null`)
+-   `icon`   (optional, default `null`)
+-   `radio`   (optional, default `null`)
+-   `status`   (optional, default `null`)
 
 ### constructor
 
-Device POJO
+Constructor
 
 **Parameters**
 
--   `id` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A timestamp
--   `description` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Device's description
--   `module` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The RF module
--   `protocol` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The RF protocol
--   `code` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The RF code
--   `subcode` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The RF sub code (optional, depending on protocol)
--   `rawCode` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The RF raw code (if code and subcode not provided)
--   `status` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The status
--   `icon` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Icon
--   `excludeFromAll` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Exclude from 'turn all on' or 'turn all off' command
--   `priority` **int** Priority
--   `night` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if device command should be enabled onmly on night
--   `visible` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if device is visible on dashboard, else false
+-   `id` **[number](#number)** An identifier (optional, default `null`)
+-   `name` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A device name (optional, default `null`)
+-   `excludeFromAll` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** When all on or all of is called, set this value to `true` won't do action (optional, default `null`)
+-   `visible` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Show in dashboard (optional, default `null`)
+-   `worksOnlyOnDayNight` **[number](#number)** Trigger on condition : `0` for Both, `1` for day, `2` for night (optional, default `null`)
+-   `icon` **[IconForm](#iconform)** An icon (optional, default `null`)
+-   `radio` **[RadioForm](#radioform)** A radio informations (optional, default `null`)
+-   `status` **[number](#number)** A status (optional, default `null`)
 
-Returns **[Device](#device)** A device object
+Returns **[DeviceForm](#deviceform)** The instance
+
+### name
+
+### excludeFromAll
+
+### visible
+
+### worksOnlyOnDayNight
+
+### icon
+
+### radio
+
+### status
 
 ### json
 
-Transform json raw object to instance
+Convert json data
 
 **Parameters**
 
--   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** JSON object data
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some key / value data
 
-Returns **[Device](#device)** A Device instance
+Returns **[DeviceForm](#deviceform)** A form object
 
 ## DeviceManager
 
@@ -1613,8 +1857,10 @@ This class allows to manage devices
 **Parameters**
 
 -   `confManager`  
--   `pluginsManager`  
+-   `formManager`  
 -   `webServices`  
+-   `radioManager`  
+-   `dashboardManager`  
 
 ### constructor
 
@@ -1622,29 +1868,44 @@ Constructor
 
 **Parameters**
 
--   `confManager` **[ConfManager](#confmanager)** A configuration manager needed for persistence
--   `pluginsManager` **[PluginsManager](#pluginsmanager)** The plugins manager
--   `webServices` **[WebServices](#webservices)** The web services to register APIs
+-   `confManager` **[ConfManager](#confmanager)** A configuration manager
+-   `formManager` **[FormManager](#formmanager)** A form manager
+-   `webServices` **[WebServices](#webservices)** The web services
+-   `radioManager` **[RadioManager](#radiomanager)** The radio manager
+-   `dashboardManager` **[DashboardManager](#dashboardmanager)** The dashboard manager
 
 Returns **[DeviceManager](#devicemanager)** The instance
 
-### setDevice
+### registerDeviceTiles
 
-Set device from a generic JSON object
+Register all devices on dashboard to get tiles on UI
+
+### registerDeviceTile
+
+Register a device on dashboard
 
 **Parameters**
 
--   `object` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The JSON object
+-   `device` **[DeviceForm](#deviceform)** A device
+
+### switchDevice
+
+Switch a device radio status
+
+**Parameters**
+
+-   `id` **[number](#number)** A device identifier
+-   `status` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A status  (`on`, `off` or radio status) (optional, default `null`)
 
 ### processAPI
 
-Process web API callback
+Process API callback
 
 **Parameters**
 
--   `apiRequest` **[APIRequest](#apirequest)** An API Request
+-   `apiRequest` **[APIRequest](#apirequest)** An APIRequest
 
-Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with APIResponse
+Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with an APIResponse object
 
 ## FormConfiguration
 
@@ -1658,6 +1919,7 @@ This class allows to manage form configuration
 -   `name`  
 -   `list`   (optional, default `false`)
 -   `formClass`   (optional, default `null`)
+-   `inject` **...any** 
 
 ### constructor
 
@@ -1671,6 +1933,7 @@ Constructor
 -   `name` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A name or identifier
 -   `list` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if form configuration manage a list, false otherwise (optional, default `false`)
 -   `formClass` **Class** A form annotation's implemented class. Can be called later through `register` method (optional, default `null`)
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Parameters injection on static methods
 
 Returns **[FormConfiguration](#formconfiguration)** The instance
 
@@ -1851,6 +2114,7 @@ This class is an interface for plugins
 -   `confManager`  
 -   `timeEventService`  
 -   `schedulerService`  
+-   `dashboardManager`  
 
 ### exportClass
 
@@ -1863,6 +2127,14 @@ Expose a class to other plugins
 ### init
 
 Init APIs
+
+### registerInstance
+
+Register an instance as Entry point.
+
+**Parameters**
+
+-   `i` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An instance
 
 ## PluginConf
 
@@ -1908,6 +2180,8 @@ This class manage plugins
 -   `formManager`  
 -   `timeEventService`  
 -   `schedulerService`  
+-   `dashboardManager`  
+-   `eventBus`  
 
 ### constructor
 
@@ -1923,6 +2197,8 @@ Constructor
 -   `formManager` **[FormManager](#formmanager)** The form manager
 -   `timeEventService` **[TimeEventService](#timeeventservice)** The time event service
 -   `schedulerService` **[SchedulerService](#schedulerservice)** The scheduler service
+-   `dashboardManager` **[DashboardManager](#dashboardmanager)** The dashboard manager
+-   `eventBus` **EventEmitter** The global event bus
 
 Returns **[PluginsManager](#pluginsmanager)** The instance
 
@@ -1988,6 +2264,7 @@ Get a plugin with identifier
 **Parameters**
 
 -   `identifier` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A plugin identifier
+-   `checkInstance` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if return with instance, false otherwise. If set to true (default), it will check that there is an instance. False for testing is recommended. (optional, default `true`)
 
 Returns **PluginAPI** A plugin
 
@@ -2047,6 +2324,57 @@ Register a form
 Returns the configuration
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Configuration object
+
+## DashboardAPI
+
+Public API for dashboard
+
+**Parameters**
+
+-   `dashboardManager`  
+
+### registerTile
+
+Register a tile
+
+**Parameters**
+
+-   `tile` **[Tile](#tile)** A tile object
+
+### unregisterTile
+
+Unregister a tile
+
+**Parameters**
+
+-   `identifier` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A tile identifier
+
+### Tile
+
+Constructor
+
+**Parameters**
+
+-   `identifier` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The tile identifier (must be unique)
+-   `type` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The tile's model (or type). Models cosntants can be retrieved through `TileType()` (optional, default `TILE_INFO_ONE_TEXT`)
+-   `icon` **[number](#number)** The icon. Use `api.exported.Icons.class.list()` to retrieve icon list. (optional, default `null`)
+-   `subIcon` **[number](#number)** The subicon. Use `api.exported.Icons.class.list()` to retrieve icon list. (optional, default `null`)
+-   `text` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The text (optional, default `null`)
+-   `subText` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The sub text (optional, default `null`)
+-   `picture` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A picture in base64 format (optional, default `null`)
+-   `pictures` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** A list of Base64 pictures (optional, default `null`)
+-   `status` **[number](#number)** A status (0, 1, ...) (optional, default `0`)
+-   `order` **[number](#number)** A number that represents the place of the tile. 1 is on top, 999999 is on bottom :) (optional, default `1`)
+-   `action` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The action (route endpoint without `:`) (optional, default `null`)
+-   `object` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An object (optional, default `null`)
+
+Returns **[Tile](#tile)** A tile
+
+### TileType
+
+Expose a list of tile's type : `TILE_INFO_ONE_TEXT`, `TILE_INFO_TWO_TEXT`, `TILE_INFO_TWO_ICONS`, `TILE_ACTION_ONE_ICON`, `TILE_PICTURE_TEXT`, `TILE_PICTURES`, `TILE_GENERIC_ACTION` or `TILE_GENERIC_ACTION_STATUS`
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Constants
 
 ## DatabaseAPI
 
@@ -2251,6 +2579,145 @@ Access to web services constants
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The constants
 
+## RadioForm
+
+**Extends FormObject.class**
+
+This class provides a radio form part
+
+**Parameters**
+
+-   `id`   (optional, default `null`)
+-   `module`   (optional, default `null`)
+-   `protocol`   (optional, default `null`)
+-   `deviceId`   (optional, default `null`)
+-   `switchId`   (optional, default `null`)
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `id` **[number](#number)** The id (optional, default `null`)
+-   `module` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The module (optional, default `null`)
+-   `protocol` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The protocol (optional, default `null`)
+-   `deviceId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The device id (optional, default `null`)
+-   `switchId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The switch id (optional, default `null`)
+
+Returns **[RadioForm](#radioform)** The instance
+
+### module
+
+### protocol
+
+### deviceId
+
+### switchId
+
+### json
+
+Convert json data
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some key / value data
+
+Returns **[RadioForm](#radioform)** A form object
+
+### getModules
+
+Form injection method for modules
+
+**Parameters**
+
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The modules list array
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of modules
+
+### getProtocols
+
+Form injection method for protocols
+
+**Parameters**
+
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The protocols list array
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of protocols
+
+## RadioManager
+
+This class manage radio stuff
+
+**Parameters**
+
+-   `pluginsManager`  
+-   `formManager`  
+-   `eventBus`  
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `pluginsManager` **PluginManager** A plugin manager instance
+-   `formManager` **[FormManager](#formmanager)** A form manager
+-   `eventBus` **EventEmitter** The global event bus
+
+Returns **[RadioManager](#radiomanager)** The instance
+
+### pluginsLoaded
+
+Called automatically when plugins are loaded. Used in separate methods for testing.
+Initially, this method wad used in contructor.
+
+**Parameters**
+
+-   `pluginsManager` **[PluginsManager](#pluginsmanager)** THe plugins manager instance
+-   `context` **[RadioManager](#radiomanager)** The context (self, this, etc ...)
+
+### registerRadioEvents
+
+Register for radio events
+
+### unregisterRadioEvents
+
+Unregister for radio events
+
+### onRadioEvent
+
+Callback when radio informations are received
+When a new radio information is received, refresh protocols list for forms
+
+**Parameters**
+
+-   `radioObject` **[DbRadio](#dbradio)** A radio object
+
+### getModules
+
+Retrieves the list of modules, store in property, and register form
+
+### getProtocols
+
+Retrieves the list of protocols, store in property, and register form
+
+### switchDevice
+
+Emit radio request
+
+**Parameters**
+
+-   `module`  
+-   `protocol` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The protocol
+-   `deviceId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The device ID
+-   `switchId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The switch ID
+-   `status` **[number](#number)** The status (or enum called through `constants()`) (optional, default `null`)
+-   `frequency` **[number](#number)** The frequency (optional, default `null`)
+-   `previousStatus` **[number](#number)** The previous object status, used if status is null to invert (optional, default `null`)
+
+Returns **[DbRadio](#dbradio)** A radio  object
+
 ## ServicesManager
 
 This class allows to manage services
@@ -2319,6 +2786,30 @@ Return the service from the name
 -   `name` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Service name
 
 Returns **[Service](#service)** The desired service, null if not found
+
+## ThemeManager
+
+This class generates dashboard
+
+**Parameters**
+
+-   `appConfiguration`  
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `appConfiguration` **AppConfiguration** Configuration
+
+Returns **[ThemeManager](#thememanager)** The instance
+
+### getColors
+
+Retrieve the theme colors
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Colors
 
 ## ThreadsManager
 
@@ -3021,6 +3512,7 @@ This class is a POJO representing an APIResponse item
 -   `response`   (optional, default `{}`)
 -   `errorCode`   (optional, default `-1`)
 -   `errorMessage`   (optional, default `null`)
+-   `upToDate`   (optional, default `false`)
 
 ### constructor
 
@@ -3032,6 +3524,7 @@ Constructor
 -   `response` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A response object to transmit (optional) (optional, default `{}`)
 -   `errorCode` **int** The error code (optional) (optional, default `-1`)
 -   `errorMessage` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The error message (optional) (optional, default `null`)
+-   `upToDate` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True will return 304 no content. (optional, default `false`)
 
 Returns **[APIResponse](#apiresponse)** The instance
 
@@ -3213,3 +3706,30 @@ Utility class for dates
 Return the current timestamp
 
 Returns **[number](#number)** The current timestamp
+
+### dateFormatted
+
+Format the current date with parameter
+
+**Parameters**
+
+-   `format` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A format (Y for year, m for month, d for day, H for hour, i for minutes, s for seconds)
+-   `timestamp` **[number](#number)** A timestamp. If not provided, use current timestamp. (optional, default `null`)
+
+Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The formatted date
+
+## Icons
+
+Utility class for icons
+
+### list
+
+Return a list of icons (key / value)
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The icons under Key / Valye format
+
+### raw
+
+Return the raw icons object
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Raw icons object

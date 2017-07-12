@@ -33,7 +33,7 @@ class DashboardAPI {
     /**
      * Unregister a tile
      *
-     * @param  {string} tile A tile identifier
+     * @param  {string} identifier A tile identifier
      */
     unregisterTile(identifier) {
         PrivateProperties.oprivate(this).dashboardManager.unregisterTile(identifier);
