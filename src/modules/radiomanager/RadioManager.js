@@ -26,12 +26,23 @@ class RadioManager {
 
         const self = this;
         eventBus.on(PluginsManager.EVENT_LOADED, (pluginsManager) => {
-            self.pluginsManager = pluginsManager;
-            self.getModules();
-            self.getProtocols();
-            self.registerRadioEvents();
-            self.formManager.register(RadioForm.class, self.modules, self.protocols);
+            self.pluginsLoaded(pluginsManager, self);
         });
+    }
+
+    /**
+     * Called automatically when plugins are loaded. Used in separate methods for testing.
+     * Initially, this method wad used in contructor.
+     *
+     * @param  {PluginsManager} pluginsManager THe plugins manager instance
+     * @param  {RadioManager} context        The context (self, this, etc ...)
+     */
+    pluginsLoaded(pluginsManager, context) {
+        context.pluginsManager = pluginsManager;
+        context.getModules();
+        context.getProtocols();
+        context.registerRadioEvents();
+        context.formManager.register(RadioForm.class, context.modules, context.protocols);
     }
 
     /**

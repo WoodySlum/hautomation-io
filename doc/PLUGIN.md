@@ -304,7 +304,7 @@ Several common methods ara vailable with the `DateUtils` class :
 
 	api.exported.DateUtils.class.timestamp();
 
-Other methds are available.
+Other methods are available. Check Public APIS documentation.
 
 ### Logging
 

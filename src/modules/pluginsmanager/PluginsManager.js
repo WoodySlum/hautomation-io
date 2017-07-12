@@ -70,7 +70,10 @@ class PluginsManager {
         }
 
         this.load();
-        eventBus.emit(EVENT_LOADED, this);
+        // Dispatch event
+        if (eventBus) {
+            eventBus.emit(EVENT_LOADED, this);
+        }
     }
 
     /**

@@ -6,8 +6,10 @@ var sinon = require("sinon");
 const HautomationCore = require("../../../src/HautomationCore");
 const core = new HautomationCore();
 const RadioManager = require("./../../../src/modules/radiomanager/RadioManager");
+const PluginsManager = require("./../../../src/modules/pluginsmanager/PluginsManager");
 let radioManager = core.radioManager;
 const formManager = core.formManager;
+const eventBus = core.eventBus;
 const pluginsManager = core.pluginsManager;
 const sampleRadioPluginIdentifier = "rflink";
 
@@ -21,7 +23,8 @@ describe("RadioManager", function() {
         sinon.spy(RadioManager.class.prototype, "getProtocols");
         sinon.spy(RadioManager.class.prototype, "registerRadioEvents");
         sinon.spy(core.formManager, "register");
-        radioManager = new RadioManager.class(pluginsManager, formManager);
+        radioManager = new RadioManager.class(pluginsManager, formManager, eventBus);
+        radioManager.pluginsLoaded(pluginsManager, radioManager);
         expect(RadioManager.class.prototype.getModules.calledOnce).to.be.true;
         expect(RadioManager.class.prototype.getProtocols.calledOnce).to.be.true;
         expect(RadioManager.class.prototype.registerRadioEvents.calledOnce).to.be.true;
