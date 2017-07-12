@@ -290,3 +290,53 @@ On the annotations, you have to specify on wich version field is introduced. The
 	};
 
 
+### Getting icons
+
+The icons can list can be retrieved using :
+
+	api.exported.Icons.class.list()
+
+This well provide an object with Key / Values where values is the icon's code.
+
+### Using date / time formatting
+
+Several common methods ara vailable with the `DateUtils` class :
+
+	api.exported.DateUtils.class.timestamp();
+
+Other methds are available.
+
+### Logging
+
+A logger can be used through the `api.exported` property.
+
+Example :
+
+	api.exported.Logger.info("An information");
+	api.exported.Logger.warn("A warning");
+	api.exported.Logger.err("An error");
+	api.exported.Logger.verbose("A verbose message");
+	api.exported.Logger.debug("A debug log");
+	
+### Create dashboard tiles
+
+You can add easily tiles on dashboard. The `dashboardAPI` property allows to do this.
+Two steps are required :
+
+- Create a new tile
+- Register the tile
+
+You can use the icon helper (check above) to access icons.
+Each tile have a type, which can be acessible through `api.dashboardAPI.TileType()` method. The available tile types are the following : `TILE_INFO_ONE_TEXT`, `TILE_INFO_TWO_TEXT`, `TILE_INFO_TWO_ICONS`, `TILE_ACTION_ONE_ICON`, `TILE_PICTURE_TEXT`, `TILE_PICTURES`, `TILE_GENERIC_ACTION` or `TILE_GENERIC_ACTION_STATUS`
+
+
+**Keep in mind that you'll need to register tile each time the information is updated**
+
+Example :
+
+	// Register a tile
+    const tile = api.dashboardAPI.Tile("test-plugin", api.dashboardAPI.TileType().TILE_INFO_ONE_TEXT, api.exported.Icons.class.list()["map-pin"], null, "A tile title");
+    api.dashboardAPI.registerTile(tile);
+
+
+

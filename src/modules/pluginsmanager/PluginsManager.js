@@ -10,6 +10,7 @@ var PluginAPI = require("./PluginAPI");
 var PluginConf = require("./PluginConf");
 
 const CONF_KEY = "plugins";
+const EVENT_LOADED = "pluginLoaded";
 
 const INTERNAL_PLUGIN_PATH = "./../../internal-plugins/";
 const EXTERNAL_PLUGIN_PATH = "plugins/node_modules/";
@@ -42,9 +43,11 @@ class PluginsManager {
      * @param  {FormManager} formManager     The form manager
      * @param {TimeEventService} timeEventService The time event service
      * @param {SchedulerService} schedulerService The scheduler service
+     * @param  {DashboardManager} dashboardManager    The dashboard manager
+     * @param  {EventEmitter} eventBus    The global event bus
      * @returns {PluginsManager} The instance
      */
-    constructor(confManager, webServices, servicesManager, dbManager, translateManager, formManager, timeEventService, schedulerService) {
+    constructor(confManager, webServices, servicesManager, dbManager, translateManager, formManager, timeEventService, schedulerService, dashboardManager, eventBus) {
         this.fs = fs;
         this.path = path;
         this.remi = remi;
@@ -57,6 +60,7 @@ class PluginsManager {
         this.formManager = formManager;
         this.timeEventService = timeEventService;
         this.schedulerService = schedulerService;
+        this.dashboardManager = dashboardManager;
 
         this.plugins = [];
         try {
@@ -66,6 +70,7 @@ class PluginsManager {
         }
 
         this.load();
+        eventBus.emit(EVENT_LOADED, this);
     }
 
     /**
@@ -153,7 +158,8 @@ class PluginsManager {
                 this.formManager,
                 this.confManager,
                 this.timeEventService,
-                this.SchedulerService
+                this.SchedulerService,
+                this.dashboardManager
             );
 
             initializedPlugins.push(pApi);
@@ -319,4 +325,4 @@ class PluginsManager {
 
 }
 
-module.exports = {class:PluginsManager, ERROR_MISSING_PROPERTY:ERROR_MISSING_PROPERTY, ERROR_NOT_A_FUNCTION:ERROR_NOT_A_FUNCTION, ERROR_DEPENDENCY_NOT_FOUND:ERROR_DEPENDENCY_NOT_FOUND};
+module.exports = {class:PluginsManager, ERROR_MISSING_PROPERTY:ERROR_MISSING_PROPERTY, ERROR_NOT_A_FUNCTION:ERROR_NOT_A_FUNCTION, ERROR_DEPENDENCY_NOT_FOUND:ERROR_DEPENDENCY_NOT_FOUND, EVENT_LOADED:EVENT_LOADED};

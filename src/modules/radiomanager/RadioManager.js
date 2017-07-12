@@ -2,6 +2,7 @@
 "use strict";
 const Logger = require("./../../logger/Logger");
 const RadioForm = require("./RadioForm");
+const PluginsManager = require("./../pluginsmanager/PluginsManager");
 
 /**
  * This class manage radio stuff
@@ -13,19 +14,24 @@ class RadioManager {
      *
      * @param  {PluginManager} pluginsManager A plugin manager instance
      * @param  {FormManager} formManager    A form manager
+     * @param  {EventEmitter} eventBus    The global event bus
      * @returns {RadioManager}                The instance
      */
-    constructor(pluginsManager, formManager) {
+    constructor(pluginsManager, formManager, eventBus) {
         this.pluginsManager = pluginsManager;
         this.formManager = formManager;
 
         this.modules = [];
         this.protocols = [];
 
-        this.getModules();
-        this.getProtocols();
-        this.registerRadioEvents();
-        this.formManager.register(RadioForm.class, this.modules, this.protocols);
+        const self = this;
+        eventBus.on(PluginsManager.EVENT_LOADED, (pluginsManager) => {
+            self.pluginsManager = pluginsManager;
+            self.getModules();
+            self.getProtocols();
+            self.registerRadioEvents();
+            self.formManager.register(RadioForm.class, self.modules, self.protocols);
+        });
     }
 
     /**

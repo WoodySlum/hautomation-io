@@ -35,13 +35,17 @@ In console, type `npm install` and everything should go on.
 
 ## Documentation
 
-### Code documentation
+### Plugin tutorial
 
-[Full documentation](doc/DOCUMENTATION.md)
+[Go to details](doc/PLUGIN.md)
 
 ### Public APIs
 
 [Full documentation](doc/PUBLIC-APIS.md)
+
+### Code documentation
+
+[Full documentation](doc/DOCUMENTATION.md)
 
 #### Web Services API registration
 

@@ -22,6 +22,7 @@ var DashboardManager = require("./modules/dashboardmanager/DashboardManager");
 var ThemeManager = require("./modules/thememanager/ThemeManager");
 const CONFIGURATION_FILE = "data/config.json";
 var AppConfiguration = require("./../data/config.json");
+const events = require("events");
 
 /**
  * The main class for core.
@@ -34,6 +35,9 @@ class HautomationCore {
      * @returns {HautomationCore} The instance
      */
     constructor() {
+        this.eventBus = new events.EventEmitter();
+
+
         // Load main configuration
         this.configurationLoader();
 
@@ -70,6 +74,8 @@ class HautomationCore {
         // Services manager
         this.servicesManager = new ServicesManager.class(this.threadsManager);
 
+        this.pluginsManager = null;
+
         // ConfManager module
         this.confManager = new ConfManager.class(AppConfiguration);
         // UserManager module
@@ -78,26 +84,20 @@ class HautomationCore {
         this.authentication = new Authentication.class(this.webServices, this.userManager);
         // Alarm module
         this.alarmManager = new AlarmManager.class(this.confManager, this.webServices);
-        // Plugins manager module
-        this.pluginsManager = new PluginsManager.class(this.confManager, this.webServices, this.servicesManager, this.dbManager, this.translateManager, this.formManager, this.timeEventService, this.schedulerService);
-        // RadioManager
-        this.radioManager = new RadioManager.class(this.pluginsManager, this.formManager);
+        // RadioManager. The plugins manager will be set later, when the pluginsLoaded event will be triggered
+        this.radioManager = new RadioManager.class(this.pluginsManager, this.formManager, this.eventBus);
         // Dashboard manager
         this.dashboardManager = new DashboardManager.class(this.themeManager, this.webServices, this.translateManager);
+        // Plugins manager module
+        this.pluginsManager = new PluginsManager.class(this.confManager, this.webServices, this.servicesManager, this.dbManager, this.translateManager, this.formManager, this.timeEventService, this.schedulerService, this.dashboardManager, this.eventBus);
         // Device manager module
         this.deviceManager = new DeviceManager.class(this.confManager, this.formManager, this.webServices, this.radioManager, this.dashboardManager);
-
 
         // Add services to manager
         this.servicesManager.add(this.webServices);
         this.servicesManager.add(this.timeEventService);
         this.servicesManager.add(this.schedulerService);
     }
-
-    // onRadioEvent(radioObject) {
-    //     Logger.err("YES");
-    //     Logger.err(radioObject);
-    // }
 
     /**
      * Start Hautomation core

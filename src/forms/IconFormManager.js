@@ -2,7 +2,7 @@
 "use strict";
 const IconForm = require("./IconForm");
 const FormManager = require("./../modules/formmanager/FormManager");
-const Icons = require("./../../res/icons/config.json");
+const Icons = require("../utils/Icons");
 
 /**
  * This class allows to generate a form part with an icon select box
@@ -17,8 +17,9 @@ class IconFormManager {
      */
     constructor(formManager) {
         const icons = [];
-        Icons.glyphs.forEach((glyph) => {
-            icons.push(glyph.code);
+        const list = Icons.class.list();
+        Object.keys(list).forEach((key) => {
+            icons.push(list[key]);
         });
         formManager.register(IconForm.class, icons);
     }
