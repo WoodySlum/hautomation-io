@@ -13,9 +13,9 @@
   "scripts": {
     "dev": "nodemon --config .nodemon.json  HautomationRunner.js",
     "start": "node HautomationRunner.js",
-    "test": "env TEST=1 NO_LOG=1 mocha --timeout 60000 --reporter progress $(find tests -name '*.tests.js')",
-    "test-ci": "env TEST=1 NO_LOG=1 istanbul cover _mocha -- --timeout 60000 --reporter mocha-junit-reporter $(find tests -name '*.tests.js')",
-    "coverage": "env TEST=1 NO_LOG=1 istanbul cover _mocha -- --timeout 60000 $(find tests -name '*.tests.js')",
+    "test": "env TEST=1 NO_LOG=1 mocha --timeout 600000 --reporter progress $(find tests -name '*.tests.js')",
+    "test-ci": "env TEST=1 NO_LOG=1 istanbul cover _mocha -- --timeout 600000 --reporter mocha-junit-reporter $(find tests -name '*.tests.js')",
+    "coverage": "env TEST=1 NO_LOG=1 istanbul cover _mocha -- --timeout 600000 $(find tests -name '*.tests.js')",
     "lint": "eslint ./src/ --ext .js",
     "doc": "documentation build ./src/** -f md -o ./doc/DOCUMENTATION.md && documentation build ./src/modules/pluginsmanager/publicapis/** -f md -o ./doc/PUBLIC-APIS.md",
     "pre-build": "npm run doc && rm -Rf ./build/* && mkdir -p ./build/plugins && mkdir -p ./build/doc && cp -R ./data ./build/ && cp ./doc/PLUGIN.md ./build/doc/ && cp ./doc/PUBLIC-APIS.md ./build/doc/ && cp -R ./scripts ./build/ && find ./node_modules -name '*.node' -exec cp -Rf {} ./build/ \\;",
