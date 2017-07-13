@@ -12,6 +12,9 @@ var Logger = require("./../../logger/Logger");
 var FormObject = require("./../formmanager/FormObject");
 var TimeEventAPI = require("./publicapis/TimeEventAPI");
 var SchedulerAPI = require("./publicapis/SchedulerAPI");
+var DateUtils = require("./../../utils/DateUtils");
+var Icons = require("./../../utils/Icons");
+var DashboardAPI = require("./publicapis/DashboardAPI");
 
 /**
  * This class is an interface for plugins
@@ -31,9 +34,10 @@ class PluginsAPI {
     //  * @param  {ConfManager} confManager     The configuration manager
     //  * @param  {TimeEventService} timeEventService     The time event service
     //  * @param  {SchedulerService} schedulerService     The scheduler service
+    //  * @param  {DashboardManager} dashboardManager     The dashboard manager
     //  * @returns {PluginAPI}                  Insntance
     //  */
-    constructor(previousVersion, p, webServices, servicesManager, dbManager, translateManager, formManager, confManager, timeEventService, schedulerService) {
+    constructor(previousVersion, p, webServices, servicesManager, dbManager, translateManager, formManager, confManager, timeEventService, schedulerService, dashboardManager) {
         PrivateProperties.createPrivateState(this);
         this.previousVersion = previousVersion;
         this.p = p;
@@ -52,7 +56,10 @@ class PluginsAPI {
         this.exported = Object.assign(this.exported,
             {Service: Service},
             {DbObject: DbObject},
-            {FormObject: FormObject}
+            {FormObject: FormObject},
+            {DateUtils: DateUtils},
+            {Icons: Icons},
+            {Logger: Logger}
         );
 
         // API part
@@ -63,7 +70,7 @@ class PluginsAPI {
         this.configurationAPI = new ConfigurationAPI.class(confManager, formManager, webServices, this.identifier);
         this.timeEventAPI = new TimeEventAPI.class(timeEventService);
         this.schedulerAPI = new SchedulerAPI.class(schedulerService);
-        this.logger = Logger;
+        this.dashboardAPI = new DashboardAPI.class(dashboardManager);
     }
 
     // /**

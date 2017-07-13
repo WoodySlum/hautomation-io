@@ -2,6 +2,7 @@
 "use strict";
 const Logger = require("./../../logger/Logger");
 const RadioForm = require("./RadioForm");
+const PluginsManager = require("./../pluginsmanager/PluginsManager");
 
 /**
  * This class manage radio stuff
@@ -13,19 +14,35 @@ class RadioManager {
      *
      * @param  {PluginManager} pluginsManager A plugin manager instance
      * @param  {FormManager} formManager    A form manager
+     * @param  {EventEmitter} eventBus    The global event bus
      * @returns {RadioManager}                The instance
      */
-    constructor(pluginsManager, formManager) {
+    constructor(pluginsManager, formManager, eventBus) {
         this.pluginsManager = pluginsManager;
         this.formManager = formManager;
 
         this.modules = [];
         this.protocols = [];
 
-        this.getModules();
-        this.getProtocols();
-        this.registerRadioEvents();
-        this.formManager.register(RadioForm.class, this.modules, this.protocols);
+        const self = this;
+        eventBus.on(PluginsManager.EVENT_LOADED, (pluginsManager) => {
+            self.pluginsLoaded(pluginsManager, self);
+        });
+    }
+
+    /**
+     * Called automatically when plugins are loaded. Used in separate methods for testing.
+     * Initially, this method wad used in contructor.
+     *
+     * @param  {PluginsManager} pluginsManager THe plugins manager instance
+     * @param  {RadioManager} context        The context (self, this, etc ...)
+     */
+    pluginsLoaded(pluginsManager, context) {
+        context.pluginsManager = pluginsManager;
+        context.getModules();
+        context.getProtocols();
+        context.registerRadioEvents();
+        context.formManager.register(RadioForm.class, context.modules, context.protocols);
     }
 
     /**

@@ -38,6 +38,9 @@ function loaded(api) {
 		}
     });
 
+    // Register a tile
+    const tile = api.dashboardAPI.Tile("test-plugin", api.dashboardAPI.TileType().TILE_INFO_ONE_TEXT, api.exported.Icons.class.list()["map-pin"], null, "A tile title");
+    api.dashboardAPI.registerTile(tile);
 }
 
 module.exports.attributes = {
