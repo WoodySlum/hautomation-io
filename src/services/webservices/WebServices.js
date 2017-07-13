@@ -1,4 +1,5 @@
 "use strict";
+const express = require("express");
 // Internal
 var Logger = require("./../../logger/Logger");
 var Service = require("./../Service");
@@ -46,7 +47,6 @@ class WebServices extends Service.class {
         super("webservices");
         this.port = port;
         this.sslPort = sslPort;
-        let express = require("express");
         this.app = express();
         this.servers = [];
         this.sslKey = sslKey;
@@ -78,6 +78,8 @@ class WebServices extends Service.class {
                 Logger.verbose(apiRequest);
                 instance.runPromises(apiRequest, instance.buildPromises(apiRequest), res);
             });
+
+            this.app.use('/', express.static(__dirname + '/../../../ui'));
 
             try {
                 let sslServer = https.createServer({

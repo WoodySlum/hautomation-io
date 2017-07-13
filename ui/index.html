@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Hautomation</title>
+    <meta http-equiv="cache-control" content="private">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <!--<link href="css/bootflat.min.css" rel="stylesheet" media="screen">-->
+    <link href="css/font-awesome.css" rel="stylesheet" media="screen">
+    <link href="css/uploadfile.css" rel="stylesheet" media="screen">
+    <link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+    <link href="css/bootstrap-switch.min.css" rel="stylesheet" media="screen">
+    <link href="css/csshake.min.css" rel="stylesheet" media="screen">
+    <link href="css/spectrum.css" rel="stylesheet" media="screen">
+    <link href="css/sweetalert2.min.css" rel="stylesheet" media="screen">
+    <link href="css/magnifier.css" rel="stylesheet" media="screen">
+    <link href="css/main.css" rel="stylesheet" media="screen">
+
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="57x57" href="img/favicon/apple-icon-57x57.png">
+	<link rel="apple-touch-icon" sizes="60x60" href="img/favicon/apple-icon-60x60.png">
+	<link rel="apple-touch-icon" sizes="72x72" href="img/favicon/apple-icon-72x72.png">
+	<link rel="apple-touch-icon" sizes="76x76" href="img/favicon/apple-icon-76x76.png">
+	<link rel="apple-touch-icon" sizes="114x114" href="img/favicon/apple-icon-114x114.png">
+	<link rel="apple-touch-icon" sizes="120x120" href="img/favicon/apple-icon-120x120.png">
+	<link rel="apple-touch-icon" sizes="144x144" href="img/favicon/apple-icon-144x144.png">
+	<link rel="apple-touch-icon" sizes="152x152" href="img/favicon/apple-icon-152x152.png">
+	<link rel="apple-touch-icon" sizes="180x180" href="img/favicon/apple-icon-180x180.png">
+	<link rel="icon" type="image/png" sizes="192x192"  href="img/favicon/android-icon-192x192.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="img/favicon/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="96x96" href="img/favicon/favicon-96x96.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="img/favicon/favicon-16x16.png">
+	<link rel="manifest" href="img/favicon/manifest.json">
+	<meta name="msapplication-TileColor" content="#ffffff">
+	<meta name="msapplication-TileImage" content="img/favicon/ms-icon-144x144.png">
+	<meta name="theme-color" content="#ffffff">
+
+    <!-- JavaScript plugins (requires jQuery) -->
+    <script src="js/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+
+	<script src="js/mjpeg.js"></script>
+    <script src="js/spectrum.js"></script>
+    <script src="js/underscore.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/highcharts.js"></script>
+	<script src="js/highcharts-more.js"></script>
+	<script src="js/jsonform.js"></script>
+	<script src="js/polyfill.js"></script>
+	<script src="js/jquery.form.js"></script>
+	<script src="js/jquery.uploadfile.min.js"></script>
+	<script src="js/jquery.elevateZoom-3.0.8.min.js"></script>
+	<script src="js/moment.min.js"></script>
+	<script src="js/bootstrap-datetimepicker.min.js"></script>
+	<script src="js/bootstrap-switch.min.js"></script>
+	<script src="js/bootstrap-select.js"></script>
+	<script src="js/jquery.md5.js"></script>
+	<script src="js/sweetalert2.min.js"></script>
+	<script src="js/Event.js"></script>
+	<script src="js/Magnifier.js"></script>
+	<script src="js/ol.js"></script>
+	<script type="text/javascript">
+        var localization = {};
+		//var localization = <?php echo $l->getJavascriptPart(); ?>;
+	</script>
+	<script src="js/main.js"></script>
+
+  </head>
+  <body>
+  <div id="primaryColor" class="primaryColor"></div>
+  <div id="secondaryColor" class="secondaryColor"></div>
+  <div id="tertiaryColor" class="tertiaryColor"></div>
+  <div id="clearColor" class="clearColor"></div>
+  <div id="onColor" class="onColor"></div>
+  <div id="offColor" class="offColor"></div>
+
+  	<script type="text/javascript">
+  		var isMobile = {
+	        Android: function() {
+	            return navigator.userAgent.match(/Android/i);
+	        },
+	        BlackBerry: function() {
+	            return navigator.userAgent.match(/BlackBerry/i);
+	        },
+	        iOS: function() {
+	            return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+	        },
+	        Opera: function() {
+	            return navigator.userAgent.match(/Opera Mini/i);
+	        },
+	        Windows: function() {
+	            return navigator.userAgent.match(/IEMobile/i);
+	        },
+	        any: function() {
+	            return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+	        }
+
+	    };
+		if(isMobile.iOS()) {
+			var a = confirm('Install iOS app ?');
+			if (a) {
+				document.location.href="https://www.hautomation.net/ios/";
+			}
+		}
+  	</script>
+  	<div id="gLoader"></div>
+
+    <!--<h1>Hautomation</h1>-->
+
+	<!-- Modals -->
+	<div id="backupModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBackupLabel" aria-hidden="true">
+		<div class="modal-dialog">
+    		<div class="modal-content">
+      			<div class="modal-header">
+	    			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	    			<h3 id="myBackupLabel">ui.popup.backup.title</h3>
+	  			</div>
+	  			<div class="modal-body">
+	    			<select id="backupMode" class="form-control">
+					  <option value="0">ui.popup.backup.option.data</option>
+					</select>
+	  			</div>
+	  			<div class="modal-footer">
+	    			<button class="btn btn-default" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> ui.close</button>
+	    			<button class="btn btn-info" data-dismiss="modal" aria-hidden="true" id="btnBackupMode">ui.popup.backup.btn</button>
+	  			</div>
+	  		</div>
+	  	</div>
+	</div>
+
+	<div id="chatModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myChatLabel" aria-hidden="true">
+		<div class="modal-dialog">
+    		<div class="modal-content">
+      			<div class="modal-header">
+	    			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	  			</div>
+	  			<div class="modal-body" id="chatContent">
+	    			<!-- -->
+	    			<section id="chatHistory">
+
+
+					</section>
+	  			</div>
+	  			<div class="modal-footer">
+					  <div class="form-group">
+					    <div class="input-group">
+					      <div class="input-group-addon"><span class="glyphicon glyphicon-comment" aria-hidden="true"></div>
+					      <input type="text" class="form-control" id="askMe" placeholder="Ask anything here and type enter" x-webkit-speech>
+					    </div>
+					  </div>
+					  <!--<button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Close</button>-->
+	  			</div>
+	  		</div>
+	  	</div>
+	</div>
+
+	<div id="cameraArchiveModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+    		<div class="modal-content">
+	  			<div class="modal-body">
+	    			<div class="alert">
+	    				<img id="cameraHistorySource" class="img-rounded" />
+					</div>
+					<div class="alert alert-info">
+	    				<span><strong>ui.date: </strong></span><span id="pictureDate"></span><br />
+	    				<span><strong>ui.time : </strong></span><span id="pictureTime"></span><br />
+	    				<span><strong>ui.popup.camera.location : </strong></span><span id="pictureLocation"></span>
+					</div>
+	  			</div>
+	  			<div class="modal-footer">
+	    			<button class="btn btn-default" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> ui.close</button>
+	  			</div>
+	  		</div>
+	  	</div>
+	</div>
+
+	<div id="cameraHistoryModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+    		<div class="modal-content">
+	  			<div class="modal-body">
+	    			<div class="alert">
+	    				<div id="cameraHistoryStatus"></div>
+	    				<img id="cameraHistoryPicture" src="" />
+					</div>
+
+					<div class="fullWidth center">
+					<button type="button" class="btn btn-primary" aria-label="Previous" id="cameraHistoryPictureFastPrevious">
+					  <span class="glyphicon glyphicon-fast-backward" aria-hidden="true"></span>
+					</button>
+					&nbsp;
+					<button type="button" class="btn btn-primary" aria-label="Previous" id="cameraHistoryPicturePrevious">
+					  <span class="glyphicon glyphicon-backward" aria-hidden="true"></span>
+					</button>
+					&nbsp;&nbsp;
+					<button type="button" class="btn btn-primary" aria-label="Next" id="cameraHistoryPictureNext">
+					  <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>
+					</button>
+					&nbsp;
+					<button type="button" class="btn btn-primary" aria-label="Next" id="cameraHistoryPictureFastNext">
+					  <span class="glyphicon glyphicon-fast-forward" aria-hidden="true"></span>
+					</button>
+					<div id="cameraHistoryProgress" class="fullWidth center">
+
+					</div>
+
+					</div>
+	  			</div>
+	  			<div class="modal-footer">
+	    			<button class="btn btn-default" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> ui.close</button>
+	  			</div>
+	  		</div>
+	  	</div>
+	</div>
+
+	<div id="pluginModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+    		<div class="modal-content">
+	  			<div class="modal-body">
+	    			<form id="pluginForm"></form>
+	  			</div>
+	  			<div class="modal-footer">
+	  				<button class="btn btn-primary" data-dismiss="modal" aria-hidden="true" id="savePluginForm">ui.save</button>
+	    			<button class="btn btn-default" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> ui.close</button>
+	  			</div>
+	  		</div>
+	  	</div>
+	</div>
+
+	<div id="sensorModal" class="modal fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+    		<div class="modal-content">
+	  			<div class="modal-body">
+	    			<form id="sensorSelectForm"></form>
+	    			<form id="sensorForm"></form>
+	  			</div>
+	  			<div class="modal-footer">
+	  				<span id="sensorOtaFlashBtn"></span>
+	  				<button class="btn btn-danger" aria-hidden="true" id="deleteSensorForm"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> ui.delete</button>
+	  				<button class="btn btn-primary" aria-hidden="true" id="saveSensorForm"><span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span> ui.save</button>
+	    			<button class="btn btn-default" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> ui.close</button>
+	  			</div>
+	  		</div>
+	  	</div>
+	</div>
+
+	<div id="sensorFlashModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+    		<div class="modal-content">
+	  			<div class="modal-body">
+	    			<form id="iotModuleSelectForm"></form>
+	    			<form id="sensorFlashForm"></form>
+	    			<div id="flashResults"></div>
+	  			</div>
+	  			<div class="modal-footer">
+	  				<button class="btn btn-primary" aria-hidden="true" id="dlFirmwareIoTBtn"><span class="glyphicon glyphicon-import" aria-hidden="true"></span> ui.flash.download</button>
+	  				<button class="btn btn-primary" aria-hidden="true" id="flashIoTBtn"><span class="glyphicon glyphicon-export" aria-hidden="true"></span> ui.flash</button>
+	    			<button class="btn btn-default" data-dismiss="modal" id="closeIoTBtn" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> ui.close</button>
+	  			</div>
+	  		</div>
+	  	</div>
+	</div>
+
+	<div id="mapModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+    		<div class="modal-content">
+	  			<div class="modal-body">
+	  				<div id="mapInfos">
+	  					<div id="mapInfosTitle"></div>
+	  					<div id="mapInfosSubtitle"></div>
+	  					<div id="mapInfosDate"></div>
+	  				</div>
+	    			<div id="map" class="map"></div>
+	  			</div>
+	  			<div class="modal-footer">
+	    			<button class="btn btn-default" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> ui.close</button>
+	  			</div>
+	  		</div>
+	  	</div>
+	</div>
+
+	<div id="rawScannerModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+    		<div class="modal-content">
+	  			<div class="modal-body">
+	  				<div id="rawScanData"></div>
+	  				<div id="rawScanAnimation"></div>
+	  			</div>
+	  			<div class="modal-footer">
+	    			<button class="btn btn-default" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> ui.close</button>
+	  			</div>
+	  		</div>
+	  	</div>
+	</div>
+
+	<div class="row" id="loginForm">
+		<div class="logo-l">
+			<!-- <img src="img/background-l.png" /> -->
+		</div>
+
+  		<div class="col-lg-4 center"></div>
+  		<div class="col-lg-4 center">
+  			<form name="login" id="loginFormContent" />
+
+  				<div class="form-group">
+					<div class="input-prepend">
+					  <span class="add-on"><i class="icon-user icon-white"></i></span>
+			      	  <input type="text" class="form-control" id="username" placeholder="ui.login.username.placeholder">
+					</div>
+			    </div>
+			    <div class="form-group">
+					<div class="input-prepend">
+					  <span class="add-on"><i class="icon-lock icon-white"></i></span>
+				      <input type="password" class="form-control" id="password" placeholder="ui.login.password.placeholder">
+					</div>
+			    </div>
+				<div class="checkbox rememberMe">
+				    <label>
+				      <input type="checkbox" name="rememberMe" id="rememberMe" checked="checked" /> ui.login.rememberme
+				    </label>
+				  </div>
+			    <div class="form-group">
+				    <div class="col-lg-20" id="signInButton">
+				      <button type="button" id="login" class="btn btn-default btn-large">ui.login.signin</button>
+				    </div>
+				</div>
+  			</form>
+  			<img src="img/squares.svg" id="loginLoader" />
+  		</div>
+  		<div class="col-lg-4 center"></div>
+	</div>
+
+	<div id="timeLapseVideoModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+    		<div class="modal-content">
+	  			<div class="modal-body">
+	    			<span id="dailyTimeLapseStream"></span>
+	  			</div>
+	  			<div class="modal-footer">
+	  				<span id="dailyTimeLapse"></span>
+	    			<button class="btn btn-default" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> ui.close</button>
+	  			</div>
+	  		</div>
+	  	</div>
+	</div>
+
+	<div id="informations" style="display:none;">
+		<div class="container-fluid">
+		  <div class="row-fluid">
+		    <div class="col-md-2" id="sidebar">
+		      <!--Sidebar content-->
+				<div class="center logo-top mini-logo">
+					<img src="img/logo-2.png" />
+				</div>
+				<ul class="nav nav-pills nav-stacked" id="menu">
+					<li><a href="#switchsTab" data-toggle="tab" id="dashboardItem"><span class="glyphicon glyphicon-th"></span> ui.dashboard</a></li>
+					<li><a href="#ambiancesTab" id="ambianceTabBtn" data-toggle="tab"><span class="glyphicon glyphicon-heart-empty"></span> ui.ambiances</a></li>
+					<li><a href="#cameraTab" data-toggle="tab" id="cameraTabAction"><span class="glyphicon glyphicon-facetime-video"></span> ui.cameras</a></li>
+					<li><a href="#telemetryTab" data-toggle="tab" id="statisticsBtn"><span class="glyphicon glyphicon-stats"></span> ui.statistics</a></li>
+					<li><a href="#manageTab" data-toggle="tab" id="manageZone"><span class="glyphicon glyphicon-cog"></span> ui.manage</a></li>
+			  	</ul>
+
+				<div class="center signOutButton">
+					<button class="btn btn-default btn-xs" id="signOut">ui.logout</button>
+				</div>
+		    </div>
+
+		    <div class="col-md-10">
+				<!--Body content-->
+					<div class="tab-content">
+						<div class="tab-pane active" id="switchsTab">
+							<div id="tiles">
+
+							</div>
+							<br />
+							<div class="center" id="dashboard-generated-date"></div>
+							<div class="center" id="dashboard-generated-date"><h6>ui.modify.tiles.description</h6></div>
+						</div>
+
+						<div class="tab-pane active" id="ambiancesTab">
+							<div id="tilesAmbiance">
+
+							</div>
+						</div>
+
+						<div class="tab-pane active" id="cameraTab">
+
+							<table id="cameraTbl">
+								<tbody class="cameraControl">
+									<tr><td colspan="3"class="center">
+										<div class="btn-group" data-toggle="buttons" id="cameraSelector">
+
+										</div>
+										<!-- -->
+                                        <div id="cameraHistoryForm">
+											<div class='input-group date' id='datetimepicker1'>
+							                    <input type='text' class="form-control" id="dtCameraHistory" name="dtCameraHistory" value="" />
+							                    <span class="input-group-addon">
+							                        <span class="glyphicon glyphicon-calendar"></span>
+							                    </span>
+							                    <span class="input-group-addon" id="cameraHistorySearchBtn">
+							                        <span class="glyphicon glyphicon-camera"></span>
+							                    </span>
+							                </div>
+						               	</div>
+								  		<script type="text/javascript">
+								            $( document ).ready(function() {
+								                $('#datetimepicker1').datetimepicker({
+								                    format: 'YYYY-MM-DD HH:mm',
+								                    enabledDates:[
+
+								                    ]
+								                });
+								                $("#dtCameraHistory").val('');
+								            });
+								        </script>
+								        <!-- -->
+									</td></tr>
+									<tr class="camController"><td colspan="3"class="center">
+										<form class="form-inline" id="timeLapseForm">
+											<select class="form-control" id="timeLapseDuration">
+												  <option value="24h">ui.timelapse.24hours</option>
+												  <option value="1h">ui.timelapse.1hour</option>
+												  <option value="48h">ui.timelapse.48hours</option>
+												  <option value="5d">ui.timelapse.5days</option>
+												</select>
+											<button type="button" class="btn btn-info" id="timeLapse"><span class="glyphicon glyphicon-facetime-video" aria-hidden="true"></span> ui.timelapse.build</button>
+											<button type="button" class="btn btn-info" id="timeLapseViewer"><span class="glyphicon glyphicon-facetime-video" aria-hidden="true"></span> ui.timelapse.daily</button>
+										</form>
+										<span id="timeLapseResults"></span>
+									</td></tr>
+									<tr class="camController"><td colspan="3" class="center cameraLoaderCell"><img src="img/squares.svg" id="cameraLoader" /></td></tr>
+									<tr class="camController cameraControlTable"><td>&nbsp;</td><td class="center"><button class="btn btn-info" id="cameraUp"><span class="glyphicon glyphicon-chevron-up"></span></button></td><td>&nbsp;</td></tr>
+									<tr class="camController cameraControlTable"><td style="text-align: right;"><button class="btn btn-info" id="cameraLeft"><span class="glyphicon glyphicon-chevron-left"></span></td><td style="width:100%;height:100%;text-align:center;"><img class="img-thumbnail" id="cameraSource" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"/></td><td><button class="btn btn-info" id="cameraRight"><span class="glyphicon glyphicon-chevron-right"></span></button></td></tr>
+									<tr class="camController cameraControlTable"><td>&nbsp;</td><td class="center"><button class="btn btn-info" id="cameraDown"><span class="glyphicon glyphicon-chevron-down"></span></button></td><td>&nbsp;</td></tr>
+									<tr><td colspan="3" class="center" style="width:100%;">&nbsp;</td></tr>
+									<tr><td colspan="3" class="center" id="cameraWall" style="width:100%;"></td></tr>
+								</tbody>
+							</table>
+
+
+						</div>
+
+						<div class="tab-pane active" id="telemetryTab">
+							<ul class="nav nav-tabs" id="teleinfoCharts">
+							  <li id="dayStatisticsTab"><a href="#dayStatistics" data-toggle="tab">ui.statistics.day</a></li>
+							  <li id="monthStatisticsTab"><a href="#monthStatistics" data-toggle="tab">ui.statistics.month</a></li>
+							  <li id="yearStatisticsTab"><a href="#yearStatistics" data-toggle="tab">ui.statistics.year</a></li>
+							</ul>
+							<div class="tab-content">
+								<div id="dayStatistics" class="tab-pane teleinfoChart"></div>
+								<div id="monthStatistics" class="tab-pane teleinfoChart"></div>
+								<div id="yearStatistics" class="tab-pane teleinfoChart"></div>
+							</div>
+						</div>
+						<div class="tab-pane active" id="notificationsTab">
+							<table class="table table-condensed table-striped table-bordered">
+						        <thead>
+						          <tr>
+						          	<th>ui.date</th>
+						            <th>ui.notification.message</th>
+						          </tr>
+						        </thead>
+						        <tbody id="notificationsTable">
+
+						        </tbody>
+							</table>
+						</div>
+						<div class="tab-pane active" id="manageTab">
+							<ul class="nav nav-tabs" id="configTabs">
+							  <li><a href="#logRadio" class="manageTab" data-toggle="tab"><span class="glyphicon"><i class="fa" data-unicode="F143">&#xF143</i></span></a></li>
+							  <li><a href="#manageSensors" class="manageTab" data-toggle="tab" id="manageSensorsItem"><span class="glyphicon"><i class="fa" data-unicode="F0E8">&#xF0E8</i></span></a></li>
+							  <li><a href="#manageDevices" class="manageTab" data-toggle="tab" id="manageDevicesItem"><span class="glyphicon"><i class="fa" data-unicode="F0EB">&#xF0EB</i></span></a></li>
+							  <li><a href="#manageActions" class="manageTab" data-toggle="tab" id="manageActionsItem"><span class="glyphicon"><i class="fa" data-unicode="F1B7">&#xF1B7</i></span></a></li>
+							  <li><a href="#manageAmbiances" class="manageTab" data-toggle="tab" id="manageAmbiancesItem"><span class="glyphicon"><i class="fa" data-unicode="F184">&#xF184</i></span></a></li>
+							  <li><a href="#manageAlarm" class="manageTab" data-toggle="tab" id="manageAlarmItem"><span class="glyphicon"><i class="fa" data-unicode="F2DA">&#xF2DA</i></span></a></li>
+							  <li><a href="#manageCameras" class="manageTab" data-toggle="tab" id="manageCamerasItem"><span class="glyphicon"><i class="fa" data-unicode="E83F">&#xE83F</i></span></a></li>
+							  <li><a href="#manageUsers" class="manageTab" data-toggle="tab" id="manageUsersItem"><span class="glyphicon"><i class="fa" data-unicode="F2BE">&#xF2BE</i></span></a></li>
+							  <li><a href="#managePlugins" class="manageTab" data-toggle="tab" id="managePluginsItem"><span class="glyphicon"><i class="fa" data-unicode="F170">&#xF170</i></span></a></li>
+							  <li><a href="#manageConfig" class="manageTab" data-toggle="tab" id="manageConfigItem"><span class="glyphicon"><i class="fa" data-unicode="F085">&#xF085</i></span></a></li>
+							  <li><a href="#manageMaintenance" class="manageTab" data-toggle="tab" id="manageMaintenanceItem"><span class="glyphicon"><i class="fa" data-unicode="F2DB">&#xF2DB</i></span></a></li>
+							  <li id="debugTab"><a href="#manageLogs" class="manageTab" data-toggle="tab" id="manageLogsItem"><span class="glyphicon"><i class="fa" data-unicode="F298">&#xF298</i></span></a></li>
+							</ul>
+							<div class="tab-content">
+
+					  			<div id="logRadio" class="tab-pane active">
+					  				<h3>ui.manage.scanner.title</h3>
+					  				<h6><span class="glyphicon glyphicon-question-sign"></span> ui.manage.scanner.subtitle</h6>
+					  				<p>
+					  					<br /><button type="button" class="btn btn-info" id="refreshRadioSignal"><span class="glyphicon glyphicon-refresh"></span> ui.refresh</button> <button type="button" class="btn btn-info" id="scanRawRadioData"><span class="glyphicon glyphicon glyphicon-search"></span> ui.manage.scanner.raw.scan</button> <img src="img/squares.svg" id="radioLoader" />
+					  				</p>
+					  				<p>
+					  					<table class="table table-condensed table-striped table-bordered">
+									        <thead>
+									          <tr>
+												<th>ui.date</th>
+												<th>ui.manage.scanner.protocol</th>
+									            <th>ui.manage.scanner.code</th>
+									            <th>ui.manage.scanner.subcode</th>
+									            <th>ui.manage.scanner.state</th>
+									            <th>ui.manage.scanner.device.action</th>
+									            <th>ui.manage.scanner.actions</th>
+									          </tr>
+									        </thead>
+									        <tbody id="radioSignalTable">
+
+									        </tbody>
+										</table>
+					  				</p>
+					  			</div>
+					  			<div id="manageSensors" class="tab-pane active">
+					  				<h3>ui.manage.sensors.title</h3>
+					  				<h6><span class="glyphicon glyphicon-question-sign"></span> ui.manage.sensors.subtitle</h6>
+					  				<div>
+					  					<img src="img/squares.svg" id="sensorsLoader" />
+					  				</div>
+					  				<div id="sensorsTable">
+					  					<button type="button" id="addSensors" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus"></span>  ui.add</button>&nbsp;&nbsp;
+					  					<button type="button" id="flashSensor" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-open"></span>  ui.manage.sensors.flash</button>
+					  					<div id="sensorsContent">
+					  					</div>
+					  				</div>
+					  			</div>
+								<div id="manageDevices" class="tab-pane active">
+					  				<h3>ui.manage.devices.title</h3>
+					  				<h6><span class="glyphicon glyphicon-question-sign"></span> ui.manage.devices.subtitle</h6>
+					  				<div>
+					  					<img src="img/squares.svg" id="devicesLoader" />
+					  				</div>
+					  				<div id="deviceTable">
+					  					<button type="button" id="addManageDevice" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus"></span> ui.add</button>
+					  					<div class="squareAdminTable" id="devicesTable">
+
+					  					</div>
+									</div>
+					  				<div class="manageForm">
+					  					<div id="addDeviceRes"></div>
+					  					<div>
+							  				<form id="addDeviceForm"></form>
+							  			</div>
+									</div>
+					  			</div>
+					  			<div id="manageActions" class="tab-pane active">
+					  				<h3>ui.manage.actions.title</h3>
+					  				<h6><span class="glyphicon glyphicon-question-sign"></span> ui.manage.actions.subtitle</h6>
+					  				<div>
+					  					<img src="img/squares.svg" id="actionsLoader" />
+					  				</div>
+					  				<div id="actionTable">
+					  					<button type="button" id="addManageAction" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus"></span> ui.add</button>
+					  					<div class="squareAdminTable" id="actionsTable">
+
+					  					</div>
+									</div>
+					  				<div class="manageForm">
+					  					<div id="addActionRes"></div>
+					  					<div>
+							  				<form id="addActionForm"></form>
+							  			</div>
+									</div>
+					  			</div>
+					  			<div id="manageUsers" class="tab-pane active">
+					  				<h3>ui.manage.users.title</h3>
+					  				<h6><span class="glyphicon glyphicon-question-sign"></span> ui.manage.users.subtitle</h6>
+					  				<div>
+					  					<img src="img/squares.svg" id="usersLoader" />
+					  				</div>
+					  				<div id="userTable">
+					  					<button type="button" id="addManageUser" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus"></span> ui.add</button>
+					  					<div class="squareAdminTable" id="usersTable">
+
+					  					</div>
+									</div>
+					  				<div class="manageForm">
+					  					<div id="addUserRes"></div>
+					  					<div>
+					  						<div id="userIconDiv">
+					  							<input type="hidden" id="userIconBase64" />
+						  						<img src="" id="userIconImg" />
+						  					</div>
+							  				<form id="addUserForm"></form>
+							  			</div>
+									</div>
+					  			</div>
+					  			<div id="manageAmbiances" class="tab-pane active">
+                                    <h3>ui.manage.ambiances.title</h3>
+                                    <h6><span class="glyphicon glyphicon-question-sign"></span> ui.manage.ambiances.subtitle</h6>
+                                    <div>
+					  					<img src="img/squares.svg" id="ambiancesLoader" />
+					  				</div>
+                                    <div id="ambianceTable">
+                                        <button type="button" id="addManageAmbiance" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus"></span> ui.add</button>
+                                        <div class="squareAdminTable" id="ambiancesTable">
+
+					  					</div>
+                                    </div>
+                                    <div class="manageForm">
+                                        <div id="addAmbianceRes"></div>
+                                        <div>
+                                            <form id="addAmbianceForm"></form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="manageAlarm" class="tab-pane active">
+                                    <h3>ui.manage.alarm.title</h3>
+                                    <h6><span class="glyphicon glyphicon-question-sign"></span> ui.manage.alarm.subtitle</h6>
+                                    <div>
+					  					<img src="img/squares.svg" id="alarmLoader" />
+					  				</div>
+
+                                    <div class="manageForm">
+                                        <div id="addAlarmRes"></div>
+                                        <div>
+                                            <form id="addAlarmForm"></form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="manageCameras" class="tab-pane active">
+                                    <h3>ui.manage.cameras.title</h3>
+                                    <h6><span class="glyphicon glyphicon-question-sign"></span> ui.manage.cameras.subtitle</h6>
+                                    <div>
+                                        <img src="img/squares.svg" id="camerasLoader" />
+                                    </div>
+                                    <div id="cameraTable">
+                                        <button type="button" id="addManageCamera" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus"></span> ui.add</button>
+
+                                        <div class="squareAdminTable" id="camerasTable">
+
+					  					</div>
+                                    </div>
+                                    <div class="manageForm">
+                                        <div id="addCameraRes"></div>
+                                        <div>
+                                            <form id="addCameraForm"></form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="manageConfig" class="tab-pane active">
+                                    <h3>ui.manage.configuration.title</h3>
+                                    <h6><span class="glyphicon glyphicon-question-sign"></span> ui.manage.configuration.subtitle</h6>
+                                    <div class="alert alert-danger">ui.manage.configuration.danger</div>
+                                    <div>
+					  					<img src="img/squares.svg" id="configLoader" />
+					  				</div>
+
+                                    <div class="manageFormLarge">
+                                        <div id="addConfigRes"></div>
+                                        <div>
+                                            <form id="addConfigForm"></form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="managePlugins" class="tab-pane active">
+                                	<div id="managePluginsLoader">
+					  					<img src="img/squares.svg" id="pluginsLoader" />
+					  				</div>
+                                	<h3>ui.manage.plugins.title</h3>
+                                	<div id="pluginsTable">
+                                		<div class="input-group pluginFilter"> <span class="input-group-addon">ui.manage.plugins.search</span>
+										    <input id="pluginFilter" type="text" class="form-control" placeholder="ui.manage.plugins.typehere">
+										</div>
+					  					<table class="table table-condensed table-striped manageTable">
+									        <thead>
+									          <tr>
+												<th>ui.manage.plugins.name</th>
+												<th>ui.manage.plugins.type</th>
+												<th>ui.manage.plugins.description</th>
+												<th>ui.manage.plugins.version</th>
+												<th>ui.manage.plugins.services</th>
+												<th>ui.manage.plugins.status</th>
+												<th>ui.actions</th>
+									          </tr>
+									        </thead>
+									        <tbody id="pluginsTableBody" class="searchable">
+
+									        </tbody>
+										</table>
+									</div>
+                                </div>
+                                <div id="manageLogs" class="tab-pane active">
+                                    <h3>ui.manage.logs.title</h3>
+                                    <div>
+                                    	<button type="button" class="btn btn-info has-spinner" id="refreshLogsButton"> <span class="spinner"><i class="fa-spin glyphicon glyphicon-refresh"></i></span> ui.refresh</button>
+                                    	<button type="button" class="btn btn-warning has-spinner" id="stopRefreshLogsButton"> <i class="glyphicon glyphicon glyphicon-minus-sign"></i> ui.manage.logs.stop.refresh</button>
+                                    </div>
+                                    <br />
+                                    <div class="input-group logFilter"> <span class="input-group-addon">ui.manage.log.filter</span>
+										    <input id="logFilter" type="text" class="form-control" placeholder="ui.manage.log.typehere">
+										</div>
+                                    <div id="manageLogsDetails">
+
+                                    </div>
+                                </div>
+                                <div id="manageMaintenance" class="tab-pane active">
+                                    <h3>ui.manage.maintenance.title</h3>
+                                    <div>
+                                    	<h4>hautomation.id : <span id="hautomationID" class="label label-primary"></span></h4>
+                                    	<h4>hautomation.version : <span id="hautomationVersion"></span></h4>
+                                    	<div class="maintenanceActionsSide"><button type="button" class="btn btn-info" id="btnReboot"><i class="glyphicon glyphicon-flash"></i> ui.manage.maintenance.reboot</button> <span id="rebootMessage"></span></div>
+                                    	<div class="maintenanceActionsSide"><button type="button" class="btn btn-info" id="btnGateway"><i class="glyphicon glyphicon-cloud-upload"></i> ui.manage.maintenance.sync</button> <span id="gatewayMessage"></span></div>
+                                    	<div class="maintenanceActionsSide"><button type="button" class="btn btn-info" id="btnCertificate"><i class="glyphicon glyphicon-lock"></i> ui.manage.maintenance.https</button></div>
+                                    	<div class="maintenanceActionsSide"><button type="button" class="btn btn-info" id="btnDefaultConfig"><i class="glyphicon glyphicon-pushpin"></i> ui.manage.maintenance.defaultconfig</button></div>
+                                    	<div class="maintenanceActionsSide"><button type="button" class="btn btn-info" id="btnRestartServices"><i class="glyphicon glyphicon-repeat"></i> ui.manage.maintenance.restart.services</button> <span id="restartServicesMessage"></span></div>
+                                    	<div class="maintenanceActions"><button type="button" class="btn btn-info" id="btnTestNotification"><i class="glyphicon glyphicon-send"></i> ui.manage.maintenance.test.notification</button> <span id="testNotification"></span></div>
+                                    	<div class="maintenanceActions"><button type="button" class="btn btn-info" id="btnBackup"><i class="glyphicon glyphicon-save"></i> ui.manage.maintenance.backup</button> <span id="backupFile"></span></div>
+                                    	<div class="maintenanceActions"><div id="restoreBackupUploader"></div><span id="restoreBackup"></span></div>
+
+                                    	<div id="deviceInfo">
+                                    		<button type="button" class="btn btn-info btn-xs" id="btnRefreshDeviceInfo"><i class="glyphicon glyphicon-repeat"></i></button>
+											<p>
+												<span id="dateInfo"><i class="icon-adjust icon-white"></i> ui.date : <strong><span id="dateInfoValue">ui.na</span></strong><br /></span>
+												<span id="timeInfo"><i class="icon-adjust icon-white"></i> ui.time : <strong><span id="timeInfoValue">ui.na</span></strong><br /></span>
+
+												<span id="localIp"><i class="icon-adjust icon-white"></i> ui.manage.maintenance.localip : <strong><span id="localIpValue">ui.na</span></strong><br /></span>
+												<span id="distantAccess"><i class="icon-adjust icon-white"></i> ui.manage.maintenance.distantaccess : <strong><span id="distantAccessValue">ui.na</span></strong><br /></span>
+												<span id="https"><i class="icon-adjust icon-white"></i> ui.manage.maintenance.https.label : <strong><span id="httpsValue">ui.na</span></strong><br /></span>
+
+												<span id="diskInfo"><i class="icon-off icon-white"></i> ui.manage.maintenance.disk.usage : <strong><span id="diskInfoValue">ui.na</span></strong><br /></span>
+												<span id="memoryInfo"><i class="icon-tasks icon-white"></i> ui.manage.maintenance.memory : <strong><span id="memoryInfoValue">ui.na</span></strong><br /></span>
+												<span id="cpuInfo"><i class="icon-tasks icon-user"></i> ui.manage.maintenance.cpu : <strong><span id="cpuInfoValue">ui.na</span></strong><br /></span>
+												<span id="uptimeInfo"><i class="icon-tasks icon-user"></i> ui.manage.maintenance.uptime : <strong><span id="uptimeInfoValue">ui.na</span></strong><br /></span>
+												<span id="oneWireInfo"><i class="icon-tasks icon-user"></i> ui.manage.maintenance.1wire : <strong><span id="oneWireInfoValue">ui.na</span></strong><br /></span>
+												<br />
+											</p>
+										</div>
+										<div class="maintenanceActionsSide"><button type="button" class="btn btn-danger" id="btnHalt"><i class="glyphicon glyphicon-off"></i> ui.manage.maintenance.stop</button></div>
+										<div class="maintenanceActionsSide"><button type="button" class="btn btn-danger" id="btnReset"><i class="glyphicon glyphicon-certificate"></i> ui.manage.maintenance.factory.reset</button></div>
+                                    </div>
+                                </div>
+							</div>
+						</div>
+				</div>
+		    </div>
+		    <!--<button type="button" class="btn btn-primary btn-lg" id="chatBtn"><span class="glyphicon glyphicon-comment" aria-hidden="true"></button>-->
+		  </div>
+		</div>
+		<script type="text/javascript">
+			var fixHighChartsTabWidth = function() {
+				// Fix Highcharts in tabs issue
+				$.each($("[data-highcharts-chart]"), function () {
+				    var highChart = Highcharts.charts[$(this).data('highchartsChart')];
+					if (highChart) {
+					    var highChartCont = $(highChart.container).parent();
+						if (highChartCont.attr('class').indexOf("tab-pane") >= 0) {
+					    	highChart.setSize(highChartCont.width()-50, highChartCont.height());
+					    	highChart.hasUserSize = undefined;
+						}
+					}
+				});
+			}
+
+			// Tabs
+			$('#menu a').click(function (e) {
+				e.preventDefault();
+				$(this).tab('show');
+				fixHighChartsTabWidth();
+			});
+			$('#menu a:first').tab('show');
+
+			// Tabs charts
+			$('#telemetryTab a').click(function (e) {
+			  	e.preventDefault();
+			 	$(this).tab('show');
+				fixHighChartsTabWidth();
+			});
+			$('#telemetryTab a:first').tab('show');
+
+			// Tabs charts
+			$('#manageTab a').click(function (e) {
+			  	e.preventDefault();
+			 	$(this).tab('show');
+			});
+			$('#manageTab a:first').tab('show');
+		</script>
+  </body>
+</html>
