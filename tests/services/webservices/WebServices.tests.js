@@ -150,6 +150,26 @@ describe("WebServices", function() {
         expect(p[0]).to.be.an("Promise");
     });
 
+    it("array of buildPromises should return an array of promises", function() {
+        let w = new WebServices.class(9090);
+        w.register({
+            processAPI : function(apiRequest) {
+                return [new Promise((resolve, reject) => {
+                    resolve(new APIResponse.class(true, {"foo":"bar"}));
+                }), new Promise((resolve, reject) => {
+                    resolve(new APIResponse.class(true, {"bar":"foo"}));
+                })];
+            }
+        });
+
+        let r = w.manageResponse(reqPost, endpoint);
+        let p = w.buildPromises(r);
+        expect(p).to.be.an("Array");
+        expect(p.length).to.be.equal(2);
+        expect(p[0]).to.be.an("Promise");
+        expect(p[1]).to.be.an("Promise");
+    });
+
     it("buildPromises should return the params as specified in routing", function(done) {
         let w = new WebServices.class(9090);
 

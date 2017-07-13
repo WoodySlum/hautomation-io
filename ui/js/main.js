@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    var vUrl = 'services/';
+    var vUrl = 'api/';
     var username = null;
     var password = null;
     var ePassword = null;
@@ -417,17 +417,15 @@ $(document).ready(function() {
         }
 
         $.ajax({
-            type: "POST",
-            url: vUrl,
+            type: "GET",
+            url: vUrl + "login/",
             data: {
-                username: username,
-                password: password,
-                method: "setLogin"
+                u: username,
+                p: password
             }
         }).done(function(msg) {
-            obj = jQuery.parseJSON(msg);
+            obj = msg;
             //username = $('#username').val();
-            ePassword = obj["epwd"];
             isAdmin = obj["admin"];
             consolelog(obj);
             $("#loginForm").fadeOut("slow", function() {
@@ -550,7 +548,7 @@ $(document).ready(function() {
     var uploadBackup = $("#restoreBackupUploader").uploadFile({
         url: vUrl,
         fileName: "backupFile",
-        /*formData: { 
+        /*formData: {
             username: readCookie("hautomationL"),
             ePassword: readCookie("hautomationP"),
             method: "restoreBackup"
@@ -1147,7 +1145,7 @@ $(document).ready(function() {
 
         htmlTile += '<input type="hidden" id="' + tile.identifier + 'data" name="' + tile.identifier + 'data" value="' + Base64.encode(JSON.stringify(tile)) + '"/>';
         // consolelog(tile);
-        // var action = 
+        // var action =
         // if (tile.action != null) {
 
         // }
@@ -1387,17 +1385,15 @@ $(document).ready(function() {
 
         getDashboardRunning = true;
         $.ajax({
-            type: "POST",
-            url: vUrl,
+            type: "GET",
+            url: vUrl + "dashboard/get/" + dashboardTs + "/",
             data: {
-                username: username,
-                ePassword: ePassword,
-                method: "getDashboard",
-                ts: dashboardTs
+                u: username,
+                p: password,
             }
         }).done(function(msg) {
             if (msg) {
-                var dashboardItems = JSON.parse(msg);
+                var dashboardItems = msg;
                 if (dashboardItems) {
                     bakeCookie('dashboard-cache', msg);
                     generateTiles(dashboardItems.tiles, 'tiles');
@@ -1721,14 +1717,14 @@ $(document).ready(function() {
                         ts: timestamp
                     }
                 }).done(function(msg) {
-                    
+
                     var tmpNotifications = jQuery.parseJSON(msg);
                     var currentTs = now();
                     var tmp = [];
                     if (notifications) {
                         for (var i = 0 ; i < notifications.length ; i++) {
                             if (notifications[i].ts < (currentTs - (7 * 24 * 60 * 60))) {
-                                
+
                             } else {
                                 tmp.push(notifications[i]);
                             }
@@ -1896,7 +1892,7 @@ $(document).ready(function() {
 
             cameraWallStream = [];
             for (i = 0; i < keys.length; i++) {
-                //camSelectorContent = 
+                //camSelectorContent =
                 cameraSelector.append("<label class=\"btn btn-default cameraSelectorClick\" id=\"idcamera" + cameras[keys[i]]["key"] + "\"><input type=\"radio\" name=\"options\" id=\"optCamera" + cameras[keys[i]]["key"] + "\" />" + cameras[keys[i]]["description"] + "</label>");
 
                 if (cameras[keys[i]]["videoUrl"] !== null) {
@@ -2536,7 +2532,7 @@ $(document).ready(function() {
                     zoomAttached:true
                 });
             }, 3000);
-            
+
 
             $("#cameraLoader").hide();
             $(".cameraControlTable").show();
@@ -3016,7 +3012,7 @@ $(document).ready(function() {
                 if (obj == null) {
                     obj = {};
                 }
-                
+
                 if (obj.subActions == null) {
                     obj.subActions = [];
                 }

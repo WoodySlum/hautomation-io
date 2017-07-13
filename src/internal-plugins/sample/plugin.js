@@ -4,6 +4,10 @@
 function loaded(api) {
     api.init();
 
+    // Register a tile
+    const tile = api.dashboardAPI.Tile("test-plugin", api.dashboardAPI.TileType().TILE_INFO_ONE_TEXT, api.exported.Icons.class.list()["map-pin"], null, "A tile title");
+    api.dashboardAPI.registerTile(tile);
+
     class SampleForm extends api.exported.FormObject.class {
         constructor(id, xo) {
             super(id);

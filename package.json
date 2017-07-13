@@ -29,7 +29,8 @@
     "assets": [
       "./src/internal-plugins/**/*.js",
       "./node_modules/threads/lib/worker.node/slave.js",
-      "./**/*.json"
+      "./**/*.json",
+      "./ui/**/*"
     ]
   },
   "repository": {

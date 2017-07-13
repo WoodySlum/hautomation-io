@@ -26,7 +26,7 @@ class DashboardManager {
         this.themeManager = themeManager;
         this.webServices = webServices;
         this.translateManager = translateManager;
-        this.webServices.registerAPI(this, WebServices.GET, ROUTE, Authentication.AUTH_NO_LEVEL);
+        this.webServices.registerAPI(this, WebServices.GET, ROUTE, Authentication.AUTH_USAGE_LEVEL);
         this.lastGenerated = DateUtils.class.timestamp();
 
         this.tiles = [];

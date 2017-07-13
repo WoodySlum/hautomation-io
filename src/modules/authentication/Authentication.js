@@ -3,6 +3,7 @@
 
 var AuthenticationData = require("./AuthenticationData");
 var APIResponse = require("./../../services/webservices/APIResponse");
+var WebServices = require("./../../services/webservices/WebServices");
 
 const USERNAME = "u";
 const PASSWORD = "p";
@@ -11,6 +12,8 @@ const AUTH_NO_LEVEL = 0;
 const AUTH_USAGE_LEVEL = 10;
 const AUTH_ADMIN_LEVEL = 80;
 const AUTH_MAX_LEVEL = 100;
+
+const LOGIN_ROUTE = ":/login/";
 
 /**
  * This class manage authentication for Web Services
@@ -28,14 +31,24 @@ class Authentication {
      */
     constructor(webService, userManager) {
         webService.registerAPI(this, "*", "*", AUTH_NO_LEVEL);
+        webService.registerAPI(this, WebServices.GET, LOGIN_ROUTE, AUTH_USAGE_LEVEL);
         this.userManager = userManager;
     }
 
     processAPI(apiRequest) {
         let t = this;
-        return new Promise( function(resolve, reject) {
+        let promises = [];
+        promises.push(new Promise( function(resolve, reject) {
             t.processAuthentication(apiRequest, resolve, reject);
-        });
+        }));
+
+        if (apiRequest.route === LOGIN_ROUTE) {
+            promises.push(new Promise( function(resolve, reject) {
+                resolve(new APIResponse.class(true, apiRequest.authenticationData));
+            }));
+        }
+
+        return promises;
     }
 
     processAuthentication(apiRequest, resolve, reject) {

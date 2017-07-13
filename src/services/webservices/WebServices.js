@@ -22,6 +22,8 @@ const HEADER_APPLICATION_FORM = "application/x-www-form-urlencoded";
 const DATA_FIELD = "data";
 const GET = "GET";
 const POST = "POST";
+const ENDPOINT_API = "/api/";
+const ENDPOINT_UI = "/";
 
 const API_UP_TO_DATE = 304;
 const API_ERROR_HTTP_CODE = 500;
@@ -59,11 +61,12 @@ class WebServices extends Service.class {
      */
     start() {
         if (this.status != Service.RUNNING) {
-            let endpoint = "/api/";
+            let endpoint = ENDPOINT_API;
             let instance = this;
 
             this.app.use(BodyParser.json());
             this.app.use(BodyParser.urlencoded({ extended: false }));
+            this.app.use(ENDPOINT_UI, express.static(__dirname + "/../../../ui"));
 
             // GET Apis
             this.app.get(endpoint + "*/", function(req, res) {
@@ -78,8 +81,6 @@ class WebServices extends Service.class {
                 Logger.verbose(apiRequest);
                 instance.runPromises(apiRequest, instance.buildPromises(apiRequest), res);
             });
-
-            this.app.use('/', express.static(__dirname + '/../../../ui'));
 
             try {
                 let sslServer = https.createServer({
@@ -149,7 +150,7 @@ class WebServices extends Service.class {
 
                 });
 
-                // API has been successfully processed by the class, and return a foo bar object
+                // API has been successfully processed by the class
                 resolve(new APIResponse.class(true, registered));
             });
         }
@@ -348,7 +349,13 @@ class WebServices extends Service.class {
                         });
                     }
 
-                    promises.push(p);
+                    if (p instanceof Array) {
+                        p.forEach((pElement) => {
+                            promises.push(pElement);
+                        });
+                    } else {
+                        promises.push(p);
+                    }
                 } else if (apiRequest.authenticationData) {
                     promises.push(new Promise((resolve) => {resolve(new APIResponse.class(false, {}, 812, "Unauthorized"));}));
                 }
@@ -404,6 +411,11 @@ class WebServices extends Service.class {
             }
 
         });
+
+        // Only authentication has been registered, so it's unknown API
+        if (apiResponses.length === 1) {
+            apiResponse = new APIResponse.class(false, {}, 1, "Unknown api called");
+        }
 
         Logger.info(apiResponse);
         if (apiResponse.success) {
