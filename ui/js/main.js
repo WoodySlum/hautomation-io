@@ -1036,14 +1036,13 @@ $(document).ready(function() {
     var drawTable = function() {
         $("#addDeviceForm").empty();
         $("#devicesLoader").hide();
-        var length = fullDevicesKeys.length;
 
         var data = [];
-        for (var i = 0; i < length; i++) {
+        for (var i = 0; i < deviceData.length; i++) {
             var tmp = {};
-            tmp.id = keys[i];
-            tmp.description = deviceData[keys[i]].description;
-            tmp.icon = deviceData[keys[i]].icon;
+            tmp.id = deviceData[i].id;
+            tmp.description = deviceData[i].name;
+            tmp.icon = deviceData[i].icon;
             data.push(tmp);
         }
 
@@ -1091,29 +1090,19 @@ $(document).ready(function() {
     var getFullObjects = function() {
         $("#deviceTable").show();
         $.ajax({
-            type: "POST",
-            url: vUrl,
+            type: "GET",
+            url: vUrl + "conf/devices/get/",
             data: {
-                username: username,
-                ePassword: ePassword,
-                method: "getObjects"
+                u: username,
+                p: password
             }
         }).done(function(msg) {
-            var jsonData = JSON.parse(msg);
+            var jsonData = msg;
             if (jsonData) {
-                keys = Object.keys(jsonData);
+                deviceData = jsonData;
                 deviceTable = $("#deviceTableBody");
                 deviceTable.empty();
                 consolelog(jsonData);
-                deviceData = jsonData;
-                fullObjects = deviceData;
-                fullDevicesKeys = keys;
-                fullDevicesLabels = {};
-                for (i = 0; i < fullDevicesKeys.length; i++) {
-
-                    ob = fullObjects[fullDevicesKeys[i]];
-                    fullDevicesLabels[fullDevicesKeys[i]] = ob["description"];
-                }
 
                 drawTable();
             }
@@ -1395,7 +1384,7 @@ $(document).ready(function() {
             if (msg) {
                 var dashboardItems = msg;
                 if (dashboardItems) {
-                    bakeCookie('dashboard-cache', msg);
+                    bakeCookie('dashboard-cache', JSON.stringify(msg));
                     generateTiles(dashboardItems.tiles, 'tiles');
                     tileActions();
                 }

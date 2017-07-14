@@ -18,7 +18,7 @@ class Icons {
 
         const icons = {};
         glyphs.forEach((glyph) => {
-            icons[glyph.css] = glyph.code;
+            icons[glyph.css] = glyph.code.toString(16);
         });
 
         return icons;

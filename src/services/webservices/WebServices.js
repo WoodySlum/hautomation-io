@@ -413,7 +413,7 @@ class WebServices extends Service.class {
         });
 
         // Only authentication has been registered, so it's unknown API
-        if (apiResponses.length === 1) {
+        if (apiResponses.length === 1 && !process.env.TEST) {
             apiResponse = new APIResponse.class(false, {}, 1, "Unknown api called");
         }
 

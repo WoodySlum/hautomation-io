@@ -44,8 +44,8 @@ class DashboardAPI {
      *
      * @param  {string} identifier                The tile identifier (must be unique)
      * @param  {string} [type=TILE_INFO_ONE_TEXT] The tile's model (or type). Models cosntants can be retrieved through `TileType()`
-     * @param  {number} [icon=null]               The icon. Use `api.exported.Icons.class.list()` to retrieve icon list.
-     * @param  {number} [subIcon=null]            The subicon. Use `api.exported.Icons.class.list()` to retrieve icon list.
+     * @param  {string} [icon=null]               The icon. Use `api.exported.Icons.class.list()` to retrieve icon list.
+     * @param  {string} [subIcon=null]            The subicon. Use `api.exported.Icons.class.list()` to retrieve icon list.
      * @param  {string} [text=null]               The text
      * @param  {string} [subText=null]            The sub text
      * @param  {string} [picture=null]            A picture in base64 format
