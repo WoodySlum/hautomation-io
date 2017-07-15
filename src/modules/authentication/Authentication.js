@@ -43,7 +43,7 @@ class Authentication {
         }));
 
         if (apiRequest.route === LOGIN_ROUTE) {
-            promises.push(new Promise( function(resolve, reject) {
+            promises.push(new Promise( function(resolve) {
                 resolve(new APIResponse.class(true, apiRequest.authenticationData));
             }));
         }
