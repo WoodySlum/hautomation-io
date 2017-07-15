@@ -42,7 +42,7 @@ describe("FormConfiguration", function() {
     it("should call constructor with good settings (not list mode)", function() {
         sinon.spy(webServices, "registerAPI");
         const fc = new FormConfiguration.class(confManager, formManager, webServices, "Foobar");
-        expect(webServices.registerAPI.calledThrice).to.be.true;
+        expect(webServices.registerAPI.callCount).to.be.equal(4);
         expect(fc).to.have.property("data");
         expect(fc).to.have.property("confManager");
         expect(fc).to.have.property("webServices");
@@ -92,7 +92,7 @@ describe("FormConfiguration", function() {
         sinon.spy(formManager, "register");
         const fc = new FormConfiguration.class(confManager, formManager, webServices, "Foobar", true, BarFoo);
 
-        expect(webServices.registerAPI.calledThrice).to.be.true;
+        expect(webServices.registerAPI.callCount).to.be.equal(4);
         expect(confManager.loadData.calledOnce).to.be.true;
         expect(formManager.register.calledOnce).to.be.true;
         expect(fc.list).to.be.equal(true);
@@ -106,7 +106,7 @@ describe("FormConfiguration", function() {
 
     it("should save configuration (list mode)", function() {
         sinon.spy(confManager, "setData");
-        
+
         const fc = new FormConfiguration.class(confManager, formManager, webServices, "Foobar", true, BarFoo);
         fc.saveConfig({xo:"foo"});
 
