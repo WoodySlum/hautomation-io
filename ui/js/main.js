@@ -1,7 +1,17 @@
+var vUrl = 'api/';
+var username = null;
+var password = null;
+// Hot replace toastr
+var swalDefaults = {
+    reverseButtons: true,
+    allowEscapeKey: true,
+    allowOutsideClick: true,
+    cancelButtonColor: "#ABB0AF",
+    confirmButtonColor: "#99BD47"
+};
+var toastr = {};
+
 $(document).ready(function() {
-    var vUrl = 'api/';
-    var username = null;
-    var password = null;
     var ePassword = null;
     var isAdmin = false;
     var objects = '';
@@ -232,15 +242,6 @@ $(document).ready(function() {
         return $("#" + colorName).css("background-color");
     }
 
-    // Hot replace toastr
-    var swalDefaults = {
-        reverseButtons: true,
-        allowEscapeKey: true,
-        allowOutsideClick: true,
-        cancelButtonColor: getColor('primaryColor'),
-        confirmButtonColor: getColor('onColor')
-    };
-    var toastr = {};
     toastr.success = function(text) {
         swal(Object.assign({
                 title: t('js.success', null),
@@ -436,6 +437,7 @@ $(document).ready(function() {
                 $('#manageZone').remove();
                 $('#manageTab').remove();
             }
+            adminFormReady();
 
             // Login
             if ($("#rememberMe").is(':checked')) {
@@ -1089,7 +1091,7 @@ $(document).ready(function() {
 
     var getFullObjects = function() {
         $("#deviceTable").show();
-        $.ajax({
+        /*$.ajax({
             type: "GET",
             url: vUrl + "conf/devices/get/",
             data: {
@@ -1109,7 +1111,7 @@ $(document).ready(function() {
         }).fail(function(msg) {
             setError(msg);
             $("#devicesLoader").hide();
-        });
+        });*/
     };
 
     var generateTile = function(tile) {

@@ -22,6 +22,7 @@ const HEADER_APPLICATION_FORM = "application/x-www-form-urlencoded";
 const DATA_FIELD = "data";
 const GET = "GET";
 const POST = "POST";
+const DELETE = "DELETE";
 const ENDPOINT_API = "/api/";
 const ENDPOINT_UI = "/";
 
@@ -77,6 +78,13 @@ class WebServices extends Service.class {
 
             // POST Apis
             this.app.post(endpoint + "*/", function(req, res) {
+                let apiRequest = instance.manageResponse(req, endpoint);
+                Logger.verbose(apiRequest);
+                instance.runPromises(apiRequest, instance.buildPromises(apiRequest), res);
+            });
+
+            // DELETE Apis
+            this.app.delete(endpoint + "*/", function(req, res) {
                 let apiRequest = instance.manageResponse(req, endpoint);
                 Logger.verbose(apiRequest);
                 instance.runPromises(apiRequest, instance.buildPromises(apiRequest), res);
@@ -266,14 +274,19 @@ class WebServices extends Service.class {
         }
 
         let methodConstant = null;
-        if (method === "GET") {
+        if (method === GET) {
             params = Object.assign(params, req.query);
             methodConstant = GET;
         }
 
-        if (method === "POST" && req.headers[CONTENT_TYPE] === HEADER_APPLICATION_FORM) {
+        if (method === POST && req.headers[CONTENT_TYPE] === HEADER_APPLICATION_FORM) {
             params = Object.assign(params, req.body);
             methodConstant = POST;
+        }
+
+        if (method === DELETE) {
+            params = Object.assign(params, req.body);
+            methodConstant = DELETE;
         }
 
         let data = {};

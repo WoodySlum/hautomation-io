@@ -1,1 +1,1 @@
-[]"id":1981,"name":"FooBar","excludeFromAll":null,"visible":true,"worksOnlyOnDayNight":null,"icon":{"icon":59398},"radio":[{"module":"rflink","protocol":"protocol1","deviceId":"dev1","switchId":"sw1"},{"module":"rflink","protocol":"protocol1","deviceId":"dev1","switchId":"sw1"}],"status":-1}]
+[{"id":1500141667165,"name":"sdsdf","excludeFromAll":false,"visible":true,"worksOnlyOnDayNight":1,"icon":{"icon":"e806"},"radio":[],"status":-1}]

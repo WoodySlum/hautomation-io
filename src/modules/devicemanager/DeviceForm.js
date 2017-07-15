@@ -18,7 +18,7 @@ class DeviceForm extends FormObject.class {
      * @param  {number} [status=null]              A status
      * @returns {DeviceForm}                            The instance
      */
-    constructor(id = null, name = null, excludeFromAll = null, visible = null, worksOnlyOnDayNight = null, icon = null, radio = null, status = null) {
+    constructor(id = null, name = null, excludeFromAll = false, visible = true, worksOnlyOnDayNight = 1, icon = {}, radio = [], status = -1) {
         super(id);
         /**
          * @Property("name");
@@ -31,6 +31,7 @@ class DeviceForm extends FormObject.class {
         /**
          * @Property("excludeFromAll");
          * @Type("boolean");
+         * @Default(false);
          * @Title("device.form.excludeFromAll");
          */
         this.excludeFromAll = excludeFromAll;
@@ -38,15 +39,17 @@ class DeviceForm extends FormObject.class {
         /**
          * @Property("visible");
          * @Type("boolean");
+         * @Default(true);
          * @Title("device.form.visible");
          */
         this.visible = visible;
 
         /**
          * @Property("worksOnlyOnDayNight");
-         * @Type("boolean");
+         * @Type("number");
+         * @Default(1);
          * @Title("device.form.worksOnlyOnDayNight");
-         * @Enum([0, 1, 2]);
+         * @Enum([1, 2, 3]);
          * @EnumNames(["device.form.worksOnlyOnDayNight.both", "device.form.worksOnlyOnDayNight.day", "device.form.worksOnlyOnDayNightNight"]);
          */
         this.worksOnlyOnDayNight = worksOnlyOnDayNight;
@@ -71,6 +74,7 @@ class DeviceForm extends FormObject.class {
          * @Property("status");
          * @Type("number");
          * @Hidden(true);
+         * @Default(-1);
          * @Title("device.form.status");
          */
         this.status = status;

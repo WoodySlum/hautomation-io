@@ -9,7 +9,7 @@ class IconForm extends FormObject.class {
      * Constructor
      *
      * @param  {number} [id=null]   An identifier
-     * @param  {number} [icon=null] An icon number
+     * @param  {string} [icon=null] An icon number
      * @returns {IconForm}             The instance
      */
     constructor(id = null, icon = null) {
@@ -17,7 +17,7 @@ class IconForm extends FormObject.class {
 
         /**
          * @Property("icon");
-         * @Type("number");
+         * @Type("string");
          * @Title("icon.form.name");
          * @Enum("getIcons");
          * @EnumNames("getIcons");

@@ -46,7 +46,6 @@
     <script src="js/bootstrap.min.js"></script>
     <script src="js/highcharts.js"></script>
 	<script src="js/highcharts-more.js"></script>
-	<script src="js/jsonform.js"></script>
 	<script src="js/polyfill.js"></script>
 	<script src="js/jquery.form.js"></script>
 	<script src="js/jquery.uploadfile.min.js"></script>
@@ -60,14 +59,15 @@
 	<script src="js/Event.js"></script>
 	<script src="js/Magnifier.js"></script>
 	<script src="js/ol.js"></script>
-    <script src="js/react.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.3.1/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.1/react-dom.min.js"></script>
     <script src="js/react-jsonschema-form.js"></script>
 	<script type="text/javascript">
         var localization = {};
 		//var localization = <?php echo $l->getJavascriptPart(); ?>;
 	</script>
 	<script src="js/main.js"></script>
-
+    <script src="js/admin-form.js"></script>
   </head>
   <body>
   <div id="primaryColor" class="primaryColor"></div>
@@ -530,16 +530,13 @@
 					  					<img src="img/squares.svg" id="devicesLoader" />
 					  				</div>
 					  				<div id="deviceTable">
-					  					<button type="button" id="addManageDevice" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus"></span> ui.add</button>
-					  					<div class="squareAdminTable" id="devicesTable">
+					  					<button type="button" id="adddevices" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus"></span> ui.add</button>
+					  					<div class="squareAdminTable" id="devicestable">
 
 					  					</div>
 									</div>
-					  				<div class="manageForm">
-					  					<div id="addDeviceRes"></div>
-					  					<div>
-							  				<form id="addDeviceForm"></form>
-							  			</div>
+					  				<div id="devicesform">
+
 									</div>
 					  			</div>
 					  			<div id="manageActions" class="tab-pane active">

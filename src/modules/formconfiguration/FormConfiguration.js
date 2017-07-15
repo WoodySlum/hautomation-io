@@ -8,6 +8,7 @@ const ROUTE_BASE_PATH = "conf";
 const ROUTE_BASE_FORM = "form";
 const ROUTE_BASE_GET = "get";
 const ROUTE_BASE_SET = "set";
+const ROUTE_BASE_DEL = "del";
 
 /**
  * This class allows to manage form configuration
@@ -38,11 +39,13 @@ class FormConfiguration {
         this.formRoute = ":/" + ROUTE_BASE_PATH + "/" + this.name + "/" + ROUTE_BASE_FORM + "/";
         this.getRoute = ":/" + ROUTE_BASE_PATH + "/" + this.name + "/" + ROUTE_BASE_GET + "/";
         this.setRoute = ":/" + ROUTE_BASE_PATH + "/" + this.name + "/" + ROUTE_BASE_SET + "/";
+        this.delRoute = ":/" + ROUTE_BASE_PATH + "/" + this.name + "/" + ROUTE_BASE_DEL + "/[id*]";
 
 
         this.webServices.registerAPI(this, WebServices.GET, this.formRoute, Authentication.AUTH_ADMIN_LEVEL);
         this.webServices.registerAPI(this, WebServices.GET, this.getRoute, Authentication.AUTH_ADMIN_LEVEL);
         this.webServices.registerAPI(this, WebServices.POST, this.setRoute, Authentication.AUTH_ADMIN_LEVEL);
+        this.webServices.registerAPI(this, WebServices.DELETE, this.delRoute, Authentication.AUTH_ADMIN_LEVEL);
 
         if (this.list) {
             this.data = [];
@@ -148,6 +151,17 @@ class FormConfiguration {
                 }  else {
                     return new Promise((resolve, reject) => {
                         reject(new APIResponse.class(false, {}, 800, "No data"));
+                    });
+                }
+            } else if (apiRequest.route.startsWith(":/" + ROUTE_BASE_PATH + "/" + this.name + "/" + ROUTE_BASE_DEL + "/")) {
+                if (apiRequest.data && apiRequest.data.id) {
+                    return new Promise((resolve) => {
+                        self.confManager.removeData(self.confKey, new (this.formClass)(apiRequest.data.id), self.data, self.comparator);
+                        resolve(new APIResponse.class(true, {success:true}));
+                    });
+                } else {
+                    return new Promise((resolve, reject) => {
+                        reject(new APIResponse.class(false, {}, 802, "No data"));
                     });
                 }
             }
