@@ -5261,7 +5261,7 @@ $(document).ready(function() {
                     ReactDOM.render(React.createElement(Form, {schema:sensorAvailableData.form.schema, uiSchema:sensorAvailableData.form.schemaUI, formData:{}, onSubmit: function(data) {
                         $.ajax({
                             type: "POST",
-                            url: vUrl + "sensor/set/",
+                            url: vUrl + "sensors/set/",
                             contentType: "application/json",
                             data: JSON.stringify({
                                 u: username,

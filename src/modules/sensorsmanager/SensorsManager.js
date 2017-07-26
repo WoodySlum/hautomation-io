@@ -4,11 +4,13 @@ const PluginsManager = require("./../pluginsmanager/PluginsManager");
 const WebServices = require("./../../services/webservices/WebServices");
 const APIResponse = require("./../../services/webservices/APIResponse");
 const Authentication = require("./../authentication/Authentication");
+const DateUtils = require("./../../utils/DateUtils");
 
 const CONF_MANAGER_KEY = "sensors";
 const SENSORS_MANAGER_AVAILABLE_GET = ":/sensors/available/get/";
-const SENSORS_MANAGER_POST_BASE = ":/sensor/set";
+const SENSORS_MANAGER_POST_BASE = ":/sensors/set";
 const SENSORS_MANAGER_POST = SENSORS_MANAGER_POST_BASE + "/[id*]/";
+const SENSORS_MANAGER_GET = ":/sensors/get/";
 
 /**
  * This class allows to manage sensors
@@ -33,7 +35,7 @@ class SensorsManager {
         try {
             this.sensors = this.confManager.loadData(Object, CONF_MANAGER_KEY, true);
         } catch(e) {
-            Logger.info(e.message);
+            Logger.warn(e.message);
             this.sensors= [];
         }
 
@@ -44,6 +46,7 @@ class SensorsManager {
 
         // Web services
         this.webServices.registerAPI(this, WebServices.GET, SENSORS_MANAGER_AVAILABLE_GET, Authentication.AUTH_ADMIN_LEVEL);
+        this.webServices.registerAPI(this, WebServices.GET, SENSORS_MANAGER_GET, Authentication.AUTH_ADMIN_LEVEL);
         this.webServices.registerAPI(this, WebServices.POST, SENSORS_MANAGER_POST, Authentication.AUTH_ADMIN_LEVEL);
     }
 
@@ -65,22 +68,59 @@ class SensorsManager {
      * @returns {Promise}  A promise with an APIResponse object
      */
     processAPI(apiRequest) {
+        const self = this;
         if (apiRequest.route === SENSORS_MANAGER_AVAILABLE_GET) {
             return new Promise((resolve) => {
                 const sensors = [];
-                this.pluginsManager.getPluginsByCategory("sensor", false).forEach((sensor) => {
+                self.pluginsManager.getPluginsByCategory("sensor", false).forEach((sensor) => {
                     if (sensor.sensorAPI.form) {
                         sensors.push({
                             identifier: sensor.identifier,
                             description: sensor.description,
-                            form:this.formManager.getForm(sensor.sensorAPI.form)
+                            form:self.formManager.getForm(sensor.sensorAPI.form)
                         });
                     }
                 });
                 resolve(new APIResponse.class(true, sensors));
             });
+        } else if (apiRequest.route === SENSORS_MANAGER_GET) {
+            return new Promise((resolve) => {
+                const sensors = [];
+                this.sensors.forEach((sensor) => {
+                    const sensorPlugin = self.pluginsManager.getPluginByIdentifier(sensor.plugin, false);
+                    sensors.push({
+                        identifier: sensor.id,
+                        name: sensor.name,
+                        icon: "",
+                        form:Object.assign(self.formManager.getForm(sensorPlugin.sensorAPI.form), {data:sensor})
+                    });
+                });
+                resolve(new APIResponse.class(true, sensors));
+            });
         } else if (apiRequest.route.startsWith(SENSORS_MANAGER_POST_BASE)) {
-            console.log(apiRequest.data);
+            return new Promise((resolve, reject) => {
+                if (apiRequest.data) {
+                    if (apiRequest.data.plugin) {
+                        if (self.pluginsManager.getPluginByIdentifier(apiRequest.data.plugin, false)) {
+                            // Set id
+                            if (!apiRequest.params.id && !apiRequest.data.id) {
+                                apiRequest.data.id = DateUtils.class.timestamp();
+                            } else if (!apiRequest.params.id) {
+                                apiRequest.data.id = apiRequest.params.id;
+                            }
+                            self.sensors = self.confManager.setData(CONF_MANAGER_KEY, apiRequest.data, self.sensors, self.comparator);
+                            resolve(new APIResponse.class(true, {success:true}));
+                        } else {
+                            reject(new APIResponse.class(false, {}, 8108, "Unexisting plugin found"));
+                        }
+                    } else {
+                        reject(new APIResponse.class(false, {}, 8107, "No plugin attached"));
+                    }
+                } else {
+                    reject(new APIResponse.class(false, {}, 8106, "No data request"));
+                }
+
+            });
         }
     }
 

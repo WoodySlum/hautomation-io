@@ -26,6 +26,8 @@ test:
 
 lint:
   stage: lint
+  only:
+    - master
   script:
   - npm run --verbose lint
 
