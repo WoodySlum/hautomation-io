@@ -147,9 +147,13 @@ function adminFormReady() {
                 }
             }).done(function(data) {
                 formData = data;
-                var divTable = document.getElementById(item + "table");
-                buttonAdd(item, divTable, formData);
-                drawSquareInterface(formData, item, divTable, item + "-set", item + "-del", item + "-set", item + "-del");
+                if (formData.data instanceof Array)  {
+                    var divTable = document.getElementById(item + "table");
+                    buttonAdd(item, divTable, formData);
+                    drawSquareInterface(formData, item, divTable, item + "-set", item + "-del", item + "-set", item + "-del");
+                } else {
+                    renderForm(item, divTable, formData.schema, formData.schemaUI, formData.data);
+                }
             }).fail(function(msg) {
                 setError(msg);
             });

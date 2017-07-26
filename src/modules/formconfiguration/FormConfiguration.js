@@ -129,7 +129,7 @@ class FormConfiguration {
         if (this.formClass) {
             // Get form
             if (apiRequest.route === this.formRoute) {
-                let form = self.formManager.getForm(self.formClass);
+                let form = self.getForm();
                 if (this.data) {
                     form.data = this.data;
                 } else {
@@ -179,6 +179,15 @@ class FormConfiguration {
      */
     getConfig() {
         return this.data;
+    }
+
+    /**
+     * Return the form
+     *
+     * @returns {Object} A formatted form object
+     */
+    getForm() {
+        return this.formManager.getForm(this.formClass);
     }
 }
 

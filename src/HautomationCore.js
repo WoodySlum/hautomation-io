@@ -20,6 +20,7 @@ var FormManager = require("./modules/formmanager/FormManager");
 var IconFormManager = require("./forms/IconFormManager");
 var DashboardManager = require("./modules/dashboardmanager/DashboardManager");
 var ThemeManager = require("./modules/thememanager/ThemeManager");
+var SensorsManager = require("./modules/sensorsmanager/SensorsManager");
 const CONFIGURATION_FILE = "data/config.json";
 var AppConfiguration = require("./../data/config.json");
 const events = require("events");
@@ -92,6 +93,8 @@ class HautomationCore {
         this.pluginsManager = new PluginsManager.class(this.confManager, this.webServices, this.servicesManager, this.dbManager, this.translateManager, this.formManager, this.timeEventService, this.schedulerService, this.dashboardManager, this.eventBus);
         // Device manager module
         this.deviceManager = new DeviceManager.class(this.confManager, this.formManager, this.webServices, this.radioManager, this.dashboardManager);
+        // Sensors manager module
+        this.sensorsManager = new SensorsManager.class(this.pluginsManager, this.eventBus, this.webServices, this.formManager, this.confManager);
 
         // Add services to manager
         this.servicesManager.add(this.webServices);

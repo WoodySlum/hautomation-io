@@ -12,6 +12,7 @@ var swalDefaults = {
 var toastr = {};
 
 $(document).ready(function() {
+    var Form = JSONSchemaForm.default;
     var ePassword = null;
     var isAdmin = false;
     var objects = '';
@@ -5053,7 +5054,7 @@ $(document).ready(function() {
         });
     }
 
-    $("#manageSensorsItem").click(function() {
+    /*$("#manageSensorsItem").click(function() {
         $("#sensorsLoader").show();
         showLoader();
         reqPluginList = $.ajax({
@@ -5221,40 +5222,29 @@ $(document).ready(function() {
             });
             hideLoader();
         });
-    });
+    });*/
 
     $("#addSensors").click(function() {
         $("#sensorsLoader").show();
         showLoader();
         reqPluginList = $.ajax({
-            type: "POST",
-            url: vUrl,
+            type: "GET",
+            url: vUrl + "sensors/available/get/",
             data: {
-                username: username,
-                ePassword: ePassword,
-                method: "getSensorPluginList"
+                u: username,
+                p: password
             }
-        }).done(function(msg) {
+        }).done(function(sensorsAvailableData) {
             $("#sensorsLoader").hide();
             $("#deleteSensorForm").hide();
-            // var jsonData = JSON.parse(msg);
-            var jsonData = JSON.parse(msg, function(key, value) {
-                if (value && (typeof value === 'string') && value.indexOf("function") === 0) {
-                    // we can only pass a function as string in JSON ==> doing a real function
-                    var jsFunc = new Function('return ' + value)();
-                    return jsFunc;
-                }
 
-                return value;
-            });
 
-            if (jsonData) {
+            if (sensorsAvailableData) {
                 var formContent = '<select id="sensorSelector" class="form-control">';
                 formContent = formContent + '<option value="">' + t('js.global.sensors.form.sensor.type.default', null) + '</option>';
-                var keys = Object.keys(jsonData);
 
-                for (var i = 0; i < keys.length; i++) {
-                    formContent = formContent + '<option value="' + keys[i] + '">' + jsonData[keys[i]].name + ' (' + jsonData[keys[i]].type + ')' + '</option>';
+                for (var i = 0; i < sensorsAvailableData.length; i++) {
+                    formContent = formContent + '<option value="' + i + '">' + sensorsAvailableData[i].description + '</option>';
                 }
 
                 formContent = formContent + '</select>';
@@ -5266,8 +5256,44 @@ $(document).ready(function() {
                 $('#sensorSelector').change(function() {
                     var key = $('#sensorSelector').val();
                     if (key == '') return;
+                    var sensorAvailableData = sensorsAvailableData[parseInt(key)];
+                    var self = this;
+                    ReactDOM.render(React.createElement(Form, {schema:sensorAvailableData.form.schema, uiSchema:sensorAvailableData.form.schemaUI, formData:{}, onSubmit: function(data) {
+                        $.ajax({
+                            type: "POST",
+                            url: vUrl + "sensor/set/",
+                            contentType: "application/json",
+                            data: JSON.stringify({
+                                u: username,
+                                p: password,
+                                data: data.formData
+                            })
+                        }).done(function(data) {
+                            // document.getElementById(prefix + "form").style.display = "none";
+                            // tableDiv.style.display = "block";
+                            // loadTiles();
+                        }).fail(function(msg) {
+                            setError(msg);
+                        });
+                    }},
+                    React.createElement(
+                      "button",
+                      { type: "button", className:"btn btn-info", onClick: function() {
+                          //loadTiles();
+                      }},
+                      "button.cancel"
+                  ),
+                    React.createElement(
+                      "button",
+                      { type: "submit", className:"btn btn-success" },
+                      "button.save"
+                  )), document.getElementById("sensorForm"));
+
+
+
+
                     // Display sensor form
-                    $("#saveSensorForm").unbind();
+                    /*$("#saveSensorForm").unbind();
                     $("#saveSensorForm").click(function() {
                         $("#sensorForm").submit();
                     });
@@ -5310,7 +5336,7 @@ $(document).ready(function() {
                                 });
                             }
                         }
-                    });
+                    });*/
                 });
             }
             hideLoader();

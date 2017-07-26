@@ -112,19 +112,24 @@ class ConfManager {
      *
      * @param  {class} classType The object class. This class MUST implement a json() method to process JSON to Object mapping
      * @param  {string} key A file store key
-     * @returns {Array}      An array of objects (instance of classType)
+     * @param  {Boolean} [disableClassMapping=false] Disable class mapping
+     * @returns {Array}      An array of objects (instance of classType), or an object
      */
-    loadData(classType, key) {
+    loadData(classType, key, disableClassMapping = false) {
         const content = this.readFile(this.getFilePath(key));
 
         if (content != null && content instanceof Array) {
             let results = [];
             content.forEach((element) => {
-                let o = new classType();
-                if (typeof o.json === "function") {
-                    results.push(o.json(element));
+                if (!disableClassMapping) {
+                    let o = new classType();
+                    if (typeof o.json === "function") {
+                        results.push(o.json(element));
+                    } else {
+                        throw Error(ERROR_NO_JSON_METHOD);
+                    }
                 } else {
-                    throw Error(ERROR_NO_JSON_METHOD);
+                    results.push(element);
                 }
             });
             return results;
@@ -175,7 +180,7 @@ class ConfManager {
             } catch (e) {
                 Logger.verbose(e.message);
             }
-            
+
             datas.push(object);
             this.saveData(datas, key);
             return datas;

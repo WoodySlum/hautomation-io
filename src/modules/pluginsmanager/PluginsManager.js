@@ -24,7 +24,10 @@ const ERROR_DEPENDENCY_NOT_FOUND = "Dependency not found";
 const INTERNAL_PLUGINS = [
     "rflink",
     "radio",
-    "sample"
+    "sample",
+    "sensor",
+    "temperature-sensor",
+    "esp-temperature-sensor"
 ];
 
 /**
@@ -240,12 +243,13 @@ class PluginsManager {
      * Get plugin per gategory
      *
      * @param  {string} category A category
+     * @param  {boolean} [checkInstance=true] True if return with instance, false otherwise. If set to true (default), it will check that there is an instance. False for testing is recommended.
      * @returns {Array}          An array of plugins
      */
-    getPluginsByCategory(category) {
+    getPluginsByCategory(category, checkInstance = true) {
         let plugins = [];
         this.plugins.forEach((plugin) => {
-            if (plugin.category.toLowerCase() === category.toLowerCase() && plugin.instance) {
+            if (plugin.category.toLowerCase() === category.toLowerCase() && (!checkInstance || (checkInstance && plugin.instance))) {
                 plugins.push(plugin);
             }
         });
