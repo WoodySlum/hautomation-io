@@ -39,7 +39,7 @@ class FormConfiguration {
         this.formRoute = ":/" + ROUTE_BASE_PATH + "/" + this.name + "/" + ROUTE_BASE_FORM + "/";
         this.getRoute = ":/" + ROUTE_BASE_PATH + "/" + this.name + "/" + ROUTE_BASE_GET + "/";
         this.setRoute = ":/" + ROUTE_BASE_PATH + "/" + this.name + "/" + ROUTE_BASE_SET + "/";
-        this.delRoute = ":/" + ROUTE_BASE_PATH + "/" + this.name + "/" + ROUTE_BASE_DEL + "/[id*]";
+        this.delRoute = ":/" + ROUTE_BASE_PATH + "/" + this.name + "/" + ROUTE_BASE_DEL + "/[id*]/";
 
 
         this.webServices.registerAPI(this, WebServices.GET, this.formRoute, Authentication.AUTH_ADMIN_LEVEL);

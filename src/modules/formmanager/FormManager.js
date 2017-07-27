@@ -104,12 +104,16 @@ class FormManager {
         let c = cl.toString();
         // Extend class lookup
         // Classic regex : class A extends B {
-        const regex = /(extends)([ ]+)(.*)([ ]+)({)/g;
+        // ;
+        console.log("--------------------");
+        console.log(c);
+        console.log("--------------------");
+        const regex = /(extends)([ ]+)([a-zA-Z\.]*)([ ]*)(\{)/g;
         let regexRes = regex.exec(c);
         let parent = null;
 
         if (regexRes && regexRes.length > 3) {
-            const extendExploded = regexRes[3].split(".");
+            const extendExploded = regexRes[3].trim().split(".");
             if (extendExploded.length > 0) {
           	   if (extendExploded[extendExploded.length - 1].toLowerCase() !== "class") {
             	   parent = extendExploded[extendExploded.length - 1];

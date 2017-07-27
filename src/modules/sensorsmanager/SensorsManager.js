@@ -11,6 +11,8 @@ const SENSORS_MANAGER_AVAILABLE_GET = ":/sensors/available/get/";
 const SENSORS_MANAGER_POST_BASE = ":/sensors/set";
 const SENSORS_MANAGER_POST = SENSORS_MANAGER_POST_BASE + "/[id*]/";
 const SENSORS_MANAGER_GET = ":/sensors/get/";
+const SENSORS_MANAGER_DEL_BASE = ":/sensors/del";
+const SENSORS_MANAGER_DEL = SENSORS_MANAGER_DEL_BASE + "/[id*]/";
 
 /**
  * This class allows to manage sensors
@@ -48,6 +50,7 @@ class SensorsManager {
         this.webServices.registerAPI(this, WebServices.GET, SENSORS_MANAGER_AVAILABLE_GET, Authentication.AUTH_ADMIN_LEVEL);
         this.webServices.registerAPI(this, WebServices.GET, SENSORS_MANAGER_GET, Authentication.AUTH_ADMIN_LEVEL);
         this.webServices.registerAPI(this, WebServices.POST, SENSORS_MANAGER_POST, Authentication.AUTH_ADMIN_LEVEL);
+        this.webServices.registerAPI(this, WebServices.DELETE, SENSORS_MANAGER_DEL, Authentication.AUTH_ADMIN_LEVEL);
     }
 
     /**
@@ -91,7 +94,8 @@ class SensorsManager {
                     sensors.push({
                         identifier: sensor.id,
                         name: sensor.name,
-                        icon: "",
+                        icon: "E8BC",
+                        category:"TEST",
                         form:Object.assign(self.formManager.getForm(sensorPlugin.sensorAPI.form), {data:sensor})
                     });
                 });
@@ -103,11 +107,12 @@ class SensorsManager {
                     if (apiRequest.data.plugin) {
                         if (self.pluginsManager.getPluginByIdentifier(apiRequest.data.plugin, false)) {
                             // Set id
-                            if (!apiRequest.params.id && !apiRequest.data.id) {
+                            if (!apiRequest.data.id) {
                                 apiRequest.data.id = DateUtils.class.timestamp();
-                            } else if (!apiRequest.params.id) {
-                                apiRequest.data.id = apiRequest.params.id;
+                            } else {
+                                apiRequest.data.id = parseInt(apiRequest.data.id);
                             }
+
                             self.sensors = self.confManager.setData(CONF_MANAGER_KEY, apiRequest.data, self.sensors, self.comparator);
                             resolve(new APIResponse.class(true, {success:true}));
                         } else {
@@ -120,6 +125,16 @@ class SensorsManager {
                     reject(new APIResponse.class(false, {}, 8106, "No data request"));
                 }
 
+            });
+        } else if (apiRequest.route.startsWith(SENSORS_MANAGER_DEL_BASE)) {
+
+            return new Promise((resolve, reject) => {
+                try {
+                    self.confManager.removeData(CONF_MANAGER_KEY, {id:parseInt(apiRequest.data.id)}, self.sensors, self.comparator);
+                    resolve(new APIResponse.class(true, {success:true}));
+                } catch(e) {
+                    reject(new APIResponse.class(false, {}, 8109, e.message));
+                }
             });
         }
     }
