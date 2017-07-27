@@ -105,9 +105,6 @@ class FormManager {
         // Extend class lookup
         // Classic regex : class A extends B {
         // ;
-        console.log("--------------------");
-        console.log(c);
-        console.log("--------------------");
         const regex = /(extends)([ ]+)([a-zA-Z\.]*)([ ]*)(\{)/g;
         let regexRes = regex.exec(c);
         let parent = null;
