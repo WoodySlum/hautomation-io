@@ -19,6 +19,7 @@ class SensorAPI {
         PrivateProperties.oprivate(this).formManager = formManager;
         PrivateProperties.oprivate(this).plugin = plugin;
         this.form = null;
+        this.sensorClass = null;
     }
     /* eslint-enable */
 
@@ -32,6 +33,16 @@ class SensorAPI {
         this.form = formClass;
         PrivateProperties.oprivate(this).formManager.registerWithAdditionalFields(formClass,{plugin:[{ key: "Type", value: "string" },{ key: "Hidden", value: true },{ key: "Default", value: PrivateProperties.oprivate(this).plugin.identifier}]}, ...inject);
         PrivateProperties.oprivate(this).plugin.exportClass(formClass);
+    }
+
+    /**
+     * Register a sensor class
+     *
+     * @param  {Class} c A sensor extended class
+     */
+    registerClass(c) {
+        this.sensorClass = c;
+        PrivateProperties.oprivate(this).plugin.exportClass(c);
     }
 }
 

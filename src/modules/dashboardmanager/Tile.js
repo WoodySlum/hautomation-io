@@ -37,9 +37,9 @@ class Tile {
         this.identifier = identifier;
         this.type = type;
         this.icon = icon;
-        this.subIcon = subIcon;
-        this.text = text;
-        this.subText = subText;
+        this.subicon = subIcon;
+        this.text = text?text.toString():null;
+        this.subtext = subText?subText.toString():null;
         this.picture = picture;
         this.pictures = pictures;
         this.status = status;

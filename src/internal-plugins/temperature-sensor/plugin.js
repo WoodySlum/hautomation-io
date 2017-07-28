@@ -3,18 +3,6 @@
 function loaded(api) {
     api.init();
 
-    /**
-     * This class is overloaded by sensors
-     * @class
-     */
-    class TemperatureSensor extends api.exported.Sensor {
-        constructor(api) {
-            super(api);
-        }
-    }
-
-    api.exportClass(TemperatureSensor);
-
     class TemperatureSensorForm extends api.exported.SensorForm {
         constructor(id, plugin, name, dashboard, statistics, dashboardColor, statisticsColor, unit) {
             super(id, plugin, name, dashboard, statistics, dashboardColor, statisticsColor);
@@ -36,6 +24,29 @@ function loaded(api) {
     }
 
     api.sensorAPI.registerForm(TemperatureSensorForm);
+
+    /**
+     * This class is overloaded by sensors
+     * @class
+     */
+    class TemperatureSensor extends api.exported.Sensor {
+        constructor(api, id, configuration) {
+            super(api, id, configuration, api.exported.Icons.class.list()["uniF2C8"], 1);
+            this.setUnit(configuration.unit);
+        }
+
+        setUnit(unit) {
+            this.unit = "°C";
+            if (unit === "far") {
+                this.unit = "°F";
+                this.unitConverter = (value) => {
+                    return value * (9/5) + 32;
+                }
+            }
+        }
+    }
+
+    api.sensorAPI.registerClass(TemperatureSensor);
 }
 
 module.exports.attributes = {

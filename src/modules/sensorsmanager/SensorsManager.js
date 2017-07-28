@@ -34,11 +34,12 @@ class SensorsManager {
         this.webServices = webServices;
         this.formManager = formManager;
         this.confManager = confManager;
+        this.sensors = [];
         try {
-            this.sensors = this.confManager.loadData(Object, CONF_MANAGER_KEY, true);
+            this.sensorsConfiguration = this.confManager.loadData(Object, CONF_MANAGER_KEY, true);
         } catch(e) {
             Logger.warn(e.message);
-            this.sensors= [];
+            this.sensorsConfiguration= [];
         }
 
         const self = this;
@@ -62,6 +63,43 @@ class SensorsManager {
      */
     pluginsLoaded(pluginsManager, context) {
         context.pluginsManager = pluginsManager;
+        context.initSensors();
+    }
+
+    /**
+     * Initialize sensors
+     */
+    initSensors() {
+        this.sensors = [];
+        this.sensorsConfiguration.forEach((sensorConfiguration) => {
+            this.initSensor(sensorConfiguration);
+        });
+    }
+
+    /**
+     * Init a sensor instance and add to local array
+     *
+     * @param  {Object} configuration The sensor configuration
+     */
+    initSensor(configuration) {
+        if (configuration.plugin) {
+            const p = this.pluginsManager.getPluginByIdentifier(configuration.plugin, false);
+            if (p) {
+                if (p.sensorAPI.sensorClass) {
+                    const sensor = new p.sensorAPI.sensorClass(p, configuration.id, configuration);
+                    sensor.init();
+                    this.sensors.push(sensor);
+
+                    Logger.info("Sensor '" + configuration.name + "' loaded (#" + configuration.id + ")");
+                } else {
+                    Logger.err("Plugin " + configuration.plugin + " does not have linked sensor class");
+                }
+            } else {
+                Logger.err("Plugin " + configuration.plugin + " can not be found");
+            }
+        } else {
+            Logger.err("No plugin associated found for sensor " + configuration.name);
+        }
     }
 
     /**
@@ -89,7 +127,7 @@ class SensorsManager {
         } else if (apiRequest.route === SENSORS_MANAGER_GET) {
             return new Promise((resolve) => {
                 const sensors = [];
-                this.sensors.forEach((sensor) => {
+                self.sensorsConfiguration.forEach((sensor) => {
                     const sensorPlugin = self.pluginsManager.getPluginByIdentifier(sensor.plugin, false);
                     sensors.push({
                         identifier: sensor.id,
@@ -113,7 +151,8 @@ class SensorsManager {
                                 apiRequest.data.id = parseInt(apiRequest.data.id);
                             }
 
-                            self.sensors = self.confManager.setData(CONF_MANAGER_KEY, apiRequest.data, self.sensors, self.comparator);
+                            self.sensorsConfiguration = self.confManager.setData(CONF_MANAGER_KEY, apiRequest.data, self.sensorsConfiguration, self.comparator);
+                            self.initSensors();
                             resolve(new APIResponse.class(true, {success:true}));
                         } else {
                             reject(new APIResponse.class(false, {}, 8108, "Unexisting plugin found"));
@@ -127,10 +166,10 @@ class SensorsManager {
 
             });
         } else if (apiRequest.route.startsWith(SENSORS_MANAGER_DEL_BASE)) {
-
             return new Promise((resolve, reject) => {
                 try {
-                    self.confManager.removeData(CONF_MANAGER_KEY, {id:parseInt(apiRequest.data.id)}, self.sensors, self.comparator);
+                    self.confManager.removeData(CONF_MANAGER_KEY, {id:parseInt(apiRequest.data.id)}, self.sensorsConfiguration, self.comparator);
+                    self.initSensors();
                     resolve(new APIResponse.class(true, {success:true}));
                 } catch(e) {
                     reject(new APIResponse.class(false, {}, 8109, e.message));

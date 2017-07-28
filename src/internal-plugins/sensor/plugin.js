@@ -96,24 +96,203 @@ function loaded(api) {
 
     api.sensorAPI.registerForm(SensorForm);
 
+    // Constants
+    const AGGREGATION_MODE_AVG = 0;
+    const AGGREGATION_MODE_SUM = 1;
+    const AGGREGATION_MODE_MIN = 2;
+    const AGGREGATION_MODE_MAX = 3;
+
+    const DEFAULT_DASHBOARD_AGGREGATION_GRANULARITY = 3600;
+
     /**
      * This class is overloaded by sensors
      * @class
      */
     class Sensor {
-        constructor(api) {
+        constructor(api, id = null, configuration = null, icon = null, round = 0, unit = null, aggregationMode = AGGREGATION_MODE_AVG, dashboardGranularity = DEFAULT_DASHBOARD_AGGREGATION_GRANULARITY) {
             this.api = api;
             this.api.databaseAPI.register(DbSensor);
             this.dbHelper = this.api.databaseAPI.dbHelper(DbSensor);
+            this.icon = icon;
+            this.id = id;
+            this.configuration = configuration;
+            this.aggregationMode = aggregationMode;
+            this.dashboardGranularity = dashboardGranularity;
+
+            if (!this.id && !this.configuration) {
+                throw Error("Sensor does not have configuration or identifier !");
+            }
+            this.unitConverter = null;
+            this.unit = unit;
+            this.unitAggregation = {};
+            this.round = round;
         }
 
+        static constants() {
+            return {AGGREGATION_MODE_AVG:AGGREGATION_MODE_AVG, AGGREGATION_MODE_SUM:AGGREGATION_MODE_SUM, AGGREGATION_MODE_MIN:AGGREGATION_MODE_MIN, AGGREGATION_MODE_MAX:AGGREGATION_MODE_MAX};
+        }
+
+        /**
+         * Needs to be call when sensor is ready
+         */
+        init() {
+            // Check for unit
+            if (!this.unit) {
+                throw Error("No unit set for sensor " + this.configuration.name + " (#" + this.id + ")");
+            }
+
+            // Update tile
+            this.updateTile();
+        }
+
+        /**
+         * Add a unit aggregation
+         *
+         * @param {String} unitName              The unit's name
+         * @param {Number} [lowThreshold=0] A low limit threshold. From this limit the unitName will be used
+         */
+        addUnitAggregation(unitName, lowThreshold = 0) {
+            this.unitAggregation[lowThreshold] = unitName;
+        }
+
+        aggregateUnit(value) {
+            let thresholdsKeys = Object.keys(this.unitAggregation);
+            // Sort ascending threshold
+            thresholdsKeys = thresholdsKeys.sort((threshold1, threshold2) => {
+              return parseFloat(threshold1) - parseFloat(threshold2);
+            });
+
+            let unit = this.unit;
+            let aggregatedValue = value;
+            thresholdsKeys.forEach((thresholdKey) => {
+                const threshold = parseFloat(thresholdKey);
+                if (value >= threshold) {
+                    unit = this.unitAggregation[thresholdKey];
+                    aggregatedValue = value / threshold;
+                }
+            });
+
+            return {value:aggregatedValue, unit:unit};
+        }
+
+
+        /**
+         *Convert a value depending unit, unit converter and aggregation engine
+         *
+         * @param  {number} value A value
+         * @returns {Object}       An object with two properties (value, unit)
+         */
+        convertValue(value) {
+            // Convert to float
+            value = parseFloat(value);
+
+            // Convert unit
+            if (this.unitConverter) {
+                value = this.unitConverter(value);
+            }
+
+            // Aggregation unit
+            const aggregated = this.aggregateUnit(value);
+
+            // Round
+            value = aggregated.value.toFixed(this.round);
+
+            return {value:value, unit:aggregated.unit};
+        }
+
+        /**
+         * Retrieve last object from database.
+         * If duration is passed, the aggregation will be done base on parameters and duration.
+         *
+         * @param  {Function} cb              A callback e.g. `(err, res) => {}`
+         * @param  {Number}   [duration=null] A duration in seconds. If null or not provided, will provide last inserted database value.
+         */
+        lastObject(cb, duration = null) {
+            let operator = null;
+            switch(this.aggregationMode) {
+                case AGGREGATION_MODE_AVG:
+                    operator = this.dbHelper.Operators().AVG;
+                break;
+                case AGGREGATION_MODE_SUM:
+                    operator = this.dbHelper.Operators().SUM;
+                break;
+                case AGGREGATION_MODE_MAX:
+                    operator = this.dbHelper.Operators().MAX;
+                break;
+                case AGGREGATION_MODE_MIN:
+                    operator = this.dbHelper.Operators().MIN;
+                break;
+            }
+
+            let lastObjectRequest;
+            if (duration) {
+                lastObjectRequest = this.dbHelper.RequestBuilder()
+                                                        .selectOp(operator, "value")
+                                                        .selectOp(this.dbHelper.Operators().MIN, "vcc")
+                                                        .where("sensorId", this.dbHelper.Operators().EQ, this.id)
+                                                        .where(this.dbHelper.Operators().FIELD_TIMESTAMP, this.dbHelper.Operators().GTE, (this.api.exported.DateUtils.class.timestamp() - duration))
+                                                        .where(this.dbHelper.Operators().FIELD_TIMESTAMP, this.dbHelper.Operators().LTE, this.api.exported.DateUtils.class.timestamp())
+                                                        .order(this.dbHelper.Operators().DESC, this.dbHelper.Operators().FIELD_TIMESTAMP)
+                                                        .first();
+            } else {
+                lastObjectRequest = this.dbHelper.RequestBuilder()
+                                                        .select()
+                                                        .selectOp(this.dbHelper.Operators().MIN, "vcc")
+                                                        .where("sensorId", this.dbHelper.Operators().EQ, this.id)
+                                                        .order(this.dbHelper.Operators().DESC, this.dbHelper.Operators().FIELD_TIMESTAMP)
+                                                        .first();
+            }
+
+            this.dbHelper.getObjects(lastObjectRequest, (err, res) => {
+                if (!err && res.length === 1) {
+                    const lastObject = res[0];
+                    cb(null, lastObject);
+                } else {
+                    if (err) {
+                        cb(err, null);
+                    } else {
+                        cb(Error("No results"), null);
+                    }
+                }
+            });
+        }
+
+        /**
+         * Update tile and register to dashboard
+         */
+        updateTile() {
+            this.lastObject((err, lastObject) => {
+                if (!err) {
+                    const convertedValue = this.convertValue(lastObject.value);
+                    const tile = this.api.dashboardAPI.Tile("sensor-"+this.id, this.api.dashboardAPI.TileType().TILE_INFO_TWO_TEXT, this.icon, null, this.configuration.name, convertedValue.value + convertedValue.unit);
+                    if (this.configuration.dashboardColor) {
+                        tile.colors.colorDefault = this.configuration.dashboardColor;
+                    }
+                    this.api.dashboardAPI.registerTile(tile);
+                } else {
+                    this.api.dashboardAPI.registerTile("sensor-"+this.id);
+                }
+            }, this.dashboardGranularity);
+        }
+
+        /**
+         * Set a value and store in database
+         *
+         * @param {number} value      A value
+         * @param {number} [vcc=null] A voltage level
+         */
         setValue(value, vcc = null) {
-            const dbObject = new DbSensor(this.dbHelper, value, vcc);
-            dbObject.save();
+            const currentObject = new DbSensor(this.dbHelper, value, this.id, vcc);
+            this.api.Logger.info("New value received for sensor " + this.configuration.name + "(#" + this.id + "). Value : " + value + ", vcc : " + vcc);
+            currentObject.save((err) => {
+                if (!err) {
+                    this.updateTile();
+                }
+            });
         }
     }
 
-    api.exportClass(Sensor);
+    api.sensorAPI.registerClass(Sensor);
 }
 
 module.exports.attributes = {

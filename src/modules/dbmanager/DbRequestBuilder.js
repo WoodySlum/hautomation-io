@@ -68,28 +68,30 @@ class DbRequestBuilder {
      * @returns {string}     Escaped output
      */
     escapeString(val) {
-        val = val.replace(/[\0\n\r\b\t\\'\x1a]/g, function (s) { // eslint-disable-line no-control-regex
-            switch (s) {
-            case "\0":
-                return "\\0";
-            case "\n":
-                return "\\n";
-            case "\r":
-                return "\\r";
-            case "\b":
-                return "\\b";
-            case "\t":
-                return "\\t";
-            case "\x1a":
-                return "\\Z";
-            case "'":
-                return "''";
-            // case '"': // eslint-disable-line quotes
-            //     return '""'; // eslint-disable-line quotes
-            default:
-                return "\\" + s;
-            }
-        });
+        if (val && typeof val === "string") {
+            val = val.replace(/[\0\n\r\b\t\\'\x1a]/g, function (s) { // eslint-disable-line no-control-regex
+                switch (s) {
+                case "\0":
+                    return "\\0";
+                case "\n":
+                    return "\\n";
+                case "\r":
+                    return "\\r";
+                case "\b":
+                    return "\\b";
+                case "\t":
+                    return "\\t";
+                case "\x1a":
+                    return "\\Z";
+                case "'":
+                    return "''";
+                // case '"': // eslint-disable-line quotes
+                //     return '""'; // eslint-disable-line quotes
+                default:
+                    return "\\" + s;
+                }
+            });
+        }
         return val;
     }
 
@@ -101,7 +103,7 @@ class DbRequestBuilder {
      * @returns {string}       The encapsulated value
      */
     getValueEncapsulated(value, meta) {
-        if (value && (meta.type === "int" || meta.type === "float" || meta.type === "double" || meta.type === "timestamp")) {
+        if (value && (meta.type === "number" || meta.type === "int" || meta.type === "float" || meta.type === "double" || meta.type === "timestamp")) {
             return value;
         } else if (value && (meta.type === "date" || meta.type === "datetime" || meta.type === "string")) {
             return "'" + this.escapeString(value) + "'";
@@ -345,7 +347,13 @@ class DbRequestBuilder {
      * @returns {DbRequestBuilder}     The instance
      */
     where(field, operator, value) {
-        this.whereList.push(field + " " + operator + " " + this.getValueEncapsulated(value, this.getMetaForField(field)));
+        const meta = this.getMetaForField(field);
+        if (meta.type === "timestamp") {
+            this.whereList.push("CAST(strftime('%s', " + field + ") AS NUMERIC) " + operator + " " + this.getValueEncapsulated(value, meta));
+        } else {
+            this.whereList.push(field + " " + operator + " " + this.getValueEncapsulated(value, meta));
+        }
+
         return this;
     }
 
@@ -418,10 +426,10 @@ class DbRequestBuilder {
     /**
      * Will return the first `length` results
      *
-     * @param  {int} length The number of database items to retrieve from the start
+     * @param  {int} [length = 1] The number of database items to retrieve from the start
      * @returns {DbRequestBuilder}     The instance
      */
-    first(length) {
+    first(length = 1) {
         this.limit = [];
         this.limit.push(0);
         this.limit.push(length);
