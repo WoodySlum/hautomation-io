@@ -25,6 +25,12 @@ const CONFIGURATION_FILE = "data/config.json";
 var AppConfiguration = require("./../data/config.json");
 const events = require("events");
 
+// For testing only
+if (process.env.TEST) {
+    AppConfiguration.configurationPath = "/tmp/data/";
+    AppConfiguration.db= "/tmp/data/database.db";
+}
+
 const EVENT_STOP = "stop";
 
 /**
@@ -142,7 +148,7 @@ class HautomationCore {
      */
     configurationLoader() {
         let confPath = path.resolve() + "/" + CONFIGURATION_FILE;
-        if (fs.existsSync(confPath)) {
+        if (fs.existsSync(confPath) && !process.env.TEST) {
             Logger.info("Main configuration found, overloading");
             AppConfiguration = JSON.parse(fs.readFileSync(confPath));
         } else {
