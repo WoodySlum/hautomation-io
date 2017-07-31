@@ -1,7 +1,7 @@
 
 var HautomationCore = require("./src/HautomationCore");
 
-var core = new HautomationCore();
+var core = new HautomationCore.class();
 core.start();
 
 process.on("SIGINT", function () {

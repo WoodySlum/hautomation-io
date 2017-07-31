@@ -103,7 +103,7 @@ class DbRequestBuilder {
      * @returns {string}       The encapsulated value
      */
     getValueEncapsulated(value, meta) {
-        if (value && (meta.type === "number" || meta.type === "int" || meta.type === "float" || meta.type === "double" || meta.type === "timestamp")) {
+        if (value && (meta.type === "number" || meta.type === "int" || meta.type === "float" || meta.type === "double" || meta.type === "timestamp")) {
             return value;
         } else if (value && (meta.type === "date" || meta.type === "datetime" || meta.type === "string")) {
             return "'" + this.escapeString(value) + "'";
@@ -426,7 +426,7 @@ class DbRequestBuilder {
     /**
      * Will return the first `length` results
      *
-     * @param  {int} [length = 1] The number of database items to retrieve from the start
+     * @param  {int} [length=1] The number of database items to retrieve from the start
      * @returns {DbRequestBuilder}     The instance
      */
     first(length = 1) {

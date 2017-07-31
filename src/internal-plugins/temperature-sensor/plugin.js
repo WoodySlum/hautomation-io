@@ -41,7 +41,7 @@ function loaded(api) {
                 this.unit = "°F";
                 this.unitConverter = (value) => {
                     return value * (9/5) + 32;
-                }
+                };
             }
         }
     }

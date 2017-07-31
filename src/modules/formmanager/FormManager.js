@@ -112,10 +112,10 @@ class FormManager {
         if (regexRes && regexRes.length > 3) {
             const extendExploded = regexRes[3].trim().split(".");
             if (extendExploded.length > 0) {
-          	   if (extendExploded[extendExploded.length - 1].toLowerCase() !== "class") {
-            	   parent = extendExploded[extendExploded.length - 1];
+                if (extendExploded[extendExploded.length - 1].toLowerCase() !== "class") {
+                    parent = extendExploded[extendExploded.length - 1];
                 } else if (extendExploded.length > 1) {
-        			if (extendExploded[extendExploded.length - 2].toLowerCase() !== "class") {
+                    if (extendExploded[extendExploded.length - 2].toLowerCase() !== "class") {
                         parent = extendExploded[extendExploded.length - 2];
                     }
                 }

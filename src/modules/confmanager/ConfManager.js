@@ -17,9 +17,11 @@ class ConfManager {
      * Constructor
      *
      * @param  {AppConfiguration} appConfiguration The app configuration object
+     * @param  {EventEmitter} eventBus    The global event bus
+     * @param  {string} stopEventName    The stop event name
      * @returns {ConfManager} The instance
      */
-    constructor(appConfiguration) {
+    constructor(appConfiguration, eventBus, stopEventName) {
         /**
          * App configuration
          * @type {Object}
@@ -30,6 +32,16 @@ class ConfManager {
          * @type {fs}
          */
         this.fs = fs;
+        this.toBeSaved = {};
+
+        // Write file on stop core
+        const self = this;
+
+        if (eventBus) {
+            eventBus.on(stopEventName, (param) => {
+                self.writeDataToDisk(self, false);
+            });
+        }
     }
 
     /**
@@ -100,9 +112,30 @@ class ConfManager {
      * @param  {string} key A file store key
      */
     saveData(data, key) {
-        this.fs.writeFile(this.getFilePath(key), JSON.stringify(data), (err) => {
-            if (err) {
-                Logger.err(err);
+        this.toBeSaved[key] = JSON.stringify(data);
+    }
+
+    /**
+     * Write data to disk
+     *
+     * @param  {ConfManager}  context      A conf manager instance, context, typically `this`
+     * @param  {Boolean} [async=true] True if save asynchronously, false otherwise
+     */
+    writeDataToDisk(context, async = true) {
+        const keys = Object.keys(context.toBeSaved);
+        keys.forEach((key) => {
+            if (async) {
+                context.fs.writeFile(context.getFilePath(key), context.toBeSaved[key], (err) => {
+                    if (err) {
+                        Logger.err(err);
+                    }
+                });
+            } else {
+                try {
+                    context.fs.writeFileSync(context.getFilePath(key), context.toBeSaved[key]);
+                } catch(e) {
+                    Logger.err(e.message);
+                }
             }
         });
     }

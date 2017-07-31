@@ -4,7 +4,7 @@ var expect = chai.expect;
 var sinon = require("sinon");
 
 var DashboardManager = require("./../../../src/modules/dashboardmanager/DashboardManager");
-const HautomationCore = require("./../../../src/HautomationCore");
+const HautomationCore = require("./../../../src/HautomationCore").class;
 const Tile = require("./../../../src/modules/dashboardmanager/Tile");
 const core = new HautomationCore();
 

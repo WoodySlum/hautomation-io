@@ -262,7 +262,7 @@ function loaded(api) {
          */
         updateTile() {
             this.lastObject((err, lastObject) => {
-                if (!err) {
+                if (!err && lastObject.value) {
                     const convertedValue = this.convertValue(lastObject.value);
                     const tile = this.api.dashboardAPI.Tile("sensor-"+this.id, this.api.dashboardAPI.TileType().TILE_INFO_TWO_TEXT, this.icon, null, this.configuration.name, convertedValue.value + convertedValue.unit);
                     if (this.configuration.dashboardColor) {
@@ -270,7 +270,7 @@ function loaded(api) {
                     }
                     this.api.dashboardAPI.registerTile(tile);
                 } else {
-                    this.api.dashboardAPI.registerTile("sensor-"+this.id);
+                    this.api.dashboardAPI.unregisterTile("sensor-"+this.id);
                 }
             }, this.dashboardGranularity);
         }
@@ -283,12 +283,16 @@ function loaded(api) {
          */
         setValue(value, vcc = null) {
             const currentObject = new DbSensor(this.dbHelper, value, this.id, vcc);
-            this.api.Logger.info("New value received for sensor " + this.configuration.name + "(#" + this.id + "). Value : " + value + ", vcc : " + vcc);
+            this.api.exported.Logger.info("New value received for sensor " + this.configuration.name + "(#" + this.id + "). Value : " + value + ", vcc : " + vcc);
             currentObject.save((err) => {
                 if (!err) {
                     this.updateTile();
                 }
             });
+        }
+
+        getStatistics(timestampBegin, timestampEnd, granularity) {
+
         }
     }
 

@@ -25,6 +25,8 @@ const CONFIGURATION_FILE = "data/config.json";
 var AppConfiguration = require("./../data/config.json");
 const events = require("events");
 
+const EVENT_STOP = "stop";
+
 /**
  * The main class for core.
  * @class
@@ -78,7 +80,7 @@ class HautomationCore {
         this.pluginsManager = null;
 
         // ConfManager module
-        this.confManager = new ConfManager.class(AppConfiguration);
+        this.confManager = new ConfManager.class(AppConfiguration, this.eventBus, EVENT_STOP);
         // UserManager module
         this.userManager = new UserManager.class(this.confManager);
         // Authentication module
@@ -100,6 +102,10 @@ class HautomationCore {
         this.servicesManager.add(this.webServices);
         this.servicesManager.add(this.timeEventService);
         this.servicesManager.add(this.schedulerService);
+
+        if (this.eventBus) {
+            this.eventBus.emit(EVENT_STOP, {});
+        }
     }
 
     /**
@@ -125,6 +131,10 @@ class HautomationCore {
         } catch(e) {
             Logger.err("Could not stop services : " + e.message);
         }
+
+        if (this.eventBus) {
+            this.eventBus.emit(EVENT_STOP, {});
+        }
     }
 
     /**
@@ -141,4 +151,4 @@ class HautomationCore {
     }
 }
 
-module.exports = HautomationCore;
+module.exports = {class:HautomationCore, EVENT_STOP:EVENT_STOP};
