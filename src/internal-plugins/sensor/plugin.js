@@ -102,14 +102,24 @@ function loaded(api) {
     const AGGREGATION_MODE_MIN = 2;
     const AGGREGATION_MODE_MAX = 3;
 
-    const DEFAULT_DASHBOARD_AGGREGATION_GRANULARITY = 3600;
+    const GRANULARITY_MINUTE = 60;
+    const GRANULARITY_HOUR = 60 * 60;
+    const GRANULARITY_DAY = 24 * 60 * 60;
+    const GRANULARITY_MONTH = 31 * 24 * 60 * 60;
+    const GRANULARITY_YEAR = 360 * 31 * 24 * 60 * 60;
+
+    const DEFAULT_DASHBOARD_AGGREGATION_GRANULARITY = GRANULARITY_HOUR;
+    const MAX_STATISTICS_COUNT = 10000;
+
+    const CHART_TYPE_LINE = "line";
+    const CHART_TYPE_BAR = "bar";
 
     /**
      * This class is overloaded by sensors
      * @class
      */
     class Sensor {
-        constructor(api, id = null, configuration = null, icon = null, round = 0, unit = null, aggregationMode = AGGREGATION_MODE_AVG, dashboardGranularity = DEFAULT_DASHBOARD_AGGREGATION_GRANULARITY) {
+        constructor(api, id = null, configuration = null, icon = null, round = 0, unit = null, aggregationMode = AGGREGATION_MODE_AVG, dashboardGranularity = DEFAULT_DASHBOARD_AGGREGATION_GRANULARITY, chartType = CHART_TYPE_LINE) {
             this.api = api;
             this.api.databaseAPI.register(DbSensor);
             this.dbHelper = this.api.databaseAPI.dbHelper(DbSensor);
@@ -118,6 +128,7 @@ function loaded(api) {
             this.configuration = configuration;
             this.aggregationMode = aggregationMode;
             this.dashboardGranularity = dashboardGranularity;
+            this.chartType = chartType;
 
             if (!this.id && !this.configuration) {
                 throw Error("Sensor does not have configuration or identifier !");
@@ -128,8 +139,15 @@ function loaded(api) {
             this.round = round;
         }
 
+        /**
+         * Access to constants
+         *
+         * @return {Object} A list of constants
+         */
         static constants() {
-            return {AGGREGATION_MODE_AVG:AGGREGATION_MODE_AVG, AGGREGATION_MODE_SUM:AGGREGATION_MODE_SUM, AGGREGATION_MODE_MIN:AGGREGATION_MODE_MIN, AGGREGATION_MODE_MAX:AGGREGATION_MODE_MAX};
+            return {AGGREGATION_MODE_AVG:AGGREGATION_MODE_AVG, AGGREGATION_MODE_SUM:AGGREGATION_MODE_SUM, AGGREGATION_MODE_MIN:AGGREGATION_MODE_MIN, AGGREGATION_MODE_MAX:AGGREGATION_MODE_MAX,
+                    GRANULARITY_MINUTE:GRANULARITY_MINUTE, GRANULARITY_HOUR:GRANULARITY_HOUR, GRANULARITY_DAY:GRANULARITY_DAY, GRANULARITY_MONTH:GRANULARITY_MONTH, GRANULARITY_YEAR:GRANULARITY_YEAR,
+                    CHART_TYPE_LINE:CHART_TYPE_LINE, CHART_TYPE_BAR:CHART_TYPE_BAR};
         }
 
         /**
@@ -155,7 +173,14 @@ function loaded(api) {
             this.unitAggregation[lowThreshold] = unitName;
         }
 
-        aggregateUnit(value) {
+        /**
+         * Aggregate a unit depending on threshold
+         *
+         * @param  {number} value            A value to convert
+         * @param  {string} [forceUnit=null] If set, this will force conversion to the specified value. Otherwise will use adapted value
+         * @returns {Object}                  An object with transformed value and unit
+         */
+        aggregateUnit(value, forceUnit = null) {
             let thresholdsKeys = Object.keys(this.unitAggregation);
             // Sort ascending threshold
             thresholdsKeys = thresholdsKeys.sort((threshold1, threshold2) => {
@@ -164,9 +189,10 @@ function loaded(api) {
 
             let unit = this.unit;
             let aggregatedValue = value;
+
             thresholdsKeys.forEach((thresholdKey) => {
                 const threshold = parseFloat(thresholdKey);
-                if (value >= threshold) {
+                if (value >= threshold || (forceUnit && (forceUnit === this.unitAggregation[thresholdKey]))) {
                     unit = this.unitAggregation[thresholdKey];
                     aggregatedValue = value / threshold;
                 }
@@ -180,9 +206,10 @@ function loaded(api) {
          *Convert a value depending unit, unit converter and aggregation engine
          *
          * @param  {number} value A value
+         * @param  {string} [forceUnit=null] Force unit conversion
          * @returns {Object}       An object with two properties (value, unit)
          */
-        convertValue(value) {
+        convertValue(value, forceUnit = null) {
             // Convert to float
             value = parseFloat(value);
 
@@ -192,7 +219,7 @@ function loaded(api) {
             }
 
             // Aggregation unit
-            const aggregated = this.aggregateUnit(value);
+            const aggregated = this.aggregateUnit(value, forceUnit);
 
             // Round
             value = aggregated.value.toFixed(this.round);
@@ -291,8 +318,113 @@ function loaded(api) {
             });
         }
 
-        getStatistics(timestampBegin, timestampEnd, granularity) {
+        /**
+         * Round a timestamp to a lower value
+         *
+         * @param  {number} ts          A timestamp
+         * @param  {number} granularity An aggregation unit in seconds. Can be sensor's constants.
+         * @returns {number}             A rounded timestamp to aggregation unit
+         */
+        roundTimestamp(ts, granularity) {
+            return ts - (ts % granularity);
+        }
 
+        /**
+         * Get sensor's statistics
+         *
+         * @param  {number}   timestampBegin Begin period
+         * @param  {number}   timestampEnd   End period
+         * @param  {number}   granularity    Granularity, for aggregation. Can be number in seconds, or granularity constants
+         * @param  {Function} cb             A callback e.g. `(err, results) => {}`
+         */
+        getStatistics(timestampBegin, timestampEnd, granularity, cb) {
+            let aggregationMode = AGGREGATION_MODE_AVG;
+            switch(this.aggregationMode) {
+                case AGGREGATION_MODE_AVG:
+                aggregationMode = this.dbHelper.Operators().AVG;
+                break;
+                case AGGREGATION_MODE_SUM:
+                aggregationMode = this.dbHelper.Operators().SUM;
+                break;
+                case AGGREGATION_MODE_MIN:
+                aggregationMode = this.dbHelper.Operators().MIN;
+                break;
+                case AGGREGATION_MODE_MAX:
+                aggregationMode = this.dbHelper.Operators().MAX;
+                break;
+            }
+
+            // Prepare results
+            let results = {};
+            let  i = timestampBegin;
+            let j = 0;
+            while (i <= timestampEnd && j < MAX_STATISTICS_COUNT) {
+                results[this.roundTimestamp(i, granularity)] = null;
+                i += granularity;
+                j++;
+            }
+
+            if (j >= MAX_STATISTICS_COUNT) {
+                this.api.exported.Logger.err("Max statistics cycle reach for sensor #" + this.id + ". Memory protection enabled");
+                if (cb) {
+                    cb(Error("Memory protection enabled"));
+                }
+            }
+
+            const statisticsRequest = this.dbHelper.RequestBuilder()
+                                      .select("CAST(strftime('%s',  timestamp)  AS NUMERIC) - (CAST(strftime('%s',  timestamp)  AS NUMERIC) % " + granularity + ") as timestamp")
+                                      .select("strftime('%Y-%m-%d %H:%M:%S',  datetime(CAST(strftime('%s',  timestamp)  AS NUMERIC) - (CAST(strftime('%s',  timestamp)  AS NUMERIC) % " + granularity + ") , 'unixepoch')) as formatted_date")
+                                      .selectOp(aggregationMode, "value")
+                                      .where("CAST(strftime('%s', timestamp) AS NUMERIC)", this.dbHelper.Operators().GTE, timestampBegin)
+                                      .where("CAST(strftime('%s', timestamp) AS NUMERIC)", this.dbHelper.Operators().LTE, timestampEnd)
+                                      .where("sensorId", this.dbHelper.Operators().EQ, this.id)
+                                      .group("timestamp")
+                                      .order(this.dbHelper.Operators().ASC, "timestamp");
+
+            const self = this;
+            this.dbHelper.getObjects(statisticsRequest, (error, objects) => {
+                if (!error) {
+                    // Affect results to statistics
+
+                    // Store max number in this loop for unit aggregation :)
+                    let max = null;
+                    objects.forEach((statisticObject) => {
+                        // Set value to array
+                        //console.log(statisticObject.timestamp);
+                        //console.log(Object.keys(results)[statisticObject.timestamp]);
+                        if (results.hasOwnProperty(statisticObject.timestamp.toString())) {
+                            results[statisticObject.timestamp.toString()] = statisticObject.value;
+                        }
+
+                        // Save max value
+                        if (!max || statisticObject.value > max) {
+                            max = statisticObject.value;
+                        }
+                    });
+
+                    // Ok, now, convert data to max value :)
+                    let unit = self.unit;
+                    if (max) {
+                        unit = self.aggregateUnit(max).unit;
+                    }
+
+                    // Now got everything to convert values referenced to max and configuration !
+                    // Let's go
+                    Object.keys(results).forEach((timestamp) => {
+                        if (results[timestamp] != null) {
+                            results[timestamp] = self.convertValue(results[timestamp], unit).value;
+                        }
+                    });
+
+                    if (cb) {
+                        cb(null, {values:results, unit:unit});
+                    }
+                } else {
+                    if (cb) {
+                        cb(error);
+                    }
+                }
+            });
         }
     }
 

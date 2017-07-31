@@ -13,6 +13,9 @@ const SENSORS_MANAGER_POST = SENSORS_MANAGER_POST_BASE + "/[id*]/";
 const SENSORS_MANAGER_GET = ":/sensors/get/";
 const SENSORS_MANAGER_DEL_BASE = ":/sensors/del";
 const SENSORS_MANAGER_DEL = SENSORS_MANAGER_DEL_BASE + "/[id*]/";
+const SENSORS_MANAGER_STATISTICS_DAY = ":/sensors/statistics/day/";
+const SENSORS_MANAGER_STATISTICS_MONTH = ":/sensors/statistics/month/";
+const SENSORS_MANAGER_STATISTICS_YEAR = ":/sensors/statistics/year/";
 
 /**
  * This class allows to manage sensors
@@ -52,6 +55,10 @@ class SensorsManager {
         this.webServices.registerAPI(this, WebServices.GET, SENSORS_MANAGER_GET, Authentication.AUTH_ADMIN_LEVEL);
         this.webServices.registerAPI(this, WebServices.POST, SENSORS_MANAGER_POST, Authentication.AUTH_ADMIN_LEVEL);
         this.webServices.registerAPI(this, WebServices.DELETE, SENSORS_MANAGER_DEL, Authentication.AUTH_ADMIN_LEVEL);
+
+        this.webServices.registerAPI(this, WebServices.GET, SENSORS_MANAGER_STATISTICS_DAY, Authentication.AUTH_USAGE_LEVEL);
+        this.webServices.registerAPI(this, WebServices.GET, SENSORS_MANAGER_STATISTICS_MONTH, Authentication.AUTH_USAGE_LEVEL);
+        this.webServices.registerAPI(this, WebServices.GET, SENSORS_MANAGER_STATISTICS_YEAR, Authentication.AUTH_USAGE_LEVEL);
     }
 
     /**
@@ -173,6 +180,57 @@ class SensorsManager {
                     resolve(new APIResponse.class(true, {success:true}));
                 } catch(e) {
                     reject(new APIResponse.class(false, {}, 8109, e.message));
+                }
+            });
+        } else if (apiRequest.route === SENSORS_MANAGER_STATISTICS_DAY) {
+            return new Promise((resolve, reject) => {
+                const eligibleSensors = [];
+                self.sensors.forEach((sensor) => {
+                    if (sensor.configuration.statistics) {
+                        eligibleSensors.push(sensor);
+                    }
+                });
+
+                if (eligibleSensors.length === 0) {
+                    reject(new APIResponse.class(false, {}, 8110, "No sensors eligible for statistics"));
+                } else {
+                    let retrievalCounter = 0;
+                    const globalResults = {x:[]};
+
+                    eligibleSensors.forEach((sensor) => {
+                        sensor.getStatistics(DateUtils.class.timestamp() - 4 * 24 * 3600, DateUtils.class.timestamp(), 3600, (error, results) => {
+                            if (!error && results) {
+                                if (globalResults.x.length === 0) {
+                                    // Populating x
+                                    Object.keys(results.values).forEach((timestamp) => {
+                                        globalResults.x.push({ts:parseInt(timestamp), datetime:timestamp, formatted:timestamp});
+                                    });
+                                }
+
+                                if (globalResults.x.length === Object.keys(results.values).length) {
+                                    if (!globalResults[results.unit]) {
+                                        globalResults[results.unit] = {};
+                                    }
+
+                                    globalResults[results.unit][sensor.id] = {name: sensor.configuration.name, color:(sensor.configuration.statisticsColor?sensor.configuration.statisticsColor:"#FF0000"), chartType:sensor.chartType, values:[]};
+                                    Object.keys(results.values).forEach((timestamp) => {
+                                        globalResults[results.unit][sensor.id].values.push(results.values[timestamp]);
+                                    });
+                                } else {
+                                    Logger.err("Sensor #" + sensor.id + " statistics count are different (x / values). Could not provide informations");
+                                    Logger.verbose(globalResults.x);
+                                    Logger.verbose(results);
+                                }
+
+
+                            }
+
+                            retrievalCounter++;
+                            if (retrievalCounter === eligibleSensors.length) {
+                                resolve(new APIResponse.class(true, globalResults));
+                            }
+                        });
+                    });
                 }
             });
         }

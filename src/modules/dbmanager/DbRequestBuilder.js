@@ -103,13 +103,16 @@ class DbRequestBuilder {
      * @returns {string}       The encapsulated value
      */
     getValueEncapsulated(value, meta) {
-        if (value && (meta.type === "number" || meta.type === "int" || meta.type === "float" || meta.type === "double" || meta.type === "timestamp")) {
+        if (meta) {
+            if (value && (meta.type === "number" || meta.type === "int" || meta.type === "float" || meta.type === "double" || meta.type === "timestamp")) {
+                return value;
+            } else if (value && (meta.type === "date" || meta.type === "datetime" || meta.type === "string")) {
+                return "'" + this.escapeString(value) + "'";
+            }
+            return "null";
+        } else {
             return value;
-        } else if (value && (meta.type === "date" || meta.type === "datetime" || meta.type === "string")) {
-            return "'" + this.escapeString(value) + "'";
         }
-
-        return "null";
     }
 
     /**
@@ -222,10 +225,7 @@ class DbRequestBuilder {
             this.selectList.push("*");
         } else {
             fields.forEach((field) => {
-                let meta = this.getMetaForField(field);
-                if (meta || (field === FIELD_ID) || (field === FIELD_TIMESTAMP)) {
-                    this.selectList.push(field);
-                }
+                this.selectList.push(field);
             });
         }
         return this;
@@ -348,7 +348,7 @@ class DbRequestBuilder {
      */
     where(field, operator, value) {
         const meta = this.getMetaForField(field);
-        if (meta.type === "timestamp") {
+        if (meta && meta.type === "timestamp") {
             this.whereList.push("CAST(strftime('%s', " + field + ") AS NUMERIC) " + operator + " " + this.getValueEncapsulated(value, meta));
         } else {
             this.whereList.push(field + " " + operator + " " + this.getValueEncapsulated(value, meta));
