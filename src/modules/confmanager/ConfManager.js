@@ -38,7 +38,7 @@ class ConfManager {
         const self = this;
 
         if (eventBus) {
-            eventBus.on(stopEventName, (param) => {
+            eventBus.on(stopEventName, () => {
                 self.writeDataToDisk(self, false);
             });
         }
@@ -119,7 +119,7 @@ class ConfManager {
      * Write data to disk
      *
      * @param  {ConfManager}  context      A conf manager instance, context, typically `this`
-     * @param  {Boolean} [async=true] True if save asynchronously, false otherwise
+     * @param  {boolean} [async=true] True if save asynchronously, false otherwise
      */
     writeDataToDisk(context, async = true) {
         const keys = Object.keys(context.toBeSaved);
@@ -145,7 +145,7 @@ class ConfManager {
      *
      * @param  {class} classType The object class. This class MUST implement a json() method to process JSON to Object mapping
      * @param  {string} key A file store key
-     * @param  {Boolean} [disableClassMapping=false] Disable class mapping
+     * @param  {boolean} [disableClassMapping=false] Disable class mapping
      * @returns {Array}      An array of objects (instance of classType), or an object
      */
     loadData(classType, key, disableClassMapping = false) {

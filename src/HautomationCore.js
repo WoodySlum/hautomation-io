@@ -96,11 +96,11 @@ class HautomationCore {
         // RadioManager. The plugins manager will be set later, when the pluginsLoaded event will be triggered
         this.radioManager = new RadioManager.class(this.pluginsManager, this.formManager, this.eventBus);
         // Sensors manager module
-        this.sensorsManager = new SensorsManager.class(this.pluginsManager, this.eventBus, this.webServices, this.formManager, this.confManager);
+        this.sensorsManager = new SensorsManager.class(this.pluginsManager, this.eventBus, this.webServices, this.formManager, this.confManager, this.translateManager, this.themeManager);
         // Dashboard manager
         this.dashboardManager = new DashboardManager.class(this.themeManager, this.webServices, this.translateManager);
         // Plugins manager module
-        this.pluginsManager = new PluginsManager.class(this.confManager, this.webServices, this.servicesManager, this.dbManager, this.translateManager, this.formManager, this.timeEventService, this.schedulerService, this.dashboardManager, this.eventBus);
+        this.pluginsManager = new PluginsManager.class(this.confManager, this.webServices, this.servicesManager, this.dbManager, this.translateManager, this.formManager, this.timeEventService, this.schedulerService, this.dashboardManager, this.eventBus, this.themeManager);
         // Device manager module
         this.deviceManager = new DeviceManager.class(this.confManager, this.formManager, this.webServices, this.radioManager, this.dashboardManager);
 

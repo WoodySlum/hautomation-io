@@ -1,3 +1,6 @@
 {
-    "datetime.format":"YYYY-MM-DD HH:mm:ss"
+    "datetime.format":"YYYY-MM-DD HH:mm:ss",
+    "sensors.statistics.day.dateformat":"HH:mm",
+    "sensors.statistics.month.dateformat":"MM-DD",
+    "sensors.statistics.year.dateformat":"YYYY-MM"
 }

@@ -1,5 +1,9 @@
 "use strict";
-
+/**
+ * Loaded function
+ *
+ * @param  {PluginAPI} api The api
+ */
 function loaded(api) {
     api.init();
 
@@ -42,7 +46,23 @@ function loaded(api) {
         }
     }
 
+    /**
+     * This class is extended by sensors forms
+     * @class
+     */
     class SensorForm extends api.exported.FormObject.class {
+        /**
+         * Sensor form
+         *
+         * @param  {number} id              An identifier
+         * @param  {string} plugin          A plugin
+         * @param  {string} name            Sensor's name
+         * @param  {boolean} dashboard       True if display on dashboard, otherwise false
+         * @param  {boolean} statistics      True if display on statistics, otherwise false
+         * @param  {string} dashboardColor  The dashboard color
+         * @param  {string} statisticsColor The statistics color
+         * @returns {SensorForm}                 The instance
+         */
         constructor(id, plugin, name, dashboard, statistics, dashboardColor, statisticsColor) {
             super(id);
 
@@ -89,6 +109,12 @@ function loaded(api) {
             this.statisticsColor = statisticsColor;
         }
 
+        /**
+         * Convert JSON data to object
+         *
+         * @param  {Object} data Some data
+         * @returns {SensorForm}      An instance
+         */
         json(data) {
             return new SensorForm(data.id, data.plugin, data.name, data.dashboard, data.statistics, data.dashboardColor, data.statisticsColor);
         }
@@ -115,10 +141,24 @@ function loaded(api) {
     const CHART_TYPE_BAR = "bar";
 
     /**
-     * This class is overloaded by sensors
+     * This class is extended by sensors
      * @class
      */
     class Sensor {
+        /**
+         * Sensor class (should be extended)
+         *
+         * @param  {PluginAPI} api                                                              A plugin api
+         * @param  {number} [id=null]                                                        An id
+         * @param  {Object} [configuration=null]                                             The configuration for sensor
+         * @param  {string} [icon=null]                                                      An icon
+         * @param  {number} [round=0]                                                        Round value (number of digits after comma)
+         * @param  {string} [unit=null]                                                      Base unit
+         * @param  {int} [aggregationMode=AGGREGATION_MODE_AVG]                           Aggregation mode
+         * @param  {number} [dashboardGranularity=DEFAULT_DASHBOARD_AGGREGATION_GRANULARITY] Dashboard granularity in seconds. Default is one hour.
+         * @param  {string} [chartType=CHART_TYPE_LINE]                                      Chart display type (bar or line)
+         * @returns {Sensor}                                                                  The instance
+         */
         constructor(api, id = null, configuration = null, icon = null, round = 0, unit = null, aggregationMode = AGGREGATION_MODE_AVG, dashboardGranularity = DEFAULT_DASHBOARD_AGGREGATION_GRANULARITY, chartType = CHART_TYPE_LINE) {
             this.api = api;
             this.api.databaseAPI.register(DbSensor);
@@ -142,12 +182,12 @@ function loaded(api) {
         /**
          * Access to constants
          *
-         * @return {Object} A list of constants
+         * @returns {Object} A list of constants
          */
         static constants() {
             return {AGGREGATION_MODE_AVG:AGGREGATION_MODE_AVG, AGGREGATION_MODE_SUM:AGGREGATION_MODE_SUM, AGGREGATION_MODE_MIN:AGGREGATION_MODE_MIN, AGGREGATION_MODE_MAX:AGGREGATION_MODE_MAX,
-                    GRANULARITY_MINUTE:GRANULARITY_MINUTE, GRANULARITY_HOUR:GRANULARITY_HOUR, GRANULARITY_DAY:GRANULARITY_DAY, GRANULARITY_MONTH:GRANULARITY_MONTH, GRANULARITY_YEAR:GRANULARITY_YEAR,
-                    CHART_TYPE_LINE:CHART_TYPE_LINE, CHART_TYPE_BAR:CHART_TYPE_BAR};
+                GRANULARITY_MINUTE:GRANULARITY_MINUTE, GRANULARITY_HOUR:GRANULARITY_HOUR, GRANULARITY_DAY:GRANULARITY_DAY, GRANULARITY_MONTH:GRANULARITY_MONTH, GRANULARITY_YEAR:GRANULARITY_YEAR,
+                CHART_TYPE_LINE:CHART_TYPE_LINE, CHART_TYPE_BAR:CHART_TYPE_BAR};
         }
 
         /**
@@ -166,8 +206,8 @@ function loaded(api) {
         /**
          * Add a unit aggregation
          *
-         * @param {String} unitName              The unit's name
-         * @param {Number} [lowThreshold=0] A low limit threshold. From this limit the unitName will be used
+         * @param {string} unitName              The unit's name
+         * @param {number} [lowThreshold=0] A low limit threshold. From this limit the unitName will be used
          */
         addUnitAggregation(unitName, lowThreshold = 0) {
             this.unitAggregation[lowThreshold] = unitName;
@@ -184,7 +224,7 @@ function loaded(api) {
             let thresholdsKeys = Object.keys(this.unitAggregation);
             // Sort ascending threshold
             thresholdsKeys = thresholdsKeys.sort((threshold1, threshold2) => {
-              return parseFloat(threshold1) - parseFloat(threshold2);
+                return parseFloat(threshold1) - parseFloat(threshold2);
             });
 
             let unit = this.unit;
@@ -192,7 +232,7 @@ function loaded(api) {
 
             thresholdsKeys.forEach((thresholdKey) => {
                 const threshold = parseFloat(thresholdKey);
-                if (value >= threshold || (forceUnit && (forceUnit === this.unitAggregation[thresholdKey]))) {
+                if (value >= threshold || (forceUnit && (forceUnit === this.unitAggregation[thresholdKey]))) {
                     unit = this.unitAggregation[thresholdKey];
                     aggregatedValue = value / threshold;
                 }
@@ -201,9 +241,8 @@ function loaded(api) {
             return {value:aggregatedValue, unit:unit};
         }
 
-
         /**
-         *Convert a value depending unit, unit converter and aggregation engine
+         * Convert a value depending unit, unit converter and aggregation engine
          *
          * @param  {number} value A value
          * @param  {string} [forceUnit=null] Force unit conversion
@@ -232,22 +271,22 @@ function loaded(api) {
          * If duration is passed, the aggregation will be done base on parameters and duration.
          *
          * @param  {Function} cb              A callback e.g. `(err, res) => {}`
-         * @param  {Number}   [duration=null] A duration in seconds. If null or not provided, will provide last inserted database value.
+         * @param  {number}   [duration=null] A duration in seconds. If null or not provided, will provide last inserted database value.
          */
         lastObject(cb, duration = null) {
             let operator = null;
             switch(this.aggregationMode) {
-                case AGGREGATION_MODE_AVG:
-                    operator = this.dbHelper.Operators().AVG;
+            case AGGREGATION_MODE_AVG:
+                operator = this.dbHelper.Operators().AVG;
                 break;
-                case AGGREGATION_MODE_SUM:
-                    operator = this.dbHelper.Operators().SUM;
+            case AGGREGATION_MODE_SUM:
+                operator = this.dbHelper.Operators().SUM;
                 break;
-                case AGGREGATION_MODE_MAX:
-                    operator = this.dbHelper.Operators().MAX;
+            case AGGREGATION_MODE_MAX:
+                operator = this.dbHelper.Operators().MAX;
                 break;
-                case AGGREGATION_MODE_MIN:
-                    operator = this.dbHelper.Operators().MIN;
+            case AGGREGATION_MODE_MIN:
+                operator = this.dbHelper.Operators().MIN;
                 break;
             }
 
@@ -340,16 +379,16 @@ function loaded(api) {
         getStatistics(timestampBegin, timestampEnd, granularity, cb) {
             let aggregationMode = AGGREGATION_MODE_AVG;
             switch(this.aggregationMode) {
-                case AGGREGATION_MODE_AVG:
+            case AGGREGATION_MODE_AVG:
                 aggregationMode = this.dbHelper.Operators().AVG;
                 break;
-                case AGGREGATION_MODE_SUM:
+            case AGGREGATION_MODE_SUM:
                 aggregationMode = this.dbHelper.Operators().SUM;
                 break;
-                case AGGREGATION_MODE_MIN:
+            case AGGREGATION_MODE_MIN:
                 aggregationMode = this.dbHelper.Operators().MIN;
                 break;
-                case AGGREGATION_MODE_MAX:
+            case AGGREGATION_MODE_MAX:
                 aggregationMode = this.dbHelper.Operators().MAX;
                 break;
             }
@@ -412,7 +451,7 @@ function loaded(api) {
                     // Let's go
                     Object.keys(results).forEach((timestamp) => {
                         if (results[timestamp] != null) {
-                            results[timestamp] = self.convertValue(results[timestamp], unit).value;
+                            results[timestamp] = parseFloat(self.convertValue(results[timestamp], unit).value);
                         }
                     });
 

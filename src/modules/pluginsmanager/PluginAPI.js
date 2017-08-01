@@ -16,6 +16,7 @@ var DateUtils = require("./../../utils/DateUtils");
 var Icons = require("./../../utils/Icons");
 var DashboardAPI = require("./publicapis/DashboardAPI");
 var SensorAPI = require("./publicapis/SensorAPI");
+var ThemeAPI = require("./publicapis/ThemeAPI");
 
 /**
  * This class is an interface for plugins
@@ -36,9 +37,10 @@ class PluginsAPI {
     //  * @param  {TimeEventService} timeEventService     The time event service
     //  * @param  {SchedulerService} schedulerService     The scheduler service
     //  * @param  {DashboardManager} dashboardManager     The dashboard manager
+    //  * @param  {ThemeManager} themeManager     The theme manager
     //  * @returns {PluginAPI}                  Insntance
     //  */
-    constructor(previousVersion, p, webServices, servicesManager, dbManager, translateManager, formManager, confManager, timeEventService, schedulerService, dashboardManager) {
+    constructor(previousVersion, p, webServices, servicesManager, dbManager, translateManager, formManager, confManager, timeEventService, schedulerService, dashboardManager, themeManager) {
         PrivateProperties.createPrivateState(this);
         this.previousVersion = previousVersion;
         this.p = p;
@@ -73,6 +75,7 @@ class PluginsAPI {
         this.schedulerAPI = new SchedulerAPI.class(schedulerService);
         this.dashboardAPI = new DashboardAPI.class(dashboardManager);
         this.sensorAPI = new SensorAPI.class(formManager, this);
+        this.themeManager = new ThemeAPI.class(themeManager);
     }
 
     // /**

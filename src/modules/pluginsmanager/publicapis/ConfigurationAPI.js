@@ -2,9 +2,6 @@
 const PrivateProperties = require("./../PrivateProperties");
 const FormConfiguration = require("../../formconfiguration/FormConfiguration");
 
-const SENSOR_BASE_CATEGORY = "sensor-base";
-const SENSOR_CATEGORY = "sensor";
-
 /**
  * Public API for configuration
  * @class

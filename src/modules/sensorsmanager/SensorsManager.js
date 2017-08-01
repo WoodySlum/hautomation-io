@@ -30,13 +30,17 @@ class SensorsManager {
      * @param  {WebServices} webServices    The web services
      * @param  {FormManager} formManager    The form manager
      * @param  {ConfManager} confManager    The configuration manager
+     * @param  {TranslateManager} translateManager    The translate manager
+     * @param  {ThemeManager} themeManager    The theme manager
      * @returns {SensorsManager}                       The instance
      */
-    constructor(pluginsManager, eventBus, webServices, formManager, confManager) {
+    constructor(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager) {
         this.pluginsManager = pluginsManager;
         this.webServices = webServices;
         this.formManager = formManager;
         this.confManager = confManager;
+        this.translateManager = translateManager;
+        this.themeManager = themeManager;
         this.sensors = [];
         try {
             this.sensorsConfiguration = this.confManager.loadData(Object, CONF_MANAGER_KEY, true);
@@ -183,57 +187,74 @@ class SensorsManager {
                 }
             });
         } else if (apiRequest.route === SENSORS_MANAGER_STATISTICS_DAY) {
-            return new Promise((resolve, reject) => {
-                const eligibleSensors = [];
-                self.sensors.forEach((sensor) => {
-                    if (sensor.configuration.statistics) {
-                        eligibleSensors.push(sensor);
-                    }
-                });
+            return this.statisticsWsResponse(24 * 60 * 60, 60 * 60, this.translateManager.t("sensors.statistics.day.dateformat"));
+        } else if (apiRequest.route === SENSORS_MANAGER_STATISTICS_MONTH) {
+            return this.statisticsWsResponse(31 * 24 * 60 * 60, 24 * 60 * 60, this.translateManager.t("sensors.statistics.month.dateformat"));
+        } else if (apiRequest.route === SENSORS_MANAGER_STATISTICS_YEAR) {
+            return this.statisticsWsResponse(12 * 31 * 24 * 60 * 60, 31 * 24 * 60 * 60, this.translateManager.t("sensors.statistics.year.dateformat"));
+        }
+    }
 
-                if (eligibleSensors.length === 0) {
-                    reject(new APIResponse.class(false, {}, 8110, "No sensors eligible for statistics"));
-                } else {
-                    let retrievalCounter = 0;
-                    const globalResults = {x:[]};
-
-                    eligibleSensors.forEach((sensor) => {
-                        sensor.getStatistics(DateUtils.class.timestamp() - 4 * 24 * 3600, DateUtils.class.timestamp(), 3600, (error, results) => {
-                            if (!error && results) {
-                                if (globalResults.x.length === 0) {
-                                    // Populating x
-                                    Object.keys(results.values).forEach((timestamp) => {
-                                        globalResults.x.push({ts:parseInt(timestamp), datetime:timestamp, formatted:timestamp});
-                                    });
-                                }
-
-                                if (globalResults.x.length === Object.keys(results.values).length) {
-                                    if (!globalResults[results.unit]) {
-                                        globalResults[results.unit] = {};
-                                    }
-
-                                    globalResults[results.unit][sensor.id] = {name: sensor.configuration.name, color:(sensor.configuration.statisticsColor?sensor.configuration.statisticsColor:"#FF0000"), chartType:sensor.chartType, values:[]};
-                                    Object.keys(results.values).forEach((timestamp) => {
-                                        globalResults[results.unit][sensor.id].values.push(results.values[timestamp]);
-                                    });
-                                } else {
-                                    Logger.err("Sensor #" + sensor.id + " statistics count are different (x / values). Could not provide informations");
-                                    Logger.verbose(globalResults.x);
-                                    Logger.verbose(results);
-                                }
-
-
-                            }
-
-                            retrievalCounter++;
-                            if (retrievalCounter === eligibleSensors.length) {
-                                resolve(new APIResponse.class(true, globalResults));
-                            }
-                        });
-                    });
+    /**
+     * Build a statistics data
+     *
+     * @param  {number} duration          A duration in seconds (period)
+     * @param  {number} aggregation       The aggregation in seconds
+     * @param  {string} displayDateFormat The display date format
+     * @returns {Promise}                   A promise
+     */
+    statisticsWsResponse(duration, aggregation, displayDateFormat) {
+        const self = this;
+        return new Promise((resolve, reject) => {
+            const eligibleSensors = [];
+            self.sensors.forEach((sensor) => {
+                if (sensor.configuration.statistics) {
+                    eligibleSensors.push(sensor);
                 }
             });
-        }
+
+            if (eligibleSensors.length === 0) {
+                reject(new APIResponse.class(false, {}, 8110, "No sensors eligible for statistics"));
+            } else {
+                let retrievalCounter = 0;
+                const globalResults = {x:[]};
+
+                eligibleSensors.forEach((sensor) => {
+                    sensor.getStatistics(DateUtils.class.timestamp() - duration, DateUtils.class.timestamp(), aggregation, (error, results) => {
+                        if (!error && results) {
+                            if (globalResults.x.length === 0) {
+                                // Populating x
+                                Object.keys(results.values).forEach((timestamp) => {
+                                    globalResults.x.push({ts:parseInt(timestamp), datetime:DateUtils.class.dateFormatted("YYYY-MM-DD HH:mm:ss", timestamp), formatted:DateUtils.class.dateFormatted(displayDateFormat, timestamp)});
+                                });
+                            }
+
+                            if (globalResults.x.length === Object.keys(results.values).length) {
+                                if (!globalResults[results.unit]) {
+                                    globalResults[results.unit] = {};
+                                }
+
+                                globalResults[results.unit][sensor.id] = {name: sensor.configuration.name, color:(sensor.configuration.statisticsColor?sensor.configuration.statisticsColor:this.themeManager.getColors().primaryColor), chartType:sensor.chartType, values:[]};
+                                Object.keys(results.values).forEach((timestamp) => {
+                                    globalResults[results.unit][sensor.id].values.push(results.values[timestamp]);
+                                });
+                            } else {
+                                Logger.err("Sensor #" + sensor.id + " statistics count are different (x / values). Could not provide informations");
+                                Logger.verbose(globalResults.x);
+                                Logger.verbose(results);
+                            }
+
+
+                        }
+
+                        retrievalCounter++;
+                        if (retrievalCounter === eligibleSensors.length) {
+                            resolve(new APIResponse.class(true, globalResults));
+                        }
+                    });
+                });
+            }
+        });
     }
 
     /**
@@ -241,7 +262,7 @@ class SensorsManager {
      *
      * @param  {Object} sensorData1 Sensor data 1
      * @param  {Object} sensorData2 Sensor data 2
-     * @return {Boolean}             True if id is the same, false otherwise
+     * @returns {boolean}             True if id is the same, false otherwise
      */
     comparator(sensorData1, sensorData2) {
         return (sensorData1.id === sensorData2.id);

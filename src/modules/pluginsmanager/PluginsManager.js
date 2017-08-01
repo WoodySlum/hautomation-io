@@ -48,9 +48,10 @@ class PluginsManager {
      * @param {SchedulerService} schedulerService The scheduler service
      * @param  {DashboardManager} dashboardManager    The dashboard manager
      * @param  {EventEmitter} eventBus    The global event bus
+     * @param  {ThemeManager} themeManager    The theme manager
      * @returns {PluginsManager} The instance
      */
-    constructor(confManager, webServices, servicesManager, dbManager, translateManager, formManager, timeEventService, schedulerService, dashboardManager, eventBus) {
+    constructor(confManager, webServices, servicesManager, dbManager, translateManager, formManager, timeEventService, schedulerService, dashboardManager, eventBus, themeManager) {
         this.fs = fs;
         this.path = path;
         this.remi = remi;
@@ -64,6 +65,7 @@ class PluginsManager {
         this.timeEventService = timeEventService;
         this.schedulerService = schedulerService;
         this.dashboardManager = dashboardManager;
+        this.themeManager = themeManager;
 
         this.plugins = [];
         try {
@@ -165,7 +167,8 @@ class PluginsManager {
                 this.confManager,
                 this.timeEventService,
                 this.SchedulerService,
-                this.dashboardManager
+                this.dashboardManager,
+                this.themeManager
             );
 
             initializedPlugins.push(pApi);
