@@ -263,7 +263,7 @@ function loaded(api) {
             // Round
             value = aggregated.value.toFixed(this.round);
 
-            return {value:value, unit:aggregated.unit};
+            return {value:parseFloat(value), unit:aggregated.unit};
         }
 
         /**
@@ -325,8 +325,10 @@ function loaded(api) {
 
         /**
          * Update tile and register to dashboard
+         *
+         * @param  {Function} [cb=null] A callback without parameters when done. Used for testing only.
          */
-        updateTile() {
+        updateTile(cb = null) {
             this.lastObject((err, lastObject) => {
                 if (!err && lastObject.value) {
                     const convertedValue = this.convertValue(lastObject.value);
@@ -335,8 +337,10 @@ function loaded(api) {
                         tile.colors.colorDefault = this.configuration.dashboardColor;
                     }
                     this.api.dashboardAPI.registerTile(tile);
+                    if (cb) cb();
                 } else {
                     this.api.dashboardAPI.unregisterTile("sensor-"+this.id);
+                    if (cb) cb();
                 }
             }, this.dashboardGranularity);
         }
@@ -346,14 +350,16 @@ function loaded(api) {
          *
          * @param {number} value      A value
          * @param {number} [vcc=null] A voltage level
+         * @param  {Function} [cb=null] A callback with an error parameter, called when done. Used for testing only.
          */
-        setValue(value, vcc = null) {
+        setValue(value, vcc = null, cb = null) {
             const currentObject = new DbSensor(this.dbHelper, value, this.id, vcc);
             this.api.exported.Logger.info("New value received for sensor " + this.configuration.name + "(#" + this.id + "). Value : " + value + ", vcc : " + vcc);
             currentObject.save((err) => {
                 if (!err) {
                     this.updateTile();
                 }
+                if (cb) cb(err);
             });
         }
 
@@ -419,7 +425,7 @@ function loaded(api) {
                                       .where("sensorId", this.dbHelper.Operators().EQ, this.id)
                                       .group("timestamp")
                                       .order(this.dbHelper.Operators().ASC, "timestamp");
-
+                                      
             const self = this;
             this.dbHelper.getObjects(statisticsRequest, (error, objects) => {
                 if (!error) {
@@ -467,6 +473,7 @@ function loaded(api) {
         }
     }
 
+    api.sensorAPI.registerClass(DbSensor);
     api.sensorAPI.registerClass(Sensor);
 }
 
