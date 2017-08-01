@@ -2768,16 +2768,14 @@ $(document).ready(function() {
     var getYearStatistics = function() {
         showLoader();
         $.ajax({
-            type: "POST",
-            url: vUrl,
+            type: "GET",
+            url: vUrl + "sensors/statistics/year/",
             data: {
-                username: username,
-                ePassword: ePassword,
-                method: "getStatistics",
-                name: "year"
+                u: username,
+                p: password
             }
         }).done(function(msg) {
-            var data = jQuery.parseJSON(msg);
+            var data = msg;
             drawSensorChart(data, 'yearStatistics', t('js.statistics.year', null));
             hideLoader();
         }).fail(function(msg) {
@@ -2789,16 +2787,14 @@ $(document).ready(function() {
     var getMonthStatistics = function() {
         showLoader();
         $.ajax({
-            type: "POST",
-            url: vUrl,
+            type: "GET",
+            url: vUrl + "sensors/statistics/month/",
             data: {
-                username: username,
-                ePassword: ePassword,
-                method: "getStatistics",
-                name: "month"
+                u: username,
+                p: password
             }
         }).done(function(msg) {
-            var data = jQuery.parseJSON(msg);
+            var data = msg;
             drawSensorChart(data, 'monthStatistics', t('js.statistics.month', null));
             hideLoader();
         }).fail(function(msg) {
@@ -2810,16 +2806,14 @@ $(document).ready(function() {
     var getDayStatistics = function() {
         showLoader();
         $.ajax({
-            type: "POST",
-            url: vUrl,
+            type: "GET",
+            url: vUrl + "sensors/statistics/day/",
             data: {
-                username: username,
-                ePassword: ePassword,
-                method: "getStatistics",
-                name: "day"
+                u: username,
+                p: password
             }
         }).done(function(msg) {
-            data = jQuery.parseJSON(msg);
+            data = msg;
             drawSensorChart(data, 'dayStatistics', t('js.statistics.day', null));
             hideLoader();
         }).fail(function(msg) {
