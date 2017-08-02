@@ -381,8 +381,10 @@ function loaded(api) {
          * @param  {number}   timestampEnd   End period
          * @param  {number}   granularity    Granularity, for aggregation. Can be number in seconds, or granularity constants
          * @param  {Function} cb             A callback e.g. `(err, results) => {}`
+         * @param  {Function} [roundTimestampFunction=null]  A  e.g. `(timestamp) => {return  timestamp;}`
+         * @param {String}    [roundDateSqlFormat=null] In relation with roundTimeStampFunction, the SQL date format. E.g. : "%Y-%m-01 00:00:00"
          */
-        getStatistics(timestampBegin, timestampEnd, granularity, cb) {
+        getStatistics(timestampBegin, timestampEnd, granularity, cb, roundTimestampFunction = null, roundDateSqlFormat = null) {
             let aggregationMode = AGGREGATION_MODE_AVG;
             switch(this.aggregationMode) {
             case AGGREGATION_MODE_AVG:
@@ -401,10 +403,17 @@ function loaded(api) {
 
             // Prepare results
             let results = {};
-            let  i = timestampBegin;
+            let i = timestampBegin;
             let j = 0;
             while (i <= timestampEnd && j < MAX_STATISTICS_COUNT) {
-                results[this.roundTimestamp(i, granularity)] = null;
+                if (roundTimestampFunction) {
+                    var DateUtils = require('../../utils/DateUtils');
+                    i = roundTimestampFunction(i);
+                    results[i] = null;
+                } else {
+                    results[this.roundTimestamp(i, granularity)] = null;
+                }
+
                 i += granularity;
                 j++;
             }
@@ -417,15 +426,14 @@ function loaded(api) {
             }
 
             const statisticsRequest = this.dbHelper.RequestBuilder()
-                                      .select("CAST(strftime('%s',  timestamp)  AS NUMERIC) - (CAST(strftime('%s',  timestamp)  AS NUMERIC) % " + granularity + ") as timestamp")
-                                      .select("strftime('%Y-%m-%d %H:%M:%S',  datetime(CAST(strftime('%s',  timestamp)  AS NUMERIC) - (CAST(strftime('%s',  timestamp)  AS NUMERIC) % " + granularity + ") , 'unixepoch')) as formatted_date")
+                                      .select(roundDateSqlFormat?"CAST(strftime('%s', strftime('" + roundDateSqlFormat + "', date(timestamp, 'utc'))) AS NUMERIC) as aggTimestamp":"CAST(strftime('%s',  timestamp)  AS NUMERIC) - (CAST(strftime('%s',  timestamp)  AS NUMERIC) % " + granularity + ") as aggTimestamp")
                                       .selectOp(aggregationMode, "value")
                                       .where("CAST(strftime('%s', timestamp) AS NUMERIC)", this.dbHelper.Operators().GTE, timestampBegin)
                                       .where("CAST(strftime('%s', timestamp) AS NUMERIC)", this.dbHelper.Operators().LTE, timestampEnd)
                                       .where("sensorId", this.dbHelper.Operators().EQ, this.id)
-                                      .group("timestamp")
-                                      .order(this.dbHelper.Operators().ASC, "timestamp");
-                                      
+                                      .group("aggTimestamp")
+                                      .order(this.dbHelper.Operators().ASC, "aggTimestamp");
+
             const self = this;
             this.dbHelper.getObjects(statisticsRequest, (error, objects) => {
                 if (!error) {
@@ -435,10 +443,8 @@ function loaded(api) {
                     let max = null;
                     objects.forEach((statisticObject) => {
                         // Set value to array
-                        //console.log(statisticObject.timestamp);
-                        //console.log(Object.keys(results)[statisticObject.timestamp]);
-                        if (results.hasOwnProperty(statisticObject.timestamp.toString())) {
-                            results[statisticObject.timestamp.toString()] = statisticObject.value;
+                        if (results.hasOwnProperty(statisticObject.aggTimestamp.toString())) {
+                            results[statisticObject.aggTimestamp.toString()] = statisticObject.value;
                         }
 
                         // Save max value

@@ -1,5 +1,9 @@
 "use strict";
 const moment = require("moment");
+const ROUND_TIMESTAMP_MINUTE = 0;
+const ROUND_TIMESTAMP_HOUR = 1;
+const ROUND_TIMESTAMP_DAY = 2;
+const ROUND_TIMESTAMP_MONTH = 3;
 
 /**
  * Utility class for dates
@@ -13,6 +17,34 @@ class DateUtils {
      */
     static timestamp() {
         return Math.floor((Date.now() / 1000) | 0);
+    }
+
+    /**
+     * Round the timestamp to the mode
+     *
+     * @param  {number} timestamp A timestamp
+     * @param  {number} mode      The mode (contant : `DateUtils.ROUND_TIMESTAMP_MINUTE`, `DateUtils.ROUND_TIMESTAMP_HOUR`, `DateUtils.ROUND_TIMESTAMP_DAY`, `DateUtils.ROUND_TIMESTAMP_MONTH`)
+     * @return {number}          Rounded timestamp
+     */
+    static roundedTimestamp(timestamp, mode) {
+        let date = moment.unix(timestamp).utc();
+
+        switch(mode) {
+        case ROUND_TIMESTAMP_MINUTE:
+            date = moment(date.format("YYYY-MM-DD HH:mm:00Z"));
+            break;
+        case ROUND_TIMESTAMP_HOUR:
+            date = moment(date.format("YYYY-MM-DD HH:00:00Z"));
+            break;
+        case ROUND_TIMESTAMP_DAY:
+            date = moment(date.format("YYYY-MM-DD 00:00:00Z"));
+            break;
+        case ROUND_TIMESTAMP_MONTH:
+            date = moment(date).format("YYYY-MM-01 00:00:00Z");
+            break;
+        }
+
+        return moment(date).unix();
     }
 
     /**
@@ -32,4 +64,4 @@ class DateUtils {
     }
 }
 
-module.exports = {class:DateUtils};
+module.exports = {class:DateUtils, ROUND_TIMESTAMP_MINUTE:ROUND_TIMESTAMP_MINUTE, ROUND_TIMESTAMP_HOUR:ROUND_TIMESTAMP_HOUR, ROUND_TIMESTAMP_DAY:ROUND_TIMESTAMP_DAY, ROUND_TIMESTAMP_MONTH:ROUND_TIMESTAMP_MONTH};

@@ -187,23 +187,30 @@ class SensorsManager {
                 }
             });
         } else if (apiRequest.route === SENSORS_MANAGER_STATISTICS_DAY) {
-            return this.statisticsWsResponse(24 * 60 * 60, 60 * 60, this.translateManager.t("sensors.statistics.day.dateformat"));
+            return this.statisticsWsResponse(DateUtils.class.timestamp(), 24 * 60 * 60, 60 * 60, this.translateManager.t("sensors.statistics.day.dateformat"));
         } else if (apiRequest.route === SENSORS_MANAGER_STATISTICS_MONTH) {
-            return this.statisticsWsResponse(31 * 24 * 60 * 60, 24 * 60 * 60, this.translateManager.t("sensors.statistics.month.dateformat"));
+            return this.statisticsWsResponse(DateUtils.class.timestamp(), 31 * 24 * 60 * 60, 24 * 60 * 60, this.translateManager.t("sensors.statistics.month.dateformat"), (timestamp) => {
+                return DateUtils.class.roundedTimestamp(timestamp, DateUtils.ROUND_TIMESTAMP_DAY);
+            }, "%Y-%m-%d 00:00:00");
         } else if (apiRequest.route === SENSORS_MANAGER_STATISTICS_YEAR) {
-            return this.statisticsWsResponse(12 * 31 * 24 * 60 * 60, 31 * 24 * 60 * 60, this.translateManager.t("sensors.statistics.year.dateformat"));
+            return this.statisticsWsResponse(DateUtils.class.roundedTimestamp(DateUtils.class.timestamp(), DateUtils.ROUND_TIMESTAMP_MONTH), 12 * 31 * 24 * 60 * 60, 31 * 24 * 60 * 60, this.translateManager.t("sensors.statistics.year.dateformat"), (timestamp) => {
+                return DateUtils.class.roundedTimestamp(timestamp, DateUtils.ROUND_TIMESTAMP_MONTH);
+            }, "%Y-%m-01 00:00:00");
         }
     }
 
     /**
      * Build a statistics data
      *
+     * @param  {number} endTimestamp      The end timestamp for aggregation
      * @param  {number} duration          A duration in seconds (period)
      * @param  {number} aggregation       The aggregation in seconds
      * @param  {string} displayDateFormat The display date format
+     * @param  {Function} [roundTimestampFunction=null]  A  e.g. `(timestamp) => {return  timestamp;}`
+     * @param {String}    [roundDateSqlFormat=null] In relation with roundTimeStampFunction, the SQL date format. E.g. : "%Y-%m-01 00:00:00"
      * @returns {Promise}                   A promise
      */
-    statisticsWsResponse(duration, aggregation, displayDateFormat) {
+    statisticsWsResponse(endTimestamp, duration, aggregation, displayDateFormat, roundTimestampFunction = null, roundDateSqlFormat = null) {
         const self = this;
         return new Promise((resolve, reject) => {
             const eligibleSensors = [];
@@ -220,7 +227,7 @@ class SensorsManager {
                 const globalResults = {x:[]};
 
                 eligibleSensors.forEach((sensor) => {
-                    sensor.getStatistics(DateUtils.class.timestamp() - duration, DateUtils.class.timestamp(), aggregation, (error, results) => {
+                    sensor.getStatistics(endTimestamp - duration, endTimestamp, aggregation, (error, results) => {
                         if (!error && results) {
                             if (globalResults.x.length === 0) {
                                 // Populating x

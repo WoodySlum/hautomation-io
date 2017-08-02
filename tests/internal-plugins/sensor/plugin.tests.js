@@ -3,6 +3,7 @@ var chai = require("chai");
 var expect = chai.expect;
 var sinon = require("sinon");
 
+const DateUtils = require("../../../src/utils/DateUtils");
 const HautomationCore = require("../../../src/HautomationCore").class;
 const core = new HautomationCore();
 const plugin = core.pluginsManager.getPluginByIdentifier("sensor", false);
@@ -287,34 +288,107 @@ describe("Sensor", function() {
         sensor.round = 2;
         sensor.id = "foofoofoofoofoo";
         sensor.aggregationMode = Sensor.constants().AGGREGATION_MODE_AVG;
-        const val1  = new plugin.exported.DbSensor(sensor.dbHelper, 32, "foofoofoofoofoo", 23);
-        val1.timestamp = 1499904304;
-        const val2  = new plugin.exported.DbSensor(sensor.dbHelper, 21, "foofoofoofoofoo", 23);
-        val2.timestamp = 1499905024;
+        const val1  = new plugin.exported.DbSensor(sensor.dbHelper, 32.8, "foofoofoofoofoo", 23);
+        val1.timestamp = "'2017-07-13 00:05:24'";
+        const val2  = new plugin.exported.DbSensor(sensor.dbHelper, 22.3, "foofoofoofoofoo", 23);
+        val2.timestamp = "'2017-07-13 00:17:43'";
         const val3  = new plugin.exported.DbSensor(sensor.dbHelper, 17, "foofoofoofoofoo", 23);
-        val3.timestamp = 1499923324;
+        val3.timestamp = "'2017-07-13 07:22:04'";
 
         val1.save((error) => {
             val2.save((error) => {
                 val3.save((error) => {
-                    sensor.dbHelper.getObjects(sensor.dbHelper.RequestBuilder().select().where("sensorId", "=", "foofoofoofoofoo"), (error, objects) => {
-                        console.log(objects);
-                        done();
-                    });
+                    // sensor.dbHelper.getObjects(sensor.dbHelper.RequestBuilder().select().where("sensorId", "=", "foofoofoofoofoo"), (error, objects) => {
+                    //     console.log(objects);
+                    //     done();
+                    // });
                     // sensor.lastObject((err, res) => {
                     //     console.log(res);
                     //     done();
                     // });
-                    // sensor.getStatistics(1499897104, 1499897104 + 24 * 60 * 60, 60 * 60, (err, results) => {
-                    //     expect(err).to.be.null;
-                    //     console.log(results);
-                    //     done();
-                    // });
+                    sensor.getStatistics(1499897104, 1499897104 + (24 * 60 * 60), (60 * 60), (err, results) => {
+                        expect(err).to.be.null;
+                        expect(results.unit).to.be.equal("foo");
+                        expect(Object.keys(results.values).length).to.be.equal(25);
+                        expect(results.values["1499904000"]).to.be.equal(27.55);
+                        expect(results.values["1499929200"]).to.be.equal(17);
+                        expect(Object.keys(results.values)[0]).to.be.equal('1499896800');
+                        expect(Object.keys(results.values)[24]).to.be.equal('1499983200');
+                        done();
+                    });
                 });
             });
         });
+    });
 
+    it("getStatistics month should return the complete list of aggregated values", function(done) {
+        let sensor = new Sensor(plugin, 30, {});
+        sensor.unit = "foo";
+        sensor.round = 2;
+        sensor.id = "foofoofoofoofoofoo";
+        sensor.aggregationMode = Sensor.constants().AGGREGATION_MODE_SUM;
+        sensor.addUnitAggregation("bar", 20);
 
+        const val1  = new plugin.exported.DbSensor(sensor.dbHelper, 18.945, "foofoofoofoofoofoo", 23);
+        val1.timestamp = "'2017-07-07 00:05:24'";
+        const val2  = new plugin.exported.DbSensor(sensor.dbHelper, 17.312, "foofoofoofoofoofoo", 23);
+        val2.timestamp = "'2017-07-07 00:17:43'";
+        const val3  = new plugin.exported.DbSensor(sensor.dbHelper, 17, "foofoofoofoofoofoo", 23);
+        val3.timestamp = "'2017-07-13 07:22:04'";
+
+        val1.save((error) => {
+            val2.save((error) => {
+                val3.save((error) => {
+                    sensor.getStatistics(1499144643, 1499144643 + (31 * 24 * 60 * 60), (24 * 60 * 60), (err, results) => {
+                        expect(err).to.be.null;
+                        expect(results.unit).to.be.equal("bar");
+                        expect(Object.keys(results.values).length).to.be.equal(32);
+                        expect(results.values["1499385600"]).to.be.equal(1.81);
+                        expect(results.values["1499904000"]).to.be.equal(0.85);
+                        expect(Object.keys(results.values)[0]).to.be.equal('1499126400');
+                        expect(Object.keys(results.values)[31]).to.be.equal('1501804800');
+                        done();
+                    });
+                });
+            });
+        });
+    });
+
+    it("getStatistics year should return the complete list of aggregated values", function(done) {
+        let sensor = new Sensor(plugin, 30, {});
+        sensor.unit = "foo";
+        sensor.round = 2;
+        sensor.id = "foofoofoofoofoofoofoo";
+        sensor.aggregationMode = Sensor.constants().AGGREGATION_MODE_MIN;
+        sensor.addUnitAggregation("bar", 20);
+
+        const val1  = new plugin.exported.DbSensor(sensor.dbHelper, 18.945, "foofoofoofoofoofoofoo", 23);
+        val1.timestamp = "'2017-03-03 03:05:24'";
+        const val2  = new plugin.exported.DbSensor(sensor.dbHelper, 17.312, "foofoofoofoofoofoofoo", 23);
+        val2.timestamp = "'2017-03-12 22:17:43'";
+        const val3  = new plugin.exported.DbSensor(sensor.dbHelper, 17, "foofoofoofoofoofoofoo", 23);
+        val3.timestamp = "'2017-05-13 07:22:04'";
+
+        val1.save((error) => {
+            val2.save((error) => {
+                val3.save((error) => {
+
+                    sensor.getStatistics(1467623167, 1467623167 + (365 * 24 * 60 * 60), (31 * 24 * 60 * 61), (err, results) => {
+                        expect(err).to.be.null;
+                        expect(results.unit).to.be.equal("foo");
+                        expect(Object.keys(results.values).length).to.be.equal(13);
+                        expect(results.values["1488326400"]).to.be.equal(17.31);
+                        expect(results.values["1493596800"]).to.be.equal(17);
+                        expect(Object.keys(results.values)[0]).to.be.equal('1467331200');
+                        expect(Object.keys(results.values)[12]).to.be.equal('1498867200');
+
+                        done();
+                    }, (timestamp) => {
+                        return DateUtils.class.roundedTimestamp(timestamp, DateUtils.ROUND_TIMESTAMP_MONTH);
+                    }, "%Y-%m-01 00:00:00");
+                });
+            });
+        });
     });
 
     after(() => {

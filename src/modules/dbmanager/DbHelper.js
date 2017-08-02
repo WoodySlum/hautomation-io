@@ -105,15 +105,26 @@ class DbHelper {
                 if (object) {
                     // Cast object to specific object class if provided
                     let values = [];
-                    this.getFieldsForTable().forEach((field) => {
+                    const fields = this.getFieldsForTable();
+                    fields.forEach((field) => {
                         if (object[field]) {
                             values.push(object[field]);
                         } else {
                             values.push(null);
                         }
                     });
+
+                    const dbObject = new this.dbObjectClass(this, values);
+
+                    // Additionnal fields
+                    Object.keys(object).forEach((property) => {
+                        if (!fields[property]) {
+                            dbObject[property] = object[property];
+                        }
+                    });
+
                     // Creates a new DBobject class
-                    cb(error, new this.dbObjectClass(this, values));
+                    cb(error, dbObject);
                 } else {
                     cb(error, object);
                 }
@@ -137,15 +148,26 @@ class DbHelper {
                     objects.forEach((object) => {
                         // Cast object to specific object class if provided
                         let values = [];
-                        this.getFieldsForTable().forEach((field) => {
+                        const fields = this.getFieldsForTable();
+                        fields.forEach((field) => {
                             if (object[field]) {
                                 values.push(object[field]);
                             } else {
                                 values.push(null);
                             }
                         });
-                        // Creates a new DBobject class
-                        castObjects.push(new this.dbObjectClass(this, values));
+
+                        const dbObject = new this.dbObjectClass(this, values);
+
+                        // Additionnal fields
+                        Object.keys(object).forEach((property) => {
+                            if (!fields[property]) {
+                                dbObject[property] = object[property];
+                            }
+                        });
+
+                        // Creates a new DbObject class
+                        castObjects.push(dbObject);
                     });
                     cb(error, castObjects);
                 } else {
