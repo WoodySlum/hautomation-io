@@ -207,7 +207,7 @@ class SensorsManager {
      * @param  {number} aggregation       The aggregation in seconds
      * @param  {string} displayDateFormat The display date format
      * @param  {Function} [roundTimestampFunction=null]  A  e.g. `(timestamp) => {return  timestamp;}`
-     * @param {String}    [roundDateSqlFormat=null] In relation with roundTimeStampFunction, the SQL date format. E.g. : "%Y-%m-01 00:00:00"
+     * @param {string}    [roundDateSqlFormat=null] In relation with roundTimeStampFunction, the SQL date format. E.g. : "%Y-%m-01 00:00:00"
      * @returns {Promise}                   A promise
      */
     statisticsWsResponse(endTimestamp, duration, aggregation, displayDateFormat, roundTimestampFunction = null, roundDateSqlFormat = null) {
@@ -258,7 +258,7 @@ class SensorsManager {
                         if (retrievalCounter === eligibleSensors.length) {
                             resolve(new APIResponse.class(true, globalResults));
                         }
-                    });
+                    }, roundTimestampFunction, roundDateSqlFormat);
                 });
             }
         });

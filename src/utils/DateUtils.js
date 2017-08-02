@@ -24,7 +24,7 @@ class DateUtils {
      *
      * @param  {number} timestamp A timestamp
      * @param  {number} mode      The mode (contant : `DateUtils.ROUND_TIMESTAMP_MINUTE`, `DateUtils.ROUND_TIMESTAMP_HOUR`, `DateUtils.ROUND_TIMESTAMP_DAY`, `DateUtils.ROUND_TIMESTAMP_MONTH`)
-     * @return {number}          Rounded timestamp
+     * @returns {number}          Rounded timestamp
      */
     static roundedTimestamp(timestamp, mode) {
         let date = moment.unix(timestamp).utc();

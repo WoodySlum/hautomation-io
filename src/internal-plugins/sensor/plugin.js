@@ -382,7 +382,7 @@ function loaded(api) {
          * @param  {number}   granularity    Granularity, for aggregation. Can be number in seconds, or granularity constants
          * @param  {Function} cb             A callback e.g. `(err, results) => {}`
          * @param  {Function} [roundTimestampFunction=null]  A  e.g. `(timestamp) => {return  timestamp;}`
-         * @param {String}    [roundDateSqlFormat=null] In relation with roundTimeStampFunction, the SQL date format. E.g. : "%Y-%m-01 00:00:00"
+         * @param {string}    [roundDateSqlFormat=null] In relation with roundTimeStampFunction, the SQL date format. E.g. : "%Y-%m-01 00:00:00"
          */
         getStatistics(timestampBegin, timestampEnd, granularity, cb, roundTimestampFunction = null, roundDateSqlFormat = null) {
             let aggregationMode = AGGREGATION_MODE_AVG;
@@ -407,7 +407,6 @@ function loaded(api) {
             let j = 0;
             while (i <= timestampEnd && j < MAX_STATISTICS_COUNT) {
                 if (roundTimestampFunction) {
-                    var DateUtils = require('../../utils/DateUtils');
                     i = roundTimestampFunction(i);
                     results[i] = null;
                 } else {
