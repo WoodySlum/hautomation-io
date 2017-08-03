@@ -159,7 +159,7 @@ function loaded(api) {
          * @param  {string} [chartType=CHART_TYPE_LINE]                                      Chart display type (bar or line)
          * @returns {Sensor}                                                                  The instance
          */
-        constructor(api, id = null, configuration = null, icon = null, round = 0, unit = null, aggregationMode = AGGREGATION_MODE_AVG, dashboardGranularity = DEFAULT_DASHBOARD_AGGREGATION_GRANULARITY, chartType = CHART_TYPE_LINE) {
+        constructor(api, id = null, type = "UNKNOWN", configuration = null, icon = null, round = 0, unit = null, aggregationMode = AGGREGATION_MODE_AVG, dashboardGranularity = DEFAULT_DASHBOARD_AGGREGATION_GRANULARITY, chartType = CHART_TYPE_LINE) {
             this.api = api;
             this.api.databaseAPI.register(DbSensor);
             this.dbHelper = this.api.databaseAPI.dbHelper(DbSensor);
@@ -169,14 +169,17 @@ function loaded(api) {
             this.aggregationMode = aggregationMode;
             this.dashboardGranularity = dashboardGranularity;
             this.chartType = chartType;
+            this.type = type;
 
-            if (!this.id && !this.configuration) {
-                throw Error("Sensor does not have configuration or identifier !");
+            if (!this.id || !this.configuration || !this.type) {
+                throw Error("Sensor does not have configuration or identifier or type !");
             }
             this.unitConverter = null;
             this.unit = unit;
             this.unitAggregation = {};
             this.round = round;
+
+            this.name = this.configuration.name;
         }
 
         /**
@@ -196,7 +199,7 @@ function loaded(api) {
         init() {
             // Check for unit
             if (!this.unit) {
-                throw Error("No unit set for sensor " + this.configuration.name + " (#" + this.id + ")");
+                throw Error("No unit set for sensor " + this.name + " (#" + this.id + ")");
             }
 
             // Update tile
@@ -332,7 +335,7 @@ function loaded(api) {
             this.lastObject((err, lastObject) => {
                 if (!err && lastObject.value) {
                     const convertedValue = this.convertValue(lastObject.value);
-                    const tile = this.api.dashboardAPI.Tile("sensor-"+this.id, this.api.dashboardAPI.TileType().TILE_INFO_TWO_TEXT, this.icon, null, this.configuration.name, convertedValue.value + convertedValue.unit);
+                    const tile = this.api.dashboardAPI.Tile("sensor-"+this.id, this.api.dashboardAPI.TileType().TILE_INFO_TWO_TEXT, this.icon, null, this.name, convertedValue.value + convertedValue.unit);
                     if (this.configuration.dashboardColor) {
                         tile.colors.colorDefault = this.configuration.dashboardColor;
                     }
@@ -354,13 +357,17 @@ function loaded(api) {
          */
         setValue(value, vcc = null, cb = null) {
             const currentObject = new DbSensor(this.dbHelper, value, this.id, vcc);
-            this.api.exported.Logger.info("New value received for sensor " + this.configuration.name + "(#" + this.id + "). Value : " + value + ", vcc : " + vcc);
+            this.api.exported.Logger.info("New value received for sensor " + this.name + "(#" + this.id + "). Value : " + value + ", vcc : " + vcc);
             currentObject.save((err) => {
                 if (!err) {
                     this.updateTile();
                 }
                 if (cb) cb(err);
             });
+
+            // Dispatch
+            const aggregated = this.convertValue(value);
+            this.api.sensorAPI.onNewSensorValue(this.id, this.type, value, this.unit, vcc, aggregated.value, aggregated.unit);
         }
 
         /**

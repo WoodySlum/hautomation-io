@@ -14,25 +14,34 @@
     -   [start](#start)
     -   [stop](#stop)
     -   [configurationLoader](#configurationloader)
--   [text](#text)
--   [number](#number)
--   [myParameter](#myparameter)
 -   [loaded](#loaded)
 -   [loaded](#loaded-1)
 -   [loaded](#loaded-2)
--   [DbRadio](#dbradio)
+-   [loaded](#loaded-3)
+-   [loaded](#loaded-4)
+-   [loaded](#loaded-5)
+-   [EspTemperatureSensorForm](#esptemperaturesensorform)
+    -   [json](#json-1)
+-   [EspTemperatureSensor](#esptemperaturesensor)
     -   [constructor](#constructor-3)
+    -   [processAPI](#processapi)
+-   [text](#text)
+-   [number](#number)
+-   [myParameter](#myparameter)
+-   [DbRadio](#dbradio)
+    -   [constructor](#constructor-4)
 -   [module](#module)
 -   [frequency](#frequency)
 -   [protocol](#protocol)
 -   [deviceId](#deviceid)
 -   [switchId](#switchid)
 -   [value](#value)
+-   [value](#value-1)
 -   [status](#status)
 -   [Radio](#radio)
-    -   [constructor](#constructor-4)
+    -   [constructor](#constructor-5)
     -   [getProtocolList](#getprotocollist)
-    -   [processAPI](#processapi)
+    -   [processAPI](#processapi-1)
     -   [defaultFrequency](#defaultfrequency)
     -   [emit](#emit)
     -   [onRadioEvent](#onradioevent)
@@ -40,20 +49,51 @@
     -   [register](#register)
     -   [unregister](#unregister)
 -   [RFLink](#rflink)
-    -   [constructor](#constructor-5)
+    -   [constructor](#constructor-6)
     -   [rflinkStatusToRadioStatus](#rflinkstatustoradiostatus)
     -   [radioStatusToRflinkStatus](#radiostatustorflinkstatus)
     -   [formatRadioObjectBeforeSending](#formatradioobjectbeforesending)
     -   [onRflinkReceive](#onrflinkreceive)
     -   [emit](#emit-1)
 -   [RFLinkService](#rflinkservice)
-    -   [constructor](#constructor-6)
+    -   [constructor](#constructor-7)
     -   [run](#run)
     -   [threadCallback](#threadcallback)
 -   [xo](#xo)
 -   [Sample](#sample)
-    -   [processAPI](#processapi-1)
+    -   [processAPI](#processapi-2)
     -   [test](#test)
+-   [DbSensor](#dbsensor)
+    -   [constructor](#constructor-8)
+-   [sensorId](#sensorid)
+-   [vcc](#vcc)
+-   [SensorForm](#sensorform)
+    -   [constructor](#constructor-9)
+    -   [name](#name)
+    -   [dashboard](#dashboard)
+    -   [statistics](#statistics)
+    -   [dashboardColor](#dashboardcolor)
+    -   [statisticsColor](#statisticscolor)
+    -   [json](#json-2)
+-   [Sensor](#sensor)
+    -   [constructor](#constructor-10)
+    -   [init](#init)
+    -   [addUnitAggregation](#addunitaggregation)
+    -   [aggregateUnit](#aggregateunit)
+    -   [convertValue](#convertvalue)
+    -   [lastObject](#lastobject)
+    -   [updateTile](#updatetile)
+    -   [setValue](#setvalue)
+    -   [roundTimestamp](#roundtimestamp)
+    -   [getStatistics](#getstatistics)
+    -   [constants](#constants-1)
+-   [TemperatureSensorForm](#temperaturesensorform)
+    -   [constructor](#constructor-11)
+    -   [unit](#unit)
+    -   [json](#json-3)
+-   [TemperatureSensor](#temperaturesensor)
+    -   [constructor](#constructor-12)
+    -   [setUnit](#setunit)
 -   [Logger](#logger)
     -   [log](#log)
     -   [warn](#warn)
@@ -62,42 +102,43 @@
     -   [info](#info)
     -   [debug](#debug)
 -   [Alarm](#alarm)
-    -   [constructor](#constructor-7)
-    -   [json](#json-1)
+    -   [constructor](#constructor-13)
+    -   [json](#json-4)
 -   [AlarmManager](#alarmmanager)
-    -   [constructor](#constructor-8)
+    -   [constructor](#constructor-14)
     -   [setAlarm](#setalarm)
-    -   [processAPI](#processapi-2)
+    -   [processAPI](#processapi-3)
 -   [Authentication](#authentication)
-    -   [constructor](#constructor-9)
+    -   [constructor](#constructor-15)
 -   [AuthenticationData](#authenticationdata)
-    -   [constructor](#constructor-10)
+    -   [constructor](#constructor-16)
     -   [authorized](#authorized)
     -   [username](#username)
     -   [level](#level)
 -   [ConfManager](#confmanager)
-    -   [constructor](#constructor-11)
+    -   [constructor](#constructor-17)
     -   [appConfiguration](#appconfiguration)
     -   [fs](#fs)
     -   [getFilePath](#getfilepath)
     -   [isJsonValid](#isjsonvalid)
     -   [readFile](#readfile)
     -   [saveData](#savedata)
+    -   [writeDataToDisk](#writedatatodisk)
     -   [loadData](#loaddata)
     -   [getData](#getdata)
     -   [setData](#setdata)
     -   [removeData](#removedata)
 -   [DashboardManager](#dashboardmanager)
-    -   [constructor](#constructor-12)
+    -   [constructor](#constructor-18)
     -   [registerTile](#registertile)
     -   [unregisterTile](#unregistertile)
     -   [buildDashboard](#builddashboard)
-    -   [processAPI](#processapi-3)
+    -   [processAPI](#processapi-4)
 -   [Tile](#tile)
-    -   [constructor](#constructor-13)
+    -   [constructor](#constructor-19)
     -   [get](#get)
 -   [DbHelper](#dbhelper)
-    -   [constructor](#constructor-14)
+    -   [constructor](#constructor-20)
     -   [RequestBuilder](#requestbuilder)
     -   [Operators](#operators)
     -   [getFieldsForTable](#getfieldsfortable)
@@ -108,7 +149,7 @@
     -   [delObject](#delobject)
     -   [delObjects](#delobjects)
 -   [DbManager](#dbmanager)
-    -   [constructor](#constructor-15)
+    -   [constructor](#constructor-21)
     -   [close](#close)
     -   [getFieldsForTable](#getfieldsfortable-1)
     -   [numberVersion](#numberversion)
@@ -123,12 +164,12 @@
     -   [delObject](#delobject-1)
     -   [delObjects](#delobjects-1)
 -   [DbObject](#dbobject)
-    -   [constructor](#constructor-16)
+    -   [constructor](#constructor-22)
     -   [base](#base)
     -   [save](#save)
     -   [del](#del)
 -   [DbRequestBuilder](#dbrequestbuilder)
-    -   [constructor](#constructor-17)
+    -   [constructor](#constructor-23)
     -   [removeLastComma](#removelastcomma)
     -   [escapeString](#escapestring)
     -   [getValueEncapsulated](#getvalueencapsulated)
@@ -158,51 +199,53 @@
     -   [tableName](#tablename)
     -   [toSchema](#toschema)
 -   [DeviceForm](#deviceform)
-    -   [constructor](#constructor-18)
-    -   [name](#name)
+    -   [constructor](#constructor-24)
+    -   [name](#name-1)
     -   [excludeFromAll](#excludefromall)
     -   [visible](#visible)
     -   [worksOnlyOnDayNight](#worksonlyondaynight)
     -   [icon](#icon-1)
     -   [radio](#radio-1)
     -   [status](#status-1)
-    -   [json](#json-2)
+    -   [json](#json-5)
 -   [DeviceManager](#devicemanager)
-    -   [constructor](#constructor-19)
+    -   [constructor](#constructor-25)
     -   [registerDeviceTiles](#registerdevicetiles)
     -   [registerDeviceTile](#registerdevicetile)
     -   [switchDevice](#switchdevice)
-    -   [processAPI](#processapi-4)
+    -   [processAPI](#processapi-5)
 -   [FormConfiguration](#formconfiguration)
-    -   [constructor](#constructor-20)
+    -   [constructor](#constructor-26)
     -   [loadConfig](#loadconfig)
     -   [saveConfig](#saveconfig)
     -   [comparator](#comparator)
     -   [registerForm](#registerform)
-    -   [processAPI](#processapi-5)
+    -   [processAPI](#processapi-6)
     -   [getConfig](#getconfig)
+    -   [getForm](#getform)
 -   [FormManager](#formmanager)
-    -   [constructor](#constructor-21)
+    -   [constructor](#constructor-27)
     -   [register](#register-1)
+    -   [registerWithAdditionalFields](#registerwithadditionalfields)
     -   [sanitize](#sanitize)
     -   [getExtendedClass](#getextendedclass)
     -   [initSchema](#initschema-1)
     -   [initSchemaUI](#initschemaui)
-    -   [getForm](#getform)
+    -   [getForm](#getform-1)
     -   [generateForm](#generateform)
 -   [FormObject](#formobject)
-    -   [constructor](#constructor-22)
-    -   [json](#json-3)
+    -   [constructor](#constructor-28)
+    -   [json](#json-6)
 -   [id](#id)
 -   [PluginsAPI](#pluginsapi)
     -   [exportClass](#exportclass)
-    -   [init](#init)
+    -   [init](#init-1)
     -   [registerInstance](#registerinstance)
 -   [PluginConf](#pluginconf)
-    -   [constructor](#constructor-23)
-    -   [json](#json-4)
+    -   [constructor](#constructor-29)
+    -   [json](#json-7)
 -   [PluginsManager](#pluginsmanager)
-    -   [constructor](#constructor-24)
+    -   [constructor](#constructor-30)
     -   [getPluginsFromDirectory](#getpluginsfromdirectory)
     -   [checkPluginSanity](#checkpluginsanity)
     -   [initPlugins](#initplugins)
@@ -216,6 +259,7 @@
 -   [ConfigurationAPI](#configurationapi)
     -   [register](#register-2)
     -   [getConfiguration](#getconfiguration)
+    -   [getForm](#getform-2)
 -   [DashboardAPI](#dashboardapi)
     -   [registerTile](#registertile-1)
     -   [unregisterTile](#unregistertile-1)
@@ -228,13 +272,22 @@
     -   [register](#register-4)
     -   [unregister](#unregister-1)
     -   [schedule](#schedule)
-    -   [constants](#constants-1)
+    -   [constants](#constants-2)
+-   [SensorAPI](#sensorapi)
+    -   [registerForm](#registerform-1)
+    -   [registerClass](#registerclass)
+    -   [registerSensorEvent](#registersensorevent)
+    -   [unregisterSensorEvent](#unregistersensorevent)
+    -   [getSensors](#getsensors)
+    -   [getValue](#getvalue)
 -   [ServicesManagerAPI](#servicesmanagerapi)
     -   [add](#add)
+-   [ThemeAPI](#themeapi)
+    -   [getColors](#getcolors)
 -   [TimeEventAPI](#timeeventapi)
     -   [register](#register-5)
     -   [unregister](#unregister-2)
-    -   [constants](#constants-2)
+    -   [constants](#constants-3)
 -   [TranslateAPI](#translateapi)
     -   [load](#load-1)
     -   [t](#t)
@@ -243,18 +296,18 @@
     -   [unregister](#unregister-3)
     -   [Authentication](#authentication-1)
     -   [APIResponse](#apiresponse)
-    -   [constants](#constants-3)
+    -   [constants](#constants-4)
 -   [RadioForm](#radioform)
-    -   [constructor](#constructor-25)
+    -   [constructor](#constructor-31)
     -   [module](#module-1)
     -   [protocol](#protocol-1)
     -   [deviceId](#deviceid-1)
     -   [switchId](#switchid-1)
-    -   [json](#json-5)
+    -   [json](#json-8)
     -   [getModules](#getmodules)
     -   [getProtocols](#getprotocols)
 -   [RadioManager](#radiomanager)
-    -   [constructor](#constructor-26)
+    -   [constructor](#constructor-32)
     -   [pluginsLoaded](#pluginsloaded)
     -   [registerRadioEvents](#registerradioevents)
     -   [unregisterRadioEvents](#unregisterradioevents)
@@ -262,8 +315,25 @@
     -   [getModules](#getmodules-1)
     -   [getProtocols](#getprotocols-1)
     -   [switchDevice](#switchdevice-1)
+-   [SensorsForm](#sensorsform)
+    -   [constructor](#constructor-33)
+    -   [sensorId](#sensorid-1)
+    -   [json](#json-9)
+-   [SensorsManager](#sensorsmanager)
+    -   [constructor](#constructor-34)
+    -   [pluginsLoaded](#pluginsloaded-1)
+    -   [initSensors](#initsensors)
+    -   [initSensor](#initsensor)
+    -   [registerSensorEvent](#registersensorevent-1)
+    -   [unregisterSensorEvent](#unregistersensorevent-1)
+    -   [getAllSensors](#getallsensors)
+    -   [onNewSensorValue](#onnewsensorvalue)
+    -   [getValue](#getvalue-1)
+    -   [processAPI](#processapi-7)
+    -   [statisticsWsResponse](#statisticswsresponse)
+    -   [comparator](#comparator-1)
 -   [ServicesManager](#servicesmanager)
-    -   [constructor](#constructor-27)
+    -   [constructor](#constructor-35)
     -   [isServiceRegistered](#isserviceregistered)
     -   [add](#add-1)
     -   [remove](#remove-1)
@@ -272,10 +342,10 @@
     -   [restart](#restart)
     -   [getService](#getservice)
 -   [ThemeManager](#thememanager)
-    -   [constructor](#constructor-28)
-    -   [getColors](#getcolors)
+    -   [constructor](#constructor-36)
+    -   [getColors](#getcolors-1)
 -   [ThreadsManager](#threadsmanager)
-    -   [constructor](#constructor-29)
+    -   [constructor](#constructor-37)
     -   [stringifyFunc](#stringifyfunc)
     -   [run](#run-1)
     -   [send](#send)
@@ -283,12 +353,12 @@
     -   [getPid](#getpid)
     -   [isRunning](#isrunning)
 -   [TranslateManager](#translatemanager)
-    -   [constructor](#constructor-30)
+    -   [constructor](#constructor-38)
     -   [addTranslations](#addtranslations)
     -   [t](#t-1)
     -   [translateArray](#translatearray)
 -   [User](#user)
-    -   [constructor](#constructor-31)
+    -   [constructor](#constructor-39)
     -   [username](#username-1)
     -   [password](#password)
     -   [level](#level-1)
@@ -296,9 +366,9 @@
     -   [email](#email)
     -   [phone](#phone)
     -   [picture](#picture)
-    -   [json](#json-6)
+    -   [json](#json-10)
 -   [UserManager](#usermanager)
-    -   [constructor](#constructor-32)
+    -   [constructor](#constructor-40)
     -   [confManager](#confmanager-1)
     -   [users](#users)
     -   [removeUser](#removeuser)
@@ -308,12 +378,12 @@
     -   [setUser](#setuser)
     -   [getAdminUser](#getadminuser)
 -   [SchedulerDbObject](#schedulerdbobject)
-    -   [constructor](#constructor-33)
+    -   [constructor](#constructor-41)
 -   [identifier](#identifier)
 -   [data](#data)
 -   [triggerDate](#triggerdate)
 -   [SchedulerService](#schedulerservice)
-    -   [constructor](#constructor-34)
+    -   [constructor](#constructor-42)
     -   [start](#start-2)
     -   [stop](#stop-2)
     -   [register](#register-7)
@@ -321,7 +391,7 @@
     -   [schedule](#schedule-1)
     -   [timeEvent](#timeevent)
 -   [Service](#service)
-    -   [constructor](#constructor-35)
+    -   [constructor](#constructor-43)
     -   [start](#start-3)
     -   [run](#run-2)
     -   [threadCallback](#threadcallback-1)
@@ -337,7 +407,7 @@
     -   [unregister](#unregister-5)
     -   [setThreadsManager](#setthreadsmanager)
 -   [TimeEventService](#timeeventservice)
-    -   [constructor](#constructor-36)
+    -   [constructor](#constructor-44)
     -   [start](#start-4)
     -   [stop](#stop-4)
     -   [hash](#hash)
@@ -347,14 +417,14 @@
     -   [convertMode](#convertmode)
     -   [timeEvent](#timeevent-1)
 -   [APIRegistration](#apiregistration)
-    -   [constructor](#constructor-37)
+    -   [constructor](#constructor-45)
     -   [delegate](#delegate)
     -   [method](#method)
     -   [route](#route)
     -   [authLevel](#authlevel)
     -   [isEqual](#isequal)
 -   [APIRequest](#apirequest)
-    -   [constructor](#constructor-38)
+    -   [constructor](#constructor-46)
     -   [method](#method-1)
     -   [ip](#ip)
     -   [route](#route-1)
@@ -365,16 +435,16 @@
     -   [authenticationData](#authenticationdata-1)
     -   [addAuthenticationData](#addauthenticationdata)
 -   [APIResponse](#apiresponse-1)
-    -   [constructor](#constructor-39)
+    -   [constructor](#constructor-47)
     -   [success](#success)
     -   [response](#response)
     -   [errorCode](#errorcode)
     -   [errorMessage](#errormessage)
 -   [WebServices](#webservices)
-    -   [constructor](#constructor-40)
+    -   [constructor](#constructor-48)
     -   [start](#start-5)
     -   [registerInfos](#registerinfos)
-    -   [processAPI](#processapi-6)
+    -   [processAPI](#processapi-8)
     -   [stop](#stop-5)
     -   [register](#register-10)
     -   [unregister](#unregister-7)
@@ -390,6 +460,7 @@
     -   [convertProperties](#convertproperties)
 -   [DateUtils](#dateutils)
     -   [timestamp](#timestamp)
+    -   [roundedTimestamp](#roundedtimestamp)
     -   [dateFormatted](#dateformatted)
 -   [Icons](#icons)
     -   [list](#list)
@@ -413,7 +484,7 @@ Constructor
 **Parameters**
 
 -   `id` **[number](#number)** An identifier (optional, default `null`)
--   `icon` **[number](#number)** An icon number (optional, default `null`)
+-   `icon` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An icon number (optional, default `null`)
 
 Returns **[IconForm](#iconform)** The instance
 
@@ -479,35 +550,109 @@ Stop automation core
 
 Try to overload configuration
 
+## loaded
+
+Loaded function
+
+**Parameters**
+
+-   `api` **PluginAPI** The api
+
+## loaded
+
+Loaded plugin function
+
+**Parameters**
+
+-   `api` **PluginAPI** The core APIs
+
+## loaded
+
+Loaded plugin function
+
+**Parameters**
+
+-   `api` **PluginAPI** The core APIs
+
+## loaded
+
+Loaded plugin function
+
+**Parameters**
+
+-   `api` **PluginAPI** The core APIs
+
+## loaded
+
+Loaded function
+
+**Parameters**
+
+-   `api` **PluginAPI** The api
+
+## loaded
+
+Loaded function
+
+**Parameters**
+
+-   `api` **PluginAPI** The api
+
+## EspTemperatureSensorForm
+
+**Extends api.exported.TemperatureSensorForm**
+
+Esp temperature form sensor
+
+### json
+
+Convert JSON data to object
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some data
+
+Returns **[EspTemperatureSensorForm](#esptemperaturesensorform)** An instance
+
+## EspTemperatureSensor
+
+**Extends api.exported.TemperatureSensor**
+
+This class is overloaded by sensors
+
+**Parameters**
+
+-   `api`  
+-   `id`  
+-   `configuration`  
+
+### constructor
+
+ESP Temperature sensor class (should be extended)
+
+**Parameters**
+
+-   `api` **PluginAPI** A plugin api
+-   `id` **[number](#number)** An id (optional, default `null`)
+-   `configuration` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The configuration for sensor (optional, default `null`)
+
+Returns **[EspTemperatureSensor](#esptemperaturesensor)** The instance
+
+### processAPI
+
+Process API callback
+
+**Parameters**
+
+-   `apiRequest` **\[type]** An APIRequest
+
+Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with an APIResponse object
+
 ## text
 
 ## number
 
 ## myParameter
-
-## loaded
-
-Loaded plugin function
-
-**Parameters**
-
--   `api` **PluginAPI** The core APIs
-
-## loaded
-
-Loaded plugin function
-
-**Parameters**
-
--   `api` **PluginAPI** The core APIs
-
-## loaded
-
-Loaded plugin function
-
-**Parameters**
-
--   `api` **PluginAPI** The core APIs
 
 ## DbRadio
 
@@ -541,6 +686,8 @@ Returns **[DbObject](#dbobject)** A database object
 ## deviceId
 
 ## switchId
+
+## value
 
 ## value
 
@@ -767,6 +914,292 @@ Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refe
 
 Shows a test log
 
+## DbSensor
+
+**Extends api.exported.DbObject.class**
+
+This class should not be implemented but only inherited.
+This class is used for sensors database
+
+**Parameters**
+
+-   `dbHelper`   (optional, default `null`)
+-   `values` **...any** 
+
+### constructor
+
+Radio table descriptor
+
+**Parameters**
+
+-   `dbHelper` **[DbHelper](#dbhelper)** A database helper (optional, default `null`)
+-   `values` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The values
+
+Returns **[DbObject](#dbobject)** A database object
+
+## sensorId
+
+## vcc
+
+## SensorForm
+
+**Extends api.exported.FormObject.class**
+
+This class is extended by sensors forms
+
+**Parameters**
+
+-   `id`  
+-   `plugin`  
+-   `name`  
+-   `dashboard`  
+-   `statistics`  
+-   `dashboardColor`  
+-   `statisticsColor`  
+
+### constructor
+
+Sensor form
+
+**Parameters**
+
+-   `id` **[number](#number)** An identifier
+-   `plugin` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A plugin
+-   `name` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Sensor's name
+-   `dashboard` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if display on dashboard, otherwise false
+-   `statistics` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if display on statistics, otherwise false
+-   `dashboardColor` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The dashboard color
+-   `statisticsColor` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The statistics color
+
+Returns **[SensorForm](#sensorform)** The instance
+
+### name
+
+### dashboard
+
+### statistics
+
+### dashboardColor
+
+### statisticsColor
+
+### json
+
+Convert JSON data to object
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some data
+
+Returns **[SensorForm](#sensorform)** An instance
+
+## Sensor
+
+This class is extended by sensors
+
+**Parameters**
+
+-   `api`  
+-   `id`   (optional, default `null`)
+-   `type`   (optional, default `"UNKNOWN"`)
+-   `configuration`   (optional, default `null`)
+-   `icon`   (optional, default `null`)
+-   `round`   (optional, default `0`)
+-   `unit`   (optional, default `null`)
+-   `aggregationMode`   (optional, default `AGGREGATION_MODE_AVG`)
+-   `dashboardGranularity`   (optional, default `DEFAULT_DASHBOARD_AGGREGATION_GRANULARITY`)
+-   `chartType`   (optional, default `CHART_TYPE_LINE`)
+
+### constructor
+
+Sensor class (should be extended)
+
+**Parameters**
+
+-   `api` **PluginAPI** A plugin api
+-   `id` **[number](#number)** An id (optional, default `null`)
+-   `type`   (optional, default `"UNKNOWN"`)
+-   `configuration` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The configuration for sensor (optional, default `null`)
+-   `icon` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An icon (optional, default `null`)
+-   `round` **[number](#number)** Round value (number of digits after comma) (optional, default `0`)
+-   `unit` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Base unit (optional, default `null`)
+-   `aggregationMode` **int** Aggregation mode (optional, default `AGGREGATION_MODE_AVG`)
+-   `dashboardGranularity` **[number](#number)** Dashboard granularity in seconds. Default is one hour. (optional, default `DEFAULT_DASHBOARD_AGGREGATION_GRANULARITY`)
+-   `chartType` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Chart display type (bar or line) (optional, default `CHART_TYPE_LINE`)
+
+Returns **[Sensor](#sensor)** The instance
+
+### init
+
+Needs to be call when sensor is ready
+
+### addUnitAggregation
+
+Add a unit aggregation
+
+**Parameters**
+
+-   `unitName` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The unit's name
+-   `lowThreshold` **[number](#number)** A low limit threshold. From this limit the unitName will be used (optional, default `0`)
+
+### aggregateUnit
+
+Aggregate a unit depending on threshold
+
+**Parameters**
+
+-   `value` **[number](#number)** A value to convert
+-   `forceUnit` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** If set, this will force conversion to the specified value. Otherwise will use adapted value (optional, default `null`)
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An object with transformed value and unit
+
+### convertValue
+
+Convert a value depending unit, unit converter and aggregation engine
+
+**Parameters**
+
+-   `value` **[number](#number)** A value
+-   `forceUnit` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Force unit conversion (optional, default `null`)
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An object with two properties (value, unit)
+
+### lastObject
+
+Retrieve last object from database.
+If duration is passed, the aggregation will be done base on parameters and duration.
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback e.g. `(err, res) => {}`
+-   `duration` **[number](#number)** A duration in seconds. If null or not provided, will provide last inserted database value. (optional, default `null`)
+
+### updateTile
+
+Update tile and register to dashboard
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback without parameters when done. Used for testing only. (optional, default `null`)
+
+### setValue
+
+Set a value and store in database
+
+**Parameters**
+
+-   `value` **[number](#number)** A value
+-   `vcc` **[number](#number)** A voltage level (optional, default `null`)
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback with an error parameter, called when done. Used for testing only. (optional, default `null`)
+
+### roundTimestamp
+
+Round a timestamp to a lower value
+
+**Parameters**
+
+-   `ts` **[number](#number)** A timestamp
+-   `granularity` **[number](#number)** An aggregation unit in seconds. Can be sensor's constants.
+
+Returns **[number](#number)** A rounded timestamp to aggregation unit
+
+### getStatistics
+
+Get sensor's statistics
+
+**Parameters**
+
+-   `timestampBegin` **[number](#number)** Begin period
+-   `timestampEnd` **[number](#number)** End period
+-   `granularity` **[number](#number)** Granularity, for aggregation. Can be number in seconds, or granularity constants
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback e.g. `(err, results) => {}`
+-   `roundTimestampFunction` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A  e.g. `(timestamp) => {return  timestamp;}` (optional, default `null`)
+-   `roundDateSqlFormat` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** In relation with roundTimeStampFunction, the SQL date format. E.g. : "%Y-%m-01 00:00:00" (optional, default `null`)
+
+### constants
+
+Access to constants
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A list of constants
+
+## TemperatureSensorForm
+
+**Extends api.exported.SensorForm**
+
+This class is extended by temperature sensors
+
+**Parameters**
+
+-   `id`  
+-   `plugin`  
+-   `name`  
+-   `dashboard`  
+-   `statistics`  
+-   `dashboardColor`  
+-   `statisticsColor`  
+-   `unit`  
+
+### constructor
+
+Sensor form
+
+**Parameters**
+
+-   `id` **[number](#number)** An identifier
+-   `plugin` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A plugin
+-   `name` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Sensor's name
+-   `dashboard` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if display on dashboard, otherwise false
+-   `statistics` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if display on statistics, otherwise false
+-   `dashboardColor` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The dashboard color
+-   `statisticsColor` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The statistics color
+-   `unit` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The default unit
+
+Returns **[SensorForm](#sensorform)** The instance
+
+### unit
+
+### json
+
+Convert JSON data to object
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some data
+
+Returns **[TemperatureSensorForm](#temperaturesensorform)** An instance
+
+## TemperatureSensor
+
+**Extends api.exported.Sensor**
+
+This class is overloaded by sensors
+
+**Parameters**
+
+-   `api`  
+-   `id`  
+-   `configuration`  
+
+### constructor
+
+Temperature sensor class (should be extended)
+
+**Parameters**
+
+-   `api` **PluginAPI** A plugin api
+-   `id` **[number](#number)** An id (optional, default `null`)
+-   `configuration` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The configuration for sensor (optional, default `null`)
+
+Returns **[TemperatureSensor](#temperaturesensor)** The instance
+
+### setUnit
+
+Set the unit depending on configuration
+
+**Parameters**
+
+-   `unit` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A unit configuration (`deg` or `far`)
+
 ## Logger
 
 This class provides static methods to log into a file.
@@ -924,7 +1357,7 @@ Constructor
 
 -   `authorized` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if authorized, else false (optional, default `false`)
 -   `username` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Username (optional, default `null`)
--   `level` **inr** Authorization level (optional, default `-1`)
+-   `level` **[number](#number)** Authorization level (optional, default `-1`)
 
 Returns **[Authentication](#authentication)** The instance
 
@@ -947,6 +1380,8 @@ This class manage object persistence with JSON format
 **Parameters**
 
 -   `appConfiguration`  
+-   `eventBus`  
+-   `stopEventName`  
 
 ### constructor
 
@@ -955,6 +1390,8 @@ Constructor
 **Parameters**
 
 -   `appConfiguration` **AppConfiguration** The app configuration object
+-   `eventBus` **EventEmitter** The global event bus
+-   `stopEventName` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The stop event name
 
 Returns **[ConfManager](#confmanager)** The instance
 
@@ -1005,6 +1442,15 @@ Save data for a specific key. Can throw error.
 -   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A JS object
 -   `key` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A file store key
 
+### writeDataToDisk
+
+Write data to disk
+
+**Parameters**
+
+-   `context` **[ConfManager](#confmanager)** A conf manager instance, context, typically `this`
+-   `async` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if save asynchronously, false otherwise (optional, default `true`)
+
 ### loadData
 
 Load data from file (Array or object)
@@ -1013,8 +1459,9 @@ Load data from file (Array or object)
 
 -   `classType` **class** The object class. This class MUST implement a json() method to process JSON to Object mapping
 -   `key` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A file store key
+-   `disableClassMapping` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Disable class mapping (optional, default `false`)
 
-Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of objects (instance of classType)
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of objects (instance of classType), or an object
 
 ### getData
 
@@ -1736,7 +2183,7 @@ Will return the first `length` results
 
 **Parameters**
 
--   `length` **int** The number of database items to retrieve from the start
+-   `length` **int** The number of database items to retrieve from the start (optional, default `1`)
 
 Returns **[DbRequestBuilder](#dbrequestbuilder)** The instance
 
@@ -1802,12 +2249,12 @@ This class provides a form for one device
 
 -   `id`   (optional, default `null`)
 -   `name`   (optional, default `null`)
--   `excludeFromAll`   (optional, default `null`)
--   `visible`   (optional, default `null`)
--   `worksOnlyOnDayNight`   (optional, default `null`)
--   `icon`   (optional, default `null`)
--   `radio`   (optional, default `null`)
--   `status`   (optional, default `null`)
+-   `excludeFromAll`   (optional, default `false`)
+-   `visible`   (optional, default `true`)
+-   `worksOnlyOnDayNight`   (optional, default `1`)
+-   `icon`   (optional, default `{}`)
+-   `radio`   (optional, default `[]`)
+-   `status`   (optional, default `-1`)
 
 ### constructor
 
@@ -1985,6 +2432,12 @@ Return configuration
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A configuration
 
+### getForm
+
+Return the form
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A formatted form object
+
 ## FormManager
 
 Generate forms from a specific object
@@ -2011,6 +2464,16 @@ Register a form class
 **Parameters**
 
 -   `cl` **Class** A class with form annotations
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Parameters injection on static methods
+
+### registerWithAdditionalFields
+
+Register a form class with additional fields
+
+**Parameters**
+
+-   `cl` **Class** A class with form annotations
+-   `additionalFields` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Additional fields object in annotation format
 -   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Parameters injection on static methods
 
 ### sanitize
@@ -2061,6 +2524,7 @@ Generates a form for a specific class
 **Parameters**
 
 -   `cl` **Class** A class with form annotations
+-   `additionalFields` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Additional fields object in annotation format
 -   `schema` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Current schema (append)
 -   `schemaUI` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Current UI schema (append)
 -   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Parameters injection on static methods
@@ -2115,6 +2579,8 @@ This class is an interface for plugins
 -   `timeEventService`  
 -   `schedulerService`  
 -   `dashboardManager`  
+-   `themeManager`  
+-   `sensorsManager`  
 
 ### exportClass
 
@@ -2182,6 +2648,8 @@ This class manage plugins
 -   `schedulerService`  
 -   `dashboardManager`  
 -   `eventBus`  
+-   `themeManager`  
+-   `sensorsManager`  
 
 ### constructor
 
@@ -2199,6 +2667,8 @@ Constructor
 -   `schedulerService` **[SchedulerService](#schedulerservice)** The scheduler service
 -   `dashboardManager` **[DashboardManager](#dashboardmanager)** The dashboard manager
 -   `eventBus` **EventEmitter** The global event bus
+-   `themeManager` **[ThemeManager](#thememanager)** The theme manager
+-   `sensorsManager` **[SensorsManager](#sensorsmanager)** The sensors manager
 
 Returns **[PluginsManager](#pluginsmanager)** The instance
 
@@ -2254,6 +2724,7 @@ Get plugin per gategory
 **Parameters**
 
 -   `category` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A category
+-   `checkInstance` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if return with instance, false otherwise. If set to true (default), it will check that there is an instance. False for testing is recommended. (optional, default `true`)
 
 Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of plugins
 
@@ -2309,6 +2780,8 @@ Public API for configuration
 -   `formManager`  
 -   `webServices`  
 -   `name`  
+-   `category`  
+-   `plugin`  
 
 ### register
 
@@ -2324,6 +2797,12 @@ Register a form
 Returns the configuration
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Configuration object
+
+### getForm
+
+Return the formatted form object
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Formatted form object
 
 ## DashboardAPI
 
@@ -2357,8 +2836,8 @@ Constructor
 
 -   `identifier` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The tile identifier (must be unique)
 -   `type` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The tile's model (or type). Models cosntants can be retrieved through `TileType()` (optional, default `TILE_INFO_ONE_TEXT`)
--   `icon` **[number](#number)** The icon. Use `api.exported.Icons.class.list()` to retrieve icon list. (optional, default `null`)
--   `subIcon` **[number](#number)** The subicon. Use `api.exported.Icons.class.list()` to retrieve icon list. (optional, default `null`)
+-   `icon` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The icon. Use `api.exported.Icons.class.list()` to retrieve icon list. (optional, default `null`)
+-   `subIcon` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The subicon. Use `api.exported.Icons.class.list()` to retrieve icon list. (optional, default `null`)
 -   `text` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The text (optional, default `null`)
 -   `subText` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The sub text (optional, default `null`)
 -   `picture` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A picture in base64 format (optional, default `null`)
@@ -2447,6 +2926,69 @@ Expose a list of constants : `IN_A_MINUTE`, `IN_FIVE_MINUTES`, `IN_TEN_MINUTES`,
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Constants
 
+## SensorAPI
+
+Public API for sensor
+
+**Parameters**
+
+-   `formManager`  
+-   `plugin`  
+-   `sensorsManager`  
+
+### registerForm
+
+Register a sensor form
+
+**Parameters**
+
+-   `formClass` **Class** A form annotation's implemented class
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The injected objects
+
+### registerClass
+
+Register a sensor class
+
+**Parameters**
+
+-   `c` **Class** A sensor extended class
+
+### registerSensorEvent
+
+Register a callback for a/all sensor
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback `(id, type, value, unit, vcc, aggValue, aggUnit) => {}`
+-   `identifier` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A sensor identifier (retrieved through `getAllSensors()`, or `*` for all) (optional, default `"*"`)
+-   `type` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A sensor type. For all types, use `*` (optional, default `"*"`)
+
+### unregisterSensorEvent
+
+Unregister a callback for a/all sensor
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback `(id, type, value, unit, vcc, aggValue, aggUnit) => {}`
+-   `identifier` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A sensor identifier (retrieved through `getAllSensors()`, or `*` for all) (optional, default `"*"`)
+-   `type` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A sensor type. For all types, use `*` (optional, default `"*"`)
+
+### getSensors
+
+Get all sensors
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** On object with id:name
+
+### getValue
+
+Get a sensor's value
+
+**Parameters**
+
+-   `id` **[number](#number)** The sensor's identifier
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback e.g. `(err, res) => {}`
+-   `duration` **[number](#number)** A duration in seconds. If null or not provided, will provide last inserted database value. (optional, default `null`)
+
 ## ServicesManagerAPI
 
 Public API for services manager
@@ -2462,6 +3004,20 @@ Add a service
 **Parameters**
 
 -   `service` **[Service](#service)** The service
+
+## ThemeAPI
+
+Public API for theme, colors
+
+**Parameters**
+
+-   `themeManager`  
+
+### getColors
+
+Retrieve the theme colors
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Colors
 
 ## TimeEventAPI
 
@@ -2717,6 +3273,178 @@ Emit radio request
 -   `previousStatus` **[number](#number)** The previous object status, used if status is null to invert (optional, default `null`)
 
 Returns **[DbRadio](#dbradio)** A radio  object
+
+## SensorsForm
+
+**Extends FormObject.class**
+
+This class provides a form for one device
+
+**Parameters**
+
+-   `id`   (optional, default `null`)
+-   `sensorId`   (optional, default `null`)
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `id` **[number](#number)** An identifier (optional, default `null`)
+-   `sensorId` **[number](#number)** A sensor identifier (optional, default `null`)
+
+Returns **[SensorsForm](#sensorsform)** The instance
+
+### sensorId
+
+### json
+
+Convert json data
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some key / value data
+
+Returns **[SensorsForm](#sensorsform)** A form object
+
+## SensorsManager
+
+This class allows to manage sensors
+
+**Parameters**
+
+-   `pluginsManager`  
+-   `eventBus`  
+-   `webServices`  
+-   `formManager`  
+-   `confManager`  
+-   `translateManager`  
+-   `themeManager`  
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `pluginsManager` **[PluginsManager](#pluginsmanager)** A plugin manager
+-   `eventBus` **EventEmitter** The global event bus
+-   `webServices` **[WebServices](#webservices)** The web services
+-   `formManager` **[FormManager](#formmanager)** The form manager
+-   `confManager` **[ConfManager](#confmanager)** The configuration manager
+-   `translateManager` **[TranslateManager](#translatemanager)** The translate manager
+-   `themeManager` **[ThemeManager](#thememanager)** The theme manager
+
+Returns **[SensorsManager](#sensorsmanager)** The instance
+
+### pluginsLoaded
+
+Called automatically when plugins are loaded. Used in separate methods for testing.
+Initially, this method wad used in contructor.
+
+**Parameters**
+
+-   `pluginsManager` **[PluginsManager](#pluginsmanager)** THe plugins manager instance
+-   `context` **[SensorsManager](#sensorsmanager)** The context (self, this, etc ...)
+
+### initSensors
+
+Initialize sensors
+
+### initSensor
+
+Init a sensor instance and add to local array
+
+**Parameters**
+
+-   `configuration` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The sensor configuration
+
+### registerSensorEvent
+
+Register a callback for a/all sensor
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback `(id, type, value, unit, vcc, aggValue, aggUnit) => {}`
+-   `identifier` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A sensor identifier (retrieved through `getAllSensors()`, or `*` for all) (optional, default `"*"`)
+-   `type` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A sensor type. For all types, use `*` (optional, default `"*"`)
+
+### unregisterSensorEvent
+
+Unregister a callback for a/all sensor
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback `(id, type, value, unit, vcc, aggValue, aggUnit) => {}`
+-   `identifier` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A sensor identifier (retrieved through `getAllSensors()`, or `*` for all) (optional, default `"*"`)
+-   `type` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A sensor type. For all types, use `*` (optional, default `"*"`)
+
+### getAllSensors
+
+Get all sensors
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** On object with id:name
+
+### onNewSensorValue
+
+Callback when a sensor receives a value
+
+**Parameters**
+
+-   `id` **[number](#number)** The identifier
+-   `type` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The type
+-   `value` **[number](#number)** The raw value
+-   `unit` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The raw unit
+-   `vcc` **[number](#number)** The sensor's voltage
+-   `aggValue` **[number](#number)** The aggregated value
+-   `aggUnit` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The aggregated unit
+
+### getValue
+
+Get a sensor's value
+
+**Parameters**
+
+-   `id` **[number](#number)** The sensor's identifier
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback e.g. `(err, res) => {}`
+-   `duration` **[number](#number)** A duration in seconds. If null or not provided, will provide last inserted database value. (optional, default `null`)
+
+### processAPI
+
+Process API callback
+
+**Parameters**
+
+-   `apiRequest` **[APIRequest](#apirequest)** An APIRequest
+
+Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with an APIResponse object
+
+### statisticsWsResponse
+
+Build a statistics data
+
+**Parameters**
+
+-   `endTimestamp` **[number](#number)** The end timestamp for aggregation
+-   `duration` **[number](#number)** A duration in seconds (period)
+-   `aggregation` **[number](#number)** The aggregation in seconds
+-   `displayDateFormat` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The display date format
+-   `roundTimestampFunction` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A  e.g. `(timestamp) => {return  timestamp;}` (optional, default `null`)
+-   `roundDateSqlFormat` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** In relation with roundTimeStampFunction, the SQL date format. E.g. : "%Y-%m-01 00:00:00" (optional, default `null`)
+
+Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise
+
+### comparator
+
+Compare sensor data
+
+**Parameters**
+
+-   `sensorData1` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Sensor data 1
+-   `sensorData2` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Sensor data 2
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if id is the same, false otherwise
 
 ## ServicesManager
 
@@ -3615,7 +4343,7 @@ Register to a specific API to be notified when a route and/or method is called
 **Parameters**
 
 -   `delegate` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A delegate which implements the processAPI(apiRequest) function
--   `method` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A method (\*, WebServices.GET / WebServices.POST) (optional, default `"*"`)
+-   `method` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A method (\*, WebServices.GET / WebServices.POST / WebServices.DELETE) (optional, default `"*"`)
 -   `route` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A route (\*, :/my/route/) (optional, default `"*"`)
 -   `authLevel` **int** An authentification level (optional, default `Authentication.AUTH_USAGE_LEVEL`)
 
@@ -3706,6 +4434,17 @@ Utility class for dates
 Return the current timestamp
 
 Returns **[number](#number)** The current timestamp
+
+### roundedTimestamp
+
+Round the timestamp to the mode
+
+**Parameters**
+
+-   `timestamp` **[number](#number)** A timestamp
+-   `mode` **[number](#number)** The mode (contant : `DateUtils.ROUND_TIMESTAMP_MINUTE`, `DateUtils.ROUND_TIMESTAMP_HOUR`, `DateUtils.ROUND_TIMESTAMP_DAY`, `DateUtils.ROUND_TIMESTAMP_MONTH`)
+
+Returns **[number](#number)** Rounded timestamp
 
 ### dateFormatted
 

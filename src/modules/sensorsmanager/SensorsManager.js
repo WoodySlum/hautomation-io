@@ -1,10 +1,12 @@
 "use strict";
+const sha256 = require("sha256");
 const Logger = require("./../../logger/Logger");
 const PluginsManager = require("./../pluginsmanager/PluginsManager");
 const WebServices = require("./../../services/webservices/WebServices");
 const APIResponse = require("./../../services/webservices/APIResponse");
 const Authentication = require("./../authentication/Authentication");
 const DateUtils = require("./../../utils/DateUtils");
+const SensorsForm = require("./SensorsForm");
 
 const CONF_MANAGER_KEY = "sensors";
 const SENSORS_MANAGER_AVAILABLE_GET = ":/sensors/available/get/";
@@ -17,6 +19,8 @@ const SENSORS_MANAGER_STATISTICS_DAY = ":/sensors/statistics/day/";
 const SENSORS_MANAGER_STATISTICS_MONTH = ":/sensors/statistics/month/";
 const SENSORS_MANAGER_STATISTICS_YEAR = ":/sensors/statistics/year/";
 
+const ERROR_ALREADY_REGISTERED = "Already registered";
+const ERROR_NOT_REGISTERED = "Not registered";
 /**
  * This class allows to manage sensors
  * @class
@@ -42,11 +46,16 @@ class SensorsManager {
         this.translateManager = translateManager;
         this.themeManager = themeManager;
         this.sensors = [];
+        this.delegates = {};
+
         try {
             this.sensorsConfiguration = this.confManager.loadData(Object, CONF_MANAGER_KEY, true);
         } catch(e) {
             Logger.warn(e.message);
-            this.sensorsConfiguration= [];
+        }
+
+        if (!this.sensorsConfiguration) {
+            this.sensorsConfiguration = [];
         }
 
         const self = this;
@@ -85,6 +94,15 @@ class SensorsManager {
         this.sensorsConfiguration.forEach((sensorConfiguration) => {
             this.initSensor(sensorConfiguration);
         });
+
+        // Register forms
+        const ids = [];
+        const names = [];
+        this.sensors.forEach((sensor) => {
+            ids.push(sensor.id);
+            names.push(sensor.name);
+        });
+        this.formManager.register(SensorsForm.class, ids, names);
     }
 
     /**
@@ -111,6 +129,97 @@ class SensorsManager {
         } else {
             Logger.err("No plugin associated found for sensor " + configuration.name);
         }
+    }
+
+    /**
+     * Register a callback for a/all sensor
+     *
+     * @param  {Function} cb               A callback `(id, type, value, unit, vcc, aggValue, aggUnit) => {}`
+     * @param  {string}   [identifier="*"] A sensor identifier (retrieved through `getAllSensors()`, or `*` for all)
+     * @param  {string}   [type="*"]       A sensor type. For all types, use `*`
+     */
+    registerSensorEvent(cb, identifier = "*", type = "*") {
+        const id = sha256(cb.toString() + identifier + type);
+        if (!this.delegates[id]) {
+            this.delegates[id] = {identifier:identifier, type:type, cb:cb};
+        } else {
+            throw Error(ERROR_ALREADY_REGISTERED);
+        }
+    }
+
+    /**
+     * Unregister a callback for a/all sensor
+     *
+     * @param  {Function} cb               A callback `(id, type, value, unit, vcc, aggValue, aggUnit) => {}`
+     * @param  {string}   [identifier="*"] A sensor identifier (retrieved through `getAllSensors()`, or `*` for all)
+     * @param  {string}   [type="*"]       A sensor type. For all types, use `*`
+     */
+    unregisterSensorEvent(cb, identifier = "*", type = "*") {
+        const id = sha256(cb.toString() + identifier + type);
+        if (this.delegates[id]) {
+            delete this.delegates[id];
+        } else {
+            throw Error(ERROR_NOT_REGISTERED);
+        }
+    }
+
+    /**
+     * Get all sensors
+     *
+     * @returns {Object} On object with id:name
+     */
+    getAllSensors() {
+        const sensors = {};
+        this.sensors.forEach((sensor) => {
+            sensors[sensor.id] = sensor.name;
+        });
+
+        return sensors;
+    }
+
+    /**
+     * Callback when a sensor receives a value
+     *
+     * @param  {number} id       The identifier
+     * @param  {string} type     The type
+     * @param  {number} value    The raw value
+     * @param  {string} unit     The raw unit
+     * @param  {number} vcc      The sensor's voltage
+     * @param  {number} aggValue The aggregated value
+     * @param  {string} aggUnit  The aggregated unit
+     */
+    onNewSensorValue(id, type, value, unit, vcc, aggValue, aggUnit) {
+        Object.keys(this.delegates).forEach((key) => {
+            const registeredEl = this.delegates[key];
+            if ((registeredEl.type === "*" || (registeredEl.type === type))
+                && (registeredEl.identifier === "*" || (parseInt(registeredEl.identifier) === parseInt(id)))
+                && registeredEl.cb) {
+                registeredEl.cb(id, type, value, unit, vcc, aggValue, aggUnit);
+            }
+        });
+    }
+
+    /**
+     * Get a sensor's value
+     *
+     * @param  {number}   id              The sensor's identifier
+     * @param  {Function} cb              A callback e.g. `(err, res) => {}`
+     * @param  {number}   [duration=null] A duration in seconds. If null or not provided, will provide last inserted database value.
+     */
+    getValue(id, cb, duration = null) {
+        this.sensors.forEach((sensor) => {
+            if (parseInt(id) === parseInt(sensor.id)) {
+                sensor.lastObject((err, res) => {
+                    if (!err) {
+                        const val = Object.assign({}, res);
+                        delete val.dbHelper;
+                        cb(err, val);
+                    } else {
+                        cb(err, null);
+                    }
+                }, duration);
+            }
+        });
     }
 
     /**
@@ -276,4 +385,4 @@ class SensorsManager {
     }
 }
 
-module.exports = {class:SensorsManager};
+module.exports = {class:SensorsManager, ERROR_ALREADY_REGISTERED:ERROR_ALREADY_REGISTERED, ERROR_NOT_REGISTERED:ERROR_NOT_REGISTERED};

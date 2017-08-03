@@ -16,7 +16,7 @@ describe("Sensor", function() {
 
     it("constructor should have good parameters", function() {
         sinon.spy(plugin.databaseAPI, "register");
-        let sensor = new Sensor(plugin, 30, {foo:"bar"}, "foo", 2, "bar", Sensor.constants().AGGREGATION_MODE_SUM, 3000, Sensor.constants().CHART_TYPE_BAR);
+        let sensor = new Sensor(plugin, 30, "FOOBAR",{foo:"bar"}, "foo", 2, "bar", Sensor.constants().AGGREGATION_MODE_SUM, 3000, Sensor.constants().CHART_TYPE_BAR);
         expect(sensor).to.have.property("api");
         expect(sensor).to.have.property("icon");
         expect(sensor).to.have.property("id");
@@ -44,7 +44,25 @@ describe("Sensor", function() {
 
     it("constructor should throw an error when configuration is null", function() {
         try {
-            let sensor = new Sensor(plugin, 30);
+            let sensor = new Sensor(plugin, 30, "FOOBAR");
+            expect(false).to.be.true;
+        } catch(e) {
+            expect(e).to.be.not.null;
+        }
+    });
+
+    it("constructor should throw an error when type is null", function() {
+        try {
+            let sensor = new Sensor(plugin, 30, null, {});
+            expect(false).to.be.true;
+        } catch(e) {
+            expect(e).to.be.not.null;
+        }
+    });
+
+    it("constructor should throw an error when id is null", function() {
+        try {
+            let sensor = new Sensor(plugin, null, "FOOBAR", {});
             expect(false).to.be.true;
         } catch(e) {
             expect(e).to.be.not.null;
@@ -52,7 +70,7 @@ describe("Sensor", function() {
     });
 
     it("init should call update tile", function() {
-        let sensor = new Sensor(plugin, 30, {});
+        let sensor = new Sensor(plugin, 30, "FOOBAR", {});
         sensor.unit = "foo";
         sinon.spy(sensor, "updateTile");
         sensor.init();
@@ -61,7 +79,7 @@ describe("Sensor", function() {
     });
 
     it("init should throw an error due to empty unit", function() {
-        let sensor = new Sensor(plugin, 30, {});
+        let sensor = new Sensor(plugin, 30, "FOOBAR", {});
         try {
             sensor.init();
             expect(false).to.be.true;
@@ -71,7 +89,7 @@ describe("Sensor", function() {
     });
 
     it("addUnitAggregation should update class property", function() {
-        let sensor = new Sensor(plugin, 30, {});
+        let sensor = new Sensor(plugin, 30, "FOOBAR", {});
         sensor.addUnitAggregation("foo", 1000);
         sensor.addUnitAggregation("bar", 2000);
         expect(Object.keys(sensor.unitAggregation).length).to.be.equal(2);
@@ -80,7 +98,7 @@ describe("Sensor", function() {
     });
 
     it("aggregateUnit should do the job", function() {
-        let sensor = new Sensor(plugin, 30, {});
+        let sensor = new Sensor(plugin, 30, "FOOBAR", {});
         sensor.unit = "foo";
         expect(sensor.aggregateUnit(1500).value).to.be.equal(1500);
         expect(sensor.aggregateUnit(1500).unit).to.be.equal("foo");
@@ -99,7 +117,7 @@ describe("Sensor", function() {
     });
 
     it("convertValue should do all conversion job", function() {
-        let sensor = new Sensor(plugin, 30, {});
+        let sensor = new Sensor(plugin, 30, "FOOBAR", {});
         sensor.unit = "foo";
         sensor.round = 2;
         sensor.unitConverter = (val) => {
@@ -125,7 +143,7 @@ describe("Sensor", function() {
     });
 
     it("lastObject with avg aggregation should report the good value", function(done) {
-        let sensor = new Sensor(plugin, 30, {});
+        let sensor = new Sensor(plugin, 30, "FOOBAR", {});
         sensor.unit = "foo";
         sensor.round = 2;
         sensor.id = "fooavg";
@@ -146,7 +164,7 @@ describe("Sensor", function() {
     });
 
     it("lastObject with sum aggregation should report the good value", function(done) {
-        let sensor = new Sensor(plugin, 30, {});
+        let sensor = new Sensor(plugin, 30, "FOOBAR", {});
         sensor.unit = "foo";
         sensor.round = 2;
         sensor.id = "foosum";
@@ -167,7 +185,7 @@ describe("Sensor", function() {
     });
 
     it("lastObject with min aggregation should report the good value", function(done) {
-        let sensor = new Sensor(plugin, 30, {});
+        let sensor = new Sensor(plugin, 30, "FOOBAR", {});
         sensor.unit = "foo";
         sensor.round = 2;
         sensor.id = "foomin";
@@ -188,7 +206,7 @@ describe("Sensor", function() {
     });
 
     it("lastObject with max aggregation should report the good value", function(done) {
-        let sensor = new Sensor(plugin, 30, {});
+        let sensor = new Sensor(plugin, 30, "FOOBAR", {});
         sensor.unit = "foo";
         sensor.round = 2;
         sensor.id = "foomax";
@@ -209,7 +227,7 @@ describe("Sensor", function() {
     });
 
     it("lastObject without period should report the good value", function(done) {
-        let sensor = new Sensor(plugin, 30, {});
+        let sensor = new Sensor(plugin, 30, "FOOBAR", {});
         sensor.unit = "foo";
         sensor.round = 2;
         sensor.id = "foofoo";
@@ -230,7 +248,7 @@ describe("Sensor", function() {
     });
 
     it("updateTile should call registerTile", function(done) {
-        let sensor = new Sensor(plugin, 30, {});
+        let sensor = new Sensor(plugin, 30, "FOOBAR", {});
         sensor.unit = "foo";
         sensor.round = 2;
         sensor.id = "foofoo";
@@ -244,7 +262,7 @@ describe("Sensor", function() {
     });
 
     it("updateTile should call unregisterTile", function(done) {
-        let sensor = new Sensor(plugin, 30, {});
+        let sensor = new Sensor(plugin, 30, "FOOBAR", {});
         sensor.unit = "foo";
         sensor.round = 2;
         sensor.id = "foofoofoo";
@@ -258,7 +276,7 @@ describe("Sensor", function() {
     });
 
     it("setValue should store raw value in database", function(done) {
-        let sensor = new Sensor(plugin, 30, {});
+        let sensor = new Sensor(plugin, 30, "FOOBAR", {});
         sensor.unit = "foo";
         sensor.round = 2;
         sensor.id = "foofoofoofoo";
@@ -276,14 +294,27 @@ describe("Sensor", function() {
         });
     });
 
+    it("setValue should dispatch value", function() {
+        let sensor = new Sensor(plugin, 30, "FOOBAR", {});
+        sensor.unit = "foo";
+        sensor.round = 2;
+        sensor.id = "foofoofoofoo";
+        sensor.aggregationMode = Sensor.constants().AGGREGATION_MODE_MAX;
+        sinon.spy(sensor, "updateTile");
+        sinon.spy(plugin.sensorAPI, "onNewSensorValue");
+        sensor.setValue(67, 10, (err) => {});
+        expect(plugin.sensorAPI.onNewSensorValue.calledOnce).to.be.true;
+        plugin.sensorAPI.onNewSensorValue.restore();
+    });
+
     it("roundTimestamp should round to lower timestamp", function() {
-        let sensor = new Sensor(plugin, 30, {});
+        let sensor = new Sensor(plugin, 30, "FOOBAR", {});
         expect(sensor.roundTimestamp(1501615834, 60 * 60)).to.be.equal(1501614000);
         expect(sensor.roundTimestamp(1501615834, 24 * 60 * 60)).to.be.equal(1501545600);
     });
 
     it("getStatistics day should return the complete list of aggregated values", function(done) {
-        let sensor = new Sensor(plugin, 30, {});
+        let sensor = new Sensor(plugin, 30, "FOOBAR", {});
         sensor.unit = "foo";
         sensor.round = 2;
         sensor.id = "foofoofoofoofoo";
@@ -322,7 +353,7 @@ describe("Sensor", function() {
     });
 
     it("getStatistics month should return the complete list of aggregated values", function(done) {
-        let sensor = new Sensor(plugin, 30, {});
+        let sensor = new Sensor(plugin, 30, "FOOBAR", {});
         sensor.unit = "foo";
         sensor.round = 2;
         sensor.id = "foofoofoofoofoofoo";
@@ -355,7 +386,7 @@ describe("Sensor", function() {
     });
 
     it("getStatistics year should return the complete list of aggregated values", function(done) {
-        let sensor = new Sensor(plugin, 30, {});
+        let sensor = new Sensor(plugin, 30, "FOOBAR", {});
         sensor.unit = "foo";
         sensor.round = 2;
         sensor.id = "foofoofoofoofoofoofoo";

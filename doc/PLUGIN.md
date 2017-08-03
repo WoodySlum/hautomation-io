@@ -128,11 +128,11 @@ You need first to register with a unique id the callback :
 	function scheduledOperation(data) {
         console.log("My name is " + data.name);
     }
-	
+
 	api.schedulerAPI.register("display-a-name", scheduledOperation);
 
 Then you can schedule your operation :
-	
+
 	api.schedulerAPI.schedule("display-a-name", api.schedulerAPI.constants().IN_A_MINUTE, {name:"Foobar"});
 
 Or at a specific timestamp :
@@ -224,14 +224,14 @@ On the annotations, you have to specify on wich version field is introduced. The
 	    class MyTable extends api.exported.DbObject.class {
 	        constructor(dbHelper = null, ...values) {
 	            super(dbHelper, ...values);
-	
+
 	            /**
 	             * @Property("text");
 	             * @Type("string");
 	             * @Version("0.0.0");
 	             */
 	            this.text;
-	
+
 	            /**
 	             * @Property("number");
 	             * @Type("int");
@@ -240,7 +240,7 @@ On the annotations, you have to specify on wich version field is introduced. The
 	            this.number;
 	        }
 	    }
-	
+
 		return MyTable;
 	}
 
@@ -265,7 +265,7 @@ On the annotations, you have to specify on wich version field is introduced. The
 		// Creating an object
 		// "A Sample text" will be mapped to text property, 2015 will be mapped to number property
 		const dbObject = new MyTable(dbHelper, "A sample text", 2015);
-		
+
 		// Save the object in database
 		dbObject.save();
 
@@ -317,7 +317,7 @@ Example :
 	api.exported.Logger.err("An error");
 	api.exported.Logger.verbose("A verbose message");
 	api.exported.Logger.debug("A debug log");
-	
+
 ### Create dashboard tiles
 
 You can add easily tiles on dashboard. The `dashboardAPI` property allows to do this.
@@ -338,5 +338,191 @@ Example :
     const tile = api.dashboardAPI.Tile("test-plugin", api.dashboardAPI.TileType().TILE_INFO_ONE_TEXT, api.exported.Icons.class.list()["map-pin"], null, "A tile title");
     api.dashboardAPI.registerTile(tile);
 
+### Create a sensor
 
+Sensor must have a particular architecture :
 
+    SensorClass <--> Intermediate sensor Layer <--> Sensor plugin
+
+The intermediate layer will define the units, the type and the aggregation rules for the sensor.
+If the intermediate layer exists it's easy to create a new sensor.
+
+You need to define a minimum sensor form.
+
+Example :
+
+    "use strict";
+    /**
+     * Loaded function
+     *
+     * @param  {PluginAPI} api The api
+     */
+    function loaded(api) {
+        api.init();
+
+        /**
+         * Esp temperature form sensor
+         * @class
+         */
+        class EspTemperatureSensorForm extends api.exported.TemperatureSensorForm {
+            /**
+             * Convert JSON data to object
+             *
+             * @param  {Object} data Some data
+             * @returns {EspTemperatureSensorForm}      An instance
+             */
+            json(data) {
+                super.json(data);
+            }
+        }
+
+        api.sensorAPI.registerForm(EspTemperatureSensorForm);
+
+        /**
+         * This class is overloaded by sensors
+         * @class
+         */
+        class EspTemperatureSensor extends api.exported.TemperatureSensor {
+            /**
+             * ESP Temperature sensor class (should be extended)
+             *
+             * @param  {PluginAPI} api                                                           A plugin api
+             * @param  {number} [id=null]                                                        An id
+             * @param  {Object} [configuration=null]                                             The configuration for sensor
+             * @returns {EspTemperatureSensor}                                                       The instance
+             */
+            constructor(api, id, configuration) {
+                super(api, id, configuration);
+                this.api.webAPI.register(this, this.api.webAPI.constants().POST, ":/esp/temperature/set/" + this.id + "/[value]/[vcc*]/", this.api.webAPI.Authentication().AUTH_NO_LEVEL);
+            }
+
+            /**
+             * Process API callback
+             *
+             * @param  {[type]} apiRequest An APIRequest
+             * @returns {Promise}  A promise with an APIResponse object
+             */
+            processAPI(apiRequest) {
+                return new Promise((resolve) => {
+                    this.setValue(apiRequest.data.value, apiRequest.data.vcc?parseFloat(apiRequest.data.vcc):null);
+                    resolve(this.api.webAPI.APIResponse(true, {success:true}));
+                });
+            }
+        }
+
+        api.sensorAPI.registerClass(EspTemperatureSensor);
+    }
+
+    module.exports.attributes = {
+        loadedCallback: loaded,
+        name: "esp-temperature-sensor",
+        version: "0.0.0",
+        category: "sensor",
+        description: "ESP temperature sensor",
+        dependencies:["temperature-sensor"]
+    };
+
+Intermediate layer example :
+
+    "use strict";
+    /**
+     * Loaded function
+     *
+     * @param  {PluginAPI} api The api
+     */
+    function loaded(api) {
+        api.init();
+
+        /**
+         * This class is extended by temperature sensors
+         * @class
+         */
+        class TemperatureSensorForm extends api.exported.SensorForm {
+            /**
+             * Sensor form
+             *
+             * @param  {number} id              An identifier
+             * @param  {string} plugin          A plugin
+             * @param  {string} name            Sensor's name
+             * @param  {boolean} dashboard       True if display on dashboard, otherwise false
+             * @param  {boolean} statistics      True if display on statistics, otherwise false
+             * @param  {string} dashboardColor  The dashboard color
+             * @param  {string} statisticsColor The statistics color
+             * @param  {string} unit The default unit
+             * @returns {SensorForm}                 The instance
+             */
+            constructor(id, plugin, name, dashboard, statistics, dashboardColor, statisticsColor, unit) {
+                super(id, plugin, name, dashboard, statistics, dashboardColor, statisticsColor);
+
+                /**
+                 * @Property("unit");
+                 * @Title("sensor.temperature.unit");
+                 * @Enum(["cel", "far"]);
+                 * @EnumNames(["Celsius", "Fahrenheit"]);
+                 * @Type("string");
+                 * @Required(true);
+                 */
+                this.unit = unit;
+            }
+
+            /**
+             * Convert JSON data to object
+             *
+             * @param  {Object} data Some data
+             * @returns {TemperatureSensorForm}      An instance
+             */
+            json(data) {
+                return new TemperatureSensorForm(data.id, data.plugin, data.name, data.dashboard, data.statistics, data.dashboardColor, data.statisticsColor, data.unit);
+            }
+        }
+
+        api.sensorAPI.registerForm(TemperatureSensorForm);
+
+        /**
+         * This class is overloaded by sensors
+         * @class
+         */
+        class TemperatureSensor extends api.exported.Sensor {
+            /**
+             * Temperature sensor class (should be extended)
+             *
+             * @param  {PluginAPI} api                                                           A plugin api
+             * @param  {number} [id=null]                                                        An id
+             * @param  {Object} [configuration=null]                                             The configuration for sensor
+             * @returns {TemperatureSensor}                                                       The instance
+             */
+            constructor(api, id, configuration) {
+                super(api, id, "TEMPERATURE", configuration, api.exported.Icons.class.list()["uniF2C8"], 1);
+                this.setUnit(configuration.unit);
+            }
+
+            /**
+             * Set the unit depending on configuration
+             *
+             * @param {string} unit A unit configuration (`deg` or `far`)
+             */
+            setUnit(unit) {
+                this.unit = "°C";
+                if (unit === "far") {
+                    this.unit = "°F";
+                    this.unitConverter = (value) => {
+                        return value * (9/5) + 32;
+                    };
+                }
+            }
+        }
+
+        api.sensorAPI.registerClass(TemperatureSensor);
+    }
+
+    module.exports.attributes = {
+        loadedCallback: loaded,
+        name: "temperature-sensor",
+        version: "0.0.0",
+        category: "sensor-base",
+        description: "Temperature Sensor base plugin",
+        dependencies:["sensor"]
+    };
+
+You can add aggregation values to the sensor. For example, if you have 63 minutes, you surely want to get 1 hour instead.
+You can use `this.addUnitAggregation(unitName, lowThreshold = 0)` on your plugin to add a unit aggregation.

@@ -19,11 +19,6 @@ describe("DateUtils", function() {
         expect(DateUtils.class.roundedTimestamp(1478003040, DateUtils.ROUND_TIMESTAMP_MONTH)).to.be.equal(1477958400);
     });
 
-    it("dateFormatted should format date", function() {
-        expect(DateUtils.class.dateFormatted("YYYY-MM-DD HH:mm:ss", 1467623167)).to.be.equal("2016-07-04 11:06:07");
-    });
-
-
     after(() => {
 
     });

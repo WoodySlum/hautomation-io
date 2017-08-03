@@ -38,9 +38,10 @@ class PluginsAPI {
     //  * @param  {SchedulerService} schedulerService     The scheduler service
     //  * @param  {DashboardManager} dashboardManager     The dashboard manager
     //  * @param  {ThemeManager} themeManager     The theme manager
+    //  * @param  {SensorsManager} sensorsManager The sensors manager
     //  * @returns {PluginAPI}                  Insntance
     //  */
-    constructor(previousVersion, p, webServices, servicesManager, dbManager, translateManager, formManager, confManager, timeEventService, schedulerService, dashboardManager, themeManager) {
+    constructor(previousVersion, p, webServices, servicesManager, dbManager, translateManager, formManager, confManager, timeEventService, schedulerService, dashboardManager, themeManager, sensorsManager) {
         PrivateProperties.createPrivateState(this);
         this.previousVersion = previousVersion;
         this.p = p;
@@ -74,7 +75,7 @@ class PluginsAPI {
         this.timeEventAPI = new TimeEventAPI.class(timeEventService);
         this.schedulerAPI = new SchedulerAPI.class(schedulerService);
         this.dashboardAPI = new DashboardAPI.class(dashboardManager);
-        this.sensorAPI = new SensorAPI.class(formManager, this);
+        this.sensorAPI = new SensorAPI.class(formManager, this, sensorsManager);
         this.themeManager = new ThemeAPI.class(themeManager);
     }
 
