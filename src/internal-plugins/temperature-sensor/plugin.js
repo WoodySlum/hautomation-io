@@ -66,7 +66,7 @@ function loaded(api) {
          * @returns {TemperatureSensor}                                                       The instance
          */
         constructor(api, id, configuration) {
-            super(api, id, "TEMPERATURE", configuration, api.exported.Icons.class.list()["uniF2C8"], 1);
+            super(api, id, "TEMPERATURE", configuration, api.exported.Icons.class.list()["uniF2C8"], 0);
             this.setUnit(configuration.unit);
         }
 

@@ -55,7 +55,7 @@ function loaded(api) {
          * @returns {ThroughputSensor}                                                       The instance
          */
         constructor(api, id, configuration) {
-            super(api, id, "THROUGHPUT", configuration, api.exported.Icons.class.list()["_578"], 1);
+            super(api, id, "THROUGHPUT", configuration, api.exported.Icons.class.list()["_578"], 0);
             this.setUnit("kb/s");
             this.addUnitAggregation("mb/s", 1024);
         }

@@ -29,6 +29,7 @@ const INTERNAL_PLUGINS = [
     "temperature-sensor",
     "humidity-sensor",
     "throughput-sensor",
+    "pressure-sensor",
     "esp-temperature-sensor"
 ];
 
