@@ -3,7 +3,7 @@ var chai = require("chai");
 var expect = chai.expect;
 var sinon = require("sinon");
 
-const HautomationCore = require("./../../../src/HautomationCore");
+const HautomationCore = require("./../../../src/HautomationCore").class;
 
 const core = new HautomationCore();
 const deviceManager = core.deviceManager;

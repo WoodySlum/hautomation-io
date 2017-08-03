@@ -74,7 +74,7 @@ class WebAPI {
      * @returns {Object} The constants
      */
     constants() {
-        return Cleaner.class.exportConstants(WebServices.class);
+        return Cleaner.class.exportConstants(WebServices);
     }
 
 }

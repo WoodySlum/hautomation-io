@@ -5,6 +5,7 @@
 -   [ConfigurationAPI](#configurationapi)
     -   [register](#register)
     -   [getConfiguration](#getconfiguration)
+    -   [getForm](#getform)
 -   [FormConfiguration](#formconfiguration)
     -   [constructor](#constructor)
     -   [loadConfig](#loadconfig)
@@ -13,6 +14,7 @@
     -   [registerForm](#registerform)
     -   [processAPI](#processapi)
     -   [getConfig](#getconfig)
+    -   [getForm](#getform-1)
 -   [DashboardAPI](#dashboardapi)
     -   [registerTile](#registertile)
     -   [unregisterTile](#unregistertile)
@@ -92,9 +94,19 @@
 -   [triggerDate](#triggerdate)
 -   [DateUtils](#dateutils)
     -   [timestamp](#timestamp)
+    -   [roundedTimestamp](#roundedtimestamp)
     -   [dateFormatted](#dateformatted)
+-   [SensorAPI](#sensorapi)
+    -   [registerForm](#registerform-1)
+    -   [registerClass](#registerclass)
+    -   [registerSensorEvent](#registersensorevent)
+    -   [unregisterSensorEvent](#unregistersensorevent)
+    -   [getSensors](#getsensors)
+    -   [getValue](#getvalue)
 -   [ServicesManagerAPI](#servicesmanagerapi)
     -   [add](#add)
+-   [ThemeAPI](#themeapi)
+    -   [getColors](#getcolors)
 -   [TimeEventAPI](#timeeventapi)
     -   [register](#register-4)
     -   [unregister](#unregister-2)
@@ -199,6 +211,8 @@ Public API for configuration
 -   `formManager`  
 -   `webServices`  
 -   `name`  
+-   `category`  
+-   `plugin`  
 
 ### register
 
@@ -214,6 +228,12 @@ Register a form
 Returns the configuration
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Configuration object
+
+### getForm
+
+Return the formatted form object
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Formatted form object
 
 ## FormConfiguration
 
@@ -293,6 +313,12 @@ Return configuration
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A configuration
 
+### getForm
+
+Return the form
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A formatted form object
+
 ## DashboardAPI
 
 Public API for dashboard
@@ -325,8 +351,8 @@ Constructor
 
 -   `identifier` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The tile identifier (must be unique)
 -   `type` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The tile's model (or type). Models cosntants can be retrieved through `TileType()` (optional, default `TILE_INFO_ONE_TEXT`)
--   `icon` **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** The icon. Use `api.exported.Icons.class.list()` to retrieve icon list. (optional, default `null`)
--   `subIcon` **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** The subicon. Use `api.exported.Icons.class.list()` to retrieve icon list. (optional, default `null`)
+-   `icon` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The icon. Use `api.exported.Icons.class.list()` to retrieve icon list. (optional, default `null`)
+-   `subIcon` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The subicon. Use `api.exported.Icons.class.list()` to retrieve icon list. (optional, default `null`)
 -   `text` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The text (optional, default `null`)
 -   `subText` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The sub text (optional, default `null`)
 -   `picture` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A picture in base64 format (optional, default `null`)
@@ -834,7 +860,7 @@ Will return the first `length` results
 
 **Parameters**
 
--   `length` **int** The number of database items to retrieve from the start
+-   `length` **int** The number of database items to retrieve from the start (optional, default `1`)
 
 Returns **[DbRequestBuilder](#dbrequestbuilder)** The instance
 
@@ -1048,6 +1074,17 @@ Return the current timestamp
 
 Returns **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** The current timestamp
 
+### roundedTimestamp
+
+Round the timestamp to the mode
+
+**Parameters**
+
+-   `timestamp` **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** A timestamp
+-   `mode` **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** The mode (contant : `DateUtils.ROUND_TIMESTAMP_MINUTE`, `DateUtils.ROUND_TIMESTAMP_HOUR`, `DateUtils.ROUND_TIMESTAMP_DAY`, `DateUtils.ROUND_TIMESTAMP_MONTH`)
+
+Returns **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** Rounded timestamp
+
 ### dateFormatted
 
 Format the current date with parameter
@@ -1058,6 +1095,69 @@ Format the current date with parameter
 -   `timestamp` **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** A timestamp. If not provided, use current timestamp. (optional, default `null`)
 
 Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The formatted date
+
+## SensorAPI
+
+Public API for sensor
+
+**Parameters**
+
+-   `formManager`  
+-   `plugin`  
+-   `sensorsManager`  
+
+### registerForm
+
+Register a sensor form
+
+**Parameters**
+
+-   `formClass` **Class** A form annotation's implemented class
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The injected objects
+
+### registerClass
+
+Register a sensor class
+
+**Parameters**
+
+-   `c` **Class** A sensor extended class
+
+### registerSensorEvent
+
+Register a callback for a/all sensor
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback `(id, type, value, unit, vcc, aggValue, aggUnit) => {}`
+-   `identifier` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A sensor identifier (retrieved through `getAllSensors()`, or `*` for all) (optional, default `"*"`)
+-   `type` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A sensor type. For all types, use `*` (optional, default `"*"`)
+
+### unregisterSensorEvent
+
+Unregister a callback for a/all sensor
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback `(id, type, value, unit, vcc, aggValue, aggUnit) => {}`
+-   `identifier` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A sensor identifier (retrieved through `getAllSensors()`, or `*` for all) (optional, default `"*"`)
+-   `type` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A sensor type. For all types, use `*` (optional, default `"*"`)
+
+### getSensors
+
+Get all sensors
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** On object with id:name
+
+### getValue
+
+Get a sensor's value
+
+**Parameters**
+
+-   `id` **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** The sensor's identifier
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback e.g. `(err, res) => {}`
+-   `duration` **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** A duration in seconds. If null or not provided, will provide last inserted database value. (optional, default `null`)
 
 ## ServicesManagerAPI
 
@@ -1074,6 +1174,20 @@ Add a service
 **Parameters**
 
 -   `service` **[Service](#service)** The service
+
+## ThemeAPI
+
+Public API for theme, colors
+
+**Parameters**
+
+-   `themeManager`  
+
+### getColors
+
+Retrieve the theme colors
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Colors
 
 ## TimeEventAPI
 
@@ -1316,7 +1430,7 @@ Constructor
 
 -   `authorized` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if authorized, else false (optional, default `false`)
 -   `username` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Username (optional, default `null`)
--   `level` **inr** Authorization level (optional, default `-1`)
+-   `level` **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** Authorization level (optional, default `-1`)
 
 Returns **[Authentication](#authentication)** The instance
 
@@ -1459,7 +1573,7 @@ Register to a specific API to be notified when a route and/or method is called
 **Parameters**
 
 -   `delegate` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A delegate which implements the processAPI(apiRequest) function
--   `method` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A method (\*, WebServices.GET / WebServices.POST) (optional, default `"*"`)
+-   `method` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A method (\*, WebServices.GET / WebServices.POST / WebServices.DELETE) (optional, default `"*"`)
 -   `route` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A route (\*, :/my/route/) (optional, default `"*"`)
 -   `authLevel` **int** An authentification level (optional, default `Authentication.AUTH_USAGE_LEVEL`)
 

@@ -12,6 +12,7 @@ var swalDefaults = {
 var toastr = {};
 
 $(document).ready(function() {
+    var Form = JSONSchemaForm.default;
     var ePassword = null;
     var isAdmin = false;
     var objects = '';
@@ -2767,16 +2768,14 @@ $(document).ready(function() {
     var getYearStatistics = function() {
         showLoader();
         $.ajax({
-            type: "POST",
-            url: vUrl,
+            type: "GET",
+            url: vUrl + "sensors/statistics/year/",
             data: {
-                username: username,
-                ePassword: ePassword,
-                method: "getStatistics",
-                name: "year"
+                u: username,
+                p: password
             }
         }).done(function(msg) {
-            var data = jQuery.parseJSON(msg);
+            var data = msg;
             drawSensorChart(data, 'yearStatistics', t('js.statistics.year', null));
             hideLoader();
         }).fail(function(msg) {
@@ -2788,16 +2787,14 @@ $(document).ready(function() {
     var getMonthStatistics = function() {
         showLoader();
         $.ajax({
-            type: "POST",
-            url: vUrl,
+            type: "GET",
+            url: vUrl + "sensors/statistics/month/",
             data: {
-                username: username,
-                ePassword: ePassword,
-                method: "getStatistics",
-                name: "month"
+                u: username,
+                p: password
             }
         }).done(function(msg) {
-            var data = jQuery.parseJSON(msg);
+            var data = msg;
             drawSensorChart(data, 'monthStatistics', t('js.statistics.month', null));
             hideLoader();
         }).fail(function(msg) {
@@ -2809,16 +2806,14 @@ $(document).ready(function() {
     var getDayStatistics = function() {
         showLoader();
         $.ajax({
-            type: "POST",
-            url: vUrl,
+            type: "GET",
+            url: vUrl + "sensors/statistics/day/",
             data: {
-                username: username,
-                ePassword: ePassword,
-                method: "getStatistics",
-                name: "day"
+                u: username,
+                p: password
             }
         }).done(function(msg) {
-            data = jQuery.parseJSON(msg);
+            data = msg;
             drawSensorChart(data, 'dayStatistics', t('js.statistics.day', null));
             hideLoader();
         }).fail(function(msg) {
@@ -5057,38 +5052,29 @@ $(document).ready(function() {
         $("#sensorsLoader").show();
         showLoader();
         reqPluginList = $.ajax({
-            type: "POST",
-            url: vUrl,
+            type: "GET",
+            url: vUrl + "sensors/get/",
             data: {
-                username: username,
-                ePassword: ePassword,
-                method: "getSensors"
+                u: username,
+                p: password
             }
-        }).done(function(msg) {
-            var jsonData = JSON.parse(msg, function(key, value) {
-                if (value && (typeof value === 'string') && value.indexOf("function") === 0) {
-                    // we can only pass a function as string in JSON ==> doing a real function
-                    var jsFunc = new Function('return ' + value)();
-                    return jsFunc;
-                }
+        }).done(function(sensors) {
 
-                return value;
-            });
+
 
             var nbLine = 4;
             var colcount = 0;
             var sensorsContent = '';
             $("#sensorsContent").empty();
 
-            for (var i = 0; i < jsonData.length; i++) {
+            for (var i = 0; i < sensors.length; i++) {
                 if (colcount == 0) {
                     sensorsContent = sensorsContent + '<div class="row">';
                 }
-                sensorsContent = sensorsContent + '<div class="col-md-2 sensorClick sensorTile" id="' + jsonData[i].identifier + '" style="background-color:' + jsonData[i].color + '">';
-                sensorsContent = sensorsContent + '<i class="fa sensorIcon" data-unicode="' + jsonData[i].icon + '">&#x' + jsonData[i].icon + '</i><br/>';
-                sensorsContent = sensorsContent + '<span class="label label-success">' + jsonData[i].type + '</span><br/>';
-                sensorsContent = sensorsContent + '<span class="label">' + jsonData[i].configValues.sensorLocationExisting + '</span><br/><br />';
-                sensorsContent = sensorsContent + '<strong>' + jsonData[i].sensorName + '</strong>';
+                sensorsContent = sensorsContent + '<div class="col-md-2 sensorClick sensorTile" id="' + sensors[i].identifier + '" style="">';
+                sensorsContent = sensorsContent + '<i class="fa sensorIcon" data-unicode="' + sensors[i].icon + '">&#x' + sensors[i].icon + '</i><br/>';
+                sensorsContent = sensorsContent + '<span class="label label-success">' + sensors[i].category + '</span><br/>';
+                sensorsContent = sensorsContent + '<strong>' + sensors[i].name + '</strong>';
                 sensorsContent = sensorsContent + '</div>';
                 colcount++;
                 if (colcount == 5) {
@@ -5110,8 +5096,14 @@ $(document).ready(function() {
                 $('#sensorSelectForm').empty();
                 $('#sensorOtaFlashBtn').empty();
 
-                var res = e.currentTarget.id.split("-");
-                var key = res[(res.length - 1)];
+
+                var sensor = null;
+                for (var i = 0; i < sensors.length; i++) {
+                    if (parseInt(sensors[i].identifier) === parseInt(e.currentTarget.id)) {
+                        sensor = sensors[i];
+                        break;
+                    }
+                }
 
                 $("#deleteSensorForm").unbind();
                 $("#deleteSensorForm").click(function() {
@@ -5126,25 +5118,20 @@ $(document).ready(function() {
                     }, swalDefaults)).then(function() {
                         // Confirm
                         showLoader();
-                        var reqDelSensor = $.ajax({
-                            type: "POST",
-                            url: vUrl,
+                        // Confirm
+                        $.ajax({
+                            type: "DELETE",
+                            url: vUrl + "sensors/del/" + sensor.identifier +"/",
                             data: {
-                                username: username,
-                                ePassword: ePassword,
-                                method: "deleteSensor",
-                                data: JSON.stringify({
-                                    'identifier': key
-                                })
+                                u: username,
+                                p: password
                             }
-                        }).done(function(msg) {
-                            $('#sensorModal').modal('hide');
-                            toastr.success(t('js.global.sensors.form.deleted', null));
+                        }).done(function(data) {
                             $("#manageSensorsItem").click();
+                            $('#sensorModal').modal('hide');
                             hideLoader();
                         }).fail(function(msg) {
-                            displayError(msg);
-                            hideLoader();
+                            setError(msg);
                         });
                     }, function(mode) {
                         // Cancel
@@ -5154,15 +5141,7 @@ $(document).ready(function() {
                     });
                 });
 
-                var plugin = null;
-                for (var i = 0; i < jsonData.length; i++) {
-                    if (jsonData[i].identifier == e.currentTarget.id) {
-                        plugin = jsonData[i];
-                        break;
-                    }
-                }
-
-                if (plugin.otaFlash) {
+                /*if (plugin.otaFlash) {
                     document.getElementById('sensorOtaFlashBtn').innerHTML = '<button class="btn btn-primary" aria-hidden="true" id="otaFlash"><span class="glyphicon glyphicon-export" aria-hidden="true"></span> ' + t('js.global.sensors.ota.flash', null) + '</button>';
                 }
 
@@ -5171,53 +5150,40 @@ $(document).ready(function() {
                 $("#sensorOtaFlashBtn").click(function() {
                     $('#sensorModal').modal('hide');
                     flashSensor(plugin);
-                });
+                });*/
 
                 // Display sensor form
                 $("#saveSensorForm").unbind();
                 $("#saveSensorForm").click(function() {
-                    $("#sensorForm").submit();
+                    $("#react-btn-submit-sensor").click();
                 });
 
                 $("#sensorForm").empty();
-                var pluginIdentifier = plugin.baseIdentifier;
-                consolelog("------");
-                consolelog(plugin.config.schema);
-                consolelog(plugin.config.form);
-                $("#sensorForm").jsonForm({
-                    schema: plugin.config.schema,
-                    "form": plugin.config.form,
-                    "value": plugin.configValues,
-                    onSubmit: function(errors, values) {
-                        if (errors) {
-                            setError(t('js.invalid.form.data', null));
-                        } else {
-                            values.key = key;
-                            if (values.sensorLocation && (values.sensorLocation != '')) values.sensorLocationExisting = values.sensorLocation;
-                            values.sensorLocation = null;
-                            showLoader();
-                            reqPluginSetConfig = $.ajax({
-                                type: "POST",
-                                url: vUrl,
-                                data: {
-                                    username: username,
-                                    ePassword: ePassword,
-                                    method: "setSensor",
-                                    data: JSON.stringify(values),
-                                    pluginIdentifier: pluginIdentifier
-                                }
-                            }).done(function(msg) {
-                                $('#sensorModal').modal('hide');
-                                toastr.success('Sensor saved');
-                                $("#manageSensorsItem").click();
-                                hideLoader();
-                            }).fail(function(msg) {
-                                displayError(msg);
-                                hideLoader();
-                            });
-                        }
-                    }
-                });
+
+                var self = this;
+                ReactDOM.render(React.createElement(Form, {schema:sensor.form.schema, uiSchema:sensor.form.schemaUI, formData:sensor.form.data, onSubmit: function(data) {
+                    $.ajax({
+                        type: "POST",
+                        url: vUrl + "sensors/set/" + sensor.form.data.id + "/",
+                        contentType: "application/json",
+                        data: JSON.stringify({
+                            u: username,
+                            p: password,
+                            data: data.formData
+                        })
+                    }).done(function(data) {
+                        $("#manageSensorsItem").click();
+                        $('#sensorModal').modal('hide');
+                    }).fail(function(msg) {
+                        $('#sensorModal').modal('hide');
+                        setError(msg);
+                    });
+                }},
+                React.createElement(
+                  "button",
+                  { type: "submit", className:"btn btn-success hidden", id:"react-btn-submit-sensor" },
+                  "button.save"
+              )), document.getElementById("sensorForm"));
             });
             hideLoader();
         });
@@ -5227,34 +5193,23 @@ $(document).ready(function() {
         $("#sensorsLoader").show();
         showLoader();
         reqPluginList = $.ajax({
-            type: "POST",
-            url: vUrl,
+            type: "GET",
+            url: vUrl + "sensors/available/get/",
             data: {
-                username: username,
-                ePassword: ePassword,
-                method: "getSensorPluginList"
+                u: username,
+                p: password
             }
-        }).done(function(msg) {
+        }).done(function(sensorsAvailableData) {
             $("#sensorsLoader").hide();
             $("#deleteSensorForm").hide();
-            // var jsonData = JSON.parse(msg);
-            var jsonData = JSON.parse(msg, function(key, value) {
-                if (value && (typeof value === 'string') && value.indexOf("function") === 0) {
-                    // we can only pass a function as string in JSON ==> doing a real function
-                    var jsFunc = new Function('return ' + value)();
-                    return jsFunc;
-                }
 
-                return value;
-            });
 
-            if (jsonData) {
+            if (sensorsAvailableData) {
                 var formContent = '<select id="sensorSelector" class="form-control">';
                 formContent = formContent + '<option value="">' + t('js.global.sensors.form.sensor.type.default', null) + '</option>';
-                var keys = Object.keys(jsonData);
 
-                for (var i = 0; i < keys.length; i++) {
-                    formContent = formContent + '<option value="' + keys[i] + '">' + jsonData[keys[i]].name + ' (' + jsonData[keys[i]].type + ')' + '</option>';
+                for (var i = 0; i < sensorsAvailableData.length; i++) {
+                    formContent = formContent + '<option value="' + i + '">' + sensorsAvailableData[i].description + '</option>';
                 }
 
                 formContent = formContent + '</select>';
@@ -5266,10 +5221,39 @@ $(document).ready(function() {
                 $('#sensorSelector').change(function() {
                     var key = $('#sensorSelector').val();
                     if (key == '') return;
+                    var sensorAvailableData = sensorsAvailableData[parseInt(key)];
+                    var self = this;
+                    ReactDOM.render(React.createElement(Form, {schema:sensorAvailableData.form.schema, uiSchema:sensorAvailableData.form.schemaUI, formData:{}, onSubmit: function(data) {
+                        $.ajax({
+                            type: "POST",
+                            url: vUrl + "sensors/set/",
+                            contentType: "application/json",
+                            data: JSON.stringify({
+                                u: username,
+                                p: password,
+                                data: data.formData
+                            })
+                        }).done(function(data) {
+                            $("#manageSensorsItem").click();
+                            $('#sensorModal').modal('hide');
+                        }).fail(function(msg) {
+                            $('#sensorModal').modal('hide');
+                            setError(msg);
+                        });
+                    }},
+                    React.createElement(
+                      "button",
+                      { type: "submit", className:"btn btn-success hidden", id:"react-btn-submit-sensor" },
+                      "button.save"
+                  )), document.getElementById("sensorForm"));
+
+
+
+
                     // Display sensor form
                     $("#saveSensorForm").unbind();
                     $("#saveSensorForm").click(function() {
-                        $("#sensorForm").submit();
+                        $("#react-btn-submit-sensor").click();
                     });
 
                     var plugin = jsonData[key];

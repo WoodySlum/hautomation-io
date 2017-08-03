@@ -24,7 +24,13 @@ const ERROR_DEPENDENCY_NOT_FOUND = "Dependency not found";
 const INTERNAL_PLUGINS = [
     "rflink",
     "radio",
-    "sample"
+    "sample",
+    "sensor",
+    "temperature-sensor",
+    "humidity-sensor",
+    "throughput-sensor",
+    "pressure-sensor",
+    "esp-temperature-sensor"
 ];
 
 /**
@@ -45,9 +51,11 @@ class PluginsManager {
      * @param {SchedulerService} schedulerService The scheduler service
      * @param  {DashboardManager} dashboardManager    The dashboard manager
      * @param  {EventEmitter} eventBus    The global event bus
+     * @param  {ThemeManager} themeManager    The theme manager
+     * @param {SensorsManager} sensorsManager  The sensors manager
      * @returns {PluginsManager} The instance
      */
-    constructor(confManager, webServices, servicesManager, dbManager, translateManager, formManager, timeEventService, schedulerService, dashboardManager, eventBus) {
+    constructor(confManager, webServices, servicesManager, dbManager, translateManager, formManager, timeEventService, schedulerService, dashboardManager, eventBus, themeManager, sensorsManager) {
         this.fs = fs;
         this.path = path;
         this.remi = remi;
@@ -61,6 +69,8 @@ class PluginsManager {
         this.timeEventService = timeEventService;
         this.schedulerService = schedulerService;
         this.dashboardManager = dashboardManager;
+        this.themeManager = themeManager;
+        this.sensorsManager = sensorsManager;
 
         this.plugins = [];
         try {
@@ -162,7 +172,9 @@ class PluginsManager {
                 this.confManager,
                 this.timeEventService,
                 this.SchedulerService,
-                this.dashboardManager
+                this.dashboardManager,
+                this.themeManager,
+                this.sensorsManager
             );
 
             initializedPlugins.push(pApi);
@@ -240,12 +252,13 @@ class PluginsManager {
      * Get plugin per gategory
      *
      * @param  {string} category A category
+     * @param  {boolean} [checkInstance=true] True if return with instance, false otherwise. If set to true (default), it will check that there is an instance. False for testing is recommended.
      * @returns {Array}          An array of plugins
      */
-    getPluginsByCategory(category) {
+    getPluginsByCategory(category, checkInstance = true) {
         let plugins = [];
         this.plugins.forEach((plugin) => {
-            if (plugin.category.toLowerCase() === category.toLowerCase() && plugin.instance) {
+            if (plugin.category.toLowerCase() === category.toLowerCase() && (!checkInstance || (checkInstance && plugin.instance))) {
                 plugins.push(plugin);
             }
         });

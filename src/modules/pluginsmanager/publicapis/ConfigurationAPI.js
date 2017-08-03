@@ -15,15 +15,20 @@ class ConfigurationAPI {
     //  * @param  {FormManager} formManager A form manager
     //  * @param  {WebServices} webServices The web services instance
     //  * @param  {string} name        Plugin's name
+    //  * @param  {string} category        Plugin's category
+    //  * @param  {PluginAPI} plugin        Plugin API
     //  * @returns {ConfigurationAPI}             The instance
     //  */
-    constructor(confManager, formManager, webServices, name) {
+    constructor(confManager, formManager, webServices, name, category, plugin) {
         PrivateProperties.createPrivateState(this);
         PrivateProperties.oprivate(this).confManager = confManager;
         PrivateProperties.oprivate(this).formManager = formManager;
         PrivateProperties.oprivate(this).webServices = webServices;
         PrivateProperties.oprivate(this).name = name;
+        PrivateProperties.oprivate(this).category = category;
         PrivateProperties.oprivate(this).formConfiguration = null;
+        PrivateProperties.oprivate(this).plugin = plugin;
+        this.form = null;
     }
     /* eslint-enable */
 
@@ -41,6 +46,11 @@ class ConfigurationAPI {
             PrivateProperties.oprivate(this).name
         );
         PrivateProperties.oprivate(this).formConfiguration.registerForm(formClass, ...inject);
+        PrivateProperties.oprivate(this).plugin.exportClass(formClass);
+
+        if (!this.form) {
+            this.form = formClass;
+        }
     }
 
     /**
@@ -52,6 +62,18 @@ class ConfigurationAPI {
         return PrivateProperties.oprivate(this).formConfiguration.getConfig();
     }
 
+    /**
+     * Return the formatted form object
+     *
+     * @returns {Object} Formatted form object
+     */
+    getForm() {
+        if (PrivateProperties.oprivate(this).formConfiguration) {
+            return PrivateProperties.oprivate(this).formConfiguration.getForm();
+        } else {
+            return null;
+        }
+    }
 
 }
 

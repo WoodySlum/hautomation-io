@@ -119,6 +119,7 @@ describe("ConfManager", function() {
          sinon.spy(confManager.fs, 'writeFile');
          try {
              confManager.saveData({foo:"bar"}, "foo");
+             confManager.writeDataToDisk(confManager);
         } catch(e) {
             expect(false).to.be.true; // This should not happened because an exception is thrown
         }
@@ -132,6 +133,7 @@ describe("ConfManager", function() {
         sinon.spy(confManager.fs, 'writeFile');
         try {
             confManager.saveData({foo:"bar"}, "foo");
+            confManager.writeDataToDisk(confManager);
             expect(false).to.be.true; // This should not happened because an exception is thrown
         } catch(e) {
             expect(e.message).to.be.equal("foobar");

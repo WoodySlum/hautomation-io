@@ -39,7 +39,7 @@ class FormConfiguration {
         this.formRoute = ":/" + ROUTE_BASE_PATH + "/" + this.name + "/" + ROUTE_BASE_FORM + "/";
         this.getRoute = ":/" + ROUTE_BASE_PATH + "/" + this.name + "/" + ROUTE_BASE_GET + "/";
         this.setRoute = ":/" + ROUTE_BASE_PATH + "/" + this.name + "/" + ROUTE_BASE_SET + "/";
-        this.delRoute = ":/" + ROUTE_BASE_PATH + "/" + this.name + "/" + ROUTE_BASE_DEL + "/[id*]";
+        this.delRoute = ":/" + ROUTE_BASE_PATH + "/" + this.name + "/" + ROUTE_BASE_DEL + "/[id*]/";
 
 
         this.webServices.registerAPI(this, WebServices.GET, this.formRoute, Authentication.AUTH_ADMIN_LEVEL);
@@ -129,7 +129,7 @@ class FormConfiguration {
         if (this.formClass) {
             // Get form
             if (apiRequest.route === this.formRoute) {
-                let form = self.formManager.getForm(self.formClass);
+                let form = self.getForm();
                 if (this.data) {
                     form.data = this.data;
                 } else {
@@ -179,6 +179,15 @@ class FormConfiguration {
      */
     getConfig() {
         return this.data;
+    }
+
+    /**
+     * Return the form
+     *
+     * @returns {Object} A formatted form object
+     */
+    getForm() {
+        return this.formManager.getForm(this.formClass);
     }
 }
 

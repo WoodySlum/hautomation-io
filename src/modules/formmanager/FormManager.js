@@ -33,10 +33,22 @@ class FormManager {
      * @param  {...Object} inject Parameters injection on static methods
      */
     register(cl, ...inject) {
+        this.registerWithAdditionalFields(cl, {}, ...inject);
+    }
+
+    /**
+     * Register a form class with additional fields
+     *
+     * @param  {Class} cl     A class with form annotations
+     * @param  {Object} additionalFields     Additional fields object in annotation format
+     * @param  {...Object} inject Parameters injection on static methods
+     */
+    registerWithAdditionalFields(cl, additionalFields, ...inject) {
         this.sanitize(cl);
         this.registeredForms[cl.name] = {
             class: cl,
-            inject:inject
+            inject:inject,
+            additionalFields: additionalFields
         };
     }
 
@@ -90,25 +102,27 @@ class FormManager {
      */
     getExtendedClass(cl) {
         let c = cl.toString();
-        let extendedClassFound = null;
         // Extend class lookup
         // Classic regex : class A extends B {
-        let regex = /(.*)(extends)([ ]+)([a-zA-Z0-9]+)(.*)({)/g;
+        // ;
+        const regex = /(extends)([ ]+)([a-zA-Z\.]*)([ ]*)(\{)/g;
         let regexRes = regex.exec(c);
-        if (regexRes && regexRes.length > 5) {
-            if (regexRes[5] && (regexRes[5].trim() !== ".class") && (regexRes[5].trim().indexOf(".")  > -1)) {
-                // Exported class regex : class A extends obj.B.class {
-                let regex = /(.*)(extends)([ ]+)(.*)(\.)([a-zA-Z0-9.]+)(\.class)(.*)/g;
-                let regexRes = regex.exec(c);
-                if (regexRes && regexRes.length > 5) {
-                    extendedClassFound = regexRes[6].trim();
+        let parent = null;
+
+        if (regexRes && regexRes.length > 3) {
+            const extendExploded = regexRes[3].trim().split(".");
+            if (extendExploded.length > 0) {
+                if (extendExploded[extendExploded.length - 1].toLowerCase() !== "class") {
+                    parent = extendExploded[extendExploded.length - 1];
+                } else if (extendExploded.length > 1) {
+                    if (extendExploded[extendExploded.length - 2].toLowerCase() !== "class") {
+                        parent = extendExploded[extendExploded.length - 2];
+                    }
                 }
-            } else {
-                extendedClassFound = regexRes[4].trim();
             }
         }
 
-        return extendedClassFound;
+        return parent;
     }
 
 
@@ -160,7 +174,7 @@ class FormManager {
         classesList.forEach((className) => {
             const c = this.registeredForms[className].class;
             const inject = this.registeredForms[className].inject;
-            form = this.generateForm(c, schema, schemaUI, ...inject);
+            form = this.generateForm(c, this.registeredForms[className].additionalFields, schema, schemaUI, ...inject);
             schema = form.schema;
             schemaUI = form.schemaUI;
         });
@@ -172,18 +186,20 @@ class FormManager {
      * Generates a form for a specific class
      *
      * @param  {Class} cl     A class with form annotations
+     * @param  {Object} additionalFields     Additional fields object in annotation format
      * @param  {Object} schema   Current schema (append)
      * @param  {Object} schemaUI   Current UI schema (append)
      * @param  {...Object} inject Parameters injection on static methods
      * @returns {Object}        A form object with the properties `schema` and `schemaUI`
      */
-    generateForm(cl, schema, schemaUI, ...inject) {
+    generateForm(cl, additionalFields, schema, schemaUI, ...inject) {
         let c = cl.toString();
 
         const self = this;
         Annotation(c, function(AnnotationReader) {
-            const properties = AnnotationReader.comments.properties;
-            Object.keys(AnnotationReader.comments.properties).forEach((prop) => {
+            const properties = Object.assign(additionalFields, AnnotationReader.comments.properties);
+            Object.keys(properties).forEach((prop) => {
+
                 const meta = Convert.class.convertProperties(properties[prop]);
                 if (meta.Type) {
                     const type = meta.Type.toLowerCase();
@@ -213,13 +229,13 @@ class FormManager {
                         exist = true;
                     } else if (type === "objects" && meta.Cl) {
                         schema.properties[prop].type = "array";
-                        const subForm =  self.generateForm(self.registeredForms[meta.Cl].class, self.initSchema(), self.initSchemaUI(), ...self.registeredForms[meta.Cl].inject);
+                        const subForm =  self.generateForm(self.registeredForms[meta.Cl].class, self.registeredForms[meta.Cl].additionalFields, self.initSchema(), self.initSchemaUI(), ...self.registeredForms[meta.Cl].inject);
                         schema.properties[prop].items = subForm.schema;
                         schemaUI[prop].items = subForm.schemaUI;
 
                         exist = true;
                     } else if (type === "object" && meta.Cl) {
-                        const subForm =  self.generateForm(self.registeredForms[meta.Cl].class, self.initSchema(), self.initSchemaUI(), ...self.registeredForms[meta.Cl].inject);
+                        const subForm =  self.generateForm(self.registeredForms[meta.Cl].class, self.registeredForms[meta.Cl].additionalFields, self.initSchema(), self.initSchemaUI(), ...self.registeredForms[meta.Cl].inject);
                         schema.properties[prop] = subForm.schema;
                         schema.properties[prop].type = "object";
                         schemaUI[prop] = subForm.schemaUI;
@@ -230,7 +246,11 @@ class FormManager {
                     if (exist) {
                         // Title
                         if (meta.Title) {
-                            schema.properties[prop].title = self.translateManager.t(meta.Title);
+                            if (cl[meta.Title] instanceof Function) {
+                                schema.properties[prop].title = cl[meta.Title](...inject);
+                            } else {
+                                schema.properties[prop].title = self.translateManager.t(meta.Title);
+                            }
                         }
 
                         // Required
@@ -240,10 +260,18 @@ class FormManager {
 
                         // Default
                         if (meta.Default) {
-                            schema.properties[prop].default = self.translateManager.t(meta.Default);
+                            if (cl[meta.Default] instanceof Function) {
+                                schema.properties[prop].default = cl[meta.Default](...inject);
+                            } else {
+                                schema.properties[prop].default = self.translateManager.t(meta.Default);
+                            }
                         }
                         if (meta.Value) {
-                            schema.properties[prop].default = self.translateManager.t(meta.Value);
+                            if (cl[meta.Value] instanceof Function) {
+                                schema.properties[prop].default = cl[meta.Value](...inject);
+                            } else {
+                                schema.properties[prop].default = self.translateManager.t(meta.Value);
+                            }
                         }
 
                         // Range

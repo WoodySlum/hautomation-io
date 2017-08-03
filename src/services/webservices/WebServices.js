@@ -201,7 +201,7 @@ class WebServices extends Service.class {
      * Register to a specific API to be notified when a route and/or method is called
      *
      * @param  {Object} delegate     A delegate which implements the processAPI(apiRequest) function
-     * @param  {string} [method="*"] A method (*, WebServices.GET / WebServices.POST)
+     * @param  {string} [method="*"] A method (*, WebServices.GET / WebServices.POST / WebServices.DELETE)
      * @param  {string} [route="*"]  A route (*, :/my/route/)
      * @param  {int} authLevel  An authentification level
      */
@@ -448,5 +448,6 @@ module.exports = {class:WebServices, CONTENT_TYPE:CONTENT_TYPE,
     API_ERROR_HTTP_CODE:API_ERROR_HTTP_CODE,
     API_UP_TO_DATE:API_UP_TO_DATE,
     GET:GET,
-    POST:POST
+    POST:POST,
+    DELETE:DELETE
 };

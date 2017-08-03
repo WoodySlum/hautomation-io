@@ -3,7 +3,7 @@ var chai = require("chai");
 var expect = chai.expect;
 var sinon = require("sinon");
 
-var HautomationCore = require("./../src/HautomationCore");
+var HautomationCore = require("./../src/HautomationCore").class;
 var WebServices = require("./../src/services/webservices/WebServices");
 
 describe("HautomationCore", function() {

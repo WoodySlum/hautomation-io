@@ -20,9 +20,18 @@ var FormManager = require("./modules/formmanager/FormManager");
 var IconFormManager = require("./forms/IconFormManager");
 var DashboardManager = require("./modules/dashboardmanager/DashboardManager");
 var ThemeManager = require("./modules/thememanager/ThemeManager");
+var SensorsManager = require("./modules/sensorsmanager/SensorsManager");
 const CONFIGURATION_FILE = "data/config.json";
 var AppConfiguration = require("./../data/config.json");
 const events = require("events");
+
+// For testing only
+if (process.env.TEST) {
+    AppConfiguration.configurationPath = "/tmp/data/";
+    AppConfiguration.db= "/tmp/data/database.db";
+}
+
+const EVENT_STOP = "stop";
 
 /**
  * The main class for core.
@@ -77,7 +86,7 @@ class HautomationCore {
         this.pluginsManager = null;
 
         // ConfManager module
-        this.confManager = new ConfManager.class(AppConfiguration);
+        this.confManager = new ConfManager.class(AppConfiguration, this.eventBus, EVENT_STOP);
         // UserManager module
         this.userManager = new UserManager.class(this.confManager);
         // Authentication module
@@ -86,10 +95,12 @@ class HautomationCore {
         this.alarmManager = new AlarmManager.class(this.confManager, this.webServices);
         // RadioManager. The plugins manager will be set later, when the pluginsLoaded event will be triggered
         this.radioManager = new RadioManager.class(this.pluginsManager, this.formManager, this.eventBus);
+        // Sensors manager module
+        this.sensorsManager = new SensorsManager.class(this.pluginsManager, this.eventBus, this.webServices, this.formManager, this.confManager, this.translateManager, this.themeManager);
         // Dashboard manager
         this.dashboardManager = new DashboardManager.class(this.themeManager, this.webServices, this.translateManager);
         // Plugins manager module
-        this.pluginsManager = new PluginsManager.class(this.confManager, this.webServices, this.servicesManager, this.dbManager, this.translateManager, this.formManager, this.timeEventService, this.schedulerService, this.dashboardManager, this.eventBus);
+        this.pluginsManager = new PluginsManager.class(this.confManager, this.webServices, this.servicesManager, this.dbManager, this.translateManager, this.formManager, this.timeEventService, this.schedulerService, this.dashboardManager, this.eventBus, this.themeManager, this.sensorsManager);
         // Device manager module
         this.deviceManager = new DeviceManager.class(this.confManager, this.formManager, this.webServices, this.radioManager, this.dashboardManager);
 
@@ -97,6 +108,10 @@ class HautomationCore {
         this.servicesManager.add(this.webServices);
         this.servicesManager.add(this.timeEventService);
         this.servicesManager.add(this.schedulerService);
+
+        if (this.eventBus) {
+            this.eventBus.emit(EVENT_STOP, {});
+        }
     }
 
     /**
@@ -122,6 +137,10 @@ class HautomationCore {
         } catch(e) {
             Logger.err("Could not stop services : " + e.message);
         }
+
+        if (this.eventBus) {
+            this.eventBus.emit(EVENT_STOP, {});
+        }
     }
 
     /**
@@ -129,7 +148,7 @@ class HautomationCore {
      */
     configurationLoader() {
         let confPath = path.resolve() + "/" + CONFIGURATION_FILE;
-        if (fs.existsSync(confPath)) {
+        if (fs.existsSync(confPath) && !process.env.TEST) {
             Logger.info("Main configuration found, overloading");
             AppConfiguration = JSON.parse(fs.readFileSync(confPath));
         } else {
@@ -138,4 +157,4 @@ class HautomationCore {
     }
 }
 
-module.exports = HautomationCore;
+module.exports = {class:HautomationCore, EVENT_STOP:EVENT_STOP};
