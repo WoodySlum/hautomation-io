@@ -23,7 +23,7 @@ function loaded(api) {
          * @param  {string} dashboardColor  The dashboard color
          * @param  {string} statisticsColor The statistics color
          * @param  {string} unit The default unit
-         * @returns {SensorForm}                 The instance
+         * @returns {TemperatureSensorForm}                 The instance
          */
         constructor(id, plugin, name, dashboard, statistics, dashboardColor, statisticsColor, unit) {
             super(id, plugin, name, dashboard, statistics, dashboardColor, statisticsColor);
