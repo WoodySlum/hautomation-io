@@ -26,10 +26,22 @@ class SensorsForm extends FormObject.class {
         this.sensorId = sensorId;
     }
 
+    /**
+     * Sensors id injection
+     *
+     * @param  {...Object} inject Inject parameters
+     * @returns {Array}        An array of ids
+     */
     static getSensorIds(...inject) {
         return [inject[0]];
     }
 
+    /**
+     * Sensors name injection
+     *
+     * @param  {...Object} inject Inject parameters
+     * @returns {Array}        An array of names
+     */
     static getSensorNames(...inject) {
         return [inject[1]];
     }

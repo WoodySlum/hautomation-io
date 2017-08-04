@@ -148,8 +148,9 @@ function loaded(api) {
         /**
          * Sensor class (should be extended)
          *
-         * @param  {PluginAPI} api                                                              A plugin api
+         * @param  {PluginAPI} api                                                           A plugin api
          * @param  {number} [id=null]                                                        An id
+         * @param  {string} [type="UNKNOWN"]                                                 A plugin type
          * @param  {Object} [configuration=null]                                             The configuration for sensor
          * @param  {string} [icon=null]                                                      An icon
          * @param  {number} [round=0]                                                        Round value (number of digits after comma)
@@ -171,7 +172,7 @@ function loaded(api) {
             this.chartType = chartType;
             this.type = type;
 
-            if (!this.id || !this.configuration || !this.type) {
+            if (!this.id || !this.configuration || !this.type) {
                 throw Error("Sensor does not have configuration or identifier or type !");
             }
             this.unitConverter = null;
