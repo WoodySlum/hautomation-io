@@ -71,8 +71,9 @@ describe("PluginsManager", function() {
 
     before(() => {
         webServices = sinon.mock(WebServices.class);
+        webServices.registerAPI = ()=>{};
         sinon.stub(PluginsManager.class.prototype, 'load');
-        pluginsManager = new PluginsManager.class(webServices);
+        pluginsManager = new PluginsManager.class({}, webServices);
         pluginA = new PluginAPI.class("0.0.0", pluginARef);
         pluginB = new PluginAPI.class("0.0.0", pluginBRef);
         pluginC = new PluginAPI.class("0.0.0", pluginCRef);

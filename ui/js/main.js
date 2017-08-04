@@ -715,7 +715,7 @@ $(document).ready(function() {
     });
 
     $("#savePluginForm").click(function() {
-        $("#pluginForm").submit();
+        $("#react-btn-submit-plugin").click();
     });
 
     window.genericAction = function genericAction(oMethod, oName) {
@@ -760,42 +760,41 @@ $(document).ready(function() {
 
     var displayPlugins = function(jsonData) {
         if (jsonData) {
-            var keys = Object.keys(jsonData);
             pluginsTable = $("#pluginsTableBody");
             pluginsTable.empty();
-            for (i = 0; i < keys.length; i++) {
-                enabledButton = '<input type="checkbox" data-size="mini" data-on-color="success" id="plugin-enabled-' + jsonData[keys[i]].identifier + '" ';
-                if (jsonData[keys[i]].enabled) {
+            for (i = 0; i < jsonData.length; i++) {
+                enabledButton = '<input type="checkbox" data-size="mini" data-on-color="success" id="plugin-enabled-' + jsonData[i].identifier + '" ';
+                if (jsonData[i].enabled) {
                     enabledButton = enabledButton + ' checked>';
                 } else {
                     enabledButton = enabledButton + '>';
                 }
 
                 var actionsPlugin = "&nbsp;";
-                if (Object.keys(jsonData[keys[i]].config.schema).length > 0) {
-                    actionsPlugin = "<button type=\"button\" class=\"setManageUser btn btn-primary btn-sm plugin-select\" id=\"configure-plugin-" + jsonData[keys[i]].identifier + "\"> <span class=\"glyphicon glyphicon-cog\"></span> </button>";
+                if (jsonData[i].configurable) {
+                    actionsPlugin = "<button type=\"button\" class=\"setManageUser btn btn-primary btn-sm plugin-select\" id=\"configure-plugin-" + jsonData[i].identifier + "\"> <span class=\"glyphicon glyphicon-cog\"></span> </button>";
                 }
 
                 services = '';
-                for (j = 0; j < jsonData[keys[i]].services.length; j++) {
-                    if (jsonData[keys[i]].services[j].status) {
-                        services += '<span class="label label-success">' + jsonData[keys[i]].services[j].name + '</span>';
+                for (j = 0; j < jsonData[i].services.length; j++) {
+                    if (jsonData[i].services[j].status === 1) {
+                        services += '<span class="label label-success">' + jsonData[i].services[j].name + '</span>';
                     } else {
-                        services += '<span class="label label-danger">' + jsonData[keys[i]].services[j].name + '</span>';
+                        services += '<span class="label label-danger">' + jsonData[i].services[j].name + '</span>';
                     }
                 }
 
 
-                var info = "<tr class=\"left\"><td class=\"middle\"><strong>" + jsonData[keys[i]].name + "</strong></td><td class=\"middle\"><span class=\"label label-primary\">" + jsonData[keys[i]].type + "</span>";
-                if (jsonData[keys[i]].sensor) {
-                    info = info + "&nbsp;<span class=\"label label-info\">" + t('js.sensor', null) + "</span>";
-                }
+                var info = "<tr class=\"left\"><td class=\"middle\"><strong>" + jsonData[i].identifier + "</strong></td><td class=\"middle\"><span class=\"label label-primary\">" + jsonData[i].category + "</span>";
+                // if (jsonData[keys[i]].sensor) {
+                //     info = info + "&nbsp;<span class=\"label label-info\">" + t('js.sensor', null) + "</span>";
+                // }
 
-                info = info + "</td><td class=\"middle\">" + jsonData[keys[i]].description + "</td><td class=\"middle\">" + jsonData[keys[i]].version + "</td><td class=\"middle\">" + services + "</td><td class=\"middle\">" + enabledButton + "</td><td class=\"middle\">" + actionsPlugin + "</td></tr>";
+                info = info + "</td><td class=\"middle\">" + jsonData[i].description + "</td><td class=\"middle\">" + jsonData[i].version + "</td><td class=\"middle\">" + services + "</td><td class=\"middle\">" + enabledButton + "</td><td class=\"middle\">" + actionsPlugin + "</td></tr>";
                 pluginsTable.append(info);
-                $("#plugin-enabled-" + jsonData[keys[i]].identifier).bootstrapSwitch();
+                $("#plugin-enabled-" + jsonData[i].identifier).bootstrapSwitch();
 
-                $("#plugin-enabled-" + jsonData[keys[i]].identifier).on('switchChange.bootstrapSwitch', function(event, state) {
+                /*$("#plugin-enabled-" + jsonData[keys[i]].identifier).on('switchChange.bootstrapSwitch', function(event, state) {
                     var status = "off";
                     if (state) {
                         status = "on";
@@ -817,13 +816,51 @@ $(document).ready(function() {
                         $("#managePluginsItem").trigger("click");
                         displayError(msg);
                     });
-                });
+                });*/
             }
         }
         $("#pluginsLoader").hide();
         $(".plugin-select").click(function() {
+            showLoader();
             var pluginIdentifier = $(this).attr('id').replace('configure-plugin-', '');
-            $('#pluginModal').modal('show');
+            reqPluginList = $.ajax({
+                type: "GET",
+                url: vUrl + "conf/" + pluginIdentifier + "/form/",
+                data: {
+                    u: username,
+                    p: password,
+                }
+            }).done(function(msg) {
+                $('#pluginModal').modal('show');
+                var self = this;console.log(msg);
+                ReactDOM.render(React.createElement(Form, {schema:msg.schema, uiSchema:msg.schemaUI, formData:msg.data, onSubmit: function(data) {
+                        $.ajax({
+                            type: "POST",
+                            url: vUrl + "conf/" + pluginIdentifier + "/set/",
+                            contentType: "application/json",
+                            data: JSON.stringify({
+                                u: username,
+                                p: password,
+                                data: data.formData
+                            })
+                        }).done(function(data) {
+                            $('#pluginModal').modal('hide');
+                        }).fail(function(msg) {
+                            setError(msg);
+                        });
+                    }},
+                    React.createElement(
+                      "button",
+                      { type: "submit", className:"btn btn-success hidden", id:"react-btn-submit-plugin" },
+                      "button.save"
+                  )), document.getElementById("pluginForm"));
+
+                hideLoader();
+            }).fail(function(msg) {
+                hideLoader();
+            });
+
+            /*$('#pluginModal').modal('show');
             for (var i = 0; i < jsonData.length; i++) {
                 if (pluginIdentifier == jsonData[i].identifier) {
                     var plugin = jsonData[i];
@@ -872,7 +909,7 @@ $(document).ready(function() {
                         });
                     }
                 }
-            });
+            });*/
         });
         $('#pluginFilter').keyup();
     }
@@ -894,26 +931,15 @@ $(document).ready(function() {
 
         $("#pluginsLoader").show();
         reqPluginList = $.ajax({
-            type: "POST",
-            url: vUrl,
+            type: "GET",
+            url: vUrl + "plugins/get/",
             data: {
-                username: username,
-                ePassword: ePassword,
-                method: "getPluginList"
+                u: username,
+                p: password,
             }
         }).done(function(msg) {
             // var jsonData = JSON.parse(msg);
-            bakeCookie('plugins-cache', msg);
-            var jsonData = JSON.parse(msg, function(key, value) {
-                if (value && (typeof value === 'string') && value.indexOf("function") === 0) {
-                    // we can only pass a function as string in JSON ==> doing a real function
-                    var jsFunc = new Function('return ' + value)();
-                    return jsFunc;
-                }
-
-                return value;
-            });
-            displayPlugins(jsonData);
+            displayPlugins(msg);
 
 
         }).fail(function(msg) {

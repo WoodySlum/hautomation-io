@@ -67,6 +67,9 @@ class FormConfiguration {
         // Conf manager
         try {
             this.data = this.confManager.loadData(this.formClass, this.confKey);
+            if (!this.list) {
+                this.data.id = 0;
+            }
         } catch(e) {
             Logger.warn("Load config for " + this.name + " error : " + e.message);
         }

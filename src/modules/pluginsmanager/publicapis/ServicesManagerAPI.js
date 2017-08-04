@@ -16,6 +16,7 @@ class ServicesManagerAPI {
     constructor(servicesManager) {
         PrivateProperties.createPrivateState(this);
         PrivateProperties.oprivate(this).servicesManager = servicesManager;
+        this.services = [];
     }
     /* eslint-enable */
 
@@ -26,6 +27,7 @@ class ServicesManagerAPI {
      */
     add(service) {
         PrivateProperties.oprivate(this).servicesManager.add(service);
+        this.services.push(service);
     }
 }
 

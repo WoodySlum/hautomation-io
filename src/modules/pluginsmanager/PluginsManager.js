@@ -8,6 +8,9 @@ var toposort = require("toposort");
 var Logger = require("./../../logger/Logger");
 var PluginAPI = require("./PluginAPI");
 var PluginConf = require("./PluginConf");
+var Authentication = require("./../authentication/Authentication");
+var WebServices = require("./../../services/webservices/WebServices");
+var APIResponse = require("./../../services/webservices/APIResponse");
 
 const CONF_KEY = "plugins";
 const EVENT_LOADED = "pluginLoaded";
@@ -16,6 +19,7 @@ const INTERNAL_PLUGIN_PATH = "./../../internal-plugins/";
 const EXTERNAL_PLUGIN_PATH = "plugins/node_modules/";
 const PLUGIN_PREFIX = "hautomation-plugin";
 const PLUGIN_MAIN = "plugin.js";
+const ROUTE_WS_GET = ":/plugins/get/";
 
 const ERROR_MISSING_PROPERTY = "Missing property name, version or description for plugin";
 const ERROR_NOT_A_FUNCTION = "Missing plugin class";
@@ -84,6 +88,9 @@ class PluginsManager {
         if (eventBus) {
             eventBus.emit(EVENT_LOADED, this);
         }
+
+        // Register plugins WS
+        this.webServices.registerAPI(this, WebServices.GET, ROUTE_WS_GET, Authentication.AUTH_ADMIN_LEVEL);
     }
 
     /**
@@ -339,6 +346,36 @@ class PluginsManager {
         return sortedArray;
     }
 
+    /**
+     * Process API callback
+     *
+     * @param  {APIRequest} apiRequest An APIRequest
+     * @returns {Promise}  A promise with an APIResponse object
+     */
+    processAPI(apiRequest) {
+        if (apiRequest.route === ROUTE_WS_GET) {
+            const plugins = [];
+            this.plugins.forEach((plugin) => {
+                const services = [];
+                plugin.servicesManagerAPI.services.forEach((service) => {
+                    services.push({name:service.name, status:service.status});
+                });
+
+                plugins.push({
+                    identifier:plugin.identifier,
+                    description:plugin.description,
+                    enabled:true,
+                    configurable:plugin.configurationAPI.form?true:false,
+                    category:plugin.category,
+                    version:plugin.version,
+                    services:services
+                });
+            });
+            return new Promise((resolve) => {
+                resolve(new APIResponse.class(true, plugins));
+            });
+        }
+    }
 }
 
 module.exports = {class:PluginsManager, ERROR_MISSING_PROPERTY:ERROR_MISSING_PROPERTY, ERROR_NOT_A_FUNCTION:ERROR_NOT_A_FUNCTION, ERROR_DEPENDENCY_NOT_FOUND:ERROR_DEPENDENCY_NOT_FOUND, EVENT_LOADED:EVENT_LOADED};
