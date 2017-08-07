@@ -17,6 +17,7 @@ var Icons = require("./../../utils/Icons");
 var DashboardAPI = require("./publicapis/DashboardAPI");
 var SensorAPI = require("./publicapis/SensorAPI");
 var ThemeAPI = require("./publicapis/ThemeAPI");
+var InstallerAPI = require("./publicapis/InstallerAPI");
 
 /**
  * This class is an interface for plugins
@@ -39,9 +40,10 @@ class PluginsAPI {
     //  * @param  {DashboardManager} dashboardManager     The dashboard manager
     //  * @param  {ThemeManager} themeManager     The theme manager
     //  * @param  {SensorsManager} sensorsManager The sensors manager
+    //  * @param  {InstallationManager} installationManager The installation manager
     //  * @returns {PluginAPI}                  Insntance
     //  */
-    constructor(previousVersion, p, webServices, servicesManager, dbManager, translateManager, formManager, confManager, timeEventService, schedulerService, dashboardManager, themeManager, sensorsManager) {
+    constructor(previousVersion, p, webServices, servicesManager, dbManager, translateManager, formManager, confManager, timeEventService, schedulerService, dashboardManager, themeManager, sensorsManager, installationManager) {
         PrivateProperties.createPrivateState(this);
         this.previousVersion = previousVersion;
         this.p = p;
@@ -77,6 +79,7 @@ class PluginsAPI {
         this.dashboardAPI = new DashboardAPI.class(dashboardManager);
         this.sensorAPI = new SensorAPI.class(formManager, this, sensorsManager);
         this.themeManager = new ThemeAPI.class(themeManager);
+        this.installerAPI = new InstallerAPI.class(installationManager, this.version);
     }
 
     // /**

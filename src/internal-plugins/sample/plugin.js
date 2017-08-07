@@ -37,7 +37,8 @@ function loaded(api) {
             this.api = api;
             this.api.webAPI.register(this, "*", ":/test/", this.api.webAPI.Authentication().AUTH_NO_LEVEL);
             this.message = "pong";
-            //api.timeEventAPI.register(this.ping, this, api.timeEventAPI.constants().EVERY_SECONDS);
+            // api.timeEventAPI.register(this.ping, this, api.timeEventAPI.constants().EVERY_SECONDS);
+            api.installerAPI.register("*", "echo \"Hello !\"; set -e; exit 0;");
         }
 
         /**

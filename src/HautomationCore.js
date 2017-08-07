@@ -21,8 +21,10 @@ var IconFormManager = require("./forms/IconFormManager");
 var DashboardManager = require("./modules/dashboardmanager/DashboardManager");
 var ThemeManager = require("./modules/thememanager/ThemeManager");
 var SensorsManager = require("./modules/sensorsmanager/SensorsManager");
+var InstallationManager = require("./modules/installationmanager/InstallationManager");
 const CONFIGURATION_FILE = "data/config.json";
 var AppConfiguration = require("./../data/config.json");
+var NpmPackage = require("./../package.json");
 const events = require("events");
 
 // For testing only
@@ -32,6 +34,7 @@ if (process.env.TEST) {
 }
 
 const EVENT_STOP = "stop";
+const EVENT_RESTART = "restart";
 
 /**
  * The main class for core.
@@ -44,8 +47,11 @@ class HautomationCore {
      * @returns {HautomationCore} The instance
      */
     constructor() {
-        this.eventBus = new events.EventEmitter();
+        Logger.info("/--------------------\\");
+        Logger.info("| Hautomation v" + NpmPackage.version + " |");
+        Logger.info("\\--------------------/");
 
+        this.eventBus = new events.EventEmitter();
 
         // Load main configuration
         this.configurationLoader();
@@ -87,6 +93,7 @@ class HautomationCore {
 
         // ConfManager module
         this.confManager = new ConfManager.class(AppConfiguration, this.eventBus, EVENT_STOP);
+
         // UserManager module
         this.userManager = new UserManager.class(this.confManager);
         // Authentication module
@@ -99,19 +106,33 @@ class HautomationCore {
         this.sensorsManager = new SensorsManager.class(this.pluginsManager, this.eventBus, this.webServices, this.formManager, this.confManager, this.translateManager, this.themeManager);
         // Dashboard manager
         this.dashboardManager = new DashboardManager.class(this.themeManager, this.webServices, this.translateManager);
+        // Installation manager
+        this.installationManager = new InstallationManager.class(this.confManager, this.eventBus);
         // Plugins manager module
-        this.pluginsManager = new PluginsManager.class(this.confManager, this.webServices, this.servicesManager, this.dbManager, this.translateManager, this.formManager, this.timeEventService, this.schedulerService, this.dashboardManager, this.eventBus, this.themeManager, this.sensorsManager);
+        this.pluginsManager = new PluginsManager.class(this.confManager, this.webServices, this.servicesManager, this.dbManager, this.translateManager, this.formManager, this.timeEventService, this.schedulerService, this.dashboardManager, this.eventBus, this.themeManager, this.sensorsManager, this.installationManager);
         // Device manager module
         this.deviceManager = new DeviceManager.class(this.confManager, this.formManager, this.webServices, this.radioManager, this.dashboardManager);
+
 
         // Add services to manager
         this.servicesManager.add(this.webServices);
         this.servicesManager.add(this.timeEventService);
         this.servicesManager.add(this.schedulerService);
 
-        if (this.eventBus) {
-            this.eventBus.emit(EVENT_STOP, {});
-        }
+        const self = this;
+        this.eventBus.on(PluginsManager.EVENT_RESTART, () => {
+            self.restart();
+        });
+
+        // Install depedencies
+        this.installationManager.execute();
+    }
+
+    /**
+     * Restart core
+     */
+    restart() {
+
     }
 
     /**
@@ -157,4 +178,4 @@ class HautomationCore {
     }
 }
 
-module.exports = {class:HautomationCore, EVENT_STOP:EVENT_STOP};
+module.exports = {class:HautomationCore, EVENT_STOP:EVENT_STOP, EVENT_RESTART:EVENT_RESTART};

@@ -74,8 +74,11 @@
     -   [toSchema](#toschema)
 -   [Convert](#convert)
     -   [convertProperties](#convertproperties)
--   [SchedulerAPI](#schedulerapi)
+-   [InstallerAPI](#installerapi)
     -   [register](#register-2)
+    -   [executeCommand](#executecommand)
+-   [SchedulerAPI](#schedulerapi)
+    -   [register](#register-3)
     -   [unregister](#unregister)
     -   [schedule](#schedule)
     -   [constants](#constants)
@@ -83,7 +86,7 @@
     -   [constructor](#constructor-5)
     -   [start](#start)
     -   [stop](#stop)
-    -   [register](#register-3)
+    -   [register](#register-4)
     -   [unregister](#unregister-1)
     -   [schedule](#schedule-1)
     -   [timeEvent](#timeevent)
@@ -108,7 +111,7 @@
 -   [ThemeAPI](#themeapi)
     -   [getColors](#getcolors)
 -   [TimeEventAPI](#timeeventapi)
-    -   [register](#register-4)
+    -   [register](#register-5)
     -   [unregister](#unregister-2)
     -   [constants](#constants-1)
 -   [TimeEventService](#timeeventservice)
@@ -117,7 +120,7 @@
     -   [stop](#stop-1)
     -   [hash](#hash)
     -   [elementForHash](#elementforhash)
-    -   [register](#register-5)
+    -   [register](#register-6)
     -   [unregister](#unregister-3)
     -   [convertMode](#convertmode)
     -   [timeEvent](#timeevent-1)
@@ -125,7 +128,7 @@
     -   [load](#load)
     -   [t](#t)
 -   [WebAPI](#webapi)
-    -   [register](#register-6)
+    -   [register](#register-7)
     -   [unregister](#unregister-4)
     -   [Authentication](#authentication)
     -   [APIResponse](#apiresponse)
@@ -151,7 +154,7 @@
     -   [registerInfos](#registerinfos)
     -   [processAPI](#processapi-1)
     -   [stop](#stop-2)
-    -   [register](#register-7)
+    -   [register](#register-8)
     -   [unregister](#unregister-5)
     -   [registerAPI](#registerapi)
     -   [unregisterAPI](#unregisterapi)
@@ -179,7 +182,7 @@
     -   [stop](#stop-3)
     -   [restart](#restart)
     -   [status](#status)
-    -   [register](#register-8)
+    -   [register](#register-9)
     -   [unregister](#unregister-6)
     -   [setThreadsManager](#setthreadsmanager)
 -   [APIRequest](#apirequest)
@@ -929,6 +932,38 @@ Convert key / values object into a single one. Example `[{key:"Foo", value:"Bar"
 -   `inputObject` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An input object
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An output object
+
+## InstallerAPI
+
+Public API for installation of external apps
+
+**Parameters**
+
+-   `installationManager`  
+-   `version`  
+
+### register
+
+Register a command to be executed for a specific version
+
+**Parameters**
+
+-   `arch` **([string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array))** The architecture ('arm', 'arm64', 'ia32', 'mips', 'mipsel', 'ppc', 'ppc64', 's390', 's390x', 'x32', 'x64', and 'x86'). Can be `*` for all arch, or an array of architectures (optional, default `"*"`)
+-   `command` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A command
+-   `sudo` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if command should be executed as sudo, false otherwise. The Hautomation process owner user should be in `sudo` group without password. (optional, default `false`)
+-   `wait` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if command is executed synchronously, false otherwise (optional, default `true`)
+
+### executeCommand
+
+Execute a command. Can throw an error if wait is `true`
+
+**Parameters**
+
+-   `command` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The command
+-   `wait` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if command is executed synchronously, false otherwise (optional, default `true`)
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback (only if wait parameter is false) : `(error, stdout, stderr) => {}` (optional, default `null`)
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An object result if wait is `true`
 
 ## SchedulerAPI
 

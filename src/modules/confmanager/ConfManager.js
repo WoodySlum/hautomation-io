@@ -167,11 +167,15 @@ class ConfManager {
             });
             return results;
         } else {
-            let o = new classType();
-            if (typeof o.json === "function") {
-                return o.json(content);
+            if (!disableClassMapping) {
+                let o = new classType();
+                if (typeof o.json === "function") {
+                    return o.json(content);
+                } else {
+                    throw Error(ERROR_NO_JSON_METHOD);
+                }
             } else {
-                throw Error(ERROR_NO_JSON_METHOD);
+                return content?content:{};
             }
         }
     }

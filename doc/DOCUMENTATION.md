@@ -11,6 +11,7 @@
     -   [constructor](#constructor-1)
 -   [HautomationCore](#hautomationcore)
     -   [constructor](#constructor-2)
+    -   [restart](#restart)
     -   [start](#start)
     -   [stop](#stop)
     -   [configurationLoader](#configurationloader)
@@ -20,16 +21,29 @@
 -   [loaded](#loaded-3)
 -   [loaded](#loaded-4)
 -   [loaded](#loaded-5)
+-   [loaded](#loaded-6)
+-   [loaded](#loaded-7)
+-   [loaded](#loaded-8)
 -   [EspTemperatureSensorForm](#esptemperaturesensorform)
     -   [json](#json-1)
 -   [EspTemperatureSensor](#esptemperaturesensor)
     -   [constructor](#constructor-3)
     -   [processAPI](#processapi)
+-   [HumiditySensorForm](#humiditysensorform)
+    -   [constructor](#constructor-4)
+    -   [json](#json-2)
+-   [HumiditySensor](#humiditysensor)
+    -   [constructor](#constructor-5)
 -   [text](#text)
 -   [number](#number)
 -   [myParameter](#myparameter)
+-   [PressureSensorForm](#pressuresensorform)
+    -   [constructor](#constructor-6)
+    -   [json](#json-3)
+-   [PressureSensor](#pressuresensor)
+    -   [constructor](#constructor-7)
 -   [DbRadio](#dbradio)
-    -   [constructor](#constructor-4)
+    -   [constructor](#constructor-8)
 -   [module](#module)
 -   [frequency](#frequency)
 -   [protocol](#protocol)
@@ -39,7 +53,7 @@
 -   [value](#value-1)
 -   [status](#status)
 -   [Radio](#radio)
-    -   [constructor](#constructor-5)
+    -   [constructor](#constructor-9)
     -   [getProtocolList](#getprotocollist)
     -   [processAPI](#processapi-1)
     -   [defaultFrequency](#defaultfrequency)
@@ -49,14 +63,14 @@
     -   [register](#register)
     -   [unregister](#unregister)
 -   [RFLink](#rflink)
-    -   [constructor](#constructor-6)
+    -   [constructor](#constructor-10)
     -   [rflinkStatusToRadioStatus](#rflinkstatustoradiostatus)
     -   [radioStatusToRflinkStatus](#radiostatustorflinkstatus)
     -   [formatRadioObjectBeforeSending](#formatradioobjectbeforesending)
     -   [onRflinkReceive](#onrflinkreceive)
     -   [emit](#emit-1)
 -   [RFLinkService](#rflinkservice)
-    -   [constructor](#constructor-7)
+    -   [constructor](#constructor-11)
     -   [run](#run)
     -   [threadCallback](#threadcallback)
 -   [xo](#xo)
@@ -64,19 +78,19 @@
     -   [processAPI](#processapi-2)
     -   [test](#test)
 -   [DbSensor](#dbsensor)
-    -   [constructor](#constructor-8)
+    -   [constructor](#constructor-12)
 -   [sensorId](#sensorid)
 -   [vcc](#vcc)
 -   [SensorForm](#sensorform)
-    -   [constructor](#constructor-9)
+    -   [constructor](#constructor-13)
     -   [name](#name)
     -   [dashboard](#dashboard)
     -   [statistics](#statistics)
     -   [dashboardColor](#dashboardcolor)
     -   [statisticsColor](#statisticscolor)
-    -   [json](#json-2)
+    -   [json](#json-4)
 -   [Sensor](#sensor)
-    -   [constructor](#constructor-10)
+    -   [constructor](#constructor-14)
     -   [init](#init)
     -   [addUnitAggregation](#addunitaggregation)
     -   [aggregateUnit](#aggregateunit)
@@ -88,12 +102,17 @@
     -   [getStatistics](#getstatistics)
     -   [constants](#constants-1)
 -   [TemperatureSensorForm](#temperaturesensorform)
-    -   [constructor](#constructor-11)
+    -   [constructor](#constructor-15)
     -   [unit](#unit)
-    -   [json](#json-3)
+    -   [json](#json-5)
 -   [TemperatureSensor](#temperaturesensor)
-    -   [constructor](#constructor-12)
+    -   [constructor](#constructor-16)
     -   [setUnit](#setunit)
+-   [ThroughputSensorForm](#throughputsensorform)
+    -   [constructor](#constructor-17)
+    -   [json](#json-6)
+-   [ThroughputSensor](#throughputsensor)
+    -   [constructor](#constructor-18)
 -   [Logger](#logger)
     -   [log](#log)
     -   [warn](#warn)
@@ -102,21 +121,21 @@
     -   [info](#info)
     -   [debug](#debug)
 -   [Alarm](#alarm)
-    -   [constructor](#constructor-13)
-    -   [json](#json-4)
+    -   [constructor](#constructor-19)
+    -   [json](#json-7)
 -   [AlarmManager](#alarmmanager)
-    -   [constructor](#constructor-14)
+    -   [constructor](#constructor-20)
     -   [setAlarm](#setalarm)
     -   [processAPI](#processapi-3)
 -   [Authentication](#authentication)
-    -   [constructor](#constructor-15)
+    -   [constructor](#constructor-21)
 -   [AuthenticationData](#authenticationdata)
-    -   [constructor](#constructor-16)
+    -   [constructor](#constructor-22)
     -   [authorized](#authorized)
     -   [username](#username)
     -   [level](#level)
 -   [ConfManager](#confmanager)
-    -   [constructor](#constructor-17)
+    -   [constructor](#constructor-23)
     -   [appConfiguration](#appconfiguration)
     -   [fs](#fs)
     -   [getFilePath](#getfilepath)
@@ -129,16 +148,16 @@
     -   [setData](#setdata)
     -   [removeData](#removedata)
 -   [DashboardManager](#dashboardmanager)
-    -   [constructor](#constructor-18)
+    -   [constructor](#constructor-24)
     -   [registerTile](#registertile)
     -   [unregisterTile](#unregistertile)
     -   [buildDashboard](#builddashboard)
     -   [processAPI](#processapi-4)
 -   [Tile](#tile)
-    -   [constructor](#constructor-19)
+    -   [constructor](#constructor-25)
     -   [get](#get)
 -   [DbHelper](#dbhelper)
-    -   [constructor](#constructor-20)
+    -   [constructor](#constructor-26)
     -   [RequestBuilder](#requestbuilder)
     -   [Operators](#operators)
     -   [getFieldsForTable](#getfieldsfortable)
@@ -149,7 +168,7 @@
     -   [delObject](#delobject)
     -   [delObjects](#delobjects)
 -   [DbManager](#dbmanager)
-    -   [constructor](#constructor-21)
+    -   [constructor](#constructor-27)
     -   [close](#close)
     -   [getFieldsForTable](#getfieldsfortable-1)
     -   [numberVersion](#numberversion)
@@ -164,12 +183,12 @@
     -   [delObject](#delobject-1)
     -   [delObjects](#delobjects-1)
 -   [DbObject](#dbobject)
-    -   [constructor](#constructor-22)
+    -   [constructor](#constructor-28)
     -   [base](#base)
     -   [save](#save)
     -   [del](#del)
 -   [DbRequestBuilder](#dbrequestbuilder)
-    -   [constructor](#constructor-23)
+    -   [constructor](#constructor-29)
     -   [removeLastComma](#removelastcomma)
     -   [escapeString](#escapestring)
     -   [getValueEncapsulated](#getvalueencapsulated)
@@ -199,7 +218,7 @@
     -   [tableName](#tablename)
     -   [toSchema](#toschema)
 -   [DeviceForm](#deviceform)
-    -   [constructor](#constructor-24)
+    -   [constructor](#constructor-30)
     -   [name](#name-1)
     -   [excludeFromAll](#excludefromall)
     -   [visible](#visible)
@@ -207,15 +226,15 @@
     -   [icon](#icon-1)
     -   [radio](#radio-1)
     -   [status](#status-1)
-    -   [json](#json-5)
+    -   [json](#json-8)
 -   [DeviceManager](#devicemanager)
-    -   [constructor](#constructor-25)
+    -   [constructor](#constructor-31)
     -   [registerDeviceTiles](#registerdevicetiles)
     -   [registerDeviceTile](#registerdevicetile)
     -   [switchDevice](#switchdevice)
     -   [processAPI](#processapi-5)
 -   [FormConfiguration](#formconfiguration)
-    -   [constructor](#constructor-26)
+    -   [constructor](#constructor-32)
     -   [loadConfig](#loadconfig)
     -   [saveConfig](#saveconfig)
     -   [comparator](#comparator)
@@ -224,7 +243,7 @@
     -   [getConfig](#getconfig)
     -   [getForm](#getform)
 -   [FormManager](#formmanager)
-    -   [constructor](#constructor-27)
+    -   [constructor](#constructor-33)
     -   [register](#register-1)
     -   [registerWithAdditionalFields](#registerwithadditionalfields)
     -   [sanitize](#sanitize)
@@ -234,18 +253,26 @@
     -   [getForm](#getform-1)
     -   [generateForm](#generateform)
 -   [FormObject](#formobject)
-    -   [constructor](#constructor-28)
-    -   [json](#json-6)
+    -   [constructor](#constructor-34)
+    -   [json](#json-9)
 -   [id](#id)
+-   [InstallationManager](#installationmanager)
+    -   [constructor](#constructor-35)
+    -   [register](#register-2)
+    -   [executeCommand](#executecommand)
+    -   [execute](#execute)
+    -   [isAlreadyExecuted](#isalreadyexecuted)
+    -   [isValidForArchitecture](#isvalidforarchitecture)
+    -   [restart](#restart-1)
 -   [PluginsAPI](#pluginsapi)
     -   [exportClass](#exportclass)
     -   [init](#init-1)
     -   [registerInstance](#registerinstance)
 -   [PluginConf](#pluginconf)
-    -   [constructor](#constructor-29)
-    -   [json](#json-7)
+    -   [constructor](#constructor-36)
+    -   [json](#json-10)
 -   [PluginsManager](#pluginsmanager)
-    -   [constructor](#constructor-30)
+    -   [constructor](#constructor-37)
     -   [getPluginsFromDirectory](#getpluginsfromdirectory)
     -   [checkPluginSanity](#checkpluginsanity)
     -   [initPlugins](#initplugins)
@@ -256,8 +283,9 @@
     -   [prepareToposortArray](#preparetoposortarray)
     -   [toposort](#toposort)
     -   [topsortedArrayConverter](#topsortedarrayconverter)
+    -   [processAPI](#processapi-7)
 -   [ConfigurationAPI](#configurationapi)
-    -   [register](#register-2)
+    -   [register](#register-3)
     -   [getConfiguration](#getconfiguration)
     -   [getForm](#getform-2)
 -   [DashboardAPI](#dashboardapi)
@@ -266,10 +294,13 @@
     -   [Tile](#tile-1)
     -   [TileType](#tiletype)
 -   [DatabaseAPI](#databaseapi)
-    -   [register](#register-3)
-    -   [dbHelper](#dbhelper-1)
--   [SchedulerAPI](#schedulerapi)
     -   [register](#register-4)
+    -   [dbHelper](#dbhelper-1)
+-   [InstallerAPI](#installerapi)
+    -   [register](#register-5)
+    -   [executeCommand](#executecommand-1)
+-   [SchedulerAPI](#schedulerapi)
+    -   [register](#register-6)
     -   [unregister](#unregister-1)
     -   [schedule](#schedule)
     -   [constants](#constants-2)
@@ -285,29 +316,29 @@
 -   [ThemeAPI](#themeapi)
     -   [getColors](#getcolors)
 -   [TimeEventAPI](#timeeventapi)
-    -   [register](#register-5)
+    -   [register](#register-7)
     -   [unregister](#unregister-2)
     -   [constants](#constants-3)
 -   [TranslateAPI](#translateapi)
     -   [load](#load-1)
     -   [t](#t)
 -   [WebAPI](#webapi)
-    -   [register](#register-6)
+    -   [register](#register-8)
     -   [unregister](#unregister-3)
     -   [Authentication](#authentication-1)
     -   [APIResponse](#apiresponse)
     -   [constants](#constants-4)
 -   [RadioForm](#radioform)
-    -   [constructor](#constructor-31)
+    -   [constructor](#constructor-38)
     -   [module](#module-1)
     -   [protocol](#protocol-1)
     -   [deviceId](#deviceid-1)
     -   [switchId](#switchid-1)
-    -   [json](#json-8)
+    -   [json](#json-11)
     -   [getModules](#getmodules)
     -   [getProtocols](#getprotocols)
 -   [RadioManager](#radiomanager)
-    -   [constructor](#constructor-32)
+    -   [constructor](#constructor-39)
     -   [pluginsLoaded](#pluginsloaded)
     -   [registerRadioEvents](#registerradioevents)
     -   [unregisterRadioEvents](#unregisterradioevents)
@@ -316,11 +347,13 @@
     -   [getProtocols](#getprotocols-1)
     -   [switchDevice](#switchdevice-1)
 -   [SensorsForm](#sensorsform)
-    -   [constructor](#constructor-33)
+    -   [constructor](#constructor-40)
     -   [sensorId](#sensorid-1)
-    -   [json](#json-9)
+    -   [json](#json-12)
+    -   [getSensorIds](#getsensorids)
+    -   [getSensorNames](#getsensornames)
 -   [SensorsManager](#sensorsmanager)
-    -   [constructor](#constructor-34)
+    -   [constructor](#constructor-41)
     -   [pluginsLoaded](#pluginsloaded-1)
     -   [initSensors](#initsensors)
     -   [initSensor](#initsensor)
@@ -329,23 +362,23 @@
     -   [getAllSensors](#getallsensors)
     -   [onNewSensorValue](#onnewsensorvalue)
     -   [getValue](#getvalue-1)
-    -   [processAPI](#processapi-7)
+    -   [processAPI](#processapi-8)
     -   [statisticsWsResponse](#statisticswsresponse)
     -   [comparator](#comparator-1)
 -   [ServicesManager](#servicesmanager)
-    -   [constructor](#constructor-35)
+    -   [constructor](#constructor-42)
     -   [isServiceRegistered](#isserviceregistered)
     -   [add](#add-1)
     -   [remove](#remove-1)
     -   [start](#start-1)
     -   [stop](#stop-1)
-    -   [restart](#restart)
+    -   [restart](#restart-2)
     -   [getService](#getservice)
 -   [ThemeManager](#thememanager)
-    -   [constructor](#constructor-36)
+    -   [constructor](#constructor-43)
     -   [getColors](#getcolors-1)
 -   [ThreadsManager](#threadsmanager)
-    -   [constructor](#constructor-37)
+    -   [constructor](#constructor-44)
     -   [stringifyFunc](#stringifyfunc)
     -   [run](#run-1)
     -   [send](#send)
@@ -353,12 +386,12 @@
     -   [getPid](#getpid)
     -   [isRunning](#isrunning)
 -   [TranslateManager](#translatemanager)
-    -   [constructor](#constructor-38)
+    -   [constructor](#constructor-45)
     -   [addTranslations](#addtranslations)
     -   [t](#t-1)
     -   [translateArray](#translatearray)
 -   [User](#user)
-    -   [constructor](#constructor-39)
+    -   [constructor](#constructor-46)
     -   [username](#username-1)
     -   [password](#password)
     -   [level](#level-1)
@@ -366,9 +399,9 @@
     -   [email](#email)
     -   [phone](#phone)
     -   [picture](#picture)
-    -   [json](#json-10)
+    -   [json](#json-13)
 -   [UserManager](#usermanager)
-    -   [constructor](#constructor-40)
+    -   [constructor](#constructor-47)
     -   [confManager](#confmanager-1)
     -   [users](#users)
     -   [removeUser](#removeuser)
@@ -378,20 +411,20 @@
     -   [setUser](#setuser)
     -   [getAdminUser](#getadminuser)
 -   [SchedulerDbObject](#schedulerdbobject)
-    -   [constructor](#constructor-41)
+    -   [constructor](#constructor-48)
 -   [identifier](#identifier)
 -   [data](#data)
 -   [triggerDate](#triggerdate)
 -   [SchedulerService](#schedulerservice)
-    -   [constructor](#constructor-42)
+    -   [constructor](#constructor-49)
     -   [start](#start-2)
     -   [stop](#stop-2)
-    -   [register](#register-7)
+    -   [register](#register-9)
     -   [unregister](#unregister-4)
     -   [schedule](#schedule-1)
     -   [timeEvent](#timeevent)
 -   [Service](#service)
-    -   [constructor](#constructor-43)
+    -   [constructor](#constructor-50)
     -   [start](#start-3)
     -   [run](#run-2)
     -   [threadCallback](#threadcallback-1)
@@ -401,30 +434,30 @@
     -   [startExternal](#startexternal)
     -   [stopExternal](#stopexternal)
     -   [stop](#stop-3)
-    -   [restart](#restart-1)
+    -   [restart](#restart-3)
     -   [status](#status-2)
-    -   [register](#register-8)
+    -   [register](#register-10)
     -   [unregister](#unregister-5)
     -   [setThreadsManager](#setthreadsmanager)
 -   [TimeEventService](#timeeventservice)
-    -   [constructor](#constructor-44)
+    -   [constructor](#constructor-51)
     -   [start](#start-4)
     -   [stop](#stop-4)
     -   [hash](#hash)
     -   [elementForHash](#elementforhash)
-    -   [register](#register-9)
+    -   [register](#register-11)
     -   [unregister](#unregister-6)
     -   [convertMode](#convertmode)
     -   [timeEvent](#timeevent-1)
 -   [APIRegistration](#apiregistration)
-    -   [constructor](#constructor-45)
+    -   [constructor](#constructor-52)
     -   [delegate](#delegate)
     -   [method](#method)
     -   [route](#route)
     -   [authLevel](#authlevel)
     -   [isEqual](#isequal)
 -   [APIRequest](#apirequest)
-    -   [constructor](#constructor-46)
+    -   [constructor](#constructor-53)
     -   [method](#method-1)
     -   [ip](#ip)
     -   [route](#route-1)
@@ -435,18 +468,18 @@
     -   [authenticationData](#authenticationdata-1)
     -   [addAuthenticationData](#addauthenticationdata)
 -   [APIResponse](#apiresponse-1)
-    -   [constructor](#constructor-47)
+    -   [constructor](#constructor-54)
     -   [success](#success)
     -   [response](#response)
     -   [errorCode](#errorcode)
     -   [errorMessage](#errormessage)
 -   [WebServices](#webservices)
-    -   [constructor](#constructor-48)
+    -   [constructor](#constructor-55)
     -   [start](#start-5)
     -   [registerInfos](#registerinfos)
-    -   [processAPI](#processapi-8)
+    -   [processAPI](#processapi-9)
     -   [stop](#stop-5)
-    -   [register](#register-10)
+    -   [register](#register-12)
     -   [unregister](#unregister-7)
     -   [registerAPI](#registerapi)
     -   [unregisterAPI](#unregisterapi)
@@ -538,6 +571,10 @@ Constructor
 
 Returns **[HautomationCore](#hautomationcore)** The instance
 
+### restart
+
+Restart core
+
 ### start
 
 Start Hautomation core
@@ -549,6 +586,22 @@ Stop automation core
 ### configurationLoader
 
 Try to overload configuration
+
+## loaded
+
+Loaded function
+
+**Parameters**
+
+-   `api` **PluginAPI** The api
+
+## loaded
+
+Loaded function
+
+**Parameters**
+
+-   `api` **PluginAPI** The api
 
 ## loaded
 
@@ -581,6 +634,14 @@ Loaded plugin function
 **Parameters**
 
 -   `api` **PluginAPI** The core APIs
+
+## loaded
+
+Loaded function
+
+**Parameters**
+
+-   `api` **PluginAPI** The api
 
 ## loaded
 
@@ -648,11 +709,143 @@ Process API callback
 
 Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with an APIResponse object
 
+## HumiditySensorForm
+
+**Extends api.exported.SensorForm**
+
+This class is extended by humidity sensors
+
+**Parameters**
+
+-   `id`  
+-   `plugin`  
+-   `name`  
+-   `dashboard`  
+-   `statistics`  
+-   `dashboardColor`  
+-   `statisticsColor`  
+
+### constructor
+
+Sensor form
+
+**Parameters**
+
+-   `id` **[number](#number)** An identifier
+-   `plugin` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A plugin
+-   `name` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Sensor's name
+-   `dashboard` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if display on dashboard, otherwise false
+-   `statistics` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if display on statistics, otherwise false
+-   `dashboardColor` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The dashboard color
+-   `statisticsColor` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The statistics color
+
+Returns **[HumiditySensorForm](#humiditysensorform)** The instance
+
+### json
+
+Convert JSON data to object
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some data
+
+Returns **[HumiditySensorForm](#humiditysensorform)** An instance
+
+## HumiditySensor
+
+**Extends api.exported.Sensor**
+
+This class is overloaded by sensors
+
+**Parameters**
+
+-   `api`  
+-   `id`  
+-   `configuration`  
+
+### constructor
+
+Humidity sensor class (should be extended)
+
+**Parameters**
+
+-   `api` **PluginAPI** A plugin api
+-   `id` **[number](#number)** An id (optional, default `null`)
+-   `configuration` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The configuration for sensor (optional, default `null`)
+
+Returns **[HumiditySensor](#humiditysensor)** The instance
+
 ## text
 
 ## number
 
 ## myParameter
+
+## PressureSensorForm
+
+**Extends api.exported.SensorForm**
+
+This class is extended by pressure sensors
+
+**Parameters**
+
+-   `id`  
+-   `plugin`  
+-   `name`  
+-   `dashboard`  
+-   `statistics`  
+-   `dashboardColor`  
+-   `statisticsColor`  
+
+### constructor
+
+Sensor form
+
+**Parameters**
+
+-   `id` **[number](#number)** An identifier
+-   `plugin` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A plugin
+-   `name` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Sensor's name
+-   `dashboard` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if display on dashboard, otherwise false
+-   `statistics` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if display on statistics, otherwise false
+-   `dashboardColor` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The dashboard color
+-   `statisticsColor` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The statistics color
+
+Returns **[PressureSensorForm](#pressuresensorform)** The instance
+
+### json
+
+Convert JSON data to object
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some data
+
+Returns **[PressureSensorForm](#pressuresensorform)** An instance
+
+## PressureSensor
+
+**Extends api.exported.Sensor**
+
+This class is overloaded by sensors
+
+**Parameters**
+
+-   `api`  
+-   `id`  
+-   `configuration`  
+
+### constructor
+
+Throughput sensor class (should be extended)
+
+**Parameters**
+
+-   `api` **PluginAPI** A plugin api
+-   `id` **[number](#number)** An id (optional, default `null`)
+-   `configuration` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The configuration for sensor (optional, default `null`)
+
+Returns **[PressureSensor](#pressuresensor)** The instance
 
 ## DbRadio
 
@@ -1018,7 +1211,7 @@ Sensor class (should be extended)
 
 -   `api` **PluginAPI** A plugin api
 -   `id` **[number](#number)** An id (optional, default `null`)
--   `type`   (optional, default `"UNKNOWN"`)
+-   `type` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A plugin type (optional, default `"UNKNOWN"`)
 -   `configuration` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The configuration for sensor (optional, default `null`)
 -   `icon` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An icon (optional, default `null`)
 -   `round` **[number](#number)** Round value (number of digits after comma) (optional, default `0`)
@@ -1154,7 +1347,7 @@ Sensor form
 -   `statisticsColor` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The statistics color
 -   `unit` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The default unit
 
-Returns **[SensorForm](#sensorform)** The instance
+Returns **[TemperatureSensorForm](#temperaturesensorform)** The instance
 
 ### unit
 
@@ -1199,6 +1392,72 @@ Set the unit depending on configuration
 **Parameters**
 
 -   `unit` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A unit configuration (`deg` or `far`)
+
+## ThroughputSensorForm
+
+**Extends api.exported.SensorForm**
+
+This class is extended by throughput sensors
+
+**Parameters**
+
+-   `id`  
+-   `plugin`  
+-   `name`  
+-   `dashboard`  
+-   `statistics`  
+-   `dashboardColor`  
+-   `statisticsColor`  
+
+### constructor
+
+Sensor form
+
+**Parameters**
+
+-   `id` **[number](#number)** An identifier
+-   `plugin` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A plugin
+-   `name` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Sensor's name
+-   `dashboard` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if display on dashboard, otherwise false
+-   `statistics` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if display on statistics, otherwise false
+-   `dashboardColor` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The dashboard color
+-   `statisticsColor` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The statistics color
+
+Returns **[ThroughputSensorForm](#throughputsensorform)** The instance
+
+### json
+
+Convert JSON data to object
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some data
+
+Returns **[ThroughputSensorForm](#throughputsensorform)** An instance
+
+## ThroughputSensor
+
+**Extends api.exported.Sensor**
+
+This class is overloaded by sensors
+
+**Parameters**
+
+-   `api`  
+-   `id`  
+-   `configuration`  
+
+### constructor
+
+Throughput sensor class (should be extended)
+
+**Parameters**
+
+-   `api` **PluginAPI** A plugin api
+-   `id` **[number](#number)** An id (optional, default `null`)
+-   `configuration` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The configuration for sensor (optional, default `null`)
+
+Returns **[ThroughputSensor](#throughputsensor)** The instance
 
 ## Logger
 
@@ -2562,6 +2821,83 @@ Returns **[FormObject](#formobject)** A form object
 
 ## id
 
+## InstallationManager
+
+This class allows to manage external installation
+
+**Parameters**
+
+-   `confManager`  
+-   `eventBus`  
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `confManager` **[ConfManager](#confmanager)** The configuration manager
+-   `eventBus` **EventEmitter** The global event bus
+
+Returns **[InstallationManager](#installationmanager)** The instance
+
+### register
+
+Register a command to be executed for a specific version
+
+**Parameters**
+
+-   `currentVersion` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The module's version
+-   `arch` **([string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array))** The architecture ('arm', 'arm64', 'ia32', 'mips', 'mipsel', 'ppc', 'ppc64', 's390', 's390x', 'x32', 'x64', and 'x86'). Can be `*` for all arch, or an array of architectures (optional, default `"*"`)
+-   `command` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A command
+-   `sudo` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if command should be executed as sudo, false otherwise. The Hautomation process owner user should be in `sudo` group without password. (optional, default `false`)
+-   `wait` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if command is executed synchronously, false otherwise (optional, default `true`)
+
+### executeCommand
+
+Execute a command. Can throw an error if wait is `true`
+
+**Parameters**
+
+-   `command` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The command
+-   `wait` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if command is executed synchronously, false otherwise (optional, default `true`)
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback (only if wait parameter is false) : `(error, stdout, stderr) => {}` (optional, default `null`)
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An object result if wait is `true`
+
+### execute
+
+Execute all registered commands
+
+### isAlreadyExecuted
+
+Check if the command has been already executed
+
+**Parameters**
+
+-   `key` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The sha256 key
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if command has been already executed, false otherwise
+
+### isValidForArchitecture
+
+Check if the command is valid for the architecture
+
+**Parameters**
+
+-   `arch` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The architecture
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if command is valid, false otherwise
+
+### restart
+
+Process Hautomation when all commands has been done
+
+**Parameters**
+
+-   `i` **[number](#number)** The current comment indice
+-   `nb` **[number](#number)** The max number of commands to execute
+
 ## PluginsAPI
 
 This class is an interface for plugins
@@ -2581,6 +2917,7 @@ This class is an interface for plugins
 -   `dashboardManager`  
 -   `themeManager`  
 -   `sensorsManager`  
+-   `installationManager`  
 
 ### exportClass
 
@@ -2650,6 +2987,7 @@ This class manage plugins
 -   `eventBus`  
 -   `themeManager`  
 -   `sensorsManager`  
+-   `installationManager`  
 
 ### constructor
 
@@ -2669,6 +3007,7 @@ Constructor
 -   `eventBus` **EventEmitter** The global event bus
 -   `themeManager` **[ThemeManager](#thememanager)** The theme manager
 -   `sensorsManager` **[SensorsManager](#sensorsmanager)** The sensors manager
+-   `installationManager` **installationManager** The installation manager
 
 Returns **[PluginsManager](#pluginsmanager)** The instance
 
@@ -2769,6 +3108,16 @@ Re-create a correctly sorted array of plugins with the previous toposort order
 -   `plugins` **\[PluginAPI]** The unsorted plugins array
 
 Returns **\[PluginAPI]** An array of plugins sorted depending on dependencies
+
+### processAPI
+
+Process API callback
+
+**Parameters**
+
+-   `apiRequest` **[APIRequest](#apirequest)** An APIRequest
+
+Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with an APIResponse object
 
 ## ConfigurationAPI
 
@@ -2884,6 +3233,38 @@ The DbHelper object allows you to create, update, delete or execute queries on t
 -   `dbObjectClass` **[DbObject](#dbobject)** A database object extended class with annotations. Please read documentation
 
 Returns **[DbHelper](#dbhelper)** A DbHelper object
+
+## InstallerAPI
+
+Public API for installation of external apps
+
+**Parameters**
+
+-   `installationManager`  
+-   `version`  
+
+### register
+
+Register a command to be executed for a specific version
+
+**Parameters**
+
+-   `arch` **([string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array))** The architecture ('arm', 'arm64', 'ia32', 'mips', 'mipsel', 'ppc', 'ppc64', 's390', 's390x', 'x32', 'x64', and 'x86'). Can be `*` for all arch, or an array of architectures (optional, default `"*"`)
+-   `command` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A command
+-   `sudo` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if command should be executed as sudo, false otherwise. The Hautomation process owner user should be in `sudo` group without password. (optional, default `false`)
+-   `wait` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if command is executed synchronously, false otherwise (optional, default `true`)
+
+### executeCommand
+
+Execute a command. Can throw an error if wait is `true`
+
+**Parameters**
+
+-   `command` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The command
+-   `wait` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if command is executed synchronously, false otherwise (optional, default `true`)
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback (only if wait parameter is false) : `(error, stdout, stderr) => {}` (optional, default `null`)
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An object result if wait is `true`
 
 ## SchedulerAPI
 
@@ -3307,6 +3688,26 @@ Convert json data
 -   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some key / value data
 
 Returns **[SensorsForm](#sensorsform)** A form object
+
+### getSensorIds
+
+Sensors id injection
+
+**Parameters**
+
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Inject parameters
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of ids
+
+### getSensorNames
+
+Sensors name injection
+
+**Parameters**
+
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Inject parameters
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of names
 
 ## SensorsManager
 
