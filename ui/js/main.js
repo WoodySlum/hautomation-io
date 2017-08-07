@@ -324,14 +324,9 @@ $(document).ready(function() {
         var displayedMessage = message;
         if (message.responseText) {
             errorData = JSON.parse(message.responseText);
+            console.log(errorData);
             code = errorData.code;
             displayedMessage = errorData.message + '<br/>[#' + code + ']';
-        }
-
-        if (message.statusText) {
-            errorData = message.statusText;
-            code = message.status;
-            displayedMessage = errorData + '<br/>[#' + code + ']';
         }
 
         // Logout
@@ -1208,7 +1203,7 @@ $(document).ready(function() {
             case "ActionOneIconStatus":
                 var val = '0';
                 if (tile.status) val = '1';
-                htmlTile += '<input type="hidden" id="' + tile.action + ' ' + tile.identifier + 'cb" name="' + tile.identifier + 'cb" value="' + val + '" />';
+                htmlTile += '<input type="hidden" id="' + tile.identifier + 'cb" name="' + tile.identifier + 'cb" value="' + val + '" />';
                 htmlTile += '<div id="' + tile.identifier + '" ';
                 htmlTile += 'class="action deviceTile ';
                 if (tile.status) htmlTile += 'deviceTileActive ';
@@ -1232,7 +1227,7 @@ $(document).ready(function() {
                 htmlTile += '</div>';
                 break;
             case "GenericAction":
-                htmlTile += '<div id="' + tile.action + '--H--' + tile.identifier + '" class="' + actionCss + ' genericAction action actionNoStatusTile subTile" style="background-color:' + backgroundColor + ';color:' + foregroundColor + ';">';
+                htmlTile += '<div id="' + tile.identifier + '" class="' + actionCss + ' genericAction action actionNoStatusTile subTile" style="background-color:' + backgroundColor + ';color:' + foregroundColor + ';">';
                 htmlTile += '<i class="fa deviceIcon" data-unicode="' + tile.icon + '">&#x' + tile.icon + '</i><br/>';
                 htmlTile += tile.text;
                 htmlTile += '</div>';
@@ -1241,7 +1236,7 @@ $(document).ready(function() {
                 var val = '0';
                 if (tile.status) val = '1';
                 htmlTile += '<input type="hidden" id="' + tile.identifier + 'cb" name="' + tile.identifier + 'cb" value="' + val + '" />';
-                htmlTile += '<div id="' + tile.action + '--H--' + tile.identifier + '" ';
+                htmlTile += '<div id="' +  tile.identifier + '" ';
                 htmlTile += 'class="' + actionCss + ' genericActionWithStatus action deviceTile ';
                 if (tile.status) htmlTile += 'deviceTileActive ';
                 htmlTile += 'subTile" style="background-color:' + backgroundColor + ';color:' + foregroundColor + ';">';
@@ -1574,20 +1569,21 @@ $(document).ready(function() {
         };
 
         $(".genericAction").click(function() {
-            tileData = event.target.id.split("--H--");
-            if (tileData.length == 2) {
-                var callback = tileData[0];
-                var tileId = tileData[1];
+            tileId = event.target.id;
+            if (tileId) {
+                var tile = getTile(tileId);
+
+                consolelog(tileId);
 
                 $.ajax({
                     type: "POST",
-                    url: vUrl,
-                    data: {
-                        username: username,
-                        ePassword: ePassword,
-                        method: callback,
-                        name: tileId
-                    }
+                    url: vUrl + tile.action,
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        u: username,
+                        p: password,
+                        data:{}
+                    })
                 }).done(function(msg) {
                     var response = JSON.parse(msg);
                     if (response.success) {
@@ -1607,13 +1603,10 @@ $(document).ready(function() {
         });
 
         $(".genericActionWithStatus").click(function() {
-            tileData = event.target.id.split("--H--");
-            if (tileData.length == 2) {
-                var callback = tileData[0];
-                var tileId = tileData[1];
+            tileId = event.target.id;
+            if (tileId) {
                 var tile = getTile(tileId);
 
-                consolelog(callback);
                 consolelog(tileId);
 
                 cb = $("#" + tileId + "cb");
@@ -1657,16 +1650,15 @@ $(document).ready(function() {
 
                 $.ajax({
                     type: "POST",
-                    url: vUrl,
-                    data: {
-                        username: username,
-                        ePassword: ePassword,
-                        method: callback,
-                        status: status,
-                        name: tileId
-                    }
+                    url: vUrl + tile.action,
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        u: username,
+                        p: password,
+                        data:{}
+                    })
                 }).done(function(msg) {
-                    var response = JSON.parse(msg);
+                    var response = msg;
                     if (response.success) {
                         toastr.success(response.success);
                     }
@@ -1677,7 +1669,6 @@ $(document).ready(function() {
                         toastr.error(response.failed);
                     }
                 }).fail(function(msg) {
-                    var response = JSON.parse(msg);
                     setError(msg);
                 });
             }

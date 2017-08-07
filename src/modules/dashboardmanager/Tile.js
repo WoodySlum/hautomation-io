@@ -61,6 +61,9 @@ class Tile {
             this.colors.colorOn = themeManager.getColors().onColor;
             this.colors.colorOff = themeManager.getColors().offColor;
         }
+        if (this.action && this.action.substr(0, 1) === "/") {
+            this.action = this.action.substr(1, this.action.length - 1);
+        }
     }
 
     /**

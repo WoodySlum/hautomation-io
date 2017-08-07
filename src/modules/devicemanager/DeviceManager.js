@@ -52,7 +52,7 @@ class DeviceManager {
     registerDeviceTile(device) {
         //constructor(themeManager, identifier, type = TILE_INFO_ONE_TEXT, icon = null, subIcon = null, text = null, subText = null, picture = null, pictures = null, status = 0, order = 1, action = null, object = null) {
         if (device.visible) {
-            const tile = new Tile.class(this.dashboardManager.themeManager, device.id, Tile.TILE_GENERIC_ACTION_STATUS, device.icon.icon, null, device.name, null, null, null, device.status > 0?1:0, 9000 + this.formConfiguration.data.indexOf(device), null, null);
+            const tile = new Tile.class(this.dashboardManager.themeManager, device.id, Tile.TILE_GENERIC_ACTION_STATUS, device.icon.icon, null, device.name, null, null, null, device.status > 0?1:0, 9000 + this.formConfiguration.data.indexOf(device), "/device/set/" + device.id + "/", null);
             this.dashboardManager.registerTile(tile);
         }
     }
