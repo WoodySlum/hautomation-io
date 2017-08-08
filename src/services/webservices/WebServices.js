@@ -121,6 +121,21 @@ class WebServices extends Service.class {
     }
 
     /**
+     * Stop Web Services
+     */
+    stop() {            
+        if (this.servers && this.status == Service.RUNNING) {
+            this.servers.forEach((server) => {
+                server.close();
+            });
+            this.servers = [];
+            super.stop();
+        } else {
+            Logger.warn("WebServices are not running, nothing to do...");
+        }
+    }
+
+    /**
      * Register and list informations
      */
     registerInfos() {
@@ -161,21 +176,6 @@ class WebServices extends Service.class {
                 // API has been successfully processed by the class
                 resolve(new APIResponse.class(true, registered));
             });
-        }
-    }
-
-    /**
-     * Stop Web Services
-     */
-    stop() {
-        if (this.server && this.status == Service.RUNNING) {
-            this.servers.forEach((server) => {
-                server.close();
-            });
-            this.servers = [];
-            super.stop();
-        } else {
-            Logger.warn("WebServices are not running, nothing to do...");
         }
     }
 

@@ -132,12 +132,14 @@ class SchedulerService extends Service.class {
     timeEvent(self) {
         const request = self.dbHelper.RequestBuilder().select().where("triggerDate", self.dbHelper.Operators().GTE, self.lastTriggered);
         self.dbHelper.getObjects(request, (err, results) => {
-            results.forEach((schedulerDbObject) => {
-                if (self.registeredElements[schedulerDbObject.identifier]) {
-                    self.registeredElements[schedulerDbObject.identifier](JSON.parse(schedulerDbObject.data));
-                }
-            });
-            self.lastTriggered = (Date.now() / 1000) | 0;
+            if (!err && results) {
+                results.forEach((schedulerDbObject) => {
+                    if (self.registeredElements[schedulerDbObject.identifier]) {
+                        self.registeredElements[schedulerDbObject.identifier](JSON.parse(schedulerDbObject.data));
+                    }
+                });
+                self.lastTriggered = (Date.now() / 1000) | 0;
+            }
         });
     }
 }

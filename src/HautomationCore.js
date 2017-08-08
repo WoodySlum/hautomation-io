@@ -2,6 +2,7 @@
 var fs = require("fs");
 var path = require("path");
 var Logger = require("./logger/Logger");
+var HautomationRunnerConstants = require("./../HautomationRunnerConstants");
 var ServicesManager = require("./modules/servicesmanager/ServicesManager");
 var ThreadsManager = require("./modules/threadsmanager/ThreadsManager");
 var WebServices = require("./services/webservices/WebServices");
@@ -44,14 +45,17 @@ class HautomationCore {
     /**
      * Constructor
      *
+     * @param  {EventEmitter} runnerEventBus Runner event bus, used for restart
      * @returns {HautomationCore} The instance
      */
-    constructor() {
+    constructor(runnerEventBus) {
+
         Logger.info("/--------------------\\");
         Logger.info("| Hautomation v" + NpmPackage.version + " |");
         Logger.info("\\--------------------/");
 
         this.eventBus = new events.EventEmitter();
+        this.runnerEventBus = runnerEventBus;
 
         // Load main configuration
         this.configurationLoader();
@@ -123,16 +127,17 @@ class HautomationCore {
         this.eventBus.on(PluginsManager.EVENT_RESTART, () => {
             self.restart();
         });
-
-        // Install depedencies
-        this.installationManager.execute();
     }
 
     /**
      * Restart core
      */
     restart() {
-
+        if (this.runnerEventBus) {
+            this.runnerEventBus.emit(HautomationRunnerConstants.RESTART, {});
+        } else {
+            Logger.err("Could not restart (no event bus)");
+        }
     }
 
     /**
@@ -145,6 +150,9 @@ class HautomationCore {
         } catch(e) {
             Logger.err("Could not start services : " + e.message);
         }
+
+        // Install dependencies
+        this.installationManager.execute();
     }
 
     /**
