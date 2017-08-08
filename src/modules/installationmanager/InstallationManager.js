@@ -75,7 +75,7 @@ class InstallationManager {
     execute() {
         const needed = [];
         this.commandList.forEach((command) => {
-            if (!this.isAlreadyExecuted(command.key) && this.isValidForArchitecture(command.arch)) {
+            if (!this.isAlreadyExecuted(command.key) && this.isValidForArchitecture(command.arch, os.arch())) {
                 needed.push(command);
             }
         });
@@ -142,11 +142,11 @@ class InstallationManager {
      * @param  {string}  arch The architecture
      * @returns {boolean}     True if command is valid, false otherwise
      */
-    isValidForArchitecture(arch) {
+    isValidForArchitecture(arch, currentArch) {
         let r = false;
         if (arch instanceof Array) {
             arch.forEach((dArch) => {
-                if (dArch.toLowerCase() === os.arch().toLowerCase()) {
+                if (dArch.toLowerCase() === currentArch.toLowerCase()) {
                     r = true;
                 }
             });
