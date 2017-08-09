@@ -1,7 +1,8 @@
 "use strict";
-var Logger = require("./../../logger/Logger");
-var User = require("./User");
+// var Logger = require("./../../logger/Logger");
 var Authentication = require("./../authentication/Authentication");
+const FormConfiguration = require("./../formconfiguration/FormConfiguration");
+const UserForm = require("./UserForm");
 
 const CONF_KEY = "users";
 const ERROR_USER_NOT_FOUND = "ERROR_USER_NOT_FOUND";
@@ -15,39 +16,13 @@ class UserManager {
      * Constructor
      *
      * @param  {ConfManager} confManager A configuration manager needed for persistence
+     * @param  {FormManager} formManager  A form manager
+     * @param  {WebServices} webServices  The web services
      * @returns {UserManager} The instance
      */
-    constructor(confManager) {
-        /**
-         * Configuration manager
-         * @type {ConfManager}
-         */
+    constructor(confManager, formManager, webServices) {
+        this.formConfiguration = new FormConfiguration.class(confManager, formManager, webServices, CONF_KEY, true, UserForm.class);
         this.confManager = confManager;
-
-        try {
-            /**
-             * Users
-             * @type {[User]}
-             */
-            this.users = this.confManager.loadData(User.class, CONF_KEY);
-        } catch(e) {
-            Logger.warn("Load users error : " + e.message);
-            this.users = [];
-        }
-    }
-
-    /**
-     * Delete specific user
-     *
-     * @param  {string} username The username
-     */
-    removeUser(username) {
-        let user = this.getUser(username);
-        try {
-            this.users = this.confManager.removeData(CONF_KEY, user, this.users, this.compareUser);
-        } catch(e) {
-            throw Error(ERROR_USER_NOT_FOUND);
-        }
     }
 
     /**
@@ -56,18 +31,7 @@ class UserManager {
      * @returns {[User]} An array of Users
      */
     getUsers() {
-        return this.users.slice();
-    }
-
-    /**
-     * Comparator for users
-     *
-     * @param  {User} user1 A user
-     * @param  {User} user2 Another user
-     * @returns {boolean}       True if user are identical, else false
-     */
-    compareUser(user1, user2) {
-        return (user1.username == user2.username)?true:false;
+        return this.formConfiguration.data.slice();
     }
 
     /**
@@ -77,20 +41,13 @@ class UserManager {
      * @returns {User}   A user, null if user does not exists
      */
     getUser(username) {
-        return this.confManager.getData(this.users, new User.class(username), this.compareUser);
-    }
-
-    /**
-     * Set user and store into json
-     *
-     * @param {User} user A user
-     */
-    setUser(user) {
-        try {
-            this.users = this.confManager.setData(CONF_KEY, user, this.users, this.compareUser);
-        } catch (e) {
-            Logger.err("Could not save user : " + e.message);
-        }
+        let foundUser = null;
+        this.formConfiguration.data.forEach((user) => {
+            if (user.username.toLowerCase() === username.toLowerCase()) {
+                foundUser = user;
+            }
+        });
+        return foundUser;
     }
 
     /**
@@ -100,7 +57,7 @@ class UserManager {
      */
     getAdminUser() {
         if (this.confManager.appConfiguration.admin.enable) {
-            return new User.class(this.confManager.appConfiguration.admin.username, this.confManager.appConfiguration.admin.password, Authentication.AUTH_MAX_LEVEL);
+            return new UserForm.class(0, this.confManager.appConfiguration.admin.username, this.confManager.appConfiguration.admin.password, Authentication.AUTH_MAX_LEVEL);
         }
 
         return null;

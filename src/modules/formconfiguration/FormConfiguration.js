@@ -34,6 +34,7 @@ class FormConfiguration {
         this.name = name.toLowerCase();
         this.confKey = this.name + ".conf";
         this.list = list;
+        this.additionalFields = [];
 
         // WebServices
         this.formRoute = ":/" + ROUTE_BASE_PATH + "/" + this.name + "/" + ROUTE_BASE_FORM + "/";
@@ -57,6 +58,18 @@ class FormConfiguration {
             this.registerForm(formClass, ...inject);
         } else {
             this.formClass = null;
+        }
+    }
+
+    /**
+     * Add additional fields
+     *
+     * @param {Class} form A form
+     */
+    addAdditionalFields(form) {
+        if (this.additionalFields.indexOf(form) === -1 && this.formClass) {
+            this.additionalFields.push(form);
+            this.formManager.addAdditionalFields(this.formClass, this.additionalFields);
         }
     }
 

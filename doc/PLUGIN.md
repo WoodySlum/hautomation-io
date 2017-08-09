@@ -527,7 +527,7 @@ Intermediate layer example :
 You can add aggregation values to the sensor. For example, if you have 63 minutes, you surely want to get 1 hour instead.
 You can use `this.addUnitAggregation(unitName, lowThreshold = 0)` on your plugin to add a unit aggregation.
 
-### Installing external app / depedency
+### Installing external app / dependency
 
 You can execute some command lines when you need for example to install an external application.
 The `installerAPI` can be used to do that. All you need is to to register the command. The commands will run only for the current version of the plugin, and only once.
@@ -536,4 +536,24 @@ When all commands will be done, the core will restart automatically.
 Here is an example :
 	
 	api.installerAPI.register(["arm"], "sleep 2; echo \"Hello !\"");
+
+### Add fields on user registration
+
+	class SampleForm extends api.exported.FormObject.class {
+        constructor(id, xo) {
+            super(id);
+            /**
+             * @Property("xo");
+             * @Type("string");
+             * @Title("Another extended form");
+             */
+            this.xo = xo;
+        }
+
+        json(data) {
+            return new SampleForm(data.id, data.xo);
+        }
+    }
+
+	api.userAPI.addAditionalFields(SampleForm);
 

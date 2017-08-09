@@ -27,7 +27,6 @@ function loaded(api) {
     api.configurationAPI.register(SampleForm);
 
 
-
     /**
      * This class is a sample plugin
      * @class

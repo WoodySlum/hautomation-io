@@ -65,7 +65,7 @@ class WebServices extends Service.class {
             let endpoint = ENDPOINT_API;
             let instance = this;
 
-            this.app.use(BodyParser.json());
+            this.app.use(BodyParser.json({limit: "2mb"}));
             this.app.use(BodyParser.urlencoded({ extended: false }));
             this.app.use(ENDPOINT_UI, express.static(__dirname + "/../../../ui"));
 
@@ -123,7 +123,7 @@ class WebServices extends Service.class {
     /**
      * Stop Web Services
      */
-    stop() {            
+    stop() {
         if (this.servers && this.status == Service.RUNNING) {
             this.servers.forEach((server) => {
                 server.close();
@@ -216,6 +216,14 @@ class WebServices extends Service.class {
         });
         if (!found) {
             super.register(registration);
+            // Sort
+            this.delegates = this.delegates.sort((a) => {
+                let r = 1;
+                if (a.delegate instanceof Authentication.class) {
+                    r = -1;
+                }
+                return r;
+            });
         } else {
             Logger.warn("Delegate already registered");
         }
@@ -422,7 +430,6 @@ class WebServices extends Service.class {
                     return;
                 }
             }
-
         });
 
         // Only authentication has been registered, so it's unknown API
@@ -430,7 +437,7 @@ class WebServices extends Service.class {
             apiResponse = new APIResponse.class(false, {}, 1, "Unknown api called");
         }
 
-        Logger.info(apiResponse);
+        Logger.verbose(apiResponse);
         if (apiResponse.success) {
             if (apiResponse.upToDate) {
                 res.status(API_UP_TO_DATE).send();

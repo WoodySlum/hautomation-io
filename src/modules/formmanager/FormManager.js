@@ -53,6 +53,24 @@ class FormManager {
     }
 
     /**
+     * Add additional fields to a form base
+     *
+     * @param {Class} formBase The base form
+     * @param {Array} forms    An array of forms
+     */
+    addAdditionalFields(formBase, forms) {
+
+        let additionalProperties = {};
+        forms.forEach((form) => {
+            Annotation(form.toString(), function(AnnotationReader) {
+                additionalProperties = Object.assign(additionalProperties, AnnotationReader.comments.properties);
+
+            });
+        });
+        this.registeredForms[formBase.name].additionalFields = additionalProperties;
+    }
+
+    /**
      * Check if the register class is valid
      *
      * @param  {Class} cl A class
@@ -197,7 +215,7 @@ class FormManager {
 
         const self = this;
         Annotation(c, function(AnnotationReader) {
-            const properties = Object.assign(additionalFields, AnnotationReader.comments.properties);
+            const properties = Object.assign(AnnotationReader.comments.properties, additionalFields);
             Object.keys(properties).forEach((prop) => {
 
                 const meta = Convert.class.convertProperties(properties[prop]);
@@ -240,6 +258,10 @@ class FormManager {
                         schema.properties[prop].type = "object";
                         schemaUI[prop] = subForm.schemaUI;
 
+                        exist = true;
+                    } else if (type === "file") {
+                        schema.properties[prop].type = "string";
+                        schema.properties[prop].format = "data-url";
                         exist = true;
                     }
 

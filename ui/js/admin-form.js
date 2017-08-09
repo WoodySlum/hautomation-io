@@ -164,4 +164,5 @@ function adminFormReady() {
 
 
     adminForm("devices");
+    adminForm("users");
 }

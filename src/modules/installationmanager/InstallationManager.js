@@ -140,6 +140,7 @@ class InstallationManager {
      * Check if the command is valid for the architecture
      *
      * @param  {string}  arch The architecture
+     * @param  {string}  currentArch The current architecture
      * @returns {boolean}     True if command is valid, false otherwise
      */
     isValidForArchitecture(arch, currentArch) {
