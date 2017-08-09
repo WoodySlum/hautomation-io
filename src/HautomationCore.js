@@ -23,6 +23,8 @@ var DashboardManager = require("./modules/dashboardmanager/DashboardManager");
 var ThemeManager = require("./modules/thememanager/ThemeManager");
 var SensorsManager = require("./modules/sensorsmanager/SensorsManager");
 var InstallationManager = require("./modules/installationmanager/InstallationManager");
+var CoreInstaller = require("./../installer/CoreInstaller");
+
 const CONFIGURATION_FILE = "data/config.json";
 var AppConfiguration = require("./../data/config.json");
 var NpmPackage = require("./../package.json");
@@ -96,12 +98,8 @@ class HautomationCore {
         this.pluginsManager = null;
 
         // ConfManager module
-        this.confManager = new ConfManager.class(AppConfiguration, this.eventBus, EVENT_STOP);
+        this.confManager = new ConfManager.class(AppConfiguration, this.eventBus, EVENT_STOP, this.timeEventService);
 
-        // UserManager module
-        this.userManager = new UserManager.class(this.confManager, this.formManager, this.webServices);
-        // Authentication module
-        this.authentication = new Authentication.class(this.webServices, this.userManager);
         // Alarm module
         this.alarmManager = new AlarmManager.class(this.confManager, this.webServices);
         // RadioManager. The plugins manager will be set later, when the pluginsLoaded event will be triggered
@@ -110,6 +108,10 @@ class HautomationCore {
         this.sensorsManager = new SensorsManager.class(this.pluginsManager, this.eventBus, this.webServices, this.formManager, this.confManager, this.translateManager, this.themeManager);
         // Dashboard manager
         this.dashboardManager = new DashboardManager.class(this.themeManager, this.webServices, this.translateManager);
+        // UserManager module
+        this.userManager = new UserManager.class(this.confManager, this.formManager, this.webServices, this.dashboardManager);
+        // Authentication module
+        this.authentication = new Authentication.class(this.webServices, this.userManager);
         // Installation manager
         this.installationManager = new InstallationManager.class(this.confManager, this.eventBus);
         // Plugins manager module
@@ -127,6 +129,11 @@ class HautomationCore {
         this.eventBus.on(PluginsManager.EVENT_RESTART, () => {
             self.restart();
         });
+
+        // Install dependencies
+        if (!process.env.TEST) {
+            CoreInstaller.install(this.installationManager);
+        }
     }
 
     /**

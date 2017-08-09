@@ -28,9 +28,10 @@ class InstallerAPI {
      * @param  {string}  command        A command
      * @param  {boolean} [sudo=false]    True if command should be executed as sudo, false otherwise. The Hautomation process owner user should be in `sudo` group without password.
      * @param  {boolean} [wait=true]    True if command is executed synchronously, false otherwise
+     * @param  {boolean} [skipError=false]    True if command fails should continue, false for retrying
      */
-    register(arch = "*", command, sudo = false, wait = true) {
-        PrivateProperties.oprivate(this).installationManager.register(PrivateProperties.oprivate(this).version, arch, command, sudo, wait);
+    register(arch = "*", command, sudo = false, wait = true, skipError = false) {
+        PrivateProperties.oprivate(this).installationManager.register(PrivateProperties.oprivate(this).version, arch, command, sudo, wait, skipError);
     }
 
     /**

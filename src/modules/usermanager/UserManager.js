@@ -1,8 +1,11 @@
 "use strict";
-// var Logger = require("./../../logger/Logger");
-var Authentication = require("./../authentication/Authentication");
+const Logger = require("./../../logger/Logger");
+const Authentication = require("./../authentication/Authentication");
 const FormConfiguration = require("./../formconfiguration/FormConfiguration");
 const UserForm = require("./UserForm");
+const ImageUtils = require("./../../utils/ImageUtils");
+const Tile = require("./../dashboardmanager/Tile");
+const Icons = require("./../../utils/Icons");
 
 const CONF_KEY = "users";
 const ERROR_USER_NOT_FOUND = "ERROR_USER_NOT_FOUND";
@@ -18,11 +21,47 @@ class UserManager {
      * @param  {ConfManager} confManager A configuration manager needed for persistence
      * @param  {FormManager} formManager  A form manager
      * @param  {WebServices} webServices  The web services
+     * @param  {DashboardManager} dashboardManager  The dashboard manager
      * @returns {UserManager} The instance
      */
-    constructor(confManager, formManager, webServices) {
+    constructor(confManager, formManager, webServices, dashboardManager) {
         this.formConfiguration = new FormConfiguration.class(confManager, formManager, webServices, CONF_KEY, true, UserForm.class);
         this.confManager = confManager;
+        this.dashboardManager = dashboardManager;
+        this.updateTile();
+    }
+
+    /**
+     * Update user tile
+     */
+    updateTile() {
+        const pics = [];
+        this.getUsers().forEach((user) => {
+            const pic = ImageUtils.class.sanitizeFormConfiguration(user.picture);
+            if (pic) {
+                if (user.atHome) {
+                    ImageUtils.class.resize(pic, (err, data) => {
+                        if (!err) {
+                            pics.push(data);
+                            const tile = new Tile.class(this.dashboardManager.themeManager, "users", Tile.TILE_PICTURES, Icons.class.list()["group"], null, null, null, null, pics);
+                            this.dashboardManager.registerTile(tile);
+                        } else {
+                            Logger.err(err.message);
+                        }
+                    });
+                } else {
+                    ImageUtils.class.blur(pic, (err, data) => {
+                        if (!err) {
+                            pics.push(data);
+                            const tile = new Tile.class(this.dashboardManager.themeManager, "users", Tile.TILE_PICTURES, Icons.class.list()["group"], null, null, null, null, pics);
+                            this.dashboardManager.registerTile(tile);
+                        } else {
+                            Logger.err(err.message);
+                        }
+                    });
+                }
+            }
+        });
     }
 
     /**

@@ -537,7 +537,15 @@ Here is an example :
 	
 	api.installerAPI.register(["arm"], "sleep 2; echo \"Hello !\"");
 
-### Add fields on user registration
+### Users
+
+#### Get users
+
+	api.userAPI.getUsers().forEach((user) => {
+		console.log(user.username);
+	});
+
+#### Add fields on user registration
 
 	class SampleForm extends api.exported.FormObject.class {
         constructor(id, xo) {

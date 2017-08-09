@@ -1,6 +1,7 @@
 "use strict";
 var Logger = require("./../../logger/Logger");
 var fs = require("fs");
+var TimeEventService = require("./../../services/timeeventservice/TimeEventService");
 
 const ERROR_EMPTY_FILE    = "ERROR_EMPTY_FILE";
 const ERROR_INVALID_JSON  = "ERROR_INVALID_JSON";
@@ -19,9 +20,10 @@ class ConfManager {
      * @param  {AppConfiguration} appConfiguration The app configuration object
      * @param  {EventEmitter} eventBus    The global event bus
      * @param  {string} stopEventName    The stop event name
+     * @param  {TimeEventService} timeEventService    The time event service
      * @returns {ConfManager} The instance
      */
-    constructor(appConfiguration, eventBus, stopEventName) {
+    constructor(appConfiguration, eventBus, stopEventName, timeEventService) {
         /**
          * App configuration
          * @type {Object}
@@ -33,6 +35,7 @@ class ConfManager {
          */
         this.fs = fs;
         this.toBeSaved = {};
+        this.timeEventService = timeEventService;
 
         // Write file on stop core
         const self = this;
@@ -41,6 +44,12 @@ class ConfManager {
             eventBus.on(stopEventName, () => {
                 self.writeDataToDisk(self, false);
             });
+        }
+
+        if (!process.env.TEST) {
+            this.timeEventService.register((self) => {
+                self.writeDataToDisk(self, true);
+            }, this, TimeEventService.EVERY_MINUTES);
         }
     }
 
@@ -122,17 +131,21 @@ class ConfManager {
      * @param  {boolean} [async=true] True if save asynchronously, false otherwise
      */
     writeDataToDisk(context, async = true) {
+        Logger.info("Saving configuration files");
         const keys = Object.keys(context.toBeSaved);
         keys.forEach((key) => {
             if (async) {
                 context.fs.writeFile(context.getFilePath(key), context.toBeSaved[key], (err) => {
                     if (err) {
                         Logger.err(err);
+                    } else {
+                        delete context.toBeSaved[key];
                     }
                 });
             } else {
                 try {
                     context.fs.writeFileSync(context.getFilePath(key), context.toBeSaved[key]);
+                    delete context.toBeSaved[key];
                 } catch(e) {
                     Logger.err(e.message);
                 }

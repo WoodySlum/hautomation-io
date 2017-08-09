@@ -12,7 +12,8 @@
       "setInterval": false,
       "clearTimeout": false,
       "clearInterval": false,
-      "__dirname":false
+      "__dirname":false,
+      "Buffer": false
   },
     "plugins": [
         "mocha",

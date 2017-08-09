@@ -12,13 +12,15 @@ var Logger = require("./../../logger/Logger");
 var FormObject = require("./../formmanager/FormObject");
 var TimeEventAPI = require("./publicapis/TimeEventAPI");
 var SchedulerAPI = require("./publicapis/SchedulerAPI");
-var DateUtils = require("./../../utils/DateUtils");
-var Icons = require("./../../utils/Icons");
 var DashboardAPI = require("./publicapis/DashboardAPI");
 var SensorAPI = require("./publicapis/SensorAPI");
 var ThemeAPI = require("./publicapis/ThemeAPI");
 var InstallerAPI = require("./publicapis/InstallerAPI");
 var UserAPI = require("./publicapis/UserAPI");
+
+var DateUtils = require("./../../utils/DateUtils");
+var Icons = require("./../../utils/Icons");
+var ImageUtils = require("./../../utils/ImageUtils");
 
 /**
  * This class is an interface for plugins
@@ -67,6 +69,7 @@ class PluginsAPI {
             {FormObject: FormObject},
             {DateUtils: DateUtils},
             {Icons: Icons},
+            {ImageUtils:ImageUtils},
             {Logger: Logger}
         );
 

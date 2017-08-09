@@ -27,6 +27,19 @@ class UserAPI {
     addAdditionalFields(form) {
         PrivateProperties.oprivate(this).userManager.formConfiguration.addAdditionalFields(form);
     }
+
+    /**
+     * Get all users (anonymized)
+     *
+     * @returns {Array} An array of users
+     */
+    getUsers() {
+        const users = PrivateProperties.oprivate(this).userManager.getUsers();
+        users.forEach((user) => {
+            delete user.password;
+        });
+        return users;
+    }
 }
 
 module.exports = {class:UserAPI};

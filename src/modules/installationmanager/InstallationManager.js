@@ -42,10 +42,11 @@ class InstallationManager {
      * @param  {string}  command        A command
      * @param  {boolean} [sudo=false]    True if command should be executed as sudo, false otherwise. The Hautomation process owner user should be in `sudo` group without password.
      * @param  {boolean} [wait=true]    True if command is executed synchronously, false otherwise
+     * @param  {boolean} [skipError=false]    True if command fails should continue, false for retrying
      */
-    register(currentVersion, arch = "*", command, sudo = false, wait = true) {
+    register(currentVersion, arch = "*", command, sudo = false, wait = true, skipError = false) {
         const key = sha256(currentVersion + command);
-        this.commandList.push({key:key, version:currentVersion, command:command, sudo:sudo, wait:wait, arch: arch});
+        this.commandList.push({key:key, version:currentVersion, command:command, sudo:sudo, wait:wait, arch: arch, skipError: skipError});
     }
 
     /**
@@ -83,7 +84,7 @@ class InstallationManager {
         let i = 0;
         needed.forEach((command) => {
             // Execute
-            const c = (command.sudo?"sudo ":"") + command.command;
+            let c = (command.sudo?"sudo ":"") + command.command;
             Logger.info("Installation manager, executing command : " + c);
             if (!command.wait) {
                 this.executeCommand(c, false, (error, stdout, stderr) => {
@@ -100,7 +101,7 @@ class InstallationManager {
                         Logger.err(stderr);
                     }
 
-                    if (!error && !stderr) {
+                    if (!error && !stderr || command.skipError) {
                         this.commandDone[command.key] = DateUtils.class.timestamp();
                         this.commandDone = this.confManager.setData(CONF_KEY, this.commandDone);
                     }
@@ -118,6 +119,10 @@ class InstallationManager {
                     this.commandDone = this.confManager.setData(CONF_KEY, this.commandDone);
                 } catch (e) {
                     Logger.err(e.message);
+                    if (command.skipError) {
+                        this.commandDone[command.key] = DateUtils.class.timestamp();
+                        this.commandDone = this.confManager.setData(CONF_KEY, this.commandDone);
+                    }
                 }
                 i++;
                 this.restart(i, needed.length);

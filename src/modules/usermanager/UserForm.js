@@ -14,9 +14,10 @@ class UserForm extends FormObject.class {
      * @param  {int} [level=null] Authorization level
      * @param  {string} [name=null] Full name
      * @param  {string} [picture=null]  Picture, in base64 format
+     * @param  {boolean} [atHome=false]  True if user is at home, false otherwise
      * @returns {User} The instance
      */
-    constructor(id = null, username = null, password = null, level = null, name = null, picture = null) {
+    constructor(id = null, username = null, password = null, level = null, name = null, picture = null, atHome = false) {
         super(id);
 
         /**
@@ -59,6 +60,15 @@ class UserForm extends FormObject.class {
          * @Type("file");
          */
         this.picture = picture;
+
+        /**
+         * @Property("atHome");
+         * @Title("user.form.atHome");
+         * @Type("boolean");
+         * @Display("hidden");
+         * @Default(false);
+         */
+        this.atHome = atHome;
     }
 
     /**
@@ -68,7 +78,7 @@ class UserForm extends FormObject.class {
      * @returns {UserForm}      A form object
      */
     json(data) {
-        return new UserForm(data.id, data.username, data.password, data.level, data.name, data.picture);
+        return new UserForm(data.id, data.username, data.password, data.level, data.name, data.picture, data.atHome);
     }
 }
 
