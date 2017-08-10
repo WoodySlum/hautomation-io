@@ -22,8 +22,8 @@ class MessageManager {
      * @param  {DbManager} dbManager    The database manager
      * @returns {InstallationManager}             The instance
      */
-    constructor(pluginsManager, eventBus, userManager, dbManager) {
-        this.pluginsManager = null;
+    constructor(pluginsManager = null, eventBus, userManager, dbManager) {
+        this.pluginsManager = pluginsManager;
         this.eventBus = eventBus;
         this.userManager = userManager;
         this.dbManager = dbManager;
@@ -99,7 +99,7 @@ class MessageManager {
     onMessageReceived(sender, message) {
         this.userManager.getUsers().forEach((user) => {
             if (sender === user.username) {
-                const dbMessage = new DbMessage.class(this.dbHelper, null, user.username, message);
+                const dbMessage = new DbMessage.class(this.dbHelper, null, user.username, message, null, null, null);
                 this.registered.forEach((register) => {
                     if (register.onMessageReceived instanceof Function) {
                         register.onMessageReceived(dbMessage);
