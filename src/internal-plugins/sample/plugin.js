@@ -38,6 +38,10 @@ function loaded(api) {
             this.message = "pong";
             // api.timeEventAPI.register(this.ping, this, api.timeEventAPI.constants().EVERY_SECONDS);
             api.installerAPI.register("*", "echo \"Hello !\"; set -e; exit 0;");
+            // setTimeout((api) => {
+            //     api.messageAPI.sendMessage(["seb"], "Hey !");
+            // }, 2000, this.api);
+
         }
 
         /**

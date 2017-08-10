@@ -34,7 +34,9 @@ const INTERNAL_PLUGINS = [
     "humidity-sensor",
     "throughput-sensor",
     "pressure-sensor",
-    "esp-temperature-sensor"
+    "esp-temperature-sensor",
+    "message-provider",
+    "prowl"
 ];
 
 /**
@@ -57,11 +59,12 @@ class PluginsManager {
      * @param  {EventEmitter} eventBus    The global event bus
      * @param  {ThemeManager} themeManager    The theme manager
      * @param {SensorsManager} sensorsManager  The sensors manager
-     * @param {installationManager} installationManager  The installation manager
-     * @param {userManager} userManager  The user manager
+     * @param {InstallationManager} installationManager  The installation manager
+     * @param {UserManager} userManager  The user manager
+     * @param {MessageManager} messageManager  The message manager
      * @returns {PluginsManager} The instance
      */
-    constructor(confManager, webServices, servicesManager, dbManager, translateManager, formManager, timeEventService, schedulerService, dashboardManager, eventBus, themeManager, sensorsManager, installationManager, userManager) {
+    constructor(confManager, webServices, servicesManager, dbManager, translateManager, formManager, timeEventService, schedulerService, dashboardManager, eventBus, themeManager, sensorsManager, installationManager, userManager, messageManager) {
         this.fs = fs;
         this.path = path;
         this.remi = remi;
@@ -79,6 +82,7 @@ class PluginsManager {
         this.sensorsManager = sensorsManager;
         this.installationManager = installationManager;
         this.userManager = userManager;
+        this.messageManager = messageManager;
 
         this.plugins = [];
         try {
@@ -187,7 +191,8 @@ class PluginsManager {
                 this.themeManager,
                 this.sensorsManager,
                 this.installationManager,
-                this.userManager
+                this.userManager,
+                this.messageManager
             );
 
             initializedPlugins.push(pApi);

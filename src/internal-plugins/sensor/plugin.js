@@ -158,11 +158,12 @@ function loaded(api) {
          * @param  {int} [aggregationMode=AGGREGATION_MODE_AVG]                           Aggregation mode
          * @param  {number} [dashboardGranularity=DEFAULT_DASHBOARD_AGGREGATION_GRANULARITY] Dashboard granularity in seconds. Default is one hour.
          * @param  {string} [chartType=CHART_TYPE_LINE]                                      Chart display type (bar or line)
+         * @param  {Function} [cb=null] A callback with an error in parameter, called when database is initialized : `(err) => {}`
          * @returns {Sensor}                                                                  The instance
          */
-        constructor(api, id = null, type = "UNKNOWN", configuration = null, icon = null, round = 0, unit = null, aggregationMode = AGGREGATION_MODE_AVG, dashboardGranularity = DEFAULT_DASHBOARD_AGGREGATION_GRANULARITY, chartType = CHART_TYPE_LINE) {
+        constructor(api, id = null, type = "UNKNOWN", configuration = null, icon = null, round = 0, unit = null, aggregationMode = AGGREGATION_MODE_AVG, dashboardGranularity = DEFAULT_DASHBOARD_AGGREGATION_GRANULARITY, chartType = CHART_TYPE_LINE, cb = null) {
             this.api = api;
-            this.api.databaseAPI.register(DbSensor);
+            this.api.databaseAPI.register(DbSensor, cb);
             this.dbHelper = this.api.databaseAPI.dbHelper(DbSensor);
             this.icon = icon;
             this.id = id;

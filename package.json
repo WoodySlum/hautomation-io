@@ -75,6 +75,7 @@
     "stack-trace": "^0.0",
     "threads": "git://github.com/WoodySlum/threads.js.git#master",
     "toposort": "^1.0",
-    "gm":"^1.23"
+    "gm":"^1.23",
+    "prowler":"^0.0"
   }
 }

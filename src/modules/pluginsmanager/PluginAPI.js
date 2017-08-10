@@ -17,6 +17,7 @@ var SensorAPI = require("./publicapis/SensorAPI");
 var ThemeAPI = require("./publicapis/ThemeAPI");
 var InstallerAPI = require("./publicapis/InstallerAPI");
 var UserAPI = require("./publicapis/UserAPI");
+var MessageAPI = require("./publicapis/MessageAPI");
 
 var DateUtils = require("./../../utils/DateUtils");
 var Icons = require("./../../utils/Icons");
@@ -45,9 +46,10 @@ class PluginsAPI {
     //  * @param  {SensorsManager} sensorsManager The sensors manager
     //  * @param  {InstallationManager} installationManager The installation manager
     //  * @param  {UserManager} userManager The user manager
+    //  * @param  {MessageManager} messageManager The message manager
     //  * @returns {PluginAPI}                  Insntance
     //  */
-    constructor(previousVersion, p, webServices, servicesManager, dbManager, translateManager, formManager, confManager, timeEventService, schedulerService, dashboardManager, themeManager, sensorsManager, installationManager, userManager) {
+    constructor(previousVersion, p, webServices, servicesManager, dbManager, translateManager, formManager, confManager, timeEventService, schedulerService, dashboardManager, themeManager, sensorsManager, installationManager, userManager, messageManager) {
         PrivateProperties.createPrivateState(this);
         this.previousVersion = previousVersion;
         this.p = p;
@@ -86,6 +88,7 @@ class PluginsAPI {
         this.themeManager = new ThemeAPI.class(themeManager);
         this.installerAPI = new InstallerAPI.class(installationManager, this.version);
         this.userAPI = new UserAPI.class(userManager);
+        this.messageAPI = new MessageAPI.class(messageManager);
     }
 
     // /**

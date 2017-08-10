@@ -79,7 +79,7 @@ class FormConfiguration {
     loadConfig() {
         // Conf manager
         try {
-            this.data = this.confManager.loadData(this.formClass, this.confKey);
+            this.data = this.confManager.loadData(this.formClass, this.confKey, true);
             if (!this.list) {
                 this.data.id = 0;
             }
@@ -100,11 +100,11 @@ class FormConfiguration {
         if (this.list) {
             if (data instanceof Array) {
                 data.forEach((d) => {
-                    this.data = this.confManager.setData(this.confKey, new (this.formClass)().json(d), this.data, this.comparator);
+                    this.data = this.confManager.setData(this.confKey, d, this.data, this.comparator);
                 });
 
             } else {
-                this.data = this.confManager.setData(this.confKey, new (this.formClass)().json(data), this.data, this.comparator);
+                this.data = this.confManager.setData(this.confKey, data, this.data, this.comparator);
             }
         } else {
             this.data = this.confManager.setData(this.confKey, new (this.formClass)().json(data));

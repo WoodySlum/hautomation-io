@@ -24,6 +24,7 @@ var ThemeManager = require("./modules/thememanager/ThemeManager");
 var SensorsManager = require("./modules/sensorsmanager/SensorsManager");
 var InstallationManager = require("./modules/installationmanager/InstallationManager");
 var CoreInstaller = require("./../installer/CoreInstaller");
+var MessageManager = require("./modules/messagemanager/MessageManager");
 
 const CONFIGURATION_FILE = "data/config.json";
 var AppConfiguration = require("./../data/config.json");
@@ -114,11 +115,12 @@ class HautomationCore {
         this.authentication = new Authentication.class(this.webServices, this.userManager);
         // Installation manager
         this.installationManager = new InstallationManager.class(this.confManager, this.eventBus);
+        // Message manager
+        this.messageManager = new MessageManager.class(this.pluginsManager, this.eventBus, this.userManager, this.dbManager);
         // Plugins manager module
-        this.pluginsManager = new PluginsManager.class(this.confManager, this.webServices, this.servicesManager, this.dbManager, this.translateManager, this.formManager, this.timeEventService, this.schedulerService, this.dashboardManager, this.eventBus, this.themeManager, this.sensorsManager, this.installationManager, this.userManager);
+        this.pluginsManager = new PluginsManager.class(this.confManager, this.webServices, this.servicesManager, this.dbManager, this.translateManager, this.formManager, this.timeEventService, this.schedulerService, this.dashboardManager, this.eventBus, this.themeManager, this.sensorsManager, this.installationManager, this.userManager, this.messageManager);
         // Device manager module
         this.deviceManager = new DeviceManager.class(this.confManager, this.formManager, this.webServices, this.radioManager, this.dashboardManager);
-
 
         // Add services to manager
         this.servicesManager.add(this.webServices);

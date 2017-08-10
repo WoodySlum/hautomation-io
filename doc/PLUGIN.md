@@ -565,3 +565,142 @@ Here is an example :
 
 	api.userAPI.addAditionalFields(SampleForm);
 
+### Messages
+
+The `messageAPI` can be used to send messages / receive messages.
+
+#### Send a message
+
+	api.messageAPI.sendMessage(["seb"], "Hey !");
+
+
+#### Receive a message
+
+	"use strict";
+
+	function loaded(api) {
+	    api.init();
+		
+		class Sample() {
+			constructor(api) {
+				api.messageAPI.register(this);
+			}
+
+			onMessageReceived(sender, message) {
+				// Do something !
+			}
+
+		}
+
+	}
+
+
+#### Create a new message provider
+
+Here is a plugin sample for new message provider :
+
+	"use strict";
+	const Prowler = require("prowler");
+	
+	/**
+	 * Loaded function
+	 *
+	 * @param  {PluginAPI} api The api
+	 */
+	function loaded(api) {
+	    /**
+	     * This class is extended by user form
+	     * @class
+	     */
+	    class ProwlForm extends api.exported.FormObject.class {
+	        /**
+	         * Prowl user form
+	         *
+	         * @param  {number} id              An identifier
+	         * @param  {string} prowlApiKey     A prowl API key
+	         * @returns {SensorForm}                 The instance
+	         */
+	        constructor(id, prowlApiKey) {
+	            super(id);
+	
+	            /**
+	             * @Property("prowlApiKey");
+	             * @Title("prowl.api.key.title");
+	             * @Type("string");
+	             */
+	            this.prowlApiKey = prowlApiKey;
+	        }
+	
+	        /**
+	         * Convert JSON data to object
+	         *
+	         * @param  {Object} data Some data
+	         * @returns {ProwlForm}      An instance
+	         */
+	        json(data) {
+	            return new ProwlForm(data.id, data.prowlApiKey);
+	        }
+	    }
+	
+	    api.userAPI.addAdditionalFields(ProwlForm);
+	
+	    /**
+	     * Prowl plugin class
+	     * @class
+	     */
+	    class Prowl extends api.exported.MessageProvider {
+	        /**
+	         * Constructor
+	         *
+	         * @param  {PluginAPI} api The API
+	         * @returns {Prowl}     The instance
+	         */
+	        constructor(api) {
+	            super(api);
+	            this.api = api;
+	        }
+	
+	        /**
+	         * Send a message to all plugins.
+	         *
+	         * @param  {string|Array} [recipients="*"] The recipients. `*` for all users, otherwise an array of usernames - user `userAPI`, e.g. `["seb", "ema"]`
+	         * @param  {string} message          The notification message
+	         * @param  {string} [action=null]    The action
+	         * @param  {string} [link=null]      The link
+	         * @param  {string} [picture=null]   The picture
+	         */
+	        sendMessage(recipients = "*", message, action = null, link = null, picture = null) {
+	            this.api.userAPI.getUsers().forEach((user) => {
+	                if (recipients === "*" || (recipients instanceof Array && recipients.indexOf(user.username) !== -1)) {
+	                    try {
+	                        var notification = new Prowler.connection(user.prowlApiKey);
+	                        let actionprefixed = "hautomation://";
+	                        if (action) {
+	                            actionprefixed += action;
+	                        }
+	                        notification.send({
+	                            "application": 'Hautomation',
+	                            "event": message,
+	                            "description": ""
+	                        });
+	                    } catch(e) {
+	                        api.exported.Logger.err(e.message);
+	                    }
+	                }
+	            });
+	        }
+	    }
+	
+	    api.instance = new Prowl(api);
+	}
+	
+	module.exports.attributes = {
+	    loadedCallback: loaded,
+	    name: "prowl",
+	    version: "0.0.0",
+	    category: "message-provider",
+	    description: "Prowl message sending",
+	    dependencies:["message-provider"]
+	};
+	
+
