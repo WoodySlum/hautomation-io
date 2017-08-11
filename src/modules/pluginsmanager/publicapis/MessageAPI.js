@@ -59,6 +59,17 @@ class MessageAPI {
     onMessageReceived(sender, message) {
         PrivateProperties.oprivate(this).messageManager.onMessageReceived(sender, message);
     }
+
+    /**
+     * Get messages
+     *
+     * @param  {Function} cb            A callback `(err, results) => {}`
+     * @param  {string}   username      A username
+     * @param  {number}   [lastTimestamp=null] Last timestamp retrieval
+     */
+    getMessages(cb, username, lastTimestamp = null) {
+        PrivateProperties.oprivate(this).messageManager.getMessages(cb, username, lastTimestamp);
+    }
 }
 
 module.exports = {class:MessageAPI};

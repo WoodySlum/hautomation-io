@@ -24,6 +24,8 @@
 -   [loaded](#loaded-6)
 -   [loaded](#loaded-7)
 -   [loaded](#loaded-8)
+-   [loaded](#loaded-9)
+-   [loaded](#loaded-10)
 -   [EspTemperatureSensorForm](#esptemperaturesensorform)
     -   [json](#json-1)
 -   [EspTemperatureSensor](#esptemperaturesensor)
@@ -34,16 +36,26 @@
     -   [json](#json-2)
 -   [HumiditySensor](#humiditysensor)
     -   [constructor](#constructor-5)
+-   [MessageProvider](#messageprovider)
+    -   [constructor](#constructor-6)
+    -   [onMessageReceived](#onmessagereceived)
 -   [text](#text)
 -   [number](#number)
 -   [myParameter](#myparameter)
 -   [PressureSensorForm](#pressuresensorform)
-    -   [constructor](#constructor-6)
+    -   [constructor](#constructor-7)
     -   [json](#json-3)
 -   [PressureSensor](#pressuresensor)
-    -   [constructor](#constructor-7)
--   [DbRadio](#dbradio)
     -   [constructor](#constructor-8)
+-   [ProwlForm](#prowlform)
+    -   [constructor](#constructor-9)
+    -   [prowlApiKey](#prowlapikey)
+    -   [json](#json-4)
+-   [Prowl](#prowl)
+    -   [constructor](#constructor-10)
+    -   [sendMessage](#sendmessage)
+-   [DbRadio](#dbradio)
+    -   [constructor](#constructor-11)
 -   [module](#module)
 -   [frequency](#frequency)
 -   [protocol](#protocol)
@@ -53,7 +65,7 @@
 -   [value](#value-1)
 -   [status](#status)
 -   [Radio](#radio)
-    -   [constructor](#constructor-9)
+    -   [constructor](#constructor-12)
     -   [getProtocolList](#getprotocollist)
     -   [processAPI](#processapi-1)
     -   [defaultFrequency](#defaultfrequency)
@@ -63,14 +75,14 @@
     -   [register](#register)
     -   [unregister](#unregister)
 -   [RFLink](#rflink)
-    -   [constructor](#constructor-10)
+    -   [constructor](#constructor-13)
     -   [rflinkStatusToRadioStatus](#rflinkstatustoradiostatus)
     -   [radioStatusToRflinkStatus](#radiostatustorflinkstatus)
     -   [formatRadioObjectBeforeSending](#formatradioobjectbeforesending)
     -   [onRflinkReceive](#onrflinkreceive)
     -   [emit](#emit-1)
 -   [RFLinkService](#rflinkservice)
-    -   [constructor](#constructor-11)
+    -   [constructor](#constructor-14)
     -   [run](#run)
     -   [threadCallback](#threadcallback)
 -   [xo](#xo)
@@ -78,19 +90,19 @@
     -   [processAPI](#processapi-2)
     -   [test](#test)
 -   [DbSensor](#dbsensor)
-    -   [constructor](#constructor-12)
+    -   [constructor](#constructor-15)
 -   [sensorId](#sensorid)
 -   [vcc](#vcc)
 -   [SensorForm](#sensorform)
-    -   [constructor](#constructor-13)
+    -   [constructor](#constructor-16)
     -   [name](#name)
     -   [dashboard](#dashboard)
     -   [statistics](#statistics)
     -   [dashboardColor](#dashboardcolor)
     -   [statisticsColor](#statisticscolor)
-    -   [json](#json-4)
+    -   [json](#json-5)
 -   [Sensor](#sensor)
-    -   [constructor](#constructor-14)
+    -   [constructor](#constructor-17)
     -   [init](#init)
     -   [addUnitAggregation](#addunitaggregation)
     -   [aggregateUnit](#aggregateunit)
@@ -102,17 +114,17 @@
     -   [getStatistics](#getstatistics)
     -   [constants](#constants-1)
 -   [TemperatureSensorForm](#temperaturesensorform)
-    -   [constructor](#constructor-15)
+    -   [constructor](#constructor-18)
     -   [unit](#unit)
-    -   [json](#json-5)
+    -   [json](#json-6)
 -   [TemperatureSensor](#temperaturesensor)
-    -   [constructor](#constructor-16)
+    -   [constructor](#constructor-19)
     -   [setUnit](#setunit)
 -   [ThroughputSensorForm](#throughputsensorform)
-    -   [constructor](#constructor-17)
-    -   [json](#json-6)
+    -   [constructor](#constructor-20)
+    -   [json](#json-7)
 -   [ThroughputSensor](#throughputsensor)
-    -   [constructor](#constructor-18)
+    -   [constructor](#constructor-21)
 -   [Logger](#logger)
     -   [log](#log)
     -   [warn](#warn)
@@ -121,21 +133,21 @@
     -   [info](#info)
     -   [debug](#debug)
 -   [Alarm](#alarm)
-    -   [constructor](#constructor-19)
-    -   [json](#json-7)
+    -   [constructor](#constructor-22)
+    -   [json](#json-8)
 -   [AlarmManager](#alarmmanager)
-    -   [constructor](#constructor-20)
+    -   [constructor](#constructor-23)
     -   [setAlarm](#setalarm)
     -   [processAPI](#processapi-3)
 -   [Authentication](#authentication)
-    -   [constructor](#constructor-21)
+    -   [constructor](#constructor-24)
 -   [AuthenticationData](#authenticationdata)
-    -   [constructor](#constructor-22)
+    -   [constructor](#constructor-25)
     -   [authorized](#authorized)
     -   [username](#username)
     -   [level](#level)
 -   [ConfManager](#confmanager)
-    -   [constructor](#constructor-23)
+    -   [constructor](#constructor-26)
     -   [appConfiguration](#appconfiguration)
     -   [fs](#fs)
     -   [getFilePath](#getfilepath)
@@ -148,16 +160,16 @@
     -   [setData](#setdata)
     -   [removeData](#removedata)
 -   [DashboardManager](#dashboardmanager)
-    -   [constructor](#constructor-24)
+    -   [constructor](#constructor-27)
     -   [registerTile](#registertile)
     -   [unregisterTile](#unregistertile)
     -   [buildDashboard](#builddashboard)
     -   [processAPI](#processapi-4)
 -   [Tile](#tile)
-    -   [constructor](#constructor-25)
+    -   [constructor](#constructor-28)
     -   [get](#get)
 -   [DbHelper](#dbhelper)
-    -   [constructor](#constructor-26)
+    -   [constructor](#constructor-29)
     -   [RequestBuilder](#requestbuilder)
     -   [Operators](#operators)
     -   [getFieldsForTable](#getfieldsfortable)
@@ -168,7 +180,7 @@
     -   [delObject](#delobject)
     -   [delObjects](#delobjects)
 -   [DbManager](#dbmanager)
-    -   [constructor](#constructor-27)
+    -   [constructor](#constructor-30)
     -   [close](#close)
     -   [getFieldsForTable](#getfieldsfortable-1)
     -   [numberVersion](#numberversion)
@@ -183,12 +195,12 @@
     -   [delObject](#delobject-1)
     -   [delObjects](#delobjects-1)
 -   [DbObject](#dbobject)
-    -   [constructor](#constructor-28)
+    -   [constructor](#constructor-31)
     -   [base](#base)
     -   [save](#save)
     -   [del](#del)
 -   [DbRequestBuilder](#dbrequestbuilder)
-    -   [constructor](#constructor-29)
+    -   [constructor](#constructor-32)
     -   [removeLastComma](#removelastcomma)
     -   [escapeString](#escapestring)
     -   [getValueEncapsulated](#getvalueencapsulated)
@@ -218,7 +230,7 @@
     -   [tableName](#tablename)
     -   [toSchema](#toschema)
 -   [DeviceForm](#deviceform)
-    -   [constructor](#constructor-30)
+    -   [constructor](#constructor-33)
     -   [name](#name-1)
     -   [excludeFromAll](#excludefromall)
     -   [visible](#visible)
@@ -226,15 +238,16 @@
     -   [icon](#icon-1)
     -   [radio](#radio-1)
     -   [status](#status-1)
-    -   [json](#json-8)
+    -   [json](#json-9)
 -   [DeviceManager](#devicemanager)
-    -   [constructor](#constructor-31)
+    -   [constructor](#constructor-34)
     -   [registerDeviceTiles](#registerdevicetiles)
     -   [registerDeviceTile](#registerdevicetile)
     -   [switchDevice](#switchdevice)
     -   [processAPI](#processapi-5)
 -   [FormConfiguration](#formconfiguration)
-    -   [constructor](#constructor-32)
+    -   [constructor](#constructor-35)
+    -   [addAdditionalFields](#addadditionalfields)
     -   [loadConfig](#loadconfig)
     -   [saveConfig](#saveconfig)
     -   [comparator](#comparator)
@@ -243,9 +256,10 @@
     -   [getConfig](#getconfig)
     -   [getForm](#getform)
 -   [FormManager](#formmanager)
-    -   [constructor](#constructor-33)
+    -   [constructor](#constructor-36)
     -   [register](#register-1)
     -   [registerWithAdditionalFields](#registerwithadditionalfields)
+    -   [addAdditionalFields](#addadditionalfields-1)
     -   [sanitize](#sanitize)
     -   [getExtendedClass](#getextendedclass)
     -   [initSchema](#initschema-1)
@@ -253,26 +267,44 @@
     -   [getForm](#getform-1)
     -   [generateForm](#generateform)
 -   [FormObject](#formobject)
-    -   [constructor](#constructor-34)
-    -   [json](#json-9)
+    -   [constructor](#constructor-37)
+    -   [json](#json-10)
 -   [id](#id)
 -   [InstallationManager](#installationmanager)
-    -   [constructor](#constructor-35)
+    -   [constructor](#constructor-38)
     -   [register](#register-2)
     -   [executeCommand](#executecommand)
     -   [execute](#execute)
     -   [isAlreadyExecuted](#isalreadyexecuted)
     -   [isValidForArchitecture](#isvalidforarchitecture)
     -   [restart](#restart-1)
+-   [DbMessage](#dbmessage)
+    -   [constructor](#constructor-39)
+-   [recipient](#recipient)
+-   [sender](#sender)
+-   [message](#message)
+-   [action](#action)
+-   [link](#link)
+-   [picture](#picture)
+-   [received](#received)
+-   [MessageManager](#messagemanager)
+    -   [constructor](#constructor-40)
+    -   [register](#register-3)
+    -   [unregister](#unregister-1)
+    -   [sendMessage](#sendmessage-1)
+    -   [onMessageReceived](#onmessagereceived-1)
+    -   [getMessages](#getmessages)
+    -   [getLastTimestamp](#getlasttimestamp)
+    -   [processAPI](#processapi-7)
 -   [PluginsAPI](#pluginsapi)
     -   [exportClass](#exportclass)
     -   [init](#init-1)
     -   [registerInstance](#registerinstance)
 -   [PluginConf](#pluginconf)
-    -   [constructor](#constructor-36)
-    -   [json](#json-10)
+    -   [constructor](#constructor-41)
+    -   [json](#json-11)
 -   [PluginsManager](#pluginsmanager)
-    -   [constructor](#constructor-37)
+    -   [constructor](#constructor-42)
     -   [getPluginsFromDirectory](#getpluginsfromdirectory)
     -   [checkPluginSanity](#checkpluginsanity)
     -   [initPlugins](#initplugins)
@@ -283,9 +315,9 @@
     -   [prepareToposortArray](#preparetoposortarray)
     -   [toposort](#toposort)
     -   [topsortedArrayConverter](#topsortedarrayconverter)
-    -   [processAPI](#processapi-7)
+    -   [processAPI](#processapi-8)
 -   [ConfigurationAPI](#configurationapi)
-    -   [register](#register-3)
+    -   [register](#register-4)
     -   [getConfiguration](#getconfiguration)
     -   [getForm](#getform-2)
 -   [DashboardAPI](#dashboardapi)
@@ -294,14 +326,20 @@
     -   [Tile](#tile-1)
     -   [TileType](#tiletype)
 -   [DatabaseAPI](#databaseapi)
-    -   [register](#register-4)
+    -   [register](#register-5)
     -   [dbHelper](#dbhelper-1)
 -   [InstallerAPI](#installerapi)
-    -   [register](#register-5)
-    -   [executeCommand](#executecommand-1)
--   [SchedulerAPI](#schedulerapi)
     -   [register](#register-6)
-    -   [unregister](#unregister-1)
+    -   [executeCommand](#executecommand-1)
+-   [MessageAPI](#messageapi)
+    -   [sendMessage](#sendmessage-2)
+    -   [register](#register-7)
+    -   [unregister](#unregister-2)
+    -   [onMessageReceived](#onmessagereceived-2)
+    -   [getMessages](#getmessages-1)
+-   [SchedulerAPI](#schedulerapi)
+    -   [register](#register-8)
+    -   [unregister](#unregister-3)
     -   [schedule](#schedule)
     -   [constants](#constants-2)
 -   [SensorAPI](#sensorapi)
@@ -316,29 +354,32 @@
 -   [ThemeAPI](#themeapi)
     -   [getColors](#getcolors)
 -   [TimeEventAPI](#timeeventapi)
-    -   [register](#register-7)
-    -   [unregister](#unregister-2)
+    -   [register](#register-9)
+    -   [unregister](#unregister-4)
     -   [constants](#constants-3)
 -   [TranslateAPI](#translateapi)
     -   [load](#load-1)
     -   [t](#t)
+-   [UserAPI](#userapi)
+    -   [addAdditionalFields](#addadditionalfields-2)
+    -   [getUsers](#getusers)
 -   [WebAPI](#webapi)
-    -   [register](#register-8)
-    -   [unregister](#unregister-3)
+    -   [register](#register-10)
+    -   [unregister](#unregister-5)
     -   [Authentication](#authentication-1)
     -   [APIResponse](#apiresponse)
     -   [constants](#constants-4)
 -   [RadioForm](#radioform)
-    -   [constructor](#constructor-38)
+    -   [constructor](#constructor-43)
     -   [module](#module-1)
     -   [protocol](#protocol-1)
     -   [deviceId](#deviceid-1)
     -   [switchId](#switchid-1)
-    -   [json](#json-11)
+    -   [json](#json-12)
     -   [getModules](#getmodules)
     -   [getProtocols](#getprotocols)
 -   [RadioManager](#radiomanager)
-    -   [constructor](#constructor-39)
+    -   [constructor](#constructor-44)
     -   [pluginsLoaded](#pluginsloaded)
     -   [registerRadioEvents](#registerradioevents)
     -   [unregisterRadioEvents](#unregisterradioevents)
@@ -347,13 +388,13 @@
     -   [getProtocols](#getprotocols-1)
     -   [switchDevice](#switchdevice-1)
 -   [SensorsForm](#sensorsform)
-    -   [constructor](#constructor-40)
+    -   [constructor](#constructor-45)
     -   [sensorId](#sensorid-1)
-    -   [json](#json-12)
+    -   [json](#json-13)
     -   [getSensorIds](#getsensorids)
     -   [getSensorNames](#getsensornames)
 -   [SensorsManager](#sensorsmanager)
-    -   [constructor](#constructor-41)
+    -   [constructor](#constructor-46)
     -   [pluginsLoaded](#pluginsloaded-1)
     -   [initSensors](#initsensors)
     -   [initSensor](#initsensor)
@@ -362,11 +403,11 @@
     -   [getAllSensors](#getallsensors)
     -   [onNewSensorValue](#onnewsensorvalue)
     -   [getValue](#getvalue-1)
-    -   [processAPI](#processapi-8)
+    -   [processAPI](#processapi-9)
     -   [statisticsWsResponse](#statisticswsresponse)
     -   [comparator](#comparator-1)
 -   [ServicesManager](#servicesmanager)
-    -   [constructor](#constructor-42)
+    -   [constructor](#constructor-47)
     -   [isServiceRegistered](#isserviceregistered)
     -   [add](#add-1)
     -   [remove](#remove-1)
@@ -375,10 +416,10 @@
     -   [restart](#restart-2)
     -   [getService](#getservice)
 -   [ThemeManager](#thememanager)
-    -   [constructor](#constructor-43)
+    -   [constructor](#constructor-48)
     -   [getColors](#getcolors-1)
 -   [ThreadsManager](#threadsmanager)
-    -   [constructor](#constructor-44)
+    -   [constructor](#constructor-49)
     -   [stringifyFunc](#stringifyfunc)
     -   [run](#run-1)
     -   [send](#send)
@@ -386,45 +427,40 @@
     -   [getPid](#getpid)
     -   [isRunning](#isrunning)
 -   [TranslateManager](#translatemanager)
-    -   [constructor](#constructor-45)
+    -   [constructor](#constructor-50)
     -   [addTranslations](#addtranslations)
     -   [t](#t-1)
     -   [translateArray](#translatearray)
--   [User](#user)
-    -   [constructor](#constructor-46)
+-   [UserForm](#userform)
+    -   [constructor](#constructor-51)
     -   [username](#username-1)
     -   [password](#password)
     -   [level](#level-1)
-    -   [fullName](#fullname)
-    -   [email](#email)
-    -   [phone](#phone)
-    -   [picture](#picture)
-    -   [json](#json-13)
+    -   [name](#name-2)
+    -   [picture](#picture-1)
+    -   [atHome](#athome)
+    -   [json](#json-14)
 -   [UserManager](#usermanager)
-    -   [constructor](#constructor-47)
-    -   [confManager](#confmanager-1)
-    -   [users](#users)
-    -   [removeUser](#removeuser)
-    -   [getUsers](#getusers)
-    -   [compareUser](#compareuser)
+    -   [constructor](#constructor-52)
+    -   [updateTile](#updatetile-1)
+    -   [getUsers](#getusers-1)
     -   [getUser](#getuser)
-    -   [setUser](#setuser)
     -   [getAdminUser](#getadminuser)
 -   [SchedulerDbObject](#schedulerdbobject)
-    -   [constructor](#constructor-48)
+    -   [constructor](#constructor-53)
 -   [identifier](#identifier)
 -   [data](#data)
 -   [triggerDate](#triggerdate)
 -   [SchedulerService](#schedulerservice)
-    -   [constructor](#constructor-49)
+    -   [constructor](#constructor-54)
     -   [start](#start-2)
     -   [stop](#stop-2)
-    -   [register](#register-9)
-    -   [unregister](#unregister-4)
+    -   [register](#register-11)
+    -   [unregister](#unregister-6)
     -   [schedule](#schedule-1)
     -   [timeEvent](#timeevent)
 -   [Service](#service)
-    -   [constructor](#constructor-50)
+    -   [constructor](#constructor-55)
     -   [start](#start-3)
     -   [run](#run-2)
     -   [threadCallback](#threadcallback-1)
@@ -436,51 +472,51 @@
     -   [stop](#stop-3)
     -   [restart](#restart-3)
     -   [status](#status-2)
-    -   [register](#register-10)
-    -   [unregister](#unregister-5)
+    -   [register](#register-12)
+    -   [unregister](#unregister-7)
     -   [setThreadsManager](#setthreadsmanager)
 -   [TimeEventService](#timeeventservice)
-    -   [constructor](#constructor-51)
+    -   [constructor](#constructor-56)
     -   [start](#start-4)
     -   [stop](#stop-4)
     -   [hash](#hash)
     -   [elementForHash](#elementforhash)
-    -   [register](#register-11)
-    -   [unregister](#unregister-6)
+    -   [register](#register-13)
+    -   [unregister](#unregister-8)
     -   [convertMode](#convertmode)
     -   [timeEvent](#timeevent-1)
 -   [APIRegistration](#apiregistration)
-    -   [constructor](#constructor-52)
+    -   [constructor](#constructor-57)
     -   [delegate](#delegate)
     -   [method](#method)
     -   [route](#route)
     -   [authLevel](#authlevel)
     -   [isEqual](#isequal)
 -   [APIRequest](#apirequest)
-    -   [constructor](#constructor-53)
+    -   [constructor](#constructor-58)
     -   [method](#method-1)
     -   [ip](#ip)
     -   [route](#route-1)
     -   [path](#path)
-    -   [action](#action)
+    -   [action](#action-1)
     -   [params](#params)
     -   [data](#data-1)
     -   [authenticationData](#authenticationdata-1)
     -   [addAuthenticationData](#addauthenticationdata)
 -   [APIResponse](#apiresponse-1)
-    -   [constructor](#constructor-54)
+    -   [constructor](#constructor-59)
     -   [success](#success)
     -   [response](#response)
     -   [errorCode](#errorcode)
     -   [errorMessage](#errormessage)
 -   [WebServices](#webservices)
-    -   [constructor](#constructor-55)
+    -   [constructor](#constructor-60)
     -   [start](#start-5)
-    -   [registerInfos](#registerinfos)
-    -   [processAPI](#processapi-9)
     -   [stop](#stop-5)
-    -   [register](#register-12)
-    -   [unregister](#unregister-7)
+    -   [registerInfos](#registerinfos)
+    -   [processAPI](#processapi-10)
+    -   [register](#register-14)
+    -   [unregister](#unregister-9)
     -   [registerAPI](#registerapi)
     -   [unregisterAPI](#unregisterapi)
     -   [manageResponse](#manageresponse)
@@ -493,11 +529,17 @@
     -   [convertProperties](#convertproperties)
 -   [DateUtils](#dateutils)
     -   [timestamp](#timestamp)
+    -   [dateToUTCTimestamp](#datetoutctimestamp)
+    -   [dateToTimestamp](#datetotimestamp)
     -   [roundedTimestamp](#roundedtimestamp)
     -   [dateFormatted](#dateformatted)
 -   [Icons](#icons)
     -   [list](#list)
     -   [raw](#raw)
+-   [ImageUtils](#imageutils)
+    -   [sanitizeFormConfiguration](#sanitizeformconfiguration)
+    -   [resize](#resize)
+    -   [blur](#blur)
 
 ## IconForm
 
@@ -565,9 +607,17 @@ Returns **[IconFormManager](#iconformmanager)** The instance
 
 The main class for core.
 
+**Parameters**
+
+-   `runnerEventBus`  
+
 ### constructor
 
 Constructor
+
+**Parameters**
+
+-   `runnerEventBus` **EventEmitter** Runner event bus, used for restart
 
 Returns **[HautomationCore](#hautomationcore)** The instance
 
@@ -586,6 +636,22 @@ Stop automation core
 ### configurationLoader
 
 Try to overload configuration
+
+## loaded
+
+Loaded function
+
+**Parameters**
+
+-   `api` **PluginAPI** The api
+
+## loaded
+
+Loaded function
+
+**Parameters**
+
+-   `api` **PluginAPI** The api
 
 ## loaded
 
@@ -775,6 +841,33 @@ Humidity sensor class (should be extended)
 
 Returns **[HumiditySensor](#humiditysensor)** The instance
 
+## MessageProvider
+
+This class is extended by message providers
+
+**Parameters**
+
+-   `api`  
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `api` **PluginAPI** The api
+
+Returns **[MessageProvider](#messageprovider)** The instance
+
+### onMessageReceived
+
+Callback when a message is received, dispatched to registered elements
+
+**Parameters**
+
+-   `sender` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The sender's username
+-   `message` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The message received
+
 ## text
 
 ## number
@@ -846,6 +939,69 @@ Throughput sensor class (should be extended)
 -   `configuration` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The configuration for sensor (optional, default `null`)
 
 Returns **[PressureSensor](#pressuresensor)** The instance
+
+## ProwlForm
+
+**Extends api.exported.FormObject.class**
+
+This class is extended by user form
+
+**Parameters**
+
+-   `id`  
+-   `prowlApiKey`  
+
+### constructor
+
+Prowl user form
+
+**Parameters**
+
+-   `id` **[number](#number)** An identifier
+-   `prowlApiKey` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A prowl API key
+
+Returns **[SensorForm](#sensorform)** The instance
+
+### prowlApiKey
+
+### json
+
+Convert JSON data to object
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some data
+
+Returns **[ProwlForm](#prowlform)** An instance
+
+## Prowl
+
+**Extends api.exported.MessageProvider**
+
+Prowl plugin class
+
+**Parameters**
+
+-   `api`  
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `api` **PluginAPI** The API
+
+Returns **[Prowl](#prowl)** The instance
+
+### sendMessage
+
+Send a message to all plugins.
+
+**Parameters**
+
+-   `recipients` **([string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array))** The recipients. `*` for all users, otherwise an array of usernames - user `userAPI`, e.g. `["seb", "ema"]` (optional, default `"*"`)
+-   `message` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The notification message
 
 ## DbRadio
 
@@ -1202,6 +1358,7 @@ This class is extended by sensors
 -   `aggregationMode`   (optional, default `AGGREGATION_MODE_AVG`)
 -   `dashboardGranularity`   (optional, default `DEFAULT_DASHBOARD_AGGREGATION_GRANULARITY`)
 -   `chartType`   (optional, default `CHART_TYPE_LINE`)
+-   `cb`   (optional, default `null`)
 
 ### constructor
 
@@ -1219,6 +1376,7 @@ Sensor class (should be extended)
 -   `aggregationMode` **int** Aggregation mode (optional, default `AGGREGATION_MODE_AVG`)
 -   `dashboardGranularity` **[number](#number)** Dashboard granularity in seconds. Default is one hour. (optional, default `DEFAULT_DASHBOARD_AGGREGATION_GRANULARITY`)
 -   `chartType` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Chart display type (bar or line) (optional, default `CHART_TYPE_LINE`)
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback with an error in parameter, called when database is initialized : `(err) => {}` (optional, default `null`)
 
 Returns **[Sensor](#sensor)** The instance
 
@@ -1641,6 +1799,7 @@ This class manage object persistence with JSON format
 -   `appConfiguration`  
 -   `eventBus`  
 -   `stopEventName`  
+-   `timeEventService`  
 
 ### constructor
 
@@ -1651,6 +1810,7 @@ Constructor
 -   `appConfiguration` **AppConfiguration** The app configuration object
 -   `eventBus` **EventEmitter** The global event bus
 -   `stopEventName` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The stop event name
+-   `timeEventService` **[TimeEventService](#timeeventservice)** The time event service
 
 Returns **[ConfManager](#confmanager)** The instance
 
@@ -2643,6 +2803,14 @@ Constructor
 
 Returns **[FormConfiguration](#formconfiguration)** The instance
 
+### addAdditionalFields
+
+Add additional fields
+
+**Parameters**
+
+-   `form` **Class** A form
+
 ### loadConfig
 
 Load configuration (data from file)
@@ -2734,6 +2902,15 @@ Register a form class with additional fields
 -   `cl` **Class** A class with form annotations
 -   `additionalFields` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Additional fields object in annotation format
 -   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Parameters injection on static methods
+
+### addAdditionalFields
+
+Add additional fields to a form base
+
+**Parameters**
+
+-   `formBase` **Class** The base form
+-   `forms` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of forms
 
 ### sanitize
 
@@ -2852,6 +3029,7 @@ Register a command to be executed for a specific version
 -   `command` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A command
 -   `sudo` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if command should be executed as sudo, false otherwise. The Hautomation process owner user should be in `sudo` group without password. (optional, default `false`)
 -   `wait` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if command is executed synchronously, false otherwise (optional, default `true`)
+-   `skipError` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if command fails should continue, false for retrying (optional, default `false`)
 
 ### executeCommand
 
@@ -2886,6 +3064,7 @@ Check if the command is valid for the architecture
 **Parameters**
 
 -   `arch` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The architecture
+-   `currentArch` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The current architecture
 
 Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if command is valid, false otherwise
 
@@ -2897,6 +3076,138 @@ Process Hautomation when all commands has been done
 
 -   `i` **[number](#number)** The current comment indice
 -   `nb` **[number](#number)** The max number of commands to execute
+
+## DbMessage
+
+**Extends DbObject.class**
+
+This class is used for messages database
+
+**Parameters**
+
+-   `dbHelper`   (optional, default `null`)
+-   `values` **...any** 
+
+### constructor
+
+Radio table descriptor
+
+**Parameters**
+
+-   `dbHelper` **[DbHelper](#dbhelper)** A database helper (optional, default `null`)
+-   `values` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The values
+
+Returns **[DbObject](#dbobject)** A database object
+
+## recipient
+
+## sender
+
+## message
+
+## action
+
+## link
+
+## picture
+
+## received
+
+## MessageManager
+
+This class allows to manage message sending
+
+**Parameters**
+
+-   `pluginsManager`   (optional, default `null`)
+-   `eventBus`  
+-   `userManager`  
+-   `dbManager`  
+-   `webServices`  
+-   `translateManager`  
+-   `dashboardManager`  
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `pluginsManager` **[PluginsManager](#pluginsmanager)** The plugins manager (optional, default `null`)
+-   `eventBus` **EventEmitter** The global event bus
+-   `userManager` **[UserManager](#usermanager)** The user manager
+-   `dbManager` **[DbManager](#dbmanager)** The database manager
+-   `webServices` **[WebServices](#webservices)** The web services
+-   `translateManager` **[TranslateManager](#translatemanager)** The translate manager
+-   `dashboardManager` **[DashboardManager](#dashboardmanager)** The dashboard manager
+
+Returns **[InstallationManager](#installationmanager)** The instance
+
+### register
+
+Register an object to message events. The callback must implement `onMessageReceived(message)` method
+
+**Parameters**
+
+-   `o` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An object that implements callback
+
+### unregister
+
+Unregister an object to message events
+
+**Parameters**
+
+-   `o` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An object that implements callback
+
+### sendMessage
+
+Send a message to all plugins.
+
+**Parameters**
+
+-   `recipients` **([string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array))** The recipients. `*` for all users, otherwise an array of usernames, e.g. `["seb", "ema"]` (optional, default `"*"`)
+-   `message` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The notification message
+-   `action` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The action (optional, default `null`)
+-   `link` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The link (optional, default `null`)
+-   `picture` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The picture (optional, default `null`)
+
+### onMessageReceived
+
+Callback when a message is received, dispatched to registered elements
+
+**Parameters**
+
+-   `sender` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The sender's username
+-   `message` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The message received
+
+### getMessages
+
+Get messages
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback `(err, results) => {}`
+-   `username` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A username
+-   `lastTimestamp` **[number](#number)** Last timestamp retrieval (optional, default `null`)
+
+### getLastTimestamp
+
+Get last timestamp for user message
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback `(err, results) => {}`
+-   `username` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A username
+
+### processAPI
+
+Process API callback
+
+**Parameters**
+
+-   `apiRequest` **[APIRequest](#apirequest)** An APIRequest
+
+Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with an APIResponse object
 
 ## PluginsAPI
 
@@ -2918,6 +3229,8 @@ This class is an interface for plugins
 -   `themeManager`  
 -   `sensorsManager`  
 -   `installationManager`  
+-   `userManager`  
+-   `messageManager`  
 
 ### exportClass
 
@@ -2957,7 +3270,7 @@ Constructor
 -   `identifier` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Plugin identifier (optional, default `null`)
 -   `version` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Plugin version (optional, default `null`)
 
-Returns **[User](#user)** The instance
+Returns **User** The instance
 
 ### json
 
@@ -2967,7 +3280,7 @@ Transform json raw object to instance
 
 -   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** JSON object data
 
-Returns **[User](#user)** A User instance
+Returns **User** A User instance
 
 ## PluginsManager
 
@@ -2988,6 +3301,8 @@ This class manage plugins
 -   `themeManager`  
 -   `sensorsManager`  
 -   `installationManager`  
+-   `userManager`  
+-   `messageManager`  
 
 ### constructor
 
@@ -3007,7 +3322,9 @@ Constructor
 -   `eventBus` **EventEmitter** The global event bus
 -   `themeManager` **[ThemeManager](#thememanager)** The theme manager
 -   `sensorsManager` **[SensorsManager](#sensorsmanager)** The sensors manager
--   `installationManager` **installationManager** The installation manager
+-   `installationManager` **[InstallationManager](#installationmanager)** The installation manager
+-   `userManager` **[UserManager](#usermanager)** The user manager
+-   `messageManager` **[MessageManager](#messagemanager)** The message manager
 
 Returns **[PluginsManager](#pluginsmanager)** The instance
 
@@ -3253,6 +3570,7 @@ Register a command to be executed for a specific version
 -   `command` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A command
 -   `sudo` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if command should be executed as sudo, false otherwise. The Hautomation process owner user should be in `sudo` group without password. (optional, default `false`)
 -   `wait` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if command is executed synchronously, false otherwise (optional, default `true`)
+-   `skipError` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if command fails should continue, false for retrying (optional, default `false`)
 
 ### executeCommand
 
@@ -3265,6 +3583,61 @@ Execute a command. Can throw an error if wait is `true`
 -   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback (only if wait parameter is false) : `(error, stdout, stderr) => {}` (optional, default `null`)
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An object result if wait is `true`
+
+## MessageAPI
+
+Public API for messages
+
+**Parameters**
+
+-   `messageManager`  
+
+### sendMessage
+
+Send a message to all plugins.
+
+**Parameters**
+
+-   `recipients` **([string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array))** The recipients. `*` for all users, otherwise an array of usernames - user `userAPI`, e.g. `["seb", "ema"]` (optional, default `"*"`)
+-   `message` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The notification message
+-   `action` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The action (optional, default `null`)
+-   `link` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The link (optional, default `null`)
+-   `picture` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The picture (optional, default `null`)
+
+### register
+
+Register an object to message events. The callback must implement `onMessageReceived(message)` method
+
+**Parameters**
+
+-   `o` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An object that implements callback
+
+### unregister
+
+Unregister an object to message events
+
+**Parameters**
+
+-   `o` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An object that implements callback
+
+### onMessageReceived
+
+Callback when a message is received, dispatched to registered elements
+
+**Parameters**
+
+-   `sender` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The sender's username
+-   `message` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The message received
+
+### getMessages
+
+Get messages
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback `(err, results) => {}`
+-   `username` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A username
+-   `lastTimestamp` **[number](#number)** Last timestamp retrieval (optional, default `null`)
 
 ## SchedulerAPI
 
@@ -3461,6 +3834,28 @@ Return a translation value
 -   `values` **...[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Optional, the placeholders values. Each `%@` will be sequentially replaced by thos values
 
 Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A translation
+
+## UserAPI
+
+Public API for users
+
+**Parameters**
+
+-   `userManager`  
+
+### addAdditionalFields
+
+Add additional fields to user registration
+
+**Parameters**
+
+-   `form` **[FormObject](#formobject)** A form object
+
+### getUsers
+
+Get all users (anonymized)
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of users
 
 ## WebAPI
 
@@ -4073,19 +4468,21 @@ Translate an arraay of elements
 
 Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of translated elements
 
-## User
+## UserForm
 
-This class is a User POJO
+**Extends FormObject.class**
+
+This class provides a form for one user
 
 **Parameters**
 
+-   `id`   (optional, default `null`)
 -   `username`   (optional, default `null`)
 -   `password`   (optional, default `null`)
 -   `level`   (optional, default `null`)
--   `fullName`   (optional, default `null`)
--   `email`   (optional, default `null`)
--   `phone`   (optional, default `null`)
+-   `name`   (optional, default `null`)
 -   `picture`   (optional, default `null`)
+-   `atHome`   (optional, default `false`)
 
 ### constructor
 
@@ -4093,53 +4490,37 @@ Constructor
 
 **Parameters**
 
+-   `id` **[number](#number)** An identifier (optional, default `null`)
 -   `username` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Username (optional, default `null`)
 -   `password` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Password (optional, default `null`)
 -   `level` **int** Authorization level (optional, default `null`)
--   `fullName` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Full name (optional, default `null`)
--   `email` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Email (optional, default `null`)
--   `phone` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Phone number (optional, default `null`)
+-   `name` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Full name (optional, default `null`)
 -   `picture` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Picture, in base64 format (optional, default `null`)
+-   `atHome` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if user is at home, false otherwise (optional, default `false`)
 
-Returns **[User](#user)** The instance
+Returns **User** The instance
 
 ### username
 
-The username
-
 ### password
-
-The password
 
 ### level
 
-The authorization level
-
-### fullName
-
-The full name
-
-### email
-
-The email
-
-### phone
-
-The phone
+### name
 
 ### picture
 
-The picture
+### atHome
 
 ### json
 
-Transform json raw object to instance
+Convert json data
 
 **Parameters**
 
--   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** JSON object data
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some key / value data
 
-Returns **[User](#user)** A User instance
+Returns **[UserForm](#userform)** A form object
 
 ## UserManager
 
@@ -4148,6 +4529,9 @@ This class allows to manage users (create, delete, search, ...)
 **Parameters**
 
 -   `confManager`  
+-   `formManager`  
+-   `webServices`  
+-   `dashboardManager`  
 
 ### constructor
 
@@ -4156,41 +4540,21 @@ Constructor
 **Parameters**
 
 -   `confManager` **[ConfManager](#confmanager)** A configuration manager needed for persistence
+-   `formManager` **[FormManager](#formmanager)** A form manager
+-   `webServices` **[WebServices](#webservices)** The web services
+-   `dashboardManager` **[DashboardManager](#dashboardmanager)** The dashboard manager
 
 Returns **[UserManager](#usermanager)** The instance
 
-### confManager
+### updateTile
 
-Configuration manager
-
-### users
-
-Users
-
-### removeUser
-
-Delete specific user
-
-**Parameters**
-
--   `username` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The username
+Update user tile
 
 ### getUsers
 
 Return a COPY of the user array
 
-Returns **\[[User](#user)]** An array of Users
-
-### compareUser
-
-Comparator for users
-
-**Parameters**
-
--   `user1` **[User](#user)** A user
--   `user2` **[User](#user)** Another user
-
-Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if user are identical, else false
+Returns **\[User]** An array of Users
 
 ### getUser
 
@@ -4200,21 +4564,13 @@ Get a user with username
 
 -   `username` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The username
 
-Returns **[User](#user)** A user, null if user does not exists
-
-### setUser
-
-Set user and store into json
-
-**Parameters**
-
--   `user` **[User](#user)** A user
+Returns **User** A user, null if user does not exists
 
 ### getAdminUser
 
 Get the admin user
 
-Returns **[User](#user)** The admin user, null if admin user is disabled
+Returns **User** The admin user, null if admin user is disabled
 
 ## SchedulerDbObject
 
@@ -4474,7 +4830,7 @@ Register an timer element
 
 **Parameters**
 
--   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback triggered when conditions are reached (context will be set back as parameter). Example : `cb(self) {}`
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback triggered when conditions are reached (context will be set back as parameter). Example : `(self) => {}`
 -   `context` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The context to exectue the callback
 -   `mode` **int** Mode (enum) : `EVERY_SECONDS`, `EVERY_MINUTES`, `EVERY_HOURS`, `EVERY_DAYS` or `CUSTOM`
 -   `hour` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The hour value. `*` for all (optional, default `null`)
@@ -4703,6 +5059,10 @@ Returns **[WebServices](#webservices)** The instance
 
 Start Web Services
 
+### stop
+
+Stop Web Services
+
 ### registerInfos
 
 Register and list informations
@@ -4716,10 +5076,6 @@ Process API callback
 -   `apiRequest` **[APIRequest](#apirequest)** An APIRequest
 
 Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with an APIResponse object
-
-### stop
-
-Stop Web Services
 
 ### register
 
@@ -4836,6 +5192,26 @@ Return the current timestamp
 
 Returns **[number](#number)** The current timestamp
 
+### dateToUTCTimestamp
+
+Convert a string date time zoned to UTC timestamp
+
+**Parameters**
+
+-   `date` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The GMT date
+
+Returns **[number](#number)** The UTC timestamp
+
+### dateToTimestamp
+
+Convert a string date time zoned to timestamp
+
+**Parameters**
+
+-   `date` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The GMT date
+
+Returns **[number](#number)** The GMT timestamp
+
 ### roundedTimestamp
 
 Round the timestamp to the mode
@@ -4873,3 +5249,41 @@ Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refer
 Return the raw icons object
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Raw icons object
+
+## ImageUtils
+
+Utility class for images
+
+### sanitizeFormConfiguration
+
+Convert form data to base 64 image
+
+**Parameters**
+
+-   `fieldData` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Field data
+
+Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Base64 image
+
+### resize
+
+Resize an image and convert to png
+
+**Parameters**
+
+-   `b64string` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The base64 image string
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback when image process is done \`(err, data) => {}``
+-   `size` **[number](#number)** The size in pixel (optional, default `100`)
+
+Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The base64 output image string
+
+### blur
+
+Blur, resize an image and convert to png
+
+**Parameters**
+
+-   `b64string` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The base64 image string
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback when image process is done \`(err, data) => {}``
+-   `size` **[number](#number)** The size in pixel (optional, default `100`)
+
+Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The base64 output image string

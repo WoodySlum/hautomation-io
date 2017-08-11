@@ -20,6 +20,26 @@ class DateUtils {
     }
 
     /**
+     * Convert a string date time zoned to UTC timestamp
+     *
+     * @param  {string} date The GMT date
+     * @returns {number}      The UTC timestamp
+     */
+    static dateToUTCTimestamp(date) {
+        return moment(moment(date).utc().format("YYYY-MM-DD HH:mm:ss")).unix();
+    }
+
+    /**
+     * Convert a string date time zoned to timestamp
+     *
+     * @param  {string} date The GMT date
+     * @returns {number}      The GMT timestamp
+     */
+    static dateToTimestamp(date) {
+        return moment(date+"Z").unix();
+    }
+
+    /**
      * Round the timestamp to the mode
      *
      * @param  {number} timestamp A timestamp

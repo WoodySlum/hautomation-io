@@ -66,6 +66,7 @@
     "express": "^4.15",
     "is-running": "^2.1.0",
     "moment": "^2.18",
+    "moment-timezone": "^0.5",
     "node-datetime": "^1.0.1",
     "remi": "^2.0",
     "remi-runner": "^1.1",
@@ -75,7 +76,7 @@
     "stack-trace": "^0.0",
     "threads": "git://github.com/WoodySlum/threads.js.git#master",
     "toposort": "^1.0",
-    "gm":"^1.23",
-    "prowler":"^0.0"
+    "gm": "^1.23",
+    "prowler": "^0.0"
   }
 }

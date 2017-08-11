@@ -4,9 +4,16 @@ const PluginsManager = require("./../pluginsmanager/PluginsManager");
 const DbSchemaConverter = require("./../dbmanager/DbSchemaConverter");
 const DbHelper = require("./../dbmanager/DbHelper");
 const DbMessage = require("./DbMessage");
-
+const WebServices = require("./../../services/webservices/WebServices");
+const APIResponse = require("./../../services/webservices/APIResponse");
+const Authentication = require("./../authentication/Authentication");
+const DateUtils = require("./../../utils/DateUtils");
+const Tile = require("./../dashboardmanager/Tile");
+const Icons = require("./../../utils/Icons");
 
 const DB_VERSION = "0.0.0";
+const ROUTE_GET = ":/messages/get/";
+const ROUTE_SET = ":/messages/set/";
 
 /**
  * This class allows to manage message sending
@@ -20,13 +27,19 @@ class MessageManager {
      * @param  {EventEmitter} eventBus    The global event bus
      * @param  {UserManager} userManager    The user manager
      * @param  {DbManager} dbManager    The database manager
+     * @param  {WebServices} webServices    The web services
+     * @param  {TranslateManager} translateManager    The translate manager
+     * @param  {DashboardManager} dashboardManager    The dashboard manager
      * @returns {InstallationManager}             The instance
      */
-    constructor(pluginsManager = null, eventBus, userManager, dbManager) {
+    constructor(pluginsManager = null, eventBus, userManager, dbManager, webServices, translateManager, dashboardManager) {
         this.pluginsManager = pluginsManager;
         this.eventBus = eventBus;
         this.userManager = userManager;
         this.dbManager = dbManager;
+        this.webServices = webServices;
+        this.translateManager = translateManager;
+        this.dashboardManager = dashboardManager;
         this.dbSchema = DbSchemaConverter.class.toSchema(DbMessage.class);
         this.dbManager.initSchema(this.dbSchema, DB_VERSION, null);
         this.dbHelper = new DbHelper.class(this.dbManager, this.dbSchema, DbSchemaConverter.class.tableName(DbMessage.class), DbMessage.class);
@@ -36,6 +49,14 @@ class MessageManager {
         this.eventBus.on(PluginsManager.EVENT_LOADED, (pluginsManager) => {
             self.pluginsManager = pluginsManager;
         });
+
+        // Web services
+        this.webServices.registerAPI(this, WebServices.GET, ROUTE_GET + "[timestamp*]/", Authentication.AUTH_USAGE_LEVEL);
+        this.webServices.registerAPI(this, WebServices.POST, ROUTE_SET, Authentication.AUTH_USAGE_LEVEL);
+
+        // Dashboard
+        const tile = new Tile.class(this.dashboardManager.themeManager, "chat", Tile.TILE_GENERIC_ACTION, Icons.class.list()["uniF1D7"], null, this.translateManager.t("tile.chat"), null, null, null, 0, 500, "chat");
+        this.dashboardManager.registerTile(tile);
     }
 
     /**
@@ -84,7 +105,7 @@ class MessageManager {
 
         this.userManager.getUsers().forEach((user) => {
             if (recipients === "*" || (recipients instanceof Array && recipients.indexOf(user.username) !== -1)) {
-                const dbMessage = new DbMessage.class(this.dbHelper, user.username, null, message, action, link, picture);
+                const dbMessage = new DbMessage.class(this.dbHelper, user.username, null, message, action, link, picture, 1);
                 dbMessage.save();
             }
         });
@@ -99,7 +120,7 @@ class MessageManager {
     onMessageReceived(sender, message) {
         this.userManager.getUsers().forEach((user) => {
             if (sender === user.username) {
-                const dbMessage = new DbMessage.class(this.dbHelper, null, user.username, message, null, null, null);
+                const dbMessage = new DbMessage.class(this.dbHelper, null, user.username, message, null, null, null, 0);
                 this.registered.forEach((register) => {
                     if (register.onMessageReceived instanceof Function) {
                         register.onMessageReceived(dbMessage);
@@ -108,6 +129,113 @@ class MessageManager {
                 dbMessage.save();
             }
         });
+    }
+
+    /**
+     * Get messages
+     *
+     * @param  {Function} cb            A callback `(err, results) => {}`
+     * @param  {string}   username      A username
+     * @param  {number}   [lastTimestamp=null] Last timestamp retrieval
+     */
+    getMessages(cb, username, lastTimestamp = null) {
+        if (!lastTimestamp) {
+            lastTimestamp = 0;
+        }
+        const request = this.dbHelper.RequestBuilder()
+        .select()
+        .complexWhere("(recipient " + this.dbHelper.Operators().LIKE + " '" + username + "' OR " + "sender " + this.dbHelper.Operators().LIKE + " '" + username + "')")
+        .where(this.dbHelper.Operators().FIELD_TIMESTAMP, this.dbHelper.Operators().GTE, parseInt(lastTimestamp)===0?1:parseInt(lastTimestamp))
+        .order(this.dbHelper.Operators().DESC, this.dbHelper.Operators().FIELD_TIMESTAMP)
+        .first(20);
+
+        this.dbHelper.getObjects(request, (error, objects) => {
+            if (error) {
+                cb(error);
+            } else {
+                const results = [];
+                objects.forEach((dbObj) => {
+                    results.push({
+                        id:dbObj.id,
+                        dt:DateUtils.class.dateFormatted(this.translateManager.t("datetime.format"), DateUtils.class.dateToTimestamp(dbObj.timestamp)),
+                        rawDt:dbObj.timestamp,
+                        timestamp:DateUtils.class.dateToUTCTimestamp(dbObj.timestamp),
+                        recipient:dbObj.recipient,
+                        sender:dbObj.sender,
+                        message:dbObj.message,
+                        action:dbObj.action,
+                        link:dbObj.link,
+                        picture:dbObj.picture,
+                        received:dbObj.received
+                    });
+                });
+                cb(null, results);
+            }
+        });
+    }
+
+    /**
+     * Get last timestamp for user message
+     *
+     * @param  {Function} cb            A callback `(err, results) => {}`
+     * @param  {string}   username      A username
+     */
+    getLastTimestamp(cb, username) {
+        const request = this.dbHelper.RequestBuilder()
+        .select()
+        .complexWhere("(recipient " + this.dbHelper.Operators().LIKE + " '" + username + "' OR " + "sender " + this.dbHelper.Operators().LIKE + " '" + username + "')")
+        .order(this.dbHelper.Operators().DESC, this.dbHelper.Operators().FIELD_TIMESTAMP)
+        .first(1);
+        this.dbHelper.getObjects(request, (error, objects) => {
+            if (error) {
+                cb(error);
+            } else if (!objects || objects.length === 0){
+                cb(Error("Empty content"));
+            } else {
+                cb(null, DateUtils.class.dateToTimestamp(objects[0].timestamp));
+            }
+        });
+    }
+
+    /**
+     * Process API callback
+     *
+     * @param  {APIRequest} apiRequest An APIRequest
+     * @returns {Promise}  A promise with an APIResponse object
+     */
+    processAPI(apiRequest) {
+        var self = this;
+
+        // Get messages
+        if (apiRequest.route.startsWith(ROUTE_GET)) {
+            return new Promise((resolve, reject) => {
+                self.getMessages((err, results) => {
+                    if (err) {
+                        reject(new APIResponse.class(false, {}, 467, err.message));
+                    } else {
+                        resolve(new APIResponse.class(true, results));
+                    }
+                }, apiRequest.authenticationData.username, apiRequest.data.timestamp);
+
+            });
+        } else if (apiRequest.route === (ROUTE_SET)) {
+            return new Promise((resolve, reject) => {
+                self.getLastTimestamp((err, timestamp) => {
+                    self.onMessageReceived(apiRequest.authenticationData.username, apiRequest.data.message);
+                    if (err) {
+                        resolve(new APIResponse.class(true, []));
+                    } else {
+                        self.getMessages((error, results) => {
+                            if (error) {
+                                reject(new APIResponse.class(false, {}, 467, err.message));
+                            } else {
+                                resolve(new APIResponse.class(true, results));
+                            }
+                        }, apiRequest.authenticationData.username, (parseInt(timestamp) + 1));
+                    }
+                }, apiRequest.authenticationData.username);
+            });
+        }
     }
 }
 

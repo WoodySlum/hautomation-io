@@ -56,6 +56,13 @@ class DbMessage extends DbObject.class {
          * @Version("0.0.0");
          */
         this.picture;
+
+        /**
+         * @Property("received");
+         * @Type("int");
+         * @Version("0.0.0");
+         */
+        this.received;
     }
 }
 

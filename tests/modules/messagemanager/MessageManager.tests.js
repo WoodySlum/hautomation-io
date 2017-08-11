@@ -10,6 +10,9 @@ const eventBus = {on:()=>{}};
 
 const userManager = core.userManager;
 const dbManager = core.dbManager;
+const translateManager = core.translateManager;
+const webServices = core.webServices;
+const dashboardManager = core.dashboardManager;
 
 class FooBar {
     constructor() {
@@ -35,7 +38,9 @@ describe("MessageManager", function() {
     it("constructor should initilize stuff correctly", function() {
         sinon.spy(eventBus, "on");
         sinon.spy(dbManager, "initSchema");
-        const mm = new MessageManager.class(null, eventBus, userManager, dbManager);
+        sinon.spy(webServices, "registerAPI");
+        sinon.spy(dashboardManager, "registerTile");
+        const mm = new MessageManager.class(null, eventBus, userManager, dbManager, webServices, translateManager, dashboardManager);
         expect(eventBus.on.calledOnce).to.be.true;
         expect(dbManager.initSchema.calledOnce).to.be.true;
         expect(mm).to.have.property("dbHelper");
@@ -45,12 +50,16 @@ describe("MessageManager", function() {
         expect(mm).to.have.property("dbManager");
         expect(mm).to.have.property("registered");
         expect(mm.registered.length).to.be.equal(0);
+        expect(webServices.registerAPI.calledTwice).to.be.true;
+        expect(dashboardManager.registerTile.calledOnce).to.be.true;
         eventBus.on.restore();
         dbManager.initSchema.restore();
+        webServices.registerAPI.restore();
+        dashboardManager.registerTile.restore();
     });
 
     it("register should be well done", function() {
-        const mm = new MessageManager.class(null, eventBus, userManager, dbManager);
+        const mm = new MessageManager.class(null, eventBus, userManager, dbManager, webServices, translateManager, dashboardManager);
         const foobar = new FooBar();
         mm.register(foobar);
         expect(mm.registered.length).to.be.equal(1);
@@ -58,7 +67,7 @@ describe("MessageManager", function() {
     });
 
     it("unregister should be well done", function() {
-        const mm = new MessageManager.class(null, eventBus, userManager, dbManager);
+        const mm = new MessageManager.class(null, eventBus, userManager, dbManager, webServices, translateManager, dashboardManager);
         const foobar = new FooBar();
         mm.register(foobar);
         expect(mm.registered.length).to.be.equal(1);
@@ -68,7 +77,7 @@ describe("MessageManager", function() {
 
     it("onMessageReceived should notify registered elements", function() {
         sinon.stub(userManager, "getUsers").returns([{username:"foo"}]);
-        const mm = new MessageManager.class(null, eventBus, userManager, dbManager);
+        const mm = new MessageManager.class(null, eventBus, userManager, dbManager, webServices, translateManager, dashboardManager);
 
         const foobar = new FooBar();
         sinon.spy(foobar, "onMessageReceived");

@@ -1006,57 +1006,6 @@ $(document).ready(function() {
         window.clearTimeout(setFocusToChatInputTimer);
     }
 
-
-
-    $('#askMe').keypress(function(e) {
-        if (e.keyCode == 13) {
-            consolelog($('#askMe').val());
-            $('#chatHistory').append('<div class="from-me"><p>' + $('#askMe').val() + '</p></div><div class="clear-chat"></div><div id="chatLoader" class="center"><img src="img/ajax-loader.gif" id="configLoader" /></div>');
-            $("#chatContent").animate({
-                scrollTop: ($('#chatContent').height() * 1000)
-            });
-
-            $.ajax({
-                type: "POST",
-                url: vUrl,
-                data: {
-                    username: username,
-                    ePassword: ePassword,
-                    method: "voiceCommand",
-                    words: '["' + $('#askMe').val() + '"]'
-                }
-            }).done(function(msg) {
-                var obj = jQuery.parseJSON(msg);
-                $('#chatLoader').remove();
-                $('#chatHistory').append('<div class="from-them"><p>' + obj.msg + '</p></div><div class="clear-chat"></div>');
-                $("#chatContent").animate({
-                    scrollTop: ($('#chatContent').height() * 1000)
-                });
-                var u = new fallbackSpeechSynthesisUtterance(obj.msg);
-                u.lang = lng;
-                u.volume = 1.0;
-                u.rate = 1.0;
-                fallbackSpeechSynthesis.speak(u);
-
-            }).fail(function(msg) {
-                $('#chatLoader').remove();
-                $('#chatHistory').append('<div class="from-them"><p>' + t('js.chat.failed', null) + '</p></div><div class="clear-chat"></div>');
-                $("#chatContent").animate({
-                    scrollTop: ($('#chatContent').height() * 1000)
-                });
-                var u = new fallbackSpeechSynthesisUtterance(obj.msg);
-                u.lang = lng;
-                u.volume = 1.0;
-                u.rate = 1.0;
-                fallbackSpeechSynthesis.speak(u);
-            });
-
-            $('#askMe').val('');
-            setFocusToChatInput();
-
-        }
-    });
-
     var drawTable = function() {
         $("#addDeviceForm").empty();
         $("#devicesLoader").hide();
@@ -1684,11 +1633,15 @@ $(document).ready(function() {
                 consolelog(notifications[i]);
                 if (notifications[i]) {
                     if (notifications[i].message && notifications[i].message != "" && notifications[i].message != 'null') {
-                        $('#chatHistory').append('<p><h6>' + notifications[i].dt + '</h6></p><div class="from-them"><p>' + notifications[i].message + '</p></div><div class="clear-chat"></div>');
+                        if (notifications[i].received === 1) {
+                            $('#chatHistory').append('<p><h6>' + notifications[i].dt + '</h6></p><div class="from-them"><p>' + notifications[i].message + '</p></div><div class="clear-chat"></div>');
+                        } else {
+                            $('#chatHistory').append('<p><h6>' + notifications[i].dt + '</h6></p><div class="from-me"><p>' + notifications[i].message + '</p></div><div class="clear-chat"></div>');
+                        }
                     }
-                    if (notifications[i].image && notifications[i].image != "") {
-                        var img = Base64.decode(notifications[i].image);
-                        $('#chatHistory').append('<div class="from-them"><p><img class="chat-image" src="data:image/jpg;base64,' + notifications[i].image + '" /></p></div><div class="clear-chat"></div>');
+                    if (notifications[i].picture && notifications[i].picture != "") {
+                        var img = Base64.decode(notifications[i].picture);
+                        $('#chatHistory').append('<div class="from-them"><p><img class="chat-image" src="data:image/jpg;base64,' + notifications[i].picture + '" /></p></div><div class="clear-chat"></div>');
                     }
                 }
 
@@ -1698,8 +1651,8 @@ $(document).ready(function() {
             });
         }
 
-        $('#chat--H--chat').unbind();
-        $('#chat--H--chat').click(function() {
+        $('#chat').unbind();
+        $('#chat').click(function() {
             $('#chatModal').unbind();
             $('#chatModal').on('show.bs.modal', function(e) {
                 notifications = JSON.parse(readCookie('chat-cache'));
@@ -1717,17 +1670,14 @@ $(document).ready(function() {
                 setFocusToChatInputTimer = window.setInterval(setFocusToChatInput, 900);
                 $('#chatHistory').empty();
                 $.ajax({
-                    type: "POST",
-                    url: vUrl,
+                    type: "GET",
+                    url: vUrl + "messages/get/" + timestamp + "/",
                     data: {
-                        username: username,
-                        ePassword: ePassword,
-                        method: "getLastNotifications",
-                        ts: timestamp
+                        u: username,
+                        p: password
                     }
                 }).done(function(msg) {
-
-                    var tmpNotifications = jQuery.parseJSON(msg);
+                    var tmpNotifications = msg;
                     var currentTs = now();
                     var tmp = [];
                     if (notifications) {
@@ -1741,8 +1691,6 @@ $(document).ready(function() {
                     }
                     notifications = tmpNotifications.concat(tmp);
                     bakeCookie('chat-cache',  JSON.stringify(notifications));
-
-
                     generateChatContent();
                 }).fail(function(msg) {
                     setError(msg);
@@ -1750,6 +1698,59 @@ $(document).ready(function() {
             });
 
             $('#chatModal').modal();
+
+            $('#askMe').unbind();
+            $('#askMe').keypress(function(e) {
+
+                if (e.keyCode == 13) {
+                    consolelog($('#askMe').val());
+                    $('#chatHistory').append('<div class="from-me"><p>' + $('#askMe').val() + '</p></div><div class="clear-chat"></div><div id="chatLoader" class="center"><img src="img/ajax-loader.gif" id="configLoader" /></div>');
+                    $("#chatContent").animate({
+                        scrollTop: ($('#chatContent').height() * 1000)
+                    });
+
+                    $.ajax({
+                        type: "POST",
+                        url: vUrl + "messages/set/",
+                        contentType: "application/json",
+                        data: JSON.stringify({
+                            u: username,
+                            p: password,
+                            data:{
+                                message:$('#askMe').val()
+                            }
+                        })
+                    }).done(function(msg) {
+                        var tmpNotifications = msg;
+                        var currentTs = now();
+                        var tmp = [];
+                        if (notifications) {
+                            for (var i = 0 ; i < notifications.length ; i++) {
+                                if (notifications[i].ts < (currentTs - (7 * 24 * 60 * 60))) {
+
+                                } else {
+                                    tmp.push(notifications[i]);
+                                }
+                            }
+                        }
+                        notifications = tmpNotifications.concat(tmp);
+                        bakeCookie('chat-cache',  JSON.stringify(notifications));
+                        generateChatContent();
+                        $('#chatLoader').remove();
+                        var u = new fallbackSpeechSynthesisUtterance(tmpNotifications[tmpNotifications.length - 1].message);
+                        u.lang = lng;
+                        u.volume = 1.0;
+                        u.rate = 1.0;
+                        fallbackSpeechSynthesis.speak(u);
+                    }).fail(function(msg) {
+                        $('#chatLoader').remove();
+                        setError(msg);
+                    });
+
+                    $('#askMe').val('');
+                    setFocusToChatInput();
+                }
+            });
         });
 
 

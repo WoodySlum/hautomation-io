@@ -8,6 +8,7 @@
     -   [getForm](#getform)
 -   [FormConfiguration](#formconfiguration)
     -   [constructor](#constructor)
+    -   [addAdditionalFields](#addadditionalfields)
     -   [loadConfig](#loadconfig)
     -   [saveConfig](#saveconfig)
     -   [comparator](#comparator)
@@ -77,17 +78,23 @@
 -   [InstallerAPI](#installerapi)
     -   [register](#register-2)
     -   [executeCommand](#executecommand)
--   [SchedulerAPI](#schedulerapi)
+-   [MessageAPI](#messageapi)
+    -   [sendMessage](#sendmessage)
     -   [register](#register-3)
     -   [unregister](#unregister)
+    -   [onMessageReceived](#onmessagereceived)
+    -   [getMessages](#getmessages)
+-   [SchedulerAPI](#schedulerapi)
+    -   [register](#register-4)
+    -   [unregister](#unregister-1)
     -   [schedule](#schedule)
     -   [constants](#constants)
 -   [SchedulerService](#schedulerservice)
     -   [constructor](#constructor-5)
     -   [start](#start)
     -   [stop](#stop)
-    -   [register](#register-4)
-    -   [unregister](#unregister-1)
+    -   [register](#register-5)
+    -   [unregister](#unregister-2)
     -   [schedule](#schedule-1)
     -   [timeEvent](#timeevent)
 -   [SchedulerDbObject](#schedulerdbobject)
@@ -97,6 +104,8 @@
 -   [triggerDate](#triggerdate)
 -   [DateUtils](#dateutils)
     -   [timestamp](#timestamp)
+    -   [dateToUTCTimestamp](#datetoutctimestamp)
+    -   [dateToTimestamp](#datetotimestamp)
     -   [roundedTimestamp](#roundedtimestamp)
     -   [dateFormatted](#dateformatted)
 -   [SensorAPI](#sensorapi)
@@ -111,8 +120,8 @@
 -   [ThemeAPI](#themeapi)
     -   [getColors](#getcolors)
 -   [TimeEventAPI](#timeeventapi)
-    -   [register](#register-5)
-    -   [unregister](#unregister-2)
+    -   [register](#register-6)
+    -   [unregister](#unregister-3)
     -   [constants](#constants-1)
 -   [TimeEventService](#timeeventservice)
     -   [constructor](#constructor-7)
@@ -120,16 +129,19 @@
     -   [stop](#stop-1)
     -   [hash](#hash)
     -   [elementForHash](#elementforhash)
-    -   [register](#register-6)
-    -   [unregister](#unregister-3)
+    -   [register](#register-7)
+    -   [unregister](#unregister-4)
     -   [convertMode](#convertmode)
     -   [timeEvent](#timeevent-1)
 -   [TranslateAPI](#translateapi)
     -   [load](#load)
     -   [t](#t)
+-   [UserAPI](#userapi)
+    -   [addAdditionalFields](#addadditionalfields-1)
+    -   [getUsers](#getusers)
 -   [WebAPI](#webapi)
-    -   [register](#register-7)
-    -   [unregister](#unregister-4)
+    -   [register](#register-8)
+    -   [unregister](#unregister-5)
     -   [Authentication](#authentication)
     -   [APIResponse](#apiresponse)
     -   [constants](#constants-2)
@@ -151,11 +163,11 @@
 -   [WebServices](#webservices)
     -   [constructor](#constructor-11)
     -   [start](#start-2)
+    -   [stop](#stop-2)
     -   [registerInfos](#registerinfos)
     -   [processAPI](#processapi-1)
-    -   [stop](#stop-2)
-    -   [register](#register-8)
-    -   [unregister](#unregister-5)
+    -   [register](#register-9)
+    -   [unregister](#unregister-6)
     -   [registerAPI](#registerapi)
     -   [unregisterAPI](#unregisterapi)
     -   [manageResponse](#manageresponse)
@@ -182,8 +194,8 @@
     -   [stop](#stop-3)
     -   [restart](#restart)
     -   [status](#status)
-    -   [register](#register-9)
-    -   [unregister](#unregister-6)
+    -   [register](#register-10)
+    -   [unregister](#unregister-7)
     -   [setThreadsManager](#setthreadsmanager)
 -   [APIRequest](#apirequest)
     -   [constructor](#constructor-13)
@@ -267,6 +279,14 @@ Constructor
 -   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Parameters injection on static methods
 
 Returns **[FormConfiguration](#formconfiguration)** The instance
+
+### addAdditionalFields
+
+Add additional fields
+
+**Parameters**
+
+-   `form` **Class** A form
 
 ### loadConfig
 
@@ -952,6 +972,7 @@ Register a command to be executed for a specific version
 -   `command` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A command
 -   `sudo` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if command should be executed as sudo, false otherwise. The Hautomation process owner user should be in `sudo` group without password. (optional, default `false`)
 -   `wait` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if command is executed synchronously, false otherwise (optional, default `true`)
+-   `skipError` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if command fails should continue, false for retrying (optional, default `false`)
 
 ### executeCommand
 
@@ -964,6 +985,61 @@ Execute a command. Can throw an error if wait is `true`
 -   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback (only if wait parameter is false) : `(error, stdout, stderr) => {}` (optional, default `null`)
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An object result if wait is `true`
+
+## MessageAPI
+
+Public API for messages
+
+**Parameters**
+
+-   `messageManager`  
+
+### sendMessage
+
+Send a message to all plugins.
+
+**Parameters**
+
+-   `recipients` **([string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array))** The recipients. `*` for all users, otherwise an array of usernames - user `userAPI`, e.g. `["seb", "ema"]` (optional, default `"*"`)
+-   `message` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The notification message
+-   `action` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The action (optional, default `null`)
+-   `link` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The link (optional, default `null`)
+-   `picture` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The picture (optional, default `null`)
+
+### register
+
+Register an object to message events. The callback must implement `onMessageReceived(message)` method
+
+**Parameters**
+
+-   `o` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An object that implements callback
+
+### unregister
+
+Unregister an object to message events
+
+**Parameters**
+
+-   `o` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An object that implements callback
+
+### onMessageReceived
+
+Callback when a message is received, dispatched to registered elements
+
+**Parameters**
+
+-   `sender` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The sender's username
+-   `message` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The message received
+
+### getMessages
+
+Get messages
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback `(err, results) => {}`
+-   `username` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A username
+-   `lastTimestamp` **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** Last timestamp retrieval (optional, default `null`)
 
 ## SchedulerAPI
 
@@ -1108,6 +1184,26 @@ Utility class for dates
 Return the current timestamp
 
 Returns **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** The current timestamp
+
+### dateToUTCTimestamp
+
+Convert a string date time zoned to UTC timestamp
+
+**Parameters**
+
+-   `date` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The GMT date
+
+Returns **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** The UTC timestamp
+
+### dateToTimestamp
+
+Convert a string date time zoned to timestamp
+
+**Parameters**
+
+-   `date` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The GMT date
+
+Returns **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** The GMT timestamp
 
 ### roundedTimestamp
 
@@ -1313,7 +1409,7 @@ Register an timer element
 
 **Parameters**
 
--   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback triggered when conditions are reached (context will be set back as parameter). Example : `cb(self) {}`
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback triggered when conditions are reached (context will be set back as parameter). Example : `(self) => {}`
 -   `context` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The context to exectue the callback
 -   `mode` **int** Mode (enum) : `EVERY_SECONDS`, `EVERY_MINUTES`, `EVERY_HOURS`, `EVERY_DAYS` or `CUSTOM`
 -   `hour` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The hour value. `*` for all (optional, default `null`)
@@ -1372,6 +1468,28 @@ Return a translation value
 -   `values` **...[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Optional, the placeholders values. Each `%@` will be sequentially replaced by thos values
 
 Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A translation
+
+## UserAPI
+
+Public API for users
+
+**Parameters**
+
+-   `userManager`  
+
+### addAdditionalFields
+
+Add additional fields to user registration
+
+**Parameters**
+
+-   `form` **FormObject** A form object
+
+### getUsers
+
+Get all users (anonymized)
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of users
 
 ## WebAPI
 
@@ -1567,6 +1685,10 @@ Returns **[WebServices](#webservices)** The instance
 
 Start Web Services
 
+### stop
+
+Stop Web Services
+
 ### registerInfos
 
 Register and list informations
@@ -1580,10 +1702,6 @@ Process API callback
 -   `apiRequest` **[APIRequest](#apirequest)** An APIRequest
 
 Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with an APIResponse object
-
-### stop
-
-Stop Web Services
 
 ### register
 
