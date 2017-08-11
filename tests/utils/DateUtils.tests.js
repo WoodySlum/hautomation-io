@@ -9,7 +9,7 @@ const DateUtils = require("./../../src/utils/DateUtils");
 describe("DateUtils", function() {
 
     before(() => {
-        moment.tz.setDefault("Europs/Paris");
+        moment.tz.setDefault("Europe/London");
     });
 
     it("roundedTimestamp should round correctly timestamp", function() {
@@ -21,7 +21,7 @@ describe("DateUtils", function() {
     });
 
     it("dateToUTCTimestamp should convert date to UTC timestamp", function() {
-        expect(DateUtils.class.dateToUTCTimestamp("2017-08-11 13:31:18")).to.be.equal(1502443878);
+        expect(DateUtils.class.dateToUTCTimestamp("2017-08-11 13:31:18")).to.be.equal(1502451078);
     });
 
     it("dateToTimestamp should convert date to timestamp", function() {

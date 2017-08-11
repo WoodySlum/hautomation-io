@@ -259,10 +259,13 @@ class PluginsManager {
             const pluginConf = new PluginConf.class(plugin.identifier, plugin.version);
             this.confManager.setData(CONF_KEY, pluginConf, this.pluginsConf, PluginConf.comparator);
             // Load
-            plugin.loaded();
-            // Reload exported
-            classes = plugin.exported;
-
+            try {
+                plugin.loaded();
+                // Reload exported
+                classes = plugin.exported;
+            } catch(e) {
+                Logger.err("Plugin " + plugin.identifier + " crashed");
+            }
         });
     }
 

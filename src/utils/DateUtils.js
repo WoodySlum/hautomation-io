@@ -1,5 +1,5 @@
 "use strict";
-const moment = require("moment");
+const moment = require("moment-timezone");
 const ROUND_TIMESTAMP_MINUTE = 0;
 const ROUND_TIMESTAMP_HOUR = 1;
 const ROUND_TIMESTAMP_DAY = 2;
