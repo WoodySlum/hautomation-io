@@ -116,14 +116,15 @@ class MessageManager {
      *
      * @param  {string} sender  The sender's username
      * @param  {string} message The message received
+     * @param  {Function} botCb A callback that should be called when data processing is done
      */
-    onMessageReceived(sender, message) {
+    onMessageReceived(sender, message, botCb = null) {
         this.userManager.getUsers().forEach((user) => {
             if (sender === user.username) {
                 const dbMessage = new DbMessage.class(this.dbHelper, null, user.username, message, null, null, null, 0);
                 this.registered.forEach((register) => {
                     if (register.onMessageReceived instanceof Function) {
-                        register.onMessageReceived(dbMessage);
+                        register.onMessageReceived(dbMessage, botCb);
                     }
                 });
                 dbMessage.save();
@@ -221,18 +222,22 @@ class MessageManager {
         } else if (apiRequest.route === (ROUTE_SET)) {
             return new Promise((resolve, reject) => {
                 self.getLastTimestamp((err, timestamp) => {
-                    self.onMessageReceived(apiRequest.authenticationData.username, apiRequest.data.message);
-                    if (err) {
-                        resolve(new APIResponse.class(true, []));
-                    } else {
-                        self.getMessages((error, results) => {
-                            if (error) {
-                                reject(new APIResponse.class(false, {}, 467, err.message));
-                            } else {
-                                resolve(new APIResponse.class(true, results));
-                            }
-                        }, apiRequest.authenticationData.username, (parseInt(timestamp) + 1));
-                    }
+                    self.onMessageReceived(apiRequest.authenticationData.username, apiRequest.data.message, () => {
+                        console.log(err);
+                        if (err) {
+                            resolve(new APIResponse.class(true, []));
+                        } else {
+                            self.getMessages((error, results) => {
+                                // console.log(error);
+                                // console.log(results);
+                                if (error) {
+                                    reject(new APIResponse.class(false, {}, 467, err.message));
+                                } else {
+                                    resolve(new APIResponse.class(true, results));
+                                }
+                            }, apiRequest.authenticationData.username, (parseInt(timestamp) + 1));
+                        }
+                    });
                 }, apiRequest.authenticationData.username);
             });
         }

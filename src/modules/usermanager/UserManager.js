@@ -70,7 +70,12 @@ class UserManager {
      * @returns {[User]} An array of Users
      */
     getUsers() {
-        return this.formConfiguration.data.slice();
+        const copy = [];
+        this.formConfiguration.data.forEach((user) => {
+            copy.push(Object.assign({}, user));
+        });
+
+        return copy;
     }
 
     /**

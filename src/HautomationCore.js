@@ -25,6 +25,7 @@ var SensorsManager = require("./modules/sensorsmanager/SensorsManager");
 var InstallationManager = require("./modules/installationmanager/InstallationManager");
 var CoreInstaller = require("./../installer/CoreInstaller");
 var MessageManager = require("./modules/messagemanager/MessageManager");
+var BotEngine = require("./modules/botengine/BotEngine");
 
 const CONFIGURATION_FILE = "data/config.json";
 var AppConfiguration = require("./../data/config.json");
@@ -121,6 +122,8 @@ class HautomationCore {
         this.pluginsManager = new PluginsManager.class(this.confManager, this.webServices, this.servicesManager, this.dbManager, this.translateManager, this.formManager, this.timeEventService, this.schedulerService, this.dashboardManager, this.eventBus, this.themeManager, this.sensorsManager, this.installationManager, this.userManager, this.messageManager);
         // Device manager module
         this.deviceManager = new DeviceManager.class(this.confManager, this.formManager, this.webServices, this.radioManager, this.dashboardManager);
+        // Bot engine
+        this.botEngine = new BotEngine.class(this.translateManager, this.messageManager, AppConfiguration.bot);
 
         // Add services to manager
         this.servicesManager.add(this.webServices);

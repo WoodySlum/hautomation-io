@@ -13,10 +13,12 @@ class ImageUtils {
      * @returns {string}           Base64 image
      */
     static sanitizeFormConfiguration(fieldData) {
-        const regex = /(.*)base64,(.*)/g;
-        const r = regex.exec(fieldData);
-        if (r.length >= 3) {
-            return r[2];
+        if (fieldData) {
+            const regex = /(.*)base64,(.*)/g;
+            const r = regex.exec(fieldData);
+            if (r.length >= 3) {
+                return r[2];
+            }
         }
 
         return null;
@@ -31,17 +33,21 @@ class ImageUtils {
      * @returns {string}              The base64 output image string
      */
     static resize(b64string, cb, size = 100) {
-        const buf = Buffer.from(b64string, "base64");
-        gm(buf)
-        .resize(size + "x" + size)
-        .setFormat("png")
-        .toBuffer(function (err, buffer) {
-            if (err) {
-                cb(err);
-            } else {
-                cb(null, buffer.toString("base64"));
-            }
-        });
+        if (b64string) {
+            const buf = Buffer.from(b64string, "base64");
+            gm(buf)
+            .resize(size + "x" + size)
+            .setFormat("png")
+            .toBuffer(function (err, buffer) {
+                if (err) {
+                    cb(err);
+                } else {
+                    cb(null, buffer.toString("base64"));
+                }
+            });
+        } else {
+            cb(Error("No image"));
+        }
     }
 
     /**
@@ -53,23 +59,27 @@ class ImageUtils {
      * @returns {string}              The base64 output image string
      */
     static blur(b64string, cb, size = 100) {
-        const buf = Buffer.from(b64string, "base64");
-        gm(buf)
-        .resize(size + "x" + size)
-        .blur(10,5)
-        .out("-matte")
-        .out("-operator", "Opacity", "Assign", "40%")
-        .out("-flatten")
-        .out("-background", "#FFFFFF")
-        .blur(100,50)
-        .setFormat("png")
-        .toBuffer(function (err, buffer) {
-            if (err) {
-                cb(err);
-            } else {
-                cb(null, buffer.toString("base64"));
-            }
-        });
+        if (b64string) {
+            const buf = Buffer.from(b64string, "base64");
+            gm(buf)
+            .resize(size + "x" + size)
+            .blur(10,5)
+            .out("-matte")
+            .out("-operator", "Opacity", "Assign", "40%")
+            .out("-flatten")
+            .out("-background", "#FFFFFF")
+            .blur(100,50)
+            .setFormat("png")
+            .toBuffer(function (err, buffer) {
+                if (err) {
+                    cb(err);
+                } else {
+                    cb(null, buffer.toString("base64"));
+                }
+            });
+        } else {
+            cb(Error("No image"));
+        }
     }
 }
 
