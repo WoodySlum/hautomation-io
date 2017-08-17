@@ -78,8 +78,6 @@
     "toposort": "^1.0",
     "gm": "^1.23",
     "prowler": "^0.0",
-    "apiai": "^4.0",
-    "sonus": "^0.1",
     "node-record-lpcm16": "^0.3",
     "waveheader": "^0.0",
     "node-witai-speech": "^1.0",
