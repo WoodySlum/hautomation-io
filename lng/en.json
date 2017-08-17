@@ -1,5 +1,4 @@
 {
-    "apiai.key":"baf7040b04f14689a560b2d8981e763b",
     "datetime.format":"YYYY-MM-DD HH:mm:ss",
     "sensors.statistics.day.dateformat":"HH:mm",
     "sensors.statistics.month.dateformat":"MM-DD",
@@ -7,5 +6,6 @@
     "bot.pmdl": "alfred_fr.pmdl",
     "bot.hotword": "alfred",
     "wit.ai.api.key": "ZJTVGA5WLFLVG5O7R3U7LYHE3SIEBUK4",
-    "wit.ai.service.error":"Je suis désolé, un problème m'a empêché de comprendre ce que vous souhaitiez."
+    "wit.ai.service.error": "Je suis désolé, un problème m'a empêché de comprendre ce que vous souhaitiez.",
+    "bot.misunderstand": "Désolé, je n'ai pas compris votre demande."
 }

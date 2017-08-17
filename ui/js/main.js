@@ -1742,6 +1742,9 @@ $(document).ready(function() {
                         u.volume = 1.0;
                         u.rate = 1.0;
                         fallbackSpeechSynthesis.speak(u);
+                        $("#chatContent").animate({
+                            scrollTop: ($('#chatContent').height() * 1000)
+                        });
                     }).fail(function(msg) {
                         $('#chatLoader').remove();
                         setError(msg);

@@ -1,8 +1,11 @@
 "use strict";
 const Logger = require("./../../logger/Logger");
-const apiai = require("apiai");
 const sha256 = require("sha256");
 const DateUtils = require("./../../utils/DateUtils");
+const DbMessage = require("./../messagemanager/DbMessage");
+
+// Bot actions
+const BotActionDevice = require("./BotActionDevice");
 
 const record = require("node-record-lpcm16");
 const snowboy = require("snowboy");
@@ -10,6 +13,7 @@ const fs = require("fs");
 const header = require("waveheader");
 const stream = require("stream");
 const WitSpeech = require("node-witai-speech");
+const {Wit, log} = require("node-wit");
 const audiohub = require("audiohub");
 const path = require("path");
 const lame = require("lame");
@@ -30,10 +34,15 @@ class BotEngine {
     constructor(translateManager, messageManager, botConfiguration) {
         this.messageManager = messageManager;
         this.translateManager = translateManager;
-        this.apiai = apiai(this.translateManager.t("apiai.key"));
         this.messageManager.register(this);
         this.botConfiguration = botConfiguration;
+
+        // Bot actions
+        this.botActions = {
+            "turnon":new BotActionDevice.class(this.translateManager)
+        }
         this.voiceDetect();
+
     }
 
     playDetectionSound() {
@@ -136,16 +145,38 @@ class BotEngine {
         say.speak(text);
     }
 
+    encodeMp3(stream) {
+        console.log("=====>");
+        var encoder = new lame.Encoder({
+          // input
+          channels: 1,
+          bitDepth: 16,
+          sampleRate: 16000,
+
+          // output
+          bitRate: 128,
+          outSampleRate: 22050,
+          mode: lame.MONO // STEREO (default), JOINTSTEREO, DUALCHANNEL or MONO
+        });
+        let stream2 = stream.pipe(encoder).pipe(fs.createWriteStream("/Users/smizrahi/Desktop/test.mp3"));
+
+        //fs.writeFileSync("/Users/smizrahi/Desktop/test.mp3", stream2);
+    }
+
     speechToText(stream, context) {
         // The content-type for this audio stream (audio/wav, ...)
         const content_type = "audio/wav";
-        fs.writeFileSync("/Users/smizrahi/Desktop/test.wav", stream);
+        this.encodeMp3(stream);
+
+        // fs.writeFileSync("/Users/smizrahi/Desktop/test.wav", stream);
+        //
+        const self = this;
 
         // Its best to return a promise
         const parseSpeech =  new Promise((resolve, reject) => {
             // call the wit.ai api with the created stream
             WitSpeech.extractSpeechIntent(context.translateManager.t("wit.ai.api.key"), stream, content_type,
-            (err, res) => {
+            (res, err) => {
                 Logger.err(err);
                 if (err) return reject(err);
                 resolve(res);
@@ -156,6 +187,7 @@ class BotEngine {
         parseSpeech.then((data) => {
             console.log(data);
             context.textToSpeech(data._text);
+            self.onMessageReceived("seb", {message:data._text}, ()=>{});
         })
         .catch((err) => {
             Logger.err(err);
@@ -173,7 +205,7 @@ class BotEngine {
         const self = this;
         const sessionId = sha256(DateUtils.class.timestamp().toString()).substr(0, 35);
 
-        const request = this.apiai.textRequest(message.message, {
+        /*const request = this.apiai.textRequest(message.message, {
             sessionId: sessionId
         });
 
@@ -188,9 +220,35 @@ class BotEngine {
             if (botCb) botCb();
         });
 
-        request.end();
+        request.end();*/
+
+        const client = new Wit({
+          accessToken: self.translateManager.t("wit.ai.api.key")
+        });
+
+        client.message(message.message, {})
+        .then((data) => {
+            if (data && data.entities) {
+                Object.keys(data.entities).forEach((entityKey) => {
+                    data.entities[entityKey].forEach((entity) => {console.log("=====>");
+                        self.messageManager.sendMessage([message.sender], entity.value);
+                        self.receiveBotAction(message.sender, entityKey, entity.value);
+                    });
+                });
+            }
+          Logger.warn(JSON.stringify(data));
+          if (botCb) botCb();
+        })
+        .catch((err) => {
+            Logger.err(err);
+            if (botCb) botCb();
+        });
     }
 
+    receiveBotAction(user, action, value) {
+        let result = this.botActions(action);
+        self.textToSpeech(result);
+    }
 
 }
 

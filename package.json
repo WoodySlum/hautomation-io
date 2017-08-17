@@ -83,6 +83,7 @@
     "node-record-lpcm16": "^0.3",
     "waveheader": "^0.0",
     "node-witai-speech": "^1.0",
+    "node-wit": "^4.3",
     "underscore": "^1.8",
     "audiohub": "^0.1",
     "say": "^0.11",
