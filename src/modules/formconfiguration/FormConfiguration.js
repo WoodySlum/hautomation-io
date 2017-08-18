@@ -65,11 +65,14 @@ class FormConfiguration {
      * Add additional fields
      *
      * @param {Class} form A form
+     * @param {string} title The form title
+     * @param  {...Object} inject Parameters injection on static methods
      */
-    addAdditionalFields(form) {
+    addAdditionalFields(form, title, ...inject) {
         if (this.additionalFields.indexOf(form) === -1 && this.formClass) {
+            this.formManager.register(form, ...inject);
             this.additionalFields.push(form);
-            this.formManager.addAdditionalFields(this.formClass, this.additionalFields);
+            this.formManager.addAdditionalFields(this.formClass, title, [form]);
         }
     }
 
@@ -185,6 +188,23 @@ class FormConfiguration {
             return new Promise((resolve, reject) => {
                 reject(new APIResponse.class(false, {}, 801, "No form defined"));
             });
+        }
+    }
+
+    /**
+     * Returns a copy of the data object
+     *
+     * @returns {Array|Object} A copy of data
+     */
+    getDataCopy() {
+        if (this.data instanceof Array) {
+            const data = [];
+            this.data.forEach((d) => {
+                data.push(Object.assign({}, d));
+            });
+            return data;
+        } else {
+            return Object.assign({}, this.data);
         }
     }
 

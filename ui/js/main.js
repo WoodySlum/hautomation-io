@@ -388,7 +388,7 @@ $(document).ready(function() {
 
     var start = function() {
         getDashboard();
-        getSettings();
+        //getSettings();
         //getCameras();
         getFullObjects();
     }
@@ -2894,7 +2894,7 @@ $(document).ready(function() {
         });
     }
 
-    $("#manageActionsItem").click(function() {
+    /*$("#manageActionsItem").click(function() {
         $("#actionTable").show();
         $("#addActionForm").empty();
         $("#actionsLoader").show();
@@ -2967,10 +2967,10 @@ $(document).ready(function() {
                     });
                 });
             }
-            $("#addManageAction").unbind();
-            $("#addManageAction").click(function() {
-                manageActionForm(null, null);
-            });
+            // $("#addManageAction").unbind();
+            // $("#addManageAction").click(function() {
+            //     manageActionForm(null, null);
+            // });
             $("#actionsLoader").hide();
             hideLoader();
         }).fail(function(msg) {
@@ -2979,7 +2979,7 @@ $(document).ready(function() {
             manageActionForm(null, null);
             $("#actionsLoader").hide();
         });
-    });
+    });*/
 
     var manageActionForm = function(obj, key) {
         showLoader();

@@ -2,6 +2,7 @@
 "use strict";
 const Logger = require("./../../logger/Logger");
 const RadioForm = require("./RadioForm");
+const RadioScenarioForm = require("./RadioScenarioForm");
 const PluginsManager = require("./../pluginsmanager/PluginsManager");
 
 /**
@@ -15,11 +16,13 @@ class RadioManager {
      * @param  {PluginManager} pluginsManager A plugin manager instance
      * @param  {FormManager} formManager    A form manager
      * @param  {EventEmitter} eventBus    The global event bus
+     * @param  {ScenarioManager} scenarioManager    The scenario manager
      * @returns {RadioManager}                The instance
      */
-    constructor(pluginsManager, formManager, eventBus) {
+    constructor(pluginsManager, formManager, eventBus, scenarioManager) {
         this.pluginsManager = pluginsManager;
         this.formManager = formManager;
+        this.scenarioManager = scenarioManager;
 
         this.modules = [];
         this.protocols = [];
@@ -43,6 +46,7 @@ class RadioManager {
         context.getProtocols();
         context.registerRadioEvents();
         context.formManager.register(RadioForm.class, context.modules, context.protocols);
+        context.scenarioManager.register(RadioScenarioForm.class, null, "radio.scenario.form.trigger");
     }
 
     /**
@@ -76,6 +80,23 @@ class RadioManager {
      * @param  {DbRadio} radioObject A radio object
      */
     onRadioEvent(radioObject) {
+        // Trigger scenarios
+        this.scenarioManager.getScenarios().forEach((scenario) => {
+            if (scenario.RadioScenarioForm.radio) {
+                if (scenario.RadioScenarioForm.radio.module === radioObject.module
+                    && scenario.RadioScenarioForm.radio.module === radioObject.module
+                    && scenario.RadioScenarioForm.radio.protocol === radioObject.protocol
+                    && scenario.RadioScenarioForm.radio.deviceId === radioObject.deviceId
+                    && scenario.RadioScenarioForm.radio.switchId === radioObject.switchId
+                    && ((parseFloat(scenario.RadioScenarioForm.status) === parseFloat(RadioScenarioForm.STATUS_ALL)) || (parseFloat(scenario.RadioScenarioForm.status) === parseFloat(radioObject.status)))
+                ) {
+                    this.scenarioManager.triggerScenario(scenario);
+                }
+            }
+
+        });
+
+        // Update protocols
         if (this.protocols.indexOf(radioObject.protocol) === -1) {
             this.getProtocols();
         }

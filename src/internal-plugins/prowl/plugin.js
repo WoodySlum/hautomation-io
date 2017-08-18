@@ -69,7 +69,7 @@ function loaded(api) {
             this.api.userAPI.getUsers().forEach((user) => {
                 if (recipients === "*" || (recipients instanceof Array && recipients.indexOf(user.username) !== -1)) {
                     try {
-                        var notification = new Prowler.connection(user.prowlApiKey);
+                        var notification = new Prowler.connection(user.ProwlForm.prowlApiKey);
                         // let actionprefixed = "hautomation://";
                         // if (action) {
                         //     actionprefixed += action;

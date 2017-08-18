@@ -56,16 +56,17 @@ class FormManager {
      * Add additional fields to a form base
      *
      * @param {Class} formBase The base form
+     * @param {string} title The form title
      * @param {Array} forms    An array of forms
      */
-    addAdditionalFields(formBase, forms) {
-
-        let additionalProperties = {};
+    addAdditionalFields(formBase, title, forms) {
+        const additionalProperties = this.registeredForms[formBase.name].additionalFields;
         forms.forEach((form) => {
-            Annotation(form.toString(), function(AnnotationReader) {
-                additionalProperties = Object.assign(additionalProperties, AnnotationReader.comments.properties);
-
-            });
+            additionalProperties[form.name] = [
+                    {key:"Type", value:"object"},
+                    {key:"Cl", value:form.name},
+                    {key:"Title", value:title}
+            ];
         });
         this.registeredForms[formBase.name].additionalFields = additionalProperties;
     }
@@ -217,7 +218,6 @@ class FormManager {
         Annotation(c, function(AnnotationReader) {
             const properties = Object.assign(AnnotationReader.comments.properties, additionalFields);
             Object.keys(properties).forEach((prop) => {
-
                 const meta = Convert.class.convertProperties(properties[prop]);
                 if (meta.Type) {
                     const type = meta.Type.toLowerCase();
@@ -273,6 +273,8 @@ class FormManager {
                             } else {
                                 schema.properties[prop].title = self.translateManager.t(meta.Title);
                             }
+                        } else {
+                            schema.properties[prop].title = null;
                         }
 
                         // Required

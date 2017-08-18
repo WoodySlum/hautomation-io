@@ -23,9 +23,10 @@ class UserAPI {
      * Add additional fields to user registration
      *
      * @param {FormObject} form A form object
+     * @param  {...Object} inject Parameters injection on static methods
      */
-    addAdditionalFields(form) {
-        PrivateProperties.oprivate(this).userManager.formConfiguration.addAdditionalFields(form);
+    addAdditionalFields(form, ...inject) {
+        PrivateProperties.oprivate(this).userManager.formConfiguration.addAdditionalFields(form, null, ...inject);
     }
 
     /**
