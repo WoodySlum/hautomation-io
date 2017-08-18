@@ -1,30 +1,31 @@
 "use strict";
-var fs = require("fs");
-var path = require("path");
-var Logger = require("./logger/Logger");
-var HautomationRunnerConstants = require("./../HautomationRunnerConstants");
-var ServicesManager = require("./modules/servicesmanager/ServicesManager");
-var ThreadsManager = require("./modules/threadsmanager/ThreadsManager");
-var WebServices = require("./services/webservices/WebServices");
-var TimeEventService = require("./services/timeeventservice/TimeEventService");
-var SchedulerService = require("./services/schedulerservice/SchedulerService");
-var Authentication = require("./modules/authentication/Authentication");
-var ConfManager = require("./modules/confmanager/ConfManager");
-var UserManager = require("./modules/usermanager/UserManager");
-var AlarmManager = require("./modules/alarmmanager/AlarmManager");
-var PluginsManager = require("./modules/pluginsmanager/PluginsManager");
-var RadioManager = require("./modules/radiomanager/RadioManager");
-var DeviceManager = require("./modules/devicemanager/DeviceManager");
-var DbManager = require("./modules/dbmanager/DbManager");
-var TranslateManager = require("./modules/translatemanager/TranslateManager");
-var FormManager = require("./modules/formmanager/FormManager");
-var IconFormManager = require("./forms/IconFormManager");
-var DashboardManager = require("./modules/dashboardmanager/DashboardManager");
-var ThemeManager = require("./modules/thememanager/ThemeManager");
-var SensorsManager = require("./modules/sensorsmanager/SensorsManager");
-var InstallationManager = require("./modules/installationmanager/InstallationManager");
-var CoreInstaller = require("./../installer/CoreInstaller");
-var MessageManager = require("./modules/messagemanager/MessageManager");
+const fs = require("fs");
+const path = require("path");
+const Logger = require("./logger/Logger");
+const HautomationRunnerConstants = require("./../HautomationRunnerConstants");
+const ServicesManager = require("./modules/servicesmanager/ServicesManager");
+const ThreadsManager = require("./modules/threadsmanager/ThreadsManager");
+const WebServices = require("./services/webservices/WebServices");
+const TimeEventService = require("./services/timeeventservice/TimeEventService");
+const SchedulerService = require("./services/schedulerservice/SchedulerService");
+const Authentication = require("./modules/authentication/Authentication");
+const ConfManager = require("./modules/confmanager/ConfManager");
+const UserManager = require("./modules/usermanager/UserManager");
+const AlarmManager = require("./modules/alarmmanager/AlarmManager");
+const PluginsManager = require("./modules/pluginsmanager/PluginsManager");
+const RadioManager = require("./modules/radiomanager/RadioManager");
+const DeviceManager = require("./modules/devicemanager/DeviceManager");
+const DbManager = require("./modules/dbmanager/DbManager");
+const TranslateManager = require("./modules/translatemanager/TranslateManager");
+const FormManager = require("./modules/formmanager/FormManager");
+const IconFormManager = require("./forms/IconFormManager");
+const DashboardManager = require("./modules/dashboardmanager/DashboardManager");
+const ThemeManager = require("./modules/thememanager/ThemeManager");
+const SensorsManager = require("./modules/sensorsmanager/SensorsManager");
+const InstallationManager = require("./modules/installationmanager/InstallationManager");
+const CoreInstaller = require("./../installer/CoreInstaller");
+const MessageManager = require("./modules/messagemanager/MessageManager");
+const ScenarioManager = require("./modules/scenariomanager/ScenarioManager");
 
 const CONFIGURATION_FILE = "data/config.json";
 var AppConfiguration = require("./../data/config.json");
@@ -103,8 +104,10 @@ class HautomationCore {
 
         // Alarm module
         this.alarmManager = new AlarmManager.class(this.confManager, this.webServices);
+        // Scenario manager
+        this.scenarioManager = new ScenarioManager.class(this.confManager, this.formManager, this.webServices, this.timeEventService);
         // RadioManager. The plugins manager will be set later, when the pluginsLoaded event will be triggered
-        this.radioManager = new RadioManager.class(this.pluginsManager, this.formManager, this.eventBus);
+        this.radioManager = new RadioManager.class(this.pluginsManager, this.formManager, this.eventBus, this.scenarioManager, this.webServices, this.translateManager);
         // Sensors manager module
         this.sensorsManager = new SensorsManager.class(this.pluginsManager, this.eventBus, this.webServices, this.formManager, this.confManager, this.translateManager, this.themeManager);
         // Dashboard manager
@@ -120,7 +123,7 @@ class HautomationCore {
         // Plugins manager module
         this.pluginsManager = new PluginsManager.class(this.confManager, this.webServices, this.servicesManager, this.dbManager, this.translateManager, this.formManager, this.timeEventService, this.schedulerService, this.dashboardManager, this.eventBus, this.themeManager, this.sensorsManager, this.installationManager, this.userManager, this.messageManager);
         // Device manager module
-        this.deviceManager = new DeviceManager.class(this.confManager, this.formManager, this.webServices, this.radioManager, this.dashboardManager);
+        this.deviceManager = new DeviceManager.class(this.confManager, this.formManager, this.webServices, this.radioManager, this.dashboardManager, this.scenarioManager, this.translateManager);
 
         // Add services to manager
         this.servicesManager.add(this.webServices);

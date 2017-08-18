@@ -11,6 +11,9 @@ let radioManager = core.radioManager;
 const formManager = core.formManager;
 const eventBus = core.eventBus;
 const pluginsManager = core.pluginsManager;
+const scenarioManager = core.scenarioManager;
+const webServices = core.webServices;
+const translateManager = core.translateManager;
 const sampleRadioPluginIdentifier = "rflink";
 
 describe("RadioManager", function() {
@@ -23,7 +26,7 @@ describe("RadioManager", function() {
         sinon.spy(RadioManager.class.prototype, "getProtocols");
         sinon.spy(RadioManager.class.prototype, "registerRadioEvents");
         sinon.spy(core.formManager, "register");
-        radioManager = new RadioManager.class(pluginsManager, formManager, eventBus);
+        radioManager = new RadioManager.class(pluginsManager, formManager, eventBus, scenarioManager, webServices, translateManager);
         radioManager.pluginsLoaded(pluginsManager, radioManager);
         expect(RadioManager.class.prototype.getModules.calledOnce).to.be.true;
         expect(RadioManager.class.prototype.getProtocols.calledOnce).to.be.true;

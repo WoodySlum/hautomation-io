@@ -165,4 +165,5 @@ function adminFormReady() {
 
     adminForm("devices");
     adminForm("users");
+    adminForm("scenarios");
 }

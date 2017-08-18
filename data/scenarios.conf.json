@@ -1,0 +1,1 @@
+[{"id":1503066184108,"name":"Test time","icon":{},"timeTrigger":[{"day":5,"time":"17:05"}],"RadioScenarioForm":{"radio":{}},"DevicesListScenarioForm":{"turnOnAll":true,"devices":[{"identifier":1981,"status":"on"}]}}]

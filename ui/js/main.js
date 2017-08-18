@@ -388,7 +388,7 @@ $(document).ready(function() {
 
     var start = function() {
         getDashboard();
-        getSettings();
+        //getSettings();
         //getCameras();
         getFullObjects();
     }
@@ -2894,7 +2894,7 @@ $(document).ready(function() {
         });
     }
 
-    $("#manageActionsItem").click(function() {
+    /*$("#manageActionsItem").click(function() {
         $("#actionTable").show();
         $("#addActionForm").empty();
         $("#actionsLoader").show();
@@ -2967,10 +2967,10 @@ $(document).ready(function() {
                     });
                 });
             }
-            $("#addManageAction").unbind();
-            $("#addManageAction").click(function() {
-                manageActionForm(null, null);
-            });
+            // $("#addManageAction").unbind();
+            // $("#addManageAction").click(function() {
+            //     manageActionForm(null, null);
+            // });
             $("#actionsLoader").hide();
             hideLoader();
         }).fail(function(msg) {
@@ -2979,7 +2979,7 @@ $(document).ready(function() {
             manageActionForm(null, null);
             $("#actionsLoader").hide();
         });
-    });
+    });*/
 
     var manageActionForm = function(obj, key) {
         showLoader();
@@ -3391,15 +3391,14 @@ $(document).ready(function() {
         $("#radioLoader").show();
         showLoader();
         $.ajax({
-            type: "POST",
-            url: vUrl,
+            type: "GET",
+            url: vUrl + "radio/get/",
             data: {
-                username: username,
-                ePassword: ePassword,
-                method: "getRadioInfoList"
+                u: username,
+                p: password
             }
         }).done(function(msg) {
-            var jsonData = JSON.parse(msg);
+            var jsonData = msg;
             if (jsonData) {
                 radioInfoListTable = $("#radioSignalTable");
                 radioInfoListTable.empty();
@@ -3409,14 +3408,14 @@ $(document).ready(function() {
                     var radioSignal = jsonData[i];
                     consolelog(radioSignal);
                     if (radioSignal.state != null) {
-                        if ((radioSignal.state == 0) || (radioSignal.state == 1)) {
-                            if (radioSignal.state) {
+                        if ((radioSignal.state == -1) || (radioSignal.state == 1)) {
+                            if (radioSignal.state === 1) {
                                 status = "<span class=\"label label-success\">" + t('js.on', null) + "</span>";
                             } else {
                                 status = "<span class=\"label label-danger\">" + t('js.off', null) + "</span>";
                             }
                         } else {
-                            status = "<span class=\"label label-info\">" + radioSignal.state + "</span>";
+                            status = "<span class=\"label label-info\">" + radioSignal.value + "</span>";
                         }
                     } else {
                         status = "";
@@ -3434,19 +3433,19 @@ $(document).ready(function() {
                         description = "";
                     }
 
-                    if (radioSignal.code != null) {
-                        code = String(radioSignal.code);
+                    if (radioSignal.deviceId != null) {
+                        code = String(radioSignal.deviceId);
                     } else {
                         code = "";
                     }
 
-                    if (radioSignal.subcode != null) {
-                        subcode = String(radioSignal.subcode);
+                    if (radioSignal.switchId != null) {
+                        subcode = String(radioSignal.switchId);
                     } else {
                         subcode = "";
                     }
 
-                    radioInfoListTable.append("<tr class=\"left\"><td>" + radioSignal.date + "</td><td>" + radioSignal.protocolLabel + "</td><td>" + code + "</td><td>" + subcode + "</td><td>" + status + "</td><td>" + found + " " + description + "</td><td class=\"center\"><button type=\"button\" class=\"assignToAction btn btn-primary btn-xs\" id=\"assignToAction-" + j + "\">" + t('js.assign.to.action', null) + "</button> <button type=\"button\" class=\"assignToDevice btn btn-primary btn-xs\" id=\"assignToDevice-" + j + "\">" + t('js.assign.to.device', null) + "</button> <button type=\"button\" class=\"radioTest btn btn-primary btn-xs\" id=\"radioTest-" + j + "\">" + t('js.test', null) + "</button></td></tr>");
+                    radioInfoListTable.append("<tr class=\"left\"><td>" + radioSignal.date + "</td><td>" + radioSignal.protocol + "</td><td>" + code + "</td><td>" + subcode + "</td><td>" + status + "</td><td>" + found + " " + description + "</td><td class=\"center\"><button type=\"button\" class=\"assignToAction btn btn-primary btn-xs\" id=\"assignToAction-" + j + "\">" + t('js.assign.to.action', null) + "</button> <button type=\"button\" class=\"assignToDevice btn btn-primary btn-xs\" id=\"assignToDevice-" + j + "\">" + t('js.assign.to.device', null) + "</button> <button type=\"button\" class=\"radioTest btn btn-primary btn-xs\" id=\"radioTest-" + j + "\">" + t('js.test', null) + "</button></td></tr>");
                     j++;
                 }
             }

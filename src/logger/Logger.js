@@ -4,6 +4,7 @@ const stackTrace = require("stack-trace");
 const dateTime = require("node-datetime");
 const columnify = require("columnify");
 const disableLog = parseInt(process.env.NO_LOG);
+const logLevel = 3;
 
 const enableLogLevel = true;
 const enableFileName = true;
@@ -93,7 +94,9 @@ class Logger {
             }
             //logLineConfig.config.lineNumber = {maxWidth: 50};
 
-            console.log(columnify([logLine], logLineConfig));
+            if (level <= logLevel) {
+                console.log(columnify([logLine], logLineConfig));
+            }
         }
     }
 
