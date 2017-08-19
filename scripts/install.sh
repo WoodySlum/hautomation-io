@@ -27,9 +27,9 @@ sudo systemctl stop hautomation
 sudo cp -f ./hautomation.service /etc/systemd/system
 sudo systemctl daemon-reload
 sudo rm -Rf /tmp/saved-data
-sudo mv "$INSTALLATION_FOLDERdata" /tmp/saved-data
+sudo mv "$INSTALLATION_FOLDER/data" /tmp/saved-data
 sudo cp -Rf ../* $INSTALLATION_FOLDER
-sudo cp -Rf /tmp/saved-data/data $INSTALLATION_FOLDER
+sudo cp -Rf /tmp/saved-data $INSTALLATION_FOLDER/data
 sudo chown -R $USER:$GROUP $INSTALLATION_FOLDER
 sudo chmod -R 0660 $INSTALLATION_FOLDER
 sudo chmod +x ${INSTALLATION_FOLDER}hautomation
