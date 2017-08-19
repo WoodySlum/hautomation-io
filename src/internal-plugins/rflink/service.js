@@ -314,6 +314,7 @@ function loaded(api) {
 
                 } else {
                     Logger.warn("Invalid number of lines in telegram (" + telegram.length + ")");
+                    return null;
                 }
             };
 
@@ -329,7 +330,10 @@ function loaded(api) {
 
                 sclient.on("data", function(line) {
                     Logger.verbose("Received RFLink data : " + line);
-                    send(processData(line));
+                    const d = processData(line);
+                    if (d) {
+                        send(processData(line));
+                    }
                 });
 
                 sclient.on("open", function() {

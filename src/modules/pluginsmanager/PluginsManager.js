@@ -264,7 +264,7 @@ class PluginsManager {
                 // Reload exported
                 classes = plugin.exported;
             } catch(e) {
-                Logger.err("Plugin " + plugin.identifier + " crashed");
+                Logger.err("Plugin " + plugin.identifier + " crashed : " + e.message);
             }
         });
     }

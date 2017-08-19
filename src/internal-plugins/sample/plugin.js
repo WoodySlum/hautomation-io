@@ -41,8 +41,6 @@ function loaded(api) {
             // setTimeout((api) => {
             //     api.messageAPI.sendMessage(["seb"], "Hey !");
             // }, 2000, this.api);
-            var a = null;
-            a[12];
         }
 
         /**
