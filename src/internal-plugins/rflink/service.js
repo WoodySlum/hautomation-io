@@ -351,7 +351,7 @@ function loaded(api) {
             // Logger.warn(JSON.stringify(processData("20;01;Blyss;ID=6968;SWITCH=C4;CMD=ON;")));
             //send(processData("20;01;Blyss;ID=6968;SWITCH=C4;CMD=ON;"));
             //send(processData("20;03;Cresta;ID=8301;WINDIR=0005;WINSP=0000;WINGS=0000;WINTMP=00c3;WINCHL=00c3;BAT=LOW;"));
-            send(processData("06;CMD=ON;"));
+            //send(processData("06;CMD=ON;"));
             //Logger.warn(JSON.stringify(processData("20;03;Cresta;ID=8301;WINDIR=0005;WINSP=0000;WINGS=0000;WINTMP=00c3;WINCHL=00c3;BAT=LOW;")));
             // 20;00;Nodo RadioFrequencyLink - RFLink Gateway V1.1 - R46;
             // 20;01;Blyss;ID=6968;SWITCH=C4;CMD=ON;
