@@ -49,7 +49,7 @@ function loaded(api) {
                     name,
                     value;
 
-                if(telegram.length > 0) {
+                if(telegram && telegram.length > 1) {
                     var tg = telegram.split(";");
 
                     rfdata.timestamp = Math.round(new Date().getTime()/1000).toString();
@@ -332,7 +332,7 @@ function loaded(api) {
                     Logger.verbose("Received RFLink data : " + line);
                     const d = processData(line);
                     if (d) {
-                        send(processData(line));
+                        send(d);
                     }
                 });
 
