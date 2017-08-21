@@ -47,6 +47,11 @@ class DeviceManager {
         this.registerDeviceTiles();
         this.registerDeviceListForm();
 
+        // Register to form configuration callback
+        this.formConfiguration.setUpdateCb(() => {
+            this.registerDeviceListForm();
+        });
+
         const self = this;
         this.scenarioManager.register(DevicesListScenarioForm.class, (scenario) => {
             self.triggerScenario(scenario, self);
@@ -132,7 +137,7 @@ class DeviceManager {
             status = Radio.STATUS_OFF;
         }
 
-        this.formConfiguration.data.forEach((device) => {
+        this.formConfiguration.getDataCopy().forEach((device) => {
             if (parseInt(device.id) === parseInt(id)) {
                 let newStatus = null;
                 device.radio.forEach((radio) => {

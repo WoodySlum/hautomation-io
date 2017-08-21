@@ -105,7 +105,7 @@ class HautomationCore {
         // Alarm module
         this.alarmManager = new AlarmManager.class(this.confManager, this.webServices);
         // Scenario manager
-        this.scenarioManager = new ScenarioManager.class(this.confManager, this.formManager, this.webServices, this.timeEventService);
+        this.scenarioManager = new ScenarioManager.class(this.confManager, this.formManager, this.webServices, this.timeEventService, this.schedulerService);
         // RadioManager. The plugins manager will be set later, when the pluginsLoaded event will be triggered
         this.radioManager = new RadioManager.class(this.pluginsManager, this.formManager, this.eventBus, this.scenarioManager, this.webServices, this.translateManager);
         // Sensors manager module
@@ -139,6 +139,16 @@ class HautomationCore {
         if (!process.env.TEST) {
             CoreInstaller.install(this.installationManager);
         }
+
+        setTimeout((self) => {
+            self.radioManager.onRadioEvent({
+                module:"rflink",
+                protocol:"eb1527",
+                deviceId:"200",
+                switchId:"1",
+                status:1
+            });
+        }, 5000, this);
     }
 
     /**

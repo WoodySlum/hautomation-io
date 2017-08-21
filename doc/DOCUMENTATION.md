@@ -264,6 +264,7 @@
     -   [json](#json-11)
 -   [FormConfiguration](#formconfiguration)
     -   [constructor](#constructor-37)
+    -   [setUpdateCb](#setupdatecb)
     -   [addAdditionalFields](#addadditionalfields)
     -   [loadConfig](#loadconfig)
     -   [saveConfig](#saveconfig)
@@ -427,28 +428,36 @@
     -   [enabled](#enabled)
     -   [icon](#icon-2)
     -   [timeTrigger](#timetrigger)
+    -   [subActions](#subactions)
     -   [json](#json-17)
 -   [ScenarioManager](#scenariomanager)
     -   [constructor](#constructor-50)
+    -   [registerScenariosListForm](#registerscenarioslistform)
     -   [generateKey](#generatekey)
     -   [register](#register-12)
     -   [unregister](#unregister-7)
     -   [triggerScenario](#triggerscenario-2)
     -   [getScenarios](#getscenarios-1)
     -   [timeEventScenario](#timeeventscenario)
--   [TimeScenarioForm](#timescenarioform)
+-   [ScenariosListForm](#scenarioslistform)
     -   [constructor](#constructor-51)
+    -   [identifier](#identifier-1)
+    -   [json](#json-18)
+    -   [getScenariosName](#getscenariosname)
+    -   [getScenariosId](#getscenariosid)
+-   [TimeScenarioForm](#timescenarioform)
+    -   [constructor](#constructor-52)
     -   [day](#day)
     -   [time](#time)
-    -   [json](#json-18)
--   [SensorsForm](#sensorsform)
-    -   [constructor](#constructor-52)
-    -   [sensorId](#sensorid-1)
     -   [json](#json-19)
+-   [SensorsForm](#sensorsform)
+    -   [constructor](#constructor-53)
+    -   [sensorId](#sensorid-1)
+    -   [json](#json-20)
     -   [getSensorIds](#getsensorids)
     -   [getSensorNames](#getsensornames)
 -   [SensorsManager](#sensorsmanager)
-    -   [constructor](#constructor-53)
+    -   [constructor](#constructor-54)
     -   [pluginsLoaded](#pluginsloaded-1)
     -   [initSensors](#initsensors)
     -   [initSensor](#initsensor)
@@ -461,7 +470,7 @@
     -   [statisticsWsResponse](#statisticswsresponse)
     -   [comparator](#comparator-1)
 -   [ServicesManager](#servicesmanager)
-    -   [constructor](#constructor-54)
+    -   [constructor](#constructor-55)
     -   [isServiceRegistered](#isserviceregistered)
     -   [add](#add-1)
     -   [remove](#remove-1)
@@ -470,10 +479,10 @@
     -   [restart](#restart-2)
     -   [getService](#getservice)
 -   [ThemeManager](#thememanager)
-    -   [constructor](#constructor-55)
+    -   [constructor](#constructor-56)
     -   [getColors](#getcolors-1)
 -   [ThreadsManager](#threadsmanager)
-    -   [constructor](#constructor-56)
+    -   [constructor](#constructor-57)
     -   [stringifyFunc](#stringifyfunc)
     -   [run](#run-1)
     -   [send](#send)
@@ -481,32 +490,32 @@
     -   [getPid](#getpid)
     -   [isRunning](#isrunning)
 -   [TranslateManager](#translatemanager)
-    -   [constructor](#constructor-57)
+    -   [constructor](#constructor-58)
     -   [addTranslations](#addtranslations)
     -   [t](#t-1)
     -   [translateArray](#translatearray)
 -   [UserForm](#userform)
-    -   [constructor](#constructor-58)
+    -   [constructor](#constructor-59)
     -   [username](#username-1)
     -   [password](#password)
     -   [level](#level-1)
     -   [name](#name-3)
     -   [picture](#picture-1)
     -   [atHome](#athome)
-    -   [json](#json-20)
+    -   [json](#json-21)
 -   [UserManager](#usermanager)
-    -   [constructor](#constructor-59)
+    -   [constructor](#constructor-60)
     -   [updateTile](#updatetile-1)
     -   [getUsers](#getusers-1)
     -   [getUser](#getuser)
     -   [getAdminUser](#getadminuser)
 -   [SchedulerDbObject](#schedulerdbobject)
-    -   [constructor](#constructor-60)
--   [identifier](#identifier-1)
+    -   [constructor](#constructor-61)
+-   [identifier](#identifier-2)
 -   [data](#data)
 -   [triggerDate](#triggerdate)
 -   [SchedulerService](#schedulerservice)
-    -   [constructor](#constructor-61)
+    -   [constructor](#constructor-62)
     -   [start](#start-2)
     -   [stop](#stop-2)
     -   [register](#register-13)
@@ -514,7 +523,7 @@
     -   [schedule](#schedule-1)
     -   [timeEvent](#timeevent)
 -   [Service](#service)
-    -   [constructor](#constructor-62)
+    -   [constructor](#constructor-63)
     -   [start](#start-3)
     -   [run](#run-2)
     -   [threadCallback](#threadcallback-1)
@@ -530,7 +539,7 @@
     -   [unregister](#unregister-9)
     -   [setThreadsManager](#setthreadsmanager)
 -   [TimeEventService](#timeeventservice)
-    -   [constructor](#constructor-63)
+    -   [constructor](#constructor-64)
     -   [start](#start-4)
     -   [stop](#stop-4)
     -   [hash](#hash)
@@ -540,14 +549,14 @@
     -   [convertMode](#convertmode)
     -   [timeEvent](#timeevent-1)
 -   [APIRegistration](#apiregistration)
-    -   [constructor](#constructor-64)
+    -   [constructor](#constructor-65)
     -   [delegate](#delegate)
     -   [method](#method)
     -   [route](#route)
     -   [authLevel](#authlevel)
     -   [isEqual](#isequal)
 -   [APIRequest](#apirequest)
-    -   [constructor](#constructor-65)
+    -   [constructor](#constructor-66)
     -   [method](#method-1)
     -   [ip](#ip)
     -   [route](#route-1)
@@ -558,13 +567,13 @@
     -   [authenticationData](#authenticationdata-1)
     -   [addAuthenticationData](#addauthenticationdata)
 -   [APIResponse](#apiresponse-1)
-    -   [constructor](#constructor-66)
+    -   [constructor](#constructor-67)
     -   [success](#success)
     -   [response](#response)
     -   [errorCode](#errorcode)
     -   [errorMessage](#errormessage)
 -   [WebServices](#webservices)
-    -   [constructor](#constructor-67)
+    -   [constructor](#constructor-68)
     -   [start](#start-5)
     -   [stop](#stop-5)
     -   [registerInfos](#registerinfos)
@@ -2991,6 +3000,14 @@ Constructor
 
 Returns **[FormConfiguration](#formconfiguration)** The instance
 
+### setUpdateCb
+
+Set the update callback. Called back when delete or save action is done.
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback with data as parameter, e.g. `cb(data) => {}`
+
 ### addAdditionalFields
 
 Add additional fields
@@ -4425,6 +4442,8 @@ Returns **[ScenarioForm](#scenarioform)** The instance
 
 ### timeTrigger
 
+### subActions
+
 ### json
 
 Convert json data
@@ -4458,6 +4477,10 @@ Constructor
 -   `timeEventService` **[TimeEventService](#timeeventservice)** The time event service
 
 Returns **[ScenarioManager](#scenariomanager)** The instance
+
+### registerScenariosListForm
+
+Register a scenario list form
 
 ### generateKey
 
@@ -4510,6 +4533,60 @@ Time event scenario, called every minutes
 **Parameters**
 
 -   `context` **[ScenarioManager](#scenariomanager)** The instance (self, this, ...)
+
+## ScenariosListForm
+
+**Extends FormObject.class**
+
+This class provides the list of scenarios
+
+**Parameters**
+
+-   `id`   (optional, default `null`)
+-   `identifier`   (optional, default `null`)
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `id` **[number](#number)** An identifier (optional, default `null`)
+-   `identifier` **[number](#number)** The scenario identifier (optional, default `null`)
+
+Returns **[ScenariosListForm](#scenarioslistform)** The instance
+
+### identifier
+
+### json
+
+Convert json data
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some key / value data
+
+Returns **[ScenariosListForm](#scenarioslistform)** A form object
+
+### getScenariosName
+
+Form injection method for Scenarios name
+
+**Parameters**
+
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The modules list array
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of devices name
+
+### getScenariosId
+
+Form injection method for Scenarios ids
+
+**Parameters**
+
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The modules list array
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of devices id
 
 ## TimeScenarioForm
 

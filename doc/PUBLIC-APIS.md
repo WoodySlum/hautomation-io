@@ -8,6 +8,7 @@
     -   [getForm](#getform)
 -   [FormConfiguration](#formconfiguration)
     -   [constructor](#constructor)
+    -   [setUpdateCb](#setupdatecb)
     -   [addAdditionalFields](#addadditionalfields)
     -   [loadConfig](#loadconfig)
     -   [saveConfig](#saveconfig)
@@ -285,6 +286,14 @@ Constructor
 -   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Parameters injection on static methods
 
 Returns **[FormConfiguration](#formconfiguration)** The instance
+
+### setUpdateCb
+
+Set the update callback. Called back when delete or save action is done.
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback with data as parameter, e.g. `cb(data) => {}`
 
 ### addAdditionalFields
 
