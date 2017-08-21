@@ -3,6 +3,7 @@
 const Logger = require("./../../logger/Logger");
 const RadioForm = require("./RadioForm");
 const RadioScenarioForm = require("./RadioScenarioForm");
+const RadioScenariosForm = require("./RadioScenariosForm");
 const PluginsManager = require("./../pluginsmanager/PluginsManager");
 const WebServices = require("./../../services/webservices/WebServices");
 const Authentication = require("./../authentication/Authentication");
@@ -59,7 +60,8 @@ class RadioManager {
         context.getProtocols();
         context.registerRadioEvents();
         context.formManager.register(RadioForm.class, context.modules, context.protocols);
-        context.scenarioManager.register(RadioScenarioForm.class, null, "radio.scenario.form.trigger");
+        context.formManager.register(RadioScenarioForm.class);
+        context.scenarioManager.register(RadioScenariosForm.class, null, "radio.scenario.form.trigger");
     }
 
     /**
@@ -95,18 +97,30 @@ class RadioManager {
     onRadioEvent(radioObject) {
         // Trigger scenarios
         this.scenarioManager.getScenarios().forEach((scenario) => {
-            if (scenario.RadioScenarioForm.radio) {
-                if (scenario.RadioScenarioForm.radio.module === radioObject.module
-                    && scenario.RadioScenarioForm.radio.module === radioObject.module
-                    && scenario.RadioScenarioForm.radio.protocol === radioObject.protocol
-                    && scenario.RadioScenarioForm.radio.deviceId === radioObject.deviceId
-                    && scenario.RadioScenarioForm.radio.switchId === radioObject.switchId
-                    && ((parseFloat(scenario.RadioScenarioForm.status) === parseFloat(RadioScenarioForm.STATUS_ALL)) || (parseFloat(scenario.RadioScenarioForm.status) === parseFloat(radioObject.status)))
-                ) {
-                    this.scenarioManager.triggerScenario(scenario);
+
+            if (scenario.RadioScenariosForm) {
+                if (scenario.RadioScenariosForm.radioScenariosForm) {
+                    let shouldExecuteAction = false;
+                    scenario.RadioScenariosForm.radioScenariosForm.forEach((radioScenarioForm) => {
+                        if (radioScenarioForm.radio) {
+                            if (radioScenarioForm.radio.module === radioObject.module
+                                && radioScenarioForm.radio.module === radioObject.module
+                                && radioScenarioForm.radio.protocol === radioObject.protocol
+                                && radioScenarioForm.radio.deviceId === radioObject.deviceId
+                                && radioScenarioForm.radio.switchId === radioObject.switchId
+                                && ((parseFloat(radioScenarioForm.status) === parseFloat(RadioScenarioForm.STATUS_ALL)) || (parseFloat(radioScenarioForm.status) === parseFloat(radioObject.status)))
+                            ) {
+                                shouldExecuteAction = true;
+                            }
+                        }
+                    });
+
+                    if (shouldExecuteAction) {
+                        this.scenarioManager.triggerScenario(scenario);
+                    }
+
                 }
             }
-
         });
 
         // Update protocols

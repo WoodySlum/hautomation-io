@@ -62,9 +62,10 @@ class PluginsManager {
      * @param {InstallationManager} installationManager  The installation manager
      * @param {UserManager} userManager  The user manager
      * @param {MessageManager} messageManager  The message manager
+     * @param  {ScenarioManager} scenarioManager The scenario manager
      * @returns {PluginsManager} The instance
      */
-    constructor(confManager, webServices, servicesManager, dbManager, translateManager, formManager, timeEventService, schedulerService, dashboardManager, eventBus, themeManager, sensorsManager, installationManager, userManager, messageManager) {
+    constructor(confManager, webServices, servicesManager, dbManager, translateManager, formManager, timeEventService, schedulerService, dashboardManager, eventBus, themeManager, sensorsManager, installationManager, userManager, messageManager, scenarioManager) {
         this.fs = fs;
         this.path = path;
         this.remi = remi;
@@ -83,6 +84,7 @@ class PluginsManager {
         this.installationManager = installationManager;
         this.userManager = userManager;
         this.messageManager = messageManager;
+        this.scenarioManager = scenarioManager;
 
         this.plugins = [];
         try {
@@ -186,13 +188,14 @@ class PluginsManager {
                 this.formManager,
                 this.confManager,
                 this.timeEventService,
-                this.SchedulerService,
+                this.schedulerService,
                 this.dashboardManager,
                 this.themeManager,
                 this.sensorsManager,
                 this.installationManager,
                 this.userManager,
-                this.messageManager
+                this.messageManager,
+                this.scenarioManager
             );
 
             initializedPlugins.push(pApi);

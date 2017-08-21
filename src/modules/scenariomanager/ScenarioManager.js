@@ -79,13 +79,15 @@ class ScenarioManager {
      * @param  {ScenarioForm} scenario A scenario
      */
     triggerScenario(scenario) {
-        Logger.info("Trigger scenario " + scenario.id);
-        Object.keys(this.registered).forEach((registeredScenarioKey) => {
-            const registeredScenario = this.registered[registeredScenarioKey];
-            if (registeredScenario.triggerCb) {
-                registeredScenario.triggerCb(scenario);
-            }
-        });
+        if (scenario.enabled) {
+            Logger.info("Trigger scenario " + scenario.id);
+            Object.keys(this.registered).forEach((registeredScenarioKey) => {
+                const registeredScenario = this.registered[registeredScenarioKey];
+                if (registeredScenario.triggerCb) {
+                    registeredScenario.triggerCb(scenario);
+                }
+            });
+        }
     }
 
     /**
