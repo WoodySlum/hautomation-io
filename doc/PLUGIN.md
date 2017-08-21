@@ -735,7 +735,7 @@ Sample :
             }
 
             json(data) {
-                return new SampleForm(data.id, data.text);
+                return new ScenarioSampleForm(data.id, data.text);
             }
         }
 
