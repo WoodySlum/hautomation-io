@@ -9,6 +9,7 @@ const Icons = require("./../../utils/Icons");
 const WebServices = require("./../../services/webservices/WebServices");
 const APIResponse = require("./../../services/webservices/APIResponse");
 const GeoUtils = require("./../../utils/GeoUtils");
+const sha256 = require("sha256");
 
 const CONF_KEY = "users";
 const ERROR_USER_NOT_FOUND = "ERROR_USER_NOT_FOUND";
@@ -38,6 +39,7 @@ class UserManager {
         this.webServices = webServices;
         this.appConfiguration = appConfiguration;
         this.updateTile();
+        this.registeredHomeNotifications = {};
 
         this.webServices.registerAPI(this, WebServices.POST, ROUTE_USER_ZONE + "[status]/", Authentication.AUTH_USAGE_LEVEL);
         this.webServices.registerAPI(this, WebServices.POST, ROUTE_USER_LCOATION + "[longitude]/[latitude]/[radius*]/[speed*]/[timestamp*]/", Authentication.AUTH_USAGE_LEVEL);
@@ -177,11 +179,38 @@ class UserManager {
         });
 
         if (u) {
-            u.atHome = inZone;
-            this.formConfiguration.saveConfig(u);
+            if (u.atHome !== inZone) {
+                u.atHome = inZone;
+                this.formConfiguration.saveConfig(u);
+                Object.keys(this.registerHomeNotifications).forEach((registerHomeNotificationsKey) => {
+                    this.registerHomeNotifications[registerHomeNotificationsKey](u);
+                });
+            } else {
+                Logger.info("User " + username + " home status does not changed");
+            }
         } else {
             Logger.warn("Could not change user zone. Unknown user " + username);
         }
+    }
+
+    /**
+     * Register for user's home notifications, ie when a user leaves / enter home
+     *
+     * @param  {Function} cb A callback `(user) => {}`
+     */
+    registerHomeNotifications(cb) {
+        const key = sha256(cb.toString());
+        this.registerHomeNotifications[key] = cb;
+    }
+
+    /**
+     * Unregister for user's home notifications, ie when a user leaves / enter home
+     *
+     * @param  {Function} cb A callback `(user) => {}`
+     */
+    unregisterHomeNotifications(cb) {
+        const key = sha256(cb.toString());
+        delete this.registerHomeNotifications[key];
     }
 
     /**

@@ -68,6 +68,24 @@ class UserAPI {
     somebodyAtHome() {
         return PrivateProperties.oprivate(this).userManager.somebodyAtHome();
     }
+
+    /**
+     * Register for user's home notifications, ie when a user leaves / enter home
+     *
+     * @param  {Function} cb A callback `(user) => {}`
+     */
+    registerHomeNotifications(cb) {
+        PrivateProperties.oprivate(this).userManager.registerHomeNotifications(cb);
+    }
+
+    /**
+     * Unregister for user's home notifications, ie when a user leaves / enter home
+     *
+     * @param  {Function} cb A callback `(user) => {}`
+     */
+    unregisterHomeNotifications(cb) {
+        PrivateProperties.oprivate(this).userManager.unregisterHomeNotifications(cb);
+    }
 }
 
 module.exports = {class:UserAPI};

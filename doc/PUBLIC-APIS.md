@@ -109,6 +109,7 @@
 -   [identifier](#identifier)
 -   [data](#data)
 -   [triggerDate](#triggerdate)
+-   [triggered](#triggered)
 -   [DateUtils](#dateutils)
     -   [timestamp](#timestamp)
     -   [dateToUTCTimestamp](#datetoutctimestamp)
@@ -146,6 +147,11 @@
 -   [UserAPI](#userapi)
     -   [addAdditionalFields](#addadditionalfields-1)
     -   [getUsers](#getusers)
+    -   [allUsersAtHome](#allusersathome)
+    -   [nobodyAtHome](#nobodyathome)
+    -   [somebodyAtHome](#somebodyathome)
+    -   [registerHomeNotifications](#registerhomenotifications)
+    -   [unregisterHomeNotifications](#unregisterhomenotifications)
 -   [WebAPI](#webapi)
     -   [register](#register-9)
     -   [unregister](#unregister-6)
@@ -1239,6 +1245,8 @@ Returns **[SchedulerDbObject](#schedulerdbobject)** The instance
 
 ## triggerDate
 
+## triggered
+
 ## DateUtils
 
 Utility class for dates
@@ -1555,6 +1563,40 @@ Add additional fields to user registration
 Get all users (anonymized)
 
 Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of users
+
+### allUsersAtHome
+
+Check if all users are at home
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if everybody is at home, false otherwise
+
+### nobodyAtHome
+
+Check if no users are at home
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if nobody is at home, false otherwise
+
+### somebodyAtHome
+
+Check if at lesat one user is at home
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if somebody is at home, false otherwise
+
+### registerHomeNotifications
+
+Register for user's home notifications, ie when a user leaves / enter home
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback `(user) => {}`
+
+### unregisterHomeNotifications
+
+Unregister for user's home notifications, ie when a user leaves / enter home
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback `(user) => {}`
 
 ## WebAPI
 

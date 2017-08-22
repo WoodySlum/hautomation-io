@@ -387,6 +387,11 @@
 -   [UserAPI](#userapi)
     -   [addAdditionalFields](#addadditionalfields-2)
     -   [getUsers](#getusers)
+    -   [allUsersAtHome](#allusersathome)
+    -   [nobodyAtHome](#nobodyathome)
+    -   [somebodyAtHome](#somebodyathome)
+    -   [registerHomeNotifications](#registerhomenotifications)
+    -   [unregisterHomeNotifications](#unregisterhomenotifications)
 -   [WebAPI](#webapi)
     -   [register](#register-11)
     -   [unregister](#unregister-6)
@@ -445,19 +450,24 @@
     -   [json](#json-18)
     -   [getScenariosName](#getscenariosname)
     -   [getScenariosId](#getscenariosid)
--   [TimeScenarioForm](#timescenarioform)
+-   [ScenarioSubActionForm](#scenariosubactionform)
     -   [constructor](#constructor-52)
+    -   [scenario](#scenario)
+    -   [delay](#delay)
+    -   [json](#json-19)
+-   [TimeScenarioForm](#timescenarioform)
+    -   [constructor](#constructor-53)
     -   [day](#day)
     -   [time](#time)
-    -   [json](#json-19)
--   [SensorsForm](#sensorsform)
-    -   [constructor](#constructor-53)
-    -   [sensorId](#sensorid-1)
     -   [json](#json-20)
+-   [SensorsForm](#sensorsform)
+    -   [constructor](#constructor-54)
+    -   [sensorId](#sensorid-1)
+    -   [json](#json-21)
     -   [getSensorIds](#getsensorids)
     -   [getSensorNames](#getsensornames)
 -   [SensorsManager](#sensorsmanager)
-    -   [constructor](#constructor-54)
+    -   [constructor](#constructor-55)
     -   [pluginsLoaded](#pluginsloaded-1)
     -   [initSensors](#initsensors)
     -   [initSensor](#initsensor)
@@ -470,7 +480,7 @@
     -   [statisticsWsResponse](#statisticswsresponse)
     -   [comparator](#comparator-1)
 -   [ServicesManager](#servicesmanager)
-    -   [constructor](#constructor-55)
+    -   [constructor](#constructor-56)
     -   [isServiceRegistered](#isserviceregistered)
     -   [add](#add-1)
     -   [remove](#remove-1)
@@ -479,10 +489,10 @@
     -   [restart](#restart-2)
     -   [getService](#getservice)
 -   [ThemeManager](#thememanager)
-    -   [constructor](#constructor-56)
+    -   [constructor](#constructor-57)
     -   [getColors](#getcolors-1)
 -   [ThreadsManager](#threadsmanager)
-    -   [constructor](#constructor-57)
+    -   [constructor](#constructor-58)
     -   [stringifyFunc](#stringifyfunc)
     -   [run](#run-1)
     -   [send](#send)
@@ -490,32 +500,40 @@
     -   [getPid](#getpid)
     -   [isRunning](#isrunning)
 -   [TranslateManager](#translatemanager)
-    -   [constructor](#constructor-58)
+    -   [constructor](#constructor-59)
     -   [addTranslations](#addtranslations)
     -   [t](#t-1)
     -   [translateArray](#translatearray)
 -   [UserForm](#userform)
-    -   [constructor](#constructor-59)
+    -   [constructor](#constructor-60)
     -   [username](#username-1)
     -   [password](#password)
     -   [level](#level-1)
     -   [name](#name-3)
     -   [picture](#picture-1)
     -   [atHome](#athome)
-    -   [json](#json-21)
+    -   [json](#json-22)
 -   [UserManager](#usermanager)
-    -   [constructor](#constructor-60)
+    -   [constructor](#constructor-61)
     -   [updateTile](#updatetile-1)
     -   [getUsers](#getusers-1)
     -   [getUser](#getuser)
     -   [getAdminUser](#getadminuser)
+    -   [allUsersAtHome](#allusersathome-1)
+    -   [nobodyAtHome](#nobodyathome-1)
+    -   [somebodyAtHome](#somebodyathome-1)
+    -   [setUserZone](#setuserzone)
+    -   [registerHomeNotifications](#registerhomenotifications-1)
+    -   [unregisterHomeNotifications](#unregisterhomenotifications-1)
+    -   [processAPI](#processapi-11)
 -   [SchedulerDbObject](#schedulerdbobject)
-    -   [constructor](#constructor-61)
+    -   [constructor](#constructor-62)
 -   [identifier](#identifier-2)
 -   [data](#data)
 -   [triggerDate](#triggerdate)
+-   [triggered](#triggered)
 -   [SchedulerService](#schedulerservice)
-    -   [constructor](#constructor-62)
+    -   [constructor](#constructor-63)
     -   [start](#start-2)
     -   [stop](#stop-2)
     -   [register](#register-13)
@@ -523,7 +541,7 @@
     -   [schedule](#schedule-1)
     -   [timeEvent](#timeevent)
 -   [Service](#service)
-    -   [constructor](#constructor-63)
+    -   [constructor](#constructor-64)
     -   [start](#start-3)
     -   [run](#run-2)
     -   [threadCallback](#threadcallback-1)
@@ -539,7 +557,7 @@
     -   [unregister](#unregister-9)
     -   [setThreadsManager](#setthreadsmanager)
 -   [TimeEventService](#timeeventservice)
-    -   [constructor](#constructor-64)
+    -   [constructor](#constructor-65)
     -   [start](#start-4)
     -   [stop](#stop-4)
     -   [hash](#hash)
@@ -549,14 +567,14 @@
     -   [convertMode](#convertmode)
     -   [timeEvent](#timeevent-1)
 -   [APIRegistration](#apiregistration)
-    -   [constructor](#constructor-65)
+    -   [constructor](#constructor-66)
     -   [delegate](#delegate)
     -   [method](#method)
     -   [route](#route)
     -   [authLevel](#authlevel)
     -   [isEqual](#isequal)
 -   [APIRequest](#apirequest)
-    -   [constructor](#constructor-66)
+    -   [constructor](#constructor-67)
     -   [method](#method-1)
     -   [ip](#ip)
     -   [route](#route-1)
@@ -567,17 +585,17 @@
     -   [authenticationData](#authenticationdata-1)
     -   [addAuthenticationData](#addauthenticationdata)
 -   [APIResponse](#apiresponse-1)
-    -   [constructor](#constructor-67)
+    -   [constructor](#constructor-68)
     -   [success](#success)
     -   [response](#response)
     -   [errorCode](#errorcode)
     -   [errorMessage](#errormessage)
 -   [WebServices](#webservices)
-    -   [constructor](#constructor-68)
+    -   [constructor](#constructor-69)
     -   [start](#start-5)
     -   [stop](#stop-5)
     -   [registerInfos](#registerinfos)
-    -   [processAPI](#processapi-11)
+    -   [processAPI](#processapi-12)
     -   [register](#register-16)
     -   [unregister](#unregister-11)
     -   [registerAPI](#registerapi)
@@ -596,6 +614,10 @@
     -   [dateToTimestamp](#datetotimestamp)
     -   [roundedTimestamp](#roundedtimestamp)
     -   [dateFormatted](#dateformatted)
+-   [GeoUtils](#geoutils)
+    -   [isInZone](#isinzone)
+    -   [deg2rad](#deg2rad)
+    -   [getDistance](#getdistance)
 -   [Icons](#icons)
     -   [list](#list)
     -   [raw](#raw)
@@ -4116,6 +4138,40 @@ Get all users (anonymized)
 
 Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of users
 
+### allUsersAtHome
+
+Check if all users are at home
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if everybody is at home, false otherwise
+
+### nobodyAtHome
+
+Check if no users are at home
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if nobody is at home, false otherwise
+
+### somebodyAtHome
+
+Check if at lesat one user is at home
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if somebody is at home, false otherwise
+
+### registerHomeNotifications
+
+Register for user's home notifications, ie when a user leaves / enter home
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback `(user) => {}`
+
+### unregisterHomeNotifications
+
+Unregister for user's home notifications, ie when a user leaves / enter home
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback `(user) => {}`
+
 ## WebAPI
 
 Public API for Web services
@@ -4419,6 +4475,7 @@ This class provides a form for an scenario
 -   `enabled`   (optional, default `null`)
 -   `icon`   (optional, default `null`)
 -   `timeTrigger`   (optional, default `null`)
+-   `subActions`   (optional, default `null`)
 
 ### constructor
 
@@ -4431,6 +4488,7 @@ Constructor
 -   `enabled` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if action is enabled, false otherwise (optional, default `null`)
 -   `icon` **[IconForm](#iconform)** An icon (optional, default `null`)
 -   `timeTrigger` **[TimeScenarioForm](#timescenarioform)** The time trigger (optional, default `null`)
+-   `subActions` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** The sub actions (optional, default `null`)
 
 Returns **[ScenarioForm](#scenarioform)** The instance
 
@@ -4464,6 +4522,7 @@ This class allows to manage scenarios
 -   `formManager`  
 -   `webServices`  
 -   `timeEventService`  
+-   `schedulerService`  
 
 ### constructor
 
@@ -4475,6 +4534,7 @@ Constructor
 -   `formManager` **[FormManager](#formmanager)** A form manager
 -   `webServices` **[WebServices](#webservices)** The web services
 -   `timeEventService` **[TimeEventService](#timeeventservice)** The time event service
+-   `schedulerService` **[SchedulerService](#schedulerservice)** The scheduler service
 
 Returns **[ScenarioManager](#scenariomanager)** The instance
 
@@ -4587,6 +4647,44 @@ Form injection method for Scenarios ids
 -   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The modules list array
 
 Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of devices id
+
+## ScenarioSubActionForm
+
+**Extends FormObject.class**
+
+This class provides the sub actions
+
+**Parameters**
+
+-   `id`   (optional, default `null`)
+-   `scenario`   (optional, default `null`)
+-   `delay`   (optional, default `null`)
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `id` **[number](#number)** An identifier (optional, default `null`)
+-   `scenario` **[ScenariosListForm](#scenarioslistform)** The scenario (optional, default `null`)
+-   `delay` **[number](#number)** The delay (optional, default `null`)
+
+Returns **[ScenarioSubActionForm](#scenariosubactionform)** The instance
+
+### scenario
+
+### delay
+
+### json
+
+Convert json data
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some key / value data
+
+Returns **[ScenarioSubActionForm](#scenariosubactionform)** A form object
 
 ## TimeScenarioForm
 
@@ -5108,6 +5206,7 @@ This class allows to manage users (create, delete, search, ...)
 -   `formManager`  
 -   `webServices`  
 -   `dashboardManager`  
+-   `appConfiguration`  
 
 ### constructor
 
@@ -5119,6 +5218,7 @@ Constructor
 -   `formManager` **[FormManager](#formmanager)** A form manager
 -   `webServices` **[WebServices](#webservices)** The web services
 -   `dashboardManager` **[DashboardManager](#dashboardmanager)** The dashboard manager
+-   `appConfiguration` **AppConfiguration** The app configuration object
 
 Returns **[UserManager](#usermanager)** The instance
 
@@ -5148,6 +5248,59 @@ Get the admin user
 
 Returns **User** The admin user, null if admin user is disabled
 
+### allUsersAtHome
+
+Check if all users are at home
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if everybody is at home, false otherwise
+
+### nobodyAtHome
+
+Check if no users are at home
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if nobody is at home, false otherwise
+
+### somebodyAtHome
+
+Check if a user is at home
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if somebody is at home, false otherwise
+
+### setUserZone
+
+Set user zone
+
+**Parameters**
+
+-   `username` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The username
+-   `inZone` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if user is in zone, false otherwise
+
+### registerHomeNotifications
+
+Register for user's home notifications, ie when a user leaves / enter home
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback `(user) => {}`
+
+### unregisterHomeNotifications
+
+Unregister for user's home notifications, ie when a user leaves / enter home
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback `(user) => {}`
+
+### processAPI
+
+Process API callback
+
+**Parameters**
+
+-   `apiRequest` **[APIRequest](#apirequest)** An APIRequest
+
+Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with an APIResponse object
+
 ## SchedulerDbObject
 
 **Extends DbObject.class**
@@ -5175,6 +5328,8 @@ Returns **[SchedulerDbObject](#schedulerdbobject)** The instance
 ## data
 
 ## triggerDate
+
+## triggered
 
 ## SchedulerService
 
@@ -5809,6 +5964,47 @@ Format the current date with parameter
 -   `timestamp` **[number](#number)** A timestamp. If not provided, use current timestamp. (optional, default `null`)
 
 Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The formatted date
+
+## GeoUtils
+
+Utility class for coordinates manipulation
+
+### isInZone
+
+Check if coordinates is contained by others coordinates
+
+**Parameters**
+
+-   `longitudeA` **[number](#number)** The longitude's zone
+-   `latitudeA` **[number](#number)** The latitude's zone
+-   `radius` **[number](#number)** The radius in meters
+-   `longitudeB` **[number](#number)** The longitude coordinate to check
+-   `latitudeB` **[number](#number)** The latitude coordinate to check
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if coordinates B is in zone, false otherwise
+
+### deg2rad
+
+Convert degrees to radian
+
+**Parameters**
+
+-   `angle` **[number](#number)** An degree angle
+
+Returns **[number](#number)** A radian angle
+
+### getDistance
+
+Get the distance in meters of 2 coordinates
+
+**Parameters**
+
+-   `longitudeA` **[number](#number)** The first longitude
+-   `latitudeA` **[number](#number)** The first latitude
+-   `longitudeB` **[number](#number)** The second longitude
+-   `latitudeB` **[number](#number)** The second latitude
+
+Returns **[number](#number)** The distance between coordinates in meter
 
 ## Icons
 
