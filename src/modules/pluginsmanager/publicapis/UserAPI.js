@@ -41,6 +41,33 @@ class UserAPI {
         });
         return users;
     }
+
+    /**
+     * Check if all users are at home
+     *
+     * @returns {boolean} True if everybody is at home, false otherwise
+     */
+    allUsersAtHome() {
+        return PrivateProperties.oprivate(this).userManager.allUsersAtHome();
+    }
+
+    /**
+     * Check if no users are at home
+     *
+     * @returns {boolean} True if nobody is at home, false otherwise
+     */
+    nobodyAtHome() {
+        return PrivateProperties.oprivate(this).userManager.nobodyAtHome();
+    }
+
+    /**
+     * Check if at lesat one user is at home
+     *
+     * @returns {boolean} True if somebody is at home, false otherwise
+     */
+    somebodyAtHome() {
+        return PrivateProperties.oprivate(this).userManager.somebodyAtHome();
+    }
 }
 
 module.exports = {class:UserAPI};

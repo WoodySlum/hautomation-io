@@ -113,7 +113,7 @@ class HautomationCore {
         // Dashboard manager
         this.dashboardManager = new DashboardManager.class(this.themeManager, this.webServices, this.translateManager);
         // UserManager module
-        this.userManager = new UserManager.class(this.confManager, this.formManager, this.webServices, this.dashboardManager);
+        this.userManager = new UserManager.class(this.confManager, this.formManager, this.webServices, this.dashboardManager, AppConfiguration);
         // Authentication module
         this.authentication = new Authentication.class(this.webServices, this.userManager);
         // Installation manager
@@ -139,16 +139,6 @@ class HautomationCore {
         if (!process.env.TEST) {
             CoreInstaller.install(this.installationManager);
         }
-
-        setTimeout((self) => {
-            self.radioManager.onRadioEvent({
-                module:"rflink",
-                protocol:"eb1527",
-                deviceId:"200",
-                switchId:"1",
-                status:1
-            });
-        }, 5000, this);
     }
 
     /**

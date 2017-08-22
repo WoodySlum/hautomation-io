@@ -53,12 +53,55 @@ describe("UserManager", function() {
         expect(admin.level).to.be.equal(Authentication.AUTH_MAX_LEVEL);
     });
 
-    it("getAdminUser disabled should return null user ", function() {
+    it("getAdminUser disabled should return null user", function() {
         const adminUser = new UserForm.class(0, "admin", "password");
         core.confManager.appConfiguration = {admin :{username:adminUser.username, password:adminUser.password, enable:false}};
         const userManager = new UserManager.class(core.confManager, core.formManager, core.webServices);
         const admin = userManager.getAdminUser();
         expect(admin).to.be.null;
+    });
+
+    it("setUserZone should change user zone ", function() {
+        const userManager = new UserManager.class(core.confManager, core.formManager, core.webServices);
+        userManager.formConfiguration.data = [userA, userB];
+        userManager.setUserZone("userA", false);
+        expect(userManager.getUser("userA").atHome).to.be.false;
+        userManager.setUserZone("userA", true);
+        expect(userManager.getUser("userA").atHome).to.be.true;
+        userManager.setUserZone("userC", true);
+    });
+
+    it("allUsersAtHome should send correct status ", function() {
+        const userManager = new UserManager.class(core.confManager, core.formManager, core.webServices);
+        userManager.formConfiguration.data = [userA, userB];
+        userManager.setUserZone("userA", false);
+        userManager.setUserZone("userB", true);
+        expect(userManager.allUsersAtHome()).to.be.false;
+        userManager.setUserZone("userA", true);
+        userManager.setUserZone("userB", true);
+        expect(userManager.allUsersAtHome()).to.be.true;
+    });
+
+    it("nobodyAtHome should send correct status", function() {
+        const userManager = new UserManager.class(core.confManager, core.formManager, core.webServices);
+        userManager.formConfiguration.data = [userA, userB];
+        userManager.setUserZone("userA", false);
+        userManager.setUserZone("userB", true);
+        expect(userManager.nobodyAtHome()).to.be.false;
+        userManager.setUserZone("userA", false);
+        userManager.setUserZone("userB", false);
+        expect(userManager.nobodyAtHome()).to.be.true;
+    });
+
+    it("somebodyAtHome should send correct status", function() {
+        const userManager = new UserManager.class(core.confManager, core.formManager, core.webServices);
+        userManager.formConfiguration.data = [userA, userB];
+        userManager.setUserZone("userA", false);
+        userManager.setUserZone("userB", false);
+        expect(userManager.somebodyAtHome()).to.be.false;
+        userManager.setUserZone("userA", true);
+        userManager.setUserZone("userB", false);
+        expect(userManager.somebodyAtHome()).to.be.true;
     });
 
     after(function () {

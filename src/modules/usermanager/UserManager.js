@@ -6,9 +6,15 @@ const UserForm = require("./UserForm");
 const ImageUtils = require("./../../utils/ImageUtils");
 const Tile = require("./../dashboardmanager/Tile");
 const Icons = require("./../../utils/Icons");
+const WebServices = require("./../../services/webservices/WebServices");
+const APIResponse = require("./../../services/webservices/APIResponse");
+const GeoUtils = require("./../../utils/GeoUtils");
 
 const CONF_KEY = "users";
 const ERROR_USER_NOT_FOUND = "ERROR_USER_NOT_FOUND";
+
+const ROUTE_USER_ZONE = ":/user/zone/set/";
+const ROUTE_USER_LCOATION = ":/user/location/set/";
 
 /**
  * This class allows to manage users (create, delete, search, ...)
@@ -22,13 +28,19 @@ class UserManager {
      * @param  {FormManager} formManager  A form manager
      * @param  {WebServices} webServices  The web services
      * @param  {DashboardManager} dashboardManager  The dashboard manager
+     * @param  {AppConfiguration} appConfiguration The app configuration object
      * @returns {UserManager} The instance
      */
-    constructor(confManager, formManager, webServices, dashboardManager) {
+    constructor(confManager, formManager, webServices, dashboardManager, appConfiguration) {
         this.formConfiguration = new FormConfiguration.class(confManager, formManager, webServices, CONF_KEY, true, UserForm.class);
         this.confManager = confManager;
         this.dashboardManager = dashboardManager;
+        this.webServices = webServices;
+        this.appConfiguration = appConfiguration;
         this.updateTile();
+
+        this.webServices.registerAPI(this, WebServices.POST, ROUTE_USER_ZONE + "[status]/", Authentication.AUTH_USAGE_LEVEL);
+        this.webServices.registerAPI(this, WebServices.POST, ROUTE_USER_LCOATION + "[longitude]/[latitude]/[radius*]/[speed*]/[timestamp*]/", Authentication.AUTH_USAGE_LEVEL);
     }
 
     /**
@@ -100,6 +112,98 @@ class UserManager {
         }
 
         return null;
+    }
+
+    /**
+     * Check if all users are at home
+     *
+     * @returns {boolean} True if everybody is at home, false otherwise
+     */
+    allUsersAtHome() {
+        let allUsersAtHome = true;
+        this.formConfiguration.getDataCopy().forEach((user) => {
+            if (!user.atHome) {
+                allUsersAtHome = false;
+            }
+        });
+
+        return allUsersAtHome;
+    }
+
+    /**
+     * Check if no users are at home
+     *
+     * @returns {boolean} True if nobody is at home, false otherwise
+     */
+    nobodyAtHome() {
+        let nobodyAtHome = true;
+        this.formConfiguration.getDataCopy().forEach((user) => {
+            if (user.atHome) {
+                nobodyAtHome = false;
+            }
+        });
+
+        return nobodyAtHome;
+    }
+
+    /**
+     * Check if a user is at home
+     *
+     * @returns {boolean} True if somebody is at home, false otherwise
+     */
+    somebodyAtHome() {
+        let somebodyAtHome = false;
+        this.formConfiguration.getDataCopy().forEach((user) => {
+            if (user.atHome) {
+                somebodyAtHome = true;
+            }
+        });
+
+        return somebodyAtHome;
+    }
+
+    /**
+     * Set user zone
+     *
+     * @param {string} username The username
+     * @param {boolean} inZone True if user is in zone, false otherwise
+     */
+    setUserZone(username, inZone) {
+        let u = null;
+        this.formConfiguration.getDataCopy().forEach((user) => {
+            if (user.username === username) {
+                u = user;
+            }
+        });
+
+        if (u) {
+            u.atHome = inZone;
+            this.formConfiguration.saveConfig(u);
+        } else {
+            Logger.warn("Could not change user zone. Unknown user " + username);
+        }
+    }
+
+    /**
+     * Process API callback
+     *
+     * @param  {APIRequest} apiRequest An APIRequest
+     * @returns {Promise}  A promise with an APIResponse object
+     */
+    processAPI(apiRequest) {
+        var self = this;
+
+        if (apiRequest.route.startsWith(ROUTE_USER_ZONE)) {
+            return new Promise((resolve) => {
+                self.setUserZone(apiRequest.authenticationData.username, Boolean(parseInt(apiRequest.data.status)));
+                resolve(new APIResponse.class(true, {success:true}));
+            });
+        } else if (apiRequest.route.startsWith(ROUTE_USER_LCOATION)) {
+            return new Promise((resolve) => {
+                self.setUserZone(apiRequest.authenticationData.username, GeoUtils.class.isInZone(this.appConfiguration.home.longitude, this.appConfiguration.home.latitude, this.appConfiguration.home.radius, parseFloat(apiRequest.data.longitude), parseFloat(apiRequest.data.latitude)));
+                resolve(new APIResponse.class(true, {success:true}));
+            });
+        }
     }
 }
 
