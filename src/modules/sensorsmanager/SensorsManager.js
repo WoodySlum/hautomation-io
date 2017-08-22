@@ -78,7 +78,7 @@ class SensorsManager {
      * Called automatically when plugins are loaded. Used in separate methods for testing.
      * Initially, this method wad used in contructor.
      *
-     * @param  {PluginsManager} pluginsManager THe plugins manager instance
+     * @param  {PluginsManager} pluginsManager The plugins manager instance
      * @param  {SensorsManager} context        The context (self, this, etc ...)
      */
     pluginsLoaded(pluginsManager, context) {
