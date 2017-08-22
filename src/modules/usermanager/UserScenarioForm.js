@@ -12,7 +12,7 @@ class UserScenarioForm extends FormObject.class {
      * @param  {number} [mode=null]                  The user home mode
      * @returns {UserScenarioForm} The instance
      */
-    constructor(id = null, day = null, time = null) {
+    constructor(id = null, mode = null) {
         super(id);
 
         /**

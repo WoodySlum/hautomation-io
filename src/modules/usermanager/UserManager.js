@@ -196,22 +196,22 @@ class UserManager {
                 this.scenarioManager.getScenarios().forEach((scenario) => {
                     if (scenario.UserScenarioForm && scenario.UserScenarioForm.mode) {
                         switch(scenario.UserScenarioForm.mode) {
-                            case 0:
+                        case 0:
                             break;
-                            case 1:
-                                if (self.allUsersAtHome()) {
-                                    self.scenarioManager.triggerScenario(scenario);
-                                }
+                        case 1:
+                            if (self.allUsersAtHome()) {
+                                self.scenarioManager.triggerScenario(scenario);
+                            }
                             break;
-                            case 2:
-                                if (self.nobodyAtHome()) {
-                                    self.scenarioManager.triggerScenario(scenario);
-                                }
+                        case 2:
+                            if (self.nobodyAtHome()) {
+                                self.scenarioManager.triggerScenario(scenario);
+                            }
                             break;
-                            case 3:
-                                if (self.somebodyAtHome()) {
-                                    self.scenarioManager.triggerScenario(scenario);
-                                }
+                        case 3:
+                            if (self.somebodyAtHome()) {
+                                self.scenarioManager.triggerScenario(scenario);
+                            }
                             break;
                         }
                     }
