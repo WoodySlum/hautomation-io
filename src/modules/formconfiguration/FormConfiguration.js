@@ -35,6 +35,7 @@ class FormConfiguration {
         this.confKey = this.name + ".conf";
         this.list = list;
         this.additionalFields = [];
+        this.updateCb = null;
 
         // WebServices
         this.formRoute = ":/" + ROUTE_BASE_PATH + "/" + this.name + "/" + ROUTE_BASE_FORM + "/";
@@ -59,6 +60,15 @@ class FormConfiguration {
         } else {
             this.formClass = null;
         }
+    }
+
+    /**
+     * Set the update callback. Called back when delete or save action is done.
+     *
+     * @param {Function} cb A callback with data as parameter, e.g. `cb(data) => {}`
+     */
+    setUpdateCb(cb) {
+        this.updateCb = cb;
     }
 
     /**
@@ -159,6 +169,7 @@ class FormConfiguration {
                 });
             } else if (apiRequest.route === this.setRoute) {
                 this.saveConfig(apiRequest.data);
+                if (this.updateCb) this.updateCb(self.data);
                 return new Promise((resolve) => {
                     resolve(new APIResponse.class(true, {success:true}));
                 });
@@ -176,6 +187,7 @@ class FormConfiguration {
                 if (apiRequest.data && apiRequest.data.id) {
                     return new Promise((resolve) => {
                         self.confManager.removeData(self.confKey, new (this.formClass)(apiRequest.data.id), self.data, self.comparator);
+                        if (this.updateCb) this.updateCb(self.data);
                         resolve(new APIResponse.class(true, {success:true}));
                     });
                 } else {

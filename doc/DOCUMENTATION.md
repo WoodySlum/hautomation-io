@@ -67,6 +67,7 @@
 -   [Radio](#radio)
     -   [constructor](#constructor-12)
     -   [getProtocolList](#getprotocollist)
+    -   [getLastReceivedRadioInformations](#getlastreceivedradioinformations)
     -   [processAPI](#processapi-1)
     -   [defaultFrequency](#defaultfrequency)
     -   [emit](#emit)
@@ -241,22 +242,40 @@
     -   [json](#json-9)
 -   [DeviceManager](#devicemanager)
     -   [constructor](#constructor-34)
+    -   [triggerScenario](#triggerscenario)
+    -   [registerDeviceListForm](#registerdevicelistform)
     -   [registerDeviceTiles](#registerdevicetiles)
     -   [registerDeviceTile](#registerdevicetile)
     -   [switchDevice](#switchdevice)
+    -   [switchAll](#switchall)
     -   [processAPI](#processapi-5)
--   [FormConfiguration](#formconfiguration)
+-   [DevicesListForm](#deviceslistform)
     -   [constructor](#constructor-35)
+    -   [identifier](#identifier)
+    -   [status](#status-2)
+    -   [json](#json-10)
+    -   [getDevicesName](#getdevicesname)
+    -   [getDevicesId](#getdevicesid)
+-   [DevicesListScenarioForm](#deviceslistscenarioform)
+    -   [constructor](#constructor-36)
+    -   [turnOnAll](#turnonall)
+    -   [turnOffAll](#turnoffall)
+    -   [devices](#devices)
+    -   [json](#json-11)
+-   [FormConfiguration](#formconfiguration)
+    -   [constructor](#constructor-37)
+    -   [setUpdateCb](#setupdatecb)
     -   [addAdditionalFields](#addadditionalfields)
     -   [loadConfig](#loadconfig)
     -   [saveConfig](#saveconfig)
     -   [comparator](#comparator)
     -   [registerForm](#registerform)
     -   [processAPI](#processapi-6)
+    -   [getDataCopy](#getdatacopy)
     -   [getConfig](#getconfig)
     -   [getForm](#getform)
 -   [FormManager](#formmanager)
-    -   [constructor](#constructor-36)
+    -   [constructor](#constructor-38)
     -   [register](#register-1)
     -   [registerWithAdditionalFields](#registerwithadditionalfields)
     -   [addAdditionalFields](#addadditionalfields-1)
@@ -267,11 +286,11 @@
     -   [getForm](#getform-1)
     -   [generateForm](#generateform)
 -   [FormObject](#formobject)
-    -   [constructor](#constructor-37)
-    -   [json](#json-10)
+    -   [constructor](#constructor-39)
+    -   [json](#json-12)
 -   [id](#id)
 -   [InstallationManager](#installationmanager)
-    -   [constructor](#constructor-38)
+    -   [constructor](#constructor-40)
     -   [register](#register-2)
     -   [executeCommand](#executecommand)
     -   [execute](#execute)
@@ -279,7 +298,7 @@
     -   [isValidForArchitecture](#isvalidforarchitecture)
     -   [restart](#restart-1)
 -   [DbMessage](#dbmessage)
-    -   [constructor](#constructor-39)
+    -   [constructor](#constructor-41)
 -   [recipient](#recipient)
 -   [sender](#sender)
 -   [message](#message)
@@ -288,7 +307,7 @@
 -   [picture](#picture)
 -   [received](#received)
 -   [MessageManager](#messagemanager)
-    -   [constructor](#constructor-40)
+    -   [constructor](#constructor-42)
     -   [register](#register-3)
     -   [unregister](#unregister-1)
     -   [sendMessage](#sendmessage-1)
@@ -301,10 +320,10 @@
     -   [init](#init-1)
     -   [registerInstance](#registerinstance)
 -   [PluginConf](#pluginconf)
-    -   [constructor](#constructor-41)
-    -   [json](#json-11)
+    -   [constructor](#constructor-43)
+    -   [json](#json-13)
 -   [PluginsManager](#pluginsmanager)
-    -   [constructor](#constructor-42)
+    -   [constructor](#constructor-44)
     -   [getPluginsFromDirectory](#getpluginsfromdirectory)
     -   [checkPluginSanity](#checkpluginsanity)
     -   [initPlugins](#initplugins)
@@ -337,9 +356,14 @@
     -   [unregister](#unregister-2)
     -   [onMessageReceived](#onmessagereceived-2)
     -   [getMessages](#getmessages-1)
--   [SchedulerAPI](#schedulerapi)
+-   [ScenarioAPI](#scenarioapi)
     -   [register](#register-8)
     -   [unregister](#unregister-3)
+    -   [triggerScenario](#triggerscenario-1)
+    -   [getScenarios](#getscenarios)
+-   [SchedulerAPI](#schedulerapi)
+    -   [register](#register-9)
+    -   [unregister](#unregister-4)
     -   [schedule](#schedule)
     -   [constants](#constants-2)
 -   [SensorAPI](#sensorapi)
@@ -354,8 +378,8 @@
 -   [ThemeAPI](#themeapi)
     -   [getColors](#getcolors)
 -   [TimeEventAPI](#timeeventapi)
-    -   [register](#register-9)
-    -   [unregister](#unregister-4)
+    -   [register](#register-10)
+    -   [unregister](#unregister-5)
     -   [constants](#constants-3)
 -   [TranslateAPI](#translateapi)
     -   [load](#load-1)
@@ -364,22 +388,22 @@
     -   [addAdditionalFields](#addadditionalfields-2)
     -   [getUsers](#getusers)
 -   [WebAPI](#webapi)
-    -   [register](#register-10)
-    -   [unregister](#unregister-5)
+    -   [register](#register-11)
+    -   [unregister](#unregister-6)
     -   [Authentication](#authentication-1)
     -   [APIResponse](#apiresponse)
     -   [constants](#constants-4)
 -   [RadioForm](#radioform)
-    -   [constructor](#constructor-43)
+    -   [constructor](#constructor-45)
     -   [module](#module-1)
     -   [protocol](#protocol-1)
     -   [deviceId](#deviceid-1)
     -   [switchId](#switchid-1)
-    -   [json](#json-12)
+    -   [json](#json-14)
     -   [getModules](#getmodules)
     -   [getProtocols](#getprotocols)
 -   [RadioManager](#radiomanager)
-    -   [constructor](#constructor-44)
+    -   [constructor](#constructor-46)
     -   [pluginsLoaded](#pluginsloaded)
     -   [registerRadioEvents](#registerradioevents)
     -   [unregisterRadioEvents](#unregisterradioevents)
@@ -387,14 +411,53 @@
     -   [getModules](#getmodules-1)
     -   [getProtocols](#getprotocols-1)
     -   [switchDevice](#switchdevice-1)
+    -   [getLastReceivedRadioInformations](#getlastreceivedradioinformations-1)
+    -   [processAPI](#processapi-9)
+-   [RadioScenarioForm](#radioscenarioform)
+    -   [constructor](#constructor-47)
+    -   [radioForm](#radioform-1)
+    -   [status](#status-3)
+    -   [json](#json-15)
+-   [RadioScenariosForm](#radioscenariosform)
+    -   [constructor](#constructor-48)
+    -   [radioScenariosForm](#radioscenariosform-1)
+    -   [json](#json-16)
+-   [ScenarioForm](#scenarioform)
+    -   [constructor](#constructor-49)
+    -   [name](#name-2)
+    -   [enabled](#enabled)
+    -   [icon](#icon-2)
+    -   [timeTrigger](#timetrigger)
+    -   [subActions](#subactions)
+    -   [json](#json-17)
+-   [ScenarioManager](#scenariomanager)
+    -   [constructor](#constructor-50)
+    -   [registerScenariosListForm](#registerscenarioslistform)
+    -   [generateKey](#generatekey)
+    -   [register](#register-12)
+    -   [unregister](#unregister-7)
+    -   [triggerScenario](#triggerscenario-2)
+    -   [getScenarios](#getscenarios-1)
+    -   [timeEventScenario](#timeeventscenario)
+-   [ScenariosListForm](#scenarioslistform)
+    -   [constructor](#constructor-51)
+    -   [identifier](#identifier-1)
+    -   [json](#json-18)
+    -   [getScenariosName](#getscenariosname)
+    -   [getScenariosId](#getscenariosid)
+-   [TimeScenarioForm](#timescenarioform)
+    -   [constructor](#constructor-52)
+    -   [day](#day)
+    -   [time](#time)
+    -   [json](#json-19)
 -   [SensorsForm](#sensorsform)
-    -   [constructor](#constructor-45)
+    -   [constructor](#constructor-53)
     -   [sensorId](#sensorid-1)
-    -   [json](#json-13)
+    -   [json](#json-20)
     -   [getSensorIds](#getsensorids)
     -   [getSensorNames](#getsensornames)
 -   [SensorsManager](#sensorsmanager)
-    -   [constructor](#constructor-46)
+    -   [constructor](#constructor-54)
     -   [pluginsLoaded](#pluginsloaded-1)
     -   [initSensors](#initsensors)
     -   [initSensor](#initsensor)
@@ -403,11 +466,11 @@
     -   [getAllSensors](#getallsensors)
     -   [onNewSensorValue](#onnewsensorvalue)
     -   [getValue](#getvalue-1)
-    -   [processAPI](#processapi-9)
+    -   [processAPI](#processapi-10)
     -   [statisticsWsResponse](#statisticswsresponse)
     -   [comparator](#comparator-1)
 -   [ServicesManager](#servicesmanager)
-    -   [constructor](#constructor-47)
+    -   [constructor](#constructor-55)
     -   [isServiceRegistered](#isserviceregistered)
     -   [add](#add-1)
     -   [remove](#remove-1)
@@ -416,10 +479,10 @@
     -   [restart](#restart-2)
     -   [getService](#getservice)
 -   [ThemeManager](#thememanager)
-    -   [constructor](#constructor-48)
+    -   [constructor](#constructor-56)
     -   [getColors](#getcolors-1)
 -   [ThreadsManager](#threadsmanager)
-    -   [constructor](#constructor-49)
+    -   [constructor](#constructor-57)
     -   [stringifyFunc](#stringifyfunc)
     -   [run](#run-1)
     -   [send](#send)
@@ -427,40 +490,40 @@
     -   [getPid](#getpid)
     -   [isRunning](#isrunning)
 -   [TranslateManager](#translatemanager)
-    -   [constructor](#constructor-50)
+    -   [constructor](#constructor-58)
     -   [addTranslations](#addtranslations)
     -   [t](#t-1)
     -   [translateArray](#translatearray)
 -   [UserForm](#userform)
-    -   [constructor](#constructor-51)
+    -   [constructor](#constructor-59)
     -   [username](#username-1)
     -   [password](#password)
     -   [level](#level-1)
-    -   [name](#name-2)
+    -   [name](#name-3)
     -   [picture](#picture-1)
     -   [atHome](#athome)
-    -   [json](#json-14)
+    -   [json](#json-21)
 -   [UserManager](#usermanager)
-    -   [constructor](#constructor-52)
+    -   [constructor](#constructor-60)
     -   [updateTile](#updatetile-1)
     -   [getUsers](#getusers-1)
     -   [getUser](#getuser)
     -   [getAdminUser](#getadminuser)
 -   [SchedulerDbObject](#schedulerdbobject)
-    -   [constructor](#constructor-53)
--   [identifier](#identifier)
+    -   [constructor](#constructor-61)
+-   [identifier](#identifier-2)
 -   [data](#data)
 -   [triggerDate](#triggerdate)
 -   [SchedulerService](#schedulerservice)
-    -   [constructor](#constructor-54)
+    -   [constructor](#constructor-62)
     -   [start](#start-2)
     -   [stop](#stop-2)
-    -   [register](#register-11)
-    -   [unregister](#unregister-6)
+    -   [register](#register-13)
+    -   [unregister](#unregister-8)
     -   [schedule](#schedule-1)
     -   [timeEvent](#timeevent)
 -   [Service](#service)
-    -   [constructor](#constructor-55)
+    -   [constructor](#constructor-63)
     -   [start](#start-3)
     -   [run](#run-2)
     -   [threadCallback](#threadcallback-1)
@@ -471,29 +534,29 @@
     -   [stopExternal](#stopexternal)
     -   [stop](#stop-3)
     -   [restart](#restart-3)
-    -   [status](#status-2)
-    -   [register](#register-12)
-    -   [unregister](#unregister-7)
+    -   [status](#status-4)
+    -   [register](#register-14)
+    -   [unregister](#unregister-9)
     -   [setThreadsManager](#setthreadsmanager)
 -   [TimeEventService](#timeeventservice)
-    -   [constructor](#constructor-56)
+    -   [constructor](#constructor-64)
     -   [start](#start-4)
     -   [stop](#stop-4)
     -   [hash](#hash)
     -   [elementForHash](#elementforhash)
-    -   [register](#register-13)
-    -   [unregister](#unregister-8)
+    -   [register](#register-15)
+    -   [unregister](#unregister-10)
     -   [convertMode](#convertmode)
     -   [timeEvent](#timeevent-1)
 -   [APIRegistration](#apiregistration)
-    -   [constructor](#constructor-57)
+    -   [constructor](#constructor-65)
     -   [delegate](#delegate)
     -   [method](#method)
     -   [route](#route)
     -   [authLevel](#authlevel)
     -   [isEqual](#isequal)
 -   [APIRequest](#apirequest)
-    -   [constructor](#constructor-58)
+    -   [constructor](#constructor-66)
     -   [method](#method-1)
     -   [ip](#ip)
     -   [route](#route-1)
@@ -504,19 +567,19 @@
     -   [authenticationData](#authenticationdata-1)
     -   [addAuthenticationData](#addauthenticationdata)
 -   [APIResponse](#apiresponse-1)
-    -   [constructor](#constructor-59)
+    -   [constructor](#constructor-67)
     -   [success](#success)
     -   [response](#response)
     -   [errorCode](#errorcode)
     -   [errorMessage](#errormessage)
 -   [WebServices](#webservices)
-    -   [constructor](#constructor-60)
+    -   [constructor](#constructor-68)
     -   [start](#start-5)
     -   [stop](#stop-5)
     -   [registerInfos](#registerinfos)
-    -   [processAPI](#processapi-10)
-    -   [register](#register-14)
-    -   [unregister](#unregister-9)
+    -   [processAPI](#processapi-11)
+    -   [register](#register-16)
+    -   [unregister](#unregister-11)
     -   [registerAPI](#registerapi)
     -   [unregisterAPI](#unregisterapi)
     -   [manageResponse](#manageresponse)
@@ -1065,6 +1128,15 @@ Returns **[Radio](#radio)** The instance
 **Parameters**
 
 -   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback function `(err, protocols) => {}`
+
+### getLastReceivedRadioInformations
+
+Return the list of last radio information received
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback function `(err, objects) => {}`
+-   `nbElements` **[number](#number)** Max number elements (optional, default `100`)
 
 ### processAPI
 
@@ -2727,6 +2799,8 @@ This class allows to manage devices
 -   `webServices`  
 -   `radioManager`  
 -   `dashboardManager`  
+-   `scenarioManager`  
+-   `translateManager`  
 
 ### constructor
 
@@ -2739,8 +2813,23 @@ Constructor
 -   `webServices` **[WebServices](#webservices)** The web services
 -   `radioManager` **[RadioManager](#radiomanager)** The radio manager
 -   `dashboardManager` **[DashboardManager](#dashboardmanager)** The dashboard manager
+-   `scenarioManager` **[ScenarioManager](#scenariomanager)** The scenario manager
+-   `translateManager` **[TranslateManager](#translatemanager)** The translate manager
 
 Returns **[DeviceManager](#devicemanager)** The instance
+
+### triggerScenario
+
+Trigger scenario elements
+
+**Parameters**
+
+-   `scenario` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A dynamic scenario object
+-   `context` **[DeviceManager](#devicemanager)** The context
+
+### registerDeviceListForm
+
+Register a device list form
 
 ### registerDeviceTiles
 
@@ -2763,6 +2852,14 @@ Switch a device radio status
 -   `id` **[number](#number)** A device identifier
 -   `status` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A status  (`on`, `off` or radio status) (optional, default `null`)
 
+### switchAll
+
+Switch all devices depending on excludeAll flag
+
+**Parameters**
+
+-   `status` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The status
+
 ### processAPI
 
 Process API callback
@@ -2772,6 +2869,106 @@ Process API callback
 -   `apiRequest` **[APIRequest](#apirequest)** An APIRequest
 
 Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with an APIResponse object
+
+## DevicesListForm
+
+**Extends FormObject.class**
+
+This class provides a form for one device
+
+**Parameters**
+
+-   `id`   (optional, default `null`)
+-   `identifier`   (optional, default `null`)
+-   `status`   (optional, default `null`)
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `id` **[number](#number)** An identifier (optional, default `null`)
+-   `identifier` **[number](#number)** The device identifier (optional, default `null`)
+-   `status` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The status (optional, default `null`)
+
+Returns **[DevicesListForm](#deviceslistform)** The instance
+
+### identifier
+
+### status
+
+### json
+
+Convert json data
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some key / value data
+
+Returns **[DevicesListForm](#deviceslistform)** A form object
+
+### getDevicesName
+
+Form injection method for Devices name
+
+**Parameters**
+
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The modules list array
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of devices name
+
+### getDevicesId
+
+Form injection method for Devices ids
+
+**Parameters**
+
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The modules list array
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of devices id
+
+## DevicesListScenarioForm
+
+**Extends FormObject.class**
+
+This class provides a form for one device
+
+**Parameters**
+
+-   `id`   (optional, default `null`)
+-   `turnOnAll`   (optional, default `null`)
+-   `turnOffAll`   (optional, default `null`)
+-   `devices`   (optional, default `null`)
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `id` **[number](#number)** An identifier (optional, default `null`)
+-   `turnOnAll` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Turn on all devices (optional, default `null`)
+-   `turnOffAll` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Turn off all devices (optional, default `null`)
+-   `devices` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array if DevicesListForm (optional, default `null`)
+
+Returns **[DevicesListScenarioForm](#deviceslistscenarioform)** The instance
+
+### turnOnAll
+
+### turnOffAll
+
+### devices
+
+### json
+
+Convert json data
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some key / value data
+
+Returns **[DevicesListScenarioForm](#deviceslistscenarioform)** A form object
 
 ## FormConfiguration
 
@@ -2803,6 +3000,14 @@ Constructor
 
 Returns **[FormConfiguration](#formconfiguration)** The instance
 
+### setUpdateCb
+
+Set the update callback. Called back when delete or save action is done.
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback with data as parameter, e.g. `cb(data) => {}`
+
 ### addAdditionalFields
 
 Add additional fields
@@ -2810,6 +3015,8 @@ Add additional fields
 **Parameters**
 
 -   `form` **Class** A form
+-   `title` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The form title
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Parameters injection on static methods
 
 ### loadConfig
 
@@ -2852,6 +3059,12 @@ Process API callback
 -   `apiRequest` **[APIRequest](#apirequest)** An APIRequest
 
 Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with an APIResponse object
+
+### getDataCopy
+
+Returns a copy of the data object
+
+Returns **([Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) \| [Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object))** A copy of data
 
 ### getConfig
 
@@ -2910,6 +3123,7 @@ Add additional fields to a form base
 **Parameters**
 
 -   `formBase` **Class** The base form
+-   `title` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The form title
 -   `forms` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of forms
 
 ### sanitize
@@ -3231,6 +3445,7 @@ This class is an interface for plugins
 -   `installationManager`  
 -   `userManager`  
 -   `messageManager`  
+-   `scenarioManager`  
 
 ### exportClass
 
@@ -3303,6 +3518,7 @@ This class manage plugins
 -   `installationManager`  
 -   `userManager`  
 -   `messageManager`  
+-   `scenarioManager`  
 
 ### constructor
 
@@ -3325,6 +3541,7 @@ Constructor
 -   `installationManager` **[InstallationManager](#installationmanager)** The installation manager
 -   `userManager` **[UserManager](#usermanager)** The user manager
 -   `messageManager` **[MessageManager](#messagemanager)** The message manager
+-   `scenarioManager` **[ScenarioManager](#scenariomanager)** The scenario manager
 
 Returns **[PluginsManager](#pluginsmanager)** The instance
 
@@ -3639,6 +3856,47 @@ Get messages
 -   `username` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A username
 -   `lastTimestamp` **[number](#number)** Last timestamp retrieval (optional, default `null`)
 
+## ScenarioAPI
+
+Public API for scenarios
+
+**Parameters**
+
+-   `scenarioManager`  
+
+### register
+
+Register to scenario execution engine
+
+**Parameters**
+
+-   `formPart` **[FormObject](#formobject)** A form part
+-   `triggerCb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A trigger called when a scenario should be executed. E.g. : `(scenario) => {}` (optional, default `null`)
+-   `title` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The title for sub form (can be translation key) (optional, default `null`)
+
+### unregister
+
+Unregister to scenario execution engine
+
+**Parameters**
+
+-   `formPart` **[FormObject](#formobject)** A form part
+-   `triggerCb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A trigger called when a scenario should be executed. E.g. : `(scenario) => {}` (optional, default `null`)
+
+### triggerScenario
+
+Called when a scenario is triggered
+
+**Parameters**
+
+-   `scenario` **[ScenarioForm](#scenarioform)** A scenario
+
+### getScenarios
+
+Return a COPY of the scenarios array
+
+Returns **\[[ScenarioForm](#scenarioform)]** An array of Scenario
+
 ## SchedulerAPI
 
 Public API for time events
@@ -3850,6 +4108,7 @@ Add additional fields to user registration
 **Parameters**
 
 -   `form` **[FormObject](#formobject)** A form object
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Parameters injection on static methods
 
 ### getUsers
 
@@ -3986,6 +4245,9 @@ This class manage radio stuff
 -   `pluginsManager`  
 -   `formManager`  
 -   `eventBus`  
+-   `scenarioManager`  
+-   `webServices`  
+-   `translateManager`  
 
 ### constructor
 
@@ -3996,6 +4258,9 @@ Constructor
 -   `pluginsManager` **PluginManager** A plugin manager instance
 -   `formManager` **[FormManager](#formmanager)** A form manager
 -   `eventBus` **EventEmitter** The global event bus
+-   `scenarioManager` **[ScenarioManager](#scenariomanager)** The scenario manager
+-   `webServices` **[WebServices](#webservices)** Web services instance
+-   `translateManager` **[TranslateManager](#translatemanager)** Translate manager
 
 Returns **[RadioManager](#radiomanager)** The instance
 
@@ -4049,6 +4314,317 @@ Emit radio request
 -   `previousStatus` **[number](#number)** The previous object status, used if status is null to invert (optional, default `null`)
 
 Returns **[DbRadio](#dbradio)** A radio  object
+
+### getLastReceivedRadioInformations
+
+Get last received radio informations
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback `cb(radioObjects) => {}`
+-   `nbElements` **[number](#number)** Number of elements (optional, default `100`)
+
+### processAPI
+
+Process API callback
+
+**Parameters**
+
+-   `apiRequest` **[APIRequest](#apirequest)** An APIRequest
+
+Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with an APIResponse object
+
+## RadioScenarioForm
+
+**Extends FormObject.class**
+
+This class provides a radio form part
+
+**Parameters**
+
+-   `id`   (optional, default `null`)
+-   `radioForm`   (optional, default `null`)
+-   `status`   (optional, default `null`)
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `id` **[number](#number)** The id (optional, default `null`)
+-   `radioForm` **[RadioForm](#radioform)** The radio form object (optional, default `null`)
+-   `status` **[number](#number)** The status (optional, default `null`)
+
+Returns **[RadioScenarioForm](#radioscenarioform)** The instance
+
+### radioForm
+
+### status
+
+### json
+
+Convert json data
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some key / value data
+
+Returns **[RadioScenarioForm](#radioscenarioform)** A form object
+
+## RadioScenariosForm
+
+**Extends FormObject.class**
+
+This class provides a list of radio form part
+
+**Parameters**
+
+-   `id`   (optional, default `null`)
+-   `radioScenariosForm`   (optional, default `null`)
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `id` **[number](#number)** The id (optional, default `null`)
+-   `radioScenariosForm` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** The radio form objects (optional, default `null`)
+
+Returns **[RadioScenariosForm](#radioscenariosform)** The instance
+
+### radioScenariosForm
+
+### json
+
+Convert json data
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some key / value data
+
+Returns **[RadioScenariosForm](#radioscenariosform)** A form object
+
+## ScenarioForm
+
+**Extends FormObject.class**
+
+This class provides a form for an scenario
+
+**Parameters**
+
+-   `id`   (optional, default `null`)
+-   `name`   (optional, default `null`)
+-   `enabled`   (optional, default `null`)
+-   `icon`   (optional, default `null`)
+-   `timeTrigger`   (optional, default `null`)
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `id` **[number](#number)** An identifier (optional, default `null`)
+-   `name` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An scenario name (optional, default `null`)
+-   `enabled` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if action is enabled, false otherwise (optional, default `null`)
+-   `icon` **[IconForm](#iconform)** An icon (optional, default `null`)
+-   `timeTrigger` **[TimeScenarioForm](#timescenarioform)** The time trigger (optional, default `null`)
+
+Returns **[ScenarioForm](#scenarioform)** The instance
+
+### name
+
+### enabled
+
+### icon
+
+### timeTrigger
+
+### subActions
+
+### json
+
+Convert json data
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some key / value data
+
+Returns **[ScenarioForm](#scenarioform)** A form object
+
+## ScenarioManager
+
+This class allows to manage scenarios
+
+**Parameters**
+
+-   `confManager`  
+-   `formManager`  
+-   `webServices`  
+-   `timeEventService`  
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `confManager` **[ConfManager](#confmanager)** A configuration manager needed for persistence
+-   `formManager` **[FormManager](#formmanager)** A form manager
+-   `webServices` **[WebServices](#webservices)** The web services
+-   `timeEventService` **[TimeEventService](#timeeventservice)** The time event service
+
+Returns **[ScenarioManager](#scenariomanager)** The instance
+
+### registerScenariosListForm
+
+Register a scenario list form
+
+### generateKey
+
+Generate a registration key
+
+**Parameters**
+
+-   `formPart` **[FormObject](#formobject)** A form part
+-   `triggerCb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A trigger called when a scenario should be executed. E.g. : `(scenario) => {}` (optional, default `null`)
+
+Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A generated key
+
+### register
+
+Register to scenario execution engine
+
+**Parameters**
+
+-   `formPart` **[FormObject](#formobject)** A form part
+-   `triggerCb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A trigger called when a scenario should be executed. E.g. : `(scenario) => {}` (optional, default `null`)
+-   `title` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The title for sub form (optional, default `null`)
+
+### unregister
+
+Unregister to scenario execution engine
+
+**Parameters**
+
+-   `formPart` **[FormObject](#formobject)** A form part
+-   `triggerCb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A trigger called when a scenario should be executed. E.g. : `(scenario) => {}` (optional, default `null`)
+
+### triggerScenario
+
+Called when a scenario is triggered
+
+**Parameters**
+
+-   `scenario` **[ScenarioForm](#scenarioform)** A scenario
+
+### getScenarios
+
+Return a COPY of the scenarios array
+
+Returns **\[[ScenarioForm](#scenarioform)]** An array of Scenario
+
+### timeEventScenario
+
+Time event scenario, called every minutes
+
+**Parameters**
+
+-   `context` **[ScenarioManager](#scenariomanager)** The instance (self, this, ...)
+
+## ScenariosListForm
+
+**Extends FormObject.class**
+
+This class provides the list of scenarios
+
+**Parameters**
+
+-   `id`   (optional, default `null`)
+-   `identifier`   (optional, default `null`)
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `id` **[number](#number)** An identifier (optional, default `null`)
+-   `identifier` **[number](#number)** The scenario identifier (optional, default `null`)
+
+Returns **[ScenariosListForm](#scenarioslistform)** The instance
+
+### identifier
+
+### json
+
+Convert json data
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some key / value data
+
+Returns **[ScenariosListForm](#scenarioslistform)** A form object
+
+### getScenariosName
+
+Form injection method for Scenarios name
+
+**Parameters**
+
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The modules list array
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of devices name
+
+### getScenariosId
+
+Form injection method for Scenarios ids
+
+**Parameters**
+
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The modules list array
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of devices id
+
+## TimeScenarioForm
+
+**Extends FormObject.class**
+
+This class provides a form for a time trigger event for scenario
+
+**Parameters**
+
+-   `id`   (optional, default `null`)
+-   `day`   (optional, default `null`)
+-   `time`   (optional, default `null`)
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `id` **[number](#number)** An identifier (optional, default `null`)
+-   `day` **[number](#number)** The day indicator (optional, default `null`)
+-   `time` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The time (optional, default `null`)
+
+Returns **[TimeScenarioForm](#timescenarioform)** The instance
+
+### day
+
+### time
+
+### json
+
+Convert json data
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some key / value data
+
+Returns **[TimeScenarioForm](#timescenarioform)** A form object
 
 ## SensorsForm
 

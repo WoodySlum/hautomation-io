@@ -1,5 +1,7 @@
 "use strict";
 
+const DateUtils = require("./../../utils/DateUtils");
+
 const FIELD_ID = "id";
 const FIELD_ID_META = {"type" : "int", "version" : "0.0.0"};
 const FIELD_TIMESTAMP = "timestamp";
@@ -520,6 +522,8 @@ class DbRequestBuilder {
                 if (field === FIELD_ID) {
                     // Add to where clause
                     this.whereList.push(FIELD_ID + EQ + this.valuesList[i]);
+                } if (field === FIELD_TIMESTAMP) {
+                    req += field + "=" + this.getValueEncapsulated(DateUtils.class.timestamp(), this.getMetaForField(field)) + ",";
                 } else {
                     req += field + "=" + this.getValueEncapsulated(this.valuesList[i], this.getMetaForField(field)) + ",";
                 }

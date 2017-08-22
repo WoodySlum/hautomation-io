@@ -8,7 +8,7 @@ const RFLinkServiceClass = require("./service.js");
  */
 function loaded(api) {
     api.init();
-    
+
     /**
      * This class manage RFLink
      * @class

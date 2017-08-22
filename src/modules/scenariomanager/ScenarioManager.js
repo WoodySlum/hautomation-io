@@ -1,11 +1,15 @@
 "use strict";
 const Logger = require("./../../logger/Logger");
+const ScenariosListForm = require("./ScenariosListForm");
+const ScenarioSubActionForm = require("./ScenarioSubActionForm");
 const FormConfiguration = require("./../formconfiguration/FormConfiguration");
 const TimeEventService = require("./../../services/timeeventservice/TimeEventService");
 const ScenarioForm = require("./ScenarioForm");
 const TimeScenarioForm = require("./TimeScenarioForm");
+const DateUtils = require("./../../utils/DateUtils");
 const sha256 = require("sha256");
 const CONF_KEY = "scenarios";
+const SUB_ACTION_SCHEDULER_KEY = "sub-action";
 
 /**
  * This class allows to manage scenarios
@@ -19,20 +23,53 @@ class ScenarioManager {
      * @param  {FormManager} formManager  A form manager
      * @param  {WebServices} webServices  The web services
      * @param  {TimeEventService} timeEventService  The time event service
+     * @param  {SchedulerService} schedulerService  The scheduler service
      * @returns {ScenarioManager} The instance
      */
-    constructor(confManager, formManager, webServices, timeEventService) {
+    constructor(confManager, formManager, webServices, timeEventService, schedulerService) {
         this.confManager = confManager;
         this.formManager = formManager;
         this.webServices = webServices;
         this.timeEventService = timeEventService;
+        this.schedulerService = schedulerService;
         this.formConfiguration = new FormConfiguration.class(confManager, formManager, webServices, CONF_KEY, true, ScenarioForm.class);
         this.formManager.register(TimeScenarioForm.class);
+        this.registerScenariosListForm();
+        this.formManager.register(ScenarioSubActionForm.class);
+        // Register to form configuration callback
+        this.formConfiguration.setUpdateCb(() => {
+            this.registerScenariosListForm();
+        });
+
         this.registered = {};
         // Time event
         this.timeEventService.register((self) => {
             self.timeEventScenario(self);
         }, this, TimeEventService.EVERY_MINUTES);
+
+        // Sub actions
+        const self = this;
+        this.schedulerService.register(SUB_ACTION_SCHEDULER_KEY, (data) => {
+            self.getScenarios().forEach((scenario) => {
+                if (scenario.id === data.scenarioId) {
+                    self.triggerScenario(scenario);
+                }
+            });
+        });
+
+    }
+
+    /**
+     * Register a scenario list form
+     */
+    registerScenariosListForm() {
+        const scenariosName = [];
+        const scenariosId = [];
+        this.formConfiguration.data.forEach((scenario) => {
+            scenariosName.push(scenario.name);
+            scenariosId.push(scenario.id);
+        });
+        this.formManager.register(ScenariosListForm.class, scenariosName, scenariosId);
     }
 
     /**
@@ -79,13 +116,27 @@ class ScenarioManager {
      * @param  {ScenarioForm} scenario A scenario
      */
     triggerScenario(scenario) {
-        Logger.info("Trigger scenario " + scenario.id);
-        Object.keys(this.registered).forEach((registeredScenarioKey) => {
-            const registeredScenario = this.registered[registeredScenarioKey];
-            if (registeredScenario.triggerCb) {
-                registeredScenario.triggerCb(scenario);
+        const self = this;
+        if (scenario.enabled) {
+            Logger.info("Trigger scenario " + scenario.id);
+            Object.keys(self.registered).forEach((registeredScenarioKey) => {
+                const registeredScenario = this.registered[registeredScenarioKey];
+                if (registeredScenario.triggerCb) {
+                    registeredScenario.triggerCb(scenario);
+                }
+            });
+
+            // Plan sub actions
+            if (scenario.subActions && scenario.subActions.length > 0) {
+                scenario.subActions.forEach((subAction) => {
+                    let delay = parseInt(subAction.delay);
+                    const nextTriggerTimestamp = delay * 60 + DateUtils.class.timestamp();
+                    Logger.info("Scheduling scenario " + subAction.scenario.scenario + " at " + nextTriggerTimestamp);
+                    self.schedulerService.schedule(SUB_ACTION_SCHEDULER_KEY, nextTriggerTimestamp , {scenarioId:subAction.scenario.scenario});
+                });
+
             }
-        });
+        }
     }
 
     /**

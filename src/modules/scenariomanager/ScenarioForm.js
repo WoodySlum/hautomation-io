@@ -10,20 +10,30 @@ class ScenarioForm extends FormObject.class {
      *
      * @param  {number} [id=null]                  An identifier
      * @param  {string} [name=null]                An scenario name
+     * @param  {boolean} [enabled=null]                True if action is enabled, false otherwise
      * @param  {IconForm} [icon=null]                An icon
      * @param  {TimeScenarioForm} [timeTrigger=null]         The time trigger
+     * @param {Array} [subActions=null]         The sub actions
      * @returns {ScenarioForm} The instance
      */
-    constructor(id = null, name = null, icon = null, timeTrigger = null) {
+    constructor(id = null, name = null, enabled = null, icon = null, timeTrigger = null, subActions = null) {
         super(id);
 
         /**
          * @Property("name");
-         * @Title("device.form.name");
+         * @Title("scenario.form.name");
          * @Type("string");
          * @Required(true);
          */
         this.name = name;
+
+        /**
+         * @Property("enabled");
+         * @Title("scenario.form.enabled");
+         * @Default(true);
+         * @Type("boolean");
+         */
+        this.enabled = enabled;
 
         /**
          * @Property("icon");
@@ -35,11 +45,19 @@ class ScenarioForm extends FormObject.class {
 
         /**
          * @Property("timeTrigger");
-         * @Title("device.form.time.trigger");
+         * @Title("scenario.form.time.trigger");
          * @Type("objects");
          * @Cl("TimeScenarioForm");
          */
         this.timeTrigger = timeTrigger;
+
+        /**
+         * @Property("subActions");
+         * @Title("scenario.form.sub.action");
+         * @Type("objects");
+         * @Cl("ScenarioSubActionForm");
+         */
+        this.subActions = subActions;
     }
 
     /**
@@ -49,7 +67,7 @@ class ScenarioForm extends FormObject.class {
      * @returns {ScenarioForm}      A form object
      */
     json(data) {
-        return new ScenarioForm(data.id, data.name, data.icon, data.timeTrigger);
+        return new ScenarioForm(data.id, data.name, data.enabled, data.icon, data.timeTrigger, data.subActions);
     }
 }
 

@@ -8,12 +8,14 @@
     -   [getForm](#getform)
 -   [FormConfiguration](#formconfiguration)
     -   [constructor](#constructor)
+    -   [setUpdateCb](#setupdatecb)
     -   [addAdditionalFields](#addadditionalfields)
     -   [loadConfig](#loadconfig)
     -   [saveConfig](#saveconfig)
     -   [comparator](#comparator)
     -   [registerForm](#registerform)
     -   [processAPI](#processapi)
+    -   [getDataCopy](#getdatacopy)
     -   [getConfig](#getconfig)
     -   [getForm](#getform-1)
 -   [DashboardAPI](#dashboardapi)
@@ -84,17 +86,22 @@
     -   [unregister](#unregister)
     -   [onMessageReceived](#onmessagereceived)
     -   [getMessages](#getmessages)
--   [SchedulerAPI](#schedulerapi)
+-   [ScenarioAPI](#scenarioapi)
     -   [register](#register-4)
     -   [unregister](#unregister-1)
+    -   [triggerScenario](#triggerscenario)
+    -   [getScenarios](#getscenarios)
+-   [SchedulerAPI](#schedulerapi)
+    -   [register](#register-5)
+    -   [unregister](#unregister-2)
     -   [schedule](#schedule)
     -   [constants](#constants)
 -   [SchedulerService](#schedulerservice)
     -   [constructor](#constructor-5)
     -   [start](#start)
     -   [stop](#stop)
-    -   [register](#register-5)
-    -   [unregister](#unregister-2)
+    -   [register](#register-6)
+    -   [unregister](#unregister-3)
     -   [schedule](#schedule-1)
     -   [timeEvent](#timeevent)
 -   [SchedulerDbObject](#schedulerdbobject)
@@ -120,8 +127,8 @@
 -   [ThemeAPI](#themeapi)
     -   [getColors](#getcolors)
 -   [TimeEventAPI](#timeeventapi)
-    -   [register](#register-6)
-    -   [unregister](#unregister-3)
+    -   [register](#register-7)
+    -   [unregister](#unregister-4)
     -   [constants](#constants-1)
 -   [TimeEventService](#timeeventservice)
     -   [constructor](#constructor-7)
@@ -129,8 +136,8 @@
     -   [stop](#stop-1)
     -   [hash](#hash)
     -   [elementForHash](#elementforhash)
-    -   [register](#register-7)
-    -   [unregister](#unregister-4)
+    -   [register](#register-8)
+    -   [unregister](#unregister-5)
     -   [convertMode](#convertmode)
     -   [timeEvent](#timeevent-1)
 -   [TranslateAPI](#translateapi)
@@ -140,8 +147,8 @@
     -   [addAdditionalFields](#addadditionalfields-1)
     -   [getUsers](#getusers)
 -   [WebAPI](#webapi)
-    -   [register](#register-8)
-    -   [unregister](#unregister-5)
+    -   [register](#register-9)
+    -   [unregister](#unregister-6)
     -   [Authentication](#authentication)
     -   [APIResponse](#apiresponse)
     -   [constants](#constants-2)
@@ -166,8 +173,8 @@
     -   [stop](#stop-2)
     -   [registerInfos](#registerinfos)
     -   [processAPI](#processapi-1)
-    -   [register](#register-9)
-    -   [unregister](#unregister-6)
+    -   [register](#register-10)
+    -   [unregister](#unregister-7)
     -   [registerAPI](#registerapi)
     -   [unregisterAPI](#unregisterapi)
     -   [manageResponse](#manageresponse)
@@ -194,8 +201,8 @@
     -   [stop](#stop-3)
     -   [restart](#restart)
     -   [status](#status)
-    -   [register](#register-10)
-    -   [unregister](#unregister-7)
+    -   [register](#register-11)
+    -   [unregister](#unregister-8)
     -   [setThreadsManager](#setthreadsmanager)
 -   [APIRequest](#apirequest)
     -   [constructor](#constructor-13)
@@ -280,6 +287,14 @@ Constructor
 
 Returns **[FormConfiguration](#formconfiguration)** The instance
 
+### setUpdateCb
+
+Set the update callback. Called back when delete or save action is done.
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback with data as parameter, e.g. `cb(data) => {}`
+
 ### addAdditionalFields
 
 Add additional fields
@@ -287,6 +302,8 @@ Add additional fields
 **Parameters**
 
 -   `form` **Class** A form
+-   `title` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The form title
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Parameters injection on static methods
 
 ### loadConfig
 
@@ -329,6 +346,12 @@ Process API callback
 -   `apiRequest` **[APIRequest](#apirequest)** An APIRequest
 
 Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with an APIResponse object
+
+### getDataCopy
+
+Returns a copy of the data object
+
+Returns **([Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) \| [Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object))** A copy of data
 
 ### getConfig
 
@@ -1041,6 +1064,47 @@ Get messages
 -   `username` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A username
 -   `lastTimestamp` **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** Last timestamp retrieval (optional, default `null`)
 
+## ScenarioAPI
+
+Public API for scenarios
+
+**Parameters**
+
+-   `scenarioManager`  
+
+### register
+
+Register to scenario execution engine
+
+**Parameters**
+
+-   `formPart` **FormObject** A form part
+-   `triggerCb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A trigger called when a scenario should be executed. E.g. : `(scenario) => {}` (optional, default `null`)
+-   `title` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The title for sub form (can be translation key) (optional, default `null`)
+
+### unregister
+
+Unregister to scenario execution engine
+
+**Parameters**
+
+-   `formPart` **FormObject** A form part
+-   `triggerCb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A trigger called when a scenario should be executed. E.g. : `(scenario) => {}` (optional, default `null`)
+
+### triggerScenario
+
+Called when a scenario is triggered
+
+**Parameters**
+
+-   `scenario` **ScenarioForm** A scenario
+
+### getScenarios
+
+Return a COPY of the scenarios array
+
+Returns **\[ScenarioForm]** An array of Scenario
+
 ## SchedulerAPI
 
 Public API for time events
@@ -1484,6 +1548,7 @@ Add additional fields to user registration
 **Parameters**
 
 -   `form` **FormObject** A form object
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Parameters injection on static methods
 
 ### getUsers
 

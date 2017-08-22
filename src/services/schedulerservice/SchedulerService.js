@@ -119,7 +119,7 @@ class SchedulerService extends Service.class {
         }
 
         if (data) {
-            const dbObject = new SchedulerDbObject.class(this.dbHelper, sha256(id), JSON.stringify(data), timestamp);
+            const dbObject = new SchedulerDbObject.class(this.dbHelper, sha256(id), JSON.stringify(data), timestamp, -1);
             dbObject.save();
         }
     }
@@ -130,13 +130,16 @@ class SchedulerService extends Service.class {
      * @param  {SchedulerService} self The SchedulerService instance
      */
     timeEvent(self) {
-        const request = self.dbHelper.RequestBuilder().select().where("triggerDate", self.dbHelper.Operators().GTE, self.lastTriggered);
+        const request = self.dbHelper.RequestBuilder().select().where("triggered", self.dbHelper.Operators().EQ, -1).where("triggerDate", self.dbHelper.Operators().GTE, self.lastTriggered);
         self.dbHelper.getObjects(request, (err, results) => {
             if (!err && results) {
                 results.forEach((schedulerDbObject) => {
                     if (self.registeredElements[schedulerDbObject.identifier]) {
                         self.registeredElements[schedulerDbObject.identifier](JSON.parse(schedulerDbObject.data));
                     }
+
+                    schedulerDbObject.triggered = 1;
+                    schedulerDbObject.save();
                 });
                 self.lastTriggered = (Date.now() / 1000) | 0;
             }

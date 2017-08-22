@@ -36,6 +36,13 @@ class SchedulerDbObject extends DbObject.class {
          * @Version("0.0.0");
          */
         this.triggerDate;
+
+        /**
+         * @Property("triggered");
+         * @Type("int");
+         * @Version("0.0.0");
+         */
+        this.triggered;
     }
 }
 

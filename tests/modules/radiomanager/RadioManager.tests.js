@@ -31,7 +31,7 @@ describe("RadioManager", function() {
         expect(RadioManager.class.prototype.getModules.calledOnce).to.be.true;
         expect(RadioManager.class.prototype.getProtocols.calledOnce).to.be.true;
         expect(RadioManager.class.prototype.registerRadioEvents.calledOnce).to.be.true;
-        expect(core.formManager.register.calledTwice).to.be.true;
+        expect(core.formManager.register.calledThrice).to.be.true;
         RadioManager.class.prototype.getModules.restore();
         RadioManager.class.prototype.getProtocols.restore();
         RadioManager.class.prototype.registerRadioEvents.restore();

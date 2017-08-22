@@ -704,3 +704,84 @@ Here is a plugin sample for new message provider :
 	};
 	
 
+### Scenarios
+
+You can add scenarios addon to your plugin using the `scenarioAPI`. This API is composed of 3 concepts :
+
+* The scenario form registration
+	* Refer to form part. You can create subforms.
+* The trigger callback
+	* Called when an scenario is triggered. If you have specific actions to do, the callback will be executed (turn on / off lights, ...)
+* The trigger action
+	* Call this method to trigger actions. All callbacks will be executed.
+
+Sample :
+
+    /* eslint-disable */
+    "use strict";
+
+    function loaded(api) {
+        api.init();
+
+        class ScenarioSampleForm extends api.exported.FormObject.class {
+            constructor(id, text) {
+                super(id);
+                /**
+                 * @Property("text");
+                 * @Type("string");
+                 * @Title("A text field");
+                 */
+                this.text = text;
+            }
+
+            json(data) {
+                return new ScenarioSampleForm(data.id, data.text);
+            }
+        }
+
+
+        /**
+         * This class is a sample plugin
+         * @class
+         */
+        class Sample {
+            constructor(api) {
+                this.api = api;
+                
+                // Register scenario and add a text field on scenario form
+                this.api.scenarioAPI.register(ScenarioSampleForm, (scenario) => {
+                    // Do what you want here
+                    this.api.exported.Logger.info(scenario);
+                    // If the scenario contains the text "demo" display a simple log line
+                    if (scenario.ScenarioSampleForm && scenario.ScenarioSampleForm.text && scenario.ScenarioSampleForm.text === "demo") {
+                        this.api.exported.Logger.info("A scenario has been trigggered with the 'demo' text !")
+                    }
+                }, "a.text.title");
+
+                // Scheduler callback. Will trigger scenario when scheduler timer is reached.
+                this.api.schedulerAPI.register("scenario-test", (data) => {
+                    this.api.scenarioAPI.getScenarios().forEach((scenario) => {
+                        // If the scenario containes the text "demo" trigger the scenario
+                        if (scenario.ScenarioSampleForm && scenario.ScenarioSampleForm.text && scenario.ScenarioSampleForm.text === "demo") {
+                            this.api.scenarioAPI.triggerScenario(scenario);
+                        }
+                    });
+                });
+
+                // Schedule the trigger scenario in a minute
+                this.api.schedulerAPI.schedule("scenario-test", this.api.schedulerAPI.constants().IN_A_MINUTE);
+            }
+        }
+
+        let s = new Sample(api);
+
+    }
+
+    module.exports.attributes = {
+        loadedCallback: loaded,
+        name: "sample-plugin",
+        version: "0.0.0",
+        category: "misc",
+        description: "I'm a sample plugin"
+    };	
+ 
