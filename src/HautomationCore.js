@@ -113,7 +113,7 @@ class HautomationCore {
         // Dashboard manager
         this.dashboardManager = new DashboardManager.class(this.themeManager, this.webServices, this.translateManager);
         // UserManager module
-        this.userManager = new UserManager.class(this.confManager, this.formManager, this.webServices, this.dashboardManager, AppConfiguration);
+        this.userManager = new UserManager.class(this.confManager, this.formManager, this.webServices, this.dashboardManager, AppConfiguration, this.scenarioManager);
         // Authentication module
         this.authentication = new Authentication.class(this.webServices, this.userManager);
         // Installation manager

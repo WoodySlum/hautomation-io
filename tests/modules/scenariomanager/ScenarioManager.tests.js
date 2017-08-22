@@ -272,6 +272,28 @@ describe("ScenarioManager", function() {
         core.schedulerService.schedule.restore();
     });
 
+    it("location event should trigger specific radio device", function() {
+        const scenarioManager = core.scenarioManager;
+        scenarioManager.formConfiguration.data = [{id:1503304879528,name:"Test multi radio",UserScenarioForm:{mode:3},enabled:true,icon:{icon:"e806"},DevicesListScenarioForm:{devices:[{identifier:1981,status:"on"}]}}];
+
+        sinon.spy(core.deviceManager, "switchDevice");
+        core.userManager.formConfiguration.data = [{username:"foobar", atHome:false}];
+        core.userManager.setUserZone("foobar", true);
+        expect(core.deviceManager.switchDevice.calledOnce).to.be.true;
+        core.deviceManager.switchDevice.restore();
+    });
+
+    it("location event should NOT trigger specific radio device", function() {
+        const scenarioManager = core.scenarioManager;
+        scenarioManager.formConfiguration.data = [{id:1503304879528,name:"Test multi radio",UserScenarioForm:{mode:3},enabled:true,icon:{icon:"e806"},DevicesListScenarioForm:{devices:[{identifier:1981,status:"on"}]}}];
+
+        sinon.spy(core.deviceManager, "switchDevice");
+        core.userManager.formConfiguration.data = [{username:"foobar", atHome:false}];
+        core.userManager.setUserZone("foobar", false);
+        expect(core.deviceManager.switchDevice.calledOnce).to.be.false;
+        core.deviceManager.switchDevice.restore();
+    });
+
     afterEach(() => {
         core = null;
         confManager = null;

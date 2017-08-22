@@ -9,6 +9,7 @@ const Icons = require("./../../utils/Icons");
 const WebServices = require("./../../services/webservices/WebServices");
 const APIResponse = require("./../../services/webservices/APIResponse");
 const GeoUtils = require("./../../utils/GeoUtils");
+const UserScenarioForm = require("./UserScenarioForm");
 const sha256 = require("sha256");
 
 const CONF_KEY = "users";
@@ -30,19 +31,23 @@ class UserManager {
      * @param  {WebServices} webServices  The web services
      * @param  {DashboardManager} dashboardManager  The dashboard manager
      * @param  {AppConfiguration} appConfiguration The app configuration object
+     * @param  {ScenarioManager} scenarioManager  The scenario manager
      * @returns {UserManager} The instance
      */
-    constructor(confManager, formManager, webServices, dashboardManager, appConfiguration) {
+    constructor(confManager, formManager, webServices, dashboardManager, appConfiguration, scenarioManager) {
         this.formConfiguration = new FormConfiguration.class(confManager, formManager, webServices, CONF_KEY, true, UserForm.class);
         this.confManager = confManager;
         this.dashboardManager = dashboardManager;
         this.webServices = webServices;
         this.appConfiguration = appConfiguration;
+        this.scenarioManager = scenarioManager;
         this.updateTile();
         this.registeredHomeNotifications = {};
 
         this.webServices.registerAPI(this, WebServices.POST, ROUTE_USER_ZONE + "[status]/", Authentication.AUTH_USAGE_LEVEL);
         this.webServices.registerAPI(this, WebServices.POST, ROUTE_USER_LCOATION + "[longitude]/[latitude]/[radius*]/[speed*]/[timestamp*]/", Authentication.AUTH_USAGE_LEVEL);
+
+        this.scenarioManager.register(UserScenarioForm.class, null, "user.scenario.form.mode.trigger");
     }
 
     /**
@@ -171,6 +176,7 @@ class UserManager {
      * @param {boolean} inZone True if user is in zone, false otherwise
      */
     setUserZone(username, inZone) {
+        const self = this;
         let u = null;
         this.formConfiguration.getDataCopy().forEach((user) => {
             if (user.username === username) {
@@ -184,6 +190,31 @@ class UserManager {
                 this.formConfiguration.saveConfig(u);
                 Object.keys(this.registerHomeNotifications).forEach((registerHomeNotificationsKey) => {
                     this.registerHomeNotifications[registerHomeNotificationsKey](u);
+                });
+
+                // Trigger scenarios
+                this.scenarioManager.getScenarios().forEach((scenario) => {
+                    if (scenario.UserScenarioForm && scenario.UserScenarioForm.mode) {
+                        switch(scenario.UserScenarioForm.mode) {
+                            case 0:
+                            break;
+                            case 1:
+                                if (self.allUsersAtHome()) {
+                                    self.scenarioManager.triggerScenario(scenario);
+                                }
+                            break;
+                            case 2:
+                                if (self.nobodyAtHome()) {
+                                    self.scenarioManager.triggerScenario(scenario);
+                                }
+                            break;
+                            case 3:
+                                if (self.somebodyAtHome()) {
+                                    self.scenarioManager.triggerScenario(scenario);
+                                }
+                            break;
+                        }
+                    }
                 });
             } else {
                 Logger.info("User " + username + " home status does not changed");
