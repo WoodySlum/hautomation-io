@@ -89,7 +89,7 @@ class UserManager {
      * @returns {[User]} An array of Users
      */
     getUsers() {
-        return this.formConfiguration.data.slice();
+        return this.formConfiguration.getDataCopy();
     }
 
     /**
@@ -100,7 +100,7 @@ class UserManager {
      */
     getUser(username) {
         let foundUser = null;
-        this.formConfiguration.data.forEach((user) => {
+        this.formConfiguration.getDataCopy().forEach((user) => {
             if (user.username.toLowerCase() === username.toLowerCase()) {
                 foundUser = user;
             }

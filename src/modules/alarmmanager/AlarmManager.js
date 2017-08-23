@@ -5,12 +5,15 @@ const Authentication = require("./../authentication/Authentication");
 const APIResponse = require("../../services/webservices/APIResponse");
 const FormConfiguration = require("./../formconfiguration/FormConfiguration");
 const AlarmForm = require("./AlarmForm");
+const AlarmSensorsForm = require("./AlarmSensorsForm");
 const Tile = require("./../dashboardmanager/Tile");
 const Icons = require("./../../utils/Icons");
+const DateUtils = require("./../../utils/DateUtils");
 
 const CONF_KEY = "alarm";
 const SWITCH_ALARM_ROUTE_BASE = "/alarm/switch/set/";
 const SWITCH_ALARM_ROUTE = ":"+ SWITCH_ALARM_ROUTE_BASE + "[status*]/";
+const SENSORS_LOCK_TIME = 60 * 5;
 
 /**
  * This class allows to manage alarm (nable, disable, ...)
@@ -27,9 +30,11 @@ class AlarmManager {
      * @param  {UserManager} userManager  The user manager
      * @param  {SensorsManager} sensorsManager  The sensor manager
      * @param  {TranslateManager} translateManager  The translate manager
+     * @param  {DeviceManager} deviceManager  The device manager
+     * @param  {MessageManager} messageManager  The message manager
      * @returns {Alarm} The instance
      */
-    constructor(confManager, formManager, webServices, dashboardManager, userManager, sensorsManager, translateManager) {
+    constructor(confManager, formManager, webServices, dashboardManager, userManager, sensorsManager, translateManager, deviceManager, messageManager) {
         this.formConfiguration = new FormConfiguration.class(confManager, formManager, webServices, CONF_KEY, false, AlarmForm.class);
         this.confManager = confManager;
         this.webServices = webServices;
@@ -38,6 +43,11 @@ class AlarmManager {
         this.sensorsManager = sensorsManager;
         this.translateManager = translateManager;
         this.formManager = formManager;
+        this.deviceManager = deviceManager;
+        this.messageManager = messageManager;
+        this.formManager.register(AlarmSensorsForm.class);
+        this.sensorsStatus = {};
+        this.alarmTriggered = false;
 
         const self = this;
         this.userManager.registerHomeNotifications(() => {
@@ -52,8 +62,52 @@ class AlarmManager {
             }
         });
 
+        try {
+            this.sensorsManager.registerSensorEvent((id) => {
+                if (self.alarmStatus() && self.formConfiguration.data && self.formConfiguration.data.sensors && self.formConfiguration.data.sensors.length > 0) {
+                    self.formConfiguration.data.sensors.forEach((sensorConfiguration) => {
+                        if (id === sensorConfiguration.sensor.identifier) {
+                            const sensor = self.sensorsManager.getSensorConfiguration(sensorConfiguration.sensor.identifier);
+                            if (sensor && self.sensorReadyForTriggering(sensorConfiguration.sensor.identifier)) {
+                                // Set timestamp for sensor in cache
+                                self.sensorsStatus[sensorConfiguration.sensor.identifier] = DateUtils.class.timestamp();
+                                if (sensorConfiguration.triggerAlarm) {
+                                    self.triggerAlarm();
+                                    self.messageManager.sendMessage("*", self.translateManager.t("alarm.manager.alert.sensor", sensor.name));
+                                    Logger.info("Alert for sensor " + sensor.id + " (" + sensor.name + "). Release lock : " + (self.sensorsStatus[sensorConfiguration.sensor.identifier] + SENSORS_LOCK_TIME));
+                                } else {
+                                    self.messageManager.sendMessage("*", self.translateManager.t("alarm.manager.pre.alert", sensor.name));
+                                    Logger.info("Pre alert for sensor " + sensor.id + " (" + sensor.name + "). Release lock : " + (self.sensorsStatus[sensorConfiguration.sensor.identifier] + SENSORS_LOCK_TIME));
+                                }
+                            }
+                        }
+                    });
+
+                }
+            });
+        } catch(e) {
+            Logger.err("Already registered");
+        }
+
+
         this.webServices.registerAPI(this, WebServices.POST, SWITCH_ALARM_ROUTE, Authentication.AUTH_USAGE_LEVEL);
         this.registerTile();
+    }
+
+    /**
+     * Check if sensor is ready for triggering events
+     *
+     * @param  {string} sensorId The sensor identifier
+     * @returns {boolean}          True if alarm can be trigger, false otherwise
+     */
+    sensorReadyForTriggering(sensorId) {
+        if (this.sensorsStatus[sensorId]) {
+            if ((DateUtils.class.timestamp() - this.sensorsStatus[sensorId]) <= SENSORS_LOCK_TIME) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -101,8 +155,45 @@ class AlarmManager {
             this.formConfiguration.data.enabled = false;
             this.formConfiguration.save();
             this.registerTile();
+            this.stopAlarm(); // Stop sirens and ...
         } else {
             Logger.info("Alarm already disabled");
+        }
+    }
+
+    /**
+     * Trigger the alarm (sirens, ...)
+     */
+    triggerAlarm() {
+        if (!this.alarmTriggered) {
+            this.alarmTriggered = true;
+            const config = this.formConfiguration.getDataCopy();
+            Logger.info("Alarm has been triggered");
+            if (config && config.devicesOnEnable && config.devicesOnEnable.length > 0) {
+                config.devicesOnEnable.forEach((device) => {
+                    this.deviceManager.switchDevice(device.identifier, device.status);
+                });
+            }
+            this.messageManager.sendMessage("*", this.translateManager.t("alarm.manager.alert"));
+        } else {
+            Logger.info("Alarm already triggered");
+        }
+    }
+
+    /**
+     * Stop the alarm (sirens, ...)
+     */
+    stopAlarm() {
+        if (this.alarmTriggered) {
+            this.alarmTriggered = false;
+            const config = this.formConfiguration.getDataCopy();
+            if (config && config.devicesOnDisable && config.devicesOnDisable.length > 0) {
+                config.devicesOnDisable.forEach((device) => {
+                    this.deviceManager.switchDevice(device.identifier, device.status);
+                });
+            }
+        } else {
+            Logger.info("Alarm already stopped");
         }
     }
 
@@ -136,4 +227,4 @@ class AlarmManager {
     }
 }
 
-module.exports = {class:AlarmManager};
+module.exports = {class:AlarmManager, SENSORS_LOCK_TIME:SENSORS_LOCK_TIME};

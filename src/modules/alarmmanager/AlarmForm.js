@@ -1,7 +1,7 @@
 var FormObject = require("./../formmanager/FormObject");
 
 /**
- * This class provides a form for one user
+ * This class provides a form for the alarm
  * @class
  */
 class AlarmForm extends FormObject.class {
@@ -9,11 +9,22 @@ class AlarmForm extends FormObject.class {
      * Constructor
      *
      * @param  {number} [id=null]                  An identifier
-     * @param  {boolean} [enabled=null] Status
+     * @param  {boolean} [enabled=false] Status
      * @param  {boolean} [userLocationTrigger=null] User location auto trigger
      * @returns {AlarmForm} The instance
      */
-    constructor(id = null, enabled = null, userLocationTrigger = null) {
+    /**
+     * Constructor
+     *
+     * @param  {number}  [id=null]                  An identifier
+     * @param  {boolean} [enabled=false]            Alarm status
+     * @param  {boolean} [userLocationTrigger=true] User location trigger
+     * @param  {Array}   [sensors=[]]               List of sensors
+     * @param  {Array}   [devicesOnEnable=[]]       Device to trigger when alarm is triggered
+     * @param  {Array}   [devicesOnDisable=[]]      Device to trigger when alarm is stopped
+     * @returns {AlarmForm} The instance
+     */
+    constructor(id = null, enabled = false, userLocationTrigger = true, sensors = [], devicesOnEnable = [], devicesOnDisable = []) {
         super(id);
 
         /**
@@ -21,7 +32,7 @@ class AlarmForm extends FormObject.class {
          * @Title("alarm.form.status");
          * @Type("boolean");
          * @Default(false);
-         * @Display("hidden");
+         * @Hidden(true);
          */
         this.enabled = enabled;
 
@@ -32,6 +43,41 @@ class AlarmForm extends FormObject.class {
          * @Default(true);
          */
         this.userLocationTrigger = userLocationTrigger;
+
+        /**
+         * @Property("userLocationTrigger");
+         * @Title("alarm.form.user.location.trigger");
+         * @Type("boolean");
+         * @Default(true);
+         */
+        this.userLocationTrigger = userLocationTrigger;
+
+        /**
+         * @Property("sensors");
+         * @Title("alarm.form.trigger.sensors");
+         * @Type("objects");
+         * @Cl("AlarmSensorsForm");
+         * @Default([]);
+         */
+        this.sensors = sensors;
+
+        /**
+         * @Property("devicesOnEnable");
+         * @Title("alarm.form.devices.enable");
+         * @Type("objects");
+         * @Cl("DevicesListForm");
+         * @Default([]);
+         */
+        this.devicesOnEnable = devicesOnEnable;
+
+        /**
+         * @Property("devicesOnDisable");
+         * @Title("alarm.form.devices.disable");
+         * @Type("objects");
+         * @Cl("DevicesListForm");
+         * @Default([]);
+         */
+        this.devicesOnDisable = devicesOnDisable;
     }
 
     /**
@@ -41,7 +87,7 @@ class AlarmForm extends FormObject.class {
      * @returns {AlarmForm}      A form object
      */
     json(data) {
-        return new AlarmForm(data.id, data.enabled, data.userLocationTrigger);
+        return new AlarmForm(data.id, data.enabled, data.userLocationTrigger, data.sensors, data.devicesOnEnable, data.devicesOnDisable);
     }
 }
 

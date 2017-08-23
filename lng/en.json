@@ -1,6 +1,9 @@
 {
-    "datetime.format":"YYYY-MM-DD HH:mm:ss",
-    "sensors.statistics.day.dateformat":"HH:mm",
-    "sensors.statistics.month.dateformat":"MM-DD",
-    "sensors.statistics.year.dateformat":"YYYY-MM"
+    "datetime.format": "YYYY-MM-DD HH:mm:ss",
+    "sensors.statistics.day.dateformat": "HH:mm",
+    "sensors.statistics.month.dateformat": "MM-DD",
+    "sensors.statistics.year.dateformat": "YYYY-MM",
+    "alarm.manager.pre.alert": "Activité détectée : %@",
+    "alarm.manager.alert": "L'alarme de votre domicile s'est déclenchée",
+    "alarm.manager.alert.sensor": "Capteur détecté : %@"
 }

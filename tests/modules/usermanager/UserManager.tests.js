@@ -40,7 +40,8 @@ describe("UserManager", function() {
     it("getUser should return the user", function() {
         const userManager = new UserManager.class(core.confManager, core.formManager, core.webServices, core.dashboardManager, null, core.scenarioManager);
         userManager.formConfiguration.data = [userA, userB];
-        expect(userManager.getUser("userA")).to.be.equal(userA);
+        expect(userManager.getUser("userA").id).to.be.equal(userA.id);
+        expect(userManager.getUser("userA").username).to.be.equal(userA.username);
     });
 
     it("getUser should return null when not found", function() {

@@ -121,7 +121,7 @@ class HautomationCore {
         // Device manager module
         this.deviceManager = new DeviceManager.class(this.confManager, this.formManager, this.webServices, this.radioManager, this.dashboardManager, this.scenarioManager, this.translateManager);
         // Alarm module
-        this.alarmManager = new AlarmManager.class(this.confManager, this.formManager, this.webServices, this.dashboardManager, this.userManager, this.sensorsManager, this.translateManager);
+        this.alarmManager = new AlarmManager.class(this.confManager, this.formManager, this.webServices, this.dashboardManager, this.userManager, this.sensorsManager, this.translateManager, this.deviceManager, this.messageManager);
         // Plugins manager module
         this.pluginsManager = new PluginsManager.class(this.confManager, this.webServices, this.servicesManager, this.dbManager, this.translateManager, this.formManager, this.timeEventService, this.schedulerService, this.dashboardManager, this.eventBus, this.themeManager, this.sensorsManager, this.installationManager, this.userManager, this.messageManager, this.scenarioManager, this.alarmManager);
 
