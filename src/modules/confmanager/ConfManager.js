@@ -145,7 +145,6 @@ class ConfManager {
             } else {
                 try {
                     context.fs.writeFileSync(context.getFilePath(key), context.toBeSaved[key]);
-                    delete context.toBeSaved[key];
                 } catch(e) {
                     Logger.err(e.message);
                 }

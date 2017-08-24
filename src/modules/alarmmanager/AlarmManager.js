@@ -13,7 +13,9 @@ const DateUtils = require("./../../utils/DateUtils");
 const CONF_KEY = "alarm";
 const SWITCH_ALARM_ROUTE_BASE = "/alarm/switch/set/";
 const SWITCH_ALARM_ROUTE = ":"+ SWITCH_ALARM_ROUTE_BASE + "[status*]/";
-const SENSORS_LOCK_TIME = 60 * 5;
+const SENSORS_LOCK_TIME = 60 * 5; // In seconds
+const ARMED_TIMER = 30; // In seconds. Will be scheduled in next minute. At least X seconds rounded to minute.
+const ARMED_IDENTIFIER = "alarm-armed";
 
 /**
  * This class allows to manage alarm (nable, disable, ...)
@@ -32,9 +34,10 @@ class AlarmManager {
      * @param  {TranslateManager} translateManager  The translate manager
      * @param  {DeviceManager} deviceManager  The device manager
      * @param  {MessageManager} messageManager  The message manager
+     * @param  {SchedulerService} schedulerService  The Scheduler service
      * @returns {Alarm} The instance
      */
-    constructor(confManager, formManager, webServices, dashboardManager, userManager, sensorsManager, translateManager, deviceManager, messageManager) {
+    constructor(confManager, formManager, webServices, dashboardManager, userManager, sensorsManager, translateManager, deviceManager, messageManager, schedulerService) {
         this.formConfiguration = new FormConfiguration.class(confManager, formManager, webServices, CONF_KEY, false, AlarmForm.class);
         this.confManager = confManager;
         this.webServices = webServices;
@@ -45,6 +48,7 @@ class AlarmManager {
         this.formManager = formManager;
         this.deviceManager = deviceManager;
         this.messageManager = messageManager;
+        this.schedulerService = schedulerService;
         this.formManager.register(AlarmSensorsForm.class);
         this.sensorsStatus = {};
         this.alarmTriggered = false;
@@ -62,32 +66,33 @@ class AlarmManager {
             }
         });
 
-        try {
-            this.sensorsManager.registerSensorEvent((id) => {
-                if (self.alarmStatus() && self.formConfiguration.data && self.formConfiguration.data.sensors && self.formConfiguration.data.sensors.length > 0) {
-                    self.formConfiguration.data.sensors.forEach((sensorConfiguration) => {
-                        if (id === sensorConfiguration.sensor.identifier) {
-                            const sensor = self.sensorsManager.getSensorConfiguration(sensorConfiguration.sensor.identifier);
-                            if (sensor && self.sensorReadyForTriggering(sensorConfiguration.sensor.identifier)) {
-                                // Set timestamp for sensor in cache
-                                self.sensorsStatus[sensorConfiguration.sensor.identifier] = DateUtils.class.timestamp();
-                                if (sensorConfiguration.triggerAlarm) {
-                                    self.triggerAlarm();
-                                    self.messageManager.sendMessage("*", self.translateManager.t("alarm.manager.alert.sensor", sensor.name));
-                                    Logger.info("Alert for sensor " + sensor.id + " (" + sensor.name + "). Release lock : " + (self.sensorsStatus[sensorConfiguration.sensor.identifier] + SENSORS_LOCK_TIME));
-                                } else {
-                                    self.messageManager.sendMessage("*", self.translateManager.t("alarm.manager.pre.alert", sensor.name));
-                                    Logger.info("Pre alert for sensor " + sensor.id + " (" + sensor.name + "). Release lock : " + (self.sensorsStatus[sensorConfiguration.sensor.identifier] + SENSORS_LOCK_TIME));
-                                }
+        this.schedulerService.register(ARMED_IDENTIFIER, () => {
+            Logger.info("Alarm is armed");
+            self.formConfiguration.data.armed = true;
+            self.formConfiguration.save();
+        });
+
+        this.sensorsManager.registerSensorEvent((id) => {
+            if (self.alarmStatus() && self.formConfiguration.data && self.formConfiguration.data.armed && self.formConfiguration.data.sensors && self.formConfiguration.data.sensors.length > 0) {
+                self.formConfiguration.data.sensors.forEach((sensorConfiguration) => {
+                    if (id === sensorConfiguration.sensor.identifier) {
+                        const sensor = self.sensorsManager.getSensorConfiguration(sensorConfiguration.sensor.identifier);
+                        if (sensor && self.sensorReadyForTriggering(sensorConfiguration.sensor.identifier)) {
+                            // Set timestamp for sensor in cache
+                            self.sensorsStatus[sensorConfiguration.sensor.identifier] = DateUtils.class.timestamp();
+                            if (sensorConfiguration.triggerAlarm) {
+                                self.triggerAlarm();
+                                self.messageManager.sendMessage("*", self.translateManager.t("alarm.manager.alert.sensor", sensor.name));
+                                Logger.info("Alert for sensor " + sensor.id + " (" + sensor.name + "). Release lock : " + (self.sensorsStatus[sensorConfiguration.sensor.identifier] + SENSORS_LOCK_TIME));
+                            } else {
+                                self.messageManager.sendMessage("*", self.translateManager.t("alarm.manager.pre.alert", sensor.name));
+                                Logger.info("Pre alert for sensor " + sensor.id + " (" + sensor.name + "). Release lock : " + (self.sensorsStatus[sensorConfiguration.sensor.identifier] + SENSORS_LOCK_TIME));
                             }
                         }
-                    });
-
-                }
-            });
-        } catch(e) {
-            Logger.err("Already registered");
-        }
+                    }
+                });
+            }
+        });
 
 
         this.webServices.registerAPI(this, WebServices.POST, SWITCH_ALARM_ROUTE, Authentication.AUTH_USAGE_LEVEL);
@@ -133,6 +138,25 @@ class AlarmManager {
     }
 
     /**
+     * Arm the alarm
+     */
+    armAlarm() {
+        this.armCancel();
+        this.schedulerService.schedule(ARMED_IDENTIFIER, (DateUtils.class.timestamp() + ARMED_TIMER));
+        Logger.info("Alarm will be armed at " + (DateUtils.class.timestamp() + ARMED_TIMER));
+    }
+
+    /**
+     * Cancel the armed alarm
+     */
+    armCancel() {
+        Logger.info("Cancelling alarm arm");
+        this.schedulerService.cancel(ARMED_IDENTIFIER);
+        this.formConfiguration.data.armed = false;
+        this.formConfiguration.save();
+    }
+
+    /**
      * Enable alarm
      */
     enableAlarm() {
@@ -141,6 +165,7 @@ class AlarmManager {
             this.formConfiguration.data.enabled = true;
             this.formConfiguration.save();
             this.registerTile();
+            this.armAlarm();
         } else {
             Logger.info("Alarm already enabled");
         }
@@ -154,6 +179,7 @@ class AlarmManager {
             Logger.info("Disable alarm");
             this.formConfiguration.data.enabled = false;
             this.formConfiguration.save();
+            this.armCancel();
             this.registerTile();
             this.stopAlarm(); // Stop sirens and ...
         } else {

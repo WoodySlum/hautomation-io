@@ -125,6 +125,33 @@ class SchedulerService extends Service.class {
     }
 
     /**
+     * Cancel a scheduled operation
+     *
+     * @param  {string}   id       An identifier (must be unique)
+     */
+    cancel(id) {
+        Logger.info("Cancelling alarm " + id);
+        const request = this.dbHelper.RequestBuilder()
+                    .select()
+                    .where("triggered", this.dbHelper.Operators().EQ, -1)
+                    .where("identifier", this.dbHelper.Operators().LIKE, sha256(id));
+        this.dbHelper.getObjects(request, (err, results) => {
+            if (!err && results) {
+                results.forEach((schedulerDbObject) => {
+                    schedulerDbObject.triggered = 2;
+                    schedulerDbObject.save((err) => {
+                        Logger.err(err.message);
+                    });
+                });
+            }
+
+            if (err) {
+                Logger.err(err.message);
+            }
+        });
+    }
+
+    /**
      * Timer event registered
      *
      * @param  {SchedulerService} self The SchedulerService instance

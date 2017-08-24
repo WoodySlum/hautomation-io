@@ -18,6 +18,7 @@ let translateManager;
 let alarmManager;
 let deviceManager;
 let messageManager;
+let schedulerService;
 
 describe("AlarmManager", function() {
     beforeEach(() => {
@@ -33,23 +34,27 @@ describe("AlarmManager", function() {
         deviceManager = core.deviceManager;
         sensorsManager.sensorsConfiguration = [{id:1501240500,plugin:"esp-temperature-sensor",name:"foobar",dashboard:true,statistics:true,dashboardColor:"#6b3583",unit:"cel"}];
         messageManager = core.messageManager;
+        schedulerService = core.schedulerService;
     });
 
     it("constructor should call several methods for intialization", function() {
         sinon.spy(core.webServices, "registerAPI");
         sinon.spy(core.userManager, "registerHomeNotifications");
         sinon.spy(core.sensorsManager, "registerSensorEvent");
-        alarmManager = new AlarmManager.class(confManager, formManager, webServices, dashboardManager, userManager, sensorsManager, translateManager, deviceManager, messageManager);
+        sinon.spy(core.schedulerService, "register");
+        alarmManager = new AlarmManager.class(confManager, formManager, webServices, dashboardManager, userManager, sensorsManager, translateManager, deviceManager, messageManager, schedulerService);
         expect(core.webServices.registerAPI.callCount).to.be.equal(5);
         expect(core.userManager.registerHomeNotifications.calledOnce).to.be.true;
         expect(core.sensorsManager.registerSensorEvent.calledOnce).to.be.true;
+        expect(core.schedulerService.register.calledOnce).to.be.true;
         core.webServices.registerAPI.restore();
         core.userManager.registerHomeNotifications.restore();
         core.sensorsManager.registerSensorEvent.restore();
+        core.schedulerService.register.restore();
     });
 
     it("sensorReadyForTriggering should work good", function() {
-        alarmManager = new AlarmManager.class(confManager, formManager, webServices, dashboardManager, userManager, sensorsManager, translateManager, deviceManager, messageManager);
+        alarmManager = new AlarmManager.class(confManager, formManager, webServices, dashboardManager, userManager, sensorsManager, translateManager, deviceManager, messageManager, schedulerService);
         alarmManager.sensorsStatus = {"foobar":DateUtils.class.timestamp(), "barbar":(DateUtils.class.timestamp() - 2 * AlarmManager.SENSORS_LOCK_TIME)};
         expect(alarmManager.sensorReadyForTriggering("barfoo")).to.be.true;
         expect(alarmManager.sensorReadyForTriggering("foobar")).to.be.false;
@@ -57,59 +62,71 @@ describe("AlarmManager", function() {
     });
 
     it("enableAlarm should really enable alarm and save status", function() {
-        alarmManager = new AlarmManager.class(confManager, formManager, webServices, dashboardManager, userManager, sensorsManager, translateManager, deviceManager, messageManager);
+        alarmManager = new AlarmManager.class(confManager, formManager, webServices, dashboardManager, userManager, sensorsManager, translateManager, deviceManager, messageManager, schedulerService);
         alarmManager.formConfiguration.data = {enabled:false};
         sinon.spy(alarmManager.formConfiguration, "save");
         sinon.spy(alarmManager, "registerTile");
+        sinon.spy(alarmManager, "armAlarm");
         alarmManager.enableAlarm();
-        expect(alarmManager.formConfiguration.save.calledOnce).to.be.true;
+        expect(alarmManager.formConfiguration.save.calledTwice).to.be.true;
         expect(alarmManager.registerTile.calledOnce).to.be.true;
         expect(alarmManager.formConfiguration.data.enabled).to.be.true;
+        expect(alarmManager.armAlarm.calledOnce).to.be.true;
         alarmManager.formConfiguration.save.restore();
         alarmManager.registerTile.restore();
+        alarmManager.armAlarm.restore();
     });
 
     it("enableAlarm should not enable alarm because that was already the case", function() {
-        alarmManager = new AlarmManager.class(confManager, formManager, webServices, dashboardManager, userManager, sensorsManager, translateManager, deviceManager, messageManager);
+        alarmManager = new AlarmManager.class(confManager, formManager, webServices, dashboardManager, userManager, sensorsManager, translateManager, deviceManager, messageManager, schedulerService);
         alarmManager.formConfiguration.data = {enabled:true};
         sinon.spy(alarmManager.formConfiguration, "save");
         sinon.spy(alarmManager, "registerTile");
+        sinon.spy(alarmManager, "armAlarm");
         alarmManager.enableAlarm();
         expect(alarmManager.formConfiguration.save.calledOnce).to.be.false;
         expect(alarmManager.registerTile.calledOnce).to.be.false;
         expect(alarmManager.formConfiguration.data.enabled).to.be.true;
+        expect(alarmManager.armAlarm.calledOnce).to.be.false;
         alarmManager.formConfiguration.save.restore();
         alarmManager.registerTile.restore();
+        alarmManager.armAlarm.restore();
     });
 
     it("disableAlarm should really disable alarm and save status", function() {
-        alarmManager = new AlarmManager.class(confManager, formManager, webServices, dashboardManager, userManager, sensorsManager, translateManager, deviceManager, messageManager);
+        alarmManager = new AlarmManager.class(confManager, formManager, webServices, dashboardManager, userManager, sensorsManager, translateManager, deviceManager, messageManager, schedulerService);
         alarmManager.formConfiguration.data = {enabled:true};
         sinon.spy(alarmManager.formConfiguration, "save");
         sinon.spy(alarmManager, "registerTile");
+        sinon.spy(alarmManager, "armCancel");
         alarmManager.disableAlarm();
-        expect(alarmManager.formConfiguration.save.calledOnce).to.be.true;
+        expect(alarmManager.formConfiguration.save.calledTwice).to.be.true;
         expect(alarmManager.registerTile.calledOnce).to.be.true;
         expect(alarmManager.formConfiguration.data.enabled).to.be.false;
+        expect(alarmManager.armCancel.calledOnce).to.be.true;
         alarmManager.formConfiguration.save.restore();
         alarmManager.registerTile.restore();
+        alarmManager.armCancel.restore();
     });
 
     it("disableAlarm should not disable alarm because that was already the case", function() {
-        alarmManager = new AlarmManager.class(confManager, formManager, webServices, dashboardManager, userManager, sensorsManager, translateManager, deviceManager, messageManager);
+        alarmManager = new AlarmManager.class(confManager, formManager, webServices, dashboardManager, userManager, sensorsManager, translateManager, deviceManager, messageManager, schedulerService);
         alarmManager.formConfiguration.data = {enabled:false};
         sinon.spy(alarmManager.formConfiguration, "save");
         sinon.spy(alarmManager, "registerTile");
+        sinon.spy(alarmManager, "armCancel");
         alarmManager.disableAlarm();
         expect(alarmManager.formConfiguration.save.calledOnce).to.be.false;
         expect(alarmManager.registerTile.calledOnce).to.be.false;
         expect(alarmManager.formConfiguration.data.enabled).to.be.false;
+        expect(alarmManager.armCancel.calledOnce).to.be.false;
         alarmManager.formConfiguration.save.restore();
         alarmManager.registerTile.restore();
+        alarmManager.armCancel.restore();
     });
 
     it("triggerAlarm should trigger alarm", function() {
-        alarmManager = new AlarmManager.class(confManager, formManager, webServices, dashboardManager, userManager, sensorsManager, translateManager, deviceManager, messageManager);
+        alarmManager = new AlarmManager.class(confManager, formManager, webServices, dashboardManager, userManager, sensorsManager, translateManager, deviceManager, messageManager, schedulerService);
         alarmManager.formConfiguration.data = {id:1503493095302,enabled:false,userLocationTrigger:true,sensors:[{sensor:{identifier:1501240500},triggerAlarm:true}],devicesOnEnable:[{identifier:1981,status:"on"}],devicesOnDisable:[{identifier:1982,status:"off"}]};
         const spy = sinon.spy(core.deviceManager, "switchDevice");
         sinon.spy(core.messageManager, "sendMessage");
@@ -124,7 +141,7 @@ describe("AlarmManager", function() {
     });
 
     it("triggerAlarm should not trigger alarm beceause that was already triggered previously", function() {
-        alarmManager = new AlarmManager.class(confManager, formManager, webServices, dashboardManager, userManager, sensorsManager, translateManager, deviceManager, messageManager);
+        alarmManager = new AlarmManager.class(confManager, formManager, webServices, dashboardManager, userManager, sensorsManager, translateManager, deviceManager, messageManager, schedulerService);
         alarmManager.formConfiguration.data = {id:1503493095302,enabled:false,userLocationTrigger:true,sensors:[{sensor:{identifier:1501240500},triggerAlarm:true}],devicesOnEnable:[{identifier:1981,status:"on"}],devicesOnDisable:[{identifier:1982,status:"off"}]};
         alarmManager.alarmTriggered = true;
 
@@ -139,7 +156,7 @@ describe("AlarmManager", function() {
     });
 
     it("stopAlarm should stop running alarm", function() {
-        alarmManager = new AlarmManager.class(confManager, formManager, webServices, dashboardManager, userManager, sensorsManager, translateManager, deviceManager, messageManager);
+        alarmManager = new AlarmManager.class(confManager, formManager, webServices, dashboardManager, userManager, sensorsManager, translateManager, deviceManager, messageManager, schedulerService);
         alarmManager.formConfiguration.data = {id:1503493095302,enabled:false,userLocationTrigger:true,sensors:[{sensor:{identifier:1501240500},triggerAlarm:true}],devicesOnEnable:[{identifier:1981,status:"on"}],devicesOnDisable:[{identifier:1982,status:"off"}]};
         alarmManager.alarmTriggered = true;
 
@@ -153,7 +170,7 @@ describe("AlarmManager", function() {
     });
 
     it("stopAlarm should not stop running alarm beceause that was already triggered previously", function() {
-        alarmManager = new AlarmManager.class(confManager, formManager, webServices, dashboardManager, userManager, sensorsManager, translateManager, deviceManager, messageManager);
+        alarmManager = new AlarmManager.class(confManager, formManager, webServices, dashboardManager, userManager, sensorsManager, translateManager, deviceManager, messageManager, schedulerService);
         alarmManager.formConfiguration.data = {id:1503493095302,enabled:false,userLocationTrigger:true,sensors:[{sensor:{identifier:1501240500},triggerAlarm:true}],devicesOnEnable:[{identifier:1981,status:"on"}],devicesOnDisable:[{identifier:1982,status:"off"}]};
         alarmManager.alarmTriggered = false;
 
@@ -164,11 +181,36 @@ describe("AlarmManager", function() {
         core.deviceManager.switchDevice.restore();
     });
 
+    it("armAlarm should process several small operations", function() {
+        alarmManager = new AlarmManager.class(confManager, formManager, webServices, dashboardManager, userManager, sensorsManager, translateManager, deviceManager, messageManager, schedulerService);
+        alarmManager.formConfiguration.data = {};
+        sinon.spy(alarmManager, "armCancel");
+        sinon.spy(schedulerService, "schedule");
+        alarmManager.armAlarm();
+        expect(alarmManager.armCancel.calledOnce).to.be.true;
+        expect(schedulerService.schedule.calledOnce).to.be.true;
+        alarmManager.armCancel.restore();
+        schedulerService.schedule.restore();
+    });
+
+    it("armCancel should process several small operations", function() {
+        alarmManager = new AlarmManager.class(confManager, formManager, webServices, dashboardManager, userManager, sensorsManager, translateManager, deviceManager, messageManager, schedulerService);
+        alarmManager.formConfiguration.data = {armed:true};
+        sinon.spy(alarmManager.formConfiguration, "save");
+        sinon.spy(schedulerService, "cancel");
+        alarmManager.armCancel();
+        expect(alarmManager.formConfiguration.save.calledOnce).to.be.true;
+        expect(alarmManager.formConfiguration.data.armed).to.be.false;
+        expect(schedulerService.cancel.calledOnce).to.be.true;
+        alarmManager.formConfiguration.save.restore();
+        schedulerService.cancel.restore();
+    });
+
     // More functional tests
 
     it("userLocationTrigger disabled should not enable alarm", function() {
         sinon.stub(core.userManager, "nobodyAtHome").returns(true);
-        alarmManager = new AlarmManager.class(confManager, formManager, webServices, dashboardManager, userManager, sensorsManager, translateManager, deviceManager, messageManager);
+        alarmManager = new AlarmManager.class(confManager, formManager, webServices, dashboardManager, userManager, sensorsManager, translateManager, deviceManager, messageManager, schedulerService);
         alarmManager.formConfiguration.data = {enabled:false, userLocationTrigger:false};
         userManager.formConfiguration.data = [{username:"foobar", atHome:true}];
         userManager.setUserZone("foobar", true);
@@ -179,7 +221,7 @@ describe("AlarmManager", function() {
     it("userLocationTrigger enabled should enable alarm", function() {
         sinon.stub(core.userManager, "nobodyAtHome").returns(true);
         sinon.stub(core.userManager, "somebodyAtHome").returns(false);
-        alarmManager = new AlarmManager.class(confManager, formManager, webServices, dashboardManager, userManager, sensorsManager, translateManager, deviceManager, messageManager);
+        alarmManager = new AlarmManager.class(confManager, formManager, webServices, dashboardManager, userManager, sensorsManager, translateManager, deviceManager, messageManager, schedulerService);
         alarmManager.formConfiguration.data = {enabled:false, userLocationTrigger:true};
         userManager.formConfiguration.data = [{username:"foobar", atHome:true}];
         userManager.setUserZone("foobar", false);
@@ -191,7 +233,7 @@ describe("AlarmManager", function() {
     it("userLocationTrigger enabled should disable alarm", function() {
         sinon.stub(core.userManager, "nobodyAtHome").returns(false);
         sinon.stub(core.userManager, "somebodyAtHome").returns(true);
-        alarmManager = new AlarmManager.class(confManager, formManager, webServices, dashboardManager, userManager, sensorsManager, translateManager, deviceManager, messageManager);
+        alarmManager = new AlarmManager.class(confManager, formManager, webServices, dashboardManager, userManager, sensorsManager, translateManager, deviceManager, messageManager, schedulerService);
         alarmManager.formConfiguration.data = {enabled:true, userLocationTrigger:true};
         userManager.formConfiguration.data = [{username:"foobar", atHome:false}];
         userManager.setUserZone("foobar", true);
@@ -201,8 +243,8 @@ describe("AlarmManager", function() {
     });
 
     it("sensor signal should enable pre-alarm", function() {
-        alarmManager = new AlarmManager.class(confManager, formManager, webServices, dashboardManager, userManager, sensorsManager, translateManager, deviceManager, messageManager);
-        alarmManager.formConfiguration.data = {id:1503493095302,enabled:true,userLocationTrigger:true,sensors:[{sensor:{identifier:1501240500},triggerAlarm:false}],devicesOnEnable:[{identifier:1981,status:"on"}],devicesOnDisable:[{identifier:1982,status:"off"}]};
+        alarmManager = new AlarmManager.class(confManager, formManager, webServices, dashboardManager, userManager, sensorsManager, translateManager, deviceManager, messageManager, schedulerService);
+        alarmManager.formConfiguration.data = {id:1503493095302,enabled:true,armed:true,userLocationTrigger:true,sensors:[{sensor:{identifier:1501240500},triggerAlarm:false}],devicesOnEnable:[{identifier:1981,status:"on"}],devicesOnDisable:[{identifier:1982,status:"off"}]};
         sinon.spy(messageManager, "sendMessage");
         sinon.spy(alarmManager, "triggerAlarm");
         sinon.spy(alarmManager, "sensorReadyForTriggering");
@@ -217,8 +259,8 @@ describe("AlarmManager", function() {
     });
 
     it("sensor signal should NOT enable pre-alarm", function() {
-        alarmManager = new AlarmManager.class(confManager, formManager, webServices, dashboardManager, userManager, sensorsManager, translateManager, deviceManager, messageManager);
-        alarmManager.formConfiguration.data = {id:1503493095302,enabled:true,userLocationTrigger:true,sensors:[{sensor:{identifier:1501240500},triggerAlarm:false}],devicesOnEnable:[{identifier:1981,status:"on"}],devicesOnDisable:[{identifier:1982,status:"off"}]};
+        alarmManager = new AlarmManager.class(confManager, formManager, webServices, dashboardManager, userManager, sensorsManager, translateManager, deviceManager, messageManager, schedulerService);
+        alarmManager.formConfiguration.data = {id:1503493095302,enabled:true,armed:true,userLocationTrigger:true,sensors:[{sensor:{identifier:1501240500},triggerAlarm:false}],devicesOnEnable:[{identifier:1981,status:"on"}],devicesOnDisable:[{identifier:1982,status:"off"}]};
         sinon.spy(messageManager, "sendMessage");
         sinon.spy(alarmManager, "triggerAlarm");
         sinon.spy(alarmManager, "sensorReadyForTriggering");
@@ -233,8 +275,8 @@ describe("AlarmManager", function() {
     });
 
     it("sensor signal should trigger alarm", function() {
-        alarmManager = new AlarmManager.class(confManager, formManager, webServices, dashboardManager, userManager, sensorsManager, translateManager, deviceManager, messageManager);
-        alarmManager.formConfiguration.data = {id:1503493095302,enabled:true,userLocationTrigger:true,sensors:[{sensor:{identifier:1501240500},triggerAlarm:true}],devicesOnEnable:[{identifier:1981,status:"on"}],devicesOnDisable:[{identifier:1982,status:"off"}]};
+        alarmManager = new AlarmManager.class(confManager, formManager, webServices, dashboardManager, userManager, sensorsManager, translateManager, deviceManager, messageManager, schedulerService);
+        alarmManager.formConfiguration.data = {id:1503493095302,enabled:true,armed:true,userLocationTrigger:true,sensors:[{sensor:{identifier:1501240500},triggerAlarm:true}],devicesOnEnable:[{identifier:1981,status:"on"}],devicesOnDisable:[{identifier:1982,status:"off"}]};
         sinon.spy(messageManager, "sendMessage");
         sinon.spy(alarmManager, "triggerAlarm");
         sinon.spy(alarmManager, "sensorReadyForTriggering");
@@ -259,5 +301,6 @@ describe("AlarmManager", function() {
         translateManager = null;
         deviceManager = null;
         messageManager = null;
+        schedulerService = null;
     });
 });

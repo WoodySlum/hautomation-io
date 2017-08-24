@@ -18,13 +18,14 @@ class AlarmForm extends FormObject.class {
      *
      * @param  {number}  [id=null]                  An identifier
      * @param  {boolean} [enabled=false]            Alarm status
+     * @param  {boolean} [armed=false]              Alarm armed status
      * @param  {boolean} [userLocationTrigger=true] User location trigger
      * @param  {Array}   [sensors=[]]               List of sensors
      * @param  {Array}   [devicesOnEnable=[]]       Device to trigger when alarm is triggered
      * @param  {Array}   [devicesOnDisable=[]]      Device to trigger when alarm is stopped
      * @returns {AlarmForm} The instance
      */
-    constructor(id = null, enabled = false, userLocationTrigger = true, sensors = [], devicesOnEnable = [], devicesOnDisable = []) {
+    constructor(id = null, enabled = false, armed = false, userLocationTrigger = true, sensors = [], devicesOnEnable = [], devicesOnDisable = []) {
         super(id);
 
         /**
@@ -35,6 +36,15 @@ class AlarmForm extends FormObject.class {
          * @Hidden(true);
          */
         this.enabled = enabled;
+
+        /**
+         * @Property("armed");
+         * @Title("alarm.form.armed");
+         * @Type("boolean");
+         * @Default(false);
+         * @Hidden(true);
+         */
+        this.armed = armed;
 
         /**
          * @Property("userLocationTrigger");
@@ -87,7 +97,7 @@ class AlarmForm extends FormObject.class {
      * @returns {AlarmForm}      A form object
      */
     json(data) {
-        return new AlarmForm(data.id, data.enabled, data.userLocationTrigger, data.sensors, data.devicesOnEnable, data.devicesOnDisable);
+        return new AlarmForm(data.id, data.enabled, data.armed, data.userLocationTrigger, data.sensors, data.devicesOnEnable, data.devicesOnDisable);
     }
 }
 
