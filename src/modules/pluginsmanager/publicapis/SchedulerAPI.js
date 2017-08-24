@@ -52,6 +52,15 @@ class SchedulerAPI {
     }
 
     /**
+     * Cancel a scheduled operation
+     *
+     * @param  {string}   id       An identifier (must be unique)
+     */
+    cancel(id) {
+        PrivateProperties.oprivate(this).schedulerService.cancel(id);
+    }
+
+    /**
      * Expose a list of constants : `IN_A_MINUTE`, `IN_FIVE_MINUTES`, `IN_TEN_MINUTES`, `IN_THIRTY_MINUTES`, `IN_A_HOUR`, `IN_TWELVE_HOUR`, `IN_A_DAY`
      *
      * @returns {Object} Constants

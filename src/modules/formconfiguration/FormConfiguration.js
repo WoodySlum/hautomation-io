@@ -125,6 +125,13 @@ class FormConfiguration {
     }
 
     /**
+     * Save data
+     */
+    save() {
+        this.saveConfig(this.data);
+    }
+
+    /**
      * List comparator for ConfManager
      *
      * @param  {Object} obj1 An first object

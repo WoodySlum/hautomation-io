@@ -89,7 +89,7 @@ class UserManager {
      * @returns {[User]} An array of Users
      */
     getUsers() {
-        return this.formConfiguration.data.slice();
+        return this.formConfiguration.getDataCopy();
     }
 
     /**
@@ -100,7 +100,7 @@ class UserManager {
      */
     getUser(username) {
         let foundUser = null;
-        this.formConfiguration.data.forEach((user) => {
+        this.formConfiguration.getDataCopy().forEach((user) => {
             if (user.username.toLowerCase() === username.toLowerCase()) {
                 foundUser = user;
             }
@@ -188,8 +188,8 @@ class UserManager {
             if (u.atHome !== inZone) {
                 u.atHome = inZone;
                 this.formConfiguration.saveConfig(u);
-                Object.keys(this.registerHomeNotifications).forEach((registerHomeNotificationsKey) => {
-                    this.registerHomeNotifications[registerHomeNotificationsKey](u);
+                Object.keys(this.registeredHomeNotifications).forEach((registeredHomeNotificationsKey) => {
+                    this.registeredHomeNotifications[registeredHomeNotificationsKey](u);
                 });
 
                 // Trigger scenarios
@@ -231,7 +231,7 @@ class UserManager {
      */
     registerHomeNotifications(cb) {
         const key = sha256(cb.toString());
-        this.registerHomeNotifications[key] = cb;
+        this.registeredHomeNotifications[key] = cb;
     }
 
     /**
@@ -241,7 +241,7 @@ class UserManager {
      */
     unregisterHomeNotifications(cb) {
         const key = sha256(cb.toString());
-        delete this.registerHomeNotifications[key];
+        delete this.registeredHomeNotifications[key];
     }
 
     /**

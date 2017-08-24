@@ -145,17 +145,6 @@ describe("SensorsManager", function() {
         expect(Object.keys(sensorsManager.delegates).length).to.be.equal(2);
     });
 
-    it("register for sensor events should throw error dur to already registered", function() {
-        const sensorsManager = new SensorsManager.class(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager);
-        sensorsManager.registerSensorEvent((id, type, value, unit, vcc, aggValue, aggUnit) => { });
-        try {
-            sensorsManager.registerSensorEvent((id, type, value, unit, vcc, aggValue, aggUnit) => { });
-            expect(false).to.be.true;
-        } catch(e) {
-            expect(e.message).to.be.equal(SensorsManager.ERROR_ALREADY_REGISTERED);
-        }
-    });
-
     it("unregister for sensor events should work as well", function() {
         const sensorsManager = new SensorsManager.class(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager);
         const cb = (id, type, value, unit, vcc, aggValue, aggUnit) => {};

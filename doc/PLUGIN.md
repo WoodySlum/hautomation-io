@@ -785,3 +785,17 @@ Sample :
         description: "I'm a sample plugin"
     };	
  
+### Alarm
+
+#### Retrieve status
+
+	api.alarmAPI.alarmStatus(); // Return true or false
+
+#### Enable alarm
+
+	api.alarmAPI.enableAlarm();
+
+#### Disable alarm
+
+	api.alarmAPI.disableAlarm();
+

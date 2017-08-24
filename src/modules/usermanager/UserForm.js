@@ -15,7 +15,7 @@ class UserForm extends FormObject.class {
      * @param  {string} [name=null] Full name
      * @param  {string} [picture=null]  Picture, in base64 format
      * @param  {boolean} [atHome=false]  True if user is at home, false otherwise
-     * @returns {User} The instance
+     * @returns {UserForm} The instance
      */
     constructor(id = null, username = null, password = null, level = null, name = null, picture = null, atHome = false) {
         super(id);
