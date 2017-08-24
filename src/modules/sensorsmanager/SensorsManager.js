@@ -142,11 +142,7 @@ class SensorsManager {
      */
     registerSensorEvent(cb, identifier = "*", type = "*") {
         const id = sha256(cb.toString() + identifier + type);
-        if (!this.delegates[id]) {
-            this.delegates[id] = {identifier:identifier, type:type, cb:cb};
-        } else {
-            throw Error(ERROR_ALREADY_REGISTERED);
-        }
+        this.delegates[id] = {identifier:identifier, type:type, cb:cb};
     }
 
     /**
