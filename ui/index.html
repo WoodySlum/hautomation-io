@@ -245,7 +245,22 @@
 	  		</div>
 	  	</div>
 	</div>
-
+    <div id="cameraModal" class="modal fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <form id="cameraSelectForm"></form>
+                    <div id="cameraForm"></div>
+                </div>
+                <div class="modal-footer">
+                    <span id="cameraOtaFlashBtn"></span>
+                    <button class="btn btn-danger" aria-hidden="true" id="deleteCameraForm"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> ui.delete</button>
+                    <button class="btn btn-primary" aria-hidden="true" id="saveCameraForm"><span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span> ui.save</button>
+                    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> ui.close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 	<div id="sensorFlashModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
     		<div class="modal-content">
@@ -523,6 +538,18 @@
 					  					</div>
 					  				</div>
 					  			</div>
+                                <div id="manageCameras" class="tab-pane active">
+                                    	<h3>ui.manage.cameras.title</h3>
+                                    	<h6><span class="glyphicon glyphicon-question-sign"></span> ui.manage.cameras.subtitle</h6>
+                                	<div>
+                                		<img src="img/squares.svg" id="camerasLoader" />
+                                	</div>
+                                	<div id="camerasTable">
+                                		<button type="button" id="addCameras" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus"></span>  ui.add</button>&nbsp;&nbsp;
+                                		<div class="squareAdminTable" id="camerasContent" >
+                                		</div>
+                                	</div>
+                                </div>
 								<div id="manageDevices" class="tab-pane active">
 					  				<h3>ui.manage.devices.title</h3>
 					  				<h6><span class="glyphicon glyphicon-question-sign"></span> ui.manage.devices.subtitle</h6>
@@ -603,26 +630,6 @@
 
 									</div>
 					  			</div>
-                                <div id="manageCameras" class="tab-pane active">
-                                    <h3>ui.manage.cameras.title</h3>
-                                    <h6><span class="glyphicon glyphicon-question-sign"></span> ui.manage.cameras.subtitle</h6>
-                                    <div>
-                                        <img src="img/squares.svg" id="camerasLoader" />
-                                    </div>
-                                    <div id="cameraTable">
-                                        <button type="button" id="addManageCamera" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus"></span> ui.add</button>
-
-                                        <div class="squareAdminTable" id="camerasTable">
-
-					  					</div>
-                                    </div>
-                                    <div class="manageForm">
-                                        <div id="addCameraRes"></div>
-                                        <div>
-                                            <form id="addCameraForm"></form>
-                                        </div>
-                                    </div>
-                                </div>
                                 <div id="manageConfig" class="tab-pane active">
                                     <h3>ui.manage.configuration.title</h3>
                                     <h6><span class="glyphicon glyphicon-question-sign"></span> ui.manage.configuration.subtitle</h6>

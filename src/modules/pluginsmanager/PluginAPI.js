@@ -20,6 +20,7 @@ var UserAPI = require("./publicapis/UserAPI");
 var MessageAPI = require("./publicapis/MessageAPI");
 var ScenarioAPI = require("./publicapis/ScenarioAPI");
 var AlarmAPI = require("./publicapis/AlarmAPI");
+var CameraAPI = require("./publicapis/CameraAPI");
 
 var DateUtils = require("./../../utils/DateUtils");
 var Icons = require("./../../utils/Icons");
@@ -51,9 +52,10 @@ class PluginsAPI {
     //  * @param  {MessageManager} messageManager The message manager
     //  * @param  {ScenarioManager} scenarioManager The scenario manager
     //  * @param  {AlarmManager} alarmManager The alarm manager
+    //  * @param  {CamerasManager} camerasManager The cameras manager
     //  * @returns {PluginAPI}                  Insntance
     //  */
-    constructor(previousVersion, p, webServices, servicesManager, dbManager, translateManager, formManager, confManager, timeEventService, schedulerService, dashboardManager, themeManager, sensorsManager, installationManager, userManager, messageManager, scenarioManager, alarmManager) {
+    constructor(previousVersion, p, webServices, servicesManager, dbManager, translateManager, formManager, confManager, timeEventService, schedulerService, dashboardManager, themeManager, sensorsManager, installationManager, userManager, messageManager, scenarioManager, alarmManager, camerasManager) {
         PrivateProperties.createPrivateState(this);
         this.previousVersion = previousVersion;
         this.p = p;
@@ -95,6 +97,7 @@ class PluginsAPI {
         this.messageAPI = new MessageAPI.class(messageManager);
         this.scenarioAPI = new ScenarioAPI.class(scenarioManager);
         this.alarmAPI = new AlarmAPI.class(alarmManager);
+        this.cameraAPI = new CameraAPI.class(formManager, this, camerasManager);
     }
 
     // /**

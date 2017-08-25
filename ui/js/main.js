@@ -1889,7 +1889,6 @@ $(document).ready(function() {
         if (cameras == null) {
             return false;
         }
-        keys = Object.keys(cameras);
         cameraSelector = $("#cameraSelector");
 
         foundDefaultCamera = false;
@@ -1901,23 +1900,24 @@ $(document).ready(function() {
             cameraSelector.append("<label class=\"btn btn-default cameraSelectorClick\" id=\"idcameraall\"><input type=\"radio\" name=\"options\" id=\"optCameraall\" />" + t('js.camera.selector.all', null) + "</label>");
 
             cameraWallStream = [];
-            for (i = 0; i < keys.length; i++) {
+            for (i = 0; i < cameras.length; i++) {
                 //camSelectorContent =
-                cameraSelector.append("<label class=\"btn btn-default cameraSelectorClick\" id=\"idcamera" + cameras[keys[i]]["key"] + "\"><input type=\"radio\" name=\"options\" id=\"optCamera" + cameras[keys[i]]["key"] + "\" />" + cameras[keys[i]]["description"] + "</label>");
+                cameraSelector.append("<label class=\"btn btn-default cameraSelectorClick\" id=\"idcamera" + cameras[i].id + "\"><input type=\"radio\" name=\"options\" id=\"optCamera" + cameras[i].id + "\" />" + cameras[i].name + "</label>");
 
-                if (cameras[keys[i]]["videoUrl"] !== null) {
+                var videoUrl = vUrl + "camera/get/mjpeg/" + cameras[i].id + "/?u=" + username + "&p=" + password;
+                if (videoUrl !== null) {
                     if ((j > 0) && ((j % 3) == 0)) {
                         wall += '</div><div class="row">';
                     }
 
 
-                    var canvasId = 'wall-stream-' + keys[i];
+                    var canvasId = 'wall-stream-' + cameras[i].id;
 
                     //var player = new MJPEG.Player(canvasId, (vUrl + cameras[keys[i]]["videoUrl"]), {});
                     //cameraWallStream.push(player);
 
                     // wall += '<div class="col-md-4 cameraWallCrop cameraSelectorClick" id="idcam' + cameras[keys[i]]["key"] + '"><div>' + cameras[keys[i]]["description"] + '</div><canvas id="' + canvasId + '"></canvas></div>';
-                    wall += '<div class="col-md-4 cameraWallCrop cameraSelectorClick" id="idcam' + cameras[keys[i]]["key"] + '"><div>' + cameras[keys[i]]["description"] + '</div><img class="cameraWallImage" id="camera-preview-' + cameras[keys[i]]["key"] + '" src="' + vUrl + cameras[keys[i]]["videoUrl"] + '" /></div>';
+                    wall += '<div class="col-md-4 cameraWallCrop cameraSelectorClick" id="idcam' + cameras[i].id + '"><div>' + cameras[i].name + '</div><img class="cameraWallImage" id="camera-preview-' + cameras[i].id + '" src="' + videoUrl + '" /></div>';
                     $("#cameraWall").html(wall);
 
                     j++;
@@ -1933,10 +1933,11 @@ $(document).ready(function() {
 
         } else {
             // Resume video
-            for (i = 0; i < keys.length; i++) {
-                if (cameras[keys[i]]["videoUrl"] !== null && $("#camera-preview-" + keys[i]).attr("src") == "") {
-                    consolelog("Resuming video for #camera-preview-" + cameras[keys[i]]["key"]);
-                    $("#camera-preview-" + cameras[keys[i]]["key"]).attr("src", vUrl + cameras[keys[i]]["videoUrl"]);
+            for (i = 0; i < cameras.length; i++) {
+                var videoUrl = vUrl + "camera/get/mjpeg/" + cameras[i].id + "/?u=" + username + "&p=" + password;
+                if (videoUrl !== null && $("#camera-preview-" + cameras[i].id).attr("src") == "") {
+                    consolelog("Resuming video for #camera-preview-" + cameras[i].id);
+                    $("#camera-preview-" + cameras[i].id).attr("src", videoUrl);
                 }
             }
         }
@@ -1964,11 +1965,11 @@ $(document).ready(function() {
                 }
 
                 // Restart cameraWall
-                var keys = Object.keys(cameras);
-                for (i = 0; i < keys.length; i++) {
-                    if ($("#camera-preview-" + keys[i]) && $("#camera-preview-" + keys[i]).attr("src") == "") {
-                        consolelog("Restart MJPEG flow for " + "#camera-preview-" + keys[i]);
-                        $("#camera-preview-" + cameras[keys[i]]["key"]).attr("src", vUrl + cameras[keys[i]]["videoUrl"]);
+                for (i = 0; i < cameras.length; i++) {
+                    var videoUrl = vUrl + "camera/get/mjpeg/" + cameras[i].id + "/?u=" + username + "&p=" + password;
+                    if ($("#camera-preview-" + keys[i]) && $("#camera-preview-" + cameras[i].id).attr("src") == "") {
+                        consolelog("Restart MJPEG flow for " + "#camera-preview-" + cameras[i].id);
+                        $("#camera-preview-" + cameras[i].id).attr("src", videoUrl);
                     }
                 }
 
@@ -1980,12 +1981,11 @@ $(document).ready(function() {
                 $("#cameraHistoryForm").show();
 
                 // Stop camera wall stream
-                var keys = Object.keys(cameras);
-                for (i = 0; i < keys.length; i++) {
-                    if ($("#camera-preview-" + keys[i]) && $("#camera-preview-" + keys[i]).attr("src") != "") {
+                for (i = 0; i < cameras.length; i++) {
+                    if ($("#camera-preview-" + keys[i]) && $("#camera-preview-" + cameras[i].id).attr("src") != "") {
                         // Clear MJPEG stream
-                        $("#camera-preview-" + keys[i]).attr("src", "");
-                        consolelog("Stopping MJPEG flow for " + "#camera-preview-" + keys[i]);
+                        $("#camera-preview-" + cameras[i].id).attr("src", "");
+                        consolelog("Stopping MJPEG flow for " + "#camera-preview-" + cameras[i].id);
                     }
                 }
 
@@ -2003,21 +2003,20 @@ $(document).ready(function() {
     var getCameras = function() {
         var camerasCache = readCookie('cameras-cache');
         if (camerasCache != null) {
-            cameras = JSON.parse(Base64.decode(readCookie('cameras-cache').replace(/apN/g, "a").replace(/ehx/g, "e").replace(/InO/g, "i")));
+            cameras = JSON.parse(Base64.decode(readCookie('cameras-cache')));
             drawCameras();
         }
         if (Object.keys(cameras).length == 0) showLoader();
         reqCamera = $.ajax({
-            type: "POST",
-            url: vUrl,
+            type: "GET",
+            url: vUrl + "cameras/list/",
             data: {
-                username: username,
-                ePassword: ePassword,
-                method: "getCameras"
+                u: username,
+                p: password
             }
         }).done(function(msg) {
-            bakeCookie('cameras-cache', Base64.encode(msg).replace(/a/g, "apN").replace(/e/g, "ehx").replace(/i/g, "InO"));
-            cameras = jQuery.parseJSON(msg);
+            bakeCookie('cameras-cache', Base64.encode(JSON.stringify(msg)));
+            cameras = msg;
             drawCameras();
             hideLoader();
         }).fail(function(msg) {
@@ -2523,11 +2522,23 @@ $(document).ready(function() {
         generateCertificate();
     });
 
+    var getCameraObject = function() {
+        if ((selectedCamera === null) || (selectedCamera == "")) return;
+        var camera = null;
+        for (var i = 0 ; i < cameras.length ; i++) {
+
+            if (parseInt(cameras[i].id) === parseInt(selectedCamera)) {
+                camera = cameras[i];
+            }
+        }
+
+        return camera;
+    }
 
     var getCamera = function() {
-        if ((selectedCamera === null) || (selectedCamera == "")) return;
-        if (cameras && cameras[selectedCamera] && cameras[selectedCamera].hasOwnProperty("videoUrl") && (cameras[selectedCamera]["videoUrl"] !== null)) {
-            document.getElementById("cameraSource").src = vUrl + cameras[selectedCamera]["videoUrl"];
+        camera = getCameraObject();
+        if (camera && camera.mjpeg) {
+            document.getElementById("cameraSource").src = vUrl + "camera/get/mjpeg/" + camera.id + "/?u=" + username + "&p=" + password;
 
             // Camera zoom
             window.setTimeout(function() {
@@ -2553,18 +2564,14 @@ $(document).ready(function() {
                 // Fallback to image
                 videoCameraMode = false;
                 $.ajax({
-                    type: "POST",
-                    url: vUrl,
+                    type: "GET",
+                    url: vUrl + "camera/get/static/" + selectedCamera + "/1/",
                     data: {
-                        username: username,
-                        ePassword: ePassword,
-                        method: "getCameraPicture",
-                        cameraQuality: "high",
-                        base64: true,
-                        camera: selectedCamera
+                        u: username,
+                        p: password
                     }
                 }).done(function(msg) {
-                    cameraImage = msg;
+                    cameraImage = msg.data;
                     //$("#cameraSource").elevateZoom(null);
                     if (cameraImage.length == 0) {
                         $('#cameraSource').hide();
@@ -2590,80 +2597,84 @@ $(document).ready(function() {
         }
     }
 
-    $("#cameraUp").click(function() {
-        $.ajax({
-            type: "POST",
-            url: vUrl,
-            data: {
-                username: username,
-                ePassword: ePassword,
-                method: "moveCameraUp",
-                cameraPan: cameraPanVal,
-                camera: selectedCamera
-            }
-        }).done(function(msg) {
-            consolelog("Camera up !");
-        }).fail(function(msg) {
-            //setError(msg);
-        });
-
-    });
-
     $("#cameraLeft").click(function() {
-        $.ajax({
-            type: "POST",
-            url: vUrl,
-            data: {
-                username: username,
-                ePassword: ePassword,
-                method: "moveCameraLeft",
-                cameraPan: cameraPanVal,
-                camera: selectedCamera
-            }
-        }).done(function(msg) {
-            consolelog("Camera left !");
-        }).fail(function(msg) {
-            //setError(msg);
-        });
-
+        camera = getCameraObject();
+        if (camera && camera.move) {
+            $.ajax({
+                type: "POST",
+                url: vUrl + "camera/move/" + camera.id + "/1/",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    u: username,
+                    p: password,
+                    data: {}
+                })
+            }).done(function(msg) {
+                consolelog("Camera left !");
+            }).fail(function(msg) {
+                //setError(msg);
+            });
+        }
     });
 
     $("#cameraRight").click(function() {
-        $.ajax({
-            type: "POST",
-            url: vUrl,
-            data: {
-                username: username,
-                ePassword: ePassword,
-                method: "moveCameraRight",
-                cameraPan: cameraPanVal,
-                camera: selectedCamera
-            }
-        }).done(function(msg) {
-            consolelog("Camera right !");
-        }).fail(function(msg) {
-            //setError(msg);
-        });
+        camera = getCameraObject();
+        if (camera && camera.move) {
+            $.ajax({
+                type: "POST",
+                url: vUrl + "camera/move/" + camera.id + "/2/",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    u: username,
+                    p: password,
+                    data: {}
+                })
+            }).done(function(msg) {
+                consolelog("Camera right !");
+            }).fail(function(msg) {
+                //setError(msg);
+            });
+        }
+    });
 
+    $("#cameraUp").click(function() {
+        camera = getCameraObject();
+        if (camera && camera.move) {
+            $.ajax({
+                type: "POST",
+                url: vUrl + "camera/move/" + camera.id + "/3/",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    u: username,
+                    p: password,
+                    data: {}
+                })
+            }).done(function(msg) {
+                consolelog("Camera up !");
+            }).fail(function(msg) {
+                //setError(msg);
+            });
+        }
     });
 
     $("#cameraDown").click(function() {
-        $.ajax({
-            type: "POST",
-            url: vUrl,
-            data: {
-                username: username,
-                ePassword: ePassword,
-                method: "moveCameraDown",
-                cameraPan: cameraPanVal,
-                camera: selectedCamera
-            }
-        }).done(function(msg) {
-            consolelog("Camera down !");
-        }).fail(function(msg) {
-            //setError(msg);
-        });
-
+        camera = getCameraObject();
+        if (camera && camera.move) {
+            $.ajax({
+                type: "POST",
+                url: vUrl + "camera/move/" + camera.id + "/4/",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    u: username,
+                    p: password,
+                    data: {}
+                })
+            }).done(function(msg) {
+                consolelog("Camera down !");
+            }).fail(function(msg) {
+                //setError(msg);
+            });
+        }
     });
 
     var getHouseInfo = function() {
@@ -4277,244 +4288,7 @@ $(document).ready(function() {
         });
     }
 
-    $("#manageCamerasItem").click(function() {
-        $("#cameraTable").show();
-        $("#addCameraForm").empty();
-        showLoader();
-        $.ajax({
-            type: "POST",
-            url: vUrl,
-            data: {
-                username: username,
-                ePassword: ePassword,
-                method: "getCamerasAdmin"
-            }
-        }).done(function(msg) {
-            var jsonData = JSON.parse(msg);
-            if (jsonData) {
-                keys = Object.keys(jsonData);
 
-                var length = keys.length;
-
-                var data = [];
-                for (var i = 0; i < length; i++) {
-                    var tmp = {};
-                    tmp.id = keys[i];
-                    tmp.description = jsonData[keys[i]].description;
-                    tmp.icon = 'E83F';
-                    data.push(tmp);
-                }
-
-                drawSquareAdminInterface(data, $("#camerasTable"), "camera-set-", "camera-del-", "setManageCamera", "delManageCamera");
-
-                $(".setManageCamera").click(function() {
-                    if (event.target.tagName.toLowerCase() === 'span') {
-                        targetId = event.target.parentNode.id.replace("camera-set-", "");
-                    } else {
-                        targetId = event.target.id.replace("camera-set-", "");
-                    }
-                    consolelog("changed !" + targetId);
-                    consolelog(jsonData[targetId]);
-
-                    manageCameraForm(jsonData[targetId], targetId);
-                });
-
-                $(".delManageCamera").click(function() {
-                    if (event.target.tagName.toLowerCase() === 'span') {
-                        targetId = event.target.parentNode.id.replace("camera-del-", "");
-                    } else {
-                        targetId = event.target.id.replace("camera-del-", "");
-                    }
-                    consolelog("changed !" + targetId);
-                    consolelog(jsonData[targetId]);
-
-                    swal(Object.assign({
-                        title: t('js.cameras.form.confirm', [jsonData[targetId].description]),
-                        type: "warning",
-                        showCancelButton: true,
-                        confirmButtonText: t('js.continue', null),
-                        cancelButtonText: t('js.cancel', null),
-                        showLoaderOnConfirm: true
-                    }, swalDefaults)).then(function() {
-                        // Confirm
-                        $.ajax({
-                            type: "POST",
-                            url: vUrl,
-                            data: {
-                                username: username,
-                                ePassword: ePassword,
-                                method: "delCamera",
-                                name: targetId
-                            }
-                        }).done(function(msg) {
-                            $("#manageCamerasItem").click();
-                        }).fail(function(msg) {
-                            setError(msg);
-                        });
-                    }, function(mode) {
-                        // Cancel
-                        if (mode && mode != 'cancel') {
-                            return;
-                        }
-                    });
-                });
-            }
-            $("#addManageCamera").unbind();
-            $("#addManageCamera").click(function() {
-                manageCameraForm(null, null);
-            });
-            $("#camerasLoader").hide();
-            hideLoader();
-        }).fail(function(msg) {
-            hideLoader();
-            setError(msg);
-            $("#camerasLoader").hide();
-        });
-    });
-
-    var manageCameraSubform = function(obj, key, subform, cameraPluginList) {
-        $("#addCameraForm").empty();
-        cameraTable = $("#cameraTable");
-        cameraTable.hide();
-        keyField = 'string';
-        if (key) keyField = 'hidden';
-
-        cameraPluginSchemaDescriptor = {
-            key: {
-                type: "hidden"
-            },
-            cameraPlugin: {
-                type: "string",
-                title: t('js.cameras.subform.type', null),
-                readonly: true
-            },
-            description: {
-                type: "string",
-                title: t('js.cameras.subform.description', null)
-            },
-            defaultCam: {
-                type: "boolean"
-            }
-        };
-        schemaDescriptor = jQuery.extend(cameraPluginSchemaDescriptor, subform.schema);
-        formDescriptor = [{
-            "key": "key"
-        }, {
-            "key": "cameraPlugin"
-        }, {
-            "key": "description"
-        }, {
-            "key": "defaultCam",
-            "inlinetitle": t('js.cameras.subform.default', null)
-        }];
-        buttonsDescriptor = [{
-            "type": "button",
-            "title": "<span class=\"glyphicon glyphicon-remove\"></span> " + t('js.cancel', null),
-            "onClick": function(evt) {
-                $("#cameraTable").show();
-                $("#addCameraForm").empty();
-                window.scrollTo(0, 0);
-            }
-        }, {
-            "type": "button",
-            "htmlClass": "btn-primary",
-            "title": "<span class=\"glyphicon glyphicon-floppy-disk\"></span> " + t('js.save', null),
-            "onClick": function(evt) { /*evt.target.submit();*/ }
-        }];
-        formDescriptor = formDescriptor.concat(subform.form);
-        formDescriptor = formDescriptor.concat(buttonsDescriptor);
-
-
-        $("#addCameraForm").jsonForm({
-            schema: schemaDescriptor,
-            "form": formDescriptor,
-            "value": obj,
-            onSubmit: function(errors, values) {
-                consolelog(errors);
-                if (errors) {
-                    setError(t('js.invalid.form.data', null));
-                } else {
-                    //dataKey = values.key;
-                    //cameraData[dataKey] = values;
-                    cameraData = values;
-                    setCameras();
-                    toastr.success(t('js.form.success', null));
-                }
-            }
-        });
-    }
-
-    var manageCameraForm = function(obj, key) {
-        $("#addCameraForm").empty();
-        cameraTable = $("#cameraTable");
-        cameraTable.hide();
-        keyField = 'string';
-        if (key) keyField = 'hidden';
-
-        $.ajax({
-            type: "POST",
-            url: vUrl,
-            data: {
-                username: username,
-                ePassword: ePassword,
-                method: "getSupportedCameraList"
-            }
-        }).done(function(msg) {
-            cameras = JSON.parse(msg, function(key, value) {
-                if (value && (typeof value === 'string') && value.indexOf("function") === 0) {
-                    // we can only pass a function as string in JSON ==> doing a real function
-                    var jsFunc = new Function('return ' + value)();
-                    return jsFunc;
-                }
-
-                return value;
-            });
-
-            cameraPluginList = new Array(t('js.cameras.plugins.pick', null));
-            cameraPluginFormList = new Array();
-            cameraPluginFormTitlesList = {};
-            for (var i = 0; i < cameras.length; i++) {
-                cameraPluginList.push(cameras[i].identifier);
-                cameraPluginFormList[cameras[i].identifier] = cameras[i].config;
-                cKey = cameras[i].identifier;
-                cValue = cameras[i].name;
-                cameraPluginFormTitlesList[cKey] = cValue;
-            }
-
-            if (obj != null) {
-                if (obj.cameraPlugin) {
-                    manageCameraSubform(obj, key, cameraPluginFormList[obj.cameraPlugin], cameraPluginList);
-                    return false;
-                }
-            }
-            $("#addCameraForm").empty();
-            $("#addCameraForm").jsonForm({
-                schema: {
-                    cameraPlugin: {
-                        "type": "string",
-                        "title": t('js.cameras.subform.type', null),
-                        "enum": cameraPluginList
-                    }
-                },
-                "form": [{
-                    "key": "cameraPlugin",
-                    "titleMap": cameraPluginFormTitlesList,
-                    "onChange": function(evt) {
-                        if (!obj) {
-                            obj = {
-                                cameraPlugin: null
-                            };
-                        }
-                        obj.cameraPlugin = evt.target.value;
-                        manageCameraSubform(obj, key, cameraPluginFormList[evt.target.value], cameraPluginList);
-                    }
-                }],
-                "value": obj
-            });
-        }).fail(function(msg) {
-            setError(msg);
-        });
-    }
     // Manage config
 
     var setManageConfig = function(configData) {
@@ -4824,6 +4598,250 @@ $(document).ready(function() {
             }
         });
     }
+
+    // Cameras
+
+    $("#manageCamerasItem").click(function() {
+        $("#camerasLoader").show();
+        showLoader();
+        reqPluginList = $.ajax({
+            type: "GET",
+            url: vUrl + "cameras/get/",
+            data: {
+                u: username,
+                p: password
+            }
+        }).done(function(cameras) {
+
+
+
+            var nbLine = 4;
+            var colcount = 0;
+            var camerasContent = '';
+            $("#camerasContent").empty();
+
+            for (var i = 0; i < cameras.length; i++) {
+                if (colcount == 0) {
+                    camerasContent = camerasContent + '<div class="row">';
+                }
+                camerasContent = camerasContent + '<div class="col-md-2 cameraClick sensorClick squareAdmin" id="' + cameras[i].identifier + '" style="cursor:pointer;">';
+                camerasContent = camerasContent + '<div><i class="fa sensorIcon" data-unicode="E83F">&#xE83F</i></div>';
+                camerasContent = camerasContent + '<div class="squareAdminText">' + cameras[i].name + '</div>';
+                camerasContent = camerasContent + '</div>';
+                colcount++;
+                if (colcount == 5) {
+                    camerasContent = camerasContent + '</div>';
+                    colcount = 0;
+                }
+            }
+            if (colcount != 0) {
+                camerasContent = camerasContent + '</div>';
+            }
+            $("#camerasContent").html(camerasContent);
+
+            $("#camerasLoader").hide();
+
+            $(".cameraClick").unbind();
+            $(".cameraClick").click(function(e) {
+                $("#deleteCameraForm").show();
+                $('#cameraModal').modal('show');
+                $('#cameraSelectForm').empty();
+                $('#cameraOtaFlashBtn').empty();
+
+
+                var camera = null;
+                for (var i = 0; i < cameras.length; i++) {
+                    if (parseInt(cameras[i].identifier) === parseInt(e.currentTarget.id)) {
+                        camera = cameras[i];
+                        break;
+                    }
+                }
+
+                $("#deleteCameraForm").unbind();
+                $("#deleteCameraForm").click(function() {
+
+                    swal(Object.assign({
+                        title: t('js.global.cameras.form.confirm', null),
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: t('js.continue', null),
+                        cancelButtonText: t('js.cancel', null),
+                        showLoaderOnConfirm: true
+                    }, swalDefaults)).then(function() {
+                        // Confirm
+                        showLoader();
+                        // Confirm
+                        $.ajax({
+                            type: "DELETE",
+                            url: vUrl + "cameras/del/" + camera.identifier +"/",
+                            data: {
+                                u: username,
+                                p: password
+                            }
+                        }).done(function(data) {
+                            $("#manageCamerasItem").click();
+                            $('#cameraModal').modal('hide');
+                            hideLoader();
+                        }).fail(function(msg) {
+                            setError(msg);
+                        });
+                    }, function(mode) {
+                        // Cancel
+                        if (mode && mode != 'cancel') {
+                            return;
+                        }
+                    });
+                });
+
+                // Display camera form
+                $("#saveCameraForm").unbind();
+                $("#saveCameraForm").click(function() {
+                    $("#react-btn-submit-camera").click();
+                });
+
+                $("#cameraForm").empty();
+
+                var self = this;
+                ReactDOM.render(React.createElement(Form, {schema:camera.form.schema, uiSchema:camera.form.schemaUI, formData:camera.form.data, onSubmit: function(data) {
+                    $.ajax({
+                        type: "POST",
+                        url: vUrl + "cameras/set/" + camera.form.data.id + "/",
+                        contentType: "application/json",
+                        data: JSON.stringify({
+                            u: username,
+                            p: password,
+                            data: data.formData
+                        })
+                    }).done(function(data) {
+                        $("#manageCamerasItem").click();
+                        $('#cameraModal').modal('hide');
+                    }).fail(function(msg) {
+                        $('#cameraModal').modal('hide');
+                        setError(msg);
+                    });
+                }},
+                React.createElement(
+                  "button",
+                  { type: "submit", className:"btn btn-success hidden", id:"react-btn-submit-camera" },
+                  "button.save"
+              )), document.getElementById("cameraForm"));
+            });
+            hideLoader();
+        });
+    });
+
+    $("#addCameras").click(function() {
+        $("#camerasLoader").show();
+        showLoader();
+        reqPluginList = $.ajax({
+            type: "GET",
+            url: vUrl + "cameras/available/get/",
+            data: {
+                u: username,
+                p: password
+            }
+        }).done(function(camerasAvailableData) {
+            $("#camerasLoader").hide();
+            $("#deleteCameraForm").hide();
+
+            if (camerasAvailableData) {
+                var formContent = '<select id="cameraSelector" class="form-control">';
+                formContent = formContent + '<option value="">' + t('js.global.cameras.form.camera.type.default', null) + '</option>';
+
+                for (var i = 0; i < camerasAvailableData.length; i++) {
+                    formContent = formContent + '<option value="' + i + '">' + camerasAvailableData[i].description + '</option>';
+                }
+
+                formContent = formContent + '</select>';
+                $('#cameraSelectForm').empty();
+                $('#cameraForm').empty();
+                $('#cameraSelectForm').append(formContent);
+                $('#cameraModal').modal('show');
+                $("#cameraSelector").unbind();
+                $('#cameraSelector').change(function() {
+                    var key = $('#cameraSelector').val();
+                    if (key == '') return;
+                    var cameraAvailableData = camerasAvailableData[parseInt(key)];
+                    var self = this;
+                    ReactDOM.render(React.createElement(Form, {schema:cameraAvailableData.form.schema, uiSchema:cameraAvailableData.form.schemaUI, formData:{}, onSubmit: function(data) {
+                        $.ajax({
+                            type: "POST",
+                            url: vUrl + "cameras/set/",
+                            contentType: "application/json",
+                            data: JSON.stringify({
+                                u: username,
+                                p: password,
+                                data: data.formData
+                            })
+                        }).done(function(data) {
+                            $("#manageCamerasItem").click();
+                            $('#cameraModal').modal('hide');
+                        }).fail(function(msg) {
+                            $('#cameraModal').modal('hide');
+                            setError(msg);
+                        });
+                    }},
+                    React.createElement(
+                      "button",
+                      { type: "submit", className:"btn btn-success hidden", id:"react-btn-submit-camera" },
+                      "button.save"
+                  )), document.getElementById("cameraForm"));
+
+
+
+
+                    // Display camera form
+                    $("#saveCameraForm").unbind();
+                    $("#saveCameraForm").click(function() {
+                        $("#react-btn-submit-camera").click();
+                    });
+
+                    var plugin = jsonData[key];
+                    consolelog(plugin);
+                    $("#cameraForm").empty();
+                    var pluginIdentifier = plugin.identifier;
+                    var selectedPluginId = parseInt(key);
+                    consolelog("----->");
+                    consolelog(plugin);
+
+                    $("#cameraForm").jsonForm({
+                        schema: plugin.config.schema,
+                        "form": plugin.config.form,
+                        "value": plugin.configValues,
+                        onSubmit: function(errors, values) {
+                            if (errors || (values.cameraLocation == null && values.cameraLocationExisting == null)) {
+                                setError(t('js.invalid.form.data', null));
+                            } else {
+                                if (values.cameraLocation && (values.cameraLocation != '')) values.cameraLocationExisting = values.cameraLocation;
+                                values.cameraLocation = null;
+                                reqPluginSetConfig = $.ajax({
+                                    type: "POST",
+                                    url: vUrl,
+                                    data: {
+                                        username: username,
+                                        ePassword: ePassword,
+                                        method: "setCamera",
+                                        data: JSON.stringify(values),
+                                        pluginIdentifier: pluginIdentifier
+                                    }
+                                }).done(function(msg) {
+                                    jsonData[selectedPluginId].configValues = values;
+                                    $('#cameraModal').modal('hide');
+                                    toastr.success(t('js.form.success', null));
+                                    $("#manageCamerasItem").click();
+                                }).fail(function(msg) {
+                                    displayError(msg);
+                                });
+                            }
+                        }
+                    });
+                });
+            }
+            hideLoader();
+        });
+    });
+
+    // Sensors
 
     $("#manageSensorsItem").click(function() {
         $("#sensorsLoader").show();

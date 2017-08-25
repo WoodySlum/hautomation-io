@@ -36,7 +36,9 @@ const INTERNAL_PLUGINS = [
     "pressure-sensor",
     "esp-temperature-sensor",
     "message-provider",
-    "prowl"
+    "prowl",
+    "camera",
+    "sumpple"
 ];
 
 /**
@@ -64,9 +66,10 @@ class PluginsManager {
      * @param {MessageManager} messageManager  The message manager
      * @param  {ScenarioManager} scenarioManager The scenario manager
      * @param  {AlarmManager} alarmManager The alarm manager
+     * @param  {CamerasManager} camerasManager The cameras manager
      * @returns {PluginsManager} The instance
      */
-    constructor(confManager, webServices, servicesManager, dbManager, translateManager, formManager, timeEventService, schedulerService, dashboardManager, eventBus, themeManager, sensorsManager, installationManager, userManager, messageManager, scenarioManager, alarmManager) {
+    constructor(confManager, webServices, servicesManager, dbManager, translateManager, formManager, timeEventService, schedulerService, dashboardManager, eventBus, themeManager, sensorsManager, installationManager, userManager, messageManager, scenarioManager, alarmManager, camerasManager) {
         this.fs = fs;
         this.path = path;
         this.remi = remi;
@@ -87,6 +90,7 @@ class PluginsManager {
         this.messageManager = messageManager;
         this.scenarioManager = scenarioManager;
         this.alarmManager = alarmManager;
+        this.camerasManager = camerasManager;
 
         this.plugins = [];
         try {
@@ -198,7 +202,8 @@ class PluginsManager {
                 this.userManager,
                 this.messageManager,
                 this.scenarioManager,
-                this.alarmManager
+                this.alarmManager,
+                this.camerasManager
             );
 
             initializedPlugins.push(pApi);
@@ -271,6 +276,7 @@ class PluginsManager {
                 classes = plugin.exported;
             } catch(e) {
                 Logger.err("Plugin " + plugin.identifier + " crashed : " + e.message);
+                Logger.err(e.stack);
             }
         });
     }
