@@ -22,6 +22,7 @@ const IconFormManager = require("./forms/IconFormManager");
 const DashboardManager = require("./modules/dashboardmanager/DashboardManager");
 const ThemeManager = require("./modules/thememanager/ThemeManager");
 const SensorsManager = require("./modules/sensorsmanager/SensorsManager");
+const CamerasManager = require("./modules/camerasmanager/CamerasManager");
 const InstallationManager = require("./modules/installationmanager/InstallationManager");
 const CoreInstaller = require("./../installer/CoreInstaller");
 const MessageManager = require("./modules/messagemanager/MessageManager");
@@ -110,6 +111,8 @@ class HautomationCore {
         this.sensorsManager = new SensorsManager.class(this.pluginsManager, this.eventBus, this.webServices, this.formManager, this.confManager, this.translateManager, this.themeManager);
         // Dashboard manager
         this.dashboardManager = new DashboardManager.class(this.themeManager, this.webServices, this.translateManager);
+        // Cameras manager module
+        this.camerasManager = new CamerasManager.class(this.pluginsManager, this.eventBus, this.webServices, this.formManager, this.confManager, this.translateManager, this.themeManager, this.dashboardManager, this.timeEventService);
         // UserManager module
         this.userManager = new UserManager.class(this.confManager, this.formManager, this.webServices, this.dashboardManager, AppConfiguration, this.scenarioManager);
         // Authentication module
@@ -123,7 +126,7 @@ class HautomationCore {
         // Alarm module
         this.alarmManager = new AlarmManager.class(this.confManager, this.formManager, this.webServices, this.dashboardManager, this.userManager, this.sensorsManager, this.translateManager, this.deviceManager, this.messageManager, this.schedulerService);
         // Plugins manager module
-        this.pluginsManager = new PluginsManager.class(this.confManager, this.webServices, this.servicesManager, this.dbManager, this.translateManager, this.formManager, this.timeEventService, this.schedulerService, this.dashboardManager, this.eventBus, this.themeManager, this.sensorsManager, this.installationManager, this.userManager, this.messageManager, this.scenarioManager, this.alarmManager);
+        this.pluginsManager = new PluginsManager.class(this.confManager, this.webServices, this.servicesManager, this.dbManager, this.translateManager, this.formManager, this.timeEventService, this.schedulerService, this.dashboardManager, this.eventBus, this.themeManager, this.sensorsManager, this.installationManager, this.userManager, this.messageManager, this.scenarioManager, this.alarmManager, this.camerasManager);
 
 
         // Add services to manager

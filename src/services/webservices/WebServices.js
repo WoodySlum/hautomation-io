@@ -71,22 +71,31 @@ class WebServices extends Service.class {
 
             // GET Apis
             this.app.get(endpoint + "*/", function(req, res) {
-                let apiRequest = instance.manageResponse(req, endpoint);
-                Logger.verbose(apiRequest);
+                let apiRequest = instance.manageResponse(req, endpoint, res);
+                const logObject = Object.assign({}, apiRequest);
+                delete logObject.res;
+                delete logObject.req;
+                Logger.verbose(logObject);
                 instance.runPromises(apiRequest, instance.buildPromises(apiRequest), res);
             });
 
             // POST Apis
             this.app.post(endpoint + "*/", function(req, res) {
-                let apiRequest = instance.manageResponse(req, endpoint);
-                Logger.verbose(apiRequest);
+                let apiRequest = instance.manageResponse(req, endpoint, res);
+                const logObject = Object.assign({}, apiRequest);
+                delete logObject.res;
+                delete logObject.req;
+                Logger.verbose(logObject);
                 instance.runPromises(apiRequest, instance.buildPromises(apiRequest), res);
             });
 
             // DELETE Apis
             this.app.delete(endpoint + "*/", function(req, res) {
-                let apiRequest = instance.manageResponse(req, endpoint);
-                Logger.verbose(apiRequest);
+                let apiRequest = instance.manageResponse(req, endpoint, res);
+                const logObject = Object.assign({}, apiRequest);
+                delete logObject.res;
+                delete logObject.req;
+                Logger.verbose(logObject);
                 instance.runPromises(apiRequest, instance.buildPromises(apiRequest), res);
             });
 
@@ -258,9 +267,10 @@ class WebServices extends Service.class {
      *
      * @param  {Request} req        The WS request
      * @param  {string} endpoint    The WS endpoint
+     * @param  {Response} res        The WS response
      * @returns {APIRequest}         An API Request
      */
-    manageResponse(req, endpoint) {
+    manageResponse(req, endpoint, res) {
         let method = req.method;
         let ip = req.ip;
         let route = req.path.replace(endpoint, "");
@@ -314,7 +324,7 @@ class WebServices extends Service.class {
 
         Logger.info(method + " " + req.path + " from " + ip + " " + req.headers[CONTENT_TYPE]);
 
-        return new APIRequest.class(methodConstant, ip, route, path, action, params, data);
+        return new APIRequest.class(methodConstant, ip, route, path, action, params, req, res, data);
     }
 
     /**
@@ -433,16 +443,18 @@ class WebServices extends Service.class {
         });
 
         // Only authentication has been registered, so it's unknown API
-        if (apiResponses.length === 1 && !process.env.TEST) {
+        if (apiResponses.length === 1 && apiResponse.success && !process.env.TEST) {
             apiResponse = new APIResponse.class(false, {}, 1, "Unknown api called");
         }
 
-        Logger.verbose(apiResponse);
         if (apiResponse.success) {
             if (apiResponse.upToDate) {
                 res.status(API_UP_TO_DATE).send();
-            } else {
+            } else if (!apiResponse.contentType || (apiResponse.contentType === APIResponse.JSON_CONTENT_TYPE)) {
                 res.json(apiResponse.response);
+            } else {
+                res.setHeader("Content-Type", apiResponse.contentType);
+                res.end(apiResponse.response, "binary");
             }
         } else {
             res.status(API_ERROR_HTTP_CODE).json({"code":apiResponse.errorCode,"message":apiResponse.errorMessage});

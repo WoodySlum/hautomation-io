@@ -25,7 +25,7 @@ describe("APIRequest", function() {
     });
 
     it("constructor fill correctly elements with data", function() {
-        let r = new APIRequest.class("1", "2", "3", "4", "5", "6", "7");
+        let r = new APIRequest.class("1", "2", "3", "4", "5", "6", "8", "9", "7");
         expect(r).to.have.property("data").and.equal("7");
     });
 
