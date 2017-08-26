@@ -46,6 +46,7 @@ class WebServices extends Service.class {
      * @param  {int} [sslPort=8443]     The listening HTTPS port
      * @param  {string} [sslKey=null]   The path for SSL key
      * @param  {string} [sslCert=null]  The path for sslCert key
+     * @param  {string} [enableCompression=true]  Enable gzip data compression
      * @returns {WebServices}            The instance
      */
     constructor(port = 8080, sslPort = 8043, sslKey = null, sslCert = null, enableCompression = true) {
@@ -74,12 +75,12 @@ class WebServices extends Service.class {
             if (this.enableCompression) {
                 this.app.use(compression({filter: (req, res) => {
                     if (req.headers["x-no-compression"]) {
-                      // don't compress responses with this request header
-                      return false;
+                        // don't compress responses with this request header
+                        return false;
                     }
 
                     // fallback to standard filter function
-                    return compression.filter(req, res)
+                    return compression.filter(req, res);
                 }}));
             }
 
