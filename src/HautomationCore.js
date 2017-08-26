@@ -82,7 +82,7 @@ class HautomationCore {
 
         // Services
         // Web services and API
-        this.webServices = new WebServices.class(AppConfiguration.port, AppConfiguration.ssl.port, AppConfiguration.ssl.key, AppConfiguration.ssl.cert);
+        this.webServices = new WebServices.class(AppConfiguration.port, AppConfiguration.ssl.port, AppConfiguration.ssl.key, AppConfiguration.ssl.cert, AppConfiguration.compression);
 
         //  Time event service
         this.timeEventService = new TimeEventService.class();

@@ -49,7 +49,7 @@ class ConfManager {
         if (!process.env.TEST) {
             this.timeEventService.register((self) => {
                 self.writeDataToDisk(self, true);
-            }, this, TimeEventService.EVERY_MINUTES);
+            }, this, TimeEventService.EVERY_HOURS);
         }
     }
 
