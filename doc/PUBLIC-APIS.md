@@ -2,6 +2,14 @@
 
 ### Table of Contents
 
+-   [AlarmAPI](#alarmapi)
+    -   [alarmStatus](#alarmstatus)
+    -   [enableAlarm](#enablealarm)
+    -   [disableAlarm](#disablealarm)
+-   [CameraAPI](#cameraapi)
+    -   [registerForm](#registerform)
+    -   [registerClass](#registerclass)
+    -   [getCameras](#getcameras)
 -   [ConfigurationAPI](#configurationapi)
     -   [register](#register)
     -   [getConfiguration](#getconfiguration)
@@ -12,8 +20,9 @@
     -   [addAdditionalFields](#addadditionalfields)
     -   [loadConfig](#loadconfig)
     -   [saveConfig](#saveconfig)
+    -   [save](#save)
     -   [comparator](#comparator)
-    -   [registerForm](#registerform)
+    -   [registerForm](#registerform-1)
     -   [processAPI](#processapi)
     -   [getDataCopy](#getdatacopy)
     -   [getConfig](#getconfig)
@@ -43,7 +52,7 @@
 -   [DbObject](#dbobject)
     -   [constructor](#constructor-3)
     -   [base](#base)
-    -   [save](#save)
+    -   [save](#save-1)
     -   [del](#del)
 -   [DbRequestBuilder](#dbrequestbuilder)
     -   [constructor](#constructor-4)
@@ -51,7 +60,7 @@
     -   [escapeString](#escapestring)
     -   [getValueEncapsulated](#getvalueencapsulated)
     -   [getMetaForField](#getmetaforfield)
-    -   [save](#save-1)
+    -   [save](#save-2)
     -   [get](#get-1)
     -   [del](#del-1)
     -   [selectOp](#selectop)
@@ -95,6 +104,7 @@
     -   [register](#register-5)
     -   [unregister](#unregister-2)
     -   [schedule](#schedule)
+    -   [cancel](#cancel)
     -   [constants](#constants)
 -   [SchedulerService](#schedulerservice)
     -   [constructor](#constructor-5)
@@ -103,6 +113,7 @@
     -   [register](#register-6)
     -   [unregister](#unregister-3)
     -   [schedule](#schedule-1)
+    -   [cancel](#cancel-1)
     -   [timeEvent](#timeevent)
 -   [SchedulerDbObject](#schedulerdbobject)
     -   [constructor](#constructor-6)
@@ -117,8 +128,8 @@
     -   [roundedTimestamp](#roundedtimestamp)
     -   [dateFormatted](#dateformatted)
 -   [SensorAPI](#sensorapi)
-    -   [registerForm](#registerform-1)
-    -   [registerClass](#registerclass)
+    -   [registerForm](#registerform-2)
+    -   [registerClass](#registerclass-1)
     -   [registerSensorEvent](#registersensorevent)
     -   [unregisterSensorEvent](#unregistersensorevent)
     -   [getSensors](#getsensors)
@@ -229,6 +240,61 @@
     -   [authLevel](#authlevel)
     -   [isEqual](#isequal)
 
+## AlarmAPI
+
+Public API for alarm
+
+**Parameters**
+
+-   `alarmManager`  
+
+### alarmStatus
+
+Get alarm state
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if alarm is enabled, false otherwise
+
+### enableAlarm
+
+Enable alarm
+
+### disableAlarm
+
+Disable alarm
+
+## CameraAPI
+
+Public API for camera
+
+**Parameters**
+
+-   `formManager`  
+-   `plugin`  
+-   `camerasManager`  
+
+### registerForm
+
+Register a camera form
+
+**Parameters**
+
+-   `formClass` **Class** A form annotation's implemented class
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The injected objects
+
+### registerClass
+
+Register a camera class
+
+**Parameters**
+
+-   `c` **Class** A camera extended class
+
+### getCameras
+
+Get all cameras
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** On object with id:name
+
 ## ConfigurationAPI
 
 Public API for configuration
@@ -322,6 +388,10 @@ Save configuration
 **Parameters**
 
 -   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Object data
+
+### save
+
+Save data
 
 ### comparator
 
@@ -1146,6 +1216,14 @@ Schedule an operation for a registered callback
 -   `timestamp` **timestamp** A timestamp or a constant : `IN_A_MINUTE`, `IN_FIVE_MINUTES`, `IN_TEN_MINUTES`, `IN_THIRTY_MINUTES`, `IN_A_HOUR`, `IN_TWELVE_HOUR`, `IN_A_DAY`
 -   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A data passed to callback when triggered (optional, default `{}`)
 
+### cancel
+
+Cancel a scheduled operation
+
+**Parameters**
+
+-   `id` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An identifier (must be unique)
+
 ### constants
 
 Expose a list of constants : `IN_A_MINUTE`, `IN_FIVE_MINUTES`, `IN_TEN_MINUTES`, `IN_THIRTY_MINUTES`, `IN_A_HOUR`, `IN_TWELVE_HOUR`, `IN_A_DAY`
@@ -1208,6 +1286,14 @@ Schedule an operation for a registered callback
 -   `id` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An identifier (must be unique)
 -   `timestamp` **timestamp** A timestamp or a constant : `IN_A_MINUTE`, `IN_FIVE_MINUTES`, `IN_TEN_MINUTES`, `IN_THIRTY_MINUTES`, `IN_A_HOUR`, `IN_TWELVE_HOUR`, `IN_A_DAY`
 -   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A data passed to callback when triggered (optional, default `{}`)
+
+### cancel
+
+Cancel a scheduled operation
+
+**Parameters**
+
+-   `id` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An identifier (must be unique)
 
 ### timeEvent
 
@@ -1717,6 +1803,7 @@ This class is a POJO representing an APIResponse item
 -   `errorCode`   (optional, default `-1`)
 -   `errorMessage`   (optional, default `null`)
 -   `upToDate`   (optional, default `false`)
+-   `contentType`   (optional, default `JSON_CONTENT_TYPE`)
 
 ### constructor
 
@@ -1729,6 +1816,7 @@ Constructor
 -   `errorCode` **int** The error code (optional) (optional, default `-1`)
 -   `errorMessage` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The error message (optional) (optional, default `null`)
 -   `upToDate` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True will return 304 no content. (optional, default `false`)
+-   `contentType` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The content type (optional, default `"application/json"`)
 
 Returns **[APIResponse](#apiresponse)** The instance
 
@@ -1855,6 +1943,7 @@ Create an API
 
 -   `req` **[Request](https://developer.mozilla.org/en-US/Add-ons/SDK/High-Level_APIs/request)** The WS request
 -   `endpoint` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The WS endpoint
+-   `res` **[Response](https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/HTML5)** The WS response
 
 Returns **[APIRequest](#apirequest)** An API Request
 
@@ -2067,6 +2156,8 @@ This class is a POJO representing an APIRequest item
 -   `path`  
 -   `action`  
 -   `params`  
+-   `req`  
+-   `res`  
 -   `data`   (optional, default `null`)
 
 ### constructor
@@ -2081,6 +2172,8 @@ Constructor
 -   `path` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** The path (route splitted in array)
 -   `action` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The action (first element of route)
 -   `params` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The parameters under key / value format
+-   `req` **[Request](https://developer.mozilla.org/en-US/Add-ons/SDK/High-Level_APIs/request)?** The request
+-   `res` **[Response](https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/HTML5)?** The response
 -   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The object sent (optional, default `null`)
 
 Returns **[APIRequest](#apirequest)** The instance

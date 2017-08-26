@@ -1,6 +1,8 @@
 "use strict";
 const request = require("request");
 const MjpegProxy = require("mjpeg-proxy").MjpegProxy;
+const fs = require("fs");
+const fx = require("mkdir-recursive");
 const Logger = require("./../../logger/Logger");
 const PluginsManager = require("./../pluginsmanager/PluginsManager");
 const WebServices = require("./../../services/webservices/WebServices");
@@ -32,6 +34,8 @@ const MODE_STATIC = "static";
 const MODE_MJPEG = "mjpeg";
 const MODE_RTSP = "rtsp";
 
+const CAMERAS_RETENTION_TIME = 60 * 60 * 24 * 31; // In seconds
+
 const ERROR_ALREADY_REGISTERED = "Already registered";
 const ERROR_NOT_REGISTERED = "Not registered";
 const ERROR_UNKNOWN_IDENTIFIER = "Unknown camera identifier";
@@ -57,9 +61,10 @@ class CamerasManager {
      * @param  {ThemeManager} themeManager    The theme manager
      * @param  {DashboardManager} dashboardManager    The dashboard manager
      * @param  {TimeEventService} timeEventService    The time event service
+     * @param  {string} [camerasArchiveFolder=null]    Camera archiving folder
      * @returns {CamerasManager}                       The instance
      */
-    constructor(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager, dashboardManager, timeEventService) {
+    constructor(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager, dashboardManager, timeEventService, camerasArchiveFolder = null) {
         this.pluginsManager = pluginsManager;
         this.webServices = webServices;
         this.formManager = formManager;
@@ -68,6 +73,7 @@ class CamerasManager {
         this.themeManager = themeManager;
         this.dashboardManager = dashboardManager;
         this.timeEventService = timeEventService;
+        this.camerasArchiveFolder = camerasArchiveFolder;
         this.cameras = [];
         this.delegates = {};
 
@@ -100,6 +106,60 @@ class CamerasManager {
         this.timeEventService.register((self) => {
             self.registerTile(self);
         }, this, TimeEventService.EVERY_HOURS);
+
+        this.timeEventService.register((self) => {
+            self.archiveCameras(self);
+        }, this, TimeEventService.EVERY_MINUTES);
+    }
+
+    /**
+     * Archive all cameras
+     *
+     * @param  {CamerasManager} context The instance
+     */
+    archiveCameras(context) {
+        const timestamp = DateUtils.class.timestamp();
+        if (context.camerasArchiveFolder) {
+            context.cameras.forEach((camera) => {
+                const cameraArchiveFolder = context.camerasArchiveFolder + camera.id + "/";
+                try {
+                    fs.accessSync(cameraArchiveFolder);
+                } catch(e) {
+                    fx.mkdirSync(cameraArchiveFolder);
+                } finally {
+                    // Clean
+                    fs.readdir(cameraArchiveFolder, (err, files) => {
+                        files.forEach((file) => {
+                            if (!err) {
+                                if (parseInt(file) < (timestamp - CAMERAS_RETENTION_TIME)) {
+                                    fs.unlink(cameraArchiveFolder + file, (error) => {
+                                        if (error) {
+                                            Logger.err("Error while deleting file " + file + " camera archive for id " + camera.id);
+                                            Logger.err(err.message);
+                                        }
+                                    });
+                                }
+                            } else {
+                                Logger.err("Error while listing camera archive for id " + camera.id);
+                                Logger.err(err.message);
+                            }
+                        });
+                    });
+
+                    // Save camera
+                    context.getImage(camera.id, (err, data) => {
+                        if (!err) {
+                            fs.writeFile(cameraArchiveFolder + timestamp, data,  (err) => {
+                                if (err) {
+                                    Logger.err("Error while writing camera archive for id " + camera.id);
+                                    Logger.err(err.message);
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
     }
 
     /**

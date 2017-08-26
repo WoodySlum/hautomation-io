@@ -26,36 +26,58 @@
 -   [loaded](#loaded-8)
 -   [loaded](#loaded-9)
 -   [loaded](#loaded-10)
--   [EspTemperatureSensorForm](#esptemperaturesensorform)
-    -   [json](#json-1)
--   [EspTemperatureSensor](#esptemperaturesensor)
+-   [loaded](#loaded-11)
+-   [loaded](#loaded-12)
+-   [CameraForm](#cameraform)
     -   [constructor](#constructor-3)
+    -   [name](#name)
+    -   [name](#name-1)
+    -   [ip](#ip)
+    -   [port](#port)
+    -   [username](#username)
+    -   [password](#password)
+    -   [json](#json-1)
+-   [Camera](#camera)
+    -   [constructor](#constructor-4)
+    -   [init](#init)
+    -   [mjpegSupport](#mjpegsupport)
+    -   [rtspSupport](#rtspsupport)
+    -   [moveSupport](#movesupport)
+    -   [generateUrlFromTemplate](#generateurlfromtemplate)
+    -   [moveLeft](#moveleft)
+    -   [moveRight](#moveright)
+    -   [moveUp](#moveup)
+    -   [moveDown](#movedown)
+-   [EspTemperatureSensorForm](#esptemperaturesensorform)
+    -   [json](#json-2)
+-   [EspTemperatureSensor](#esptemperaturesensor)
+    -   [constructor](#constructor-5)
     -   [processAPI](#processapi)
 -   [HumiditySensorForm](#humiditysensorform)
-    -   [constructor](#constructor-4)
-    -   [json](#json-2)
--   [HumiditySensor](#humiditysensor)
-    -   [constructor](#constructor-5)
--   [MessageProvider](#messageprovider)
     -   [constructor](#constructor-6)
+    -   [json](#json-3)
+-   [HumiditySensor](#humiditysensor)
+    -   [constructor](#constructor-7)
+-   [MessageProvider](#messageprovider)
+    -   [constructor](#constructor-8)
     -   [onMessageReceived](#onmessagereceived)
 -   [text](#text)
 -   [number](#number)
 -   [myParameter](#myparameter)
 -   [PressureSensorForm](#pressuresensorform)
-    -   [constructor](#constructor-7)
-    -   [json](#json-3)
--   [PressureSensor](#pressuresensor)
-    -   [constructor](#constructor-8)
--   [ProwlForm](#prowlform)
     -   [constructor](#constructor-9)
-    -   [prowlApiKey](#prowlapikey)
     -   [json](#json-4)
--   [Prowl](#prowl)
+-   [PressureSensor](#pressuresensor)
     -   [constructor](#constructor-10)
+-   [ProwlForm](#prowlform)
+    -   [constructor](#constructor-11)
+    -   [prowlApiKey](#prowlapikey)
+    -   [json](#json-5)
+-   [Prowl](#prowl)
+    -   [constructor](#constructor-12)
     -   [sendMessage](#sendmessage)
 -   [DbRadio](#dbradio)
-    -   [constructor](#constructor-11)
+    -   [constructor](#constructor-13)
 -   [module](#module)
 -   [frequency](#frequency)
 -   [protocol](#protocol)
@@ -65,7 +87,7 @@
 -   [value](#value-1)
 -   [status](#status)
 -   [Radio](#radio)
-    -   [constructor](#constructor-12)
+    -   [constructor](#constructor-14)
     -   [getProtocolList](#getprotocollist)
     -   [getLastReceivedRadioInformations](#getlastreceivedradioinformations)
     -   [processAPI](#processapi-1)
@@ -76,14 +98,14 @@
     -   [register](#register)
     -   [unregister](#unregister)
 -   [RFLink](#rflink)
-    -   [constructor](#constructor-13)
+    -   [constructor](#constructor-15)
     -   [rflinkStatusToRadioStatus](#rflinkstatustoradiostatus)
     -   [radioStatusToRflinkStatus](#radiostatustorflinkstatus)
     -   [formatRadioObjectBeforeSending](#formatradioobjectbeforesending)
     -   [onRflinkReceive](#onrflinkreceive)
     -   [emit](#emit-1)
 -   [RFLinkService](#rflinkservice)
-    -   [constructor](#constructor-14)
+    -   [constructor](#constructor-16)
     -   [run](#run)
     -   [threadCallback](#threadcallback)
 -   [xo](#xo)
@@ -91,20 +113,20 @@
     -   [processAPI](#processapi-2)
     -   [test](#test)
 -   [DbSensor](#dbsensor)
-    -   [constructor](#constructor-15)
+    -   [constructor](#constructor-17)
 -   [sensorId](#sensorid)
 -   [vcc](#vcc)
 -   [SensorForm](#sensorform)
-    -   [constructor](#constructor-16)
-    -   [name](#name)
+    -   [constructor](#constructor-18)
+    -   [name](#name-2)
     -   [dashboard](#dashboard)
     -   [statistics](#statistics)
     -   [dashboardColor](#dashboardcolor)
     -   [statisticsColor](#statisticscolor)
-    -   [json](#json-5)
+    -   [json](#json-6)
 -   [Sensor](#sensor)
-    -   [constructor](#constructor-17)
-    -   [init](#init)
+    -   [constructor](#constructor-19)
+    -   [init](#init-1)
     -   [addUnitAggregation](#addunitaggregation)
     -   [aggregateUnit](#aggregateunit)
     -   [convertValue](#convertvalue)
@@ -114,18 +136,22 @@
     -   [roundTimestamp](#roundtimestamp)
     -   [getStatistics](#getstatistics)
     -   [constants](#constants-1)
+-   [SumppleCameraForm](#sumpplecameraform)
+    -   [json](#json-7)
+-   [Sumpple](#sumpple)
+    -   [constructor](#constructor-20)
 -   [TemperatureSensorForm](#temperaturesensorform)
-    -   [constructor](#constructor-18)
+    -   [constructor](#constructor-21)
     -   [unit](#unit)
-    -   [json](#json-6)
+    -   [json](#json-8)
 -   [TemperatureSensor](#temperaturesensor)
-    -   [constructor](#constructor-19)
+    -   [constructor](#constructor-22)
     -   [setUnit](#setunit)
 -   [ThroughputSensorForm](#throughputsensorform)
-    -   [constructor](#constructor-20)
-    -   [json](#json-7)
+    -   [constructor](#constructor-23)
+    -   [json](#json-9)
 -   [ThroughputSensor](#throughputsensor)
-    -   [constructor](#constructor-21)
+    -   [constructor](#constructor-24)
 -   [Logger](#logger)
     -   [log](#log)
     -   [warn](#warn)
@@ -133,22 +159,71 @@
     -   [verbose](#verbose)
     -   [info](#info)
     -   [debug](#debug)
--   [Alarm](#alarm)
-    -   [constructor](#constructor-22)
-    -   [json](#json-8)
--   [AlarmManager](#alarmmanager)
-    -   [constructor](#constructor-23)
-    -   [setAlarm](#setalarm)
-    -   [processAPI](#processapi-3)
--   [Authentication](#authentication)
-    -   [constructor](#constructor-24)
--   [AuthenticationData](#authenticationdata)
+-   [AlarmForm](#alarmform)
     -   [constructor](#constructor-25)
-    -   [authorized](#authorized)
-    -   [username](#username)
-    -   [level](#level)
--   [ConfManager](#confmanager)
     -   [constructor](#constructor-26)
+    -   [enabled](#enabled)
+    -   [armed](#armed)
+    -   [userLocationTrigger](#userlocationtrigger)
+    -   [userLocationTrigger](#userlocationtrigger-1)
+    -   [sensors](#sensors)
+    -   [devicesOnEnable](#devicesonenable)
+    -   [devicesOnDisable](#devicesondisable)
+    -   [json](#json-10)
+-   [AlarmManager](#alarmmanager)
+    -   [constructor](#constructor-27)
+    -   [sensorReadyForTriggering](#sensorreadyfortriggering)
+    -   [registerTile](#registertile)
+    -   [alarmStatus](#alarmstatus)
+    -   [armAlarm](#armalarm)
+    -   [armCancel](#armcancel)
+    -   [enableAlarm](#enablealarm)
+    -   [disableAlarm](#disablealarm)
+    -   [triggerAlarm](#triggeralarm)
+    -   [stopAlarm](#stopalarm)
+    -   [processAPI](#processapi-3)
+-   [AlarmSensorsForm](#alarmsensorsform)
+    -   [constructor](#constructor-28)
+    -   [sensor](#sensor-1)
+    -   [triggerAlarm](#triggeralarm-1)
+    -   [captureVideo](#capturevideo)
+    -   [json](#json-11)
+-   [Authentication](#authentication)
+    -   [constructor](#constructor-29)
+-   [AuthenticationData](#authenticationdata)
+    -   [constructor](#constructor-30)
+    -   [authorized](#authorized)
+    -   [username](#username-1)
+    -   [level](#level)
+-   [CamerasForm](#camerasform)
+    -   [constructor](#constructor-31)
+    -   [cameraId](#cameraid)
+    -   [json](#json-12)
+    -   [getCameraIds](#getcameraids)
+    -   [getCameraNames](#getcameranames)
+-   [CamerasListForm](#cameraslistform)
+    -   [constructor](#constructor-32)
+    -   [identifier](#identifier)
+    -   [json](#json-13)
+    -   [getCamerasName](#getcamerasname)
+    -   [getCamerasId](#getcamerasid)
+-   [CamerasManager](#camerasmanager)
+    -   [constructor](#constructor-33)
+    -   [pluginsLoaded](#pluginsloaded)
+    -   [initCameras](#initcameras)
+    -   [initCamera](#initcamera)
+    -   [getAllCameras](#getallcameras)
+    -   [registerTile](#registertile-1)
+    -   [processAPI](#processapi-4)
+    -   [comparator](#comparator)
+    -   [getCameraConfiguration](#getcameraconfiguration)
+    -   [registerCamerasListForm](#registercameraslistform)
+    -   [getCamerasList](#getcameraslist)
+    -   [getCamera](#getcamera)
+    -   [getDefaultCamera](#getdefaultcamera)
+    -   [getImage](#getimage)
+-   [ConfManager](#confmanager)
+    -   [constructor](#constructor-34)
     -   [appConfiguration](#appconfiguration)
     -   [fs](#fs)
     -   [getFilePath](#getfilepath)
@@ -161,16 +236,16 @@
     -   [setData](#setdata)
     -   [removeData](#removedata)
 -   [DashboardManager](#dashboardmanager)
-    -   [constructor](#constructor-27)
-    -   [registerTile](#registertile)
+    -   [constructor](#constructor-35)
+    -   [registerTile](#registertile-2)
     -   [unregisterTile](#unregistertile)
     -   [buildDashboard](#builddashboard)
-    -   [processAPI](#processapi-4)
+    -   [processAPI](#processapi-5)
 -   [Tile](#tile)
-    -   [constructor](#constructor-28)
+    -   [constructor](#constructor-36)
     -   [get](#get)
 -   [DbHelper](#dbhelper)
-    -   [constructor](#constructor-29)
+    -   [constructor](#constructor-37)
     -   [RequestBuilder](#requestbuilder)
     -   [Operators](#operators)
     -   [getFieldsForTable](#getfieldsfortable)
@@ -181,7 +256,7 @@
     -   [delObject](#delobject)
     -   [delObjects](#delobjects)
 -   [DbManager](#dbmanager)
-    -   [constructor](#constructor-30)
+    -   [constructor](#constructor-38)
     -   [close](#close)
     -   [getFieldsForTable](#getfieldsfortable-1)
     -   [numberVersion](#numberversion)
@@ -196,12 +271,12 @@
     -   [delObject](#delobject-1)
     -   [delObjects](#delobjects-1)
 -   [DbObject](#dbobject)
-    -   [constructor](#constructor-31)
+    -   [constructor](#constructor-39)
     -   [base](#base)
     -   [save](#save)
     -   [del](#del)
 -   [DbRequestBuilder](#dbrequestbuilder)
-    -   [constructor](#constructor-32)
+    -   [constructor](#constructor-40)
     -   [removeLastComma](#removelastcomma)
     -   [escapeString](#escapestring)
     -   [getValueEncapsulated](#getvalueencapsulated)
@@ -231,51 +306,52 @@
     -   [tableName](#tablename)
     -   [toSchema](#toschema)
 -   [DeviceForm](#deviceform)
-    -   [constructor](#constructor-33)
-    -   [name](#name-1)
+    -   [constructor](#constructor-41)
+    -   [name](#name-3)
     -   [excludeFromAll](#excludefromall)
     -   [visible](#visible)
     -   [worksOnlyOnDayNight](#worksonlyondaynight)
     -   [icon](#icon-1)
     -   [radio](#radio-1)
     -   [status](#status-1)
-    -   [json](#json-9)
+    -   [json](#json-14)
 -   [DeviceManager](#devicemanager)
-    -   [constructor](#constructor-34)
+    -   [constructor](#constructor-42)
     -   [triggerScenario](#triggerscenario)
     -   [registerDeviceListForm](#registerdevicelistform)
     -   [registerDeviceTiles](#registerdevicetiles)
     -   [registerDeviceTile](#registerdevicetile)
     -   [switchDevice](#switchdevice)
     -   [switchAll](#switchall)
-    -   [processAPI](#processapi-5)
+    -   [processAPI](#processapi-6)
 -   [DevicesListForm](#deviceslistform)
-    -   [constructor](#constructor-35)
-    -   [identifier](#identifier)
+    -   [constructor](#constructor-43)
+    -   [identifier](#identifier-1)
     -   [status](#status-2)
-    -   [json](#json-10)
+    -   [json](#json-15)
     -   [getDevicesName](#getdevicesname)
     -   [getDevicesId](#getdevicesid)
 -   [DevicesListScenarioForm](#deviceslistscenarioform)
-    -   [constructor](#constructor-36)
+    -   [constructor](#constructor-44)
     -   [turnOnAll](#turnonall)
     -   [turnOffAll](#turnoffall)
     -   [devices](#devices)
-    -   [json](#json-11)
+    -   [json](#json-16)
 -   [FormConfiguration](#formconfiguration)
-    -   [constructor](#constructor-37)
+    -   [constructor](#constructor-45)
     -   [setUpdateCb](#setupdatecb)
     -   [addAdditionalFields](#addadditionalfields)
     -   [loadConfig](#loadconfig)
     -   [saveConfig](#saveconfig)
-    -   [comparator](#comparator)
+    -   [save](#save-2)
+    -   [comparator](#comparator-1)
     -   [registerForm](#registerform)
-    -   [processAPI](#processapi-6)
+    -   [processAPI](#processapi-7)
     -   [getDataCopy](#getdatacopy)
     -   [getConfig](#getconfig)
     -   [getForm](#getform)
 -   [FormManager](#formmanager)
-    -   [constructor](#constructor-38)
+    -   [constructor](#constructor-46)
     -   [register](#register-1)
     -   [registerWithAdditionalFields](#registerwithadditionalfields)
     -   [addAdditionalFields](#addadditionalfields-1)
@@ -286,11 +362,11 @@
     -   [getForm](#getform-1)
     -   [generateForm](#generateform)
 -   [FormObject](#formobject)
-    -   [constructor](#constructor-39)
-    -   [json](#json-12)
+    -   [constructor](#constructor-47)
+    -   [json](#json-17)
 -   [id](#id)
 -   [InstallationManager](#installationmanager)
-    -   [constructor](#constructor-40)
+    -   [constructor](#constructor-48)
     -   [register](#register-2)
     -   [executeCommand](#executecommand)
     -   [execute](#execute)
@@ -298,7 +374,7 @@
     -   [isValidForArchitecture](#isvalidforarchitecture)
     -   [restart](#restart-1)
 -   [DbMessage](#dbmessage)
-    -   [constructor](#constructor-41)
+    -   [constructor](#constructor-49)
 -   [recipient](#recipient)
 -   [sender](#sender)
 -   [message](#message)
@@ -307,23 +383,23 @@
 -   [picture](#picture)
 -   [received](#received)
 -   [MessageManager](#messagemanager)
-    -   [constructor](#constructor-42)
+    -   [constructor](#constructor-50)
     -   [register](#register-3)
     -   [unregister](#unregister-1)
     -   [sendMessage](#sendmessage-1)
     -   [onMessageReceived](#onmessagereceived-1)
     -   [getMessages](#getmessages)
     -   [getLastTimestamp](#getlasttimestamp)
-    -   [processAPI](#processapi-7)
+    -   [processAPI](#processapi-8)
 -   [PluginsAPI](#pluginsapi)
     -   [exportClass](#exportclass)
-    -   [init](#init-1)
+    -   [init](#init-2)
     -   [registerInstance](#registerinstance)
 -   [PluginConf](#pluginconf)
-    -   [constructor](#constructor-43)
-    -   [json](#json-13)
+    -   [constructor](#constructor-51)
+    -   [json](#json-18)
 -   [PluginsManager](#pluginsmanager)
-    -   [constructor](#constructor-44)
+    -   [constructor](#constructor-52)
     -   [getPluginsFromDirectory](#getpluginsfromdirectory)
     -   [checkPluginSanity](#checkpluginsanity)
     -   [initPlugins](#initplugins)
@@ -334,13 +410,21 @@
     -   [prepareToposortArray](#preparetoposortarray)
     -   [toposort](#toposort)
     -   [topsortedArrayConverter](#topsortedarrayconverter)
-    -   [processAPI](#processapi-8)
+    -   [processAPI](#processapi-9)
+-   [AlarmAPI](#alarmapi)
+    -   [alarmStatus](#alarmstatus-1)
+    -   [enableAlarm](#enablealarm-1)
+    -   [disableAlarm](#disablealarm-1)
+-   [CameraAPI](#cameraapi)
+    -   [registerForm](#registerform-1)
+    -   [registerClass](#registerclass)
+    -   [getCameras](#getcameras)
 -   [ConfigurationAPI](#configurationapi)
     -   [register](#register-4)
     -   [getConfiguration](#getconfiguration)
     -   [getForm](#getform-2)
 -   [DashboardAPI](#dashboardapi)
-    -   [registerTile](#registertile-1)
+    -   [registerTile](#registertile-3)
     -   [unregisterTile](#unregistertile-1)
     -   [Tile](#tile-1)
     -   [TileType](#tiletype)
@@ -365,10 +449,11 @@
     -   [register](#register-9)
     -   [unregister](#unregister-4)
     -   [schedule](#schedule)
+    -   [cancel](#cancel)
     -   [constants](#constants-2)
 -   [SensorAPI](#sensorapi)
-    -   [registerForm](#registerform-1)
-    -   [registerClass](#registerclass)
+    -   [registerForm](#registerform-2)
+    -   [registerClass](#registerclass-1)
     -   [registerSensorEvent](#registersensorevent)
     -   [unregisterSensorEvent](#unregistersensorevent)
     -   [getSensors](#getsensors)
@@ -399,17 +484,17 @@
     -   [APIResponse](#apiresponse)
     -   [constants](#constants-4)
 -   [RadioForm](#radioform)
-    -   [constructor](#constructor-45)
+    -   [constructor](#constructor-53)
     -   [module](#module-1)
     -   [protocol](#protocol-1)
     -   [deviceId](#deviceid-1)
     -   [switchId](#switchid-1)
-    -   [json](#json-14)
+    -   [json](#json-19)
     -   [getModules](#getmodules)
     -   [getProtocols](#getprotocols)
 -   [RadioManager](#radiomanager)
-    -   [constructor](#constructor-46)
-    -   [pluginsLoaded](#pluginsloaded)
+    -   [constructor](#constructor-54)
+    -   [pluginsLoaded](#pluginsloaded-1)
     -   [registerRadioEvents](#registerradioevents)
     -   [unregisterRadioEvents](#unregisterradioevents)
     -   [onRadioEvent](#onradioevent-1)
@@ -417,26 +502,26 @@
     -   [getProtocols](#getprotocols-1)
     -   [switchDevice](#switchdevice-1)
     -   [getLastReceivedRadioInformations](#getlastreceivedradioinformations-1)
-    -   [processAPI](#processapi-9)
+    -   [processAPI](#processapi-10)
 -   [RadioScenarioForm](#radioscenarioform)
-    -   [constructor](#constructor-47)
+    -   [constructor](#constructor-55)
     -   [radioForm](#radioform-1)
     -   [status](#status-3)
-    -   [json](#json-15)
+    -   [json](#json-20)
 -   [RadioScenariosForm](#radioscenariosform)
-    -   [constructor](#constructor-48)
+    -   [constructor](#constructor-56)
     -   [radioScenariosForm](#radioscenariosform-1)
-    -   [json](#json-16)
+    -   [json](#json-21)
 -   [ScenarioForm](#scenarioform)
-    -   [constructor](#constructor-49)
-    -   [name](#name-2)
-    -   [enabled](#enabled)
+    -   [constructor](#constructor-57)
+    -   [name](#name-4)
+    -   [enabled](#enabled-1)
     -   [icon](#icon-2)
     -   [timeTrigger](#timetrigger)
     -   [subActions](#subactions)
-    -   [json](#json-17)
+    -   [json](#json-22)
 -   [ScenarioManager](#scenariomanager)
-    -   [constructor](#constructor-50)
+    -   [constructor](#constructor-58)
     -   [registerScenariosListForm](#registerscenarioslistform)
     -   [generateKey](#generatekey)
     -   [register](#register-12)
@@ -445,30 +530,36 @@
     -   [getScenarios](#getscenarios-1)
     -   [timeEventScenario](#timeeventscenario)
 -   [ScenariosListForm](#scenarioslistform)
-    -   [constructor](#constructor-51)
-    -   [identifier](#identifier-1)
-    -   [json](#json-18)
+    -   [constructor](#constructor-59)
+    -   [identifier](#identifier-2)
+    -   [json](#json-23)
     -   [getScenariosName](#getscenariosname)
     -   [getScenariosId](#getscenariosid)
 -   [ScenarioSubActionForm](#scenariosubactionform)
-    -   [constructor](#constructor-52)
+    -   [constructor](#constructor-60)
     -   [scenario](#scenario)
     -   [delay](#delay)
-    -   [json](#json-19)
+    -   [json](#json-24)
 -   [TimeScenarioForm](#timescenarioform)
-    -   [constructor](#constructor-53)
+    -   [constructor](#constructor-61)
     -   [day](#day)
     -   [time](#time)
-    -   [json](#json-20)
+    -   [json](#json-25)
 -   [SensorsForm](#sensorsform)
-    -   [constructor](#constructor-54)
+    -   [constructor](#constructor-62)
     -   [sensorId](#sensorid-1)
-    -   [json](#json-21)
+    -   [json](#json-26)
     -   [getSensorIds](#getsensorids)
     -   [getSensorNames](#getsensornames)
+-   [SensorsListForm](#sensorslistform)
+    -   [constructor](#constructor-63)
+    -   [identifier](#identifier-3)
+    -   [json](#json-27)
+    -   [getSensorsName](#getsensorsname)
+    -   [getSensorsId](#getsensorsid)
 -   [SensorsManager](#sensorsmanager)
-    -   [constructor](#constructor-55)
-    -   [pluginsLoaded](#pluginsloaded-1)
+    -   [constructor](#constructor-64)
+    -   [pluginsLoaded](#pluginsloaded-2)
     -   [initSensors](#initsensors)
     -   [initSensor](#initsensor)
     -   [registerSensorEvent](#registersensorevent-1)
@@ -476,11 +567,13 @@
     -   [getAllSensors](#getallsensors)
     -   [onNewSensorValue](#onnewsensorvalue)
     -   [getValue](#getvalue-1)
-    -   [processAPI](#processapi-10)
+    -   [processAPI](#processapi-11)
     -   [statisticsWsResponse](#statisticswsresponse)
-    -   [comparator](#comparator-1)
+    -   [comparator](#comparator-2)
+    -   [getSensorConfiguration](#getsensorconfiguration)
+    -   [registerSensorsListForm](#registersensorslistform)
 -   [ServicesManager](#servicesmanager)
-    -   [constructor](#constructor-56)
+    -   [constructor](#constructor-65)
     -   [isServiceRegistered](#isserviceregistered)
     -   [add](#add-1)
     -   [remove](#remove-1)
@@ -489,10 +582,10 @@
     -   [restart](#restart-2)
     -   [getService](#getservice)
 -   [ThemeManager](#thememanager)
-    -   [constructor](#constructor-57)
+    -   [constructor](#constructor-66)
     -   [getColors](#getcolors-1)
 -   [ThreadsManager](#threadsmanager)
-    -   [constructor](#constructor-58)
+    -   [constructor](#constructor-67)
     -   [stringifyFunc](#stringifyfunc)
     -   [run](#run-1)
     -   [send](#send)
@@ -500,21 +593,21 @@
     -   [getPid](#getpid)
     -   [isRunning](#isrunning)
 -   [TranslateManager](#translatemanager)
-    -   [constructor](#constructor-59)
+    -   [constructor](#constructor-68)
     -   [addTranslations](#addtranslations)
     -   [t](#t-1)
     -   [translateArray](#translatearray)
 -   [UserForm](#userform)
-    -   [constructor](#constructor-60)
-    -   [username](#username-1)
-    -   [password](#password)
+    -   [constructor](#constructor-69)
+    -   [username](#username-2)
+    -   [password](#password-1)
     -   [level](#level-1)
-    -   [name](#name-3)
+    -   [name](#name-5)
     -   [picture](#picture-1)
     -   [atHome](#athome)
-    -   [json](#json-22)
+    -   [json](#json-28)
 -   [UserManager](#usermanager)
-    -   [constructor](#constructor-61)
+    -   [constructor](#constructor-70)
     -   [updateTile](#updatetile-1)
     -   [getUsers](#getusers-1)
     -   [getUser](#getuser)
@@ -525,23 +618,28 @@
     -   [setUserZone](#setuserzone)
     -   [registerHomeNotifications](#registerhomenotifications-1)
     -   [unregisterHomeNotifications](#unregisterhomenotifications-1)
-    -   [processAPI](#processapi-11)
+    -   [processAPI](#processapi-12)
+-   [UserScenarioForm](#userscenarioform)
+    -   [constructor](#constructor-71)
+    -   [mode](#mode)
+    -   [json](#json-29)
 -   [SchedulerDbObject](#schedulerdbobject)
-    -   [constructor](#constructor-62)
--   [identifier](#identifier-2)
+    -   [constructor](#constructor-72)
+-   [identifier](#identifier-4)
 -   [data](#data)
 -   [triggerDate](#triggerdate)
 -   [triggered](#triggered)
 -   [SchedulerService](#schedulerservice)
-    -   [constructor](#constructor-63)
+    -   [constructor](#constructor-73)
     -   [start](#start-2)
     -   [stop](#stop-2)
     -   [register](#register-13)
     -   [unregister](#unregister-8)
     -   [schedule](#schedule-1)
+    -   [cancel](#cancel-1)
     -   [timeEvent](#timeevent)
 -   [Service](#service)
-    -   [constructor](#constructor-64)
+    -   [constructor](#constructor-74)
     -   [start](#start-3)
     -   [run](#run-2)
     -   [threadCallback](#threadcallback-1)
@@ -557,7 +655,7 @@
     -   [unregister](#unregister-9)
     -   [setThreadsManager](#setthreadsmanager)
 -   [TimeEventService](#timeeventservice)
-    -   [constructor](#constructor-65)
+    -   [constructor](#constructor-75)
     -   [start](#start-4)
     -   [stop](#stop-4)
     -   [hash](#hash)
@@ -567,16 +665,16 @@
     -   [convertMode](#convertmode)
     -   [timeEvent](#timeevent-1)
 -   [APIRegistration](#apiregistration)
-    -   [constructor](#constructor-66)
+    -   [constructor](#constructor-76)
     -   [delegate](#delegate)
     -   [method](#method)
     -   [route](#route)
     -   [authLevel](#authlevel)
     -   [isEqual](#isequal)
 -   [APIRequest](#apirequest)
-    -   [constructor](#constructor-67)
+    -   [constructor](#constructor-77)
     -   [method](#method-1)
-    -   [ip](#ip)
+    -   [ip](#ip-1)
     -   [route](#route-1)
     -   [path](#path)
     -   [action](#action-1)
@@ -585,17 +683,17 @@
     -   [authenticationData](#authenticationdata-1)
     -   [addAuthenticationData](#addauthenticationdata)
 -   [APIResponse](#apiresponse-1)
-    -   [constructor](#constructor-68)
+    -   [constructor](#constructor-78)
     -   [success](#success)
     -   [response](#response)
     -   [errorCode](#errorcode)
     -   [errorMessage](#errormessage)
 -   [WebServices](#webservices)
-    -   [constructor](#constructor-69)
+    -   [constructor](#constructor-79)
     -   [start](#start-5)
     -   [stop](#stop-5)
     -   [registerInfos](#registerinfos)
-    -   [processAPI](#processapi-12)
+    -   [processAPI](#processapi-13)
     -   [register](#register-16)
     -   [unregister](#unregister-11)
     -   [registerAPI](#registerapi)
@@ -764,6 +862,14 @@ Loaded function
 
 ## loaded
 
+Loaded function
+
+**Parameters**
+
+-   `api` **PluginAPI** The api
+
+## loaded
+
 Loaded plugin function
 
 **Parameters**
@@ -809,6 +915,152 @@ Loaded function
 **Parameters**
 
 -   `api` **PluginAPI** The api
+
+## loaded
+
+Loaded function
+
+**Parameters**
+
+-   `api` **PluginAPI** The api
+
+## CameraForm
+
+**Extends api.exported.FormObject.class**
+
+This class is extended by cameras forms
+
+**Parameters**
+
+-   `id`  
+-   `plugin`  
+-   `name`  
+-   `ip`  
+-   `port`  
+-   `username`  
+-   `password`  
+
+### constructor
+
+Cemra form
+
+**Parameters**
+
+-   `id` **[number](#number)** An identifier
+-   `plugin` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A plugin
+-   `name` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Camera's name
+-   `ip` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Camera's IP
+-   `port` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Camera's port
+-   `username` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Camera's username
+-   `password` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Camera's password
+
+Returns **[CameraForm](#cameraform)** The instance
+
+### name
+
+### name
+
+### ip
+
+### port
+
+### username
+
+### password
+
+### json
+
+Convert JSON data to object
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some data
+
+Returns **[CameraForm](#cameraform)** An instance
+
+## Camera
+
+This class is extended by cameras
+
+**Parameters**
+
+-   `api`  
+-   `id`   (optional, default `null`)
+-   `configuration`   (optional, default `null`)
+-   `snapshotUrl`   (optional, default `null`)
+-   `mjpegUrl`   (optional, default `null`)
+-   `rtspUrl`   (optional, default `null`)
+-   `leftCb`   (optional, default `null`)
+-   `rightCb`   (optional, default `null`)
+-   `upCb`   (optional, default `null`)
+-   `downCb`   (optional, default `null`)
+
+### constructor
+
+Camera class (should be extended)
+
+**Parameters**
+
+-   `api` **PluginAPI** A plugin api
+-   `id` **[number](#number)** An id (optional, default `null`)
+-   `configuration` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The configuration for camera (optional, default `null`)
+-   `snapshotUrl` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The snapshot URL template (Parameters : %port%, %ip%, %username%, %password%), without protocol and ip. For example, `cgi-bin/snap.cgi?username=%username%&password=%password%` (optional, default `null`)
+-   `mjpegUrl` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The MJPEG URL template (Parameters : %port%, %ip%, %username%, %password%), without protocol and ip. For example, `cgi-bin/videostream.cgi?username=%username%&password=%password%` (optional, default `null`)
+-   `rtspUrl` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The RTSP URL template (Parameters : %port%, %ip%, %username%, %password%), without protocol and ip. For example, `cgi-bin/snap.cgi?username=%username%&password=%password%` (optional, default `null`)
+-   `leftCb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Move left callback (optional, default `null`)
+-   `rightCb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Move right callback (optional, default `null`)
+-   `upCb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Move up callback (optional, default `null`)
+-   `downCb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Move down callback (optional, default `null`)
+
+Returns **[Camera](#camera)** The instance
+
+### init
+
+Needs to be call when camera is ready
+
+### mjpegSupport
+
+Does the plugin suppport mjpeg stream
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** true if supported, false otherwise
+
+### rtspSupport
+
+Does the plugin suppport rtsp stream
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** true if supported, false otherwise
+
+### moveSupport
+
+Does the plugin suppport moves
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** true if supported, false otherwise
+
+### generateUrlFromTemplate
+
+Generate an URL from the template
+
+**Parameters**
+
+-   `url` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An URL template (Parameters : %port%, %ip%, %username%, %password%), without protocol and ip. For example, `cgi-bin/videostream.cgi?username=%username%&password=%password%` (optional, default `null`)
+
+Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The complete URL
+
+### moveLeft
+
+Move left camera
+
+### moveRight
+
+Move right camera
+
+### moveUp
+
+Move up camera
+
+### moveDown
+
+Move down camera
 
 ## EspTemperatureSensorForm
 
@@ -1567,6 +1819,46 @@ Access to constants
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A list of constants
 
+## SumppleCameraForm
+
+**Extends api.exported.CameraForm**
+
+Sumpple form camera
+
+### json
+
+Convert JSON data to object
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some data
+
+Returns **[SumppleCameraForm](#sumpplecameraform)** An instance
+
+## Sumpple
+
+**Extends api.exported.Camera**
+
+Sumpple camera class
+
+**Parameters**
+
+-   `api`  
+-   `id`  
+-   `configuration`  
+
+### constructor
+
+Sumpple camera
+
+**Parameters**
+
+-   `api` **PluginAPI** A plugin api
+-   `id` **[number](#number)** An id (optional, default `null`)
+-   `configuration` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The configuration for camera (optional, default `null`)
+
+Returns **[Sumpple](#sumpple)** The instance
+
 ## TemperatureSensorForm
 
 **Extends api.exported.SensorForm**
@@ -1764,13 +2056,21 @@ Log a debug message to a file, with stacktrace
 
 -   `message` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A log message
 
-## Alarm
+## AlarmForm
 
-This class is an Alarm POJO
+**Extends FormObject.class**
+
+This class provides a form for the alarm
 
 **Parameters**
 
+-   `id`   (optional, default `null`)
 -   `enabled`   (optional, default `false`)
+-   `armed`   (optional, default `false`)
+-   `userLocationTrigger`   (optional, default `true`)
+-   `sensors`   (optional, default `[]`)
+-   `devicesOnEnable`   (optional, default `[]`)
+-   `devicesOnDisable`   (optional, default `[]`)
 
 ### constructor
 
@@ -1778,19 +2078,55 @@ Constructor
 
 **Parameters**
 
--   `enabled` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if alarm is enabled, else false (optional, default `false`)
+-   `id` **[number](#number)** An identifier (optional, default `null`)
+-   `enabled` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Status (optional, default `false`)
+-   `armed`   (optional, default `false`)
+-   `userLocationTrigger` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** User location auto trigger (optional, default `null`)
+-   `sensors`   (optional, default `[]`)
+-   `devicesOnEnable`   (optional, default `[]`)
+-   `devicesOnDisable`   (optional, default `[]`)
 
-Returns **[Alarm](#alarm)** The instance
+Returns **[AlarmForm](#alarmform)** The instance
 
-### json
+### constructor
 
-Transform json raw object to instance
+Constructor
 
 **Parameters**
 
--   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** JSON object data
+-   `id` **[number](#number)** An identifier (optional, default `null`)
+-   `enabled` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Alarm status (optional, default `false`)
+-   `armed` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Alarm armed status (optional, default `false`)
+-   `userLocationTrigger` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** User location trigger (optional, default `true`)
+-   `sensors` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** List of sensors (optional, default `[]`)
+-   `devicesOnEnable` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** Device to trigger when alarm is triggered (optional, default `[]`)
+-   `devicesOnDisable` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** Device to trigger when alarm is stopped (optional, default `[]`)
 
-Returns **[Alarm](#alarm)** A User instance
+Returns **[AlarmForm](#alarmform)** The instance
+
+### enabled
+
+### armed
+
+### userLocationTrigger
+
+### userLocationTrigger
+
+### sensors
+
+### devicesOnEnable
+
+### devicesOnDisable
+
+### json
+
+Convert json data
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some key / value data
+
+Returns **[AlarmForm](#alarmform)** A form object
 
 ## AlarmManager
 
@@ -1799,7 +2135,15 @@ This class allows to manage alarm (nable, disable, ...)
 **Parameters**
 
 -   `confManager`  
+-   `formManager`  
 -   `webServices`  
+-   `dashboardManager`  
+-   `userManager`  
+-   `sensorsManager`  
+-   `translateManager`  
+-   `deviceManager`  
+-   `messageManager`  
+-   `schedulerService`  
 
 ### constructor
 
@@ -1808,27 +2152,113 @@ Constructor
 **Parameters**
 
 -   `confManager` **[ConfManager](#confmanager)** A configuration manager needed for persistence
--   `webServices` **[WebServices](#webservices)** The web services to register APIs
+-   `formManager` **[FormManager](#formmanager)** A form manager
+-   `webServices` **[WebServices](#webservices)** The web services
+-   `dashboardManager` **[DashboardManager](#dashboardmanager)** The dashboard manager
+-   `userManager` **[UserManager](#usermanager)** The user manager
+-   `sensorsManager` **[SensorsManager](#sensorsmanager)** The sensor manager
+-   `translateManager` **[TranslateManager](#translatemanager)** The translate manager
+-   `deviceManager` **[DeviceManager](#devicemanager)** The device manager
+-   `messageManager` **[MessageManager](#messagemanager)** The message manager
+-   `schedulerService` **[SchedulerService](#schedulerservice)** The Scheduler service
 
-Returns **[Alarm](#alarm)** The instance
+Returns **Alarm** The instance
 
-### setAlarm
+### sensorReadyForTriggering
 
-Set alarm from a generic JSON object
+Check if sensor is ready for triggering events
 
 **Parameters**
 
--   `object` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The JSON object
+-   `sensorId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The sensor identifier
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if alarm can be trigger, false otherwise
+
+### registerTile
+
+Register alarm tile
+
+### alarmStatus
+
+Get alarm state
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if alarm is enabled, false otherwise
+
+### armAlarm
+
+Arm the alarm
+
+### armCancel
+
+Cancel the armed alarm
+
+### enableAlarm
+
+Enable alarm
+
+### disableAlarm
+
+Disable alarm
+
+### triggerAlarm
+
+Trigger the alarm (sirens, ...)
+
+### stopAlarm
+
+Stop the alarm (sirens, ...)
 
 ### processAPI
 
-Process web API callback
+Process API callback
 
 **Parameters**
 
--   `apiRequest` **[APIRequest](#apirequest)** An API Request
+-   `apiRequest` **[APIRequest](#apirequest)** An APIRequest
 
-Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with APIResponse
+Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with an APIResponse object
+
+## AlarmSensorsForm
+
+**Extends FormObject.class**
+
+This class provides a form for alarm sensors form
+
+**Parameters**
+
+-   `id`   (optional, default `null`)
+-   `sensor`   (optional, default `null`)
+-   `triggerAlarm`   (optional, default `true`)
+-   `captureVideo`   (optional, default `false`)
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `id` **[number](#number)** An identifier (optional, default `null`)
+-   `sensor` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Sensor (optional, default `null`)
+-   `triggerAlarm` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Trigger alarm (optional, default `null`)
+-   `captureVideo` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Capture video (optional, default `null`)
+
+Returns **[AlarmForm](#alarmform)** The instance
+
+### sensor
+
+### triggerAlarm
+
+### captureVideo
+
+### json
+
+Convert json data
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some key / value data
+
+Returns **[AlarmSensorsForm](#alarmsensorsform)** A form object
 
 ## Authentication
 
@@ -1883,6 +2313,250 @@ Username
 ### level
 
 App access level
+
+## CamerasForm
+
+**Extends FormObject.class**
+
+This class provides a form for one device
+
+**Parameters**
+
+-   `id`   (optional, default `null`)
+-   `cameraId`   (optional, default `null`)
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `id` **[number](#number)** An identifier (optional, default `null`)
+-   `cameraId` **[number](#number)** A camera identifier (optional, default `null`)
+
+Returns **[CamerasForm](#camerasform)** The instance
+
+### cameraId
+
+### json
+
+Convert json data
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some key / value data
+
+Returns **[CamerasForm](#camerasform)** A form object
+
+### getCameraIds
+
+Cameras id injection
+
+**Parameters**
+
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Inject parameters
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of ids
+
+### getCameraNames
+
+Cameras name injection
+
+**Parameters**
+
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Inject parameters
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of names
+
+## CamerasListForm
+
+**Extends FormObject.class**
+
+This class provides a form for cameras
+
+**Parameters**
+
+-   `id`   (optional, default `null`)
+-   `identifier`   (optional, default `null`)
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `id` **[number](#number)** An identifier (optional, default `null`)
+-   `identifier` **[number](#number)** The camera identifier (optional, default `null`)
+
+Returns **[CamerasListForm](#cameraslistform)** The instance
+
+### identifier
+
+### json
+
+Convert json data
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some key / value data
+
+Returns **[CamerasListForm](#cameraslistform)** A form object
+
+### getCamerasName
+
+Form injection method for Cameras name
+
+**Parameters**
+
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The modules list array
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of cameras name
+
+### getCamerasId
+
+Form injection method for Cameras ids
+
+**Parameters**
+
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The modules list array
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of cameras id
+
+## CamerasManager
+
+This class allows to manage cameras
+
+**Parameters**
+
+-   `pluginsManager`  
+-   `eventBus`  
+-   `webServices`  
+-   `formManager`  
+-   `confManager`  
+-   `translateManager`  
+-   `themeManager`  
+-   `dashboardManager`  
+-   `timeEventService`  
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `pluginsManager` **[PluginsManager](#pluginsmanager)** A plugin manager
+-   `eventBus` **EventEmitter** The global event bus
+-   `webServices` **[WebServices](#webservices)** The web services
+-   `formManager` **[FormManager](#formmanager)** The form manager
+-   `confManager` **[ConfManager](#confmanager)** The configuration manager
+-   `translateManager` **[TranslateManager](#translatemanager)** The translate manager
+-   `themeManager` **[ThemeManager](#thememanager)** The theme manager
+-   `dashboardManager` **[DashboardManager](#dashboardmanager)** The dashboard manager
+-   `timeEventService` **[TimeEventService](#timeeventservice)** The time event service
+
+Returns **[CamerasManager](#camerasmanager)** The instance
+
+### pluginsLoaded
+
+Called automatically when plugins are loaded. Used in separate methods for testing.
+Initially, this method wad used in contructor.
+
+**Parameters**
+
+-   `pluginsManager` **[PluginsManager](#pluginsmanager)** The plugins manager instance
+-   `context` **[CamerasManager](#camerasmanager)** The context (self, this, etc ...)
+
+### initCameras
+
+Initialize cameras
+
+### initCamera
+
+Init a camera instance and add to local array
+
+**Parameters**
+
+-   `configuration` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The camera configuration
+
+### getAllCameras
+
+Get all cameras
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** On object with id:name
+
+### registerTile
+
+Register camera tile
+
+**Parameters**
+
+-   `context` **[CamerasManager](#camerasmanager)** The instance
+
+### processAPI
+
+Process API callback
+
+**Parameters**
+
+-   `apiRequest` **[APIRequest](#apirequest)** An APIRequest
+
+Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with an APIResponse object
+
+### comparator
+
+Compare camera data
+
+**Parameters**
+
+-   `cameraData1` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Camera data 1
+-   `cameraData2` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Camera data 2
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if id is the same, false otherwise
+
+### getCameraConfiguration
+
+Get camera configuration. If no parameters are passed, returns the array of all camera configuration.
+
+**Parameters**
+
+-   `cameraId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The camera identifier. Can be null. (optional, default `null`)
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The camera configuration, or configurations, or null if nothing found
+
+### registerCamerasListForm
+
+Register a cameras list form
+
+### getCamerasList
+
+Retrieve the list of cameras with name and identifier
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** The list of cameras
+
+### getCamera
+
+Get the camera Object
+
+**Parameters**
+
+-   `id` **[number](#number)** Camera identifier
+
+Returns **[Camera](#camera)** A camera extended object. Returns null if nothing found.
+
+### getDefaultCamera
+
+Get the default camera
+
+Returns **[Camera](#camera)** A default camera
+
+### getImage
+
+Get a picture
+
+**Parameters**
+
+-   `id` **[number](#number)** Camera identifier
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback with error, image buffer and mime type. Example : `(err, data, mime) => {}`
 
 ## ConfManager
 
@@ -3052,6 +3726,10 @@ Save configuration
 
 -   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Object data
 
+### save
+
+Save data
+
 ### comparator
 
 List comparator for ConfManager
@@ -3468,6 +4146,8 @@ This class is an interface for plugins
 -   `userManager`  
 -   `messageManager`  
 -   `scenarioManager`  
+-   `alarmManager`  
+-   `camerasManager`  
 
 ### exportClass
 
@@ -3541,6 +4221,8 @@ This class manage plugins
 -   `userManager`  
 -   `messageManager`  
 -   `scenarioManager`  
+-   `alarmManager`  
+-   `camerasManager`  
 
 ### constructor
 
@@ -3564,6 +4246,8 @@ Constructor
 -   `userManager` **[UserManager](#usermanager)** The user manager
 -   `messageManager` **[MessageManager](#messagemanager)** The message manager
 -   `scenarioManager` **[ScenarioManager](#scenariomanager)** The scenario manager
+-   `alarmManager` **[AlarmManager](#alarmmanager)** The alarm manager
+-   `camerasManager` **[CamerasManager](#camerasmanager)** The cameras manager
 
 Returns **[PluginsManager](#pluginsmanager)** The instance
 
@@ -3674,6 +4358,61 @@ Process API callback
 -   `apiRequest` **[APIRequest](#apirequest)** An APIRequest
 
 Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with an APIResponse object
+
+## AlarmAPI
+
+Public API for alarm
+
+**Parameters**
+
+-   `alarmManager`  
+
+### alarmStatus
+
+Get alarm state
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if alarm is enabled, false otherwise
+
+### enableAlarm
+
+Enable alarm
+
+### disableAlarm
+
+Disable alarm
+
+## CameraAPI
+
+Public API for camera
+
+**Parameters**
+
+-   `formManager`  
+-   `plugin`  
+-   `camerasManager`  
+
+### registerForm
+
+Register a camera form
+
+**Parameters**
+
+-   `formClass` **Class** A form annotation's implemented class
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The injected objects
+
+### registerClass
+
+Register a camera class
+
+**Parameters**
+
+-   `c` **Class** A camera extended class
+
+### getCameras
+
+Get all cameras
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** On object with id:name
 
 ## ConfigurationAPI
 
@@ -3953,6 +4692,14 @@ Schedule an operation for a registered callback
 -   `id` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An identifier (must be unique)
 -   `timestamp` **timestamp** A timestamp or a constant : `IN_A_MINUTE`, `IN_FIVE_MINUTES`, `IN_TEN_MINUTES`, `IN_THIRTY_MINUTES`, `IN_A_HOUR`, `IN_TWELVE_HOUR`, `IN_A_DAY`
 -   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A data passed to callback when triggered (optional, default `{}`)
+
+### cancel
+
+Cancel a scheduled operation
+
+**Parameters**
+
+-   `id` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An identifier (must be unique)
 
 ### constants
 
@@ -4778,6 +5525,60 @@ Sensors name injection
 
 Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of names
 
+## SensorsListForm
+
+**Extends FormObject.class**
+
+This class provides a form for sensors
+
+**Parameters**
+
+-   `id`   (optional, default `null`)
+-   `identifier`   (optional, default `null`)
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `id` **[number](#number)** An identifier (optional, default `null`)
+-   `identifier` **[number](#number)** The sensor identifier (optional, default `null`)
+
+Returns **[SensorsListForm](#sensorslistform)** The instance
+
+### identifier
+
+### json
+
+Convert json data
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some key / value data
+
+Returns **[SensorsListForm](#sensorslistform)** A form object
+
+### getSensorsName
+
+Form injection method for Sensors name
+
+**Parameters**
+
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The modules list array
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of sensors name
+
+### getSensorsId
+
+Form injection method for Sensors ids
+
+**Parameters**
+
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The modules list array
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of sensors id
+
 ## SensorsManager
 
 This class allows to manage sensors
@@ -4815,7 +5616,7 @@ Initially, this method wad used in contructor.
 
 **Parameters**
 
--   `pluginsManager` **[PluginsManager](#pluginsmanager)** THe plugins manager instance
+-   `pluginsManager` **[PluginsManager](#pluginsmanager)** The plugins manager instance
 -   `context` **[SensorsManager](#sensorsmanager)** The context (self, this, etc ...)
 
 ### initSensors
@@ -4915,6 +5716,20 @@ Compare sensor data
 -   `sensorData2` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Sensor data 2
 
 Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if id is the same, false otherwise
+
+### getSensorConfiguration
+
+Get sensor configuration. If no parameters are passed, returns the array of all sensor configuration.
+
+**Parameters**
+
+-   `sensorId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The sensor identifier. Can be null. (optional, default `null`)
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The sensor configuration, or configurations, or null if nothing found
+
+### registerSensorsListForm
+
+Register a sensors list form
 
 ## ServicesManager
 
@@ -5172,7 +5987,7 @@ Constructor
 -   `picture` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Picture, in base64 format (optional, default `null`)
 -   `atHome` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if user is at home, false otherwise (optional, default `false`)
 
-Returns **User** The instance
+Returns **[UserForm](#userform)** The instance
 
 ### username
 
@@ -5207,6 +6022,7 @@ This class allows to manage users (create, delete, search, ...)
 -   `webServices`  
 -   `dashboardManager`  
 -   `appConfiguration`  
+-   `scenarioManager`  
 
 ### constructor
 
@@ -5219,6 +6035,7 @@ Constructor
 -   `webServices` **[WebServices](#webservices)** The web services
 -   `dashboardManager` **[DashboardManager](#dashboardmanager)** The dashboard manager
 -   `appConfiguration` **AppConfiguration** The app configuration object
+-   `scenarioManager` **[ScenarioManager](#scenariomanager)** The scenario manager
 
 Returns **[UserManager](#usermanager)** The instance
 
@@ -5300,6 +6117,40 @@ Process API callback
 -   `apiRequest` **[APIRequest](#apirequest)** An APIRequest
 
 Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with an APIResponse object
+
+## UserScenarioForm
+
+**Extends FormObject.class**
+
+This class provides a form for user location trigger event for scenario
+
+**Parameters**
+
+-   `id`   (optional, default `null`)
+-   `mode`   (optional, default `null`)
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `id` **[number](#number)** An identifier (optional, default `null`)
+-   `mode` **[number](#number)** The user home mode (optional, default `null`)
+
+Returns **[UserScenarioForm](#userscenarioform)** The instance
+
+### mode
+
+### json
+
+Convert json data
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some key / value data
+
+Returns **[UserScenarioForm](#userscenarioform)** A form object
 
 ## SchedulerDbObject
 
@@ -5387,6 +6238,14 @@ Schedule an operation for a registered callback
 -   `id` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An identifier (must be unique)
 -   `timestamp` **timestamp** A timestamp or a constant : `IN_A_MINUTE`, `IN_FIVE_MINUTES`, `IN_TEN_MINUTES`, `IN_THIRTY_MINUTES`, `IN_A_HOUR`, `IN_TWELVE_HOUR`, `IN_A_DAY`
 -   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A data passed to callback when triggered (optional, default `{}`)
+
+### cancel
+
+Cancel a scheduled operation
+
+**Parameters**
+
+-   `id` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An identifier (must be unique)
 
 ### timeEvent
 
@@ -5660,6 +6519,8 @@ This class is a POJO representing an APIRequest item
 -   `path`  
 -   `action`  
 -   `params`  
+-   `req`  
+-   `res`  
 -   `data`   (optional, default `null`)
 
 ### constructor
@@ -5674,6 +6535,8 @@ Constructor
 -   `path` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** The path (route splitted in array)
 -   `action` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The action (first element of route)
 -   `params` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The parameters under key / value format
+-   `req` **[Request](https://developer.mozilla.org/en-US/Add-ons/SDK/High-Level_APIs/request)?** The request
+-   `res` **[Response](https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/HTML5)?** The response
 -   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The object sent (optional, default `null`)
 
 Returns **[APIRequest](#apirequest)** The instance
@@ -5729,6 +6592,7 @@ This class is a POJO representing an APIResponse item
 -   `errorCode`   (optional, default `-1`)
 -   `errorMessage`   (optional, default `null`)
 -   `upToDate`   (optional, default `false`)
+-   `contentType`   (optional, default `JSON_CONTENT_TYPE`)
 
 ### constructor
 
@@ -5741,6 +6605,7 @@ Constructor
 -   `errorCode` **int** The error code (optional) (optional, default `-1`)
 -   `errorMessage` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The error message (optional) (optional, default `null`)
 -   `upToDate` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True will return 304 no content. (optional, default `false`)
+-   `contentType` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The content type (optional, default `"application/json"`)
 
 Returns **[APIResponse](#apiresponse)** The instance
 
@@ -5853,6 +6718,7 @@ Create an API
 
 -   `req` **[Request](https://developer.mozilla.org/en-US/Add-ons/SDK/High-Level_APIs/request)** The WS request
 -   `endpoint` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The WS endpoint
+-   `res` **[Response](https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/HTML5)** The WS response
 
 Returns **[APIRequest](#apirequest)** An API Request
 
@@ -6043,7 +6909,7 @@ Resize an image and convert to png
 **Parameters**
 
 -   `b64string` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The base64 image string
--   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback when image process is done \`(err, data) => {}``
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback when image process is done `(err, data) => {}`
 -   `size` **[number](#number)** The size in pixel (optional, default `100`)
 
 Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The base64 output image string

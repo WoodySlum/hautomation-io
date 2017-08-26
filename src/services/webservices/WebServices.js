@@ -1,5 +1,7 @@
 "use strict";
 const express = require("express");
+const compression = require("compression");
+
 // Internal
 var Logger = require("./../../logger/Logger");
 var Service = require("./../Service");
@@ -44,9 +46,10 @@ class WebServices extends Service.class {
      * @param  {int} [sslPort=8443]     The listening HTTPS port
      * @param  {string} [sslKey=null]   The path for SSL key
      * @param  {string} [sslCert=null]  The path for sslCert key
+     * @param  {string} [enableCompression=true]  Enable gzip data compression
      * @returns {WebServices}            The instance
      */
-    constructor(port = 8080, sslPort = 8043, sslKey = null, sslCert = null) {
+    constructor(port = 8080, sslPort = 8043, sslKey = null, sslCert = null, enableCompression = true) {
         super("webservices");
         this.port = port;
         this.sslPort = sslPort;
@@ -55,6 +58,7 @@ class WebServices extends Service.class {
         this.sslKey = sslKey;
         this.sslCert = sslCert;
         this.fs = fs;
+        this.enableCompression = enableCompression;
     }
 
     /**
@@ -68,6 +72,17 @@ class WebServices extends Service.class {
             this.app.use(BodyParser.json({limit: "2mb"}));
             this.app.use(BodyParser.urlencoded({ extended: false }));
             this.app.use(ENDPOINT_UI, express.static(__dirname + "/../../../ui"));
+            if (this.enableCompression) {
+                this.app.use(compression({filter: (req, res) => {
+                    if (req.headers["x-no-compression"]) {
+                        // don't compress responses with this request header
+                        return false;
+                    }
+
+                    // fallback to standard filter function
+                    return compression.filter(req, res);
+                }}));
+            }
 
             // GET Apis
             this.app.get(endpoint + "*/", function(req, res) {

@@ -64,6 +64,7 @@
     "callsite": "^1.0.0",
     "columnify": "^1.5",
     "express": "^4.15",
+    "compression": "^1.7",
     "is-running": "^2.1.0",
     "moment": "^2.18",
     "moment-timezone": "^0.5",
@@ -78,6 +79,7 @@
     "toposort": "^1.0",
     "gm": "^1.23",
     "prowler": "^0.0",
-    "mjpeg-proxy": "^0.2"
+    "mjpeg-proxy": "^0.2",
+    "mkdir-recursive": "^0.3"
   }
 }
