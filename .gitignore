@@ -17,6 +17,10 @@ data/database.db
 # Data file
 data/plugins.json
 
+# Camera files
+data/cameras/
+
+
 # Package lock
 package-lock.json
 
