@@ -2031,7 +2031,7 @@ $(document).ready(function() {
     });
 
     var dailyTimeLapseLink = function() {
-        var hrDl = vUrl + '?username=' + username + '&password=' + encodeURIComponent(password) + '&method=getDailyTimeLapse&camera=' + selectedCamera;
+        var hrDl = vUrl + 'camera/timelapse/daily/get/' + selectedCamera + '/?u=' + username + '&p=' + encodeURIComponent(password);
         $('#dailyTimeLapse').html('<a class="btn btn-primary" href="' + hrDl + '" target="_blank" role="button"><span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> ' + t('js.download', null) + '</a>');
     }
 
@@ -2040,8 +2040,8 @@ $(document).ready(function() {
     });
 
     $("#timeLapseViewer").click(function() {
-        var hrStream = vUrl + '?username=' + username + '&password=' + encodeURIComponent(password) + '&method=getDailyTimeLapseStream&camera=' + selectedCamera;
-        $('#dailyTimeLapseStream').html('<div class="embed-responsive embed-responsive-16by9"><iframe class="embed-responsive-item" src="' + hrStream + '"></iframe></div>');
+        var hrStream = vUrl + 'camera/timelapse/daily/stream/' + selectedCamera + '/?u=' + username + '&p=' + encodeURIComponent(password);
+        $('#dailyTimeLapseStream').html('<div class="embed-responsive embed-responsive-16by9"><<video src=" ' + hrStream + '" controls></video></div>');
         $('#timeLapseVideoModal').modal('show');
     });
 

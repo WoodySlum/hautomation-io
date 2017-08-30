@@ -111,14 +111,15 @@ class HautomationCore {
         this.sensorsManager = new SensorsManager.class(this.pluginsManager, this.eventBus, this.webServices, this.formManager, this.confManager, this.translateManager, this.themeManager);
         // Dashboard manager
         this.dashboardManager = new DashboardManager.class(this.themeManager, this.webServices, this.translateManager);
+        // Installation manager
+        this.installationManager = new InstallationManager.class(this.confManager, this.eventBus);
         // Cameras manager module
-        this.camerasManager = new CamerasManager.class(this.pluginsManager, this.eventBus, this.webServices, this.formManager, this.confManager, this.translateManager, this.themeManager, this.dashboardManager, this.timeEventService, AppConfiguration.cameras.archiveFolder);
+        this.camerasManager = new CamerasManager.class(this.pluginsManager, this.eventBus, this.webServices, this.formManager, this.confManager, this.translateManager, this.themeManager, this.dashboardManager, this.timeEventService, AppConfiguration.cameras.archiveFolder, AppConfiguration.cachePath, this.installationManager);
+
         // UserManager module
         this.userManager = new UserManager.class(this.confManager, this.formManager, this.webServices, this.dashboardManager, AppConfiguration, this.scenarioManager);
         // Authentication module
         this.authentication = new Authentication.class(this.webServices, this.userManager);
-        // Installation manager
-        this.installationManager = new InstallationManager.class(this.confManager, this.eventBus);
         // Message manager
         this.messageManager = new MessageManager.class(this.pluginsManager, this.eventBus, this.userManager, this.dbManager, this.webServices, this.translateManager, this.dashboardManager);
         // Device manager module
