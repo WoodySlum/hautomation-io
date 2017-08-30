@@ -55,6 +55,28 @@ class CameraAPI {
     getCameras() {
         return PrivateProperties.oprivate(this).camerasManager.getAllCameras();
     }
+
+    /**
+     * Get a picture
+     *
+     * @param  {number}   id Camera identifier
+     * @param  {Function} cb         A callback with error, image buffer and mime type. Example : `(err, data, mime) => {}`
+     * @param  {number}   [timestamp=null] The timestamp of the picture. If `null`, live snapshot.
+     */
+    getImage(id, cb, timestamp = null) {
+        return PrivateProperties.oprivate(this).camerasManager.getImage(id, cb, timestamp);
+    }
+
+    /**
+     * Record a video session for a specific camera
+     *
+     * @param  {number}   id         The camera identifier
+     * @param  {Function} cb         A callback `(err, generatedFilepath) => {}`
+     * @param  {number}   [timer=60] Duration of capture in seconds
+     */
+    record(id, cb, timer = 60) {
+        return PrivateProperties.oprivate(this).camerasManager.record(id, cb, timer);
+    }
 }
 
 module.exports = {class:CameraAPI};

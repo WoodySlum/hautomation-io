@@ -210,6 +210,7 @@
 -   [CamerasManager](#camerasmanager)
     -   [constructor](#constructor-33)
     -   [pluginsLoaded](#pluginsloaded)
+    -   [archiveCameras](#archivecameras)
     -   [initCameras](#initcameras)
     -   [initCamera](#initcamera)
     -   [getAllCameras](#getallcameras)
@@ -222,8 +223,18 @@
     -   [getCamera](#getcamera)
     -   [getDefaultCamera](#getdefaultcamera)
     -   [getImage](#getimage)
--   [ConfManager](#confmanager)
+    -   [timelapseStatus](#timelapsestatus)
+    -   [dailyFilepath](#dailyfilepath)
+    -   [generateDailyTimeLapses](#generatedailytimelapses)
+    -   [generateTimelapse](#generatetimelapse)
+    -   [record](#record)
+-   [TimelapseGenerator](#timelapsegenerator)
     -   [constructor](#constructor-34)
+    -   [generateTimelapse](#generatetimelapse-1)
+    -   [pad](#pad)
+    -   [prepareFiles](#preparefiles)
+-   [ConfManager](#confmanager)
+    -   [constructor](#constructor-35)
     -   [appConfiguration](#appconfiguration)
     -   [fs](#fs)
     -   [getFilePath](#getfilepath)
@@ -236,16 +247,16 @@
     -   [setData](#setdata)
     -   [removeData](#removedata)
 -   [DashboardManager](#dashboardmanager)
-    -   [constructor](#constructor-35)
+    -   [constructor](#constructor-36)
     -   [registerTile](#registertile-2)
     -   [unregisterTile](#unregistertile)
     -   [buildDashboard](#builddashboard)
     -   [processAPI](#processapi-5)
 -   [Tile](#tile)
-    -   [constructor](#constructor-36)
+    -   [constructor](#constructor-37)
     -   [get](#get)
 -   [DbHelper](#dbhelper)
-    -   [constructor](#constructor-37)
+    -   [constructor](#constructor-38)
     -   [RequestBuilder](#requestbuilder)
     -   [Operators](#operators)
     -   [getFieldsForTable](#getfieldsfortable)
@@ -256,7 +267,7 @@
     -   [delObject](#delobject)
     -   [delObjects](#delobjects)
 -   [DbManager](#dbmanager)
-    -   [constructor](#constructor-38)
+    -   [constructor](#constructor-39)
     -   [close](#close)
     -   [getFieldsForTable](#getfieldsfortable-1)
     -   [numberVersion](#numberversion)
@@ -271,12 +282,12 @@
     -   [delObject](#delobject-1)
     -   [delObjects](#delobjects-1)
 -   [DbObject](#dbobject)
-    -   [constructor](#constructor-39)
+    -   [constructor](#constructor-40)
     -   [base](#base)
     -   [save](#save)
     -   [del](#del)
 -   [DbRequestBuilder](#dbrequestbuilder)
-    -   [constructor](#constructor-40)
+    -   [constructor](#constructor-41)
     -   [removeLastComma](#removelastcomma)
     -   [escapeString](#escapestring)
     -   [getValueEncapsulated](#getvalueencapsulated)
@@ -306,7 +317,7 @@
     -   [tableName](#tablename)
     -   [toSchema](#toschema)
 -   [DeviceForm](#deviceform)
-    -   [constructor](#constructor-41)
+    -   [constructor](#constructor-42)
     -   [name](#name-3)
     -   [excludeFromAll](#excludefromall)
     -   [visible](#visible)
@@ -316,7 +327,7 @@
     -   [status](#status-1)
     -   [json](#json-14)
 -   [DeviceManager](#devicemanager)
-    -   [constructor](#constructor-42)
+    -   [constructor](#constructor-43)
     -   [triggerScenario](#triggerscenario)
     -   [registerDeviceListForm](#registerdevicelistform)
     -   [registerDeviceTiles](#registerdevicetiles)
@@ -325,20 +336,20 @@
     -   [switchAll](#switchall)
     -   [processAPI](#processapi-6)
 -   [DevicesListForm](#deviceslistform)
-    -   [constructor](#constructor-43)
+    -   [constructor](#constructor-44)
     -   [identifier](#identifier-1)
     -   [status](#status-2)
     -   [json](#json-15)
     -   [getDevicesName](#getdevicesname)
     -   [getDevicesId](#getdevicesid)
 -   [DevicesListScenarioForm](#deviceslistscenarioform)
-    -   [constructor](#constructor-44)
+    -   [constructor](#constructor-45)
     -   [turnOnAll](#turnonall)
     -   [turnOffAll](#turnoffall)
     -   [devices](#devices)
     -   [json](#json-16)
 -   [FormConfiguration](#formconfiguration)
-    -   [constructor](#constructor-45)
+    -   [constructor](#constructor-46)
     -   [setUpdateCb](#setupdatecb)
     -   [addAdditionalFields](#addadditionalfields)
     -   [loadConfig](#loadconfig)
@@ -351,7 +362,7 @@
     -   [getConfig](#getconfig)
     -   [getForm](#getform)
 -   [FormManager](#formmanager)
-    -   [constructor](#constructor-46)
+    -   [constructor](#constructor-47)
     -   [register](#register-1)
     -   [registerWithAdditionalFields](#registerwithadditionalfields)
     -   [addAdditionalFields](#addadditionalfields-1)
@@ -362,11 +373,11 @@
     -   [getForm](#getform-1)
     -   [generateForm](#generateform)
 -   [FormObject](#formobject)
-    -   [constructor](#constructor-47)
+    -   [constructor](#constructor-48)
     -   [json](#json-17)
 -   [id](#id)
 -   [InstallationManager](#installationmanager)
-    -   [constructor](#constructor-48)
+    -   [constructor](#constructor-49)
     -   [register](#register-2)
     -   [executeCommand](#executecommand)
     -   [execute](#execute)
@@ -374,7 +385,7 @@
     -   [isValidForArchitecture](#isvalidforarchitecture)
     -   [restart](#restart-1)
 -   [DbMessage](#dbmessage)
-    -   [constructor](#constructor-49)
+    -   [constructor](#constructor-50)
 -   [recipient](#recipient)
 -   [sender](#sender)
 -   [message](#message)
@@ -383,7 +394,7 @@
 -   [picture](#picture)
 -   [received](#received)
 -   [MessageManager](#messagemanager)
-    -   [constructor](#constructor-50)
+    -   [constructor](#constructor-51)
     -   [register](#register-3)
     -   [unregister](#unregister-1)
     -   [sendMessage](#sendmessage-1)
@@ -396,10 +407,10 @@
     -   [init](#init-2)
     -   [registerInstance](#registerinstance)
 -   [PluginConf](#pluginconf)
-    -   [constructor](#constructor-51)
+    -   [constructor](#constructor-52)
     -   [json](#json-18)
 -   [PluginsManager](#pluginsmanager)
-    -   [constructor](#constructor-52)
+    -   [constructor](#constructor-53)
     -   [getPluginsFromDirectory](#getpluginsfromdirectory)
     -   [checkPluginSanity](#checkpluginsanity)
     -   [initPlugins](#initplugins)
@@ -419,6 +430,8 @@
     -   [registerForm](#registerform-1)
     -   [registerClass](#registerclass)
     -   [getCameras](#getcameras)
+    -   [getImage](#getimage-1)
+    -   [record](#record-1)
 -   [ConfigurationAPI](#configurationapi)
     -   [register](#register-4)
     -   [getConfiguration](#getconfiguration)
@@ -484,7 +497,7 @@
     -   [APIResponse](#apiresponse)
     -   [constants](#constants-4)
 -   [RadioForm](#radioform)
-    -   [constructor](#constructor-53)
+    -   [constructor](#constructor-54)
     -   [module](#module-1)
     -   [protocol](#protocol-1)
     -   [deviceId](#deviceid-1)
@@ -493,7 +506,7 @@
     -   [getModules](#getmodules)
     -   [getProtocols](#getprotocols)
 -   [RadioManager](#radiomanager)
-    -   [constructor](#constructor-54)
+    -   [constructor](#constructor-55)
     -   [pluginsLoaded](#pluginsloaded-1)
     -   [registerRadioEvents](#registerradioevents)
     -   [unregisterRadioEvents](#unregisterradioevents)
@@ -504,16 +517,16 @@
     -   [getLastReceivedRadioInformations](#getlastreceivedradioinformations-1)
     -   [processAPI](#processapi-10)
 -   [RadioScenarioForm](#radioscenarioform)
-    -   [constructor](#constructor-55)
+    -   [constructor](#constructor-56)
     -   [radioForm](#radioform-1)
     -   [status](#status-3)
     -   [json](#json-20)
 -   [RadioScenariosForm](#radioscenariosform)
-    -   [constructor](#constructor-56)
+    -   [constructor](#constructor-57)
     -   [radioScenariosForm](#radioscenariosform-1)
     -   [json](#json-21)
 -   [ScenarioForm](#scenarioform)
-    -   [constructor](#constructor-57)
+    -   [constructor](#constructor-58)
     -   [name](#name-4)
     -   [enabled](#enabled-1)
     -   [icon](#icon-2)
@@ -521,7 +534,7 @@
     -   [subActions](#subactions)
     -   [json](#json-22)
 -   [ScenarioManager](#scenariomanager)
-    -   [constructor](#constructor-58)
+    -   [constructor](#constructor-59)
     -   [registerScenariosListForm](#registerscenarioslistform)
     -   [generateKey](#generatekey)
     -   [register](#register-12)
@@ -530,35 +543,35 @@
     -   [getScenarios](#getscenarios-1)
     -   [timeEventScenario](#timeeventscenario)
 -   [ScenariosListForm](#scenarioslistform)
-    -   [constructor](#constructor-59)
+    -   [constructor](#constructor-60)
     -   [identifier](#identifier-2)
     -   [json](#json-23)
     -   [getScenariosName](#getscenariosname)
     -   [getScenariosId](#getscenariosid)
 -   [ScenarioSubActionForm](#scenariosubactionform)
-    -   [constructor](#constructor-60)
+    -   [constructor](#constructor-61)
     -   [scenario](#scenario)
     -   [delay](#delay)
     -   [json](#json-24)
 -   [TimeScenarioForm](#timescenarioform)
-    -   [constructor](#constructor-61)
+    -   [constructor](#constructor-62)
     -   [day](#day)
     -   [time](#time)
     -   [json](#json-25)
 -   [SensorsForm](#sensorsform)
-    -   [constructor](#constructor-62)
+    -   [constructor](#constructor-63)
     -   [sensorId](#sensorid-1)
     -   [json](#json-26)
     -   [getSensorIds](#getsensorids)
     -   [getSensorNames](#getsensornames)
 -   [SensorsListForm](#sensorslistform)
-    -   [constructor](#constructor-63)
+    -   [constructor](#constructor-64)
     -   [identifier](#identifier-3)
     -   [json](#json-27)
     -   [getSensorsName](#getsensorsname)
     -   [getSensorsId](#getsensorsid)
 -   [SensorsManager](#sensorsmanager)
-    -   [constructor](#constructor-64)
+    -   [constructor](#constructor-65)
     -   [pluginsLoaded](#pluginsloaded-2)
     -   [initSensors](#initsensors)
     -   [initSensor](#initsensor)
@@ -573,7 +586,7 @@
     -   [getSensorConfiguration](#getsensorconfiguration)
     -   [registerSensorsListForm](#registersensorslistform)
 -   [ServicesManager](#servicesmanager)
-    -   [constructor](#constructor-65)
+    -   [constructor](#constructor-66)
     -   [isServiceRegistered](#isserviceregistered)
     -   [add](#add-1)
     -   [remove](#remove-1)
@@ -582,10 +595,10 @@
     -   [restart](#restart-2)
     -   [getService](#getservice)
 -   [ThemeManager](#thememanager)
-    -   [constructor](#constructor-66)
+    -   [constructor](#constructor-67)
     -   [getColors](#getcolors-1)
 -   [ThreadsManager](#threadsmanager)
-    -   [constructor](#constructor-67)
+    -   [constructor](#constructor-68)
     -   [stringifyFunc](#stringifyfunc)
     -   [run](#run-1)
     -   [send](#send)
@@ -593,12 +606,12 @@
     -   [getPid](#getpid)
     -   [isRunning](#isrunning)
 -   [TranslateManager](#translatemanager)
-    -   [constructor](#constructor-68)
+    -   [constructor](#constructor-69)
     -   [addTranslations](#addtranslations)
     -   [t](#t-1)
     -   [translateArray](#translatearray)
 -   [UserForm](#userform)
-    -   [constructor](#constructor-69)
+    -   [constructor](#constructor-70)
     -   [username](#username-2)
     -   [password](#password-1)
     -   [level](#level-1)
@@ -607,7 +620,7 @@
     -   [atHome](#athome)
     -   [json](#json-28)
 -   [UserManager](#usermanager)
-    -   [constructor](#constructor-70)
+    -   [constructor](#constructor-71)
     -   [updateTile](#updatetile-1)
     -   [getUsers](#getusers-1)
     -   [getUser](#getuser)
@@ -620,17 +633,17 @@
     -   [unregisterHomeNotifications](#unregisterhomenotifications-1)
     -   [processAPI](#processapi-12)
 -   [UserScenarioForm](#userscenarioform)
-    -   [constructor](#constructor-71)
+    -   [constructor](#constructor-72)
     -   [mode](#mode)
     -   [json](#json-29)
 -   [SchedulerDbObject](#schedulerdbobject)
-    -   [constructor](#constructor-72)
+    -   [constructor](#constructor-73)
 -   [identifier](#identifier-4)
 -   [data](#data)
 -   [triggerDate](#triggerdate)
 -   [triggered](#triggered)
 -   [SchedulerService](#schedulerservice)
-    -   [constructor](#constructor-73)
+    -   [constructor](#constructor-74)
     -   [start](#start-2)
     -   [stop](#stop-2)
     -   [register](#register-13)
@@ -639,7 +652,7 @@
     -   [cancel](#cancel-1)
     -   [timeEvent](#timeevent)
 -   [Service](#service)
-    -   [constructor](#constructor-74)
+    -   [constructor](#constructor-75)
     -   [start](#start-3)
     -   [run](#run-2)
     -   [threadCallback](#threadcallback-1)
@@ -655,7 +668,7 @@
     -   [unregister](#unregister-9)
     -   [setThreadsManager](#setthreadsmanager)
 -   [TimeEventService](#timeeventservice)
-    -   [constructor](#constructor-75)
+    -   [constructor](#constructor-76)
     -   [start](#start-4)
     -   [stop](#stop-4)
     -   [hash](#hash)
@@ -665,14 +678,14 @@
     -   [convertMode](#convertmode)
     -   [timeEvent](#timeevent-1)
 -   [APIRegistration](#apiregistration)
-    -   [constructor](#constructor-76)
+    -   [constructor](#constructor-77)
     -   [delegate](#delegate)
     -   [method](#method)
     -   [route](#route)
     -   [authLevel](#authlevel)
     -   [isEqual](#isequal)
 -   [APIRequest](#apirequest)
-    -   [constructor](#constructor-77)
+    -   [constructor](#constructor-78)
     -   [method](#method-1)
     -   [ip](#ip-1)
     -   [route](#route-1)
@@ -683,13 +696,13 @@
     -   [authenticationData](#authenticationdata-1)
     -   [addAuthenticationData](#addauthenticationdata)
 -   [APIResponse](#apiresponse-1)
-    -   [constructor](#constructor-78)
+    -   [constructor](#constructor-79)
     -   [success](#success)
     -   [response](#response)
     -   [errorCode](#errorcode)
     -   [errorMessage](#errormessage)
 -   [WebServices](#webservices)
-    -   [constructor](#constructor-79)
+    -   [constructor](#constructor-80)
     -   [start](#start-5)
     -   [stop](#stop-5)
     -   [registerInfos](#registerinfos)
@@ -2079,12 +2092,12 @@ Constructor
 **Parameters**
 
 -   `id` **[number](#number)** An identifier (optional, default `null`)
--   `enabled` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Status (optional, default `false`)
--   `armed`   (optional, default `false`)
--   `userLocationTrigger` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** User location auto trigger (optional, default `null`)
--   `sensors`   (optional, default `[]`)
--   `devicesOnEnable`   (optional, default `[]`)
--   `devicesOnDisable`   (optional, default `[]`)
+-   `enabled` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Alarm status (optional, default `false`)
+-   `armed` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Alarm armed status (optional, default `false`)
+-   `userLocationTrigger` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** User location trigger (optional, default `true`)
+-   `sensors` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** List of sensors (optional, default `[]`)
+-   `devicesOnEnable` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** Device to trigger when alarm is triggered (optional, default `[]`)
+-   `devicesOnDisable` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** Device to trigger when alarm is stopped (optional, default `[]`)
 
 Returns **[AlarmForm](#alarmform)** The instance
 
@@ -2095,12 +2108,12 @@ Constructor
 **Parameters**
 
 -   `id` **[number](#number)** An identifier (optional, default `null`)
--   `enabled` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Alarm status (optional, default `false`)
--   `armed` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Alarm armed status (optional, default `false`)
--   `userLocationTrigger` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** User location trigger (optional, default `true`)
--   `sensors` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** List of sensors (optional, default `[]`)
--   `devicesOnEnable` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** Device to trigger when alarm is triggered (optional, default `[]`)
--   `devicesOnDisable` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** Device to trigger when alarm is stopped (optional, default `[]`)
+-   `enabled` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Status (optional, default `false`)
+-   `armed`   (optional, default `false`)
+-   `userLocationTrigger` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** User location auto trigger (optional, default `null`)
+-   `sensors`   (optional, default `[]`)
+-   `devicesOnEnable`   (optional, default `[]`)
+-   `devicesOnDisable`   (optional, default `[]`)
 
 Returns **[AlarmForm](#alarmform)** The instance
 
@@ -2144,6 +2157,7 @@ This class allows to manage alarm (nable, disable, ...)
 -   `deviceManager`  
 -   `messageManager`  
 -   `schedulerService`  
+-   `camerasManager`  
 
 ### constructor
 
@@ -2161,6 +2175,7 @@ Constructor
 -   `deviceManager` **[DeviceManager](#devicemanager)** The device manager
 -   `messageManager` **[MessageManager](#messagemanager)** The message manager
 -   `schedulerService` **[SchedulerService](#schedulerservice)** The Scheduler service
+-   `camerasManager` **[CamerasManager](#camerasmanager)** The cameras manager
 
 Returns **Alarm** The instance
 
@@ -2437,6 +2452,9 @@ This class allows to manage cameras
 -   `themeManager`  
 -   `dashboardManager`  
 -   `timeEventService`  
+-   `camerasConfiguration`   (optional, default `null`)
+-   `cachePath`   (optional, default `null`)
+-   `installationManager`   (optional, default `null`)
 
 ### constructor
 
@@ -2453,6 +2471,9 @@ Constructor
 -   `themeManager` **[ThemeManager](#thememanager)** The theme manager
 -   `dashboardManager` **[DashboardManager](#dashboardmanager)** The dashboard manager
 -   `timeEventService` **[TimeEventService](#timeeventservice)** The time event service
+-   `camerasConfiguration` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Cameras configuration (optional, default `null`)
+-   `cachePath` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Temporary files path (optional, default `null`)
+-   `installationManager` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Installation manager (optional, default `null`)
 
 Returns **[CamerasManager](#camerasmanager)** The instance
 
@@ -2465,6 +2486,14 @@ Initially, this method wad used in contructor.
 
 -   `pluginsManager` **[PluginsManager](#pluginsmanager)** The plugins manager instance
 -   `context` **[CamerasManager](#camerasmanager)** The context (self, this, etc ...)
+
+### archiveCameras
+
+Archive all cameras
+
+**Parameters**
+
+-   `context` **[CamerasManager](#camerasmanager)** The instance
 
 ### initCameras
 
@@ -2557,6 +2586,108 @@ Get a picture
 
 -   `id` **[number](#number)** Camera identifier
 -   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback with error, image buffer and mime type. Example : `(err, data, mime) => {}`
+-   `timestamp` **[number](#number)** The timestamp of the picture. If `null`, live snapshot. (optional, default `null`)
+
+### timelapseStatus
+
+Retrieve a timelapse status for a specific token
+
+**Parameters**
+
+-   `token` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Time lapse token
+
+Returns **[number](#number)** The status
+
+### dailyFilepath
+
+Get the daily timelapse file path
+
+**Parameters**
+
+-   `camera` **[Camera](#camera)** A camera
+-   `camerasArchiveFolder` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Camera archive folder
+
+Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The path
+
+### generateDailyTimeLapses
+
+Generate a daily timelapse
+
+**Parameters**
+
+-   `context` **[CamerasManager](#camerasmanager)** The context (self)
+
+### generateTimelapse
+
+Generate a timelapse for a camera id
+
+**Parameters**
+
+-   `id` **[number](#number)** The camera identifier
+-   `duration` **[number](#number)** The duration in seconds (optional, default `24*60*60`)
+
+### record
+
+Record a video session for a specific camera
+
+**Parameters**
+
+-   `id` **[number](#number)** The camera identifier
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback `(err, generatedFilepath) => {}`
+-   `timer` **[number](#number)** Duration of capture in seconds (optional, default `60`)
+
+## TimelapseGenerator
+
+This class allows to generate timelapse
+
+**Parameters**
+
+-   `camera`  
+-   `installationManager`  
+-   `cachePath`  
+-   `cameraArchiveFolder`  
+-   `duration`   (optional, default `24*60*60`)
+
+### constructor
+
+Generate a timelapse for a camera
+
+**Parameters**
+
+-   `camera` **[Camera](#camera)** A camera object
+-   `installationManager` **[InstallationManager](#installationmanager)** The installation manager instance
+-   `cachePath` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The cache path
+-   `cameraArchiveFolder` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The camera archive path
+-   `duration` **[number](#number)** The duration in seconds (optional, default `24*60*60`)
+
+Returns **[TimelapseGenerator](#timelapsegenerator)** The instance
+
+### generateTimelapse
+
+Generate a timelapse
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback as `(status, error, timelapseFilepath) => {}`
+
+### pad
+
+Add padding to number
+
+**Parameters**
+
+-   `num` **[number](#number)** The number
+-   `size` **[number](#number)** The leading 0 count
+
+Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The transformed number
+
+### prepareFiles
+
+Prepare camera files
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback as `(err, pictureList, cacheImages, folder) => {}`
 
 ## ConfManager
 
@@ -4413,6 +4544,26 @@ Register a camera class
 Get all cameras
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** On object with id:name
+
+### getImage
+
+Get a picture
+
+**Parameters**
+
+-   `id` **[number](#number)** Camera identifier
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback with error, image buffer and mime type. Example : `(err, data, mime) => {}`
+-   `timestamp` **[number](#number)** The timestamp of the picture. If `null`, live snapshot. (optional, default `null`)
+
+### record
+
+Record a video session for a specific camera
+
+**Parameters**
+
+-   `id` **[number](#number)** The camera identifier
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback `(err, generatedFilepath) => {}`
+-   `timer` **[number](#number)** Duration of capture in seconds (optional, default `60`)
 
 ## ConfigurationAPI
 
@@ -6637,6 +6788,7 @@ This class manage Web Services call, and more specifically the external APIs
 -   `sslPort`   (optional, default `8043`)
 -   `sslKey`   (optional, default `null`)
 -   `sslCert`   (optional, default `null`)
+-   `enableCompression`   (optional, default `true`)
 
 ### constructor
 
@@ -6648,6 +6800,7 @@ Constructor
 -   `sslPort` **int** The listening HTTPS port (optional, default `8443`)
 -   `sslKey` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The path for SSL key (optional, default `null`)
 -   `sslCert` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The path for sslCert key (optional, default `null`)
+-   `enableCompression` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Enable gzip data compression (optional, default `true`)
 
 Returns **[WebServices](#webservices)** The instance
 
