@@ -35,9 +35,10 @@ class AlarmManager {
      * @param  {DeviceManager} deviceManager  The device manager
      * @param  {MessageManager} messageManager  The message manager
      * @param  {SchedulerService} schedulerService  The Scheduler service
+     * @param  {CamerasManager} camerasManager  The cameras manager
      * @returns {Alarm} The instance
      */
-    constructor(confManager, formManager, webServices, dashboardManager, userManager, sensorsManager, translateManager, deviceManager, messageManager, schedulerService) {
+    constructor(confManager, formManager, webServices, dashboardManager, userManager, sensorsManager, translateManager, deviceManager, messageManager, schedulerService, camerasManager) {
         this.formConfiguration = new FormConfiguration.class(confManager, formManager, webServices, CONF_KEY, false, AlarmForm.class);
         this.confManager = confManager;
         this.webServices = webServices;
@@ -49,6 +50,7 @@ class AlarmManager {
         this.deviceManager = deviceManager;
         this.messageManager = messageManager;
         this.schedulerService = schedulerService;
+        this.camerasManager = camerasManager;
         this.formManager.register(AlarmSensorsForm.class);
         this.sensorsStatus = {};
         this.alarmTriggered = false;

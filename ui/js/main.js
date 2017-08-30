@@ -592,33 +592,36 @@ $(document).ready(function() {
         }
     });
 
-    var updateTimeLapseStatus = function() {
+    var updateTimeLapseStatus = function(token) {
+        //CAMERAS_MANAGER_TIMELAPSE_STATUS_GET_BASE
         if (!timeLapseRunning) {
             timeLapseRunning = true;
             reqTimeLapseStatus = $.ajax({
-                type: "POST",
-                url: vUrl,
+                type: "GET",
+                url: vUrl + "camera/timelapse/status/get/" + token + "/",
                 data: {
-                    username: username,
-                    ePassword: ePassword,
-                    method: "getTimeLapseStatus",
-                    videoToken: videoToken,
-                    videoTmpFile: videoTmpFile
+                    u: username,
+                    p: password
                 }
             }).done(function(msg) {
-                var obj = jQuery.parseJSON(msg);
-                consolelog(obj);
+                console.log(msg);
                 clearInterval(videoTimeLapseTimer);
-                if (obj.generated === true) {
+                if (msg.status === 3) {
                     toastr.info(t('js.timelapse.success', null));
-
-                    $("#timeLapseResults").html(t('js.timelapse.success.result', ['<a href="' + vUrl + '?username=' + username + '&ePassword=' + encodeURIComponent(ePassword) + '&method=getTimeLapse&videoToken=' + videoToken + '" target="_blank">', '</a>']));
+                    $("#timeLapseResults").html(t('js.timelapse.success.result', ['<a href="' + vUrl + 'camera/timelapse/get/' + token + '?u=' + username + '&p=' + encodeURIComponent(password) + '" target="_blank">', '</a>']));
                     $('timeLapse').prop('disabled', false);
+                } else if (msg.status === 4) {
+                    toastr.error(t('js.timelapse.error', null));
+                    $("#timeLapseResults").html('<div>' + t('js.timelapse.error', null) + '</div>');
                 } else {
-                    var percVideoProcess = Math.round((obj.size * 100) / videoLength);
-                    if (percVideoProcess >= 99) percVideoProcess = 99;
-                    $("#timeLapseResults").html('<div class="progress"><div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="' + percVideoProcess + '" aria-valuemin="0" aria-valuemax="100" style="width: ' + percVideoProcess + '%;">' + percVideoProcess + '%</div></div>');
-                    videoTimeLapseTimer = window.setInterval(updateTimeLapseStatus, 5000);
+                    if (msg.status === 0) {
+                        $("#timeLapseResults").html('<div>' + t('js.timelapse.pending', null) + '</div>');
+                    } else if (msg.status === 1) {
+                        $("#timeLapseResults").html('<div>' + t('js.timelapse.started', null) + '</div>');
+                    } else if (msg.status === 2) {
+                        $("#timeLapseResults").html('<div>' + t('js.timelapse.running', null) + '</div>');
+                    }
+                    videoTimeLapseTimer = window.setInterval(updateTimeLapseStatus, 5000, token);
                 }
                 timeLapseRunning = false;
             }).fail(function(msg) {
@@ -656,24 +659,18 @@ $(document).ready(function() {
 
             reqTimeLapse = $.ajax({
                 type: "POST",
-                url: vUrl,
-                data: {
-                    username: username,
-                    ePassword: ePassword,
-                    method: "timeLapse",
-                    camera: selectedCamera,
-                    nightScene: nightScene,
-                    timeLapseDuration: timeLapseDuration
-                }
+                url: vUrl + "camera/timelapse/set/" + selectedCamera + "/" + timeLapseDuration + "/",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    u: username,
+                    p: password,
+                    data: {}
+                })
             }).done(function(msg) {
-                var obj = jQuery.parseJSON(msg);
-                consolelog(obj);
-                videoLength = obj.estimatedSize;
-                videoToken = obj.token;
-                videoTmpFile = obj.tmpFile;
+                var token = msg.token;
 
-                $("#timeLapseResults").html(t('js.timelapse.generating2', [obj.width, obj.height]));
-                updateTimeLapseStatus();
+                $("#timeLapseResults").html(t('js.timelapse.generating2'));
+                updateTimeLapseStatus(token);
 
             }).fail(function(msg) {
                 $("#timeLapseResults").html('');
@@ -2031,7 +2028,7 @@ $(document).ready(function() {
     });
 
     var dailyTimeLapseLink = function() {
-        var hrDl = vUrl + '?username=' + username + '&password=' + encodeURIComponent(password) + '&method=getDailyTimeLapse&camera=' + selectedCamera;
+        var hrDl = vUrl + 'camera/timelapse/daily/get/' + selectedCamera + '/?u=' + username + '&p=' + encodeURIComponent(password);
         $('#dailyTimeLapse').html('<a class="btn btn-primary" href="' + hrDl + '" target="_blank" role="button"><span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> ' + t('js.download', null) + '</a>');
     }
 
@@ -2040,8 +2037,8 @@ $(document).ready(function() {
     });
 
     $("#timeLapseViewer").click(function() {
-        var hrStream = vUrl + '?username=' + username + '&password=' + encodeURIComponent(password) + '&method=getDailyTimeLapseStream&camera=' + selectedCamera;
-        $('#dailyTimeLapseStream').html('<div class="embed-responsive embed-responsive-16by9"><iframe class="embed-responsive-item" src="' + hrStream + '"></iframe></div>');
+        var hrStream = vUrl + 'camera/timelapse/daily/stream/' + selectedCamera + '/?u=' + username + '&p=' + encodeURIComponent(password);
+        $('#dailyTimeLapseStream').html('<div class="embed-responsive embed-responsive-16by9"><<video src=" ' + hrStream + '" controls></video></div>');
         $('#timeLapseVideoModal').modal('show');
     });
 
@@ -2120,26 +2117,45 @@ $(document).ready(function() {
 
     });
 
+    var parseDate = function(myDate) {
+        var parts, date, time, dt, ms;
+
+        parts = myDate.split(/[T ]/); // Split on `T` or a space to get date and time
+        date = parts[0];
+        time = parts[1];
+
+        dt = new Date();
+
+        parts = date.split(/[-\/]/);  // Split date on - or /
+        dt.setFullYear(parseInt(parts[0], 10));
+        dt.setMonth(parseInt(parts[1], 10) - 1); // Months start at 0 in JS
+        dt.setDate(parseInt(parts[2], 10));
+
+        parts = time.split(/:/);    // Split time on :
+        dt.setHours(parseInt(parts[0], 10));
+        dt.setMinutes(parseInt(parts[1], 10));
+        dt.setSeconds(parseInt(parts[2], 10));
+
+        ms = dt.getTime();
+        return ms;
+    }
+
     var getHistoryCamera = function() {
         var cameraHistoryDatePicker = $("#dtCameraHistory").val();
         $("#cameraHistoryStatus").html('<div class="loading-picture">' + t('js.camera.loading.pictures', null) + ' </div>');
 
         if (cameraHistoryDatePicker != '') {
-            reqGetHistoryPicture = $.ajax({
-                type: "POST",
-                url: vUrl,
+            reqGetHistoryPicture = $.ajax({//camera/get/static/1503653182/0/1504019460/?u=admin&p=admin
+                type: "GET",
+                url: vUrl + "camera/get/static/" + selectedCamera + "/1/" + Math.round(parseDate(cameraHistoryDatePicker + ':00') / 1000) + "/",
                 data: {
-                    username: username,
-                    ePassword: ePassword,
-                    method: "getHistoryPicture",
-                    picture: cameraHistoryDatePicker,
-                    base64: true,
-                    camera: selectedCamera
+                    u: username,
+                    p: password
                 }
             }).done(function(msg) {
                 cameraHistoryImage = msg;
                 //$("#cameraHistoryPicture").elevateZoom(null);
-                document.getElementById("cameraHistoryPicture").src = "data:image/jpg;base64," + cameraHistoryImage;
+                document.getElementById("cameraHistoryPicture").src = "data:image/jpg;base64," + cameraHistoryImage.data;
                 //$("#cameraHistoryPicture").elevateZoom({ zoomType: "lens", lensShape: "round", lensSize: 150});
 
                 var maxDate = currentDate() - (currentDate() - (86400 * cameraHistoryDays));

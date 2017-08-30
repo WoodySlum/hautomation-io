@@ -799,3 +799,5 @@ Sample :
 
 	api.alarmAPI.disableAlarm();
 
+### Cameras
+

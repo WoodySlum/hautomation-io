@@ -10,6 +10,8 @@
     -   [registerForm](#registerform)
     -   [registerClass](#registerclass)
     -   [getCameras](#getcameras)
+    -   [getImage](#getimage)
+    -   [record](#record)
 -   [ConfigurationAPI](#configurationapi)
     -   [register](#register)
     -   [getConfiguration](#getconfiguration)
@@ -294,6 +296,26 @@ Register a camera class
 Get all cameras
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** On object with id:name
+
+### getImage
+
+Get a picture
+
+**Parameters**
+
+-   `id` **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** Camera identifier
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback with error, image buffer and mime type. Example : `(err, data, mime) => {}`
+-   `timestamp` **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** The timestamp of the picture. If `null`, live snapshot. (optional, default `null`)
+
+### record
+
+Record a video session for a specific camera
+
+**Parameters**
+
+-   `id` **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** The camera identifier
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback `(err, generatedFilepath) => {}`
+-   `timer` **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** Duration of capture in seconds (optional, default `60`)
 
 ## ConfigurationAPI
 
@@ -1862,6 +1884,7 @@ This class manage Web Services call, and more specifically the external APIs
 -   `sslPort`   (optional, default `8043`)
 -   `sslKey`   (optional, default `null`)
 -   `sslCert`   (optional, default `null`)
+-   `enableCompression`   (optional, default `true`)
 
 ### constructor
 
@@ -1873,6 +1896,7 @@ Constructor
 -   `sslPort` **int** The listening HTTPS port (optional, default `8443`)
 -   `sslKey` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The path for SSL key (optional, default `null`)
 -   `sslCert` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The path for sslCert key (optional, default `null`)
+-   `enableCompression` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Enable gzip data compression (optional, default `true`)
 
 Returns **[WebServices](#webservices)** The instance
 
