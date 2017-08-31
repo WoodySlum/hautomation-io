@@ -16,6 +16,7 @@ const SWITCH_ALARM_ROUTE = ":"+ SWITCH_ALARM_ROUTE_BASE + "[status*]/";
 const SENSORS_LOCK_TIME = 60 * 5; // In seconds
 const ARMED_TIMER = 30; // In seconds. Will be scheduled in next minute. At least X seconds rounded to minute.
 const ARMED_IDENTIFIER = "alarm-armed";
+const RECORDING_TIME = 60 * 5; // In seconds
 
 /**
  * This class allows to manage alarm (nable, disable, ...)
@@ -89,6 +90,27 @@ class AlarmManager {
                             } else {
                                 self.messageManager.sendMessage("*", self.translateManager.t("alarm.manager.pre.alert", sensor.name));
                                 Logger.info("Pre alert for sensor " + sensor.id + " (" + sensor.name + "). Release lock : " + (self.sensorsStatus[sensorConfiguration.sensor.identifier] + SENSORS_LOCK_TIME));
+                            }
+
+                            if (sensorConfiguration.captureVideo) {
+                                this.camerasManager.getCamerasList().forEach((camera) => {
+                                    this.camerasManager.getImage(camera.id, (err, data) => {
+                                        if (!err && data) {
+                                            self.messageManager.sendMessage("*", null, "cameras", null, data.toString('base64'));
+                                        } else {
+                                            Logger.err(err);
+                                        }
+                                    });
+                                    this.camerasManager.record(camera.id, (err, generatedFilepath) => {
+                                        if (!err && generatedFilepath) {
+                                            Logger.info("Recording session for alarm path : " + generatedFilepath);
+                                        } else {
+                                            Logger.err(err);
+                                        }
+
+                                    }, RECORDING_TIME);
+                                });
+
                             }
                         }
                     }

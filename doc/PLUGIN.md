@@ -801,3 +801,111 @@ Sample :
 
 ### Cameras
 
+#### Create a camera plugin
+
+You can create a plugin which add support to your own camera brand.
+
+Sample code :
+
+	"use strict";
+	/**
+	 * Loaded function
+	 *
+	 * @param  {PluginAPI} api The api
+	 */
+	function loaded(api) {
+	    api.init();
+	
+	    /**
+	     * Sumpple form camera
+	     * @class
+	     */
+	    class SumppleCameraForm extends api.exported.CameraForm {
+	        /**
+	         * Convert JSON data to object
+	         *
+	         * @param  {Object} data Some data
+	         * @returns {SumppleCameraForm}      An instance
+	         */
+	        json(data) {
+	            super.json(data);
+	        }
+	    }
+	
+	    api.cameraAPI.registerForm(SumppleCameraForm);
+	
+	    /**
+	     * Sumpple camera class
+	     * @class
+	     */
+	    class Sumpple extends api.exported.Camera {
+	        /**
+	         * Sumpple camera
+	         *
+	         * @param  {PluginAPI} api                                                           A plugin api
+	         * @param  {number} [id=null]                                                        An id
+	         * @param  {Object} [configuration=null]                                             The configuration for camera
+	         * @returns {Sumpple}                                                                  The instance
+	         */
+	        constructor(api, id, configuration) {
+	            super(api, id, configuration, "cgi-bin/video_snapshot.cgi?user=%username%&pwd=%password%", "cgi-bin/videostream.cgi?user=%username%&pwd=%password%", "live/av0?user=%username%&passwd=%password%");
+	        }
+	
+	    }
+	
+	    api.cameraAPI.registerClass(Sumpple);
+	}
+	
+	module.exports.attributes = {
+	    loadedCallback: loaded,
+	    name: "sumpple",
+	    version: "0.0.0",
+	    category: "camera",
+	    description: "Sumpple plugin",
+	    dependencies:["camera"]
+	};
+	
+In the super call for constructor, you need to specify the following parameters :
+
+		 * @param  {PluginAPI} api                                                           A plugin api
+         * @param  {number} [id=null]                                                        An id
+         * @param  {Object} [configuration=null]                                             The configuration for camera
+         * @param  {string} [snapshotUrl=null]   The snapshot URL template (Parameters : %port%, %ip%, %username%, %password%), without protocol and ip. For example, `cgi-bin/snap.cgi?username=%username%&password=%password%`
+         * @param  {string} [mjpegUrl=null]      The MJPEG URL template (Parameters : %port%, %ip%, %username%, %password%), without protocol and ip. For example, `cgi-bin/videostream.cgi?username=%username%&password=%password%`
+         * @param  {string} [rtspUrl=null]       The RTSP URL template (Parameters : %port%, %ip%, %username%, %password%), without protocol and ip. For example, `cgi-bin/snap.cgi?username=%username%&password=%password%`
+         * @param  {Function} [leftCb=null]        Move left callback
+         * @param  {Function} [rightCb=null]       Move right callback
+         * @param  {Function} [upCb=null]          Move up callback
+         * @param  {Function} [downCb=null]        Move down callback
+
+#### Using camera APIs
+
+Retrieve all cameras :
+	
+	api.camerAPI.getCameras();
+
+Get a static picture for a camera :
+
+	api.camerAPI.getImage(123456789, (err, data, mime) => {
+		if (!err) {
+			// Data is in data !
+		}
+	});
+
+Get an historized static picture for a camera :
+
+	api.camerAPI.getImage(123456789, (err, data, mime) => {
+		if (!err) {
+			// Data is in data !
+		}
+	}, 1504189281);
+
+Record camera stream for 30 seconds :
+
+	api.cameraAPI.record(123456789, (err, generatedFilepath) => {
+		if (!err) {
+			api.exported.Logger.info("File has been dumped on : " + generatedFilepath);
+		}
+	}, 30);
+
+
