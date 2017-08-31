@@ -33,6 +33,9 @@ var AppConfiguration = require("./../data/config.json");
 var NpmPackage = require("./../package.json");
 const events = require("events");
 
+// Logger
+Logger.setLogLevel(AppConfiguration.logLevel?AppConfiguration.logLevel:null);
+
 // For testing only
 if (process.env.TEST) {
     AppConfiguration.configurationPath = "/tmp/data/";
