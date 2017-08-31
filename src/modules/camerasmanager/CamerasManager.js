@@ -62,6 +62,7 @@ const ERROR_TIMELAPSE_ALREADY_RUNNING = "TimeLapse already running";
 const ERROR_TIMELAPSE_NOT_GENERATED = "Timelapse not generated";
 const ERROR_UNKNOWN_TIMELAPSE_TOKEN = "Unknown timelapse token";
 const ERROR_UNEXISTING_PICTURE = "Unexisting picture";
+const ERROR_RECORD_ALREADY_RUNNING = "Already recording camera";
 
 
 /**
@@ -104,6 +105,7 @@ class CamerasManager {
         this.cameras = [];
         this.delegates = {};
         this.currentTimelapse = null;
+        this.currentRecording = {};
         this.generatedTimelapses = {};
 
         try {
@@ -165,6 +167,7 @@ class CamerasManager {
         context.initCameras();
         this.registerCamerasListForm();
         this.registerTile(this);
+        //this.record(1503653182, (err, s) => {});
     }
 
     /**
@@ -862,43 +865,50 @@ class CamerasManager {
      * @param  {number}   [timer=60] Duration of capture in seconds
      */
     record(id, cb, timer = 60) {
-        const camera = this.getCamera(id);
-        if (camera.mjpegUrl) {
-            const recordSessionFile = this.cachePath + id + "-" + DateUtils.class.timestamp() + "-record";
-            Logger.info("Recording video for camera " + id + " for " + timer + " seconds");
-            let frameCount = 0;
-            const wstream = fs.createWriteStream(recordSessionFile + ".mjpg");
-            const req = request(camera.mjpegUrl);
-            const PassThrough = require("stream").PassThrough;
-            const pt = new PassThrough();
-            req.pipe(pt).pipe(wstream);
-            pt.on("data", (chunk) => {
-                if (chunk.toString("utf8").indexOf("JFIF")!==-1) {
-                    frameCount++;
-                }
-            });
-            setTimeout((vwstream, vreq) => {
-                vwstream.end();
-                vreq.abort();
-                const frameRate = Math.round(frameCount / timer);
-                Logger.info("Record session stop");
-                Logger.info("Detected frames : " + frameCount);
-                Logger.info("Detected framerate : " + frameRate);
-                Logger.info("Converting video session");
-
-                this.installationManager.executeCommand("avconv -r " + ((frameRate < 1) ? 1:frameRate) + " -i " + recordSessionFile + ".mjpg -vcodec libx264 " + recordSessionFile + ".mp4", false, (error, stdout, stderr) => {
-                    // Clean mjpg stream
-                    fs.remove(recordSessionFile + ".mjpg");
-                    if (error) {
-                        Logger.err(stderr);
-                        cb(error);
-                    } else {
-                        cb(null, recordSessionFile + ".mp4");
+        if (!this.currentRecording[parseInt(id)]) {
+            this.currentRecording[parseInt(id)] = {};
+            const camera = this.getCamera(id);
+            if (camera.mjpegUrl) {
+                const recordSessionFile = this.cachePath + id + "-" + DateUtils.class.timestamp() + "-record";
+                Logger.info("Recording video for camera " + id + " for " + timer + " seconds");
+                let frameCount = 0;
+                const wstream = fs.createWriteStream(recordSessionFile + ".mjpg");
+                const req = request(camera.mjpegUrl);
+                const PassThrough = require("stream").PassThrough;
+                const pt = new PassThrough();
+                req.pipe(pt).pipe(wstream);
+                pt.on("data", (chunk) => {
+                    if (chunk.toString("utf8").indexOf("JFIF")!==-1) {
+                        frameCount++;
                     }
                 });
-            }, timer * 1000, wstream, req);
+                setTimeout((vwstream, vreq) => {
+                    vwstream.end();
+                    vreq.abort();
+                    const frameRate = Math.round(frameCount / timer);
+                    Logger.info("Record session stop");
+                    delete this.currentRecording[parseInt(id)];
+                    Logger.info("Detected frames : " + frameCount);
+                    Logger.info("Detected framerate : " + frameRate);
+                    Logger.info("Converting video session");
+
+                    this.installationManager.executeCommand("avconv -r " + ((frameRate < 1) ? 1:frameRate) + " -i " + recordSessionFile + ".mjpg -vcodec libx264 " + recordSessionFile + ".mp4", false, (error, stdout, stderr) => {
+                        // Clean mjpg stream
+                        fs.remove(recordSessionFile + ".mjpg");
+                        if (error) {
+                            Logger.err(stderr);
+                            cb(error);
+                        } else {
+                            Logger.info("Video session encoding terminated.");
+                            cb(null, recordSessionFile + ".mp4");
+                        }
+                    });
+                }, timer * 1000, wstream, req);
+            } else {
+                cb(Error(ERROR_UNSUPPORTED_MODE));
+            }
         } else {
-            cb(Error(ERROR_UNSUPPORTED_MODE));
+            cb(Error(ERROR_RECORD_ALREADY_RUNNING));
         }
     }
 }
