@@ -96,7 +96,7 @@ class AlarmManager {
                                 this.camerasManager.getCamerasList().forEach((camera) => {
                                     this.camerasManager.getImage(camera.id, (err, data) => {
                                         if (!err && data) {
-                                            self.messageManager.sendMessage("*", null, "cameras", null, data.toString('base64'));
+                                            self.messageManager.sendMessage("*", null, "cameras", null, data.toString("base64"));
                                         } else {
                                             Logger.err(err);
                                         }
