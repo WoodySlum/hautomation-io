@@ -38,7 +38,9 @@ const INTERNAL_PLUGINS = [
     "message-provider",
     "prowl",
     "camera",
-    "sumpple"
+    "sumpple",
+    "presence-sensor",
+    "radio-presence-sensor"
 ];
 
 /**
@@ -67,9 +69,10 @@ class PluginsManager {
      * @param  {ScenarioManager} scenarioManager The scenario manager
      * @param  {AlarmManager} alarmManager The alarm manager
      * @param  {CamerasManager} camerasManager The cameras manager
+     * @param  {RadioManager} radioManager The radio manager
      * @returns {PluginsManager} The instance
      */
-    constructor(confManager, webServices, servicesManager, dbManager, translateManager, formManager, timeEventService, schedulerService, dashboardManager, eventBus, themeManager, sensorsManager, installationManager, userManager, messageManager, scenarioManager, alarmManager, camerasManager) {
+    constructor(confManager, webServices, servicesManager, dbManager, translateManager, formManager, timeEventService, schedulerService, dashboardManager, eventBus, themeManager, sensorsManager, installationManager, userManager, messageManager, scenarioManager, alarmManager, camerasManager, radioManager) {
         this.fs = fs;
         this.path = path;
         this.remi = remi;
@@ -91,6 +94,7 @@ class PluginsManager {
         this.scenarioManager = scenarioManager;
         this.alarmManager = alarmManager;
         this.camerasManager = camerasManager;
+        this.radioManager = radioManager;
 
         this.plugins = [];
         try {
@@ -203,7 +207,8 @@ class PluginsManager {
                 this.messageManager,
                 this.scenarioManager,
                 this.alarmManager,
-                this.camerasManager
+                this.camerasManager,
+                this.radioManager
             );
 
             initializedPlugins.push(pApi);

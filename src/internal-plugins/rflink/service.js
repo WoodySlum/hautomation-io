@@ -349,7 +349,17 @@ function loaded(api) {
             };
 
             // Logger.warn(JSON.stringify(processData("20;01;Blyss;ID=6968;SWITCH=C4;CMD=ON;")));
-            //send(processData("20;01;Blyss;ID=6968;SWITCH=C4;CMD=ON;"));
+
+            /*setTimeout(() => {
+                send(processData("20;01;Blyss;ID=6968;SWITCH=C4;CMD=ON;"));
+            }, 3000);
+
+            setTimeout(() => {
+                send(processData("20;01;Blyss;ID=6968;SWITCH=C4;CMD=ON;"));
+            }, 30000);
+            setTimeout(() => {
+                send(processData("20;01;Blyss;ID=6968;SWITCH=C4;CMD=ON;"));
+            }, 70000);*/
             //send(processData("20;03;Cresta;ID=8301;WINDIR=0005;WINSP=0000;WINGS=0000;WINTMP=00c3;WINCHL=00c3;BAT=LOW;"));
             //send(processData("06;CMD=ON;"));
             //Logger.warn(JSON.stringify(processData("20;03;Cresta;ID=8301;WINDIR=0005;WINSP=0000;WINGS=0000;WINTMP=00c3;WINCHL=00c3;BAT=LOW;")));

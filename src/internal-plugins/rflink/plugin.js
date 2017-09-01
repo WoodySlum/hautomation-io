@@ -122,6 +122,25 @@ function loaded(api) {
             this.service.send("rflinkSend", this.formatRadioObjectBeforeSending(radioObject));
             return radioObject;
         }
+
+        /**
+         * Return the list of supported protocolList
+         *
+         * @param  {Function} cb A callback function `(err, protocols) => {}`
+         */
+        getProtocolList(cb) {
+            const baseList = ["X10","AB400D","Chuango","newkaku","ev1527","elrodb","blyss","aster","warema","selectplus","kaku","tristate","ab400d","no1527","conrad","nodo_ra1527","doorbell","fa500","nodo_radiofrev1527","astrell","nodo_radi","e7","56e82","e=004041","nodo_rv1527"];
+            super.getProtocolList((err, list) => {
+                if (!err) {
+                    list.forEach((protocol) => {
+                        if (baseList.indexOf(protocol) === -1) {
+                            baseList.push(protocol);
+                        }
+                    });
+                }
+                cb(null, baseList);
+            });
+        }
     }
 
     // Instantiate. Parent will store instanciation.

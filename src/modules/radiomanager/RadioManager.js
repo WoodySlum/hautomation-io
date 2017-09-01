@@ -9,6 +9,8 @@ const WebServices = require("./../../services/webservices/WebServices");
 const Authentication = require("./../authentication/Authentication");
 const APIResponse = require("./../../services/webservices/APIResponse");
 const DateUtils = require("./../../utils/DateUtils");
+const sha256 = require("sha256");
+const Cleaner = require("./../../utils/Cleaner");
 
 const ROUTE_GET_BASE_PATH = ":/radio/get/";
 const RADIO_PLUGIN_KEY = "radio";
@@ -38,6 +40,7 @@ class RadioManager {
 
         this.modules = [];
         this.protocols = [];
+        this.registeredElements = {};
 
         const self = this;
         eventBus.on(PluginsManager.EVENT_LOADED, (pluginsManager) => {
@@ -62,6 +65,30 @@ class RadioManager {
         context.formManager.register(RadioForm.class, context.modules, context.protocols);
         context.formManager.register(RadioScenarioForm.class);
         context.scenarioManager.register(RadioScenariosForm.class, null, "radio.scenario.form.trigger");
+    }
+
+    /**
+     * Register for radio events
+     *
+     * @param  {Function} cb            A callback triggered when radio information is received. Example : `(radioObj) => {}`
+     */
+    register(cb) {
+        const index = sha256(cb.toString());
+        this.registeredElements[index] = cb;
+    }
+
+    /**
+     * Unegister an timer element
+     *
+     * @param  {Function} cb             A callback triggered when radio information is received. Example : `(radioObj) => {}`
+     */
+    unregister(cb) {
+        const index = sha256(cb.toString());
+        if (this.registeredElements[index]) {
+            delete this.registeredElements[index];
+        } else {
+            Logger.warn("Element not found");
+        }
     }
 
     /**
@@ -97,7 +124,6 @@ class RadioManager {
     onRadioEvent(radioObject) {
         // Trigger scenarios
         this.scenarioManager.getScenarios().forEach((scenario) => {
-
             if (scenario.RadioScenariosForm) {
                 if (scenario.RadioScenariosForm.radioScenariosForm) {
                     let shouldExecuteAction = false;
@@ -118,7 +144,6 @@ class RadioManager {
                     if (shouldExecuteAction) {
                         this.scenarioManager.triggerScenario(scenario);
                     }
-
                 }
             }
         });
@@ -127,6 +152,11 @@ class RadioManager {
         if (this.protocols.indexOf(radioObject.protocol) === -1) {
             this.getProtocols();
         }
+
+        // Dispatch callback
+        Object.keys(this.registeredElements).forEach((registeredKey) => {
+            this.registeredElements[registeredKey](Cleaner.class.cleanDbObject(radioObject));
+        });
     }
 
     /**
