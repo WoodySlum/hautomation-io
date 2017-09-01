@@ -97,14 +97,17 @@
     -   [unregister](#unregister)
     -   [onMessageReceived](#onmessagereceived)
     -   [getMessages](#getmessages)
--   [ScenarioAPI](#scenarioapi)
+-   [RadioAPI](#radioapi)
     -   [register](#register-4)
     -   [unregister](#unregister-1)
+-   [ScenarioAPI](#scenarioapi)
+    -   [register](#register-5)
+    -   [unregister](#unregister-2)
     -   [triggerScenario](#triggerscenario)
     -   [getScenarios](#getscenarios)
 -   [SchedulerAPI](#schedulerapi)
-    -   [register](#register-5)
-    -   [unregister](#unregister-2)
+    -   [register](#register-6)
+    -   [unregister](#unregister-3)
     -   [schedule](#schedule)
     -   [cancel](#cancel)
     -   [constants](#constants)
@@ -112,8 +115,8 @@
     -   [constructor](#constructor-5)
     -   [start](#start)
     -   [stop](#stop)
-    -   [register](#register-6)
-    -   [unregister](#unregister-3)
+    -   [register](#register-7)
+    -   [unregister](#unregister-4)
     -   [schedule](#schedule-1)
     -   [cancel](#cancel-1)
     -   [timeEvent](#timeevent)
@@ -141,8 +144,8 @@
 -   [ThemeAPI](#themeapi)
     -   [getColors](#getcolors)
 -   [TimeEventAPI](#timeeventapi)
-    -   [register](#register-7)
-    -   [unregister](#unregister-4)
+    -   [register](#register-8)
+    -   [unregister](#unregister-5)
     -   [constants](#constants-1)
 -   [TimeEventService](#timeeventservice)
     -   [constructor](#constructor-7)
@@ -150,8 +153,8 @@
     -   [stop](#stop-1)
     -   [hash](#hash)
     -   [elementForHash](#elementforhash)
-    -   [register](#register-8)
-    -   [unregister](#unregister-5)
+    -   [register](#register-9)
+    -   [unregister](#unregister-6)
     -   [convertMode](#convertmode)
     -   [timeEvent](#timeevent-1)
 -   [TranslateAPI](#translateapi)
@@ -166,8 +169,8 @@
     -   [registerHomeNotifications](#registerhomenotifications)
     -   [unregisterHomeNotifications](#unregisterhomenotifications)
 -   [WebAPI](#webapi)
-    -   [register](#register-9)
-    -   [unregister](#unregister-6)
+    -   [register](#register-10)
+    -   [unregister](#unregister-7)
     -   [Authentication](#authentication)
     -   [APIResponse](#apiresponse)
     -   [constants](#constants-2)
@@ -186,14 +189,15 @@
     -   [errorMessage](#errormessage)
 -   [Cleaner](#cleaner)
     -   [exportConstants](#exportconstants)
+    -   [cleanDbObject](#cleandbobject)
 -   [WebServices](#webservices)
     -   [constructor](#constructor-11)
     -   [start](#start-2)
     -   [stop](#stop-2)
     -   [registerInfos](#registerinfos)
     -   [processAPI](#processapi-1)
-    -   [register](#register-10)
-    -   [unregister](#unregister-7)
+    -   [register](#register-11)
+    -   [unregister](#unregister-8)
     -   [registerAPI](#registerapi)
     -   [unregisterAPI](#unregisterapi)
     -   [manageResponse](#manageresponse)
@@ -201,6 +205,7 @@
     -   [runPromises](#runpromises)
     -   [sendAPIResponse](#sendapiresponse)
 -   [Logger](#logger)
+    -   [setLogLevel](#setloglevel)
     -   [log](#log)
     -   [warn](#warn)
     -   [err](#err)
@@ -220,8 +225,8 @@
     -   [stop](#stop-3)
     -   [restart](#restart)
     -   [status](#status)
-    -   [register](#register-11)
-    -   [unregister](#unregister-8)
+    -   [register](#register-12)
+    -   [unregister](#unregister-9)
     -   [setThreadsManager](#setthreadsmanager)
 -   [APIRequest](#apirequest)
     -   [constructor](#constructor-13)
@@ -1162,6 +1167,30 @@ Get messages
 -   `username` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A username
 -   `lastTimestamp` **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** Last timestamp retrieval (optional, default `null`)
 
+## RadioAPI
+
+Public API for radio events
+
+**Parameters**
+
+-   `radioManager`  
+
+### register
+
+Register for radio events
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback triggered when radio information is received. Example : `(radioObj) => {}`
+
+### unregister
+
+Unegister an timer element
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback triggered when radio information is received. Example : `(radioObj) => {}`
+
 ## ScenarioAPI
 
 Public API for scenarios
@@ -1872,6 +1901,16 @@ Clean an exported class by removing the `class` property
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A clean object
 
+### cleanDbObject
+
+Clean a DbObject by removing DbHelper
+
+**Parameters**
+
+-   `dbObject` **[DbObject](#dbobject)** A database object
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A cleaned object
+
 ## WebServices
 
 **Extends Service.class**
@@ -2003,6 +2042,14 @@ Process sending results in JSON to API caller
 ## Logger
 
 This class provides static methods to log into a file.
+
+### setLogLevel
+
+Set the log level
+
+**Parameters**
+
+-   `level` **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** Log level between 0 and 5 (optional, default `3`)
 
 ### log
 

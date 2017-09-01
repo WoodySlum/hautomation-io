@@ -28,6 +28,8 @@
 -   [loaded](#loaded-10)
 -   [loaded](#loaded-11)
 -   [loaded](#loaded-12)
+-   [loaded](#loaded-13)
+-   [loaded](#loaded-14)
 -   [CameraForm](#cameraform)
     -   [constructor](#constructor-3)
     -   [name](#name)
@@ -64,20 +66,30 @@
 -   [text](#text)
 -   [number](#number)
 -   [myParameter](#myparameter)
--   [PressureSensorForm](#pressuresensorform)
-    -   [constructor](#constructor-9)
+-   [PresenceSensorForm](#presencesensorform)
     -   [json](#json-4)
--   [PressureSensor](#pressuresensor)
+-   [PresenceSensor](#presencesensor)
+    -   [constructor](#constructor-9)
+-   [PressureSensorForm](#pressuresensorform)
     -   [constructor](#constructor-10)
--   [ProwlForm](#prowlform)
-    -   [constructor](#constructor-11)
-    -   [prowlApiKey](#prowlapikey)
     -   [json](#json-5)
--   [Prowl](#prowl)
+-   [PressureSensor](#pressuresensor)
+    -   [constructor](#constructor-11)
+-   [ProwlForm](#prowlform)
     -   [constructor](#constructor-12)
-    -   [sendMessage](#sendmessage)
--   [DbRadio](#dbradio)
+    -   [prowlApiKey](#prowlapikey)
+    -   [json](#json-6)
+-   [Prowl](#prowl)
     -   [constructor](#constructor-13)
+    -   [sendMessage](#sendmessage)
+-   [RadioPresenceSensorForm](#radiopresencesensorform)
+    -   [constructor](#constructor-14)
+    -   [radio](#radio)
+    -   [json](#json-7)
+-   [RadioPresenceSensor](#radiopresencesensor)
+    -   [constructor](#constructor-15)
+-   [DbRadio](#dbradio)
+    -   [constructor](#constructor-16)
 -   [module](#module)
 -   [frequency](#frequency)
 -   [protocol](#protocol)
@@ -86,8 +98,8 @@
 -   [value](#value)
 -   [value](#value-1)
 -   [status](#status)
--   [Radio](#radio)
-    -   [constructor](#constructor-14)
+-   [Radio](#radio-1)
+    -   [constructor](#constructor-17)
     -   [getProtocolList](#getprotocollist)
     -   [getLastReceivedRadioInformations](#getlastreceivedradioinformations)
     -   [processAPI](#processapi-1)
@@ -98,14 +110,15 @@
     -   [register](#register)
     -   [unregister](#unregister)
 -   [RFLink](#rflink)
-    -   [constructor](#constructor-15)
+    -   [constructor](#constructor-18)
     -   [rflinkStatusToRadioStatus](#rflinkstatustoradiostatus)
     -   [radioStatusToRflinkStatus](#radiostatustorflinkstatus)
     -   [formatRadioObjectBeforeSending](#formatradioobjectbeforesending)
     -   [onRflinkReceive](#onrflinkreceive)
     -   [emit](#emit-1)
+    -   [getProtocolList](#getprotocollist-1)
 -   [RFLinkService](#rflinkservice)
-    -   [constructor](#constructor-16)
+    -   [constructor](#constructor-19)
     -   [run](#run)
     -   [threadCallback](#threadcallback)
 -   [xo](#xo)
@@ -113,19 +126,19 @@
     -   [processAPI](#processapi-2)
     -   [test](#test)
 -   [DbSensor](#dbsensor)
-    -   [constructor](#constructor-17)
+    -   [constructor](#constructor-20)
 -   [sensorId](#sensorid)
 -   [vcc](#vcc)
 -   [SensorForm](#sensorform)
-    -   [constructor](#constructor-18)
+    -   [constructor](#constructor-21)
     -   [name](#name-2)
     -   [dashboard](#dashboard)
     -   [statistics](#statistics)
     -   [dashboardColor](#dashboardcolor)
     -   [statisticsColor](#statisticscolor)
-    -   [json](#json-6)
+    -   [json](#json-8)
 -   [Sensor](#sensor)
-    -   [constructor](#constructor-19)
+    -   [constructor](#constructor-22)
     -   [init](#init-1)
     -   [addUnitAggregation](#addunitaggregation)
     -   [aggregateUnit](#aggregateunit)
@@ -137,22 +150,23 @@
     -   [getStatistics](#getstatistics)
     -   [constants](#constants-1)
 -   [SumppleCameraForm](#sumpplecameraform)
-    -   [json](#json-7)
+    -   [json](#json-9)
 -   [Sumpple](#sumpple)
-    -   [constructor](#constructor-20)
+    -   [constructor](#constructor-23)
 -   [TemperatureSensorForm](#temperaturesensorform)
-    -   [constructor](#constructor-21)
+    -   [constructor](#constructor-24)
     -   [unit](#unit)
-    -   [json](#json-8)
+    -   [json](#json-10)
 -   [TemperatureSensor](#temperaturesensor)
-    -   [constructor](#constructor-22)
+    -   [constructor](#constructor-25)
     -   [setUnit](#setunit)
 -   [ThroughputSensorForm](#throughputsensorform)
-    -   [constructor](#constructor-23)
-    -   [json](#json-9)
+    -   [constructor](#constructor-26)
+    -   [json](#json-11)
 -   [ThroughputSensor](#throughputsensor)
-    -   [constructor](#constructor-24)
+    -   [constructor](#constructor-27)
 -   [Logger](#logger)
+    -   [setLogLevel](#setloglevel)
     -   [log](#log)
     -   [warn](#warn)
     -   [err](#err)
@@ -160,8 +174,8 @@
     -   [info](#info)
     -   [debug](#debug)
 -   [AlarmForm](#alarmform)
-    -   [constructor](#constructor-25)
-    -   [constructor](#constructor-26)
+    -   [constructor](#constructor-28)
+    -   [constructor](#constructor-29)
     -   [enabled](#enabled)
     -   [armed](#armed)
     -   [userLocationTrigger](#userlocationtrigger)
@@ -169,9 +183,9 @@
     -   [sensors](#sensors)
     -   [devicesOnEnable](#devicesonenable)
     -   [devicesOnDisable](#devicesondisable)
-    -   [json](#json-10)
+    -   [json](#json-12)
 -   [AlarmManager](#alarmmanager)
-    -   [constructor](#constructor-27)
+    -   [constructor](#constructor-30)
     -   [sensorReadyForTriggering](#sensorreadyfortriggering)
     -   [registerTile](#registertile)
     -   [alarmStatus](#alarmstatus)
@@ -183,32 +197,32 @@
     -   [stopAlarm](#stopalarm)
     -   [processAPI](#processapi-3)
 -   [AlarmSensorsForm](#alarmsensorsform)
-    -   [constructor](#constructor-28)
+    -   [constructor](#constructor-31)
     -   [sensor](#sensor-1)
     -   [triggerAlarm](#triggeralarm-1)
     -   [captureVideo](#capturevideo)
-    -   [json](#json-11)
+    -   [json](#json-13)
 -   [Authentication](#authentication)
-    -   [constructor](#constructor-29)
+    -   [constructor](#constructor-32)
 -   [AuthenticationData](#authenticationdata)
-    -   [constructor](#constructor-30)
+    -   [constructor](#constructor-33)
     -   [authorized](#authorized)
     -   [username](#username-1)
     -   [level](#level)
 -   [CamerasForm](#camerasform)
-    -   [constructor](#constructor-31)
+    -   [constructor](#constructor-34)
     -   [cameraId](#cameraid)
-    -   [json](#json-12)
+    -   [json](#json-14)
     -   [getCameraIds](#getcameraids)
     -   [getCameraNames](#getcameranames)
 -   [CamerasListForm](#cameraslistform)
-    -   [constructor](#constructor-32)
+    -   [constructor](#constructor-35)
     -   [identifier](#identifier)
-    -   [json](#json-13)
+    -   [json](#json-15)
     -   [getCamerasName](#getcamerasname)
     -   [getCamerasId](#getcamerasid)
 -   [CamerasManager](#camerasmanager)
-    -   [constructor](#constructor-33)
+    -   [constructor](#constructor-36)
     -   [pluginsLoaded](#pluginsloaded)
     -   [archiveCameras](#archivecameras)
     -   [initCameras](#initcameras)
@@ -229,12 +243,12 @@
     -   [generateTimelapse](#generatetimelapse)
     -   [record](#record)
 -   [TimelapseGenerator](#timelapsegenerator)
-    -   [constructor](#constructor-34)
+    -   [constructor](#constructor-37)
     -   [generateTimelapse](#generatetimelapse-1)
     -   [pad](#pad)
     -   [prepareFiles](#preparefiles)
 -   [ConfManager](#confmanager)
-    -   [constructor](#constructor-35)
+    -   [constructor](#constructor-38)
     -   [appConfiguration](#appconfiguration)
     -   [fs](#fs)
     -   [getFilePath](#getfilepath)
@@ -247,16 +261,16 @@
     -   [setData](#setdata)
     -   [removeData](#removedata)
 -   [DashboardManager](#dashboardmanager)
-    -   [constructor](#constructor-36)
+    -   [constructor](#constructor-39)
     -   [registerTile](#registertile-2)
     -   [unregisterTile](#unregistertile)
     -   [buildDashboard](#builddashboard)
     -   [processAPI](#processapi-5)
 -   [Tile](#tile)
-    -   [constructor](#constructor-37)
+    -   [constructor](#constructor-40)
     -   [get](#get)
 -   [DbHelper](#dbhelper)
-    -   [constructor](#constructor-38)
+    -   [constructor](#constructor-41)
     -   [RequestBuilder](#requestbuilder)
     -   [Operators](#operators)
     -   [getFieldsForTable](#getfieldsfortable)
@@ -267,7 +281,7 @@
     -   [delObject](#delobject)
     -   [delObjects](#delobjects)
 -   [DbManager](#dbmanager)
-    -   [constructor](#constructor-39)
+    -   [constructor](#constructor-42)
     -   [close](#close)
     -   [getFieldsForTable](#getfieldsfortable-1)
     -   [numberVersion](#numberversion)
@@ -282,12 +296,12 @@
     -   [delObject](#delobject-1)
     -   [delObjects](#delobjects-1)
 -   [DbObject](#dbobject)
-    -   [constructor](#constructor-40)
+    -   [constructor](#constructor-43)
     -   [base](#base)
     -   [save](#save)
     -   [del](#del)
 -   [DbRequestBuilder](#dbrequestbuilder)
-    -   [constructor](#constructor-41)
+    -   [constructor](#constructor-44)
     -   [removeLastComma](#removelastcomma)
     -   [escapeString](#escapestring)
     -   [getValueEncapsulated](#getvalueencapsulated)
@@ -317,17 +331,17 @@
     -   [tableName](#tablename)
     -   [toSchema](#toschema)
 -   [DeviceForm](#deviceform)
-    -   [constructor](#constructor-42)
+    -   [constructor](#constructor-45)
     -   [name](#name-3)
     -   [excludeFromAll](#excludefromall)
     -   [visible](#visible)
     -   [worksOnlyOnDayNight](#worksonlyondaynight)
     -   [icon](#icon-1)
-    -   [radio](#radio-1)
+    -   [radio](#radio-2)
     -   [status](#status-1)
-    -   [json](#json-14)
+    -   [json](#json-16)
 -   [DeviceManager](#devicemanager)
-    -   [constructor](#constructor-43)
+    -   [constructor](#constructor-46)
     -   [triggerScenario](#triggerscenario)
     -   [registerDeviceListForm](#registerdevicelistform)
     -   [registerDeviceTiles](#registerdevicetiles)
@@ -336,20 +350,20 @@
     -   [switchAll](#switchall)
     -   [processAPI](#processapi-6)
 -   [DevicesListForm](#deviceslistform)
-    -   [constructor](#constructor-44)
+    -   [constructor](#constructor-47)
     -   [identifier](#identifier-1)
     -   [status](#status-2)
-    -   [json](#json-15)
+    -   [json](#json-17)
     -   [getDevicesName](#getdevicesname)
     -   [getDevicesId](#getdevicesid)
 -   [DevicesListScenarioForm](#deviceslistscenarioform)
-    -   [constructor](#constructor-45)
+    -   [constructor](#constructor-48)
     -   [turnOnAll](#turnonall)
     -   [turnOffAll](#turnoffall)
     -   [devices](#devices)
-    -   [json](#json-16)
+    -   [json](#json-18)
 -   [FormConfiguration](#formconfiguration)
-    -   [constructor](#constructor-46)
+    -   [constructor](#constructor-49)
     -   [setUpdateCb](#setupdatecb)
     -   [addAdditionalFields](#addadditionalfields)
     -   [loadConfig](#loadconfig)
@@ -362,7 +376,7 @@
     -   [getConfig](#getconfig)
     -   [getForm](#getform)
 -   [FormManager](#formmanager)
-    -   [constructor](#constructor-47)
+    -   [constructor](#constructor-50)
     -   [register](#register-1)
     -   [registerWithAdditionalFields](#registerwithadditionalfields)
     -   [addAdditionalFields](#addadditionalfields-1)
@@ -373,11 +387,11 @@
     -   [getForm](#getform-1)
     -   [generateForm](#generateform)
 -   [FormObject](#formobject)
-    -   [constructor](#constructor-48)
-    -   [json](#json-17)
+    -   [constructor](#constructor-51)
+    -   [json](#json-19)
 -   [id](#id)
 -   [InstallationManager](#installationmanager)
-    -   [constructor](#constructor-49)
+    -   [constructor](#constructor-52)
     -   [register](#register-2)
     -   [executeCommand](#executecommand)
     -   [execute](#execute)
@@ -385,7 +399,7 @@
     -   [isValidForArchitecture](#isvalidforarchitecture)
     -   [restart](#restart-1)
 -   [DbMessage](#dbmessage)
-    -   [constructor](#constructor-50)
+    -   [constructor](#constructor-53)
 -   [recipient](#recipient)
 -   [sender](#sender)
 -   [message](#message)
@@ -394,7 +408,7 @@
 -   [picture](#picture)
 -   [received](#received)
 -   [MessageManager](#messagemanager)
-    -   [constructor](#constructor-51)
+    -   [constructor](#constructor-54)
     -   [register](#register-3)
     -   [unregister](#unregister-1)
     -   [sendMessage](#sendmessage-1)
@@ -407,10 +421,10 @@
     -   [init](#init-2)
     -   [registerInstance](#registerinstance)
 -   [PluginConf](#pluginconf)
-    -   [constructor](#constructor-52)
-    -   [json](#json-18)
+    -   [constructor](#constructor-55)
+    -   [json](#json-20)
 -   [PluginsManager](#pluginsmanager)
-    -   [constructor](#constructor-53)
+    -   [constructor](#constructor-56)
     -   [getPluginsFromDirectory](#getpluginsfromdirectory)
     -   [checkPluginSanity](#checkpluginsanity)
     -   [initPlugins](#initplugins)
@@ -453,14 +467,17 @@
     -   [unregister](#unregister-2)
     -   [onMessageReceived](#onmessagereceived-2)
     -   [getMessages](#getmessages-1)
--   [ScenarioAPI](#scenarioapi)
+-   [RadioAPI](#radioapi)
     -   [register](#register-8)
     -   [unregister](#unregister-3)
+-   [ScenarioAPI](#scenarioapi)
+    -   [register](#register-9)
+    -   [unregister](#unregister-4)
     -   [triggerScenario](#triggerscenario-1)
     -   [getScenarios](#getscenarios)
 -   [SchedulerAPI](#schedulerapi)
-    -   [register](#register-9)
-    -   [unregister](#unregister-4)
+    -   [register](#register-10)
+    -   [unregister](#unregister-5)
     -   [schedule](#schedule)
     -   [cancel](#cancel)
     -   [constants](#constants-2)
@@ -476,8 +493,8 @@
 -   [ThemeAPI](#themeapi)
     -   [getColors](#getcolors)
 -   [TimeEventAPI](#timeeventapi)
-    -   [register](#register-10)
-    -   [unregister](#unregister-5)
+    -   [register](#register-11)
+    -   [unregister](#unregister-6)
     -   [constants](#constants-3)
 -   [TranslateAPI](#translateapi)
     -   [load](#load-1)
@@ -491,23 +508,25 @@
     -   [registerHomeNotifications](#registerhomenotifications)
     -   [unregisterHomeNotifications](#unregisterhomenotifications)
 -   [WebAPI](#webapi)
-    -   [register](#register-11)
-    -   [unregister](#unregister-6)
+    -   [register](#register-12)
+    -   [unregister](#unregister-7)
     -   [Authentication](#authentication-1)
     -   [APIResponse](#apiresponse)
     -   [constants](#constants-4)
 -   [RadioForm](#radioform)
-    -   [constructor](#constructor-54)
+    -   [constructor](#constructor-57)
     -   [module](#module-1)
     -   [protocol](#protocol-1)
     -   [deviceId](#deviceid-1)
     -   [switchId](#switchid-1)
-    -   [json](#json-19)
+    -   [json](#json-21)
     -   [getModules](#getmodules)
     -   [getProtocols](#getprotocols)
 -   [RadioManager](#radiomanager)
-    -   [constructor](#constructor-55)
+    -   [constructor](#constructor-58)
     -   [pluginsLoaded](#pluginsloaded-1)
+    -   [register](#register-13)
+    -   [unregister](#unregister-8)
     -   [registerRadioEvents](#registerradioevents)
     -   [unregisterRadioEvents](#unregisterradioevents)
     -   [onRadioEvent](#onradioevent-1)
@@ -517,61 +536,61 @@
     -   [getLastReceivedRadioInformations](#getlastreceivedradioinformations-1)
     -   [processAPI](#processapi-10)
 -   [RadioScenarioForm](#radioscenarioform)
-    -   [constructor](#constructor-56)
+    -   [constructor](#constructor-59)
     -   [radioForm](#radioform-1)
     -   [status](#status-3)
-    -   [json](#json-20)
+    -   [json](#json-22)
 -   [RadioScenariosForm](#radioscenariosform)
-    -   [constructor](#constructor-57)
+    -   [constructor](#constructor-60)
     -   [radioScenariosForm](#radioscenariosform-1)
-    -   [json](#json-21)
+    -   [json](#json-23)
 -   [ScenarioForm](#scenarioform)
-    -   [constructor](#constructor-58)
+    -   [constructor](#constructor-61)
     -   [name](#name-4)
     -   [enabled](#enabled-1)
     -   [icon](#icon-2)
     -   [timeTrigger](#timetrigger)
     -   [subActions](#subactions)
-    -   [json](#json-22)
+    -   [json](#json-24)
 -   [ScenarioManager](#scenariomanager)
-    -   [constructor](#constructor-59)
+    -   [constructor](#constructor-62)
     -   [registerScenariosListForm](#registerscenarioslistform)
     -   [generateKey](#generatekey)
-    -   [register](#register-12)
-    -   [unregister](#unregister-7)
+    -   [register](#register-14)
+    -   [unregister](#unregister-9)
     -   [triggerScenario](#triggerscenario-2)
     -   [getScenarios](#getscenarios-1)
     -   [timeEventScenario](#timeeventscenario)
 -   [ScenariosListForm](#scenarioslistform)
-    -   [constructor](#constructor-60)
+    -   [constructor](#constructor-63)
     -   [identifier](#identifier-2)
-    -   [json](#json-23)
+    -   [json](#json-25)
     -   [getScenariosName](#getscenariosname)
     -   [getScenariosId](#getscenariosid)
 -   [ScenarioSubActionForm](#scenariosubactionform)
-    -   [constructor](#constructor-61)
+    -   [constructor](#constructor-64)
     -   [scenario](#scenario)
     -   [delay](#delay)
-    -   [json](#json-24)
+    -   [json](#json-26)
 -   [TimeScenarioForm](#timescenarioform)
-    -   [constructor](#constructor-62)
+    -   [constructor](#constructor-65)
     -   [day](#day)
     -   [time](#time)
-    -   [json](#json-25)
+    -   [json](#json-27)
 -   [SensorsForm](#sensorsform)
-    -   [constructor](#constructor-63)
+    -   [constructor](#constructor-66)
     -   [sensorId](#sensorid-1)
-    -   [json](#json-26)
+    -   [json](#json-28)
     -   [getSensorIds](#getsensorids)
     -   [getSensorNames](#getsensornames)
 -   [SensorsListForm](#sensorslistform)
-    -   [constructor](#constructor-64)
+    -   [constructor](#constructor-67)
     -   [identifier](#identifier-3)
-    -   [json](#json-27)
+    -   [json](#json-29)
     -   [getSensorsName](#getsensorsname)
     -   [getSensorsId](#getsensorsid)
 -   [SensorsManager](#sensorsmanager)
-    -   [constructor](#constructor-65)
+    -   [constructor](#constructor-68)
     -   [pluginsLoaded](#pluginsloaded-2)
     -   [initSensors](#initsensors)
     -   [initSensor](#initsensor)
@@ -586,7 +605,7 @@
     -   [getSensorConfiguration](#getsensorconfiguration)
     -   [registerSensorsListForm](#registersensorslistform)
 -   [ServicesManager](#servicesmanager)
-    -   [constructor](#constructor-66)
+    -   [constructor](#constructor-69)
     -   [isServiceRegistered](#isserviceregistered)
     -   [add](#add-1)
     -   [remove](#remove-1)
@@ -595,10 +614,10 @@
     -   [restart](#restart-2)
     -   [getService](#getservice)
 -   [ThemeManager](#thememanager)
-    -   [constructor](#constructor-67)
+    -   [constructor](#constructor-70)
     -   [getColors](#getcolors-1)
 -   [ThreadsManager](#threadsmanager)
-    -   [constructor](#constructor-68)
+    -   [constructor](#constructor-71)
     -   [stringifyFunc](#stringifyfunc)
     -   [run](#run-1)
     -   [send](#send)
@@ -606,21 +625,21 @@
     -   [getPid](#getpid)
     -   [isRunning](#isrunning)
 -   [TranslateManager](#translatemanager)
-    -   [constructor](#constructor-69)
+    -   [constructor](#constructor-72)
     -   [addTranslations](#addtranslations)
     -   [t](#t-1)
     -   [translateArray](#translatearray)
 -   [UserForm](#userform)
-    -   [constructor](#constructor-70)
+    -   [constructor](#constructor-73)
     -   [username](#username-2)
     -   [password](#password-1)
     -   [level](#level-1)
     -   [name](#name-5)
     -   [picture](#picture-1)
     -   [atHome](#athome)
-    -   [json](#json-28)
+    -   [json](#json-30)
 -   [UserManager](#usermanager)
-    -   [constructor](#constructor-71)
+    -   [constructor](#constructor-74)
     -   [updateTile](#updatetile-1)
     -   [getUsers](#getusers-1)
     -   [getUser](#getuser)
@@ -633,26 +652,26 @@
     -   [unregisterHomeNotifications](#unregisterhomenotifications-1)
     -   [processAPI](#processapi-12)
 -   [UserScenarioForm](#userscenarioform)
-    -   [constructor](#constructor-72)
+    -   [constructor](#constructor-75)
     -   [mode](#mode)
-    -   [json](#json-29)
+    -   [json](#json-31)
 -   [SchedulerDbObject](#schedulerdbobject)
-    -   [constructor](#constructor-73)
+    -   [constructor](#constructor-76)
 -   [identifier](#identifier-4)
 -   [data](#data)
 -   [triggerDate](#triggerdate)
 -   [triggered](#triggered)
 -   [SchedulerService](#schedulerservice)
-    -   [constructor](#constructor-74)
+    -   [constructor](#constructor-77)
     -   [start](#start-2)
     -   [stop](#stop-2)
-    -   [register](#register-13)
-    -   [unregister](#unregister-8)
+    -   [register](#register-15)
+    -   [unregister](#unregister-10)
     -   [schedule](#schedule-1)
     -   [cancel](#cancel-1)
     -   [timeEvent](#timeevent)
 -   [Service](#service)
-    -   [constructor](#constructor-75)
+    -   [constructor](#constructor-78)
     -   [start](#start-3)
     -   [run](#run-2)
     -   [threadCallback](#threadcallback-1)
@@ -664,28 +683,28 @@
     -   [stop](#stop-3)
     -   [restart](#restart-3)
     -   [status](#status-4)
-    -   [register](#register-14)
-    -   [unregister](#unregister-9)
+    -   [register](#register-16)
+    -   [unregister](#unregister-11)
     -   [setThreadsManager](#setthreadsmanager)
 -   [TimeEventService](#timeeventservice)
-    -   [constructor](#constructor-76)
+    -   [constructor](#constructor-79)
     -   [start](#start-4)
     -   [stop](#stop-4)
     -   [hash](#hash)
     -   [elementForHash](#elementforhash)
-    -   [register](#register-15)
-    -   [unregister](#unregister-10)
+    -   [register](#register-17)
+    -   [unregister](#unregister-12)
     -   [convertMode](#convertmode)
     -   [timeEvent](#timeevent-1)
 -   [APIRegistration](#apiregistration)
-    -   [constructor](#constructor-77)
+    -   [constructor](#constructor-80)
     -   [delegate](#delegate)
     -   [method](#method)
     -   [route](#route)
     -   [authLevel](#authlevel)
     -   [isEqual](#isequal)
 -   [APIRequest](#apirequest)
-    -   [constructor](#constructor-78)
+    -   [constructor](#constructor-81)
     -   [method](#method-1)
     -   [ip](#ip-1)
     -   [route](#route-1)
@@ -696,19 +715,19 @@
     -   [authenticationData](#authenticationdata-1)
     -   [addAuthenticationData](#addauthenticationdata)
 -   [APIResponse](#apiresponse-1)
-    -   [constructor](#constructor-79)
+    -   [constructor](#constructor-82)
     -   [success](#success)
     -   [response](#response)
     -   [errorCode](#errorcode)
     -   [errorMessage](#errormessage)
 -   [WebServices](#webservices)
-    -   [constructor](#constructor-80)
+    -   [constructor](#constructor-83)
     -   [start](#start-5)
     -   [stop](#stop-5)
     -   [registerInfos](#registerinfos)
     -   [processAPI](#processapi-13)
-    -   [register](#register-16)
-    -   [unregister](#unregister-11)
+    -   [register](#register-18)
+    -   [unregister](#unregister-13)
     -   [registerAPI](#registerapi)
     -   [unregisterAPI](#unregisterapi)
     -   [manageResponse](#manageresponse)
@@ -717,6 +736,7 @@
     -   [sendAPIResponse](#sendapiresponse)
 -   [Cleaner](#cleaner)
     -   [exportConstants](#exportconstants)
+    -   [cleanDbObject](#cleandbobject)
 -   [Convert](#convert)
     -   [convertProperties](#convertproperties)
 -   [DateUtils](#dateutils)
@@ -832,6 +852,22 @@ Stop automation core
 ### configurationLoader
 
 Try to overload configuration
+
+## loaded
+
+Loaded function
+
+**Parameters**
+
+-   `api` **PluginAPI** The api
+
+## loaded
+
+Loaded function
+
+**Parameters**
+
+-   `api` **PluginAPI** The api
 
 ## loaded
 
@@ -1224,6 +1260,46 @@ Callback when a message is received, dispatched to registered elements
 
 ## myParameter
 
+## PresenceSensorForm
+
+**Extends api.exported.SensorForm**
+
+This class is extended by throughput sensors
+
+### json
+
+Convert JSON data to object
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some data
+
+Returns **[PresenceSensorForm](#presencesensorform)** An instance
+
+## PresenceSensor
+
+**Extends api.exported.Sensor**
+
+This class is overloaded by sensors
+
+**Parameters**
+
+-   `api`  
+-   `id`  
+-   `configuration`  
+
+### constructor
+
+Presence sensor class (should be extended)
+
+**Parameters**
+
+-   `api` **PluginAPI** A plugin api
+-   `id` **[number](#number)** An id (optional, default `null`)
+-   `configuration` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The configuration for sensor (optional, default `null`)
+
+Returns **[PresenceSensor](#presencesensor)** The instance
+
 ## PressureSensorForm
 
 **Extends api.exported.SensorForm**
@@ -1352,6 +1428,76 @@ Send a message to all plugins.
 
 -   `recipients` **([string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array))** The recipients. `*` for all users, otherwise an array of usernames - user `userAPI`, e.g. `["seb", "ema"]` (optional, default `"*"`)
 -   `message` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The notification message
+
+## RadioPresenceSensorForm
+
+**Extends api.exported.PresenceSensorForm**
+
+Radio presence form sensor
+
+**Parameters**
+
+-   `id`  
+-   `plugin`  
+-   `name`  
+-   `dashboard`  
+-   `statistics`  
+-   `dashboardColor`  
+-   `statisticsColor`  
+-   `radio`  
+
+### constructor
+
+Radio presence sensor form
+
+**Parameters**
+
+-   `id` **[number](#number)** An identifier
+-   `plugin` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A plugin
+-   `name` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Sensor's name
+-   `dashboard` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if display on dashboard, otherwise false
+-   `statistics` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if display on statistics, otherwise false
+-   `dashboardColor` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The dashboard color
+-   `statisticsColor` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The statistics color
+-   `radio` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** The radio objects
+
+Returns **[RadioPresenceSensorForm](#radiopresencesensorform)** The instance
+
+### radio
+
+### json
+
+Convert JSON data to object
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some data
+
+Returns **[RadioPresenceSensorForm](#radiopresencesensorform)** An instance
+
+## RadioPresenceSensor
+
+**Extends api.exported.PresenceSensor**
+
+This class is overloaded by sensors
+
+**Parameters**
+
+-   `api`  
+-   `id`  
+-   `configuration`  
+
+### constructor
+
+Radio presence sensor class
+
+**Parameters**
+
+-   `api` **PluginAPI** A plugin api
+-   `id` **[number](#number)** An id (optional, default `null`)
+-   `configuration` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The configuration for sensor (optional, default `null`)
+
+Returns **[RadioPresenceSensor](#radiopresencesensor)** The instance
 
 ## DbRadio
 
@@ -1559,6 +1705,14 @@ Emit radio request
 -   `previousStatus` **[number](#number)** The previous object status, used if status is null to invert (optional, default `null`)
 
 Returns **[DbRadio](#dbradio)** A radio  object
+
+### getProtocolList
+
+Return the list of supported protocolList
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback function `(err, protocols) => {}`
 
 ## RFLinkService
 
@@ -2019,6 +2173,14 @@ Returns **[ThroughputSensor](#throughputsensor)** The instance
 ## Logger
 
 This class provides static methods to log into a file.
+
+### setLogLevel
+
+Set the log level
+
+**Parameters**
+
+-   `level` **[number](#number)** Log level between 0 and 5 (optional, default `3`)
 
 ### log
 
@@ -4279,6 +4441,7 @@ This class is an interface for plugins
 -   `scenarioManager`  
 -   `alarmManager`  
 -   `camerasManager`  
+-   `radioManager`  
 
 ### exportClass
 
@@ -4354,6 +4517,7 @@ This class manage plugins
 -   `scenarioManager`  
 -   `alarmManager`  
 -   `camerasManager`  
+-   `radioManager`  
 
 ### constructor
 
@@ -4379,6 +4543,7 @@ Constructor
 -   `scenarioManager` **[ScenarioManager](#scenariomanager)** The scenario manager
 -   `alarmManager` **[AlarmManager](#alarmmanager)** The alarm manager
 -   `camerasManager` **[CamerasManager](#camerasmanager)** The cameras manager
+-   `radioManager` **[RadioManager](#radiomanager)** The radio manager
 
 Returns **[PluginsManager](#pluginsmanager)** The instance
 
@@ -4767,6 +4932,30 @@ Get messages
 -   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback `(err, results) => {}`
 -   `username` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A username
 -   `lastTimestamp` **[number](#number)** Last timestamp retrieval (optional, default `null`)
+
+## RadioAPI
+
+Public API for radio events
+
+**Parameters**
+
+-   `radioManager`  
+
+### register
+
+Register for radio events
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback triggered when radio information is received. Example : `(radioObj) => {}`
+
+### unregister
+
+Unegister an timer element
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback triggered when radio information is received. Example : `(radioObj) => {}`
 
 ## ScenarioAPI
 
@@ -5227,6 +5416,22 @@ Initially, this method wad used in contructor.
 
 -   `pluginsManager` **[PluginsManager](#pluginsmanager)** THe plugins manager instance
 -   `context` **[RadioManager](#radiomanager)** The context (self, this, etc ...)
+
+### register
+
+Register for radio events
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback triggered when radio information is received. Example : `(radioObj) => {}`
+
+### unregister
+
+Unegister an timer element
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback triggered when radio information is received. Example : `(radioObj) => {}`
 
 ### registerRadioEvents
 
@@ -6917,6 +7122,16 @@ Clean an exported class by removing the `class` property
 -   `exported` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An exported object with `class` property
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A clean object
+
+### cleanDbObject
+
+Clean a DbObject by removing DbHelper
+
+**Parameters**
+
+-   `dbObject` **[DbObject](#dbobject)** A database object
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A cleaned object
 
 ## Convert
 

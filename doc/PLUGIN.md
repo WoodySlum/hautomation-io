@@ -908,4 +908,15 @@ Record camera stream for 30 seconds :
 		}
 	}, 30);
 
+### Radio data
+
+You can easily receive radio data through `radioAPI`.
+
+Register for radio events sample :
+	
+	api.radioAPI.register((radioObject) => {
+		api.exported.Logger.info(radioObject);
+	});
+
+
 
