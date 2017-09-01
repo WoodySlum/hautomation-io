@@ -5,9 +5,11 @@ module.exports = {install:(installationManager) => {
     installationManager.register("0.0.3", ["x32", "x64"], "brew install imagemagick", false, false, true);
     installationManager.register("0.0.3", ["x32", "x64"], "brew install graphicsmagick", false, false, true);
     installationManager.register("0.0.3", ["x32", "x64"], "brew install libav", false, false, true);
+    installationManager.register("0.0.3", ["x32", "x64"], "pip install -U platformio", false, false, true);
 
     // Raspberry Pi
     installationManager.register("0.0.3", ["arm", "arm64"], "apt-get update", true, true);
     installationManager.register("0.0.3", ["arm", "arm64"], "apt-get install -y imagemagick graphicsmagick", true, true);
     installationManager.register("0.0.3", ["arm", "arm64"], "apt-get install -y libav-tools", true, true);
+    installationManager.register("0.0.3", ["arm", "arm64"], "pip install -U platformio", true, true);
 }};
