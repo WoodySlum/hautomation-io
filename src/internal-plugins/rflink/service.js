@@ -56,7 +56,7 @@ function loaded(api) {
                     // Process RFLink
                     rflink_id = tg[0];
                     sensor_id = tg[1];
-                    name_id = (tg[2].toLowerCase().replace(/ /g,"_")).replace(/\//g,"_"); //lowercase, replace spaces and slashes
+                    name_id = (tg[2])?(tg[2].toLowerCase().replace(/ /g,"_")).replace(/\//g,"_"):""; //lowercase, replace spaces and slashes
                     if (tg[3]) {
                         device_id = tg[3].split("=")[1];
                     }
@@ -78,7 +78,7 @@ function loaded(api) {
                     {
                         // we don"t use split() method since values can have "=" in it
                         idx = tg[i].indexOf("=");
-                        name = (tg[i].substring(0, idx)).toLowerCase();
+                        name = (tg[i].substring(0, idx))?(tg[i].substring(0, idx)).toLowerCase():"";
                         value = tg[i].substring(idx + 1, tg[i].length);
                         rfdata[ name ] = value;
                     }
