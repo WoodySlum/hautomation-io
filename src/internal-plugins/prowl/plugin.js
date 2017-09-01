@@ -96,5 +96,5 @@ module.exports.attributes = {
     version: "0.0.0",
     category: "message-provider",
     description: "Prowl message sending",
-    dependencies:["message-provider"]
+    dependencies:["message-provider-base"]
 };

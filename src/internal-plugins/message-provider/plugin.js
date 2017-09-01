@@ -40,6 +40,6 @@ module.exports.attributes = {
     loadedCallback: loaded,
     name: "message-provider",
     version: "0.0.0",
-    category: "message-provider-interface",
+    category: "message-provider-base",
     description: "Message provider interface"
 };
