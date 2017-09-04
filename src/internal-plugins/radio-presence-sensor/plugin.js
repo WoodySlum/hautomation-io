@@ -1,6 +1,6 @@
 "use strict";
 
-const LOCK_TIME = 60;
+const LOCK_TIME = 5 * 60;
 
 /**
  * Loaded function
