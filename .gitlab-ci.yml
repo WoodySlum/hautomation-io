@@ -44,7 +44,6 @@ deploy:
   only:
     - master
   script:
-  - npm run build
   - ssh-add <(echo "$STAGING_PRIVATE_KEY")
   - ssh -p22 $STAGING_USER@$STAGING_IP "rm -Rf $STAGING_TMP_FOLDER/hautomation-core-deploy"
   - ssh -p22 $STAGING_USER@$STAGING_IP "mkdir $STAGING_TMP_FOLDER/hautomation-core-deploy"
