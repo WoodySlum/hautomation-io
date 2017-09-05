@@ -329,7 +329,7 @@ function loaded(api) {
                 });
 
                 sclient.on("data", function(line) {
-                    Logger.verbose("Received RFLink data : " + line);
+                    Logger.info("RFLink data received : " + line);
                     const d = processData(line);
                     if (d) {
                         send(d);
@@ -338,6 +338,15 @@ function loaded(api) {
 
                 sclient.on("open", function() {
                     Logger.info("RFLink connected, ready to receive data");
+                });
+
+                sclient.on("close", function() {
+                    Logger.info("RFLink connection closed");
+                });
+
+                sclient.on("error", function(err) {
+                    Logger.error("RFLink error : ");
+                    Logger.error(err);
                 });
             } catch(e) {
                 Logger.err(e.message);
