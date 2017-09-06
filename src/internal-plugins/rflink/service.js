@@ -345,8 +345,8 @@ function loaded(api) {
                 });
 
                 sclient.on("error", function(err) {
-                    Logger.error("RFLink error : ");
-                    Logger.error(err);
+                    Logger.err("RFLink error : ");
+                    Logger.err(err);
                 });
             } catch(e) {
                 Logger.err(e.message);
