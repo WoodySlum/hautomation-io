@@ -71,9 +71,10 @@ class RadioManager {
      * Register for radio events
      *
      * @param  {Function} cb            A callback triggered when radio information is received. Example : `(radioObj) => {}`
+     * @param  {string} id            An identifier
      */
-    register(cb) {
-        const index = sha256(cb.toString());
+    register(cb, id = null) {
+        const index = sha256(cb.toString() + id);
         this.registeredElements[index] = cb;
     }
 
@@ -81,9 +82,10 @@ class RadioManager {
      * Unegister an timer element
      *
      * @param  {Function} cb             A callback triggered when radio information is received. Example : `(radioObj) => {}`
+     * @param  {string} id            An identifier
      */
-    unregister(cb) {
-        const index = sha256(cb.toString());
+    unregister(cb, id = null) {
+        const index = sha256(cb.toString() + id);
         if (this.registeredElements[index]) {
             delete this.registeredElements[index];
         } else {

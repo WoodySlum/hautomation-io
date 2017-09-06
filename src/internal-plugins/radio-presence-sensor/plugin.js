@@ -86,7 +86,7 @@ function loaded(api) {
                         }
                     });
                 }
-            });
+            }, id);
         }
     }
 
