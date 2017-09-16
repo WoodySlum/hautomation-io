@@ -40,9 +40,9 @@ function loaded(api) {
             let processData = (telegram) => {
                 var elements = telegram.split(";");
                 if (elements.length >= 3) {
-                    const rflinkId = elements[0];
-                    const commandId = elements[1];
-                    const protocol = elements[2];
+                    const rflinkId = elements[0].toLowerCase();
+                    const commandId = elements[1].toLowerCase();
+                    const protocol = elements[2].toLowerCase();
 
                     if (protocol.indexOf("=") !== -1) {
                         return null;
@@ -56,13 +56,13 @@ function loaded(api) {
 
                     if (elements.length >= 4) {
                         if (elements[3].indexOf("ID=") !== -1) {
-                            deviceId = elements[3].split("=")[1];
+                            deviceId = elements[3].split("=")[1].toLowerCase();
                         }
                     }
 
                     if (elements.length >= 5) {
                         if (elements[4].indexOf("SWITCH=") !== -1) {
-                            switchId = elements[4].split("=")[1];
+                            switchId = elements[4].split("=")[1].toLowerCase();
                         }
 
                         if (elements[4].indexOf("TEMP=") !== -1) {
