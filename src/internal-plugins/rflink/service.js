@@ -38,280 +38,67 @@ function loaded(api) {
             var sclient;
 
             let processData = (telegram) => {
-                let sendRadioArray = [];
-                var rflink_id,
-                    sensor_id,
-                    name_id,
-                    device_id,
-                    rfdata = {},
-                    result,
-                    idx,
-                    name,
-                    value;
+                var elements = telegram.split(";");
+                if (elements.length >= 3) {
+                    const rflinkId = elements[0];
+                    const commandId = elements[1];
+                    const protocol = elements[2];
 
-                if(telegram && telegram.length > 1) {
-                    var tg = telegram.split(";");
-
-                    rfdata.timestamp = Math.round(new Date().getTime()/1000).toString();
-                    // Process RFLink
-                    rflink_id = tg[0];
-                    sensor_id = tg[1];
-                    name_id = (tg[2])?(tg[2].toLowerCase().replace(/ /g,"_")).replace(/\//g,"_"):""; //lowercase, replace spaces and slashes
-                    if (tg[3]) {
-                        device_id = tg[3].split("=")[1];
+                    if (protocol.indexOf("=") !== -1) {
+                        return null;
                     }
 
-                    if (name_id.includes("nodo_radiofrequencylink") )
-                    {
-                        Logger.info("Start message, getting RFLink version...");
+                    let deviceId = null;
+                    let switchId = null;
+                    let sensor = null;
+                    let status = null;
+                    let value = null;
 
-                    }
-
-                    if (name_id.includes("ver") ) // 20;3C;VER=1.1;REV=37;BUILD=01;
-                    {
-                        // version info
-                        const vers = tg[2].split("=")[1];
-                        const rev = tg[3].split("=")[1];
-                    }
-
-                    for(var i = 4; i < (tg.length)-1;i++)
-                    {
-                        // we don"t use split() method since values can have "=" in it
-                        idx = tg[i].indexOf("=");
-                        name = (tg[i].substring(0, idx))?(tg[i].substring(0, idx)).toLowerCase():"";
-                        value = tg[i].substring(idx + 1, tg[i].length);
-                        rfdata[ name ] = value;
-                    }
-                    //log(rfdata);
-
-                    for(var y in rfdata)
-                    {
-                        if (y === "switch")
-                        {
-                            result = rfdata[y];
-                            rfdata[y] = result.toString();
-                        }
-                        else if (y === "cmd") // ON/OFF/ALLON/ALLOFF
-                        {
-                            result = rfdata[y];
-                        }
-                        else if (y === "set_level") // 1-100 %
-                        {
-                            result = Math.round(parseInt(rfdata[y]) * 99 / 15) + 1    ;
-                            rfdata[y] = result.toString();
-                        }
-                        else if (y === "temp") // celcius
-                        {
-                            result = parseInt(rfdata[y], 16);
-                            if(result >= 32768){
-                                result = 32768 - result;
-                            }
-
-                            rfdata[y] = (result / 10.0).toString();
-                        }
-                        else if (y === "hum") // 0-100 %
-                        {
-                            result = parseInt(rfdata[y]);
-                            rfdata[y] = result.toString();
-                        }
-                        else if (y === "baro")
-                        {
-                            result = parseInt(rfdata[y], 16);
-                            rfdata[y] = result.toString();
-                        }
-                        else if (y === "hstatus") // 0=Normal, 1=Comfortable, 2=Dry, 3=Wet
-                        {
-                            result = parseInt(rfdata[y]);
-                            rfdata[y] = result.toString();
-                        }
-                        else if (y === "bforecast") // 0=No Info/Unknown, 1=Sunny, 2=Partly Cloudy, 3=Cloudy, 4=Rain
-                        {
-                            result = parseInt(rfdata[y]);
-                            rfdata[y] = result.toString();
-                        }
-                        else if (y === "uv")
-                        {
-                            result = parseInt(rfdata[y], 16) /10.0;
-                            rfdata[y] = result.toString();
-                        }
-                        else if (y === "lux")
-                        {
-                            result = parseInt(rfdata[y], 16);
-                            rfdata[y] = result.toString();
-                        }
-                        else if (y === "bat") // OK/LOW
-                        {
-                            result = rfdata[y];
-                            rfdata[y] = result.toString();
-                        }
-                        else if (y === "rain") // mm
-                        {
-                            result = parseInt(rfdata[y], 16) /10.0;
-                            rfdata[y] = result.toString();
-                        }
-                        else if (y === "raintot") // mm
-                        {
-                            result = parseInt(rfdata[y], 16);
-                            rfdata[y] = result.toString();
-                        }
-                        else if (y === "winsp") // km. p/h
-                        {
-                            result = parseInt(rfdata[y], 16) /10.0;
-                            rfdata[y] = result.toString();
-                        }
-                        else if (y === "awinsp") // km. p/h
-                        {
-                            result = parseInt(rfdata[y], 16) /10.0;
-                            rfdata[y] = result.toString();
-                        }
-                        else if (y === "wings") // km. p/h
-                        {
-                            result = parseInt(rfdata[y], 16);
-                            rfdata[y] = result.toString();
-                        }
-                        else if (y === "windir") // 0-360 degrees in 22.5 degree steps
-                        {
-                            result = parseInt(rfdata[y]) *22.5;
-                            rfdata[y] = result.toString();
-                        }
-                        else if (y === "winchl")
-                        {
-                            result = parseInt(rfdata[y], 16);
-                            if(result >= 32768){
-                                result = 32768 - result;
-                            }
-
-                            rfdata[y] = (result / 10.0).toString();
-                        }
-                        else if (y === "wintmp")
-                        {
-                            result = parseInt(rfdata[y], 16);
-                            if(result >= 32768){
-                                result = 32768 - result;
-                            }
-
-                            rfdata[y] = (result / 10.0).toString();
-                        }
-                        else if (y === "chime")
-                        {
-                            result = parseInt(rfdata[y]);
-                            rfdata[y] = result.toString();
-                        }
-                        else if (y === "smokealert") // ON/OFF
-                        {
-                            result = rfdata[y];
-                            rfdata[y] = result.toString();
-                        }
-                        else if (y === "pir") // ON/OFF
-                        {
-                            result = rfdata[y];
-                            rfdata[y] = result.toString();
-                        }
-                        else if (y === "co2")
-                        {
-                            result = parseInt(rfdata[y]);
-                            rfdata[y] = result.toString();
-                        }
-                        else if (y === "sound")
-                        {
-                            result = parseInt(rfdata[y]);
-                            rfdata[y] = result.toString();
-                        }
-                        else if (y === "kwatt")
-                        {
-                            result = parseInt(rfdata[y]);
-                            rfdata[y] = result.toString();
-                        }
-                        else if (y === "watt")
-                        {
-                            result = parseInt(rfdata[y]);
-                            rfdata[y] = result.toString();
-                        }
-                        else if (y === "dist")
-                        {
-                            result = parseInt(rfdata[y]);
-                            rfdata[y] = result.toString();
-                        }
-                        else if (y === "meter")
-                        {
-                            result = parseInt(rfdata[y]);
-                            rfdata[y] = result.toString();
-                        }
-                        else if (y === "volt")
-                        {
-                            result = parseInt(rfdata[y]);
-                            rfdata[y] = result.toString();
-                        }
-                        else if (y === "current")
-                        {
-                            result = parseInt(rfdata[y]);
-                            rfdata[y] = result.toString();
+                    if (elements.length >= 4) {
+                        if (elements[3].indexOf("ID=") !== -1) {
+                            deviceId = elements[3].split("=")[1];
                         }
                     }
 
-                    //log(rfdata);
+                    if (elements.length >= 5) {
+                        if (elements[4].indexOf("SWITCH=") !== -1) {
+                            switchId = elements[4].split("=")[1];
+                        }
 
-                    //only accept RFLink->Master messages
+                        if (elements[4].indexOf("TEMP=") !== -1) {
+                            sensor = "TEMP";
+                            value = parseInt(elements[4].split("=")[1]);
+                        }
 
-                    if (rflink_id == 20)
-                    {
-                        if (name_id.includes("nodo_radiofrequencylink"))
-                        {
-                            // version info
-                            Logger.info("Received: Start message");
+                        if (elements[4].indexOf("HUM=") !== -1) {
+                            sensor = "HUM";
+                            value = parseInt(elements[4].split("=")[1]);
                         }
-                        else if (name_id.includes("ver"))
-                        {
-                            // version info
-                            // 20;15;VER=1.1;REV=42;BUILD=0a;
-                            Logger.info("Received: Version info");
-                        }
-                        else if (name_id.includes("ok"))
-                        {
-                            // message received
-                            Logger.info("Received: ok message");
-                            sendRadioArray.shift();
-                            Logger.info("Removed item. Radio array length : "+sendRadioArray.length);
-                            if (sendRadioArray.length > 0) {
-                                return sendRadioArray[0];
-                            } else {
-                                Logger.info("Removed item. Nothing to do.");
-                            }
-                        }
-                        else if (name_id.includes("pong"))
-                        {
-                            // ping received
-                            Logger.info("Received: pong");
-                        }
-                        else if (name_id.includes("cmd_unkknown"))
-                        {
-                            // unkknown command received
-                            Logger.info("Received: Unkknown command");
-                            Logger.info("Received: ok message");
-                            sendRadioArray.shift();
-                            Logger.info("Removed item. Radio array length : "+sendRadioArray.length);
-                            if (sendRadioArray.length > 0) {
-                                return sendRadioArray[0];
-                            } else {
-                                Logger.info("Removed item. Nothing to do.");
-                            }
-                        }
-                        else
-                        {
-                            return {
-                                rflink_id: rflink_id,
-                                sensor_id: sensor_id,
-                                protocol: name_id,
-                                code: device_id,
-                                subcode: rfdata.switch,
-                                status: rfdata.cmd,
-                                timestamp: rfdata.timestamp,
-                                raw: telegram,
-                                rfdata: rfdata
-                            };
+
+                        if (elements[4].indexOf("UV=") !== -1) {
+                            sensor = "UV";
+                            value = parseInt(elements[4].split("=")[1]);
                         }
                     }
 
+                    if (elements.length >= 6) {
+                        if (elements[5].indexOf("CMD=") !== -1) {
+                            status = elements[5].split("=")[1];
+                        }
+                    }
+
+                    return {
+                        rflink_id: rflinkId,
+                        sensor_id: commandId,
+                        protocol: protocol,
+                        code: deviceId,
+                        subcode: switchId,
+                        status: status,
+                        value: value,
+                        sensor: sensor,
+                        timestamp: Math.floor((Date.now() / 1000) | 0),
+                        raw: telegram
+                    };
                 } else {
                     Logger.warn("Invalid number of lines in telegram (" + telegram.length + ")");
                     return null;
@@ -346,7 +133,7 @@ function loaded(api) {
 
                 sclient.on("error", function(err) {
                     Logger.err("RFLink error : ");
-                    Logger.err(err);
+                    Logger.err(err.message);
                 });
             } catch(e) {
                 Logger.err(e.message);
