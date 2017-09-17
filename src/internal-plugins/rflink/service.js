@@ -107,12 +107,12 @@ function loaded(api) {
 
             try {
                 sclient = new sp("/dev/ttyACM0", {
-                    baudrate: 57600,
+                    baudrate: 9600,
                     databits: 8,
                     parity: "none",
                     stopBits: 1,
                     flowControl: false,
-                    parser: sp.parsers.readline("\n")
+                    parser: sp.parsers.readline("\r\n")
                 });
 
                 sclient.on("data", function(line) {
