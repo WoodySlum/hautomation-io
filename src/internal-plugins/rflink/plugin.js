@@ -78,9 +78,11 @@ function loaded(api) {
                 this.service.port = api.configurationAPI.getConfiguration().port;
             }
 
-            api.configurationAPI.setUpdateCb(() => {
-                this.service.port = api.configurationAPI.getConfiguration().port;
-                this.service.restart();
+            api.configurationAPI.setUpdateCb((data) => {
+                if (data && data.port) {
+                    this.service.port = data.port;
+                    this.service.restart();
+                }
             });
         }
 
