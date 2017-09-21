@@ -79,6 +79,7 @@ function loaded(api) {
             }
 
             api.configurationAPI.setUpdateCb(() => {
+                this.service.port = api.configurationAPI.getConfiguration().port;
                 this.service.restart();
             });
         }
