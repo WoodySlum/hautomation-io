@@ -22,8 +22,18 @@ function loaded(api) {
          */
         constructor(plugin) {
             super("rflink", null, api.exported.Service.SERVICE_MODE_THREADED);
+            this.port = null;
             this.plugin = plugin;
             self = this;
+        }
+
+        /**
+         * Start the service
+         */
+        start() {
+            super.start();
+            this.send("getPorts", {});
+            this.send("listen", this.port);
         }
 
         /**
@@ -33,10 +43,7 @@ function loaded(api) {
          * @param  {Function} send Send a message to parent process
          */
         run(data, send) {
-            const sp = require("serialport");
-            //const readline = require("readline").SerialPort;
-            var sclient;
-
+            let sclient;
             let processData = (telegram) => {
                 var elements = telegram.split(";");
                 if (elements.length >= 3) {
@@ -106,35 +113,52 @@ function loaded(api) {
             };
 
             try {
-                sclient = new sp("/dev/ttyACM0", {
-                    baudrate: 9600,
-                    databits: 8,
-                    parity: "none",
-                    stopBits: 1,
-                    flowControl: false,
-                    parser: sp.parsers.readline("\r\n")
-                });
+                const SerialPort = require("serialport");
+                const Readline = SerialPort.parsers.Readline;
+                this.listen = (port) => {
+                    if (port) {
+                        const sp = new SerialPort(port, {
+                            baudRate: 57600
+                        });
+                        const parser = new Readline();
+                        sclient = sp.pipe(parser);
 
-                sclient.on("data", function(line) {
-                    Logger.info("RFLink data received : " + line);
-                    const d = processData(line);
-                    if (d) {
-                        send(d);
+                        sclient.on("data", function(data) {
+                            const line = data.toString("utf8");
+                            Logger.info("RFLink data received : " + line);
+                            const d = processData(line);
+                            if (d) {
+                                send({method:"rflinkData", data:d});
+                            }
+                        });
+
+                        sclient.on("open", function() {
+                            Logger.info("RFLink connected, ready to receive data");
+                        });
+
+                        sclient.on("close", function() {
+                            Logger.info("RFLink connection closed");
+                        });
+
+                        sclient.on("error", function(err) {
+                            Logger.err("RFLink error : ");
+                            Logger.err(err.message);
+                        });
+                    } else {
+                        Logger.info("RFLink empty port. Could not start.");
                     }
-                });
+                };
 
-                sclient.on("open", function() {
-                    Logger.info("RFLink connected, ready to receive data");
-                });
+                this.getPorts = () => {
+                    const detectedPorts = [];
+                    SerialPort.list(function (err, ports) {
+                        ports.forEach(function(port) {
+                            detectedPorts.push({endpoint:port.comName, manufacturer:port.manufacturer});
+                        });
+                        send({method:"detectedPorts", data:detectedPorts});
+                    });
+                };
 
-                sclient.on("close", function() {
-                    Logger.info("RFLink connection closed");
-                });
-
-                sclient.on("error", function(err) {
-                    Logger.err("RFLink error : ");
-                    Logger.err(err.message);
-                });
             } catch(e) {
                 Logger.err(e.message);
             }
@@ -171,7 +195,11 @@ function loaded(api) {
          * @param  {Object} data    A data passed as initial value
          */
         threadCallback(data) {
-            self.plugin.onRflinkReceive(data);
+            if (data.method === "rflinkData") {
+                self.plugin.onRflinkReceive(data.data);
+            } else if (data.method === "detectedPorts") {
+                self.plugin.onDetectedPortsReceive(data.data);
+            }
         }
     }
 

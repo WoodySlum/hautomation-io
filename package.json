@@ -71,7 +71,7 @@
     "node-datetime": "^1.0.1",
     "remi": "^2.0",
     "remi-runner": "^1.1",
-    "serialport": "^4.0",
+    "serialport": "^5.0",
     "sha256": "^0.2",
     "sqlite3": "^3.1.8",
     "stack-trace": "^0.0",

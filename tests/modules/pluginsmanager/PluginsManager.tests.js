@@ -74,11 +74,11 @@ describe("PluginsManager", function() {
         webServices.registerAPI = ()=>{};
         sinon.stub(PluginsManager.class.prototype, 'load');
         pluginsManager = new PluginsManager.class({}, webServices);
-        pluginA = new PluginAPI.class("0.0.0", pluginARef);
-        pluginB = new PluginAPI.class("0.0.0", pluginBRef);
-        pluginC = new PluginAPI.class("0.0.0", pluginCRef);
-        pluginD = new PluginAPI.class("0.0.0", pluginDRef);
-        pluginInvalidDependencies = new PluginAPI.class("0.0.0", pluginInvalidDependenciesRef);
+        pluginA = new PluginAPI.class("0.0.0", pluginARef, webServices);
+        pluginB = new PluginAPI.class("0.0.0", pluginBRef, webServices);
+        pluginC = new PluginAPI.class("0.0.0", pluginCRef, webServices);
+        pluginD = new PluginAPI.class("0.0.0", pluginDRef, webServices);
+        pluginInvalidDependencies = new PluginAPI.class("0.0.0", pluginInvalidDependenciesRef, webServices);
 
     });
 

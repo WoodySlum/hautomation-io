@@ -10,6 +10,54 @@ function loaded(api) {
     api.init();
 
     /**
+     * This class manage RFLink form configuration
+     * @class
+     */
+    class RFlinkForm extends api.exported.FormObject.class {
+        /**
+         * Constructor
+         *
+         * @param  {number} id The identifier
+         * @param  {string} port The port
+         * @returns {RFlinkForm}        The instance
+         */
+        constructor(id, port) {
+            super(id);
+            /**
+             * @Property("port");
+             * @Type("string");
+             * @Title("rflink.settings.port");
+             * @Enum("getPorts");
+             * @EnumNames("getPorts");
+             */
+            this.port = port;
+        }
+
+        /**
+         * Form injection method for ports
+         *
+         * @param  {...Object} inject The ports list array
+         * @returns {Array}        An array of ports
+         */
+        static getPorts(...inject) {
+            return inject[0];
+        }
+
+        /**
+         * Convert a json object to RFLinkForm object
+         *
+         * @param  {Object} data Some data
+         * @returns {RFlinkForm}      An instance
+         */
+        json(data) {
+            return new RFlinkForm(data.id, data.port);
+        }
+    }
+
+    // Register the rflink form
+    api.configurationAPI.register(RFlinkForm, []);
+
+    /**
      * This class manage RFLink
      * @class
      */
@@ -26,6 +74,13 @@ function loaded(api) {
             const RFLinkService = RFLinkServiceClass(api);
             this.service = new RFLinkService(this);
             api.servicesManagerAPI.add(this.service);
+            if (api.configurationAPI.getConfiguration() && api.configurationAPI.getConfiguration().port) {
+                this.service.port = api.configurationAPI.getConfiguration().port;
+            }
+
+            api.configurationAPI.setUpdateCb(() => {
+                this.service.restart();
+            });
         }
 
         /**
@@ -104,6 +159,23 @@ function loaded(api) {
         onRflinkReceive(data) {
             // TODO: Support values and sensors
             super.onRadioEvent(this.defaultFrequency(), data.protocol, data.code, data.subcode, null, this.rflinkStatusToRadioStatus(data.status));
+        }
+
+        /**
+         * Callback when port data is received
+         *
+         * @param  {Object} data A data object containing serial ports
+         */
+        onDetectedPortsReceive(data) {
+            const ports  = [];
+            data.forEach((d) => {
+                if (d.manufacturer && (d.manufacturer.toLowerCase().indexOf("arduino") !== -1)) {
+                    ports.push(d.endpoint);
+                }
+            });
+
+            // Register the rflink form
+            api.configurationAPI.register(RFlinkForm, ports);
         }
 
        /**

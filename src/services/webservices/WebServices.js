@@ -249,7 +249,7 @@ class WebServices extends Service.class {
                 return r;
             });
         } else {
-            Logger.warn("Delegate already registered");
+            Logger.warn("Delegate already registered (" + route + ")");
         }
     }
 
