@@ -71,6 +71,9 @@ function loaded(api) {
         constructor(api) {
             super(api);
             this.api = api;
+            this.version = null;
+            this.revision = null;
+
             const RFLinkService = RFLinkServiceClass(api);
             this.service = new RFLinkService(this);
             api.servicesManagerAPI.add(this.service);
@@ -165,6 +168,19 @@ function loaded(api) {
         }
 
         /**
+         * Called when version is retrieved from RFLink
+         *
+         * @param  {number} version  Version
+         * @param  {string} revision Revision
+         */
+        onRflinkVersion(version, revision) {
+            this.version = version;
+            this.revision = revision;
+
+            api.exported.Logger.info("RFLink version " + version + revision);
+        }
+
+        /**
          * Callback when port data is received
          *
          * @param  {Object} data A data object containing serial ports
@@ -172,9 +188,9 @@ function loaded(api) {
         onDetectedPortsReceive(data) {
             const ports  = [];
             data.forEach((d) => {
-                if (d.manufacturer && (d.manufacturer.toLowerCase().indexOf("arduino") !== -1)) {
+                //if (d.manufacturer && (d.manufacturer.toLowerCase().indexOf("arduino") !== -1)) {
                     ports.push(d.endpoint);
-                }
+                //}
             });
 
             // Register the rflink form
@@ -216,6 +232,8 @@ function loaded(api) {
                 cb(null, baseList);
             });
         }
+
+        ///usr/bin/avrdude -v -p atmega2560 -c stk500 -P /dev/ttyACM0 -b 115200 -D -U flash:w:/tmp/RFLink.cpp.hex:i
     }
 
     // Instantiate. Parent will store instanciation.

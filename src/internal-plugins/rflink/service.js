@@ -1,6 +1,8 @@
 "use strict";
 
 var self = null;
+const TYPE_RADIO = "RADIO";
+const TYPE_VERSION = "VERSION";
 
 /**
  * Loaded plugin function
@@ -44,12 +46,14 @@ function loaded(api) {
          */
         run(data, send) {
             let sclient;
+            let sp;
             let processData = (telegram) => {
                 var elements = telegram.split(";");
                 if (elements.length >= 3) {
                     const rflinkId = elements[0].toLowerCase();
                     const commandId = elements[1].toLowerCase();
                     const protocol = elements[2].toLowerCase();
+                    let type = TYPE_RADIO;
 
                     if (protocol.indexOf("=") !== -1) {
                         return null;
@@ -60,6 +64,23 @@ function loaded(api) {
                     let sensor = null;
                     let status = null;
                     let value = null;
+                    let version = null;
+                    let revision = null;
+
+                    // Version
+                    if (elements.length >= 3 && elements[2].startsWith("Nodo RadioFrequencyLink")) {
+                        //20;00;Nodo RadioFrequencyLink - RFLink Gateway V1.1 - R47;
+                        const versionFull = elements[2].split("-");
+                        if (versionFull.length === 3) {
+                            revision = versionFull[2].trim();
+                            version = 0;
+                            const mainVersionFull = versionFull[1].split(" V");
+                            if (mainVersionFull.length === 2) {
+                                version = parseFloat(mainVersionFull[1].trim());
+                            }
+                            type = TYPE_VERSION;
+                        }
+                    }
 
                     if (elements.length >= 4) {
                         if (elements[3].indexOf("ID=") !== -1) {
@@ -95,6 +116,7 @@ function loaded(api) {
                     }
 
                     return {
+                        type:type,
                         rflink_id: rflinkId,
                         sensor_id: commandId,
                         protocol: protocol,
@@ -104,7 +126,9 @@ function loaded(api) {
                         value: value,
                         sensor: sensor,
                         timestamp: Math.floor((Date.now() / 1000) | 0),
-                        raw: telegram
+                        raw: telegram,
+                        version: version,
+                        revision: revision
                     };
                 } else {
                     Logger.warn("Invalid number of lines in telegram (" + telegram.length + ")");
@@ -117,7 +141,7 @@ function loaded(api) {
                 const Readline = SerialPort.parsers.Readline;
                 this.listen = (port) => {
                     if (port) {
-                        const sp = new SerialPort(port, {
+                        sp = new SerialPort(port, {
                             baudRate: 57600
                         });
                         const parser = new Readline();
@@ -128,19 +152,25 @@ function loaded(api) {
                             Logger.info("RFLink data received : " + line);
                             const d = processData(line);
                             if (d) {
-                                send({method:"rflinkData", data:d});
+                                if (d.type === TYPE_RADIO) {
+                                    send({method:"rflinkData", data:d});
+                                } else if (d.type === TYPE_VERSION) {
+                                    send({method:"rflinkVersion", data:d});
+                                }
                             }
                         });
 
-                        sclient.on("open", function() {
+                        sp.on("open", function() {
                             Logger.info("RFLink connected, ready to receive data");
+                            // Request version
+                            sp.write("10;VERSION\r\n");
                         });
 
-                        sclient.on("close", function() {
+                        sp.on("close", function() {
                             Logger.info("RFLink connection closed");
                         });
 
-                        sclient.on("error", function(err) {
+                        sp.on("error", function(err) {
                             Logger.err("RFLink error : ");
                             Logger.err(err.message);
                         });
@@ -165,7 +195,7 @@ function loaded(api) {
 
             this.rflinkSend = (data) => {
                 Logger.info("RFLink sending data : " + data);
-                sclient.write(data + "\r\n");
+                sp.write(data + "\r\n");
             };
 
             // Logger.warn(JSON.stringify(processData("20;01;Blyss;ID=6968;SWITCH=C4;CMD=ON;")));
@@ -197,6 +227,8 @@ function loaded(api) {
         threadCallback(data) {
             if (data.method === "rflinkData") {
                 self.plugin.onRflinkReceive(data.data);
+            } else if (data.method === "rflinkVersion") {
+                self.plugin.onRflinkVersion(data.data.version, data.data.revision);
             } else if (data.method === "detectedPorts") {
                 self.plugin.onDetectedPortsReceive(data.data);
             }
