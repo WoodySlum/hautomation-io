@@ -182,10 +182,14 @@ function loaded(api) {
                 this.getPorts = () => {
                     const detectedPorts = [];
                     SerialPort.list(function (err, ports) {
-                        ports.forEach(function(port) {
-                            detectedPorts.push({endpoint:port.comName, manufacturer:port.manufacturer});
-                        });
-                        send({method:"detectedPorts", data:detectedPorts});
+                        if (!err && ports) {
+                            ports.forEach(function(port) {
+                                detectedPorts.push({endpoint:port.comName, manufacturer:port.manufacturer});
+                            });
+                            send({method:"detectedPorts", data:detectedPorts});
+                        } else {
+                            Logger.err("Error on serial ports detection : " + err.message);
+                        }
                     });
                 };
 
