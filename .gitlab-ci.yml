@@ -11,27 +11,27 @@ before_script:
   - eval $(ssh-agent -s)
   - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
 
-stages:
+.stages:
   - lint
   - test
   - doc
   - build
   - deploy
 
-test:
+.test:
   stage: test
   script:
   - npm run --verbose test-ci
   coverage: '/Statements   : \d+\.\d+/'
 
-lint:
+.lint:
   stage: lint
   only:
     - master
   script:
   - npm run --verbose lint
 
-build:
+.build:
   stage: build
   script:
   - npm run --verbose build
@@ -39,7 +39,7 @@ build:
     paths:
     - build/*
 
-deploy:
+.deploy:
   stage: deploy
   only:
     - master
