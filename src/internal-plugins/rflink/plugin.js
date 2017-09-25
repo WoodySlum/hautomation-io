@@ -93,6 +93,8 @@ function loaded(api) {
                     this.service.restart();
                 }
             });
+            
+            api.timeEventAPI.register(this.upgrade, this, api.timeEventAPI.constants().EVERY_DAYS);
         }
 
         /**
@@ -239,11 +241,30 @@ function loaded(api) {
             });
         }
 
-        upgrade() {
-            this.version = 1.1;
-            this.revision = "R46";
-            if (this.version && this.revision) {
-                request("http://www.nemcon.nl/blog2/fw/update.jsp?ver=" + this.version + "&rel=" + this.revision.toLowerCase().replace("r", ""), function(error, response, body) {
+        /**
+         * Reboot the RFLink device
+         *
+         * @param  {RFLink} [context=null] The context. If not specified, set to `this`
+         */
+        reboot(context = null) {
+            if (!context) {
+                context = this;
+            }
+            context.service.send("rflinkSend", "10;REBOOT;");
+        }
+
+        /**
+         * Try to upgrade RFLink firmware
+         *
+         * @param  {RFLink} [context=null] The context. If not specified, set to `this`
+         */
+        upgrade(context = null) {
+            if (!context) {
+                context = this;
+            }
+
+            if (context.version && context.revision && context.api.configurationAPI.getConfiguration() && context.api.configurationAPI.getConfiguration().port) {
+                request("http://www.nemcon.nl/blog2/fw/update.jsp?ver=" + context.version + "&rel=" + context.revision.toLowerCase().replace("r", ""), function(error, response, body) {
                     if (!error && body) {
                         parseString(body, function (err, result) {
                             if (!err) {
@@ -251,60 +272,70 @@ function loaded(api) {
                                     if (result.Result.Value && result.Result.Value.length === 1) {
                                         const updateAvailable = parseInt(result.Result.Value[0]);
                                         if (updateAvailable === 0) {
-                                            api.exported.Logger.info("No update available");
+                                            context.api.exported.Logger.info("No update available");
                                         } else {
-                                            api.exported.Logger.info("Update available");
+                                            context.api.exported.Logger.info("Update available");
                                             if (result.Result.Url && result.Result.Url.length === 1 && result.Result.MD5 && result.Result.MD5.length === 1) {
                                                 const firmwareUrl = result.Result.Url[0];
                                                 const firmwareHash = result.Result.MD5[0];
-                                                api.exported.Logger.info("URL firmware : " + firmwareUrl);
-                                                api.exported.Logger.info("MD5 hash firmware : " + firmwareHash);
+                                                context.api.exported.Logger.info("URL firmware : " + firmwareUrl);
+                                                context.api.exported.Logger.info("MD5 hash firmware : " + firmwareHash);
                                                 request(firmwareUrl, function(fwError, fwResponse, fwBody) {
                                                     if (!fwError) {
-                                                        api.exported.Logger.info("Firmware downloaded successfully");
-                                                        const fwFilePath = api.exported.cachePath + "rflink.bin";
+                                                        context.api.exported.Logger.info("Firmware downloaded successfully");
+                                                        const fwFilePath = context.api.exported.cachePath + "rflink.bin";
                                                         fs.removeSync(fwFilePath);
                                                         fs.writeFile(fwFilePath, fwBody, (fileFwErr) => {
                                                             if (!fileFwErr) {
                                                                 fs.readFile(fwFilePath, function (hashErr, hashData) {
                                                                     const md5 = crypto.createHash("md5").update(hashData, "utf8").digest("hex");
                                                                     if (md5 === firmwareHash) {
-                                                                        api.exported.Logger.info("MD5 firmware match. Continue.");
-                                                                        this.service.stop();
-
-                                                                        this.service.start();
+                                                                        context.api.exported.Logger.info("MD5 firmware match. Continue.");
+                                                                        context.reboot(context);
+                                                                        context.service.stop();
+                                                                        const command = "avrdude -v -p atmega2560 -c stk500 -P " + context.api.configurationAPI.getConfiguration().port + " -b 115200 -D -U flash:w:" + fwFilePath + ":i";
+                                                                        context.api.installerAPI.executeCommand(command, false, (error, stdout, stderr) => {
+                                                                            if (!error) {
+                                                                                context.api.exported.Logger.info("Firmware successfully updated");
+                                                                                context.api.messageAPI.sendMessage("*", context.api.translateAPI.t("rflink.update.message"));
+                                                                                context.api.exported.Logger.verbose(stdout);
+                                                                            } else {
+                                                                                context.api.exported.Logger.err("Firmware update error");
+                                                                                context.api.exported.Logger.err(error.message);
+                                                                                context.api.exported.Logger.err(stderr);
+                                                                            }
+                                                                            context.service.start();
+                                                                        });
                                                                     } else {
-                                                                        api.exported.Logger.err("Checksum are differents ! Cannot continue");
+                                                                        context.api.exported.Logger.err("Checksum are differents ! Cannot continue");
                                                                     }
                                                                 });
                                                             } else {
-                                                                api.exported.Logger.err(fileFwErr.message);
+                                                                context.api.exported.Logger.err(fileFwErr.message);
                                                             }
                                                         });
                                                     } else {
-                                                        api.exported.Logger.err("Error while downloading firmware");
+                                                        context.api.exported.Logger.err("Error while downloading firmware");
                                                     }
                                                 });
                                             } else {
-                                                api.exported.Logger.err("Unexpected RFLink results upgrade data");
+                                                context.api.exported.Logger.err("Unexpected RFLink results upgrade data");
                                             }
-
                                         }
                                     }
                                 }
                             } else {
-                                api.exported.Logger.err(err.message);
+                                context.api.exported.Logger.err(err.message);
                             }
                         });
                     } else {
-                        api.exported.Logger.err(error.message);
+                        context.api.exported.Logger.err(error.message);
                     }
-
                 });
+            } else {
+                context.api.exported.Logger.err("Invalid parameters");
             }
         }
-
-        ///usr/bin/avrdude -v -p atmega2560 -c stk500 -P /dev/ttyACM0 -b 115200 -D -U flash:w:/tmp/RFLink.cpp.hex:i
     }
 
     // Instantiate. Parent will store instanciation.

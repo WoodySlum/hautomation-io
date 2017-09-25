@@ -38,6 +38,7 @@ class PluginsAPI {
     //  * @param  {string} previousVersion The plugin's previous version, used for migration
     //  * @param  {object} p The plugin require value
     //  * @param  {WebServices} webServices     The web services
+    //  * @param  {Object} appConfiguration The global configuration
     //  * @param  {ServicesManager} servicesManager     The services manager
     //  * @param  {DbManager} webServices     The database manager
     //  * @param  {TranslateManager} translateManager     The translate manager
@@ -55,10 +56,9 @@ class PluginsAPI {
     //  * @param  {AlarmManager} alarmManager The alarm manager
     //  * @param  {CamerasManager} camerasManager The cameras manager
     //  * @param  {RadioManager} radioManager The radio manager
-    //  * @param  {Object} appConfiguration The global configuration
     //  * @returns {PluginAPI}                  Insntance
     //  */
-    constructor(previousVersion, p, webServices, servicesManager, dbManager, translateManager, formManager, confManager, timeEventService, schedulerService, dashboardManager, themeManager, sensorsManager, installationManager, userManager, messageManager, scenarioManager, alarmManager, camerasManager, radioManager, appConfiguration) {
+    constructor(previousVersion, p, webServices, appConfiguration, servicesManager, dbManager, translateManager, formManager, confManager, timeEventService, schedulerService, dashboardManager, themeManager, sensorsManager, installationManager, userManager, messageManager, scenarioManager, alarmManager, camerasManager, radioManager) {
         PrivateProperties.createPrivateState(this);
         this.previousVersion = previousVersion;
         this.p = p;

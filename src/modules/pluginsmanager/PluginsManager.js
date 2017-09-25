@@ -194,6 +194,7 @@ class PluginsManager {
                 oldVersion,
                 p,
                 this.webServices,
+                this.appConfiguration,
                 this.servicesManager,
                 this.dbManager,
                 this.translateManager,
@@ -210,8 +211,7 @@ class PluginsManager {
                 this.scenarioManager,
                 this.alarmManager,
                 this.camerasManager,
-                this.radioManager,
-                this.appConfiguration
+                this.radioManager
             );
 
             initializedPlugins.push(pApi);

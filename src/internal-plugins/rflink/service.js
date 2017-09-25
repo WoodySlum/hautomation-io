@@ -1,8 +1,6 @@
 "use strict";
 
 var self = null;
-const TYPE_RADIO = "RADIO";
-const TYPE_VERSION = "VERSION";
 
 /**
  * Loaded plugin function
@@ -45,6 +43,8 @@ function loaded(api) {
          * @param  {Function} send Send a message to parent process
          */
         run(data, send) {
+            const TYPE_RADIO = "RADIO";
+            const TYPE_VERSION = "VERSION";
             let sclient;
             let sp;
             let processData = (telegram) => {

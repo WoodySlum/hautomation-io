@@ -70,15 +70,16 @@ describe("PluginsManager", function() {
 
 
     before(() => {
+        const appConfiguration = {cachePath:"foobar"};
         webServices = sinon.mock(WebServices.class);
         webServices.registerAPI = ()=>{};
         sinon.stub(PluginsManager.class.prototype, 'load');
         pluginsManager = new PluginsManager.class({}, webServices);
-        pluginA = new PluginAPI.class("0.0.0", pluginARef, webServices);
-        pluginB = new PluginAPI.class("0.0.0", pluginBRef, webServices);
-        pluginC = new PluginAPI.class("0.0.0", pluginCRef, webServices);
-        pluginD = new PluginAPI.class("0.0.0", pluginDRef, webServices);
-        pluginInvalidDependencies = new PluginAPI.class("0.0.0", pluginInvalidDependenciesRef, webServices);
+        pluginA = new PluginAPI.class("0.0.0", pluginARef, webServices, appConfiguration);
+        pluginB = new PluginAPI.class("0.0.0", pluginBRef, webServices, appConfiguration);
+        pluginC = new PluginAPI.class("0.0.0", pluginCRef, webServices, appConfiguration);
+        pluginD = new PluginAPI.class("0.0.0", pluginDRef, webServices, appConfiguration);
+        pluginInvalidDependencies = new PluginAPI.class("0.0.0", pluginInvalidDependenciesRef, webServices, appConfiguration);
 
     });
 

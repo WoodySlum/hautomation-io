@@ -58,6 +58,7 @@ class InstallationManager {
      * @returns {Object}              An object result if wait is `true`
      */
     executeCommand(command, wait = true, cb = null) {
+        Logger.info("Executing command => " + command);
         if (!wait) {
             childProcess.exec(command, {}, (error, stdout, stderr) => {
                 if (cb) {
