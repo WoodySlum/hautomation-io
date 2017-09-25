@@ -1,5 +1,9 @@
 "use strict";
 const RFLinkServiceClass = require("./service.js");
+const request = require("request");
+const parseString = require("xml2js").parseString;
+const fs = require("fs-extra");
+const crypto = require("crypto");
 
 /**
  * Loaded plugin function
@@ -8,6 +12,8 @@ const RFLinkServiceClass = require("./service.js");
  */
 function loaded(api) {
     api.init();
+    api.installerAPI.register("0.0.0", ["x32", "x64"], "brew install avrdude", false, false, true);
+    api.installerAPI.register("0.0.0", ["arm", "arm64"], "apt-get install -y avrdude", true, true);
 
     /**
      * This class manage RFLink form configuration
@@ -188,9 +194,9 @@ function loaded(api) {
         onDetectedPortsReceive(data) {
             const ports  = [];
             data.forEach((d) => {
-                //if (d.manufacturer && (d.manufacturer.toLowerCase().indexOf("arduino") !== -1)) {
+                if (d.manufacturer && (d.manufacturer.toLowerCase().indexOf("arduino") !== -1)) {
                     ports.push(d.endpoint);
-                //}
+                }
             });
 
             // Register the rflink form
@@ -231,6 +237,71 @@ function loaded(api) {
                 }
                 cb(null, baseList);
             });
+        }
+
+        upgrade() {
+            this.version = 1.1;
+            this.revision = "R46";
+            if (this.version && this.revision) {
+                request("http://www.nemcon.nl/blog2/fw/update.jsp?ver=" + this.version + "&rel=" + this.revision.toLowerCase().replace("r", ""), function(error, response, body) {
+                    if (!error && body) {
+                        parseString(body, function (err, result) {
+                            if (!err) {
+                                if (result.Result) {
+                                    if (result.Result.Value && result.Result.Value.length === 1) {
+                                        const updateAvailable = parseInt(result.Result.Value[0]);
+                                        if (updateAvailable === 0) {
+                                            api.exported.Logger.info("No update available");
+                                        } else {
+                                            api.exported.Logger.info("Update available");
+                                            if (result.Result.Url && result.Result.Url.length === 1 && result.Result.MD5 && result.Result.MD5.length === 1) {
+                                                const firmwareUrl = result.Result.Url[0];
+                                                const firmwareHash = result.Result.MD5[0];
+                                                api.exported.Logger.info("URL firmware : " + firmwareUrl);
+                                                api.exported.Logger.info("MD5 hash firmware : " + firmwareHash);
+                                                request(firmwareUrl, function(fwError, fwResponse, fwBody) {
+                                                    if (!fwError) {
+                                                        api.exported.Logger.info("Firmware downloaded successfully");
+                                                        const fwFilePath = api.exported.cachePath + "rflink.bin";
+                                                        fs.removeSync(fwFilePath);
+                                                        fs.writeFile(fwFilePath, fwBody, (fileFwErr) => {
+                                                            if (!fileFwErr) {
+                                                                fs.readFile(fwFilePath, function (hashErr, hashData) {
+                                                                    const md5 = crypto.createHash("md5").update(hashData, "utf8").digest("hex");
+                                                                    if (md5 === firmwareHash) {
+                                                                        api.exported.Logger.info("MD5 firmware match. Continue.");
+                                                                        this.service.stop();
+
+                                                                        this.service.start();
+                                                                    } else {
+                                                                        api.exported.Logger.err("Checksum are differents ! Cannot continue");
+                                                                    }
+                                                                });
+                                                            } else {
+                                                                api.exported.Logger.err(fileFwErr.message);
+                                                            }
+                                                        });
+                                                    } else {
+                                                        api.exported.Logger.err("Error while downloading firmware");
+                                                    }
+                                                });
+                                            } else {
+                                                api.exported.Logger.err("Unexpected RFLink results upgrade data");
+                                            }
+
+                                        }
+                                    }
+                                }
+                            } else {
+                                api.exported.Logger.err(err.message);
+                            }
+                        });
+                    } else {
+                        api.exported.Logger.err(error.message);
+                    }
+
+                });
+            }
         }
 
         ///usr/bin/avrdude -v -p atmega2560 -c stk500 -P /dev/ttyACM0 -b 115200 -D -U flash:w:/tmp/RFLink.cpp.hex:i

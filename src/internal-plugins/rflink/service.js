@@ -176,6 +176,7 @@ function loaded(api) {
                         });
                     } else {
                         Logger.info("RFLink empty port. Could not start.");
+                        this.getPorts();
                     }
                 };
 

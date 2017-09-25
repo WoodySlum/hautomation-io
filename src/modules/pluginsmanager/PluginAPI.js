@@ -55,9 +55,10 @@ class PluginsAPI {
     //  * @param  {AlarmManager} alarmManager The alarm manager
     //  * @param  {CamerasManager} camerasManager The cameras manager
     //  * @param  {RadioManager} radioManager The radio manager
+    //  * @param  {Object} appConfiguration The global configuration
     //  * @returns {PluginAPI}                  Insntance
     //  */
-    constructor(previousVersion, p, webServices, servicesManager, dbManager, translateManager, formManager, confManager, timeEventService, schedulerService, dashboardManager, themeManager, sensorsManager, installationManager, userManager, messageManager, scenarioManager, alarmManager, camerasManager, radioManager) {
+    constructor(previousVersion, p, webServices, servicesManager, dbManager, translateManager, formManager, confManager, timeEventService, schedulerService, dashboardManager, themeManager, sensorsManager, installationManager, userManager, messageManager, scenarioManager, alarmManager, camerasManager, radioManager, appConfiguration) {
         PrivateProperties.createPrivateState(this);
         this.previousVersion = previousVersion;
         this.p = p;
@@ -80,7 +81,8 @@ class PluginsAPI {
             {DateUtils: DateUtils},
             {Icons: Icons},
             {ImageUtils:ImageUtils},
-            {Logger: Logger}
+            {Logger: Logger},
+            {cachePath:appConfiguration.cachePath}
         );
 
         // API part
