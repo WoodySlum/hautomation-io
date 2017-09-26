@@ -2,12 +2,11 @@
 Description=Hautomation
 
 [Service]
+Environment=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:Var/hautomation
+Environment=NODE_ENV=production
 ExecStart=/bin/sh -c '{INSTALLATION_FOLDER}hautomation 2>&1 >> /var/log/hautomation-js.log'
 Restart=always
-Environment=NODE_ENV=production
 WorkingDirectory={INSTALLATION_FOLDER}
-User=root
-Group=nogroup
 
 [Install]
 WantedBy=multi-user.target
