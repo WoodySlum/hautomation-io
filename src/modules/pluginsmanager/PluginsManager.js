@@ -70,9 +70,10 @@ class PluginsManager {
      * @param  {AlarmManager} alarmManager The alarm manager
      * @param  {CamerasManager} camerasManager The cameras manager
      * @param  {RadioManager} radioManager The radio manager
+     * @param  {Object} appConfiguration The global configuration
      * @returns {PluginsManager} The instance
      */
-    constructor(confManager, webServices, servicesManager, dbManager, translateManager, formManager, timeEventService, schedulerService, dashboardManager, eventBus, themeManager, sensorsManager, installationManager, userManager, messageManager, scenarioManager, alarmManager, camerasManager, radioManager) {
+    constructor(confManager, webServices, servicesManager, dbManager, translateManager, formManager, timeEventService, schedulerService, dashboardManager, eventBus, themeManager, sensorsManager, installationManager, userManager, messageManager, scenarioManager, alarmManager, camerasManager, radioManager, appConfiguration) {
         this.fs = fs;
         this.path = path;
         this.remi = remi;
@@ -95,6 +96,7 @@ class PluginsManager {
         this.alarmManager = alarmManager;
         this.camerasManager = camerasManager;
         this.radioManager = radioManager;
+        this.appConfiguration = appConfiguration;
 
         this.plugins = [];
         try {
@@ -192,6 +194,7 @@ class PluginsManager {
                 oldVersion,
                 p,
                 this.webServices,
+                this.appConfiguration,
                 this.servicesManager,
                 this.dbManager,
                 this.translateManager,

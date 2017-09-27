@@ -1,0 +1,26 @@
+verbose: false
+instrumentation:
+    extension: .js
+    root: ./src
+    default-excludes: true
+    include-all-sources: true
+    excludes: ['**/*Form.js', '**/forms/*', '**/logger/*', '**/internal-plugins/*-sensor/*', '**/modules/pluginsmanager/publicapis/*', '**/modules/camerasmanager/*', '**/internal-plugins/rflink/*']
+    embed-source: false
+    variable: __coverage__
+    compact: true
+    preserve-comments: false
+    complete-copy: false
+    save-baseline: false
+reporting:
+    print: summary
+    reports:
+        - lcov
+    dir: ./coverage
+    watermarks:
+        statements: [50, 70]
+        lines: [50, 70]
+        functions: [50, 70]
+        branches: [50, 70]
+hooks:
+    hook-run-in-context: false
+    post-require-hook: null

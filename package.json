@@ -71,7 +71,7 @@
     "node-datetime": "^1.0.1",
     "remi": "^2.0",
     "remi-runner": "^1.1",
-    "serialport": "^4.0",
+    "serialport": "^5.0",
     "sha256": "^0.2",
     "sqlite3": "^3.1.8",
     "stack-trace": "^0.0",
@@ -80,6 +80,7 @@
     "gm": "^1.23",
     "prowler": "^0.0",
     "mjpeg-proxy": "^0.2",
-    "fs-extra": "^4.0"
+    "fs-extra": "^4.0",
+    "xml2js":"^0.4"
   }
 }

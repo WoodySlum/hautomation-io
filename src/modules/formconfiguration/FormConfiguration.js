@@ -60,6 +60,8 @@ class FormConfiguration {
         } else {
             this.formClass = null;
         }
+
+        this.loadConfig();
     }
 
     /**
@@ -151,7 +153,6 @@ class FormConfiguration {
     registerForm(formClass, ...inject) {
         this.formClass = formClass;
         this.formManager.register(formClass, ...inject);
-        this.loadConfig();
     }
 
     /**
