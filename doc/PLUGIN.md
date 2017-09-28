@@ -799,6 +799,24 @@ Sample :
 
 	api.alarmAPI.disableAlarm();
 
+### Environment
+
+#### Get home location coordinates
+
+	api.environmentAPI.getCoordinates();
+
+#### Enable day mode
+
+	api.environmentAPI.setDay();
+
+#### Enable night mode
+
+	api.environmentAPI.setNight();
+
+#### Get mode
+
+	api.environmentAPI.isNight(); // Returns true if it's night, false otherwise
+
 ### Cameras
 
 #### Create a camera plugin
