@@ -36,10 +36,10 @@ class EnvironmentManager {
      */
     registerTile() {
         let tileTitle = this.translateManager.t("environment.day");
-        let icon = "moon";
+        let icon = "sun-1";
         if (this.isNight()) {
             tileTitle = this.translateManager.t("environment.night");
-            icon = "sun-1";
+            icon = "moon";
         }
         const tile = new Tile.class(this.dashboardManager.themeManager, "day-night", Tile.TILE_INFO_ONE_TEXT, Icons.class.list()[icon], null, tileTitle, null, null, null, null, 200);
         this.dashboardManager.registerTile(tile);
