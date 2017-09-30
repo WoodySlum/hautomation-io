@@ -146,6 +146,23 @@ class SensorsManager {
     }
 
     /**
+     * Get sensor by identifier
+     *
+     * @param  {string} identifier An identiifer
+     * @returns {Sensor}            A sensor object
+     */
+    getSensor(identifier) {
+        let sensor = null;
+        this.sensors.forEach((s) => {
+            if (s.id === identifier) {
+                sensor = s;
+            }
+        });
+
+        return sensor;
+    }
+
+    /**
      * Unregister a callback for a/all sensor
      *
      * @param  {Function} cb               A callback `(id, type, value, unit, vcc, aggValue, aggUnit) => {}`
@@ -247,11 +264,12 @@ class SensorsManager {
                 const sensors = [];
                 self.sensorsConfiguration.forEach((sensor) => {
                     const sensorPlugin = self.pluginsManager.getPluginByIdentifier(sensor.plugin, false);
+                    const s = self.getSensor(sensor.id);
                     sensors.push({
                         identifier: sensor.id,
                         name: sensor.name,
-                        icon: "E8BC",
-                        category:"TEST",
+                        icon: (s?s.icon:"E8BC"),
+                        category: (s?s.type:"UNKNOWN"),
                         form:Object.assign(self.formManager.getForm(sensorPlugin.sensorAPI.form), {data:sensor})
                     });
                 });

@@ -40,7 +40,10 @@ const INTERNAL_PLUGINS = [
     "camera",
     "sumpple",
     "presence-sensor",
-    "radio-presence-sensor"
+    "radio-presence-sensor",
+    "openweather",
+    "openweather-temperature-sensor",
+    "openweather-humidity-sensor"
 ];
 
 /**
@@ -214,7 +217,8 @@ class PluginsManager {
                 this.alarmManager,
                 this.camerasManager,
                 this.radioManager,
-                this.environmentManager
+                this.environmentManager,
+                this
             );
 
             initializedPlugins.push(pApi);
