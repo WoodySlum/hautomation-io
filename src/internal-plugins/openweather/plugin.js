@@ -183,7 +183,7 @@ function loaded(api) {
                         dbObject.save();
                     }
                 });
-            }, this, api.timeEventAPI.constants().EVERY_HOURS);
+            }, this, api.timeEventAPI.constants().EVERY_MINUTES);
         }
 
         /**
