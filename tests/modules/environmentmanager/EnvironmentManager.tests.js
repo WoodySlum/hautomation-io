@@ -36,6 +36,7 @@ describe("EnvironmentManager", function() {
 
     it("setDay should well set day", function() {
         const environmentManager = new EnvironmentManager.class({home:{foo:"bar"}}, core.confManager, core.formManager, core.webServices, core.dashboardManager, core.translateManager);
+        environmentManager.formConfiguration.data.day = false;
         sinon.spy(environmentManager, "registerTile");
         environmentManager.setDay();
         expect(environmentManager.isNight()).to.be.false;
@@ -45,6 +46,7 @@ describe("EnvironmentManager", function() {
 
     it("setNight should well set night", function() {
         const environmentManager = new EnvironmentManager.class({home:{foo:"bar"}}, core.confManager, core.formManager, core.webServices, core.dashboardManager, core.translateManager);
+        environmentManager.formConfiguration.data.day = true;
         sinon.spy(environmentManager, "registerTile");
         environmentManager.setNight();
         expect(environmentManager.isNight()).to.be.true;

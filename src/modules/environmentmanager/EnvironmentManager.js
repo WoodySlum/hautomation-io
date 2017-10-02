@@ -1,4 +1,5 @@
 "use strict";
+const sha256 = require("sha256");
 const Logger = require("./../../logger/Logger");
 const FormConfiguration = require("./../formconfiguration/FormConfiguration");
 const EnvironmentForm = require("./EnvironmentForm");
@@ -28,7 +29,34 @@ class EnvironmentManager {
         this.formManager = formManager;
         this.translateManager = translateManager;
         this.formConfiguration.data = this.formConfiguration.data?this.formConfiguration.data:{};
+        this.registeredElements = {};
         this.registerTile();
+    }
+
+    /**
+     * Register for day/night notifications
+     *
+     * @param  {Function} cb            A callback triggered when day/night information is received. Example : `(isNight) => {}`
+     * @param  {string} id            An identifier
+     */
+    registerDayNightNotifications(cb, id = null) {
+        const index = sha256(cb.toString() + id);
+        this.registeredElements[index] = cb;
+    }
+
+    /**
+     * Unegister for day/night notifications
+     *
+     * @param  {Function} cb             A callback triggered when day/night information is received. Example : `(isNight) => {}`
+     * @param  {string} id            An identifier
+     */
+    unregisterDayNightNotifications(cb, id = null) {
+        const index = sha256(cb.toString() + id);
+        if (this.registeredElements[index]) {
+            delete this.registeredElements[index];
+        } else {
+            Logger.warn("Element not found");
+        }
     }
 
     /**
@@ -55,23 +83,41 @@ class EnvironmentManager {
     }
 
     /**
+     * Dispatch day or night changes
+     */
+    dispatchDayNightChange() {
+        // Dispatch callback
+        Object.keys(this.registeredElements).forEach((registeredKey) => {
+            this.registeredElements[registeredKey](this.isNight());
+        });
+    }
+
+    /**
      * Set day
      */
     setDay() {
-        Logger.info("Day mode enabled");
-        this.formConfiguration.data.day = true;
-        this.formConfiguration.save();
-        this.registerTile();
+        if (this.isNight()) {
+            Logger.info("Day mode enabled");
+            this.formConfiguration.data.day = true;
+            this.formConfiguration.save();
+            this.registerTile();
+
+            this.dispatchDayNightChange();
+        }
     }
 
     /**
      * Set night
      */
     setNight() {
-        Logger.info("Night mode enabled");
-        this.formConfiguration.data.day = false;
-        this.formConfiguration.save();
-        this.registerTile();
+        if (!this.isNight()) {
+            Logger.info("Night mode enabled");
+            this.formConfiguration.data.day = false;
+            this.formConfiguration.save();
+            this.registerTile();
+
+            this.dispatchDayNightChange();
+        }
     }
 
     /**

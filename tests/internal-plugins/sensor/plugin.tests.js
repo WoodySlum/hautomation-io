@@ -251,7 +251,7 @@ describe("Sensor", function() {
     });
 
     it("updateTile should call registerTile", function(done) {
-        let sensor = new Sensor(plugin, 30, "FOOBAR", {});
+        let sensor = new Sensor(plugin, 30, "FOOBAR", {dashboard:true});
         sensor.unit = "foo";
         sensor.round = 2;
         sensor.id = "foofoo";

@@ -27,6 +27,7 @@ var EnvironmentAPI = require("./publicapis/EnvironmentAPI");
 var DateUtils = require("./../../utils/DateUtils");
 var Icons = require("./../../utils/Icons");
 var ImageUtils = require("./../../utils/ImageUtils");
+var Cleaner = require("./../../utils/Cleaner");
 
 /**
  * This class is an interface for plugins
@@ -83,8 +84,9 @@ class PluginsAPI {
             {FormObject: FormObject},
             {DateUtils: DateUtils},
             {Icons: Icons},
-            {ImageUtils:ImageUtils},
+            {ImageUtils: ImageUtils},
             {Logger: Logger},
+            {Cleaner: Cleaner},
             {cachePath:appConfiguration.cachePath}
         );
 

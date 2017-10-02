@@ -50,6 +50,26 @@ class EnvironmentAPI {
     isNight() {
         return PrivateProperties.oprivate(this).environmentManager.isNight();
     }
+
+    /**
+     * Register for day/night notifications
+     *
+     * @param  {Function} cb            A callback triggered when day/night information is received. Example : `(isNight) => {}`
+     * @param  {string} id            An identifier
+     */
+    registerDayNightNotifications(cb, id = null) {
+        PrivateProperties.oprivate(this).environmentManager.registerDayNightNotifications(cb, id);
+    }
+
+    /**
+     * Unegister for day/night notifications
+     *
+     * @param  {Function} cb             A callback triggered when day/night information is received. Example : `(isNight) => {}`
+     * @param  {string} id            An identifier
+     */
+    unregisterDayNightNotifications(cb, id = null) {
+        PrivateProperties.oprivate(this).environmentManager.unregisterDayNightNotifications(cb, id);
+    }
 }
 
 module.exports = {class:EnvironmentAPI};
