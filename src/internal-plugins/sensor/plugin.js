@@ -341,7 +341,12 @@ function loaded(api) {
                     if (this.configuration.dashboardColor) {
                         tile.colors.colorDefault = this.configuration.dashboardColor;
                     }
-                    this.api.dashboardAPI.registerTile(tile);
+
+                    if (this.configuration.dashboard) {
+                        this.api.dashboardAPI.registerTile(tile);
+                    } else {
+                        this.api.dashboardAPI.unregisterTile("sensor-"+this.id);
+                    }
                     if (cb) cb();
                 } else {
                     this.api.dashboardAPI.unregisterTile("sensor-"+this.id);

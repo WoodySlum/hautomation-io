@@ -93,6 +93,16 @@ You'll need to notify core that you need dependency for the plugin that export c
 	};
 
 
+### Retrieve and set plugin instance
+
+Create a plugin instance and share it : 
+
+	api.registerInstance(new OpenWeather(api));
+
+Access to plugin instance :
+
+	const openWeather = api.getPluginInstance("openweather");
+
 ### Trigger regularly task
 
 You can `cron` some tasks by registering through the `TimeEventAPI`.
@@ -798,6 +808,24 @@ Sample :
 #### Disable alarm
 
 	api.alarmAPI.disableAlarm();
+
+### Environment
+
+#### Get home location coordinates
+
+	api.environmentAPI.getCoordinates();
+
+#### Enable day mode
+
+	api.environmentAPI.setDay();
+
+#### Enable night mode
+
+	api.environmentAPI.setNight();
+
+#### Get mode
+
+	api.environmentAPI.isNight(); // Returns true if it's night, false otherwise
 
 ### Cameras
 

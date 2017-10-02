@@ -41,6 +41,10 @@ function loaded(api) {
             // setTimeout((api) => {
             //     api.messageAPI.sendMessage(["seb"], "Hey !");
             // }, 2000, this.api);
+            //
+            // setTimeout((api) => {
+            //     api.environmentAPI.setDay();
+            // }, 5000, this.api);
         }
 
         /**

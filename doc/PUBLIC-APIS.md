@@ -1182,6 +1182,7 @@ Register for radio events
 **Parameters**
 
 -   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback triggered when radio information is received. Example : `(radioObj) => {}`
+-   `id` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An identifier (optional, default `null`)
 
 ### unregister
 
@@ -1190,6 +1191,7 @@ Unegister an timer element
 **Parameters**
 
 -   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback triggered when radio information is received. Example : `(radioObj) => {}`
+-   `id` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An identifier (optional, default `null`)
 
 ## ScenarioAPI
 

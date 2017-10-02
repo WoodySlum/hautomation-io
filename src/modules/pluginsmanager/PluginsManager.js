@@ -34,13 +34,19 @@ const INTERNAL_PLUGINS = [
     "humidity-sensor",
     "throughput-sensor",
     "pressure-sensor",
+    "wind-sensor",
     "esp-temperature-sensor",
     "message-provider",
     "prowl",
     "camera",
     "sumpple",
     "presence-sensor",
-    "radio-presence-sensor"
+    "radio-presence-sensor",
+    "openweather",
+    "openweather-temperature-sensor",
+    "openweather-humidity-sensor",
+    "openweather-pressure-sensor",
+    "openweather-wind-sensor"
 ];
 
 /**
@@ -71,9 +77,10 @@ class PluginsManager {
      * @param  {CamerasManager} camerasManager The cameras manager
      * @param  {RadioManager} radioManager The radio manager
      * @param  {Object} appConfiguration The global configuration
+     * @param  {EnvironmentManager} environmentManager The environment manager
      * @returns {PluginsManager} The instance
      */
-    constructor(confManager, webServices, servicesManager, dbManager, translateManager, formManager, timeEventService, schedulerService, dashboardManager, eventBus, themeManager, sensorsManager, installationManager, userManager, messageManager, scenarioManager, alarmManager, camerasManager, radioManager, appConfiguration) {
+    constructor(confManager, webServices, servicesManager, dbManager, translateManager, formManager, timeEventService, schedulerService, dashboardManager, eventBus, themeManager, sensorsManager, installationManager, userManager, messageManager, scenarioManager, alarmManager, camerasManager, radioManager, appConfiguration, environmentManager) {
         this.fs = fs;
         this.path = path;
         this.remi = remi;
@@ -97,6 +104,7 @@ class PluginsManager {
         this.camerasManager = camerasManager;
         this.radioManager = radioManager;
         this.appConfiguration = appConfiguration;
+        this.environmentManager = environmentManager;
 
         this.plugins = [];
         try {
@@ -211,7 +219,9 @@ class PluginsManager {
                 this.scenarioManager,
                 this.alarmManager,
                 this.camerasManager,
-                this.radioManager
+                this.radioManager,
+                this.environmentManager,
+                this
             );
 
             initializedPlugins.push(pApi);

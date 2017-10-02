@@ -66,6 +66,8 @@
 -   [text](#text)
 -   [number](#number)
 -   [myParameter](#myparameter)
+-   [apiKey](#apikey)
+-   [OpenWeather](#openweather)
 -   [PresenceSensorForm](#presencesensorform)
     -   [json](#json-4)
 -   [PresenceSensor](#presencesensor)
@@ -1260,6 +1262,16 @@ Callback when a message is received, dispatched to registered elements
 
 ## myParameter
 
+## apiKey
+
+## OpenWeather
+
+This class manage openweather calls plugin
+
+**Parameters**
+
+-   `api`  
+
 ## PresenceSensorForm
 
 **Extends api.exported.SensorForm**
@@ -2254,12 +2266,12 @@ Constructor
 **Parameters**
 
 -   `id` **[number](#number)** An identifier (optional, default `null`)
--   `enabled` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Alarm status (optional, default `false`)
--   `armed` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Alarm armed status (optional, default `false`)
--   `userLocationTrigger` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** User location trigger (optional, default `true`)
--   `sensors` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** List of sensors (optional, default `[]`)
--   `devicesOnEnable` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** Device to trigger when alarm is triggered (optional, default `[]`)
--   `devicesOnDisable` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** Device to trigger when alarm is stopped (optional, default `[]`)
+-   `enabled` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Status (optional, default `false`)
+-   `armed`   (optional, default `false`)
+-   `userLocationTrigger` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** User location auto trigger (optional, default `null`)
+-   `sensors`   (optional, default `[]`)
+-   `devicesOnEnable`   (optional, default `[]`)
+-   `devicesOnDisable`   (optional, default `[]`)
 
 Returns **[AlarmForm](#alarmform)** The instance
 
@@ -2270,12 +2282,12 @@ Constructor
 **Parameters**
 
 -   `id` **[number](#number)** An identifier (optional, default `null`)
--   `enabled` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Status (optional, default `false`)
--   `armed`   (optional, default `false`)
--   `userLocationTrigger` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** User location auto trigger (optional, default `null`)
--   `sensors`   (optional, default `[]`)
--   `devicesOnEnable`   (optional, default `[]`)
--   `devicesOnDisable`   (optional, default `[]`)
+-   `enabled` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Alarm status (optional, default `false`)
+-   `armed` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Alarm armed status (optional, default `false`)
+-   `userLocationTrigger` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** User location trigger (optional, default `true`)
+-   `sensors` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** List of sensors (optional, default `[]`)
+-   `devicesOnEnable` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** Device to trigger when alarm is triggered (optional, default `[]`)
+-   `devicesOnDisable` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** Device to trigger when alarm is stopped (optional, default `[]`)
 
 Returns **[AlarmForm](#alarmform)** The instance
 
@@ -4948,6 +4960,7 @@ Register for radio events
 **Parameters**
 
 -   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback triggered when radio information is received. Example : `(radioObj) => {}`
+-   `id` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An identifier (optional, default `null`)
 
 ### unregister
 
@@ -4956,6 +4969,7 @@ Unegister an timer element
 **Parameters**
 
 -   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback triggered when radio information is received. Example : `(radioObj) => {}`
+-   `id` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An identifier (optional, default `null`)
 
 ## ScenarioAPI
 
@@ -5424,6 +5438,7 @@ Register for radio events
 **Parameters**
 
 -   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback triggered when radio information is received. Example : `(radioObj) => {}`
+-   `id` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An identifier (optional, default `null`)
 
 ### unregister
 
@@ -5432,6 +5447,7 @@ Unegister an timer element
 **Parameters**
 
 -   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback triggered when radio information is received. Example : `(radioObj) => {}`
+-   `id` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An identifier (optional, default `null`)
 
 ### registerRadioEvents
 
