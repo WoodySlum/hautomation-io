@@ -5,6 +5,7 @@ const FormConfiguration = require("./../formconfiguration/FormConfiguration");
 const EnvironmentForm = require("./EnvironmentForm");
 const Tile = require("./../dashboardmanager/Tile");
 const Icons = require("./../../utils/Icons");
+const DayNightScenarioForm = require("./DayNightScenarioForm");
 
 /**
  * This class allows to manage house environment
@@ -20,17 +21,21 @@ class EnvironmentManager {
      * @param  {WebServices} webServices  The web services
      * @param  {DashboardManager} dashboardManager The dashboard manager
      * @param  {TranslateManager} translateManager    The translate manager
+     * @param  {ScenarioManager} scenarioManager    The scenario manager
      * @returns {EnvironmentManager}              The instance
      */
-    constructor(appConfiguration, confManager, formManager, webServices, dashboardManager, translateManager) {
+    constructor(appConfiguration, confManager, formManager, webServices, dashboardManager, translateManager, scenarioManager) {
         this.appConfiguration = appConfiguration;
         this.formConfiguration = new FormConfiguration.class(confManager, formManager, webServices, "environment", false, EnvironmentForm.class);
         this.dashboardManager = dashboardManager;
         this.formManager = formManager;
         this.translateManager = translateManager;
+        this.scenarioManager = scenarioManager;
         this.formConfiguration.data = this.formConfiguration.data?this.formConfiguration.data:{};
         this.registeredElements = {};
         this.registerTile();
+        this.formManager.register(DayNightScenarioForm.class);
+        this.scenarioManager.register(DayNightScenarioForm.class, null, "daynight.scenario.trigger.title");
     }
 
     /**
@@ -89,6 +94,17 @@ class EnvironmentManager {
         // Dispatch callback
         Object.keys(this.registeredElements).forEach((registeredKey) => {
             this.registeredElements[registeredKey](this.isNight());
+        });
+
+        // Dispatch to scenarios
+        this.scenarioManager.getScenarios().forEach((scenario) => {
+            if (scenario.DayNightScenarioForm && scenario.DayNightScenarioForm.day && !this.isNight()) {
+                this.scenarioManager.triggerScenario(scenario);
+            }
+
+            if (scenario.DayNightScenarioForm && scenario.DayNightScenarioForm.night && this.isNight()) {
+                this.scenarioManager.triggerScenario(scenario);
+            }
         });
     }
 

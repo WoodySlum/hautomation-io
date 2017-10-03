@@ -17,9 +17,9 @@ describe("EnvironmentManager", function() {
         sinon.spy(core.confManager, "readFile");
         sinon.spy(core.formManager, "register");
         sinon.spy(core.dashboardManager, "registerTile");
-        const environmentManager = new EnvironmentManager.class({home:{foo:"bar"}}, core.confManager, core.formManager, core.webServices, core.dashboardManager, core.translateManager);
+        const environmentManager = new EnvironmentManager.class({home:{foo:"bar"}}, core.confManager, core.formManager, core.webServices, core.dashboardManager, core.translateManager, core.scenarioManager);
         expect(core.confManager.readFile.calledOnce).to.be.true;
-        expect(core.formManager.register.calledOnce).to.be.true;
+        expect(core.formManager.register.calledTwice).to.be.true;
         expect(core.dashboardManager.registerTile.calledOnce).to.be.true;
         expect(environmentManager.formConfiguration.data).to.be.not.null;
         expect(Object.keys(environmentManager.formConfiguration.data).length).to.be.equal(0);
@@ -30,12 +30,12 @@ describe("EnvironmentManager", function() {
     });
 
     it("getCoordinates should return the coordinates", function() {
-        const environmentManager = new EnvironmentManager.class({home:{foo:"bar"}}, core.confManager, core.formManager, core.webServices, core.dashboardManager, core.translateManager);
+        const environmentManager = new EnvironmentManager.class({home:{foo:"bar"}}, core.confManager, core.formManager, core.webServices, core.dashboardManager, core.translateManager, core.scenarioManager);
         expect(environmentManager.getCoordinates().foo).to.be.equal("bar");
     });
 
     it("setDay should well set day", function() {
-        const environmentManager = new EnvironmentManager.class({home:{foo:"bar"}}, core.confManager, core.formManager, core.webServices, core.dashboardManager, core.translateManager);
+        const environmentManager = new EnvironmentManager.class({home:{foo:"bar"}}, core.confManager, core.formManager, core.webServices, core.dashboardManager, core.translateManager, core.scenarioManager);
         environmentManager.formConfiguration.data.day = false;
         sinon.spy(environmentManager, "registerTile");
         environmentManager.setDay();
@@ -45,7 +45,7 @@ describe("EnvironmentManager", function() {
     });
 
     it("setNight should well set night", function() {
-        const environmentManager = new EnvironmentManager.class({home:{foo:"bar"}}, core.confManager, core.formManager, core.webServices, core.dashboardManager, core.translateManager);
+        const environmentManager = new EnvironmentManager.class({home:{foo:"bar"}}, core.confManager, core.formManager, core.webServices, core.dashboardManager, core.translateManager, core.scenarioManager);
         environmentManager.formConfiguration.data.day = true;
         sinon.spy(environmentManager, "registerTile");
         environmentManager.setNight();
@@ -55,7 +55,7 @@ describe("EnvironmentManager", function() {
     });
 
     it("registerTile should call dashboard manager", function() {
-        const environmentManager = new EnvironmentManager.class({home:{foo:"bar"}}, core.confManager, core.formManager, core.webServices, core.dashboardManager, core.translateManager);
+        const environmentManager = new EnvironmentManager.class({home:{foo:"bar"}}, core.confManager, core.formManager, core.webServices, core.dashboardManager, core.translateManager, core.scenarioManager);
         sinon.spy(core.dashboardManager, "registerTile");
         environmentManager.registerTile();
         expect(core.dashboardManager.registerTile.calledOnce).to.be.true;

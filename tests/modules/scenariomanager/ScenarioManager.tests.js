@@ -294,6 +294,38 @@ describe("ScenarioManager", function() {
         core.deviceManager.switchDevice.restore();
     });
 
+    // Day / night trigger
+
+    it("setDay should trigger a scenario", function() {
+        const scenarioManager = core.scenarioManager;
+        scenarioManager.formConfiguration.data = [{id:1503304879528,name:"Test multi radio",UserScenarioForm:{mode:3},enabled:true,icon:{icon:"e806"},DayNightScenarioForm:{day:true},DevicesListScenarioForm:{devices:[{identifier:1981,status:"on"}]}}];
+        sinon.spy(core.deviceManager, "switchDevice");
+        core.environmentManager.formConfiguration.data = {id:1507041316686,day:false};
+        core.environmentManager.setDay();
+        expect(core.deviceManager.switchDevice.calledOnce).to.be.true;
+        core.deviceManager.switchDevice.restore();
+    });
+
+    it("setNight should trigger a scenario", function() {
+        const scenarioManager = core.scenarioManager;
+        scenarioManager.formConfiguration.data = [{id:1503304879528,name:"Test multi radio",UserScenarioForm:{mode:3},enabled:true,icon:{icon:"e806"},DayNightScenarioForm:{night:true},DevicesListScenarioForm:{devices:[{identifier:1981,status:"on"}]}}];
+        sinon.spy(core.deviceManager, "switchDevice");
+        core.environmentManager.formConfiguration.data = {id:1507041316686,day:true};
+        core.environmentManager.setNight();
+        expect(core.deviceManager.switchDevice.calledOnce).to.be.true;
+        core.deviceManager.switchDevice.restore();
+    });
+
+    it("setNight should NOT trigger a scenario because triggers are not configured", function() {
+        const scenarioManager = core.scenarioManager;
+        scenarioManager.formConfiguration.data = [{id:1503304879528,name:"Test multi radio",UserScenarioForm:{mode:3},enabled:true,icon:{icon:"e806"},DayNightScenarioForm:{night:false, day:false},DevicesListScenarioForm:{devices:[{identifier:1981,status:"on"}]}}];
+        sinon.spy(core.deviceManager, "switchDevice");
+        core.environmentManager.formConfiguration.data = [{id:1507041316686,day:true}];
+        core.environmentManager.setNight();
+        expect(core.deviceManager.switchDevice.calledOnce).to.be.false;
+        core.deviceManager.switchDevice.restore();
+    });
+
     afterEach(() => {
         core = null;
         confManager = null;
