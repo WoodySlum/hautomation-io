@@ -28,6 +28,11 @@ describe("DateUtils", function() {
         expect(DateUtils.class.dateToTimestamp("2017-08-11 13:31:18")).to.be.equal(1502458278);
     });
 
+    // secondsElapsedSinceMidnight(timestamp)
+    it("secondsElapsedSinceMidnight should return good number of seconds", function() {
+        expect(DateUtils.class.secondsElapsedSinceMidnight(1507022887)).to.be.equal(34108);
+    });
+
     after(() => {
 
     });
