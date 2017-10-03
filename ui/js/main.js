@@ -1605,7 +1605,7 @@ $(document).ready(function() {
                     })
                 }).done(function(msg) {
                     var response = msg;
-                    if (response.success) {
+                    if (response.success && typeof(response.success) !== "boolean") {
                         toastr.success(response.success);
                     }
                     if (response.info) {

@@ -1,5 +1,5 @@
 "use strict";
-// const Logger = require("./../../logger/Logger");
+const Logger = require("./../../logger/Logger");
 const DeviceForm = require("./DeviceForm");
 const FormConfiguration = require("./../formconfiguration/FormConfiguration");
 const WebServices = require("./../../services/webservices/WebServices");
@@ -31,15 +31,17 @@ class DeviceManager {
      * @param  {DashboardManager} dashboardManager The dashboard manager
      * @param  {ScenarioManager} scenarioManager    The scenario manager
      * @param  {TranslateManager} translateManager    The translate manager
+     * @param  {EnvironmentManager} environmentManager    The environment manager
      * @returns {DeviceManager}              The instance
      */
-    constructor(confManager, formManager, webServices, radioManager, dashboardManager, scenarioManager, translateManager) {
+    constructor(confManager, formManager, webServices, radioManager, dashboardManager, scenarioManager, translateManager, environmentManager) {
         this.formConfiguration = new FormConfiguration.class(confManager, formManager, webServices, "devices", true, DeviceForm.class);
         this.radioManager = radioManager;
         this.dashboardManager = dashboardManager;
         this.scenarioManager = scenarioManager;
         this.formManager = formManager;
         this.translateManager = translateManager;
+        this.environmentManager = environmentManager;
 
         webServices.registerAPI(this, WebServices.POST, ":/device/set/[id]/[status*]/", Authentication.AUTH_USAGE_LEVEL);
         webServices.registerAPI(this, WebServices.POST, ":" + ROUTE_ALL_ON, Authentication.AUTH_USAGE_LEVEL);
@@ -138,19 +140,28 @@ class DeviceManager {
         }
 
         this.formConfiguration.getDataCopy().forEach((device) => {
-            if (parseInt(device.id) === parseInt(id)) {
-                let newStatus = null;
-                device.radio.forEach((radio) => {
-                    const radioObject = this.radioManager.switchDevice(radio.module, radio.protocol, radio.deviceId, radio.switchId, status, radio.frequency, device.status);
-                    if (radioObject.status) {
-                        newStatus = radioObject.status;
-                    }
-                });
 
-                if (newStatus) {
-                    device.status = newStatus;
-                    this.formConfiguration.saveConfig(device);
-                    this.registerDeviceTile(device); // Save to dashboard !
+            if (parseInt(device.id) === parseInt(id)) {
+                // Check for day and night mode
+                if (!device.worksOnlyOnDayNight
+                    || (device.worksOnlyOnDayNight === 1)
+                    || (device.worksOnlyOnDayNight === 2 && !this.environmentManager.isNight())
+                    || (device.worksOnlyOnDayNight === 3 && this.environmentManager.isNight())) {
+                    let newStatus = null;
+                    device.radio.forEach((radio) => {
+                        const radioObject = this.radioManager.switchDevice(radio.module, radio.protocol, radio.deviceId, radio.switchId, status, radio.frequency, device.status);
+                        if (radioObject.status) {
+                            newStatus = radioObject.status;
+                        }
+                    });
+
+                    if (newStatus) {
+                        device.status = newStatus;
+                        this.formConfiguration.saveConfig(device);
+                        this.registerDeviceTile(device); // Save to dashboard !
+                    }
+                } else {
+                    Logger.warn("Turning device " + device.id + " is not authorized due to day / night mode. Device configuration (" + device.worksOnlyOnDayNight + "), Current mode is night (" + this.environmentManager.isNight() + ")");
                 }
             }
         });
