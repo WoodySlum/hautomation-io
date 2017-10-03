@@ -120,10 +120,11 @@ describe("DeviceManager", function() {
 
     it("switchDevice should NOT call twice send radio when night and set to day", function() {
         devices[0].worksOnlyOnDayNight = 2;
+        devices[0].status = -1;
         sinon.spy(radioManager, "switchDevice");
         sinon.stub(core.environmentManager, "isNight").returns(true);
         deviceManager.switchDevice(1981, "On");
-        expect(radioManager.switchDevice.calledTwice).to.be.false;
+        expect(radioManager.switchDevice.callCount > 0).to.be.false;
         radioManager.switchDevice.restore();
         core.environmentManager.isNight.restore();
     });
@@ -140,10 +141,22 @@ describe("DeviceManager", function() {
 
     it("switchDevice should NOT call twice send radio when day and set to night", function() {
         devices[0].worksOnlyOnDayNight = 3;
+        devices[0].status = -1;
         sinon.spy(radioManager, "switchDevice");
         sinon.stub(core.environmentManager, "isNight").returns(false);
         deviceManager.switchDevice(1981, "On");
-        expect(radioManager.switchDevice.calledTwice).to.be.false;
+        expect(radioManager.switchDevice.callCount > 0).to.be.false;
+        radioManager.switchDevice.restore();
+        core.environmentManager.isNight.restore();
+    });
+
+    it("switchDevice should call twice send radio because status is on, even if night mode is enabled", function() {
+        devices[0].worksOnlyOnDayNight = 3;
+        devices[0].status = 1;
+        sinon.spy(radioManager, "switchDevice");
+        sinon.stub(core.environmentManager, "isNight").returns(false);
+        deviceManager.switchDevice(1981, "Off");
+        expect(radioManager.switchDevice.calledTwice).to.be.true;
         radioManager.switchDevice.restore();
         core.environmentManager.isNight.restore();
     });

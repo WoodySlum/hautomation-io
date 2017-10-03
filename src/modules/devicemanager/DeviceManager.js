@@ -146,7 +146,8 @@ class DeviceManager {
                 if (!device.worksOnlyOnDayNight
                     || (device.worksOnlyOnDayNight === 1)
                     || (device.worksOnlyOnDayNight === 2 && !this.environmentManager.isNight())
-                    || (device.worksOnlyOnDayNight === 3 && this.environmentManager.isNight())) {
+                    || (device.worksOnlyOnDayNight === 3 && this.environmentManager.isNight())
+                    || device.status === Radio.STATUS_ON) {
                     let newStatus = null;
                     device.radio.forEach((radio) => {
                         const radioObject = this.radioManager.switchDevice(radio.module, radio.protocol, radio.deviceId, radio.switchId, status, radio.frequency, device.status);
@@ -161,7 +162,7 @@ class DeviceManager {
                         this.registerDeviceTile(device); // Save to dashboard !
                     }
                 } else {
-                    Logger.warn("Turning device " + device.id + " is not authorized due to day / night mode. Device configuration (" + device.worksOnlyOnDayNight + "), Current mode is night (" + this.environmentManager.isNight() + ")");
+                    Logger.warn("Turning device " + device.id + " is not authorized due to day / night mode. Device configuration (" + device.worksOnlyOnDayNight + "), Current mode is night (" + this.environmentManager.isNight() + "), Status (" + device.status + "), Compared status (" + Radio.STATUS_ON + ")");
                 }
             }
         });
