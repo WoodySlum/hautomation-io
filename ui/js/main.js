@@ -5045,6 +5045,12 @@ $(document).ready(function() {
                                 data: data.formData
                             })
                         }).done(function(data) {
+                            if (data.id) {
+                                console.log("NOT NEWWWW !");
+                            } else {
+                                console.log("NEWWWW !");
+                            }
+                            
                             $("#manageSensorsItem").click();
                             $('#sensorModal').modal('hide');
                         }).fail(function(msg) {

@@ -31,7 +31,12 @@
       "./src/internal-plugins/**/*.js",
       "./node_modules/threads/lib/worker.node/slave.js",
       "./**/*.json",
-      "./ui/**/*"
+      "./ui/**/*",
+      "./src/**/*.c",
+      "./src/**/*.cpp",
+      "./src/**/*.h",
+      "./src/**/lib/",
+      "./src/**/global_lib/"
     ]
   },
   "repository": {
@@ -55,7 +60,7 @@
     "mocha": "^3.5.0",
     "mocha-junit-reporter": "^1.13",
     "nodemon": "^1.11.0",
-    "pkg": "^3.0",
+    "pkg": "^4.0",
     "sinon": "^2.4.1"
   },
   "dependencies": {

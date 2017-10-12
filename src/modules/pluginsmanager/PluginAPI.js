@@ -23,6 +23,7 @@ var AlarmAPI = require("./publicapis/AlarmAPI");
 var CameraAPI = require("./publicapis/CameraAPI");
 var RadioAPI = require("./publicapis/RadioAPI");
 var EnvironmentAPI = require("./publicapis/EnvironmentAPI");
+var IotAPI = require("./publicapis/IotAPI");
 
 var DateUtils = require("./../../utils/DateUtils");
 var Icons = require("./../../utils/Icons");
@@ -60,9 +61,10 @@ class PluginsAPI {
     //  * @param  {RadioManager} radioManager The radio manager
     //  * @param  {EnvironmentManager} environmentManager The environment manager
     //  * @param  {PluginsManager} pluginsManager The plugins manager
+    //  * @param  {IotManager} iotManager The IoT manager
     //  * @returns {PluginAPI}                  Insntance
     //  */
-    constructor(previousVersion, p, webServices, appConfiguration, servicesManager, dbManager, translateManager, formManager, confManager, timeEventService, schedulerService, dashboardManager, themeManager, sensorsManager, installationManager, userManager, messageManager, scenarioManager, alarmManager, camerasManager, radioManager, environmentManager, pluginsManager) {
+    constructor(previousVersion, p, webServices, appConfiguration, servicesManager, dbManager, translateManager, formManager, confManager, timeEventService, schedulerService, dashboardManager, themeManager, sensorsManager, installationManager, userManager, messageManager, scenarioManager, alarmManager, camerasManager, radioManager, environmentManager, pluginsManager, iotManager) {
         PrivateProperties.createPrivateState(this);
         this.previousVersion = previousVersion;
         this.p = p;
@@ -109,6 +111,7 @@ class PluginsAPI {
         this.cameraAPI = new CameraAPI.class(formManager, this, camerasManager);
         this.radioAPI = new RadioAPI.class(radioManager);
         this.environmentAPI = new EnvironmentAPI.class(environmentManager);
+        this.iotAPI = new IotAPI.class(iotManager);
         PrivateProperties.oprivate(this).pluginsManager = pluginsManager;
     }
 

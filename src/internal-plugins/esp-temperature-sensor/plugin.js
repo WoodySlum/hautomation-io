@@ -23,7 +23,33 @@ function loaded(api) {
         }
     }
 
+
+    // test
+    class Toto extends api.exported.FormObject.class {
+        constructor(id = null, test = null) {
+            super(id);
+
+            /**
+             * @Property("test");
+             * @Title("super test !");
+             * @Type("string");
+             */
+            this.test = test;
+        }
+
+        /**
+         * Convert JSON data to object
+         *
+         * @param  {Object} data Some data
+         * @returns {EspTemperatureSensorForm}      An instance
+         */
+        json(data) {
+
+        }
+    }
+
     api.sensorAPI.registerForm(EspTemperatureSensorForm);
+    api.iotAPI.registerApp("app", "test", "test", 1, "espressif8266", "nodemcuv2", "arduino", ["esp8266"], Toto);
 
     /**
      * This class is overloaded by sensors
@@ -66,5 +92,5 @@ module.exports.attributes = {
     version: "0.0.0",
     category: "sensor",
     description: "ESP temperature sensor",
-    dependencies:["temperature-sensor"]
+    dependencies:["temperature-sensor", "esp8266"]
 };

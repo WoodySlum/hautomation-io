@@ -37,15 +37,17 @@ class SensorsManager {
      * @param  {ConfManager} confManager    The configuration manager
      * @param  {TranslateManager} translateManager    The translate manager
      * @param  {ThemeManager} themeManager    The theme manager
+     * @param  {IotManager} iotManager    The iot manager
      * @returns {SensorsManager}                       The instance
      */
-    constructor(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager) {
+    constructor(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager, iotManager) {
         this.pluginsManager = pluginsManager;
         this.webServices = webServices;
         this.formManager = formManager;
         this.confManager = confManager;
         this.translateManager = translateManager;
         this.themeManager = themeManager;
+        this.iotManager = iotManager;
         this.sensors = [];
         this.delegates = {};
 
@@ -250,10 +252,13 @@ class SensorsManager {
                 const sensors = [];
                 self.pluginsManager.getPluginsByCategory("sensor", false).forEach((sensor) => {
                     if (sensor.sensorAPI.form) {
+                        self.formManager.addAdditionalFields(sensor.sensorAPI.form, null, self.iotManager.getFormsForApp(sensor.iotAPI.iotApp));
+                        const form = self.formManager.getForm(sensor.sensorAPI.form);
                         sensors.push({
                             identifier: sensor.identifier,
                             description: sensor.description,
-                            form:self.formManager.getForm(sensor.sensorAPI.form)
+                            iotApp: sensor.iotAPI.iotApp,
+                            form: form
                         });
                     }
                 });

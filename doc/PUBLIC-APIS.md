@@ -16,9 +16,10 @@
     -   [register](#register)
     -   [getConfiguration](#getconfiguration)
     -   [getForm](#getform)
+    -   [setUpdateCb](#setupdatecb)
 -   [FormConfiguration](#formconfiguration)
     -   [constructor](#constructor)
-    -   [setUpdateCb](#setupdatecb)
+    -   [setUpdateCb](#setupdatecb-1)
     -   [addAdditionalFields](#addadditionalfields)
     -   [loadConfig](#loadconfig)
     -   [saveConfig](#saveconfig)
@@ -88,9 +89,17 @@
     -   [toSchema](#toschema)
 -   [Convert](#convert)
     -   [convertProperties](#convertproperties)
+-   [EnvironmentAPI](#environmentapi)
+    -   [getCoordinates](#getcoordinates)
+    -   [setDay](#setday)
+    -   [setNight](#setnight)
+    -   [isNight](#isnight)
+    -   [registerDayNightNotifications](#registerdaynightnotifications)
+    -   [unregisterDayNightNotifications](#unregisterdaynightnotifications)
 -   [InstallerAPI](#installerapi)
     -   [register](#register-2)
     -   [executeCommand](#executecommand)
+-   [IotAPI](#iotapi)
 -   [MessageAPI](#messageapi)
     -   [sendMessage](#sendmessage)
     -   [register](#register-3)
@@ -132,6 +141,7 @@
     -   [dateToTimestamp](#datetotimestamp)
     -   [roundedTimestamp](#roundedtimestamp)
     -   [dateFormatted](#dateformatted)
+    -   [secondsElapsedSinceMidnight](#secondselapsedsincemidnight)
 -   [SensorAPI](#sensorapi)
     -   [registerForm](#registerform-2)
     -   [registerClass](#registerclass-1)
@@ -355,6 +365,14 @@ Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refer
 Return the formatted form object
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Formatted form object
+
+### setUpdateCb
+
+Set the update callback. Called back when delete or save action is done.
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback with data as parameter, e.g. `cb(data) => {}`
 
 ## FormConfiguration
 
@@ -1079,6 +1097,52 @@ Convert key / values object into a single one. Example `[{key:"Foo", value:"Bar"
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An output object
 
+## EnvironmentAPI
+
+Public API for home environement
+
+**Parameters**
+
+-   `environmentManager`  
+
+### getCoordinates
+
+Return the home's coordinates
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The coordinates
+
+### setDay
+
+Set day
+
+### setNight
+
+Set night
+
+### isNight
+
+Is it night ?
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` if night mode, otherwise `false`
+
+### registerDayNightNotifications
+
+Register for day/night notifications
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback triggered when day/night information is received. Example : `(isNight) => {}`
+-   `id` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An identifier (optional, default `null`)
+
+### unregisterDayNightNotifications
+
+Unegister for day/night notifications
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback triggered when day/night information is received. Example : `(isNight) => {}`
+-   `id` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An identifier (optional, default `null`)
+
 ## InstallerAPI
 
 Public API for installation of external apps
@@ -1111,6 +1175,14 @@ Execute a command. Can throw an error if wait is `true`
 -   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback (only if wait parameter is false) : `(error, stdout, stderr) => {}` (optional, default `null`)
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An object result if wait is `true`
+
+## IotAPI
+
+Public API for iot
+
+**Parameters**
+
+-   `iotManager`  
 
 ## MessageAPI
 
@@ -1437,6 +1509,16 @@ Format the current date with parameter
 -   `timestamp` **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** A timestamp. If not provided, use current timestamp. (optional, default `null`)
 
 Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The formatted date
+
+### secondsElapsedSinceMidnight
+
+Return the number of seconds elapsed since midnight in UTC format
+
+**Parameters**
+
+-   `timestamp` **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** A timestamp in seconds
+
+Returns **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** A number of seconds elapsed
 
 ## SensorAPI
 
