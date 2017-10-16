@@ -106,6 +106,26 @@ class SensorAPI {
     getValue(id, cb, duration = null) {
         PrivateProperties.oprivate(this).sensorsManager.getValue(id, cb, duration);
     }
+
+    /**
+     * Get sensor by identifier
+     *
+     * @param  {string} identifier An identiifer
+     * @returns {Sensor}            A sensor object
+     */
+    getSensor(identifier) {
+        return PrivateProperties.oprivate(this).sensorsManager.getSensor(identifier);
+    }
+
+    /**
+     * Flash a sensor
+     *
+     * @param  {number}   id The sensor's identifier
+     * @param  {Function} cb A callback `(error, details) => {}`
+     */
+    flashSensor(id, cb) {
+        PrivateProperties.oprivate(this).sensorsManager.flashSensor(id, cb);
+    }
 }
 
 module.exports = {class:SensorAPI};

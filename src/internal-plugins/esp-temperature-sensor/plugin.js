@@ -49,7 +49,7 @@ function loaded(api) {
     }
 
     api.sensorAPI.registerForm(EspTemperatureSensorForm);
-    api.iotAPI.registerApp("app", "test", "test", 1, "espressif8266", "nodemcuv2", "arduino", ["esp8266"], Toto);
+    api.iotAPI.registerApp("app", "test", "test", 1, "espressif8266_stage", "nodemcuv2", "arduino", ["esp8266"], Toto);
 
     /**
      * This class is overloaded by sensors
@@ -66,20 +66,6 @@ function loaded(api) {
          */
         constructor(api, id, configuration) {
             super(api, id, configuration);
-            this.api.webAPI.register(this, this.api.webAPI.constants().POST, ":/esp/temperature/set/" + this.id + "/[value]/[vcc*]/", this.api.webAPI.Authentication().AUTH_NO_LEVEL);
-        }
-
-        /**
-         * Process API callback
-         *
-         * @param  {[type]} apiRequest An APIRequest
-         * @returns {Promise}  A promise with an APIResponse object
-         */
-        processAPI(apiRequest) {
-            return new Promise((resolve) => {
-                this.setValue(apiRequest.data.value, apiRequest.data.vcc?parseFloat(apiRequest.data.vcc):null);
-                resolve(this.api.webAPI.APIResponse(true, {success:true}));
-            });
         }
     }
 

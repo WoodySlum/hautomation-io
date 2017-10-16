@@ -1503,3 +1503,66 @@ a:hover {
 #configTabs {
 	font-size:20px;
 }
+
+#sensorFlash span {
+    color: #ABB0AF;
+    font-size: 170px;
+}
+
+#sensorFlashRunning {
+    height: 300px;
+    width: 100%;
+    font-size: 25px;
+}
+
+.sensorFlashRunning-left {
+  animation: sensorFlashRunningAnim 4s linear infinite;
+  position: fixed;
+  left: 20%;
+  top: 55px;
+  color: #ABB0AF;
+}
+
+.sensorFlashRunning-right {
+  position: fixed;
+  left: 60%;
+  top: 55px;
+  color: #99BD47;
+}
+
+@keyframes sensorFlashRunningAnim {
+  0% {
+    left: 15%;
+    transform: rotate(-30deg);
+  }
+  30% {
+    left: 45%;
+    transform: rotate(30deg);
+  }
+  70% {
+    left: 15%;
+  }
+  100% {
+    left: 15%;
+  }
+}
+
+#sensorFlashFinishIcon span {
+    font-size: 75px;
+}
+
+.sensorFlashFinishIconError {
+    color: #bdc2c1;
+}
+
+.sensorFlashFinishIconSuccess {
+    color: #99BD47;
+}
+
+#sensorFlashIndicatorText {
+    font-size: 25px;
+}
+
+#sensorFlashFinishText {
+    font-size: 25px;
+}

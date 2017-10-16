@@ -4906,7 +4906,8 @@ $(document).ready(function() {
                 $('#sensorModal').modal('show');
                 $('#sensorSelectForm').empty();
                 $('#sensorOtaFlashBtn').empty();
-
+                $('#sensorFlash').hide();
+                $('#saveSensorForm').show();
 
                 var sensor = null;
                 for (var i = 0; i < sensors.length; i++) {
@@ -4914,6 +4915,18 @@ $(document).ready(function() {
                         sensor = sensors[i];
                         break;
                     }
+                }
+
+                if (sensor && sensor.iotApp) {
+                    $('#flashSensorBtn').show()
+                    $('#flashSensorBtn').unbind();
+                    $('#flashSensorBtn').click(function() {
+                        $('#flashSensorBtn').hide();
+                        $("#deleteSensorForm").hide();
+                        flashSensorSteps(sensor.identifier);
+                    });
+                } else {
+                    $('#flashSensorBtn').hide();
                 }
 
                 $("#deleteSensorForm").unbind();
@@ -5000,6 +5013,62 @@ $(document).ready(function() {
         });
     });
 
+    flashSensorSteps = function(sensorIdentifier) {
+        $('#sensorForm').empty();
+        $('#sensorSelectForm').empty();
+        $('#sensorFlash').show();
+        $('#saveSensorForm').hide();
+        $("#iotFlash").unbind();
+        $("#sensorFlashIndicator").show();
+        $("#sensorFlashRunning").hide();
+        $("#sensorFlashFinish").hide();
+        $("#iotFlash").click(function() {
+            $("#sensorFlashIndicator").hide();
+            $("#sensorFlashRunning").show();
+            $("#sensorFlashFinish").hide();
+            document.getElementById('sensorFlashRunning').innerHTML = generateAnimation('sensorFlashRunning-left', 'sensorFlashRunning-right', 'F0D0', 'F2DB') + '<br /><br /><br /><br /><div class="center">' + t('flash.flashing') + "</div>";
+            $.ajax({
+                type: "POST",
+                url: vUrl + "sensor/flash/" + sensorIdentifier + "/",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    u: username,
+                    p: password
+                })
+            }).done(function(result) {
+                $("#sensorFlashRunning").hide();
+                $("#sensorFlashFinish").show();
+                document.getElementById("sensorFlashFinishIcon").innerHTML = '<span class="glyphicon glyphicon-ok-sign sensorFlashFinishIconSuccess" aria-hidden="true"></span>';
+                document.getElementById("sensorFlashFinishText").innerHTML = t('sensor.flash.success');
+                document.getElementById("sensorFlashFinishDetails").innerHTML = '<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#flashDetails" aria-expanded="true" aria-controls="flashDetails">' +
+                t('js.details') +
+                '</a>' +
+                '</h4>' +
+                '</div>' +
+                '<div id="flashDetails" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">' +
+                '<div class="panel-body">' +
+                '<code>' + nl2br(result.details) + '</code>' +
+                '</div>' +
+                '</div>';
+            }).fail(function(msg) {
+                $("#sensorFlashRunning").hide();
+                $("#sensorFlashFinish").show();
+                document.getElementById("sensorFlashFinishIcon").innerHTML = '<span class="glyphicon glyphicon-remove-sign sensorFlashFinishIconError" aria-hidden="true"></span>';
+                document.getElementById("sensorFlashFinishText").innerHTML = t('sensor.flash.error');
+                document.getElementById("sensorFlashFinishDetails").innerHTML = '<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#flashDetails" aria-expanded="true" aria-controls="flashDetails">' +
+                t('js.details') +
+                '</a>' +
+                '</h4>' +
+                '</div>' +
+                '<div id="flashDetails" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">' +
+                '<div class="panel-body">' +
+                '<code>' + nl2br(msg.responseJSON.data.details) + '</code>' +
+                '</div>' +
+                '</div>';
+            });
+        });
+    }
+
     $("#addSensors").click(function() {
         $("#sensorsLoader").show();
         showLoader();
@@ -5029,6 +5098,9 @@ $(document).ready(function() {
                 $('#sensorSelectForm').append(formContent);
                 $('#sensorModal').modal('show');
                 $("#sensorSelector").unbind();
+                $('#sensorFlash').hide();
+                $('#saveSensorForm').show();
+                $('#flashSensorBtn').hide();
                 $('#sensorSelector').change(function() {
                     var key = $('#sensorSelector').val();
                     if (key == '') return;
@@ -5045,14 +5117,12 @@ $(document).ready(function() {
                                 data: data.formData
                             })
                         }).done(function(data) {
-                            if (data.id) {
-                                console.log("NOT NEWWWW !");
+                            if (data.id && sensorAvailableData.iotApp) {
+                                flashSensorSteps(data.id);
                             } else {
-                                console.log("NEWWWW !");
+                                $("#manageSensorsItem").click();
+                                $('#sensorModal').modal('hide');
                             }
-                            
-                            $("#manageSensorsItem").click();
-                            $('#sensorModal').modal('hide');
                         }).fail(function(msg) {
                             $('#sensorModal').modal('hide');
                             setError(msg);
@@ -5073,7 +5143,7 @@ $(document).ready(function() {
                         $("#react-btn-submit-sensor").click();
                     });
 
-                    var plugin = jsonData[key];
+                    /*var plugin = jsonData[key];
                     consolelog(plugin);
                     $("#sensorForm").empty();
                     var pluginIdentifier = plugin.identifier;
@@ -5111,7 +5181,7 @@ $(document).ready(function() {
                                 });
                             }
                         }
-                    });
+                    });*/
                 });
             }
             hideLoader();

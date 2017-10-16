@@ -326,11 +326,11 @@ class WebServices extends Service.class {
 
         if (method === "POST" && req.headers[CONTENT_TYPE] === HEADER_APPLICATION_JSON && req.body) {
             methodConstant = POST;
+            params = Object.assign(params, req.body);
 
             // If application/json header
             if (req.body.data) {
                 data = req.body[DATA_FIELD];
-                params = Object.assign(params, req.body);
                 delete params[DATA_FIELD];
             } else {
                 Logger.warn("Empty body content");
@@ -472,7 +472,7 @@ class WebServices extends Service.class {
                 res.end(apiResponse.response, "binary");
             }
         } else {
-            res.status(API_ERROR_HTTP_CODE).json({"code":apiResponse.errorCode,"message":apiResponse.errorMessage});
+            res.status(API_ERROR_HTTP_CODE).json({"code":apiResponse.errorCode,"message":apiResponse.errorMessage, "data":apiResponse.response});
         }
     }
 }

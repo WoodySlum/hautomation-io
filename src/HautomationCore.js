@@ -132,7 +132,7 @@ class HautomationCore {
         // Device manager module
         this.deviceManager = new DeviceManager.class(this.confManager, this.formManager, this.webServices, this.radioManager, this.dashboardManager, this.scenarioManager, this.translateManager, this.environmentManager);
         // IoT manager
-        this.iotManager = new IotManager.class(AppConfiguration, this.webServices, this.installationManager, this.formManager);
+        this.iotManager = new IotManager.class(AppConfiguration, this.webServices, this.installationManager, this.formManager, this.environmentManager);
         // Sensors manager module
         this.sensorsManager = new SensorsManager.class(this.pluginsManager, this.eventBus, this.webServices, this.formManager, this.confManager, this.translateManager, this.themeManager, this.iotManager);
         // Alarm module

@@ -7,33 +7,49 @@
 function loaded(api) {
     api.init();
 
-    // test
-    class Titi extends api.exported.FormObject.class {
-        constructor(id = null, demo = null) {
-            super(id);
-
-            /**
-             * @Property("demo");
-             * @Title("super demo !");
-             * @Type("string");
-             */
-            this.demo = demo;
+    /**
+     * Manage sensors
+     * @class
+     */
+    class EspSensors {
+        /**
+         * ESP sensors class
+         *
+         * @param  {PluginAPI} api                                                           A plugin api
+         * @returns {EspSensors}                                                       The instance
+         */
+        constructor(api) {
+            this.api = api;
+            this.api.iotAPI.registerLib("app", "esp8266");
+            this.api.webAPI.register(this, this.api.webAPI.constants().POST, ":/esp/sensor/set/[id]/[value]/[vcc*]/", this.api.webAPI.Authentication().AUTH_NO_LEVEL);
         }
 
         /**
-         * Convert JSON data to object
+         * Process API callback
          *
-         * @param  {Object} data Some data
-         * @returns {EspTemperatureSensorForm}      An instance
+         * @param  {[type]} apiRequest An APIRequest
+         * @returns {Promise}  A promise with an APIResponse object
          */
-        json(data) {
-
+        processAPI(apiRequest) {
+            return new Promise((resolve, reject) => {
+                console.log("-------------");
+                console.log(apiRequest.data);
+                if (apiRequest.data.id && apiRequest.data.value) {
+                    const sensor = this.api.sensorAPI.getSensor(parseInt(apiRequest.data.id));
+                    if (sensor) {
+                        sensor.setValue(parseFloat(apiRequest.data.value), apiRequest.data.vcc?parseFloat(apiRequest.data.vcc):null);
+                        resolve(this.api.webAPI.APIResponse(true, {success:true}));
+                    } else {
+                        reject(this.api.webAPI.APIResponse(false, {}, 1080, "No sensor found"));
+                    }
+                } else {
+                    reject(this.api.webAPI.APIResponse(false, {}, 1081, "Invalid parameters"));
+                }
+            });
         }
     }
 
-    api.iotAPI.registerLib("app", "esp8266", Titi);
-
-
+    api.registerInstance(new EspSensors(api));
 }
 
 module.exports.attributes = {
@@ -41,5 +57,5 @@ module.exports.attributes = {
     name: "esp8266",
     version: "0.0.0",
     category: "iot",
-    description: "ESP8266 base libraries"
+    description: "ESP8266 base libraries and sensors manager"
 };

@@ -6,6 +6,8 @@ const DateUtils = require("./../../utils/DateUtils");
 const SRC_FOLDER = "src";
 const LIB_FOLDER = "lib";
 const GLOBAL_LIB_FOLDER = "global_lib";
+const MAIN_FILE = "main.cpp";
+const CONFIGURATION_PLACEHOLDER = "%config%";
 
 /**
  * This class allows to manage iot apps
@@ -19,13 +21,15 @@ class IotManager {
      * @param  {WebServices} webServices  The web services
      * @param  {InstallationManager} installationManager  The installation manager
      * @param  {FormManager} formManager  The form manager
+     * @param  {EnvironmentManager} environmentManager  The environment manager
      * @returns {IotManager}              The instance
      */
-    constructor(appConfiguration, webServices, installationManager, formManager) {
+    constructor(appConfiguration, webServices, installationManager, formManager, environmentManager) {
         this.webServices = webServices;
         this.appConfiguration = appConfiguration;
         this.installationManager = installationManager;
         this.formManager = formManager;
+        this.environmentManager = environmentManager;
         this.iotApps = {};
         this.iotLibs = {};
     }
@@ -86,8 +90,8 @@ class IotManager {
             throw Error("'" + GLOBAL_LIB_FOLDER + "' folder does not exists in " + path);
         }
 
-        if (!fs.existsSync(path + "/" + SRC_FOLDER + "/main.cpp") && !fs.existsSync(path + "/" + SRC_FOLDER + "/main.c")) {
-            throw Error("'" + path + "/" + SRC_FOLDER + "/' folder must contain a main.cpp/main.c file");
+        if (!fs.existsSync(path + "/" + SRC_FOLDER + "/" + MAIN_FILE)) {
+            throw Error("'" + path + "/" + SRC_FOLDER + "/' folder must contain a " + MAIN_FILE + " file");
         }
 
         dependencies.forEach((dependency) => {
@@ -114,10 +118,10 @@ class IotManager {
         }
 
         Logger.info("Registered IoT app " + name);
-        /*this.build(id, false, (err, res) => {
-            Logger.err(err);
+        this.build(id, true, {}, (err, res) => {
+            if (err) Logger.err(err.message);
             Logger.info(res);
-        });*/
+        });
     }
 
     build(id, flash = false, config = null, cb) {
@@ -134,6 +138,28 @@ class IotManager {
         fs.copySync(this.iotApps[id].src, tmpDir + SRC_FOLDER);
         fs.copySync(this.iotApps[id].lib, tmpDir + LIB_FOLDER);
         fs.copySync(this.iotApps[id].globalLib, tmpDir + GLOBAL_LIB_FOLDER);
+
+        // Configuration injection
+        const baseConfiguration = {
+                wifi:this.environmentManager.getWifiInfos(),
+                ip:this.environmentManager.getLocalIp(),
+                port:this.environmentManager.getLocalPort()
+        };
+        if (!config) {
+            config = {};
+        }
+
+        const jsonConfiguration = JSON.stringify(Object.assign(baseConfiguration, config)).replace(/\"/g, '\\"');
+        try {
+            const mainFilePath = tmpDir + SRC_FOLDER + "/" + MAIN_FILE;
+            let mainContent = fs.readFileSync(mainFilePath, {encoding:"utf-8"});
+            if (mainContent) {
+                mainContent = mainContent.replace(CONFIGURATION_PLACEHOLDER, jsonConfiguration);
+                fs.writeFileSync(mainFilePath, mainContent);
+            }
+        } catch(e) {
+            Logger.err(e.message);
+        }
 
         this.writeDescriptor(tmpDir, id);
 
@@ -160,7 +186,8 @@ class IotManager {
         iniContent += "framework = " + this.iotApps[id].framework + "\n";
         iniContent += "\n";
         iniContent += "[platformio]\n";
-        iniContent += "lib_dir = ./global_dir\n";
+        iniContent += "lib_dir = ./" + GLOBAL_LIB_FOLDER + "\n";
+        iniContent += "lib_extra_dirs = ./" +LIB_FOLDER + "\n";
         fs.writeFileSync(folder + "platformio.ini", iniContent);
     }
 

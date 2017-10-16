@@ -19,6 +19,8 @@ const SENSORS_MANAGER_DEL = SENSORS_MANAGER_DEL_BASE + "/[id*]/";
 const SENSORS_MANAGER_STATISTICS_DAY = ":/sensors/statistics/day/";
 const SENSORS_MANAGER_STATISTICS_MONTH = ":/sensors/statistics/month/";
 const SENSORS_MANAGER_STATISTICS_YEAR = ":/sensors/statistics/year/";
+const SENSORS_MANAGER_FLASH_BASE = ":/sensor/flash";
+const SENSORS_MANAGER_FLASH = SENSORS_MANAGER_FLASH_BASE + "/[id]/";
 
 const ERROR_ALREADY_REGISTERED = "Already registered";
 const ERROR_NOT_REGISTERED = "Not registered";
@@ -75,6 +77,8 @@ class SensorsManager {
         this.webServices.registerAPI(this, WebServices.GET, SENSORS_MANAGER_STATISTICS_DAY, Authentication.AUTH_USAGE_LEVEL);
         this.webServices.registerAPI(this, WebServices.GET, SENSORS_MANAGER_STATISTICS_MONTH, Authentication.AUTH_USAGE_LEVEL);
         this.webServices.registerAPI(this, WebServices.GET, SENSORS_MANAGER_STATISTICS_YEAR, Authentication.AUTH_USAGE_LEVEL);
+
+        this.webServices.registerAPI(this, WebServices.POST, SENSORS_MANAGER_FLASH, Authentication.AUTH_ADMIN_LEVEL);
     }
 
     /**
@@ -275,6 +279,7 @@ class SensorsManager {
                         name: sensor.name,
                         icon: (s?s.icon:"E8BC"),
                         category: (s?s.type:"UNKNOWN"),
+                        iotApp: sensorPlugin.iotAPI.iotApp,
                         form:Object.assign(self.formManager.getForm(sensorPlugin.sensorAPI.form), {data:sensor})
                     });
                 });
@@ -294,7 +299,7 @@ class SensorsManager {
 
                             self.sensorsConfiguration = self.confManager.setData(CONF_MANAGER_KEY, apiRequest.data, self.sensorsConfiguration, self.comparator);
                             self.initSensors();
-                            resolve(new APIResponse.class(true, {success:true}));
+                            resolve(new APIResponse.class(true, {success:true, id:apiRequest.data.id}));
                         } else {
                             reject(new APIResponse.class(false, {}, 8108, "Unexisting plugin found"));
                         }
@@ -326,6 +331,17 @@ class SensorsManager {
             return this.statisticsWsResponse(DateUtils.class.roundedTimestamp(DateUtils.class.timestamp(), DateUtils.ROUND_TIMESTAMP_MONTH), 12 * 31 * 24 * 60 * 60, 31 * 24 * 60 * 60, this.translateManager.t("sensors.statistics.year.dateformat"), (timestamp) => {
                 return DateUtils.class.roundedTimestamp(timestamp, DateUtils.ROUND_TIMESTAMP_MONTH);
             }, "%Y-%m-01 00:00:00");
+        } else if (apiRequest.route.startsWith(SENSORS_MANAGER_FLASH_BASE)) {
+            return new Promise((resolve, reject) => {
+                this.flashSensor(parseInt(apiRequest.data.id), (error, details) => {
+                    if (!error) {
+                        resolve(new APIResponse.class(true, {success:true, details:details.stdout}));
+                    } else {
+                        Logger.err(error.message);
+                        resolve(new APIResponse.class(false, {details:error.message}, 854, "Flashing error"));
+                    }
+                });
+            });
         }
     }
 
@@ -437,6 +453,34 @@ class SensorsManager {
             sensorsId.push(sensor.id);
         });
         this.formManager.register(SensorsListForm.class, sensorsName, sensorsId);
+    }
+
+    /**
+     * Flash a sensor
+     *
+     * @param  {number}   id The sensor's identifier
+     * @param  {Function} cb A callback `(error, details) => {}`
+     */
+    flashSensor(id, cb) {
+        const configuration = this.getSensorConfiguration(id);
+        const sensor = this.getSensor(id);
+
+        if (!configuration) {
+            cb(Error("No configuration found"));
+        } else if (!sensor) {
+            cb(Error("No sensor found"));
+        } else if (!sensor.api || !sensor.api.iotAPI || !sensor.api.iotAPI.iotApp) {
+            cb(Error("No iot app found"));
+        } else {
+            this.iotManager.build(sensor.api.iotAPI.iotApp, true, configuration, (error, description) => {
+                if (!error) {
+                    cb(null, description);
+                } else {
+                    Logger.err("Sensor flashing id " + id + " has failed");
+                    cb(error);
+                }
+            });
+        }
     }
 }
 
