@@ -1070,6 +1070,35 @@ a:hover {
 	float: right;
 }
 
+.iotsTile {
+	height: 150px;
+	background-color: #99BD47;
+	text-align: center;
+	font-weight: bold;
+	margin: 1px;
+	color: #FFFFFF;
+}
+
+.iotsIcon {
+	font-size: 30px;
+	text-align: center;
+	margin-top: 10px;
+	margin-bottom: 20px;
+}
+
+#iotsLoader {
+	width: 20px;
+	height: 20px;
+	display: none;
+	float: right;
+}
+
+#iotsContent {
+	margin-top: 30px;
+	margin-left: 14px;
+	cursor: pointer;
+}
+
 #mapInfos {
 	height: 76px;
     position: fixed;
@@ -1504,33 +1533,33 @@ a:hover {
 	font-size:20px;
 }
 
-#sensorFlash span {
+#iotsFlash span {
     color: #ABB0AF;
     font-size: 170px;
 }
 
-#sensorFlashRunning {
+#iotsFlashRunning {
     height: 300px;
     width: 100%;
     font-size: 25px;
 }
 
-.sensorFlashRunning-left {
-  animation: sensorFlashRunningAnim 4s linear infinite;
+.iotsFlashRunning-left {
+  animation: iotsFlashRunningAnim 4s linear infinite;
   position: fixed;
   left: 20%;
   top: 55px;
   color: #ABB0AF;
 }
 
-.sensorFlashRunning-right {
+.iotsFlashRunning-right {
   position: fixed;
   left: 60%;
   top: 55px;
   color: #99BD47;
 }
 
-@keyframes sensorFlashRunningAnim {
+@keyframes iotsFlashRunningAnim {
   0% {
     left: 15%;
     transform: rotate(-30deg);
@@ -1547,22 +1576,22 @@ a:hover {
   }
 }
 
-#sensorFlashFinishIcon span {
+#iotsFlashFinishIcon span {
     font-size: 75px;
 }
 
-.sensorFlashFinishIconError {
+.iotsFlashFinishIconError {
     color: #bdc2c1;
 }
 
-.sensorFlashFinishIconSuccess {
+.iotsFlashFinishIconSuccess {
     color: #99BD47;
 }
 
-#sensorFlashIndicatorText {
+#iotsFlashIndicatorText {
     font-size: 25px;
 }
 
-#sensorFlashFinishText {
+#iotsFlashFinishText {
     font-size: 25px;
 }

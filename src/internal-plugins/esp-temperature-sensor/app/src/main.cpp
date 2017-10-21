@@ -14,12 +14,13 @@ Hautomation hautomation = Hautomation();
 
 void setup() {
   hautomation.setup(JSON_CONFIG);
-  // Serial.println(hautomation.baseUrl());
-  //
 
-  hautomation.postSensorValue("1508003508", 22, 34);
+  JsonVariant toto = hautomation.getConfig();
+  const char* ip = toto["ip"];
+
 }
 
 void loop() {
+    hautomation.postSensorValue("TEMPERATURE_SENSOR", 22);
     hautomation.loop();
 }

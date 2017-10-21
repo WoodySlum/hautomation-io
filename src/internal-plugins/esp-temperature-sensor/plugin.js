@@ -25,9 +25,9 @@ function loaded(api) {
 
 
     // test
-    class Toto extends api.exported.FormObject.class {
-        constructor(id = null, test = null) {
-            super(id);
+    class Toto extends api.exported.IotForm {
+        constructor(id = null, iotApp = null, name = null, test = null) {
+            super(id, iotApp, name);
 
             /**
              * @Property("test");
@@ -49,7 +49,7 @@ function loaded(api) {
     }
 
     api.sensorAPI.registerForm(EspTemperatureSensorForm);
-    api.iotAPI.registerApp("app", "test", "test", 1, "espressif8266_stage", "nodemcuv2", "arduino", ["esp8266"], Toto);
+    api.iotAPI.registerApp("app", "test", "A test app", 1, "espressif8266_stage", "nodemcuv2", "arduino", ["esp8266"], Toto);
 
     /**
      * This class is overloaded by sensors

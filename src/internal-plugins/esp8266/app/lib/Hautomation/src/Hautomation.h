@@ -3,6 +3,7 @@
 
 #if ARDUINO >= 100
   #include "Arduino.h"
+  #include "EEPROM.h"
 #else
 
 #endif
@@ -12,24 +13,33 @@
 #include <ESP8266WebServer.h>
 #include <ESP8266mDNS.h>
 #include <ESP8266HTTPUpdateServer.h>
+#define ARDUINOJSON_ENABLE_PROGMEM 0
 #include <ArduinoJson.h>
+extern "C" {
+#include "user_interface.h"
+}
 
 // Your class header here...
 class Hautomation {
   public:
     Hautomation();
-    JsonObject &parseJson(String json);
+    JsonObject &parseJson(DynamicJsonBuffer &jsonBuffer, String json);
     void setup(String jsonConfiguration);
     void loop();
     String baseUrl();
-    void transmit(String url, JsonObject &object);
-    void postSensorValue(String id, float value, float vcc);
+    void transmit(String url, JsonObject& jsonObject, int timeout);
+    void postSensorValue(String sensorType, float value);
+    JsonVariant &getConfig();
+    void rest(int mode, long duration);
   private:
-    JsonObject *_config;
-
+    void checkRun();
     void httpUpdateServer();
     void connect();
     void parseConfig(String jsonConfiguration);
+    void ping();
+    void saveCounter(int value);
+    int loadCounter();
+    boolean canRunHttpServer();
 };
 
 #endif

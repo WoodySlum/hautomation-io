@@ -24,6 +24,7 @@ var CameraAPI = require("./publicapis/CameraAPI");
 var RadioAPI = require("./publicapis/RadioAPI");
 var EnvironmentAPI = require("./publicapis/EnvironmentAPI");
 var IotAPI = require("./publicapis/IotAPI");
+var IotForm = require("../iotmanager/IotForm");
 
 var DateUtils = require("./../../utils/DateUtils");
 var Icons = require("./../../utils/Icons");
@@ -89,7 +90,8 @@ class PluginsAPI {
             {ImageUtils: ImageUtils},
             {Logger: Logger},
             {Cleaner: Cleaner},
-            {cachePath:appConfiguration.cachePath}
+            {cachePath:appConfiguration.cachePath},
+            {IotForm:IotForm.class}
         );
 
         // API part

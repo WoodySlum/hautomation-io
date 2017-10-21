@@ -35,6 +35,14 @@ class IotAPI {
     iotAppExists(id) {
         return PrivateProperties.oprivate(this).iotManager.iotAppExists(id);
     }
+
+    getVersion(id) {
+        return PrivateProperties.oprivate(this).iotManager.getVersion(id);
+    }
+
+    getIot(id) {
+        return PrivateProperties.oprivate(this).iotManager.getIot(id);
+    }
 }
 
 module.exports = {class:IotAPI};

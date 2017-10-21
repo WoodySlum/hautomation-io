@@ -4905,8 +4905,6 @@ $(document).ready(function() {
                 $("#deleteSensorForm").show();
                 $('#sensorModal').modal('show');
                 $('#sensorSelectForm').empty();
-                $('#sensorOtaFlashBtn').empty();
-                $('#sensorFlash').hide();
                 $('#saveSensorForm').show();
 
                 var sensor = null;
@@ -4915,18 +4913,6 @@ $(document).ready(function() {
                         sensor = sensors[i];
                         break;
                     }
-                }
-
-                if (sensor && sensor.iotApp) {
-                    $('#flashSensorBtn').show()
-                    $('#flashSensorBtn').unbind();
-                    $('#flashSensorBtn').click(function() {
-                        $('#flashSensorBtn').hide();
-                        $("#deleteSensorForm").hide();
-                        flashSensorSteps(sensor.identifier);
-                    });
-                } else {
-                    $('#flashSensorBtn').hide();
                 }
 
                 $("#deleteSensorForm").unbind();
@@ -5013,62 +4999,6 @@ $(document).ready(function() {
         });
     });
 
-    flashSensorSteps = function(sensorIdentifier) {
-        $('#sensorForm').empty();
-        $('#sensorSelectForm').empty();
-        $('#sensorFlash').show();
-        $('#saveSensorForm').hide();
-        $("#iotFlash").unbind();
-        $("#sensorFlashIndicator").show();
-        $("#sensorFlashRunning").hide();
-        $("#sensorFlashFinish").hide();
-        $("#iotFlash").click(function() {
-            $("#sensorFlashIndicator").hide();
-            $("#sensorFlashRunning").show();
-            $("#sensorFlashFinish").hide();
-            document.getElementById('sensorFlashRunning').innerHTML = generateAnimation('sensorFlashRunning-left', 'sensorFlashRunning-right', 'F0D0', 'F2DB') + '<br /><br /><br /><br /><div class="center">' + t('flash.flashing') + "</div>";
-            $.ajax({
-                type: "POST",
-                url: vUrl + "sensor/flash/" + sensorIdentifier + "/",
-                contentType: "application/json",
-                data: JSON.stringify({
-                    u: username,
-                    p: password
-                })
-            }).done(function(result) {
-                $("#sensorFlashRunning").hide();
-                $("#sensorFlashFinish").show();
-                document.getElementById("sensorFlashFinishIcon").innerHTML = '<span class="glyphicon glyphicon-ok-sign sensorFlashFinishIconSuccess" aria-hidden="true"></span>';
-                document.getElementById("sensorFlashFinishText").innerHTML = t('sensor.flash.success');
-                document.getElementById("sensorFlashFinishDetails").innerHTML = '<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#flashDetails" aria-expanded="true" aria-controls="flashDetails">' +
-                t('js.details') +
-                '</a>' +
-                '</h4>' +
-                '</div>' +
-                '<div id="flashDetails" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">' +
-                '<div class="panel-body">' +
-                '<code>' + nl2br(result.details) + '</code>' +
-                '</div>' +
-                '</div>';
-            }).fail(function(msg) {
-                $("#sensorFlashRunning").hide();
-                $("#sensorFlashFinish").show();
-                document.getElementById("sensorFlashFinishIcon").innerHTML = '<span class="glyphicon glyphicon-remove-sign sensorFlashFinishIconError" aria-hidden="true"></span>';
-                document.getElementById("sensorFlashFinishText").innerHTML = t('sensor.flash.error');
-                document.getElementById("sensorFlashFinishDetails").innerHTML = '<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#flashDetails" aria-expanded="true" aria-controls="flashDetails">' +
-                t('js.details') +
-                '</a>' +
-                '</h4>' +
-                '</div>' +
-                '<div id="flashDetails" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">' +
-                '<div class="panel-body">' +
-                '<code>' + nl2br(msg.responseJSON.data.details) + '</code>' +
-                '</div>' +
-                '</div>';
-            });
-        });
-    }
-
     $("#addSensors").click(function() {
         $("#sensorsLoader").show();
         showLoader();
@@ -5098,9 +5028,7 @@ $(document).ready(function() {
                 $('#sensorSelectForm').append(formContent);
                 $('#sensorModal').modal('show');
                 $("#sensorSelector").unbind();
-                $('#sensorFlash').hide();
                 $('#saveSensorForm').show();
-                $('#flashSensorBtn').hide();
                 $('#sensorSelector').change(function() {
                     var key = $('#sensorSelector').val();
                     if (key == '') return;
@@ -5142,40 +5070,317 @@ $(document).ready(function() {
                     $("#saveSensorForm").click(function() {
                         $("#react-btn-submit-sensor").click();
                     });
+                });
+            }
+            hideLoader();
+        });
+    });
+    // IOTS
+    // -------------------------------
+    // -------------------------------
+    $("#manageIotsItem").click(function() {
+        $("#iotsLoader").show();
+        showLoader();
+        reqPluginList = $.ajax({
+            type: "GET",
+            url: vUrl + "iot/get/",
+            data: {
+                u: username,
+                p: password
+            }
+        }).done(function(iots) {
+            var nbLine = 4;
+            var colcount = 0;
+            var iotsContent = '';
+            $("#iotsContent").empty();
+
+            for (var i = 0; i < iots.length; i++) {
+                if (colcount == 0) {
+                    iotsContent = iotsContent + '<div class="row">';
+                }
+                iotsContent = iotsContent + '<div class="col-md-2 iotsClick iotsTile" id="' + iots[i].identifier + '" style="">';
+                iotsContent = iotsContent + '<i class="fa iotsIcon" data-unicode="' + iots[i].icon + '">&#x' + iots[i].icon + '</i><br/>';
+                iotsContent = iotsContent + '<span class="label label-success">' + iots[i].iotApp + '</span><br/>';
+                iotsContent = iotsContent + '<strong>' + iots[i].name + '</strong>';
+                iotsContent = iotsContent + '</div>';
+                colcount++;
+                if (colcount == 5) {
+                    iotsContent = iotsContent + '</div>';
+                    colcount = 0;
+                }
+            }
+            if (colcount != 0) {
+                iotsContent = iotsContent + '</div>';
+            }
+            $("#iotsContent").html(iotsContent);
+
+            $("#iotsLoader").hide();
+
+            $(".iotsClick").unbind();
+            $(".iotsClick").click(function(e) {
+                $("#deleteIotForm").show();
+                $('#iotsModal').modal('show');
+                $('#iotsSelectForm').empty();
+                $('#iotsOtaFlashBtn').empty();
+                $('#iotsFlash').hide();
+                $('#saveIotsForm').show();
+
+                var iot = null;
+                for (var i = 0; i < iots.length; i++) {
+                    if (parseInt(iots[i].identifier) === parseInt(e.currentTarget.id)) {
+                        iot = iots[i];
+                        break;
+                    }
+                }
+
+                if (iot) {
+                    $('#flashIotsBtn').show()
+                    $('#flashIotsBtn').unbind();
+                    $('#flashIotsBtn').click(function() {
+                        $('#flashIotsBtn').hide();
+                        $("#deleteIotsForm").hide();
+                        flashIotSteps(iot.identifier);
+                    });
+                }
+
+                $("#deleteIotsForm").unbind();
+                $("#deleteIotsForm").click(function() {
+
+                    swal(Object.assign({
+                        title: t('js.global.iots.form.confirm', null),
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: t('js.continue', null),
+                        cancelButtonText: t('js.cancel', null),
+                        showLoaderOnConfirm: true
+                    }, swalDefaults)).then(function() {
+                        // Confirm
+                        showLoader();
+                        // Confirm
+                        $.ajax({
+                            type: "DELETE",
+                            url: vUrl + "iot/del/" + iot.identifier +"/",
+                            data: {
+                                u: username,
+                                p: password
+                            }
+                        }).done(function(data) {
+                            $("#manageIotsItem").click();
+                            $('#iotsModal').modal('hide');
+                            hideLoader();
+                        }).fail(function(msg) {
+                            setError(msg);
+                        });
+                    }, function(mode) {
+                        // Cancel
+                        if (mode && mode != 'cancel') {
+                            return;
+                        }
+                    });
+                });
+
+                // Display iot form
+                $("#saveIotsForm").unbind();
+                $("#saveIotsForm").click(function() {
+                    $("#react-btn-submit-iot").click();
+                });
+
+                $("#iotForm").empty();
+
+                var self = this;
+
+                ReactDOM.render(React.createElement(Form, {schema:iot.form.schema, uiSchema:iot.form.schemaUI, formData:iot.form.data, onSubmit: function(data) {
+                    $.ajax({
+                        type: "POST",
+                        url: vUrl + "iot/set/" + iot.form.data.id + "/",
+                        contentType: "application/json",
+                        data: JSON.stringify({
+                            u: username,
+                            p: password,
+                            data: data.formData
+                        })
+                    }).done(function(data) {
+                        $("#manageIotsItem").click();
+                        flashIotSteps(data.id);
+                    }).fail(function(msg) {
+                        $('#iotsModal').modal('hide');
+                        setError(msg);
+                    });
+                }},
+                React.createElement(
+                  "button",
+                  { type: "submit", className:"btn btn-success hidden", id:"react-btn-submit-iot" },
+                  "button.save"
+              )), document.getElementById("iotsForm"));
+            });
+            hideLoader();
+        });
+    });
+
+    flashIotSteps = function(iotIdentifier) {
+        $('#iotsForm').empty();
+        $('#iotsSelectForm').empty();
+        $('#iotsFlash').show();
+        $('#saveIotsForm').hide();
+        $("#iotsFlashBtn").unbind();
+        $("#iotsFlashIndicator").show();
+        $("#iotsFlashRunning").hide();
+        $("#iotsFlashFinish").hide();
+        $("#iotsFlashBtn").click(function() {
+            $("#iotsFlashIndicator").hide();
+            $("#iotsFlashRunning").show();
+            $("#iotsFlashFinish").hide();
+            document.getElementById('iotsFlashRunning').innerHTML = generateAnimation('iotsFlashRunning-left', 'iotsFlashRunning-right', 'F0D0', 'F2DB') + '<br /><br /><br /><br /><div class="center">' + t('flash.flashing') + "</div>";
+            $.ajax({
+                type: "POST",
+                url: vUrl + "iot/flash/" + iotIdentifier + "/",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    u: username,
+                    p: password
+                })
+            }).done(function(result) {
+                $("#iotsFlashRunning").hide();
+                $("#iotsFlashFinish").show();
+                document.getElementById("iotsFlashFinishIcon").innerHTML = '<span class="glyphicon glyphicon-ok-sign iotFlashFinishIconSuccess" aria-hidden="true"></span>';
+                document.getElementById("iotsFlashFinishText").innerHTML = t('iot.flash.success');
+                document.getElementById("iotsFlashFinishDetails").innerHTML = '<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#flashResults" aria-expanded="true" aria-controls="flashResults">' +
+                t('js.details') +
+                '</a>' +
+                '</h4>' +
+                '</div>' +
+                '<div id="flashResults" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">' +
+                '<div class="panel-body">' +
+                '<code>' + nl2br(result.details) + '</code>' +
+                '</div>' +
+                '</div>';
+            }).fail(function(msg) {
+                $("#iotsFlashRunning").hide();
+                $("#iotsFlashFinish").show();
+                document.getElementById("iotsFlashFinishIcon").innerHTML = '<span class="glyphicon glyphicon-remove-sign iotFlashFinishIconError" aria-hidden="true"></span>';
+                document.getElementById("iotsFlashFinishText").innerHTML = t('iot.flash.error');
+                document.getElementById("iotsFlashFinishDetails").innerHTML = '<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#flashResults" aria-expanded="true" aria-controls="flashResults">' +
+                t('js.details') +
+                '</a>' +
+                '</h4>' +
+                '</div>' +
+                '<div id="flashResults" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">' +
+                '<div class="panel-body">' +
+                '<code>' + nl2br(msg.responseJSON.message) + '</code>' +
+                '</div>' +
+                '</div>' +
+                '<br /><button type="button" class="btn btn-primary" id="iotsFlashRetry">' + t('iot.flash.retry') + '</button>';
+                $("#iotsFlashRetry").unbind();
+                $("#iotsFlashRetry").click(function() {
+                    $("#iotsFlashBtn").click();
+                });
+            });
+        });
+    }
+
+    $("#addIots").click(function() {
+        $("#iotsLoader").show();
+        showLoader();
+        reqPluginList = $.ajax({
+            type: "GET",
+            url: vUrl + "iot/available/get/",
+            data: {
+                u: username,
+                p: password
+            }
+        }).done(function(iotsAvailableData) {
+            $("#iotsLoader").hide();
+            $("#deleteIotForm").hide();
+
+
+            if (iotsAvailableData) {
+                var formContent = '<select id="iotsSelector" class="form-control">';
+                formContent = formContent + '<option value="">' + t('js.global.iots.form.iot.type.default', null) + '</option>';
+
+                for (var i = 0; i < iotsAvailableData.length; i++) {
+                    formContent = formContent + '<option value="' + i + '">' + iotsAvailableData[i].description + '</option>';
+                }
+
+                formContent = formContent + '</select>';
+                $('#iotsSelectForm').empty();
+                $('#iotsForm').empty();
+                $('#iotsSelectForm').append(formContent);
+                $('#iotsModal').modal('show');
+                $("#iotsSelector").unbind();
+                $('#iotsFlash').hide();
+                $('#saveIotsForm').show();
+                $('#flashIotsBtn').hide();
+                $('#iotsSelector').change(function() {
+                    var key = $('#iotsSelector').val();
+                    if (key == '') return;
+                    var iotAvailableData = iotsAvailableData[parseInt(key)];
+
+                    var self = this;
+                    ReactDOM.render(React.createElement(Form, {schema:iotAvailableData.form.schema, uiSchema:iotAvailableData.form.schemaUI, formData:iotAvailableData.form.data, onSubmit: function(data) {
+                        $.ajax({
+                            type: "POST",
+                            url: vUrl + "iot/set/",
+                            contentType: "application/json",
+                            data: JSON.stringify({
+                                u: username,
+                                p: password,
+                                data: data.formData
+                            })
+                        }).done(function(data) {
+                            flashIotSteps(data.id);
+                        }).fail(function(msg) {
+                            $('#iotsModal').modal('hide');
+                            setError(msg);
+                        });
+                    }},
+                    React.createElement(
+                      "button",
+                      { type: "submit", className:"btn btn-success hidden", id:"react-btn-submit-iot" },
+                      "button.save"
+                  )), document.getElementById("iotsForm"));
+
+
+
+
+                    // Display iot form
+                    $("#saveIotsForm").unbind();
+                    $("#saveIotsForm").click(function() {
+                        $("#react-btn-submit-iot").click();
+                    });
 
                     /*var plugin = jsonData[key];
                     consolelog(plugin);
-                    $("#sensorForm").empty();
+                    $("#iotForm").empty();
                     var pluginIdentifier = plugin.identifier;
                     var selectedPluginId = parseInt(key);
                     consolelog("----->");
                     consolelog(plugin);
 
-                    $("#sensorForm").jsonForm({
+                    $("#iotForm").jsonForm({
                         schema: plugin.config.schema,
                         "form": plugin.config.form,
                         "value": plugin.configValues,
                         onSubmit: function(errors, values) {
-                            if (errors || (values.sensorLocation == null && values.sensorLocationExisting == null)) {
+                            if (errors || (values.iotLocation == null && values.iotLocationExisting == null)) {
                                 setError(t('js.invalid.form.data', null));
                             } else {
-                                if (values.sensorLocation && (values.sensorLocation != '')) values.sensorLocationExisting = values.sensorLocation;
-                                values.sensorLocation = null;
+                                if (values.iotLocation && (values.iotLocation != '')) values.iotLocationExisting = values.iotLocation;
+                                values.iotLocation = null;
                                 reqPluginSetConfig = $.ajax({
                                     type: "POST",
                                     url: vUrl,
                                     data: {
                                         username: username,
                                         ePassword: ePassword,
-                                        method: "setSensor",
+                                        method: "setIot",
                                         data: JSON.stringify(values),
                                         pluginIdentifier: pluginIdentifier
                                     }
                                 }).done(function(msg) {
                                     jsonData[selectedPluginId].configValues = values;
-                                    $('#sensorModal').modal('hide');
+                                    $('#iotModal').modal('hide');
                                     toastr.success(t('js.form.success', null));
-                                    $("#manageSensorsItem").click();
+                                    $("#manageIotsItem").click();
                                 }).fail(function(msg) {
                                     displayError(msg);
                                 });
@@ -5187,232 +5392,9 @@ $(document).ready(function() {
             hideLoader();
         });
     });
-
-    var iotAppForm = function(iotApp, sensorInfo) {
-        $("#sensorFlashForm").empty();
-        $("#flashIoTBtn").unbind();
-        $("#flashIoTBtn").click(function() {
-            $("#sensorFlashForm").submit();
-        });
-
-        $("#sensorFlashForm").jsonForm({
-            schema: iotApp.form.schema,
-            "form": iotApp.form.form,
-            "value": iotApp.form.values,
-            onSubmit: function(errors, values) {
-                if (errors) {
-                    setError(t('js.invalid.form.data', null));
-                } else {
-                    if (values.sensorLocation && (values.sensorLocation != '')) values.sensorLocationExisting = values.sensorLocation;
-                    values.sensorLocation = null;
-                    var data = {};
-                    data.iotApp = iotApp;
-                    data.dataValues = values;
-                    data.ota = false;
-                    if (sensorInfo != null) data.ota = true;
-
-                    var flashIoT = $.ajax({
-                        type: "POST",
-                        url: vUrl,
-                        data: {
-                            username: username,
-                            ePassword: ePassword,
-                            method: "flashIoT",
-                            data: JSON.stringify(data)
-                        }
-                    }).done(function(msg) {
-                        var data = JSON.parse(msg);
-                        var board = data.board;
-                        var buildToken = data.buildToken;
-
-                        if (data.buildToken) {
-                            $("#iotModuleSelectForm").empty();
-                            $("#sensorFlashForm").empty();
-                            $("#sensorFlashForm").unbind();
-                            $("#flashIoTBtn").hide();
-                            $("#closeIoTBtn").hide();
-
-                            var refreshIoTBuildToken = function() {
-                                consolelog("Refreshing build");
-                                var flashIoT = $.ajax({
-                                    type: "POST",
-                                    url: vUrl,
-                                    data: {
-                                        username: username,
-                                        ePassword: ePassword,
-                                        method: "flashIoTStatus",
-                                        data: msg
-                                    }
-                                }).done(function(msg) {
-                                    var status = JSON.parse(msg);
-                                    var stateHtml = '<table class="table table-condensed">';
-                                    var hasError = false;
-                                    for (i = 0; i < status.steps.length; i++) {
-                                        if (status.steps[i].state == -1) hasError = true;
-                                        var styleClass = 'active';
-                                        if (status.steps[i].state == -1) styleClass = 'danger';
-                                        if (status.steps[i].state == 1) styleClass = 'info';
-                                        if (status.steps[i].state == 2) styleClass = 'success';
-                                        stateHtml = stateHtml + '<tr class="' + styleClass + '">';
-                                        if (status.steps[i].id == "build") {
-                                            stateHtml = stateHtml + '<td><span class="glyphicon glyphicon-wrench" aria-hidden="true"></span></td>';
-                                        } else {
-                                            if (status.steps[i].id == "uploading") {
-                                                stateHtml = stateHtml + '<td><span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span></td>';
-                                            } else {
-                                                stateHtml = stateHtml + '<td>&nbsp;</td>';
-                                            }
-                                        }
-                                        stateHtml = stateHtml + '<td>' + status.steps[i].label + '</td>';
-                                        stateHtml = stateHtml + '<td>' + status.steps[i].status + '</td>';
-                                        stateHtml = stateHtml + '</tr>';
-                                    }
-                                    stateHtml = stateHtml + '</table>';
-
-                                    var title = t('js.global.sensors.form.iot.flashing');
-                                    var additionnalInfo = '<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">' +
-                                        '<div class="panel panel-default">' +
-                                        '<div class="panel-heading" role="tab" id="flashDetailsHeading">' +
-                                        '<h4 class="panel-title">' +
-                                        '<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#flashDetails" aria-expanded="true" aria-controls="flashDetails">' +
-                                        t('js.details') +
-                                        '</a>' +
-                                        '</h4>' +
-                                        '</div>' +
-                                        '<div id="flashDetails" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">' +
-                                        '<div class="panel-body">' +
-                                        '<code>' + nl2br(status.log) + '</code>' +
-                                        '</div>' +
-                                        '</div>' +
-                                        '</div>' +
-                                        '</div>';
-                                    if (status.finished) {
-                                        if (hasError) {
-                                            title = t('js.global.sensors.form.iot.flashing.error');
-                                        } else {
-                                            title = t('js.global.sensors.form.iot.flashing.success');
-                                        }
-                                    }
-
-                                    var loaderFlashing = '<span></span>';
-                                    if (!status.finished && !hasError) {
-                                        loaderFlashing = '<div style="float: left;top: -8px;position: relative"><img src="img/squares.svg" /></div>';
-                                    }
-
-                                    stateHtml = '<h3>' + iotApp.name + '</h3>' + loaderFlashing + '<h4>' + title + '</h4>' + stateHtml + '<br/>' + additionnalInfo;
-
-                                    document.getElementById("flashResults").innerHTML = stateHtml;
-
-                                    if (!status.finished) {
-                                        window.setTimeout(refreshIoTBuildToken, 3000);
-                                    } else {
-                                        $("#closeIoTBtn").show();
-                                    }
-
-                                    if (status.firmwareAvailable) {
-                                        $("#dlFirmwareIoTBtn").show();
-                                        $("#dlFirmwareIoTBtn").unbind();
-                                        var ob = {};
-                                        ob.board = board;
-                                        ob.buildToken = buildToken;
-
-                                        $("#dlFirmwareIoTBtn").click(function() {
-                                            var newWindow = window.open("", "_blank");
-                                            newWindow.location.href = vUrl + '?username=' + encodeURIComponent(username) + '&ePassword=' + ePassword + '&method=getIoTFirmware&data=' + encodeURIComponent(JSON.stringify(ob));
-                                        });
-                                    }
-
-                                }).fail(function(msg) {
-                                    displayError(msg);
-                                    $("#flashIoTBtn").show();
-                                    $("#closeIoTBtn").show();
-                                });
-                            }
-                            refreshIoTBuildToken();
-                        }
-                    }).fail(function(msg) {
-                        displayError(msg);
-                    });
-                }
-            }
-        });
-    }
-
-    var flashSensor = function(sensorInfo) {
-        $("#sensorsLoader").show();
-        $("#flashResults").empty();
-        $("#flashIoTBtn").show();
-        $("#closeIoTBtn").show();
-        $("#flashIoTBtn").unbind();
-        $("#dlFirmwareIoTBtn").hide();
-        showLoader();
-        reqFlashSensor = $.ajax({
-            type: "POST",
-            url: vUrl,
-            data: {
-                username: username,
-                ePassword: ePassword,
-                method: "getIoTApps"
-            }
-        }).done(function(msg) {
-            $("#sensorsLoader").hide();
-
-            // var jsonData = JSON.parse(msg);
-            var jsonData = JSON.parse(msg, function(key, value) {
-                if (value && (typeof value === 'string') && value.indexOf("function") === 0) {
-                    // we can only pass a function as string in JSON ==> doing a real function
-                    var jsFunc = new Function('return ' + value)();
-                    return jsFunc;
-                }
-
-                return value;
-            });
-
-            if (jsonData) {
-                var formContent = '';
-                if (sensorInfo == null) {
-                    formContent = '<select id="iotSelector" class="form-control">';
-                    formContent = formContent + '<option value="-1">' + t('js.global.sensors.form.iot.type.default', null) + '</option>';
-                    for (var i = 0; i < jsonData.length; i++) {
-                        formContent = formContent + '<option value="' + i + '">' + jsonData[i].name + '</option>';
-                    }
-
-                    formContent = formContent + '</select>';
-                }
-
-                $('#iotModuleSelectForm').empty();
-                $('#iotModuleForm').empty();
-                $('#iotModuleSelectForm').append(formContent);
-                $('#sensorFlashModal').modal('show');
-                $("#sensorFlashForm").empty();
-                $("#iotSelector").unbind();
-                $('#iotSelector').change(function() {
-                    var i = $('#iotSelector').val();
-                    if (i != -1) {
-                        var iotApp = jsonData[i];
-                        iotAppForm(iotApp, sensorInfo);
-                    }
-                });
-
-                if (sensorInfo != null) {
-                    var selectedIotApp = sensorInfo.otaParams.iotApp;
-                    for (var i = 0; i < jsonData.length; i++) {
-                        // Update form with new downloaded
-                        if (jsonData[i].identifier == sensorInfo.otaParams.iotApp.identifier) {
-                            selectedIotApp = jsonData[i];
-                        }
-                    }
-                    selectedIotApp.form.values = sensorInfo.otaParams.dataValues;
-                    iotAppForm(selectedIotApp, sensorInfo);
-                }
-            }
-            hideLoader();
-        });
-    }
-
-    $("#flashSensor").click(function(evt) {
-        flashSensor(null);
-    });
+    // END IOTS
+    // -------------------------------
+    // -------------------------------
 
     var scanRawRadioSignalCountdown = function(data, value, nextFunc) {
         document.getElementById("rawScanData").innerHTML = data.replace('PLHOLDER', value);

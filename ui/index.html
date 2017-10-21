@@ -235,33 +235,48 @@
 	  			<div class="modal-body">
 	    			<form id="sensorSelectForm"></form>
 	    			<div id="sensorForm"></div>
-                    <div id="sensorFlash" class="center">
-                        <div id="sensorFlashIndicator">
+	  			</div>
+	  			<div class="modal-footer">
+	  				<button class="btn btn-danger" aria-hidden="true" id="deleteSensorForm"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> ui.delete</button>
+	  				<button class="btn btn-primary" aria-hidden="true" id="saveSensorForm"><span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span> ui.save</button>
+	    			<button class="btn btn-default" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> ui.close</button>
+	  			</div>
+	  		</div>
+	  	</div>
+	</div>
+    <div id="iotsModal" class="modal fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+    		<div class="modal-content">
+	  			<div class="modal-body">
+	    			<form id="iotsSelectForm"></form>
+	    			<div id="iotsForm"></div>
+                    <div id="iotsFlash" class="center">
+                        <div id="iotsFlashIndicator">
                             <span class="glyphicon glyphicon-save" aria-hidden="true"></span><br /><br />
-                            <div id ="sensorFlashIndicatorText">sensor.flash.ready</div><br /><br />
-                            <button type="button" class="btn btn-primary" id="iotFlash">sensor.flash.go</button>
+                            <div id ="iotsFlashIndicatorText">iots.flash.ready</div><br /><br />
+                            <button type="button" class="btn btn-primary" id="iotsFlashBtn">iots.flash.go</button>
                         </div>
-                        <div id="sensorFlashRunning">
+                        <div id="iotsFlashRunning">
 
                         </div>
-                        <div id="sensorFlashFinish">
-                            <div id="sensorFlashFinishIcon">
+                        <div id="iotsFlashFinish">
+                            <div id="iotsFlashFinishIcon">
 
                             </div>
-                            <div id="sensorFlashFinishText">
+                            <div id="iotsFlashFinishText">
 
                             </div>
-                            <div id="sensorFlashFinishDetails">
+                            <div id="iotsFlashFinishDetails">
 
                             </div>
                         </div>
                     </div>
 	  			</div>
 	  			<div class="modal-footer">
-	  				<span id="sensorOtaFlashBtn"></span>
-                    <button class="btn btn-primary" aria-hidden="true" id="flashSensorBtn"><span class="glyphicon glyphicon-save" aria-hidden="true"></span> ui.flash</button>
-	  				<button class="btn btn-danger" aria-hidden="true" id="deleteSensorForm"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> ui.delete</button>
-	  				<button class="btn btn-primary" aria-hidden="true" id="saveSensorForm"><span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span> ui.save</button>
+	  				<span id="iotsOtaFlashBtn"></span>
+                    <button class="btn btn-primary" aria-hidden="true" id="flashIotsBtn"><span class="glyphicon glyphicon-save" aria-hidden="true"></span> ui.flash</button>
+	  				<button class="btn btn-danger" aria-hidden="true" id="deleteIotsForm"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> ui.delete</button>
+	  				<button class="btn btn-primary" aria-hidden="true" id="saveIotsForm"><span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span> ui.save</button>
 	    			<button class="btn btn-default" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> ui.close</button>
 	  			</div>
 	  		</div>
@@ -508,6 +523,7 @@
 						<div class="tab-pane active" id="manageTab">
 							<ul class="nav nav-tabs" id="configTabs">
 							  <li><a href="#logRadio" class="manageTab" data-toggle="tab"><span class="glyphicon"><i class="fa" data-unicode="F143">&#xF143</i></span></a></li>
+                              <li><a href="#manageIots" class="manageTab" data-toggle="tab" id="manageIotsItem"><span class="glyphicon"><i class="fa" data-unicode="F2DB">&#xF2DB</i></span></a></li>
 							  <li><a href="#manageSensors" class="manageTab" data-toggle="tab" id="manageSensorsItem"><span class="glyphicon"><i class="fa" data-unicode="F0E8">&#xF0E8</i></span></a></li>
 							  <li><a href="#manageDevices" class="manageTab" data-toggle="tab" id="manageDevicesItem"><span class="glyphicon"><i class="fa" data-unicode="F0EB">&#xF0EB</i></span></a></li>
 							  <li><a href="#manageActions" class="manageTab" data-toggle="tab" id="manageActionsItem"><span class="glyphicon"><i class="fa" data-unicode="F1B7">&#xF1B7</i></span></a></li>
@@ -546,6 +562,18 @@
 									        </tbody>
 										</table>
 					  				</p>
+					  			</div>
+                                <div id="manageIots" class="tab-pane active">
+					  				<h3>ui.manage.iots.title</h3>
+					  				<h6><span class="glyphicon glyphicon-question-sign"></span> ui.manage.iots.subtitle</h6>
+					  				<div>
+					  					<img src="img/squares.svg" id="iotsLoader" />
+					  				</div>
+					  				<div id="iotsTable">
+					  					<button type="button" id="addIots" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus"></span>  ui.add</button>&nbsp;&nbsp;
+					  					<div id="iotsContent">
+					  					</div>
+					  				</div>
 					  			</div>
 					  			<div id="manageSensors" class="tab-pane active">
 					  				<h3>ui.manage.sensors.title</h3>
