@@ -1,9 +1,17 @@
 #include "Hautomation.h"
+#include "StringStream.h"
 
+// int MAX_TIME_CONNECTION_ATTEMPT = 30; // In seconds
+// int MAX_TIME_CONNECTION_RETRY = 30; // In seconds
+// int MAX_TIME_SLEEP = 70 * 60;
+// int HTTP_SENSOR_TIMEOUT = 20;
+// int HTTP_PING_TIMEOUT = 10;
 int MAX_TIME_CONNECTION_ATTEMPT = 30; // In seconds
-int MAX_TIME_SLEEP = 70 * 60;
+int MAX_TIME_CONNECTION_RETRY = 30; // In seconds
+int MAX_TIME_SLEEP = 1 * 60;
 int HTTP_SENSOR_TIMEOUT = 20;
-int HTTP_PING_TIMEOUT = 5;
+int HTTP_PING_TIMEOUT = 10;
+boolean updating = false;
 ESP8266WebServer httpServer(80);
 ESP8266HTTPUpdateServer httpUpdater;
 DynamicJsonBuffer sensorBuffer;
@@ -11,8 +19,8 @@ JsonObject& sensorValues = sensorBuffer.createObject();
 DynamicJsonBuffer configBuffer;
 JsonVariant config;
 
-int poweredMode = 3;
-int sleepTime = 30;
+int poweredMode = 0;
+int sleepTime = 90;
 
 
 // Measure vcc
@@ -31,6 +39,7 @@ void Hautomation::setup(String jsonConfiguration)
 
     delay(5000);
     parseConfig(jsonConfiguration);
+
     delay(500);
     Serial.println("Hautomation ESP8266 library");
     Serial.println("Configuration : ");
@@ -38,6 +47,11 @@ void Hautomation::setup(String jsonConfiguration)
 
     checkRun();
     connect();
+
+    if (shouldFirmwareUpdate()) {
+        Serial.println("Entering firmware update mode");
+        updateFirmware();
+    }
 }
 
 JsonObject &Hautomation::parseJson(DynamicJsonBuffer &jsonBuffer, String json) {
@@ -76,8 +90,8 @@ void Hautomation::connect() {
                 counter++;
             }
             if (counter >= MAX_TIME_CONNECTION_ATTEMPT) {
-                Serial.println("Connection failed. Trying again in 10 minutes");
-                rest(0, 10 * 60);
+                Serial.println("Connection failed. Trying again in " + String(MAX_TIME_CONNECTION_RETRY) + " seconds");
+                rest(3, MAX_TIME_CONNECTION_RETRY);
                 return;
             }
 
@@ -104,7 +118,7 @@ void Hautomation::checkRun() {
         int tick = loadCounter();
         long elapsedTime = tick * sleepTime;
         if (elapsedTime >= sleepTime) {
-            saveCounter(0);
+            saveCounter(1);
         } else {
             long newSleepTime = sleepTime;
             if ((sleepTime - elapsedTime) <= MAX_TIME_SLEEP) {
@@ -134,6 +148,12 @@ void Hautomation::httpUpdateServer() {
     httpServer.on("/reboot", [](){
         Serial.println("Rebooting ...");
         httpServer.send(200, "text/html", "Rebooting, please wait ...");
+        ESP.restart();
+    });
+
+    httpServer.on("/reset", [](){
+        Serial.println("Resetting ...");
+        httpServer.send(200, "text/html", "Rebooting, please wait ...");
         ESP.reset();
     });
 
@@ -147,20 +167,68 @@ void Hautomation::httpUpdateServer() {
 }
 
 void Hautomation::ping() {
-    const char* id = config["id"];
-    String ip = WiFi.localIP().toString();
-    long freeHeap = ESP.getFreeHeap();
+    if (!shouldFirmwareUpdate()) {
+        const char* id = config["id"];
+        String ip = WiFi.localIP().toString();
+        long freeHeap = ESP.getFreeHeap();
+        float vcc = ESP.getVcc() / 1000;
+        const int currentVersion = config["version"];
 
-    DynamicJsonBuffer pingBuffer;
-    JsonObject& pingData = pingBuffer.createObject();
-    pingData["ip"] = ip.c_str();
-    pingData["freeHeap"] = freeHeap;
+        DynamicJsonBuffer pingBuffer;
+        JsonObject& pingData = pingBuffer.createObject();
+        pingData["ip"] = ip.c_str();
+        pingData["freeHeap"] = freeHeap;
+        pingData["vcc"] = vcc;
+        pingData["version"] = currentVersion;
 
-    transmit(baseUrl() + "esp/ping/" + String(id) + "/", pingData, HTTP_PING_TIMEOUT);
+        String payload = transmit(baseUrl() + "esp/ping/" + String(id) + "/", pingData, HTTP_PING_TIMEOUT);
+
+        if (payload != NULL) {
+            DynamicJsonBuffer updateBuffer;
+            JsonVariant updateData = parseJson(updateBuffer, payload);
+            const int newVersion = updateData["version"];
+
+            if (newVersion > currentVersion) {
+                Serial.println("New firmware version available : " + String(newVersion));
+                setFirmwareUpdate();
+                ESP.reset();
+            }
+        }
+    }
 }
 
-void Hautomation::transmit(String url, JsonObject& jsonObject, int timeout) {
+void Hautomation::updateFirmware() {
+    const char* id = config["id"];
+    const char* ip = config["ip"];
+    int port = config["port"];
+    Serial.println("Updating ...");
+    resetFirmwareUpdate();
+    updating = true;
+    t_httpUpdate_return ret = ESPhttpUpdate.update(baseUrl() + "esp/firmware/upgrade/" + String(id) + "/");
+    switch(ret) {
+        case HTTP_UPDATE_FAILED:
+            Serial.printf("Firmware flash error (%d): %s",  ESPhttpUpdate.getLastError(), ESPhttpUpdate.getLastErrorString().c_str());
+            updating = false;
+            break;
+
+        case HTTP_UPDATE_NO_UPDATES:
+            Serial.println("Firmware no update");
+            updating = false;
+            break;
+
+        case HTTP_UPDATE_OK:
+            Serial.println("Firmware updated ! Rebooting ...");
+            delay(5000);
+            ESP.reset();
+            break;
+     }
+}
+
+String Hautomation::transmit(String url, JsonObject& jsonObject, int timeout) {
     String data;
+    String payload;
+    StringStream payloadStream;
+
     jsonObject.printTo(data);
 
     Serial.println("Calling " + url + " with data " + data);
@@ -168,29 +236,36 @@ void Hautomation::transmit(String url, JsonObject& jsonObject, int timeout) {
     http.setTimeout(timeout);
     http.begin(url);
     http.addHeader("Content-Type", "application/json");
-    http.POST(data);
-    http.writeToStream(&Serial);
-    String payload = http.getString();
-    Serial.println(payload);
+    int httpCode = http.POST(data);
+    http.writeToStream(&payloadStream);
+    delay(500);
+    if (httpCode == HTTP_CODE_OK || httpCode == 500) {
+        payload = payloadStream.readString();
+    }
+    Serial.println("Response payload : " + payload);
     http.end();
+
+    return payload;
 }
 
 void Hautomation::postSensorValue(String sensorType, float value) {
-    String id = config["id"];
-    String vcc = String(ESP.getVcc() / 1000);
-    String url = baseUrl() + "esp/sensor/set/" + id + "/" + sensorType + "/" + String(value) + "/" + vcc + "/";
-    DynamicJsonBuffer jsonBuffer;
+    if (!shouldFirmwareUpdate()) {
+        String id = config["id"];
+        String vcc = String(ESP.getVcc() / 1000);
+        String url = baseUrl() + "esp/sensor/set/" + id + "/" + sensorType + "/" + String(value) + "/" + vcc + "/";
+        DynamicJsonBuffer jsonBuffer;
 
-    JsonObject& root = jsonBuffer.createObject();
-    root["id"] = id;
-    root["type"] = sensorType;
-    root["value"] = value;
-    root["vcc"] = vcc;
+        JsonObject& root = jsonBuffer.createObject();
+        root["id"] = id;
+        root["type"] = sensorType;
+        root["value"] = value;
+        root["vcc"] = vcc;
 
-    // Store values
-    sensorValues[sensorType] = value;
+        // Store values
+        sensorValues[sensorType] = value;
 
-    transmit(url, root, HTTP_SENSOR_TIMEOUT);
+        transmit(url, root, HTTP_SENSOR_TIMEOUT);
+    }
 }
 
 void Hautomation::loop() {
@@ -217,7 +292,7 @@ void Hautomation::saveCounter(int value) {
 }
 
 int Hautomation::loadCounter() {
-    int value = 0;
+    int value = 1;
     int hasBeenWritten = 0;
 
     EEPROM.begin(512);
@@ -227,14 +302,44 @@ int Hautomation::loadCounter() {
     EEPROM.end();
 
     if (hasBeenWritten != 1) {
-        value = 0;
+        value = 1;
     }
 
     return value;
 }
 
+void Hautomation::resetFirmwareUpdate() {
+    Serial.println("Resetting firmare indicator");
+    EEPROM.begin(512);
+    EEPROM.put(20, 100);
+    EEPROM.commit();
+    EEPROM.end();
+}
+
+void Hautomation::setFirmwareUpdate() {
+    EEPROM.begin(512);
+    EEPROM.put(20, 102);
+    EEPROM.commit();
+    EEPROM.end();
+}
+
+boolean Hautomation::shouldFirmwareUpdate() {
+    int value = 0;
+
+    EEPROM.begin(512);
+    EEPROM.get(20, value);
+    EEPROM.commit();
+    EEPROM.end();
+
+    if (value == 102) {
+        return true;
+    }
+
+    return false;
+}
+
 boolean Hautomation::canRunHttpServer() {
-    if (poweredMode == 1 || poweredMode == 2) {
+    if ((poweredMode == 1 || poweredMode == 2) && !shouldFirmwareUpdate()) {
         return true;
     } else {
         return false;
@@ -244,19 +349,21 @@ boolean Hautomation::canRunHttpServer() {
 // Mode : 0 - Deep sleep mode, 1 - always powered but sleep, 2 - always powered, 3 - light sleep mode
 // Duration in seconds
 void Hautomation::rest(int mode, long duration) {
-    if (mode == 0) {
-        Serial.println("Entering deep sleep for time " + String(sleepTime) + "s");
-        ESP.deepSleep(duration * 1000000L);
-    }
+    if (!updating) {
+        if (mode == 0) {
+            Serial.println("Entering deep sleep for time " + String(duration) + "s");
+            ESP.deepSleep(duration * 1000000L);
+        }
 
-    if (mode == 1) {
-        Serial.println("Delay for time " + String(sleepTime) + "s");
-        delay(sleepTime * 1000L);
-    }
+        if (mode == 1) {
+            Serial.println("Delay for time " + String(duration) + "s");
+            delay(sleepTime * 1000L);
+        }
 
-    if (mode == 3) {
-        Serial.println("Enetring light sleep for time " + String(sleepTime) + "s");
-        wifi_set_sleep_type(LIGHT_SLEEP_T);
-        delay(sleepTime * 1000L);
+        if (mode == 3) {
+            Serial.println("Enetring light sleep for time " + String(duration) + "s");
+            wifi_set_sleep_type(LIGHT_SLEEP_T);
+            delay(sleepTime * 1000L);
+        }
     }
 }

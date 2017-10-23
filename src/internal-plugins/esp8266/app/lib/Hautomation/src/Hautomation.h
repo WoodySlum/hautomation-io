@@ -12,6 +12,7 @@
 #include <ESP8266HTTPClient.h>
 #include <ESP8266WebServer.h>
 #include <ESP8266mDNS.h>
+#include <ESP8266httpUpdate.h>
 #include <ESP8266HTTPUpdateServer.h>
 #define ARDUINOJSON_ENABLE_PROGMEM 0
 #include <ArduinoJson.h>
@@ -19,7 +20,6 @@ extern "C" {
 #include "user_interface.h"
 }
 
-// Your class header here...
 class Hautomation {
   public:
     Hautomation();
@@ -27,7 +27,7 @@ class Hautomation {
     void setup(String jsonConfiguration);
     void loop();
     String baseUrl();
-    void transmit(String url, JsonObject& jsonObject, int timeout);
+    String transmit(String url, JsonObject& jsonObject, int timeout);
     void postSensorValue(String sensorType, float value);
     JsonVariant &getConfig();
     void rest(int mode, long duration);
@@ -37,9 +37,13 @@ class Hautomation {
     void connect();
     void parseConfig(String jsonConfiguration);
     void ping();
+    void updateFirmware();
     void saveCounter(int value);
     int loadCounter();
     boolean canRunHttpServer();
+    void resetFirmwareUpdate();
+    void setFirmwareUpdate();
+    boolean shouldFirmwareUpdate();
 };
 
 #endif

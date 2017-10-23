@@ -49,7 +49,7 @@ function loaded(api) {
     }
 
     api.sensorAPI.registerForm(EspTemperatureSensorForm);
-    api.iotAPI.registerApp("app", "test", "A test app", 1, "espressif8266_stage", "nodemcuv2", "arduino", ["esp8266"], Toto);
+    api.iotAPI.registerApp("app", "test", "A test app", 1, "espressif8266_stage", "nodemcuv2", "arduino", ["esp8266"], {poweredMode: 3, timer:30}, Toto);
 
     /**
      * This class is overloaded by sensors

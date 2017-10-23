@@ -70,7 +70,17 @@ class IotManager {
         this.webServices.registerAPI(this, WebServices.POST, IOT_MANAGER_FLASH, Authentication.AUTH_ADMIN_LEVEL);
     }
 
-    registerLib(path, id, version = 0, form = null, ...inject) {
+    /**
+     * Register an IoT library
+     * A library folder should contain `global_lib` and `lib` folder, inside `path` parameter
+     *
+     * @param  {string} path        The library path
+     * @param  {string} appId       An app identifier
+     * @param  {int} [version=0] A version number
+     * @param  {FormObject} [form=null] A form
+     * @param  {...Object} inject      Some form injection parameters
+     */
+    registerLib(path, appId, version = 0, form = null, ...inject) {
         if (!fs.existsSync(path + "/" + LIB_FOLDER)) {
             throw Error("'lib' folder does not exists in " + path);
         }
@@ -79,25 +89,31 @@ class IotManager {
             throw Error("'global_lib' folder does not exists in " + path);
         }
 
-        this.iotLibs[id] = {};
-        this.iotLibs[id].lib = path + "/" + LIB_FOLDER;
-        this.iotLibs[id].globalLib = path + "/" + GLOBAL_LIB_FOLDER;
-        this.iotLibs[id].form = form;
-        this.iotLibs[id].version = version;
+        this.iotLibs[appId] = {};
+        this.iotLibs[appId].lib = path + "/" + LIB_FOLDER;
+        this.iotLibs[appId].globalLib = path + "/" + GLOBAL_LIB_FOLDER;
+        this.iotLibs[appId].form = form;
+        this.iotLibs[appId].version = version;
 
         // Register form
         if (form) {
             this.formManager.register(form, ...inject);
         }
 
-        Logger.info("IoT lib " + id + " registered");
+        Logger.info("IoT lib " + appId + " registered");
     }
 
-    getFormsForApp(id) {
+    /**
+     * Get the forms for an IoT app
+     *
+     * @param  {string} appId An app identifier
+     * @returns {[FormObject]}       The list of forms
+     */
+    getFormsForApp(appId) {
         const results = [];
-        if (this.iotAppExists(id) && this.iotApps[id].form) {
-            if (this.iotApps[id].dependencies) {
-                this.iotApps[id].dependencies.forEach((dependencyKey) => {
+        if (this.iotAppExists(appId) && this.iotApps[appId].form) {
+            if (this.iotApps[appId].dependencies) {
+                this.iotApps[appId].dependencies.forEach((dependencyKey) => {
                     const dependency = this.iotLibs[dependencyKey];
                     if (dependency && dependency.form) {
                         results.push(dependency.form);
@@ -105,13 +121,30 @@ class IotManager {
                 });
             }
 
-            results.push(this.iotApps[id].form);
+            results.push(this.iotApps[appId].form);
         }
         return results;
     }
 
-    registerApp(path, id, name, version, platform, board, framework, dependencies, form = null, ...inject) {
-        if (!path || !id || !name || !version || !platform || !board || !framework) {
+    /**
+     * Register an IoT library
+     * An IoT app folder should contain `global_lib`, `lib` and `src` folder, inside `path` parameter.
+     * A `main.cpp` file should be created under `src` folder.
+     *
+     * @param  {string} path           The application file path
+     * @param  {string} appId          An app identifier
+     * @param  {string} name           The app name
+     * @param  {int} version           The application version number
+     * @param  {string} platform       A platform
+     * @param  {string} board          A board type
+     * @param  {string} framework      A framework
+     * @param  {Array} dependencies    The array of library dependencies. Can be en empty array or an array of library app identifiers.
+     * @param  {Object} [options=null] A list of options injected in IoT configuration during flash sequence
+     * @param  {FormObject} [form=null] A form
+     * @param  {...Object} inject      Some form injection parameters
+     */
+    registerApp(path, appId, name, version, platform, board, framework, dependencies, options = null, form = null, ...inject) {
+        if (!path || !appId || !name || !version || !platform || !board || !framework) {
             throw Error("Parameters are mandatory");
         }
 
@@ -137,17 +170,18 @@ class IotManager {
             }
         });
 
-        this.iotApps[id] = {};
-        this.iotApps[id].src = path + "/" + SRC_FOLDER;
-        this.iotApps[id].lib = path + "/" + LIB_FOLDER;
-        this.iotApps[id].globalLib = path + "/" + GLOBAL_LIB_FOLDER;
-        this.iotApps[id].name = name;
-        this.iotApps[id].version = version;
-        this.iotApps[id].platform = platform;
-        this.iotApps[id].board = board;
-        this.iotApps[id].framework = framework;
-        this.iotApps[id].form = form;
-        this.iotApps[id].dependencies = dependencies;
+        this.iotApps[appId] = {};
+        this.iotApps[appId].src = path + "/" + SRC_FOLDER;
+        this.iotApps[appId].lib = path + "/" + LIB_FOLDER;
+        this.iotApps[appId].globalLib = path + "/" + GLOBAL_LIB_FOLDER;
+        this.iotApps[appId].name = name;
+        this.iotApps[appId].version = version;
+        this.iotApps[appId].platform = platform;
+        this.iotApps[appId].board = board;
+        this.iotApps[appId].framework = framework;
+        this.iotApps[appId].form = form;
+        this.iotApps[appId].dependencies = dependencies;
+        this.iotApps[appId].options = options?options:{};
 
         // Register form
         if (form) {
@@ -155,39 +189,46 @@ class IotManager {
         }
 
         Logger.info("Registered IoT app " + name);
-        /*this.build(id, true, {}, (err, res) => {
-            if (err) Logger.err(err.message);
-            Logger.info(res);
-        });*/
     }
 
-    build(id, flash = false, config = null, cb) {
-        const tmpDir = this.appConfiguration.cachePath + "iot-flash-" + DateUtils.class.timestamp() + "-" + id + "/";
+    /**
+     * Build a firmware for a specific appId
+     *
+     * @param  {string}   appId         An app identifier
+     * @param  {boolean}  [flash=false] `true` if USB flash sequence should be done after build, `false` otherwise
+     * @param  {Object}   [config=null] A configuration injected to firmware
+     * @param  {Function} cb            A callback `(error, result) => {}` called when firmware / flash is done. The result object contains 2 properties, `firmwarePath` for the firmware, `stdout` for the results
+     */
+    build(appId, flash = false, config = null, cb) {
+        const tmpDir = this.appConfiguration.cachePath + "iot-flash-" + DateUtils.class.timestamp() + "-" + appId + "/";
         fs.ensureDirSync(tmpDir);
 
         // Copy dependencies
-        this.iotApps[id].dependencies.forEach((dependencyId) => {
+        this.iotApps[appId].dependencies.forEach((dependencyId) => {
             const dependency = this.iotLibs[dependencyId];
             fs.copySync(dependency.lib, tmpDir + LIB_FOLDER);
             fs.copySync(dependency.globalLib, tmpDir + GLOBAL_LIB_FOLDER);
         });
         // Copy sources
-        fs.copySync(this.iotApps[id].src, tmpDir + SRC_FOLDER);
-        fs.copySync(this.iotApps[id].lib, tmpDir + LIB_FOLDER);
-        fs.copySync(this.iotApps[id].globalLib, tmpDir + GLOBAL_LIB_FOLDER);
+        fs.copySync(this.iotApps[appId].src, tmpDir + SRC_FOLDER);
+        fs.copySync(this.iotApps[appId].lib, tmpDir + LIB_FOLDER);
+        fs.copySync(this.iotApps[appId].globalLib, tmpDir + GLOBAL_LIB_FOLDER);
 
         // Configuration injection
         const baseConfiguration = {
-                wifi:this.environmentManager.getWifiInfos(),
-                ip:this.environmentManager.getLocalIp(),
-                port:this.environmentManager.getLocalPort(),
-                version:this.getVersion(id)
+            wifi:this.environmentManager.getWifiInfos(),
+            ip:this.environmentManager.getLocalIp(),
+            port:this.environmentManager.getLocalPort(),
+            version:this.getVersion(appId),
+            options:this.iotApps[appId].options
         };
         if (!config) {
             config = {};
         }
 
+        // eslint-disable-next-line
         const jsonConfiguration = JSON.stringify(Object.assign(baseConfiguration, config)).replace(/\"/g, '\\"');
+
         try {
             const mainFilePath = tmpDir + SRC_FOLDER + "/" + MAIN_FILE;
             let mainContent = fs.readFileSync(mainFilePath, {encoding:"utf-8"});
@@ -199,13 +240,13 @@ class IotManager {
             Logger.err(e.message);
         }
 
-        this.writeDescriptor(tmpDir, id);
+        this.writeDescriptor(tmpDir, appId);
 
-        this.installationManager.executeCommand("cd " + tmpDir + " ;platformio run -e " + this.iotApps[id].board + (flash?" -t upload":""), false, (error, stdout, stderr) => {
+        this.installationManager.executeCommand("cd " + tmpDir + " ;platformio run -e " + this.iotApps[appId].board + (flash?" -t upload":""), false, (error, stdout, stderr) => {
             if (error) {
                 cb(error);
             } else {
-                const firmwarePath = tmpDir + ".pioenvs/" + this.iotApps[id].board + "/firmware.elf";
+                const firmwarePath = tmpDir + ".pioenvs/" + this.iotApps[appId].board + "/firmware.bin";
                 console.log(firmwarePath);
                 if (fs.existsSync(firmwarePath)) {
                     cb(null, {firmwarePath:firmwarePath, stdout:stdout});
@@ -216,30 +257,48 @@ class IotManager {
         });
     }
 
-    writeDescriptor(folder, id) {
+    /**
+     * Write platformio ini file descriptor
+     *
+     * @param  {string} folder The folder where file should be written
+     * @param  {string} appId  An app identifier
+     */
+    writeDescriptor(folder, appId) {
         let iniContent = "";
-        iniContent += "[env:" + this.iotApps[id].board + "]\n";
-        iniContent += "platform = " + this.iotApps[id].platform + "\n";
-        iniContent += "board = " + this.iotApps[id].board + "\n";
-        iniContent += "framework = " + this.iotApps[id].framework + "\n";
+        iniContent += "[env:" + this.iotApps[appId].board + "]\n";
+        iniContent += "platform = " + this.iotApps[appId].platform + "\n";
+        iniContent += "board = " + this.iotApps[appId].board + "\n";
+        iniContent += "framework = " + this.iotApps[appId].framework + "\n";
         iniContent += "\n";
         iniContent += "[platformio]\n";
         iniContent += "lib_dir = ./" + GLOBAL_LIB_FOLDER + "\n";
-        iniContent += "lib_extra_dirs = ./" +LIB_FOLDER + "\n";
+        iniContent += "lib_extra_dirs = ./" + LIB_FOLDER + "\n";
         fs.writeFileSync(folder + "platformio.ini", iniContent);
     }
 
-    iotAppExists(id) {
-        if (this.iotApps[id]) {
+    /**
+     * Check if an IoT app exists
+     *
+     * @param  {string} appId An app identifier
+     * @returns {boolean}       `true` if the iot app is registered, `false` otherwise
+     */
+    iotAppExists(appId) {
+        if (this.iotApps[appId]) {
             return true;
         } else {
             return false;
         }
     }
 
-    getVersion(id) {
+    /**
+     * Get a version for a specific IoT app
+     *
+     * @param  {string} appId An app identifier
+     * @returns {int}       A version number
+     */
+    getVersion(appId) {
         let version = 0;
-        const app = this.getIotApp(id);
+        const app = this.getIotApp(appId);
         if (app) {
             version = app.version;
             app.dependencies.forEach((dependencyId) => {
@@ -252,14 +311,26 @@ class IotManager {
         return version;
     }
 
-    getIotApp(id) {
-        if (this.iotApps[id]) {
-            return this.iotApps[id];
+    /**
+     * Retrive an IoT app object
+     *
+     * @param  {string} appId An app identifier
+     * @returns {Object}       An IoT app
+     */
+    getIotApp(appId) {
+        if (this.iotApps[appId]) {
+            return this.iotApps[appId];
         } else {
             return null;
         }
     }
 
+    /**
+     * Retrieve an IoT (not application, but configured instance)
+     *
+     * @param  {number} id An IoT identifier
+     * @returns {Object}    An IoT configuration object
+     */
     getIot(id) {
         let iotFound = null;
         this.iots.forEach((iot) => {

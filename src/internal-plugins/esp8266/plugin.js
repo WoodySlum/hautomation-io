@@ -1,4 +1,8 @@
 "use strict";
+
+const fs = require("fs-extra");
+const md5File = require("md5-file");
+
 /**
  * Loaded function
  *
@@ -9,6 +13,8 @@ function loaded(api) {
 
     const WS_SENSOR_SET_ROUTE = ":/esp/sensor/set/";
     const WS_PING_ROUTE = ":/esp/ping/";
+    const WS_FIRMWARE_ROUTE = ":/esp/firmware/upgrade/";
+    const errorFirmware = {};
 
     /**
      * Manage sensors
@@ -23,9 +29,10 @@ function loaded(api) {
          */
         constructor(api) {
             this.api = api;
-            this.api.iotAPI.registerLib("app", "esp8266", 1);
+            this.api.iotAPI.registerLib("app", "esp8266", 23);
             this.api.webAPI.register(this, this.api.webAPI.constants().POST, WS_SENSOR_SET_ROUTE + "[id]/[type]/[value]/[vcc*]/", this.api.webAPI.Authentication().AUTH_NO_LEVEL);
             this.api.webAPI.register(this, this.api.webAPI.constants().POST, WS_PING_ROUTE + "[id]/", this.api.webAPI.Authentication().AUTH_NO_LEVEL);
+            this.api.webAPI.register(this, this.api.webAPI.constants().GET, WS_FIRMWARE_ROUTE + "[id]/", this.api.webAPI.Authentication().AUTH_NO_LEVEL);
         }
 
         /**
@@ -49,14 +56,42 @@ function loaded(api) {
                         reject(this.api.webAPI.APIResponse(false, {}, 1081, "Invalid parameters"));
                     }
                 });
-            } else {
-                if (apiRequest.route.startsWith(WS_PING_ROUTE)) {
-                    return new Promise((resolve, reject) => {
-                        resolve(this.api.webAPI.APIResponse(true, {success:true, version:this.api.iotAPI.getVersion(this.api.iotAPI.getIot(apiRequest.data.id).iotApp)}));
-                    });
-                }
-            }
+            } else if (apiRequest.route.startsWith(WS_PING_ROUTE)) {
+                const iot = this.api.iotAPI.getIot(apiRequest.data.id);
+                return new Promise((resolve, reject) => {
+                    resolve(this.api.webAPI.APIResponse(true, {success:true, version:(errorFirmware[iot.iotApp]?-1:this.api.iotAPI.getVersion(this.api.iotAPI.getIot(apiRequest.data.id).iotApp))}));
+                });
+            } else if (apiRequest.route.startsWith(WS_FIRMWARE_ROUTE)) {
 
+
+                return new Promise((resolve, reject) => {
+                    const iot = this.api.iotAPI.getIot(apiRequest.data.id);
+                    if (iot) {
+                        this.api.iotAPI.build(iot.iotApp, false, iot, (error, details) => {
+                            if (error) {
+                                errorFirmware[iot.iotApp] = true;
+                                api.exported.Logger.err("Locked firmware for app " + iot.iotApp + ". Firmware built failed : " + error.message);
+                                reject(this.api.webAPI.APIResponse(false, {}, 1090, "Build firmware failed for id " + apiRequest.data.id));
+                            } else if (details && details.firmwarePath) {
+                                api.exported.Logger.err(details);
+                                api.exported.Logger.info("Firmware built for app " + iot.iotApp);
+                                const md5 = md5File.sync(details.firmwarePath);
+                                apiRequest.res.setHeader("Content-Type", "application/octet-stream");
+                                apiRequest.res.setHeader("x-MD5", md5);
+                                apiRequest.res.download(details.firmwarePath);
+                            } else {
+                                errorFirmware[iot.iotApp] = true;
+                                api.exported.Logger.err("Locked firmware for app " + iot.iotApp + ". Firmware built failed : " + error.message);
+                                reject(this.api.webAPI.APIResponse(false, {}, 1091, "Build firmware failed for id " + apiRequest.data.id));
+                            }
+                        });
+                    } else {
+                        api.exported.Logger.err("Unknown iot identifier");
+                        reject(this.api.webAPI.APIResponse(false, {}, 1089, "Unknown iot identifier " + apiRequest.data.id));
+                    }
+
+                });
+            }
         }
     }
 
