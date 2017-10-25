@@ -1,16 +1,16 @@
 #include "Hautomation.h"
-#include "StringStream.h"
 
-// int MAX_TIME_CONNECTION_ATTEMPT = 30; // In seconds
-// int MAX_TIME_CONNECTION_RETRY = 30; // In seconds
-// int MAX_TIME_SLEEP = 70 * 60;
-// int HTTP_SENSOR_TIMEOUT = 20;
-// int HTTP_PING_TIMEOUT = 10;
 int MAX_TIME_CONNECTION_ATTEMPT = 30; // In seconds
 int MAX_TIME_CONNECTION_RETRY = 30; // In seconds
-int MAX_TIME_SLEEP = 1 * 60;
-int HTTP_SENSOR_TIMEOUT = 20;
-int HTTP_PING_TIMEOUT = 10;
+int MAX_TIME_SLEEP = 70 * 60;
+int HTTP_SENSOR_TIMEOUT = 20 * 1000;
+int HTTP_PING_TIMEOUT = 10 * 1000;
+
+int POWER_MODE_DEEP_SLEEP = 0;
+int POWER_MODE_SLEEP = 1;
+int POWER_MODE_ALWAYS = 2;
+int POWER_MODE_LIGHT_SLEEP = 3;
+
 boolean updating = false;
 ESP8266WebServer httpServer(80);
 ESP8266HTTPUpdateServer httpUpdater;
@@ -19,8 +19,8 @@ JsonObject& sensorValues = sensorBuffer.createObject();
 DynamicJsonBuffer configBuffer;
 JsonVariant config;
 
-int poweredMode = 0;
-int sleepTime = 90;
+int poweredMode = POWER_MODE_SLEEP;
+int sleepTime = 60;
 
 
 // Measure vcc
@@ -34,18 +34,19 @@ Hautomation::Hautomation()
 void Hautomation::setup(String jsonConfiguration)
 {
     Serial.begin(115200);
-
     config = NULL;
-
-    delay(5000);
     parseConfig(jsonConfiguration);
-
-    delay(500);
     Serial.println("Hautomation ESP8266 library");
     Serial.println("Configuration : ");
     Serial.println(jsonConfiguration);
 
-    checkRun();
+    poweredMode = config["options"]["poweredMode"];
+    sleepTime = config["options"]["timer"];
+
+    if (!shouldFirmwareUpdate()) {
+        checkRun();
+    }
+
     connect();
 
     if (shouldFirmwareUpdate()) {
@@ -77,8 +78,8 @@ void Hautomation::connect() {
             WiFi.hostname("DEMO_HAUTOMATION");
         #endif
 
-            const char* ssid = config["wifi"]["ssid"];
-            const char* passphrase = config["wifi"]["passphrase"];
+            const char* ssid = config["ESP8266Form"]["ssid"];
+            const char* passphrase = config["ESP8266Form"]["passphrase"];
 
             Serial.println("SSID : " + String(ssid));
             //Serial.println("Passphrase : " + String(passphrase));
@@ -91,7 +92,7 @@ void Hautomation::connect() {
             }
             if (counter >= MAX_TIME_CONNECTION_ATTEMPT) {
                 Serial.println("Connection failed. Trying again in " + String(MAX_TIME_CONNECTION_RETRY) + " seconds");
-                rest(3, MAX_TIME_CONNECTION_RETRY);
+                rest(POWER_MODE_SLEEP, MAX_TIME_CONNECTION_RETRY);
                 return;
             }
 
@@ -108,21 +109,24 @@ void Hautomation::connect() {
     if (canRunHttpServer()) {
         httpUpdateServer();
     }
+
+    // Ping
+    ping();
 }
 
 void Hautomation::checkRun() {
     //sleepTime
-    if (sleepTime <= MAX_TIME_SLEEP) {
-
-    } else {
+    if (sleepTime > MAX_TIME_SLEEP) {
         int tick = loadCounter();
-        long elapsedTime = tick * sleepTime;
+        long elapsedTime = tick * MAX_TIME_SLEEP;
         if (elapsedTime >= sleepTime) {
             saveCounter(1);
         } else {
             long newSleepTime = sleepTime;
             if ((sleepTime - elapsedTime) <= MAX_TIME_SLEEP) {
                 newSleepTime = (sleepTime - elapsedTime);
+            } else {
+                newSleepTime = MAX_TIME_SLEEP;
             }
             tick++;
             saveCounter(tick);
@@ -153,7 +157,7 @@ void Hautomation::httpUpdateServer() {
 
     httpServer.on("/reset", [](){
         Serial.println("Resetting ...");
-        httpServer.send(200, "text/html", "Rebooting, please wait ...");
+        httpServer.send(200, "application/json", "{}");
         ESP.reset();
     });
 
@@ -162,6 +166,11 @@ void Hautomation::httpUpdateServer() {
         sensorValues.printTo(values);
         httpServer.send(200, "application/json", values);
     });
+
+    /*httpServer.on("/ping", [](){
+        ping();
+        httpServer.send(200, "application/json", "{}");
+    });*/
 
     Serial.println("HTTP server ready");
 }
@@ -227,23 +236,25 @@ void Hautomation::updateFirmware() {
 String Hautomation::transmit(String url, JsonObject& jsonObject, int timeout) {
     String data;
     String payload;
-    StringStream payloadStream;
-
     jsonObject.printTo(data);
 
     Serial.println("Calling " + url + " with data " + data);
-    HTTPClient http;
-    http.setTimeout(timeout);
-    http.begin(url);
-    http.addHeader("Content-Type", "application/json");
-    int httpCode = http.POST(data);
-    http.writeToStream(&payloadStream);
-    delay(500);
-    if (httpCode == HTTP_CODE_OK || httpCode == 500) {
-        payload = payloadStream.readString();
+    if (WiFi.status() == WL_CONNECTED) {
+        HTTPClient http;
+        http.setTimeout(timeout);
+        http.begin(url);
+        http.addHeader("Content-Type", "application/json");
+        int httpCode = http.POST(data);
+
+        if (httpCode == HTTP_CODE_OK || httpCode == 500) {
+            payload = http.getString();
+        }
+
+        Serial.println("Response payload : " + payload);
+        http.end();
+    } else {
+        Serial.println("Could not transmit data. Not connected to network.");
     }
-    Serial.println("Response payload : " + payload);
-    http.end();
 
     return payload;
 }
@@ -273,8 +284,10 @@ void Hautomation::loop() {
         connect();
     }
 
-    // Ping
-    ping();
+    // Ping only when not always powered
+    if (poweredMode == POWER_MODE_ALWAYS && poweredMode == POWER_MODE_SLEEP) {
+        ping();
+    }
 
     if (canRunHttpServer()) {
         httpServer.handleClient();
@@ -339,7 +352,7 @@ boolean Hautomation::shouldFirmwareUpdate() {
 }
 
 boolean Hautomation::canRunHttpServer() {
-    if ((poweredMode == 1 || poweredMode == 2) && !shouldFirmwareUpdate()) {
+    if ((poweredMode == POWER_MODE_SLEEP || poweredMode == POWER_MODE_ALWAYS) && !shouldFirmwareUpdate()) {
         return true;
     } else {
         return false;
@@ -350,18 +363,18 @@ boolean Hautomation::canRunHttpServer() {
 // Duration in seconds
 void Hautomation::rest(int mode, long duration) {
     if (!updating) {
-        if (mode == 0) {
+        if (mode == POWER_MODE_DEEP_SLEEP) {
             Serial.println("Entering deep sleep for time " + String(duration) + "s");
             ESP.deepSleep(duration * 1000000L);
         }
 
-        if (mode == 1) {
+        if (mode == POWER_MODE_SLEEP) {
             Serial.println("Delay for time " + String(duration) + "s");
             delay(sleepTime * 1000L);
         }
 
-        if (mode == 3) {
-            Serial.println("Enetring light sleep for time " + String(duration) + "s");
+        if (mode == POWER_MODE_LIGHT_SLEEP) {
+            Serial.println("Entering light sleep for time " + String(duration) + "s");
             wifi_set_sleep_type(LIGHT_SLEEP_T);
             delay(sleepTime * 1000L);
         }

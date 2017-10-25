@@ -394,6 +394,8 @@ class FormManager {
                                 schemaUI[prop]["ui:widget"] = "checkboxes";
                             } else if (display === "textarea") {
                                 schemaUI[prop]["ui:widget"] = "textarea";
+                            } else if (display === "password") {
+                                schemaUI[prop]["ui:widget"] = "password";
                             }
                         }
 

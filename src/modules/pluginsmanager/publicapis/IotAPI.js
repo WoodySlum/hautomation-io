@@ -100,6 +100,15 @@ class IotAPI {
     build(appId, flash = false, config = null, cb) {
         PrivateProperties.oprivate(this).iotManager.build(appId, flash, config, cb);
     }
+
+    /**
+     * Get the constants `constants().PLATFORMS`, `constants().BOARDS` and `constants().FRAMEWORKS`
+     *
+     * @returns {Object} The constants object
+     */
+    constants() {
+        return PrivateProperties.oprivate(this).iotManager.constants();
+    }
 }
 
 module.exports = {class:IotAPI};

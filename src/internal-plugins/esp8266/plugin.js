@@ -1,6 +1,4 @@
 "use strict";
-
-const fs = require("fs-extra");
 const md5File = require("md5-file");
 
 /**
@@ -11,16 +9,49 @@ const md5File = require("md5-file");
 function loaded(api) {
     api.init();
 
+    class ESP8266Form extends api.exported.FormObject.class {
+        constructor(id = null, ssid = null, passphrase = null) {
+            this.id = id;
+
+            /**
+             * @Property("ssid");
+             * @Title("esp8266.form.wifi.ssid");
+             * @Type("string");
+             * @Required(true);
+             */
+            this.ssid = ssid;
+
+            /**
+             * @Property("passphrase");
+             * @Title("esp8266.form.wifi.password");
+             * @Type("string");
+             * @Required(true);
+             * @Display("password");
+             */
+            this.passphrase = passphrase;
+        }
+
+        /**
+         * Convert JSON data to object
+         *
+         * @param  {Object} data Some data
+         * @returns {ESP8266Form}      An instance
+         */
+        json(data) {
+            return new ESP8266Form(data.id, data.ssid, data.passphrase);
+        }
+    }
+
     const WS_SENSOR_SET_ROUTE = ":/esp/sensor/set/";
     const WS_PING_ROUTE = ":/esp/ping/";
     const WS_FIRMWARE_ROUTE = ":/esp/firmware/upgrade/";
     const errorFirmware = {};
 
     /**
-     * Manage sensors
+     * ESP8266 manager class
      * @class
      */
-    class EspSensors {
+    class Esp8266 {
         /**
          * ESP sensors class
          *
@@ -29,10 +60,48 @@ function loaded(api) {
          */
         constructor(api) {
             this.api = api;
-            this.api.iotAPI.registerLib("app", "esp8266", 23);
+            this.api.iotAPI.registerLib("app", "esp8266", 42, ESP8266Form);
             this.api.webAPI.register(this, this.api.webAPI.constants().POST, WS_SENSOR_SET_ROUTE + "[id]/[type]/[value]/[vcc*]/", this.api.webAPI.Authentication().AUTH_NO_LEVEL);
             this.api.webAPI.register(this, this.api.webAPI.constants().POST, WS_PING_ROUTE + "[id]/", this.api.webAPI.Authentication().AUTH_NO_LEVEL);
             this.api.webAPI.register(this, this.api.webAPI.constants().GET, WS_FIRMWARE_ROUTE + "[id]/", this.api.webAPI.Authentication().AUTH_NO_LEVEL);
+        }
+
+        /**
+         * ESP8266 constants :
+         * Modes : `MODE_DEEP_SLEEP`, `MODE_SLEEP`, `MODE_ALWAYS_POWERED` or `MODE_LIGHT_SLEEP`
+         * Time : `EVERY_HOUR`, `EVERY_DAY` or `EVERY_WEEK`
+         *
+         * @returns {Object} The constants
+         */
+        constants() {
+            return {
+                MODE_DEEP_SLEEP:0,
+                MODE_SLEEP:1,
+                MODE_ALWAYS_POWERED:2,
+                MODE_LIGHT_SLEEP:3,
+                EVERY_HOUR: (60 * 60),
+                EVERY_DAY: (24 * 60 * 60),
+                EVERY_WEEK: (7* 24 * 60 * 60)
+            };
+        }
+
+        /**
+         * Generate Iot app options
+         *
+         * @param  {int} powerMode The power mode. Can be `api.getPluginInstance("esp8266").constants().MODE_DEEP_SLEEP`, `api.getPluginInstance("esp8266").constants().MODE_SLEEP`, `api.getPluginInstance("esp8266").constants().MODE_ALWAYS_POWERED` or `api.getPluginInstance("esp8266").constants().MODE_LIGHT_SLEEP`
+         * @param  {int} timer     A timer for mode deep sleep, light sleep or sleep in `seconds`. Can be a constant `api.getPluginInstance("esp8266").constants().EVERY_HOUR`, `api.getPluginInstance("esp8266").constants().EVERY_DAY` or `api.getPluginInstance("esp8266").constants().EVERY_WEEK`
+         *
+         * @returns {Object}           The options object
+         */
+        generateOptions(powerMode, timer) {
+            if (powerMode < 0 || powerMode > 3) {
+                throw Error("Invalid power mode");
+            }
+
+            return {
+                poweredMode: powerMode,
+                timer:timer
+            };
         }
 
         /**
@@ -58,7 +127,8 @@ function loaded(api) {
                 });
             } else if (apiRequest.route.startsWith(WS_PING_ROUTE)) {
                 const iot = this.api.iotAPI.getIot(apiRequest.data.id);
-                return new Promise((resolve, reject) => {
+                return new Promise((resolve) => {
+                    console.log({success:true, version:(errorFirmware[iot.iotApp]?-1:this.api.iotAPI.getVersion(this.api.iotAPI.getIot(apiRequest.data.id).iotApp))});
                     resolve(this.api.webAPI.APIResponse(true, {success:true, version:(errorFirmware[iot.iotApp]?-1:this.api.iotAPI.getVersion(this.api.iotAPI.getIot(apiRequest.data.id).iotApp))}));
                 });
             } else if (apiRequest.route.startsWith(WS_FIRMWARE_ROUTE)) {
@@ -95,7 +165,7 @@ function loaded(api) {
         }
     }
 
-    api.registerInstance(new EspSensors(api));
+    api.registerInstance(new Esp8266(api));
 }
 
 module.exports.attributes = {

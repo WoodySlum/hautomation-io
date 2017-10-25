@@ -1,11 +1,12 @@
 "use strict";
-const Logger = require("./../../logger/Logger");
 const fs = require("fs-extra");
+const Logger = require("./../../logger/Logger");
 const DateUtils = require("./../../utils/DateUtils");
 const WebServices = require("./../../services/webservices/WebServices");
 const APIResponse = require("./../../services/webservices/APIResponse");
 const Authentication = require("./../authentication/Authentication");
 const IotForm = require("./IotForm");
+const IotsListForm = require("./IotsListForm");
 
 const CONF_MANAGER_KEY = "iots";
 const SRC_FOLDER = "src";
@@ -61,6 +62,7 @@ class IotManager {
         }
 
         this.formManager.register(IotForm.class);
+        this.registerIotsListForm();
 
         // Web services
         this.webServices.registerAPI(this, WebServices.GET, IOT_MANAGER_AVAILABLE_GET, Authentication.AUTH_ADMIN_LEVEL);
@@ -68,6 +70,19 @@ class IotManager {
         this.webServices.registerAPI(this, WebServices.POST, IOT_MANAGER_POST, Authentication.AUTH_ADMIN_LEVEL);
         this.webServices.registerAPI(this, WebServices.DELETE, IOT_MANAGER_DEL, Authentication.AUTH_ADMIN_LEVEL);
         this.webServices.registerAPI(this, WebServices.POST, IOT_MANAGER_FLASH, Authentication.AUTH_ADMIN_LEVEL);
+    }
+
+    /**
+     * Register an iots list form
+     */
+    registerIotsListForm() {
+        const iotsName = [];
+        const iotsId = [];
+        this.iots.forEach((iot) => {
+            iotsName.push(iot.name);
+            iotsId.push(iot.id);
+        });
+        this.formManager.register(IotsListForm.class, iotsName, iotsId);
     }
 
     /**
@@ -104,26 +119,22 @@ class IotManager {
     }
 
     /**
-     * Get the forms for an IoT app
+     * Get the constants `constants().PLATFORMS`, `constants().BOARDS` and `constants().FRAMEWORKS`
      *
-     * @param  {string} appId An app identifier
-     * @returns {[FormObject]}       The list of forms
+     * @returns {Object} The constants object
      */
-    getFormsForApp(appId) {
-        const results = [];
-        if (this.iotAppExists(appId) && this.iotApps[appId].form) {
-            if (this.iotApps[appId].dependencies) {
-                this.iotApps[appId].dependencies.forEach((dependencyKey) => {
-                    const dependency = this.iotLibs[dependencyKey];
-                    if (dependency && dependency.form) {
-                        results.push(dependency.form);
-                    }
-                });
+    constants() {
+        return {
+            PLATFORMS:{
+                ESP8266:"espressif8266_stage"
+            },
+            BOARDS:{
+                NODEMCU:"nodemcuv2"
+            },
+            FRAMEWORKS:{
+                ARDUINO:"arduino"
             }
-
-            results.push(this.iotApps[appId].form);
-        }
-        return results;
+        };
     }
 
     /**
@@ -186,6 +197,20 @@ class IotManager {
         // Register form
         if (form) {
             this.formManager.register(form, ...inject);
+
+            if (dependencies) {
+                const forms = [];
+                dependencies.forEach((dependencyKey) => {
+                    const dependency = this.iotLibs[dependencyKey];
+                    if (dependency && dependency.form) {
+                        forms.push(dependency.form);
+                    }
+                });
+
+                if (forms.length > 0) {
+                    this.formManager.addAdditionalFields(form, null, forms);
+                }
+            }
         }
 
         Logger.info("Registered IoT app " + name);
@@ -216,7 +241,6 @@ class IotManager {
 
         // Configuration injection
         const baseConfiguration = {
-            wifi:this.environmentManager.getWifiInfos(),
             ip:this.environmentManager.getLocalIp(),
             port:this.environmentManager.getLocalPort(),
             version:this.getVersion(appId),
@@ -390,7 +414,7 @@ class IotManager {
                             }
 
                             self.iots = self.confManager.setData(CONF_MANAGER_KEY, apiRequest.data, self.iots, self.comparator);
-
+                            self.registerIotsListForm();
                             resolve(new APIResponse.class(true, {success:true, id:apiRequest.data.id}));
                         } else {
                             reject(new APIResponse.class(false, {}, 8128, "Unexisting iot app found"));
@@ -407,6 +431,7 @@ class IotManager {
             return new Promise((resolve, reject) => {
                 try {
                     self.confManager.removeData(CONF_MANAGER_KEY, {id:parseInt(apiRequest.data.id)}, self.iots, self.comparator);
+                    self.registerIotsListForm();
                     resolve(new APIResponse.class(true, {success:true}));
                 } catch(e) {
                     reject(new APIResponse.class(false, {}, 8129, e.message));

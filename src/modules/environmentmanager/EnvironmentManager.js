@@ -147,15 +147,6 @@ class EnvironmentManager {
     }
 
     /**
-     * Return the wifi informations
-     *
-     * @returns {Object} The wifi informations
-     */
-    getWifiInfos() {
-        return this.appConfiguration.wifi;
-    }
-
-    /**
      * Get the local HTTP port
      *
      * @returns {number} The local hautomation HTTP port

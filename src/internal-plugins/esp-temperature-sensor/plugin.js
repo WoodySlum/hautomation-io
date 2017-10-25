@@ -32,7 +32,7 @@ function loaded(api) {
             /**
              * @Property("test");
              * @Title("super test !");
-             * @Type("string");
+             * @Type("IotsListForm");
              */
             this.test = test;
         }
@@ -49,7 +49,8 @@ function loaded(api) {
     }
 
     api.sensorAPI.registerForm(EspTemperatureSensorForm);
-    api.iotAPI.registerApp("app", "test", "A test app", 1, "espressif8266_stage", "nodemcuv2", "arduino", ["esp8266"], {poweredMode: 3, timer:30}, Toto);
+    const espPlugin = api.getPluginInstance("esp8266");
+    api.iotAPI.registerApp("app", "test", "A test app", 1, api.iotAPI.constants().PLATFORMS.ESP8266, api.iotAPI.constants().BOARDS.NODEMCU, api.iotAPI.constants().FRAMEWORKS.ARDUINO, ["esp8266"], espPlugin.generateOptions(espPlugin.constants().MODE_ALWAYS_POWERED, 60), Toto);
 
     /**
      * This class is overloaded by sensors
