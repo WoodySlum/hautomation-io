@@ -9,9 +9,21 @@ const md5File = require("md5-file");
 function loaded(api) {
     api.init();
 
+    /**
+     * ESP8266 form class
+     * @class
+     */
     class ESP8266Form extends api.exported.FormObject.class {
+        /**
+         * Constructor
+         *
+         * @param  {number} [id=null]         Identifier
+         * @param  {string} [ssid=null]       Wifi SSID
+         * @param  {string} [passphrase=null] Wifi passphrase
+         * @returns {ESP8266Form}                   The instance
+         */
         constructor(id = null, ssid = null, passphrase = null) {
-            this.id = id;
+            super(id);
 
             /**
              * @Property("ssid");
@@ -60,7 +72,7 @@ function loaded(api) {
          */
         constructor(api) {
             this.api = api;
-            this.api.iotAPI.registerLib("app", "esp8266", 42, ESP8266Form);
+            this.api.iotAPI.registerLib("app", "esp8266", 48, ESP8266Form);
             this.api.webAPI.register(this, this.api.webAPI.constants().POST, WS_SENSOR_SET_ROUTE + "[id]/[type]/[value]/[vcc*]/", this.api.webAPI.Authentication().AUTH_NO_LEVEL);
             this.api.webAPI.register(this, this.api.webAPI.constants().POST, WS_PING_ROUTE + "[id]/", this.api.webAPI.Authentication().AUTH_NO_LEVEL);
             this.api.webAPI.register(this, this.api.webAPI.constants().GET, WS_FIRMWARE_ROUTE + "[id]/", this.api.webAPI.Authentication().AUTH_NO_LEVEL);
@@ -113,17 +125,27 @@ function loaded(api) {
         processAPI(apiRequest) {
             if (apiRequest.route.startsWith(WS_SENSOR_SET_ROUTE)) {
                 return new Promise((resolve, reject) => {
-                    if (apiRequest.data.id && apiRequest.data.value) {
-                        const sensor = this.api.sensorAPI.getSensor(parseInt(apiRequest.data.id));
-                        if (sensor) {
-                            sensor.setValue(parseFloat(apiRequest.data.value), apiRequest.data.vcc?parseFloat(apiRequest.data.vcc):null);
-                            resolve(this.api.webAPI.APIResponse(true, {success:true}));
-                        } else {
-                            reject(this.api.webAPI.APIResponse(false, {}, 1080, "No sensor found"));
+                    // console.log(apiRequest.data);
+                    if (apiRequest.data.type && apiRequest.data.id && apiRequest.data.value) {
+                        const sensors = this.api.sensorAPI.getSensors(apiRequest.data.type);
+                        let received = false;
+                        Object.keys(sensors).forEach((sensorKey) => {
+                            const sensor = this.api.sensorAPI.getSensor(sensorKey);
+                            if (parseInt(apiRequest.data.id) === sensor.getIotIdentifier()) {
+                                sensor.setValue(parseFloat(apiRequest.data.value), apiRequest.data.vcc?parseFloat(apiRequest.data.vcc):null);
+                                received = true;
+                            }
+                        });
+
+                        if (!received) {
+                            api.exported.Logger.warn("No registered sensor received value");
                         }
+
+                        resolve(this.api.webAPI.APIResponse(true, {success:true}));
                     } else {
                         reject(this.api.webAPI.APIResponse(false, {}, 1081, "Invalid parameters"));
                     }
+
                 });
             } else if (apiRequest.route.startsWith(WS_PING_ROUTE)) {
                 const iot = this.api.iotAPI.getIot(apiRequest.data.id);
@@ -132,8 +154,6 @@ function loaded(api) {
                     resolve(this.api.webAPI.APIResponse(true, {success:true, version:(errorFirmware[iot.iotApp]?-1:this.api.iotAPI.getVersion(this.api.iotAPI.getIot(apiRequest.data.id).iotApp))}));
                 });
             } else if (apiRequest.route.startsWith(WS_FIRMWARE_ROUTE)) {
-
-
                 return new Promise((resolve, reject) => {
                     const iot = this.api.iotAPI.getIot(apiRequest.data.id);
                     if (iot) {

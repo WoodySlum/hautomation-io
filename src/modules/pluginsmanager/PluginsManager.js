@@ -36,6 +36,7 @@ const INTERNAL_PLUGINS = [
     "pressure-sensor",
     "wind-sensor",
     "esp-temperature-sensor",
+    "esp-humidity-sensor",
     "message-provider",
     "prowl",
     "camera",
@@ -47,7 +48,8 @@ const INTERNAL_PLUGINS = [
     "openweather-humidity-sensor",
     "openweather-pressure-sensor",
     "openweather-wind-sensor",
-    "esp8266"
+    "esp8266",
+    "esp8266-dht22"
 ];
 
 /**

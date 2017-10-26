@@ -181,6 +181,10 @@ class IotManager {
             }
         });
 
+        if (!form) {
+            form = IotForm.class;
+        }
+
         this.iotApps[appId] = {};
         this.iotApps[appId].src = path + "/" + SRC_FOLDER;
         this.iotApps[appId].lib = path + "/" + LIB_FOLDER;
@@ -195,21 +199,19 @@ class IotManager {
         this.iotApps[appId].options = options?options:{};
 
         // Register form
-        if (form) {
-            this.formManager.register(form, ...inject);
+        this.formManager.register(form, ...inject);
 
-            if (dependencies) {
-                const forms = [];
-                dependencies.forEach((dependencyKey) => {
-                    const dependency = this.iotLibs[dependencyKey];
-                    if (dependency && dependency.form) {
-                        forms.push(dependency.form);
-                    }
-                });
-
-                if (forms.length > 0) {
-                    this.formManager.addAdditionalFields(form, null, forms);
+        if (dependencies) {
+            const forms = [];
+            dependencies.forEach((dependencyKey) => {
+                const dependency = this.iotLibs[dependencyKey];
+                if (dependency && dependency.form) {
+                    forms.push(dependency.form);
                 }
+            });
+
+            if (forms.length > 0) {
+                this.formManager.addAdditionalFields(form, null, forms);
             }
         }
 
@@ -246,6 +248,7 @@ class IotManager {
             version:this.getVersion(appId),
             options:this.iotApps[appId].options
         };
+
         if (!config) {
             config = {};
         }

@@ -154,7 +154,7 @@ class SensorsManager {
     getSensor(identifier) {
         let sensor = null;
         this.sensors.forEach((s) => {
-            if (s.id === identifier) {
+            if (parseInt(s.id) === parseInt(identifier)) {
                 sensor = s;
             }
         });
@@ -181,12 +181,16 @@ class SensorsManager {
     /**
      * Get all sensors
      *
+     * @param  {string} [type=null] Sensor's type or category. If not specified, send back all sensors.
+     *
      * @returns {Object} On object with id:name
      */
-    getAllSensors() {
+    getAllSensors(type = null) {
         const sensors = {};
         this.sensors.forEach((sensor) => {
-            sensors[sensor.id] = sensor.name;
+            if (!type || (sensor.type === type)) {
+                sensors[sensor.id] = sensor.name;
+            }
         });
 
         return sensors;

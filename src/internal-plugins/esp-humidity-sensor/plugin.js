@@ -8,16 +8,16 @@ function loaded(api) {
     api.init();
 
     /**
-     * Esp temperature form sensor
+     * Esp humidity form sensor
      * @class
      */
-    class EspTemperatureSensorForm extends api.exported.TemperatureSensorForm {
+    class EspHumiditySensorForm extends api.exported.HumiditySensorForm {
 
         /**
          * Convert JSON data to object
          *
          * @param  {Object} data Some data
-         * @returns {EspTemperatureSensorForm}      An instance
+         * @returns {EspHumiditySensorForm}      An instance
          */
         json(data) {
             super.json(data);
@@ -25,34 +25,34 @@ function loaded(api) {
     }
 
     api.sensorAPI.iotAppPowered();
-    api.sensorAPI.registerForm(EspTemperatureSensorForm);
+    api.sensorAPI.registerForm(EspHumiditySensorForm);
 
     /**
      * This class is overloaded by sensors
      * @class
      */
-    class EspTemperatureSensor extends api.exported.TemperatureSensor {
+    class EspHumiditySensor extends api.exported.HumiditySensor {
         /**
-         * ESP Temperature sensor class (should be extended)
+         * ESP Humidity sensor class (should be extended)
          *
          * @param  {PluginAPI} api                                                           A plugin api
          * @param  {number} [id=null]                                                        An id
          * @param  {Object} [configuration=null]                                             The configuration for sensor
-         * @returns {EspTemperatureSensor}                                                       The instance
+         * @returns {EspHumiditySensor}                                                       The instance
          */
         constructor(api, id, configuration) {
             super(api, id, configuration);
         }
     }
 
-    api.sensorAPI.registerClass(EspTemperatureSensor);
+    api.sensorAPI.registerClass(EspHumiditySensor);
 }
 
 module.exports.attributes = {
     loadedCallback: loaded,
-    name: "esp-temperature-sensor",
+    name: "esp-humidity-sensor",
     version: "0.0.0",
     category: "sensor",
-    description: "ESP temperature sensor",
-    dependencies:["temperature-sensor", "esp-dht22-sensor"]
+    description: "ESP humidity sensor",
+    dependencies:["humidity-sensor", "esp-dht22-sensor"]
 };
