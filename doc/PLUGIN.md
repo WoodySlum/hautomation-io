@@ -947,4 +947,160 @@ Register for radio events sample :
 	});
 
 
+### IoTs
+
+### Create an IoT library
+
+Create a plugin class as described above.
+In the directory where the `plugin.js` file is, create a folder for example `myIotLib`. In this folder, you need to create two folders, `lib` and `global_lib`.
+Build tools uses `platform.io` tools to build the library / application.
+
+Your plugin folder should look as this :
+
+	|
+	|-hautomation
+	|-node_modules
+		|-my-plugin
+			|-plugin.js
+			|-myIotLib
+				|-lib
+				|-global_lib
+
+Then in your `plugin.js`, file use the iotAPI to declare your library.
+Please refer to the API documentation (`iotAPI` part).
+
+Sample code :
+
+	"use strict";
+	
+	/**
+	 * Loaded function
+	 *
+	 * @param  {PluginAPI} api The api
+	 */
+	function loaded(api) {
+	    api.init();
+	
+	    /**
+	     * ESP8266 form class
+	     * @class
+	     */
+	    class ESP8266Form extends api.exported.FormObject.class {
+	        /**
+	         * Constructor
+	         *
+	         * @param  {number} [id=null]         Identifier
+	         * @param  {string} [ssid=null]       Wifi SSID
+	         * @param  {string} [passphrase=null] Wifi passphrase
+	         * @returns {ESP8266Form}                   The instance
+	         */
+	        constructor(id = null, ssid = null, passphrase = null) {
+	            super(id);
+	
+	            /**
+	             * @Property("ssid");
+	             * @Title("esp8266.form.wifi.ssid");
+	             * @Type("string");
+	             * @Required(true);
+	             */
+	            this.ssid = ssid;
+	
+	            /**
+	             * @Property("passphrase");
+	             * @Title("esp8266.form.wifi.password");
+	             * @Type("string");
+	             * @Required(true);
+	             * @Display("password");
+	             */
+	            this.passphrase = passphrase;
+	        }
+	
+	        /**
+	         * Convert JSON data to object
+	         *
+	         * @param  {Object} data Some data
+	         * @returns {ESP8266Form}      An instance
+	         */
+	        json(data) {
+	            return new ESP8266Form(data.id, data.ssid, data.passphrase);
+	        }
+	    }
+	
+	    /**
+	     * ESP8266 manager class
+	     * @class
+	     */
+	    class Esp8266 {
+	        /**
+	         * ESP sensors class
+	         *
+	         * @param  {PluginAPI} api                                                           A plugin api
+	         * @returns {EspSensors}                                                       The instance
+	         */
+	        constructor(api) {
+	            this.api = api;
+	            this.api.iotAPI.registerLib("myIotLib", "esp8266", 1, ESP8266Form);
+	        }
+	    }
+	
+	    api.registerInstance(new Esp8266(api));
+	}
+	
+	module.exports.attributes = {
+	    loadedCallback: loaded,
+	    name: "esp8266",
+	    version: "0.0.0",
+	    category: "iot",
+	    description: "ESP8266 base libraries and sensors manager"
+	};
+	 
+### Create an IoT app
+
+As previously described, the procedure is likely similar to an Iot library. Keep the same folder architecture and add a `main.cpp` file into a `src` folder.
+Build tools uses `platform.io` tools to build the library / application.
+
+Your plugin folder should look as this :
+
+	|
+	|-hautomation
+	|-node_modules
+		|-my-plugin
+			|-plugin.js
+			|-myIotApp
+				|-lib
+				|-global_lib
+				|-src
+					|-main.cpp
+
+Note : If your IoT application needs librairies declared in other plugins, you need to indicate the library identifier into :
+
+* The plugin dependencies
+* The dependency array parameter of the `registerApp` method
+
+Sample code :
+
+	"use strict";
+	/**
+	 * Loaded function
+	 *
+	 * @param  {PluginAPI} api The api
+	 */
+	function loaded(api) {
+	    api.init();
+	
+	    const espPlugin = api.getPluginInstance("esp8266");
+	    api.iotAPI.registerApp("app", "esp8266-dht22", "ESP8266 Temperature and humidity sensor", 1, api.iotAPI.constants().PLATFORMS.ESP8266, api.iotAPI.constants().BOARDS.NODEMCU, api.iotAPI.constants().FRAMEWORKS.ARDUINO, ["esp8266"], espPlugin.generateOptions(espPlugin.constants().MODE_SLEEP, 60 * 60));
+	}
+	
+	module.exports.attributes = {
+	    loadedCallback: loaded,
+	    name: "esp-dht22-sensor",
+	    version: "0.0.0",
+	    category: "iot",
+	    description: "ESP Humidity and temperature sensor",
+	    dependencies:["esp8266"]
+	};
+	
+
+
 

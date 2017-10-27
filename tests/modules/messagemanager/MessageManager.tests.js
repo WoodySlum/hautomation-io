@@ -35,7 +35,7 @@ describe("MessageManager", function() {
 
     });
 
-    it("constructor should initilize stuff correctly", function() {
+    it("constructor should initialize stuff correctly", function() {
         sinon.spy(eventBus, "on");
         sinon.spy(dbManager, "initSchema");
         sinon.spy(webServices, "registerAPI");
