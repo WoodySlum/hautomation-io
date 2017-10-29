@@ -39,9 +39,10 @@ class IotManager {
      * @param  {FormManager} formManager  The form manager
      * @param  {EnvironmentManager} environmentManager  The environment manager
      * @param  {ConfManager} confManager    The configuration manager
+     * @param  {ConfManager} confManager    The configuration manager
      * @returns {IotManager}              The instance
      */
-    constructor(appConfiguration, webServices, installationManager, formManager, environmentManager, confManager) {
+    constructor(appConfiguration, webServices, installationManager, formManager, environmentManager, confManager, fs = null) {
         this.webServices = webServices;
         this.appConfiguration = appConfiguration;
         this.installationManager = installationManager;
@@ -50,6 +51,10 @@ class IotManager {
         this.confManager = confManager;
         this.iotApps = {};
         this.iotLibs = {};
+
+        if (!fs) {
+
+        }
 
         try {
             this.iots = this.confManager.loadData(Object, CONF_MANAGER_KEY, true);
