@@ -8,14 +8,6 @@ class AlarmForm extends FormObject.class {
     /**
      * Constructor
      *
-     * @param  {number} [id=null]                  An identifier
-     * @param  {boolean} [enabled=false] Status
-     * @param  {boolean} [userLocationTrigger=null] User location auto trigger
-     * @returns {AlarmForm} The instance
-     */
-    /**
-     * Constructor
-     *
      * @param  {number}  [id=null]                  An identifier
      * @param  {boolean} [enabled=false]            Alarm status
      * @param  {boolean} [armed=false]              Alarm armed status

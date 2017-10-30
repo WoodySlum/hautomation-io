@@ -1,10 +1,10 @@
-verbose: false
+verbose: true
 instrumentation:
     extension: .js
     root: ./src
     default-excludes: true
     include-all-sources: true
-    excludes: ['**/*Form.js', '**/forms/*', '**/logger/*', '**/internal-plugins/*-sensor/*', '**/modules/pluginsmanager/publicapis/*', '**/modules/camerasmanager/*', '**/internal-plugins/rflink/*', '**/internal-plugins/openweather/*']
+    excludes: ['**/*Form.js', '**/forms/*', '**/logger/*', '**/internal-plugins/*-sensor/*', '**/modules/pluginsmanager/publicapis/*', '**/modules/camerasmanager/*', '**/internal-plugins/rflink/*', '**/internal-plugins/openweather/*', '**/internal-plugins/esp*']
     embed-source: false
     variable: __coverage__
     compact: true

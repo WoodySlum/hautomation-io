@@ -1070,6 +1070,35 @@ a:hover {
 	float: right;
 }
 
+.iotsTile {
+	height: 150px;
+	background-color: #99BD47;
+	text-align: center;
+	font-weight: bold;
+	margin: 1px;
+	color: #FFFFFF;
+}
+
+.iotsIcon {
+	font-size: 30px;
+	text-align: center;
+	margin-top: 10px;
+	margin-bottom: 20px;
+}
+
+#iotsLoader {
+	width: 20px;
+	height: 20px;
+	display: none;
+	float: right;
+}
+
+#iotsContent {
+	margin-top: 30px;
+	margin-left: 14px;
+	cursor: pointer;
+}
+
 #mapInfos {
 	height: 76px;
     position: fixed;
@@ -1502,4 +1531,67 @@ a:hover {
 
 #configTabs {
 	font-size:20px;
+}
+
+#iotsFlash span {
+    color: #ABB0AF;
+    font-size: 170px;
+}
+
+#iotsFlashRunning {
+    height: 300px;
+    width: 100%;
+    font-size: 25px;
+}
+
+.iotsFlashRunning-left {
+  animation: iotsFlashRunningAnim 4s linear infinite;
+  position: fixed;
+  left: 20%;
+  top: 55px;
+  color: #ABB0AF;
+}
+
+.iotsFlashRunning-right {
+  position: fixed;
+  left: 60%;
+  top: 55px;
+  color: #99BD47;
+}
+
+@keyframes iotsFlashRunningAnim {
+  0% {
+    left: 15%;
+    transform: rotate(-30deg);
+  }
+  30% {
+    left: 45%;
+    transform: rotate(30deg);
+  }
+  70% {
+    left: 15%;
+  }
+  100% {
+    left: 15%;
+  }
+}
+
+#iotsFlashFinishIcon span {
+    font-size: 75px;
+}
+
+.iotsFlashFinishIconError {
+    color: #bdc2c1;
+}
+
+.iotsFlashFinishIconSuccess {
+    color: #99BD47;
+}
+
+#iotsFlashIndicatorText {
+    font-size: 25px;
+}
+
+#iotsFlashFinishText {
+    font-size: 25px;
 }

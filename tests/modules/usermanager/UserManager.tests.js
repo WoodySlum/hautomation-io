@@ -10,7 +10,6 @@ var HautomationCore = require("./../../../src/HautomationCore");
 var UserForm = require("./../../../src/modules/usermanager/UserForm");
 
 const core = new HautomationCore.class();
-
 describe("UserManager", function() {
     const userA = new UserForm.class(1, "userA");
     const userB = new UserForm.class(2, "userB");

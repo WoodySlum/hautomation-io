@@ -10,10 +10,10 @@ const PluginsManager = require("./../../../src/modules/pluginsmanager/PluginsMan
 let radioManager = core.radioManager;
 const formManager = core.formManager;
 const eventBus = core.eventBus;
-const pluginsManager = core.pluginsManager;
 const scenarioManager = core.scenarioManager;
 const webServices = core.webServices;
 const translateManager = core.translateManager;
+const pluginsManager = core.pluginsManager;
 const sampleRadioPluginIdentifier = "rflink";
 
 describe("RadioManager", function() {

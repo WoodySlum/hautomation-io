@@ -287,7 +287,8 @@ class WebServices extends Service.class {
      */
     manageResponse(req, endpoint, res) {
         let method = req.method;
-        let ip = req.ip;
+        const ipSplit = req.ip.split(":");
+        let ip = ipSplit[(ipSplit.length - 1)];
         let route = req.path.replace(endpoint, "");
         let path = route.split("/");
         let action = null;
@@ -326,11 +327,11 @@ class WebServices extends Service.class {
 
         if (method === "POST" && req.headers[CONTENT_TYPE] === HEADER_APPLICATION_JSON && req.body) {
             methodConstant = POST;
+            params = Object.assign(params, req.body);
 
             // If application/json header
             if (req.body.data) {
                 data = req.body[DATA_FIELD];
-                params = Object.assign(params, req.body);
                 delete params[DATA_FIELD];
             } else {
                 Logger.warn("Empty body content");
@@ -472,7 +473,7 @@ class WebServices extends Service.class {
                 res.end(apiResponse.response, "binary");
             }
         } else {
-            res.status(API_ERROR_HTTP_CODE).json({"code":apiResponse.errorCode,"message":apiResponse.errorMessage});
+            res.status(API_ERROR_HTTP_CODE).json({"code":apiResponse.errorCode,"message":apiResponse.errorMessage, "data":apiResponse.response});
         }
     }
 }

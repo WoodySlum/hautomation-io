@@ -7,7 +7,6 @@ const HautomationCore = require("./../../../src/HautomationCore").class;
 const EnvironmentManager = require("./../../../src/modules/environmentmanager/EnvironmentManager");
 
 const core = new HautomationCore();
-
 describe("EnvironmentManager", function() {
     before(() => {
 

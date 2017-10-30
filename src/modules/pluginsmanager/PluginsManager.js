@@ -36,6 +36,7 @@ const INTERNAL_PLUGINS = [
     "pressure-sensor",
     "wind-sensor",
     "esp-temperature-sensor",
+    "esp-humidity-sensor",
     "message-provider",
     "prowl",
     "camera",
@@ -46,7 +47,9 @@ const INTERNAL_PLUGINS = [
     "openweather-temperature-sensor",
     "openweather-humidity-sensor",
     "openweather-pressure-sensor",
-    "openweather-wind-sensor"
+    "openweather-wind-sensor",
+    "esp8266",
+    "esp8266-dht22"
 ];
 
 /**
@@ -78,9 +81,10 @@ class PluginsManager {
      * @param  {RadioManager} radioManager The radio manager
      * @param  {Object} appConfiguration The global configuration
      * @param  {EnvironmentManager} environmentManager The environment manager
+     * @param  {IotManager} iotManager The IoT manager
      * @returns {PluginsManager} The instance
      */
-    constructor(confManager, webServices, servicesManager, dbManager, translateManager, formManager, timeEventService, schedulerService, dashboardManager, eventBus, themeManager, sensorsManager, installationManager, userManager, messageManager, scenarioManager, alarmManager, camerasManager, radioManager, appConfiguration, environmentManager) {
+    constructor(confManager, webServices, servicesManager, dbManager, translateManager, formManager, timeEventService, schedulerService, dashboardManager, eventBus, themeManager, sensorsManager, installationManager, userManager, messageManager, scenarioManager, alarmManager, camerasManager, radioManager, appConfiguration, environmentManager, iotManager) {
         this.fs = fs;
         this.path = path;
         this.remi = remi;
@@ -105,6 +109,7 @@ class PluginsManager {
         this.radioManager = radioManager;
         this.appConfiguration = appConfiguration;
         this.environmentManager = environmentManager;
+        this.iotManager = iotManager;
 
         this.plugins = [];
         try {
@@ -221,7 +226,8 @@ class PluginsManager {
                 this.camerasManager,
                 this.radioManager,
                 this.environmentManager,
-                this
+                this,
+                this.iotManager
             );
 
             initializedPlugins.push(pApi);
@@ -295,6 +301,9 @@ class PluginsManager {
             } catch(e) {
                 Logger.err("Plugin " + plugin.identifier + " crashed : " + e.message);
                 Logger.err(e.stack);
+                if (this.appConfiguration && this.appConfiguration.crashOnPluginError) {
+                    process.exit(1);
+                }
             }
         });
     }

@@ -1,5 +1,6 @@
 "use strict";
 const sha256 = require("sha256");
+const os = require("os");
 const Logger = require("./../../logger/Logger");
 const FormConfiguration = require("./../formconfiguration/FormConfiguration");
 const EnvironmentForm = require("./EnvironmentForm");
@@ -143,6 +144,37 @@ class EnvironmentManager {
      */
     isNight() {
         return !this.formConfiguration.data.day;
+    }
+
+    /**
+     * Get the local HTTP port
+     *
+     * @returns {number} The local hautomation HTTP port
+     */
+    getLocalPort() {
+        return this.appConfiguration.port;
+    }
+
+    /**
+     * Get the local IP address, null if not found
+     *
+     * @returns {string} The local IP address
+     */
+    getLocalIp() {
+        const ifaces = os.networkInterfaces();
+        let localIp = null;
+        Object.keys(ifaces).forEach(function (ifname) {
+            ifaces[ifname].forEach(function (iface) {
+                if ("IPv4" !== iface.family || iface.internal !== false) {
+                    // skip over internal (i.e. 127.0.0.1) and non-ipv4 addresses
+                    return;
+                }
+
+                localIp = iface.address;
+            });
+        });
+
+        return localIp;
     }
 }
 

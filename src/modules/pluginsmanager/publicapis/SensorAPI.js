@@ -1,5 +1,6 @@
 "use strict";
 const PrivateProperties = require("./../PrivateProperties");
+const IotsListForm = require("./../../iotmanager/IotsListForm");
 
 /**
  * Public API for sensor
@@ -22,6 +23,7 @@ class SensorAPI {
         PrivateProperties.oprivate(this).sensorsManager = sensorsManager;
         this.form = null;
         this.sensorClass = null;
+        this.iotRef = false;
     }
     /* eslint-enable */
 
@@ -35,6 +37,10 @@ class SensorAPI {
         this.form = formClass;
         PrivateProperties.oprivate(this).formManager.registerWithAdditionalFields(formClass,{plugin:[{ key: "Type", value: "string" },{ key: "Hidden", value: true },{ key: "Default", value: PrivateProperties.oprivate(this).plugin.identifier}]}, ...inject);
         PrivateProperties.oprivate(this).plugin.exportClass(formClass);
+
+        if (this.iotRef) {
+            PrivateProperties.oprivate(this).formManager.addAdditionalFields(formClass, null, [IotsListForm.class]);
+        }
     }
 
     /**
@@ -90,10 +96,12 @@ class SensorAPI {
     /**
      * Get all sensors
      *
+     * @param  {string} [type=null] Sensor's type or category. If not specified, send back all sensors.
+     *
      * @returns {Object} On object with id:name
      */
-    getSensors() {
-        return PrivateProperties.oprivate(this).sensorsManager.getAllSensors();
+    getSensors(type = null) {
+        return PrivateProperties.oprivate(this).sensorsManager.getAllSensors(type);
     }
 
     /**
@@ -105,6 +113,24 @@ class SensorAPI {
      */
     getValue(id, cb, duration = null) {
         PrivateProperties.oprivate(this).sensorsManager.getValue(id, cb, duration);
+    }
+
+    /**
+     * Get sensor by identifier
+     *
+     * @param  {string} identifier An identiifer
+     * @returns {Sensor}            A sensor object
+     */
+    getSensor(identifier) {
+        return PrivateProperties.oprivate(this).sensorsManager.getSensor(identifier);
+    }
+
+    /**
+     * Call this if your plugin is linked to an iot. The iot list form will be automatically added.
+     * The method should be called before `registerForm()` !
+     */
+    iotAppPowered() {
+        this.iotRef = true;
     }
 }
 

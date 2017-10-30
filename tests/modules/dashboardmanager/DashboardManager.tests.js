@@ -7,7 +7,6 @@ var DashboardManager = require("./../../../src/modules/dashboardmanager/Dashboar
 const HautomationCore = require("./../../../src/HautomationCore").class;
 const Tile = require("./../../../src/modules/dashboardmanager/Tile");
 const core = new HautomationCore();
-
 const webServices = core.webServices;
 const translateManager = core.translateManager;
 const themeManager = core.themeManager;

@@ -10,6 +10,7 @@ const deviceManager = core.deviceManager;
 const radioManager = core.radioManager;
 const sampleRadioPluginIdentifier = "rflink";
 const radioPlugin = core.pluginsManager.getPluginByIdentifier(sampleRadioPluginIdentifier);
+
 const devices = [
    {
       "id":1981,

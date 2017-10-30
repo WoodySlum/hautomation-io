@@ -95,6 +95,21 @@ Fast and easy !
         }
     }
 
+#### Password
+
+    class Foo extends api.exported.FormObject.class {
+        constructor(id, bar) {
+            super(id);
+            /**
+             * @Property("bar");
+             * @Type("string");
+             * @Title("my.translate.key");
+             * @Display("password");
+             */
+            this.bar = bar;
+        }
+    }
+
 #### Integer
 
     class Foo extends api.exported.FormObject.class {

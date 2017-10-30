@@ -124,12 +124,12 @@ class FormManager {
         // Extend class lookup
         // Classic regex : class A extends B {
         // ;
-        const regex = /(extends)([ ]+)([a-zA-Z\.]*)([ ]*)(\{)/g;
+        const regex = /(extends)([ ]*)([\(]*)([a-zA-Z\.]*)([\)]*)([ ]*)(\{)/g;
         let regexRes = regex.exec(c);
         let parent = null;
 
-        if (regexRes && regexRes.length > 3) {
-            const extendExploded = regexRes[3].trim().split(".");
+        if (regexRes && regexRes.length > 4) {
+            const extendExploded = regexRes[4].trim().split(".");
             if (extendExploded.length > 0) {
                 if (extendExploded[extendExploded.length - 1].toLowerCase() !== "class") {
                     parent = extendExploded[extendExploded.length - 1];
@@ -394,6 +394,8 @@ class FormManager {
                                 schemaUI[prop]["ui:widget"] = "checkboxes";
                             } else if (display === "textarea") {
                                 schemaUI[prop]["ui:widget"] = "textarea";
+                            } else if (display === "password") {
+                                schemaUI[prop]["ui:widget"] = "password";
                             }
                         }
 

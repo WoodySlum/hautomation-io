@@ -34,6 +34,7 @@ function loaded(api) {
              * @Enum(["kmh", "mph"]);
              * @EnumNames(["km/h", "mph"]);
              * @Type("string");
+             * @Default("kmh");
              * @Required(true);
              */
             this.unit = unit;

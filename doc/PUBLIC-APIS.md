@@ -16,9 +16,10 @@
     -   [register](#register)
     -   [getConfiguration](#getconfiguration)
     -   [getForm](#getform)
+    -   [setUpdateCb](#setupdatecb)
 -   [FormConfiguration](#formconfiguration)
     -   [constructor](#constructor)
-    -   [setUpdateCb](#setupdatecb)
+    -   [setUpdateCb](#setupdatecb-1)
     -   [addAdditionalFields](#addadditionalfields)
     -   [loadConfig](#loadconfig)
     -   [saveConfig](#saveconfig)
@@ -88,9 +89,24 @@
     -   [toSchema](#toschema)
 -   [Convert](#convert)
     -   [convertProperties](#convertproperties)
+-   [EnvironmentAPI](#environmentapi)
+    -   [getCoordinates](#getcoordinates)
+    -   [setDay](#setday)
+    -   [setNight](#setnight)
+    -   [isNight](#isnight)
+    -   [registerDayNightNotifications](#registerdaynightnotifications)
+    -   [unregisterDayNightNotifications](#unregisterdaynightnotifications)
 -   [InstallerAPI](#installerapi)
     -   [register](#register-2)
     -   [executeCommand](#executecommand)
+-   [IotAPI](#iotapi)
+    -   [registerLib](#registerlib)
+    -   [registerApp](#registerapp)
+    -   [iotAppExists](#iotappexists)
+    -   [getVersion](#getversion)
+    -   [getIot](#getiot)
+    -   [build](#build)
+    -   [constants](#constants)
 -   [MessageAPI](#messageapi)
     -   [sendMessage](#sendmessage)
     -   [register](#register-3)
@@ -110,7 +126,7 @@
     -   [unregister](#unregister-3)
     -   [schedule](#schedule)
     -   [cancel](#cancel)
-    -   [constants](#constants)
+    -   [constants](#constants-1)
 -   [SchedulerService](#schedulerservice)
     -   [constructor](#constructor-5)
     -   [start](#start)
@@ -132,6 +148,7 @@
     -   [dateToTimestamp](#datetotimestamp)
     -   [roundedTimestamp](#roundedtimestamp)
     -   [dateFormatted](#dateformatted)
+    -   [secondsElapsedSinceMidnight](#secondselapsedsincemidnight)
 -   [SensorAPI](#sensorapi)
     -   [registerForm](#registerform-2)
     -   [registerClass](#registerclass-1)
@@ -139,6 +156,18 @@
     -   [unregisterSensorEvent](#unregistersensorevent)
     -   [getSensors](#getsensors)
     -   [getValue](#getvalue)
+    -   [getSensor](#getsensor)
+    -   [iotAppPowered](#iotapppowered)
+-   [IotsListForm](#iotslistform)
+    -   [constructor](#constructor-7)
+    -   [identifier](#identifier-1)
+    -   [json](#json)
+    -   [getIotsName](#getiotsname)
+    -   [getIotsId](#getiotsid)
+-   [FormObject](#formobject)
+    -   [constructor](#constructor-8)
+    -   [json](#json-1)
+-   [id](#id)
 -   [ServicesManagerAPI](#servicesmanagerapi)
     -   [add](#add)
 -   [ThemeAPI](#themeapi)
@@ -146,9 +175,9 @@
 -   [TimeEventAPI](#timeeventapi)
     -   [register](#register-8)
     -   [unregister](#unregister-5)
-    -   [constants](#constants-1)
+    -   [constants](#constants-2)
 -   [TimeEventService](#timeeventservice)
-    -   [constructor](#constructor-7)
+    -   [constructor](#constructor-9)
     -   [start](#start-1)
     -   [stop](#stop-1)
     -   [hash](#hash)
@@ -173,16 +202,17 @@
     -   [unregister](#unregister-7)
     -   [Authentication](#authentication)
     -   [APIResponse](#apiresponse)
-    -   [constants](#constants-2)
+    -   [constants](#constants-3)
 -   [Authentication](#authentication-1)
-    -   [constructor](#constructor-8)
+    -   [constructor](#constructor-10)
+    -   [checkLocalIp](#checklocalip)
 -   [AuthenticationData](#authenticationdata)
-    -   [constructor](#constructor-9)
+    -   [constructor](#constructor-11)
     -   [authorized](#authorized)
     -   [username](#username)
     -   [level](#level)
 -   [APIResponse](#apiresponse-1)
-    -   [constructor](#constructor-10)
+    -   [constructor](#constructor-12)
     -   [success](#success)
     -   [response](#response)
     -   [errorCode](#errorcode)
@@ -191,7 +221,7 @@
     -   [exportConstants](#exportconstants)
     -   [cleanDbObject](#cleandbobject)
 -   [WebServices](#webservices)
-    -   [constructor](#constructor-11)
+    -   [constructor](#constructor-13)
     -   [start](#start-2)
     -   [stop](#stop-2)
     -   [registerInfos](#registerinfos)
@@ -213,7 +243,7 @@
     -   [info](#info)
     -   [debug](#debug)
 -   [Service](#service)
-    -   [constructor](#constructor-12)
+    -   [constructor](#constructor-14)
     -   [start](#start-3)
     -   [run](#run)
     -   [threadCallback](#threadcallback)
@@ -229,7 +259,7 @@
     -   [unregister](#unregister-9)
     -   [setThreadsManager](#setthreadsmanager)
 -   [APIRequest](#apirequest)
-    -   [constructor](#constructor-13)
+    -   [constructor](#constructor-15)
     -   [method](#method)
     -   [ip](#ip)
     -   [route](#route)
@@ -240,7 +270,7 @@
     -   [authenticationData](#authenticationdata-1)
     -   [addAuthenticationData](#addauthenticationdata)
 -   [APIRegistration](#apiregistration)
-    -   [constructor](#constructor-14)
+    -   [constructor](#constructor-16)
     -   [delegate](#delegate)
     -   [method](#method-1)
     -   [route](#route-1)
@@ -355,6 +385,14 @@ Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refer
 Return the formatted form object
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Formatted form object
+
+### setUpdateCb
+
+Set the update callback. Called back when delete or save action is done.
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback with data as parameter, e.g. `cb(data) => {}`
 
 ## FormConfiguration
 
@@ -1079,6 +1117,52 @@ Convert key / values object into a single one. Example `[{key:"Foo", value:"Bar"
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An output object
 
+## EnvironmentAPI
+
+Public API for home environement
+
+**Parameters**
+
+-   `environmentManager`  
+
+### getCoordinates
+
+Return the home's coordinates
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The coordinates
+
+### setDay
+
+Set day
+
+### setNight
+
+Set night
+
+### isNight
+
+Is it night ?
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` if night mode, otherwise `false`
+
+### registerDayNightNotifications
+
+Register for day/night notifications
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback triggered when day/night information is received. Example : `(isNight) => {}`
+-   `id` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An identifier (optional, default `null`)
+
+### unregisterDayNightNotifications
+
+Unegister for day/night notifications
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback triggered when day/night information is received. Example : `(isNight) => {}`
+-   `id` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An identifier (optional, default `null`)
+
 ## InstallerAPI
 
 Public API for installation of external apps
@@ -1111,6 +1195,94 @@ Execute a command. Can throw an error if wait is `true`
 -   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback (only if wait parameter is false) : `(error, stdout, stderr) => {}` (optional, default `null`)
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An object result if wait is `true`
+
+## IotAPI
+
+Public API for iot
+
+**Parameters**
+
+-   `iotManager`  
+
+### registerLib
+
+Register an IoT library
+A library folder should contain `global_lib` and `lib` folder, inside `path` parameter
+
+**Parameters**
+
+-   `path` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The library path
+-   `appId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An app identifier
+-   `form` **[FormObject](#formobject)** A form (optional, default `null`)
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some form injection parameters
+-   `version` **int** A version number (optional, default `0`)
+
+### registerApp
+
+Register an IoT library
+An IoT app folder should contain `global_lib`, `lib` and `src` folder, inside `path` parameter.
+A `main.cpp` file should be created under `src` folder.
+
+**Parameters**
+
+-   `path` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The application file path
+-   `appId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An app identifier
+-   `name` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The app name
+-   `version` **int** The application version number
+-   `platform` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A platform
+-   `board` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A board type
+-   `framework` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A framework
+-   `form` **[FormObject](#formobject)** A form (optional, default `null`)
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some form injection parameters
+-   `dependencies` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** The array of library dependencies. Can be en empty array or an array of library app identifiers.
+-   `options` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A list of options injected in IoT configuration during flash sequence (optional, default `null`)
+
+### iotAppExists
+
+Check if an IoT app exists
+
+**Parameters**
+
+-   `appId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An app identifier
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` if the iot app is registered, `false` otherwise
+
+### getVersion
+
+Get a version for a specific IoT app
+
+**Parameters**
+
+-   `appId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An app identifier
+
+Returns **int** A version number
+
+### getIot
+
+Retrieve an IoT (not application, but configured instance)
+
+**Parameters**
+
+-   `id` **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** An IoT identifier
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An IoT configuration object
+
+### build
+
+Build a firmware for a specific appId
+
+**Parameters**
+
+-   `appId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An app identifier
+-   `flash` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` if USB flash sequence should be done after build, `false` otherwise (optional, default `false`)
+-   `config` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A configuration injected to firmware (optional, default `null`)
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback `(error, result) => {}` called when firmware / flash is done. The result object contains 2 properties, `firmwarePath` for the firmware, `stdout` for the results
+
+### constants
+
+Get the constants `constants().PLATFORMS`, `constants().BOARDS` and `constants().FRAMEWORKS`
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The constants object
 
 ## MessageAPI
 
@@ -1207,7 +1379,7 @@ Register to scenario execution engine
 
 **Parameters**
 
--   `formPart` **FormObject** A form part
+-   `formPart` **[FormObject](#formobject)** A form part
 -   `triggerCb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A trigger called when a scenario should be executed. E.g. : `(scenario) => {}` (optional, default `null`)
 -   `title` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The title for sub form (can be translation key) (optional, default `null`)
 
@@ -1217,7 +1389,7 @@ Unregister to scenario execution engine
 
 **Parameters**
 
--   `formPart` **FormObject** A form part
+-   `formPart` **[FormObject](#formobject)** A form part
 -   `triggerCb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A trigger called when a scenario should be executed. E.g. : `(scenario) => {}` (optional, default `null`)
 
 ### triggerScenario
@@ -1438,6 +1610,16 @@ Format the current date with parameter
 
 Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The formatted date
 
+### secondsElapsedSinceMidnight
+
+Return the number of seconds elapsed since midnight in UTC format
+
+**Parameters**
+
+-   `timestamp` **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** A timestamp in seconds
+
+Returns **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** A number of seconds elapsed
+
 ## SensorAPI
 
 Public API for sensor
@@ -1489,6 +1671,10 @@ Unregister a callback for a/all sensor
 
 Get all sensors
 
+**Parameters**
+
+-   `type` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Sensor's type or category. If not specified, send back all sensors. (optional, default `null`)
+
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** On object with id:name
 
 ### getValue
@@ -1500,6 +1686,106 @@ Get a sensor's value
 -   `id` **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** The sensor's identifier
 -   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback e.g. `(err, res) => {}`
 -   `duration` **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** A duration in seconds. If null or not provided, will provide last inserted database value. (optional, default `null`)
+
+### getSensor
+
+Get sensor by identifier
+
+**Parameters**
+
+-   `identifier` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An identiifer
+
+Returns **Sensor** A sensor object
+
+### iotAppPowered
+
+Call this if your plugin is linked to an iot. The iot list form will be automatically added.
+The method should be called before `registerForm()` !
+
+## IotsListForm
+
+**Extends FormObject.class**
+
+This class provides a iot list form
+
+**Parameters**
+
+-   `id`   (optional, default `null`)
+-   `identifier`   (optional, default `null`)
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `id` **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** An identifier (optional, default `null`)
+-   `identifier` **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** The iot identifier (optional, default `null`)
+
+Returns **DevicesListForm** The instance
+
+### identifier
+
+### json
+
+Convert json data
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some key / value data
+
+Returns **[IotsListForm](#iotslistform)** A form object
+
+### getIotsName
+
+Form injection method for Iots name
+
+**Parameters**
+
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The modules list array
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of iots name
+
+### getIotsId
+
+Form injection method for Iots ids
+
+**Parameters**
+
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The modules list array
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of iots id
+
+## FormObject
+
+Form objects
+This class must be extended
+
+**Parameters**
+
+-   `id`   (optional, default `null`)
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `id` **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** An identifier (optional, default `null`)
+
+Returns **[FormObject](#formobject)** The instance
+
+### json
+
+Convert json data
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some key / value data
+
+Returns **[FormObject](#formobject)** A form object
+
+## id
 
 ## ServicesManagerAPI
 
@@ -1694,7 +1980,7 @@ Add additional fields to user registration
 
 **Parameters**
 
--   `form` **FormObject** A form object
+-   `form` **[FormObject](#formobject)** A form object
 -   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Parameters injection on static methods
 
 ### getUsers
@@ -1799,6 +2085,7 @@ This class manage authentication for Web Services
 
 -   `webService`  
 -   `userManager`  
+-   `environmentManager`  
 
 ### constructor
 
@@ -1808,8 +2095,19 @@ Constructor
 
 -   `webService` **WebService** The web service instance
 -   `userManager` **UserManager** User manager
+-   `environmentManager` **EnvironmentManager** Environment manager
 
 Returns **[Authentication](#authentication)** Instance
+
+### checkLocalIp
+
+Check if an ip is on the same network
+
+**Parameters**
+
+-   `ipSource` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The source ip
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` if the ip is on the same network, `false` otherwise
 
 ## AuthenticationData
 

@@ -12,6 +12,7 @@ function loaded(api) {
      * @class
      */
     class EspTemperatureSensorForm extends api.exported.TemperatureSensorForm {
+
         /**
          * Convert JSON data to object
          *
@@ -23,6 +24,7 @@ function loaded(api) {
         }
     }
 
+    api.sensorAPI.iotAppPowered();
     api.sensorAPI.registerForm(EspTemperatureSensorForm);
 
     /**
@@ -40,20 +42,6 @@ function loaded(api) {
          */
         constructor(api, id, configuration) {
             super(api, id, configuration);
-            this.api.webAPI.register(this, this.api.webAPI.constants().POST, ":/esp/temperature/set/" + this.id + "/[value]/[vcc*]/", this.api.webAPI.Authentication().AUTH_NO_LEVEL);
-        }
-
-        /**
-         * Process API callback
-         *
-         * @param  {[type]} apiRequest An APIRequest
-         * @returns {Promise}  A promise with an APIResponse object
-         */
-        processAPI(apiRequest) {
-            return new Promise((resolve) => {
-                this.setValue(apiRequest.data.value, apiRequest.data.vcc?parseFloat(apiRequest.data.vcc):null);
-                resolve(this.api.webAPI.APIResponse(true, {success:true}));
-            });
         }
     }
 
@@ -66,5 +54,5 @@ module.exports.attributes = {
     version: "0.0.0",
     category: "sensor",
     description: "ESP temperature sensor",
-    dependencies:["temperature-sensor"]
+    dependencies:["temperature-sensor", "esp-dht22-sensor"]
 };

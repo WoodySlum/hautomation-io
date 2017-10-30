@@ -34,6 +34,7 @@ function loaded(api) {
              * @Enum(["cel", "far"]);
              * @EnumNames(["Celsius", "Fahrenheit"]);
              * @Type("string");
+             * @Default("cel");
              * @Required(true);
              */
             this.unit = unit;

@@ -490,6 +490,20 @@ function loaded(api) {
                 }
             });
         }
+
+        /**
+         * Returns the linked iot identifier
+         *
+         * @returns {number} Iot identifier
+         */
+        getIotIdentifier() {
+            let identifier = null;
+            if (this.configuration.IotsListForm && this.configuration.IotsListForm.identifier) {
+                identifier = parseInt(this.configuration.IotsListForm.identifier);
+            }
+
+            return identifier;
+        }
     }
 
     api.sensorAPI.registerClass(DbSensor);

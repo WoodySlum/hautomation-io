@@ -154,7 +154,7 @@ class SensorsManager {
     getSensor(identifier) {
         let sensor = null;
         this.sensors.forEach((s) => {
-            if (s.id === identifier) {
+            if (parseInt(s.id) === parseInt(identifier)) {
                 sensor = s;
             }
         });
@@ -181,12 +181,16 @@ class SensorsManager {
     /**
      * Get all sensors
      *
+     * @param  {string} [type=null] Sensor's type or category. If not specified, send back all sensors.
+     *
      * @returns {Object} On object with id:name
      */
-    getAllSensors() {
+    getAllSensors(type = null) {
         const sensors = {};
         this.sensors.forEach((sensor) => {
-            sensors[sensor.id] = sensor.name;
+            if (!type || (sensor.type === type)) {
+                sensors[sensor.id] = sensor.name;
+            }
         });
 
         return sensors;
@@ -250,10 +254,11 @@ class SensorsManager {
                 const sensors = [];
                 self.pluginsManager.getPluginsByCategory("sensor", false).forEach((sensor) => {
                     if (sensor.sensorAPI.form) {
+                        const form = self.formManager.getForm(sensor.sensorAPI.form);
                         sensors.push({
                             identifier: sensor.identifier,
                             description: sensor.description,
-                            form:self.formManager.getForm(sensor.sensorAPI.form)
+                            form: form
                         });
                     }
                 });
@@ -289,7 +294,7 @@ class SensorsManager {
 
                             self.sensorsConfiguration = self.confManager.setData(CONF_MANAGER_KEY, apiRequest.data, self.sensorsConfiguration, self.comparator);
                             self.initSensors();
-                            resolve(new APIResponse.class(true, {success:true}));
+                            resolve(new APIResponse.class(true, {success:true, id:apiRequest.data.id}));
                         } else {
                             reject(new APIResponse.class(false, {}, 8108, "Unexisting plugin found"));
                         }

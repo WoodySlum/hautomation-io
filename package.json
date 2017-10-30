@@ -31,7 +31,12 @@
       "./src/internal-plugins/**/*.js",
       "./node_modules/threads/lib/worker.node/slave.js",
       "./**/*.json",
-      "./ui/**/*"
+      "./ui/**/*",
+      "./src/**/*.c",
+      "./src/**/*.cpp",
+      "./src/**/*.h",
+      "./src/**/lib/",
+      "./src/**/global_lib/"
     ]
   },
   "repository": {
@@ -51,11 +56,11 @@
     "eslint-plugin-jsdoc": "^3.1.2",
     "eslint-plugin-mocha": "^4.11.0",
     "eslint-plugin-require-jsdoc": "^1.0",
-    "istanbul": "^1.1.0-alpha.1",
+    "istanbul": "^1.0.0-alpha.2",
     "mocha": "^3.5.0",
     "mocha-junit-reporter": "^1.13",
     "nodemon": "^1.11.0",
-    "pkg": "^3.0",
+    "pkg": "^4.0",
     "sinon": "^2.4.1"
   },
   "dependencies": {
@@ -81,6 +86,7 @@
     "prowler": "^0.0",
     "mjpeg-proxy": "^0.2",
     "fs-extra": "^4.0",
-    "xml2js":"^0.4"
+    "xml2js":"^0.4",
+    "md5-file":"^3.2"
   }
 }
