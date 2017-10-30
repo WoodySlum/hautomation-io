@@ -37,6 +37,8 @@
 -   [loaded](#loaded-19)
 -   [loaded](#loaded-20)
 -   [loaded](#loaded-21)
+-   [loaded](#loaded-22)
+-   [loaded](#loaded-23)
 -   [CameraForm](#cameraform)
     -   [constructor](#constructor-3)
     -   [name](#name)
@@ -57,40 +59,53 @@
     -   [moveRight](#moveright)
     -   [moveUp](#moveup)
     -   [moveDown](#movedown)
--   [EspTemperatureSensorForm](#esptemperaturesensorform)
+-   [EspHumiditySensorForm](#esphumiditysensorform)
     -   [json](#json-2)
--   [EspTemperatureSensor](#esptemperaturesensor)
+-   [EspHumiditySensor](#esphumiditysensor)
     -   [constructor](#constructor-5)
+-   [EspTemperatureSensorForm](#esptemperaturesensorform)
+    -   [json](#json-3)
+-   [EspTemperatureSensor](#esptemperaturesensor)
+    -   [constructor](#constructor-6)
+-   [ESP8266Form](#esp8266form)
+    -   [constructor](#constructor-7)
+    -   [ssid](#ssid)
+    -   [passphrase](#passphrase)
+    -   [json](#json-4)
+-   [Esp8266](#esp8266)
+    -   [constructor](#constructor-8)
+    -   [constants](#constants)
+    -   [generateOptions](#generateoptions)
     -   [processAPI](#processapi)
 -   [HumiditySensorForm](#humiditysensorform)
-    -   [constructor](#constructor-6)
-    -   [json](#json-3)
+    -   [constructor](#constructor-9)
+    -   [json](#json-5)
 -   [HumiditySensor](#humiditysensor)
-    -   [constructor](#constructor-7)
+    -   [constructor](#constructor-10)
 -   [MessageProvider](#messageprovider)
-    -   [constructor](#constructor-8)
+    -   [constructor](#constructor-11)
     -   [onMessageReceived](#onmessagereceived)
 -   [text](#text)
 -   [number](#number)
 -   [myParameter](#myparameter)
 -   [OpenweatherHumiditySensorForm](#openweatherhumiditysensorform)
-    -   [json](#json-4)
--   [OpenweatherHumiditySensor](#openweatherhumiditysensor)
-    -   [constructor](#constructor-9)
--   [OpenweatherPressureSensorForm](#openweatherpressuresensorform)
-    -   [json](#json-5)
--   [OpenweatherPressureSensor](#openweatherpressuresensor)
-    -   [constructor](#constructor-10)
--   [OpenweatherTemperatureSensorForm](#openweathertemperaturesensorform)
     -   [json](#json-6)
--   [OpenweatherTemperatureSensor](#openweathertemperaturesensor)
-    -   [constructor](#constructor-11)
--   [OpenweatherWindSensorForm](#openweatherwindsensorform)
-    -   [json](#json-7)
--   [OpenweatherWindSensor](#openweatherwindsensor)
+-   [OpenweatherHumiditySensor](#openweatherhumiditysensor)
     -   [constructor](#constructor-12)
--   [OpenWeatherDb](#openweatherdb)
+-   [OpenweatherPressureSensorForm](#openweatherpressuresensorform)
+    -   [json](#json-7)
+-   [OpenweatherPressureSensor](#openweatherpressuresensor)
     -   [constructor](#constructor-13)
+-   [OpenweatherTemperatureSensorForm](#openweathertemperaturesensorform)
+    -   [json](#json-8)
+-   [OpenweatherTemperatureSensor](#openweathertemperaturesensor)
+    -   [constructor](#constructor-14)
+-   [OpenweatherWindSensorForm](#openweatherwindsensorform)
+    -   [json](#json-9)
+-   [OpenweatherWindSensor](#openweatherwindsensor)
+    -   [constructor](#constructor-15)
+-   [OpenWeatherDb](#openweatherdb)
+    -   [constructor](#constructor-16)
 -   [weatherId](#weatherid)
 -   [weatherName](#weathername)
 -   [weatherIcon](#weathericon)
@@ -103,14 +118,14 @@
 -   [sunrise](#sunrise)
 -   [sunset](#sunset)
 -   [OpenWeatherForm](#openweatherform)
-    -   [constructor](#constructor-14)
+    -   [constructor](#constructor-17)
     -   [apiKey](#apikey)
     -   [autoDayNight](#autodaynight)
     -   [weatherTile](#weathertile)
     -   [rainForecastTileMode](#rainforecasttilemode)
-    -   [json](#json-8)
+    -   [json](#json-10)
 -   [OpenWeather](#openweather)
-    -   [constructor](#constructor-15)
+    -   [constructor](#constructor-18)
     -   [register](#register)
     -   [unregister](#unregister)
     -   [prepareUrl](#prepareurl)
@@ -121,29 +136,29 @@
     -   [forecastProcessing](#forecastprocessing)
     -   [registerRainForecastTile](#registerrainforecasttile)
 -   [PresenceSensorForm](#presencesensorform)
-    -   [json](#json-9)
--   [PresenceSensor](#presencesensor)
-    -   [constructor](#constructor-16)
--   [PressureSensorForm](#pressuresensorform)
-    -   [constructor](#constructor-17)
-    -   [json](#json-10)
--   [PressureSensor](#pressuresensor)
-    -   [constructor](#constructor-18)
--   [ProwlForm](#prowlform)
-    -   [constructor](#constructor-19)
-    -   [prowlApiKey](#prowlapikey)
     -   [json](#json-11)
--   [Prowl](#prowl)
+-   [PresenceSensor](#presencesensor)
+    -   [constructor](#constructor-19)
+-   [PressureSensorForm](#pressuresensorform)
     -   [constructor](#constructor-20)
+    -   [json](#json-12)
+-   [PressureSensor](#pressuresensor)
+    -   [constructor](#constructor-21)
+-   [ProwlForm](#prowlform)
+    -   [constructor](#constructor-22)
+    -   [prowlApiKey](#prowlapikey)
+    -   [json](#json-13)
+-   [Prowl](#prowl)
+    -   [constructor](#constructor-23)
     -   [sendMessage](#sendmessage)
 -   [RadioPresenceSensorForm](#radiopresencesensorform)
-    -   [constructor](#constructor-21)
+    -   [constructor](#constructor-24)
     -   [radio](#radio)
-    -   [json](#json-12)
+    -   [json](#json-14)
 -   [RadioPresenceSensor](#radiopresencesensor)
-    -   [constructor](#constructor-22)
+    -   [constructor](#constructor-25)
 -   [DbRadio](#dbradio)
-    -   [constructor](#constructor-23)
+    -   [constructor](#constructor-26)
 -   [module](#module)
 -   [frequency](#frequency)
 -   [protocol](#protocol)
@@ -153,23 +168,23 @@
 -   [value](#value-1)
 -   [status](#status)
 -   [Radio](#radio-1)
-    -   [constructor](#constructor-24)
+    -   [constructor](#constructor-27)
     -   [getProtocolList](#getprotocollist)
     -   [getLastReceivedRadioInformations](#getlastreceivedradioinformations)
     -   [processAPI](#processapi-1)
     -   [defaultFrequency](#defaultfrequency)
     -   [emit](#emit)
     -   [onRadioEvent](#onradioevent)
-    -   [constants](#constants)
+    -   [constants](#constants-1)
     -   [register](#register-1)
     -   [unregister](#unregister-1)
 -   [RFlinkForm](#rflinkform)
-    -   [constructor](#constructor-25)
+    -   [constructor](#constructor-28)
     -   [port](#port-1)
-    -   [json](#json-13)
+    -   [json](#json-15)
     -   [getPorts](#getports)
 -   [RFLink](#rflink)
-    -   [constructor](#constructor-26)
+    -   [constructor](#constructor-29)
     -   [rflinkStatusToRadioStatus](#rflinkstatustoradiostatus)
     -   [radioStatusToRflinkStatus](#radiostatustorflinkstatus)
     -   [formatRadioObjectBeforeSending](#formatradioobjectbeforesending)
@@ -181,7 +196,7 @@
     -   [reboot](#reboot)
     -   [upgrade](#upgrade)
 -   [RFLinkService](#rflinkservice)
-    -   [constructor](#constructor-27)
+    -   [constructor](#constructor-30)
     -   [start](#start-1)
     -   [run](#run)
     -   [threadCallback](#threadcallback)
@@ -190,19 +205,19 @@
     -   [processAPI](#processapi-2)
     -   [test](#test)
 -   [DbSensor](#dbsensor)
-    -   [constructor](#constructor-28)
+    -   [constructor](#constructor-31)
 -   [sensorId](#sensorid)
 -   [vcc](#vcc)
 -   [SensorForm](#sensorform)
-    -   [constructor](#constructor-29)
+    -   [constructor](#constructor-32)
     -   [name](#name-2)
     -   [dashboard](#dashboard)
     -   [statistics](#statistics)
     -   [dashboardColor](#dashboardcolor)
     -   [statisticsColor](#statisticscolor)
-    -   [json](#json-14)
+    -   [json](#json-16)
 -   [Sensor](#sensor)
-    -   [constructor](#constructor-30)
+    -   [constructor](#constructor-33)
     -   [init](#init-1)
     -   [addUnitAggregation](#addunitaggregation)
     -   [aggregateUnit](#aggregateunit)
@@ -212,29 +227,30 @@
     -   [setValue](#setvalue)
     -   [roundTimestamp](#roundtimestamp)
     -   [getStatistics](#getstatistics)
-    -   [constants](#constants-1)
+    -   [getIotIdentifier](#getiotidentifier)
+    -   [constants](#constants-2)
 -   [SumppleCameraForm](#sumpplecameraform)
-    -   [json](#json-15)
+    -   [json](#json-17)
 -   [Sumpple](#sumpple)
-    -   [constructor](#constructor-31)
+    -   [constructor](#constructor-34)
 -   [TemperatureSensorForm](#temperaturesensorform)
-    -   [constructor](#constructor-32)
+    -   [constructor](#constructor-35)
     -   [unit](#unit)
-    -   [json](#json-16)
+    -   [json](#json-18)
 -   [TemperatureSensor](#temperaturesensor)
-    -   [constructor](#constructor-33)
+    -   [constructor](#constructor-36)
     -   [setUnit](#setunit)
 -   [ThroughputSensorForm](#throughputsensorform)
-    -   [constructor](#constructor-34)
-    -   [json](#json-17)
--   [ThroughputSensor](#throughputsensor)
-    -   [constructor](#constructor-35)
--   [WindSensorForm](#windsensorform)
-    -   [constructor](#constructor-36)
-    -   [unit](#unit-1)
-    -   [json](#json-18)
--   [WindSensor](#windsensor)
     -   [constructor](#constructor-37)
+    -   [json](#json-19)
+-   [ThroughputSensor](#throughputsensor)
+    -   [constructor](#constructor-38)
+-   [WindSensorForm](#windsensorform)
+    -   [constructor](#constructor-39)
+    -   [unit](#unit-1)
+    -   [json](#json-20)
+-   [WindSensor](#windsensor)
+    -   [constructor](#constructor-40)
     -   [setUnit](#setunit-1)
 -   [Logger](#logger)
     -   [setLogLevel](#setloglevel)
@@ -245,8 +261,7 @@
     -   [info](#info)
     -   [debug](#debug)
 -   [AlarmForm](#alarmform)
-    -   [constructor](#constructor-38)
-    -   [constructor](#constructor-39)
+    -   [constructor](#constructor-41)
     -   [enabled](#enabled)
     -   [armed](#armed)
     -   [userLocationTrigger](#userlocationtrigger)
@@ -254,9 +269,9 @@
     -   [sensors](#sensors)
     -   [devicesOnEnable](#devicesonenable)
     -   [devicesOnDisable](#devicesondisable)
-    -   [json](#json-19)
+    -   [json](#json-21)
 -   [AlarmManager](#alarmmanager)
-    -   [constructor](#constructor-40)
+    -   [constructor](#constructor-42)
     -   [sensorReadyForTriggering](#sensorreadyfortriggering)
     -   [registerTile](#registertile)
     -   [alarmStatus](#alarmstatus)
@@ -268,32 +283,32 @@
     -   [stopAlarm](#stopalarm)
     -   [processAPI](#processapi-3)
 -   [AlarmSensorsForm](#alarmsensorsform)
-    -   [constructor](#constructor-41)
+    -   [constructor](#constructor-43)
     -   [sensor](#sensor-1)
     -   [triggerAlarm](#triggeralarm-1)
     -   [captureVideo](#capturevideo)
-    -   [json](#json-20)
+    -   [json](#json-22)
 -   [Authentication](#authentication)
-    -   [constructor](#constructor-42)
+    -   [constructor](#constructor-44)
 -   [AuthenticationData](#authenticationdata)
-    -   [constructor](#constructor-43)
+    -   [constructor](#constructor-45)
     -   [authorized](#authorized)
     -   [username](#username-1)
     -   [level](#level)
 -   [CamerasForm](#camerasform)
-    -   [constructor](#constructor-44)
+    -   [constructor](#constructor-46)
     -   [cameraId](#cameraid)
-    -   [json](#json-21)
+    -   [json](#json-23)
     -   [getCameraIds](#getcameraids)
     -   [getCameraNames](#getcameranames)
 -   [CamerasListForm](#cameraslistform)
-    -   [constructor](#constructor-45)
+    -   [constructor](#constructor-47)
     -   [identifier](#identifier)
-    -   [json](#json-22)
+    -   [json](#json-24)
     -   [getCamerasName](#getcamerasname)
     -   [getCamerasId](#getcamerasid)
 -   [CamerasManager](#camerasmanager)
-    -   [constructor](#constructor-46)
+    -   [constructor](#constructor-48)
     -   [pluginsLoaded](#pluginsloaded)
     -   [archiveCameras](#archivecameras)
     -   [initCameras](#initcameras)
@@ -314,12 +329,12 @@
     -   [generateTimelapse](#generatetimelapse)
     -   [record](#record)
 -   [TimelapseGenerator](#timelapsegenerator)
-    -   [constructor](#constructor-47)
+    -   [constructor](#constructor-49)
     -   [generateTimelapse](#generatetimelapse-1)
     -   [pad](#pad)
     -   [prepareFiles](#preparefiles)
 -   [ConfManager](#confmanager)
-    -   [constructor](#constructor-48)
+    -   [constructor](#constructor-50)
     -   [appConfiguration](#appconfiguration)
     -   [fs](#fs)
     -   [getFilePath](#getfilepath)
@@ -332,16 +347,16 @@
     -   [setData](#setdata)
     -   [removeData](#removedata)
 -   [DashboardManager](#dashboardmanager)
-    -   [constructor](#constructor-49)
+    -   [constructor](#constructor-51)
     -   [registerTile](#registertile-2)
     -   [unregisterTile](#unregistertile)
     -   [buildDashboard](#builddashboard)
     -   [processAPI](#processapi-5)
 -   [Tile](#tile)
-    -   [constructor](#constructor-50)
+    -   [constructor](#constructor-52)
     -   [get](#get)
 -   [DbHelper](#dbhelper)
-    -   [constructor](#constructor-51)
+    -   [constructor](#constructor-53)
     -   [RequestBuilder](#requestbuilder)
     -   [Operators](#operators)
     -   [getFieldsForTable](#getfieldsfortable)
@@ -352,7 +367,7 @@
     -   [delObject](#delobject)
     -   [delObjects](#delobjects)
 -   [DbManager](#dbmanager)
-    -   [constructor](#constructor-52)
+    -   [constructor](#constructor-54)
     -   [close](#close)
     -   [getFieldsForTable](#getfieldsfortable-1)
     -   [numberVersion](#numberversion)
@@ -367,12 +382,12 @@
     -   [delObject](#delobject-1)
     -   [delObjects](#delobjects-1)
 -   [DbObject](#dbobject)
-    -   [constructor](#constructor-53)
+    -   [constructor](#constructor-55)
     -   [base](#base)
     -   [save](#save)
     -   [del](#del)
 -   [DbRequestBuilder](#dbrequestbuilder)
-    -   [constructor](#constructor-54)
+    -   [constructor](#constructor-56)
     -   [removeLastComma](#removelastcomma)
     -   [escapeString](#escapestring)
     -   [getValueEncapsulated](#getvalueencapsulated)
@@ -402,7 +417,7 @@
     -   [tableName](#tablename)
     -   [toSchema](#toschema)
 -   [DeviceForm](#deviceform)
-    -   [constructor](#constructor-55)
+    -   [constructor](#constructor-57)
     -   [name](#name-3)
     -   [excludeFromAll](#excludefromall)
     -   [visible](#visible)
@@ -410,9 +425,9 @@
     -   [icon](#icon-1)
     -   [radio](#radio-2)
     -   [status](#status-1)
-    -   [json](#json-23)
+    -   [json](#json-25)
 -   [DeviceManager](#devicemanager)
-    -   [constructor](#constructor-56)
+    -   [constructor](#constructor-58)
     -   [triggerScenario](#triggerscenario)
     -   [registerDeviceListForm](#registerdevicelistform)
     -   [registerDeviceTiles](#registerdevicetiles)
@@ -421,29 +436,29 @@
     -   [switchAll](#switchall)
     -   [processAPI](#processapi-6)
 -   [DevicesListForm](#deviceslistform)
-    -   [constructor](#constructor-57)
+    -   [constructor](#constructor-59)
     -   [identifier](#identifier-1)
     -   [status](#status-2)
-    -   [json](#json-24)
+    -   [json](#json-26)
     -   [getDevicesName](#getdevicesname)
     -   [getDevicesId](#getdevicesid)
 -   [DevicesListScenarioForm](#deviceslistscenarioform)
-    -   [constructor](#constructor-58)
+    -   [constructor](#constructor-60)
     -   [turnOnAll](#turnonall)
     -   [turnOffAll](#turnoffall)
     -   [devices](#devices)
-    -   [json](#json-25)
+    -   [json](#json-27)
 -   [DayNightScenarioForm](#daynightscenarioform)
-    -   [constructor](#constructor-59)
+    -   [constructor](#constructor-61)
     -   [day](#day)
     -   [night](#night)
-    -   [json](#json-26)
+    -   [json](#json-28)
 -   [EnvironmentForm](#environmentform)
-    -   [constructor](#constructor-60)
+    -   [constructor](#constructor-62)
     -   [day](#day-1)
-    -   [json](#json-27)
+    -   [json](#json-29)
 -   [EnvironmentManager](#environmentmanager)
-    -   [constructor](#constructor-61)
+    -   [constructor](#constructor-63)
     -   [registerDayNightNotifications](#registerdaynightnotifications)
     -   [unregisterDayNightNotifications](#unregisterdaynightnotifications)
     -   [registerTile](#registertile-3)
@@ -452,8 +467,10 @@
     -   [setDay](#setday)
     -   [setNight](#setnight)
     -   [isNight](#isnight)
+    -   [getLocalPort](#getlocalport)
+    -   [getLocalIp](#getlocalip)
 -   [FormConfiguration](#formconfiguration)
-    -   [constructor](#constructor-62)
+    -   [constructor](#constructor-64)
     -   [setUpdateCb](#setupdatecb)
     -   [addAdditionalFields](#addadditionalfields)
     -   [loadConfig](#loadconfig)
@@ -466,7 +483,7 @@
     -   [getConfig](#getconfig)
     -   [getForm](#getform)
 -   [FormManager](#formmanager)
-    -   [constructor](#constructor-63)
+    -   [constructor](#constructor-65)
     -   [register](#register-2)
     -   [registerWithAdditionalFields](#registerwithadditionalfields)
     -   [addAdditionalFields](#addadditionalfields-1)
@@ -477,21 +494,44 @@
     -   [getForm](#getform-1)
     -   [generateForm](#generateform)
 -   [FormObject](#formobject)
-    -   [constructor](#constructor-64)
-    -   [json](#json-28)
+    -   [constructor](#constructor-66)
+    -   [json](#json-30)
 -   [id](#id)
 -   [InstallationManager](#installationmanager)
-    -   [constructor](#constructor-65)
+    -   [constructor](#constructor-67)
     -   [register](#register-3)
     -   [executeCommand](#executecommand)
     -   [execute](#execute)
     -   [isAlreadyExecuted](#isalreadyexecuted)
     -   [isValidForArchitecture](#isvalidforarchitecture)
     -   [restart](#restart-1)
+-   [IotForm](#iotform)
+    -   [constructor](#constructor-68)
+    -   [iotApp](#iotapp)
+    -   [name](#name-4)
+    -   [json](#json-31)
 -   [IotManager](#iotmanager)
-    -   [constructor](#constructor-66)
+    -   [constructor](#constructor-69)
+    -   [registerIotsListForm](#registeriotslistform)
+    -   [registerLib](#registerlib)
+    -   [constants](#constants-3)
+    -   [registerApp](#registerapp)
+    -   [build](#build)
+    -   [writeDescriptor](#writedescriptor)
+    -   [iotAppExists](#iotappexists)
+    -   [getVersion](#getversion)
+    -   [getIotApp](#getiotapp)
+    -   [getIot](#getiot)
+    -   [processAPI](#processapi-8)
+    -   [comparator](#comparator-2)
+-   [IotsListForm](#iotslistform)
+    -   [constructor](#constructor-70)
+    -   [identifier](#identifier-2)
+    -   [json](#json-32)
+    -   [getIotsName](#getiotsname)
+    -   [getIotsId](#getiotsid)
 -   [DbMessage](#dbmessage)
-    -   [constructor](#constructor-67)
+    -   [constructor](#constructor-71)
 -   [recipient](#recipient)
 -   [sender](#sender)
 -   [message](#message)
@@ -500,24 +540,24 @@
 -   [picture](#picture)
 -   [received](#received)
 -   [MessageManager](#messagemanager)
-    -   [constructor](#constructor-68)
+    -   [constructor](#constructor-72)
     -   [register](#register-4)
     -   [unregister](#unregister-2)
     -   [sendMessage](#sendmessage-1)
     -   [onMessageReceived](#onmessagereceived-1)
     -   [getMessages](#getmessages)
     -   [getLastTimestamp](#getlasttimestamp)
-    -   [processAPI](#processapi-8)
+    -   [processAPI](#processapi-9)
 -   [PluginsAPI](#pluginsapi)
     -   [exportClass](#exportclass)
     -   [init](#init-2)
     -   [registerInstance](#registerinstance)
     -   [getPluginInstance](#getplugininstance)
 -   [PluginConf](#pluginconf)
-    -   [constructor](#constructor-69)
-    -   [json](#json-29)
+    -   [constructor](#constructor-73)
+    -   [json](#json-33)
 -   [PluginsManager](#pluginsmanager)
-    -   [constructor](#constructor-70)
+    -   [constructor](#constructor-74)
     -   [getPluginsFromDirectory](#getpluginsfromdirectory)
     -   [checkPluginSanity](#checkpluginsanity)
     -   [initPlugins](#initplugins)
@@ -528,7 +568,7 @@
     -   [prepareToposortArray](#preparetoposortarray)
     -   [toposort](#toposort)
     -   [topsortedArrayConverter](#topsortedarrayconverter)
-    -   [processAPI](#processapi-9)
+    -   [processAPI](#processapi-10)
 -   [AlarmAPI](#alarmapi)
     -   [alarmStatus](#alarmstatus-1)
     -   [enableAlarm](#enablealarm-1)
@@ -563,6 +603,13 @@
     -   [register](#register-7)
     -   [executeCommand](#executecommand-1)
 -   [IotAPI](#iotapi)
+    -   [registerLib](#registerlib-1)
+    -   [registerApp](#registerapp-1)
+    -   [iotAppExists](#iotappexists-1)
+    -   [getVersion](#getversion-1)
+    -   [getIot](#getiot-1)
+    -   [build](#build-1)
+    -   [constants](#constants-4)
 -   [MessageAPI](#messageapi)
     -   [sendMessage](#sendmessage-2)
     -   [register](#register-8)
@@ -582,7 +629,7 @@
     -   [unregister](#unregister-6)
     -   [schedule](#schedule)
     -   [cancel](#cancel)
-    -   [constants](#constants-2)
+    -   [constants](#constants-5)
 -   [SensorAPI](#sensorapi)
     -   [registerForm](#registerform-2)
     -   [registerClass](#registerclass-1)
@@ -590,6 +637,8 @@
     -   [unregisterSensorEvent](#unregistersensorevent)
     -   [getSensors](#getsensors)
     -   [getValue](#getvalue)
+    -   [getSensor](#getsensor)
+    -   [iotAppPowered](#iotapppowered)
 -   [ServicesManagerAPI](#servicesmanagerapi)
     -   [add](#add)
 -   [ThemeAPI](#themeapi)
@@ -597,7 +646,7 @@
 -   [TimeEventAPI](#timeeventapi)
     -   [register](#register-12)
     -   [unregister](#unregister-7)
-    -   [constants](#constants-3)
+    -   [constants](#constants-6)
 -   [TranslateAPI](#translateapi)
     -   [load](#load-1)
     -   [t](#t)
@@ -614,18 +663,18 @@
     -   [unregister](#unregister-8)
     -   [Authentication](#authentication-1)
     -   [APIResponse](#apiresponse)
-    -   [constants](#constants-4)
+    -   [constants](#constants-7)
 -   [RadioForm](#radioform)
-    -   [constructor](#constructor-71)
+    -   [constructor](#constructor-75)
     -   [module](#module-1)
     -   [protocol](#protocol-1)
     -   [deviceId](#deviceid-1)
     -   [switchId](#switchid-1)
-    -   [json](#json-30)
+    -   [json](#json-34)
     -   [getModules](#getmodules)
     -   [getProtocols](#getprotocols)
 -   [RadioManager](#radiomanager)
-    -   [constructor](#constructor-72)
+    -   [constructor](#constructor-76)
     -   [pluginsLoaded](#pluginsloaded-1)
     -   [register](#register-14)
     -   [unregister](#unregister-9)
@@ -636,26 +685,26 @@
     -   [getProtocols](#getprotocols-1)
     -   [switchDevice](#switchdevice-1)
     -   [getLastReceivedRadioInformations](#getlastreceivedradioinformations-1)
-    -   [processAPI](#processapi-10)
+    -   [processAPI](#processapi-11)
 -   [RadioScenarioForm](#radioscenarioform)
-    -   [constructor](#constructor-73)
+    -   [constructor](#constructor-77)
     -   [radioForm](#radioform-1)
     -   [status](#status-3)
-    -   [json](#json-31)
+    -   [json](#json-35)
 -   [RadioScenariosForm](#radioscenariosform)
-    -   [constructor](#constructor-74)
+    -   [constructor](#constructor-78)
     -   [radioScenariosForm](#radioscenariosform-1)
-    -   [json](#json-32)
+    -   [json](#json-36)
 -   [ScenarioForm](#scenarioform)
-    -   [constructor](#constructor-75)
-    -   [name](#name-4)
+    -   [constructor](#constructor-79)
+    -   [name](#name-5)
     -   [enabled](#enabled-1)
     -   [icon](#icon-2)
     -   [timeTrigger](#timetrigger)
     -   [subActions](#subactions)
-    -   [json](#json-33)
+    -   [json](#json-37)
 -   [ScenarioManager](#scenariomanager)
-    -   [constructor](#constructor-76)
+    -   [constructor](#constructor-80)
     -   [registerScenariosListForm](#registerscenarioslistform)
     -   [generateKey](#generatekey)
     -   [register](#register-15)
@@ -664,51 +713,51 @@
     -   [getScenarios](#getscenarios-1)
     -   [timeEventScenario](#timeeventscenario)
 -   [ScenariosListForm](#scenarioslistform)
-    -   [constructor](#constructor-77)
-    -   [identifier](#identifier-2)
-    -   [json](#json-34)
-    -   [getScenariosName](#getscenariosname)
-    -   [getScenariosId](#getscenariosid)
--   [ScenarioSubActionForm](#scenariosubactionform)
-    -   [constructor](#constructor-78)
-    -   [scenario](#scenario)
-    -   [delay](#delay)
-    -   [json](#json-35)
--   [TimeScenarioForm](#timescenarioform)
-    -   [constructor](#constructor-79)
-    -   [day](#day-2)
-    -   [time](#time)
-    -   [json](#json-36)
--   [SensorsForm](#sensorsform)
-    -   [constructor](#constructor-80)
-    -   [sensorId](#sensorid-1)
-    -   [json](#json-37)
-    -   [getSensorIds](#getsensorids)
-    -   [getSensorNames](#getsensornames)
--   [SensorsListForm](#sensorslistform)
     -   [constructor](#constructor-81)
     -   [identifier](#identifier-3)
     -   [json](#json-38)
+    -   [getScenariosName](#getscenariosname)
+    -   [getScenariosId](#getscenariosid)
+-   [ScenarioSubActionForm](#scenariosubactionform)
+    -   [constructor](#constructor-82)
+    -   [scenario](#scenario)
+    -   [delay](#delay)
+    -   [json](#json-39)
+-   [TimeScenarioForm](#timescenarioform)
+    -   [constructor](#constructor-83)
+    -   [day](#day-2)
+    -   [time](#time)
+    -   [json](#json-40)
+-   [SensorsForm](#sensorsform)
+    -   [constructor](#constructor-84)
+    -   [sensorId](#sensorid-1)
+    -   [json](#json-41)
+    -   [getSensorIds](#getsensorids)
+    -   [getSensorNames](#getsensornames)
+-   [SensorsListForm](#sensorslistform)
+    -   [constructor](#constructor-85)
+    -   [identifier](#identifier-4)
+    -   [json](#json-42)
     -   [getSensorsName](#getsensorsname)
     -   [getSensorsId](#getsensorsid)
 -   [SensorsManager](#sensorsmanager)
-    -   [constructor](#constructor-82)
+    -   [constructor](#constructor-86)
     -   [pluginsLoaded](#pluginsloaded-2)
     -   [initSensors](#initsensors)
     -   [initSensor](#initsensor)
     -   [registerSensorEvent](#registersensorevent-1)
-    -   [getSensor](#getsensor)
+    -   [getSensor](#getsensor-1)
     -   [unregisterSensorEvent](#unregistersensorevent-1)
     -   [getAllSensors](#getallsensors)
     -   [onNewSensorValue](#onnewsensorvalue)
     -   [getValue](#getvalue-1)
-    -   [processAPI](#processapi-11)
+    -   [processAPI](#processapi-12)
     -   [statisticsWsResponse](#statisticswsresponse)
-    -   [comparator](#comparator-2)
+    -   [comparator](#comparator-3)
     -   [getSensorConfiguration](#getsensorconfiguration)
     -   [registerSensorsListForm](#registersensorslistform)
 -   [ServicesManager](#servicesmanager)
-    -   [constructor](#constructor-83)
+    -   [constructor](#constructor-87)
     -   [isServiceRegistered](#isserviceregistered)
     -   [add](#add-1)
     -   [remove](#remove-1)
@@ -717,10 +766,10 @@
     -   [restart](#restart-2)
     -   [getService](#getservice)
 -   [ThemeManager](#thememanager)
-    -   [constructor](#constructor-84)
+    -   [constructor](#constructor-88)
     -   [getColors](#getcolors-1)
 -   [ThreadsManager](#threadsmanager)
-    -   [constructor](#constructor-85)
+    -   [constructor](#constructor-89)
     -   [stringifyFunc](#stringifyfunc)
     -   [run](#run-1)
     -   [send](#send)
@@ -728,21 +777,21 @@
     -   [getPid](#getpid)
     -   [isRunning](#isrunning)
 -   [TranslateManager](#translatemanager)
-    -   [constructor](#constructor-86)
+    -   [constructor](#constructor-90)
     -   [addTranslations](#addtranslations)
     -   [t](#t-1)
     -   [translateArray](#translatearray)
 -   [UserForm](#userform)
-    -   [constructor](#constructor-87)
+    -   [constructor](#constructor-91)
     -   [username](#username-2)
     -   [password](#password-1)
     -   [level](#level-1)
-    -   [name](#name-5)
+    -   [name](#name-6)
     -   [picture](#picture-1)
     -   [atHome](#athome)
-    -   [json](#json-39)
+    -   [json](#json-43)
 -   [UserManager](#usermanager)
-    -   [constructor](#constructor-88)
+    -   [constructor](#constructor-92)
     -   [updateTile](#updatetile-1)
     -   [getUsers](#getusers-1)
     -   [getUser](#getuser)
@@ -753,19 +802,19 @@
     -   [setUserZone](#setuserzone)
     -   [registerHomeNotifications](#registerhomenotifications-1)
     -   [unregisterHomeNotifications](#unregisterhomenotifications-1)
-    -   [processAPI](#processapi-12)
+    -   [processAPI](#processapi-13)
 -   [UserScenarioForm](#userscenarioform)
-    -   [constructor](#constructor-89)
+    -   [constructor](#constructor-93)
     -   [mode](#mode)
-    -   [json](#json-40)
+    -   [json](#json-44)
 -   [SchedulerDbObject](#schedulerdbobject)
-    -   [constructor](#constructor-90)
--   [identifier](#identifier-4)
+    -   [constructor](#constructor-94)
+-   [identifier](#identifier-5)
 -   [data](#data)
 -   [triggerDate](#triggerdate)
 -   [triggered](#triggered)
 -   [SchedulerService](#schedulerservice)
-    -   [constructor](#constructor-91)
+    -   [constructor](#constructor-95)
     -   [start](#start-3)
     -   [stop](#stop-2)
     -   [register](#register-16)
@@ -774,7 +823,7 @@
     -   [cancel](#cancel-1)
     -   [timeEvent](#timeevent)
 -   [Service](#service)
-    -   [constructor](#constructor-92)
+    -   [constructor](#constructor-96)
     -   [start](#start-4)
     -   [run](#run-2)
     -   [threadCallback](#threadcallback-1)
@@ -790,7 +839,7 @@
     -   [unregister](#unregister-12)
     -   [setThreadsManager](#setthreadsmanager)
 -   [TimeEventService](#timeeventservice)
-    -   [constructor](#constructor-93)
+    -   [constructor](#constructor-97)
     -   [start](#start-5)
     -   [stop](#stop-4)
     -   [hash](#hash)
@@ -800,14 +849,14 @@
     -   [convertMode](#convertmode)
     -   [timeEvent](#timeevent-1)
 -   [APIRegistration](#apiregistration)
-    -   [constructor](#constructor-94)
+    -   [constructor](#constructor-98)
     -   [delegate](#delegate)
     -   [method](#method)
     -   [route](#route)
     -   [authLevel](#authlevel)
     -   [isEqual](#isequal)
 -   [APIRequest](#apirequest)
-    -   [constructor](#constructor-95)
+    -   [constructor](#constructor-99)
     -   [method](#method-1)
     -   [ip](#ip-1)
     -   [route](#route-1)
@@ -818,17 +867,17 @@
     -   [authenticationData](#authenticationdata-1)
     -   [addAuthenticationData](#addauthenticationdata)
 -   [APIResponse](#apiresponse-1)
-    -   [constructor](#constructor-96)
+    -   [constructor](#constructor-100)
     -   [success](#success)
     -   [response](#response)
     -   [errorCode](#errorcode)
     -   [errorMessage](#errormessage)
 -   [WebServices](#webservices)
-    -   [constructor](#constructor-97)
+    -   [constructor](#constructor-101)
     -   [start](#start-6)
     -   [stop](#stop-5)
     -   [registerInfos](#registerinfos)
-    -   [processAPI](#processapi-13)
+    -   [processAPI](#processapi-14)
     -   [register](#register-19)
     -   [unregister](#unregister-14)
     -   [registerAPI](#registerapi)
@@ -956,6 +1005,22 @@ Stop automation core
 ### configurationLoader
 
 Try to overload configuration
+
+## loaded
+
+Loaded function
+
+**Parameters**
+
+-   `api` **PluginAPI** The api
+
+## loaded
+
+Loaded function
+
+**Parameters**
+
+-   `api` **PluginAPI** The api
 
 ## loaded
 
@@ -1271,6 +1336,46 @@ Move up camera
 
 Move down camera
 
+## EspHumiditySensorForm
+
+**Extends api.exported.HumiditySensorForm**
+
+Esp humidity form sensor
+
+### json
+
+Convert JSON data to object
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some data
+
+Returns **[EspHumiditySensorForm](#esphumiditysensorform)** An instance
+
+## EspHumiditySensor
+
+**Extends api.exported.HumiditySensor**
+
+This class is overloaded by sensors
+
+**Parameters**
+
+-   `api`  
+-   `id`  
+-   `configuration`  
+
+### constructor
+
+ESP Humidity sensor class (should be extended)
+
+**Parameters**
+
+-   `api` **PluginAPI** A plugin api
+-   `id` **[number](#number)** An id (optional, default `null`)
+-   `configuration` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The configuration for sensor (optional, default `null`)
+
+Returns **[EspHumiditySensor](#esphumiditysensor)** The instance
+
 ## EspTemperatureSensorForm
 
 **Extends api.exported.TemperatureSensorForm**
@@ -1310,6 +1415,81 @@ ESP Temperature sensor class (should be extended)
 -   `configuration` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The configuration for sensor (optional, default `null`)
 
 Returns **[EspTemperatureSensor](#esptemperaturesensor)** The instance
+
+## ESP8266Form
+
+**Extends api.exported.FormObject.class**
+
+ESP8266 form class
+
+**Parameters**
+
+-   `id`   (optional, default `null`)
+-   `ssid`   (optional, default `null`)
+-   `passphrase`   (optional, default `null`)
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `id` **[number](#number)** Identifier (optional, default `null`)
+-   `ssid` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Wifi SSID (optional, default `null`)
+-   `passphrase` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Wifi passphrase (optional, default `null`)
+
+Returns **[ESP8266Form](#esp8266form)** The instance
+
+### ssid
+
+### passphrase
+
+### json
+
+Convert JSON data to object
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some data
+
+Returns **[ESP8266Form](#esp8266form)** An instance
+
+## Esp8266
+
+ESP8266 manager class
+
+**Parameters**
+
+-   `api`  
+
+### constructor
+
+ESP sensors class
+
+**Parameters**
+
+-   `api` **PluginAPI** A plugin api
+
+Returns **EspSensors** The instance
+
+### constants
+
+ESP8266 constants :
+Modes : `MODE_DEEP_SLEEP`, `MODE_SLEEP`, `MODE_ALWAYS_POWERED` or `MODE_LIGHT_SLEEP`
+Time : `EVERY_HOUR`, `EVERY_DAY` or `EVERY_WEEK`
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The constants
+
+### generateOptions
+
+Generate Iot app options
+
+**Parameters**
+
+-   `powerMode` **int** The power mode. Can be `api.getPluginInstance("esp8266").constants().MODE_DEEP_SLEEP`, `api.getPluginInstance("esp8266").constants().MODE_SLEEP`, `api.getPluginInstance("esp8266").constants().MODE_ALWAYS_POWERED` or `api.getPluginInstance("esp8266").constants().MODE_LIGHT_SLEEP`
+-   `timer` **int** A timer for mode deep sleep, light sleep or sleep in `seconds`. Can be a constant `api.getPluginInstance("esp8266").constants().EVERY_HOUR`, `api.getPluginInstance("esp8266").constants().EVERY_DAY` or `api.getPluginInstance("esp8266").constants().EVERY_WEEK`
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The options object
 
 ### processAPI
 
@@ -2560,6 +2740,12 @@ Get sensor's statistics
 -   `roundTimestampFunction` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A  e.g. `(timestamp) => {return  timestamp;}` (optional, default `null`)
 -   `roundDateSqlFormat` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** In relation with roundTimeStampFunction, the SQL date format. E.g. : "%Y-%m-01 00:00:00" (optional, default `null`)
 
+### getIotIdentifier
+
+Returns the linked iot identifier
+
+Returns **[number](#number)** Iot identifier
+
 ### constants
 
 Access to constants
@@ -2918,22 +3104,6 @@ Constructor
 -   `sensors` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** List of sensors (optional, default `[]`)
 -   `devicesOnEnable` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** Device to trigger when alarm is triggered (optional, default `[]`)
 -   `devicesOnDisable` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** Device to trigger when alarm is stopped (optional, default `[]`)
-
-Returns **[AlarmForm](#alarmform)** The instance
-
-### constructor
-
-Constructor
-
-**Parameters**
-
--   `id` **[number](#number)** An identifier (optional, default `null`)
--   `enabled` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Status (optional, default `false`)
--   `armed`   (optional, default `false`)
--   `userLocationTrigger` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** User location auto trigger (optional, default `null`)
--   `sensors`   (optional, default `[]`)
--   `devicesOnEnable`   (optional, default `[]`)
--   `devicesOnDisable`   (optional, default `[]`)
 
 Returns **[AlarmForm](#alarmform)** The instance
 
@@ -4767,6 +4937,18 @@ Is it night ?
 
 Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` if night mode, otherwise `false`
 
+### getLocalPort
+
+Get the local HTTP port
+
+Returns **[number](#number)** The local hautomation HTTP port
+
+### getLocalIp
+
+Get the local IP address, null if not found
+
+Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The local IP address
+
 ## FormConfiguration
 
 This class allows to manage form configuration
@@ -5092,6 +5274,44 @@ Process Hautomation when all commands has been done
 -   `i` **[number](#number)** The current comment indice
 -   `nb` **[number](#number)** The max number of commands to execute
 
+## IotForm
+
+**Extends FormObject.class**
+
+This class provides an Iot device. Need to be overloaded.
+
+**Parameters**
+
+-   `id`   (optional, default `null`)
+-   `iotApp`   (optional, default `null`)
+-   `name`   (optional, default `null`)
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `id` **[number](#number)** An identifier (optional, default `null`)
+-   `iotApp` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An iot app identifier (optional, default `null`)
+-   `name` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A device name (optional, default `null`)
+
+Returns **[DeviceForm](#deviceform)** The instance
+
+### iotApp
+
+### name
+
+### json
+
+Convert json data
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some key / value data
+
+Returns **[IotForm](#iotform)** A form object
+
 ## IotManager
 
 This class allows to manage iot apps
@@ -5101,6 +5321,9 @@ This class allows to manage iot apps
 -   `appConfiguration`  
 -   `webServices`  
 -   `installationManager`  
+-   `formManager`  
+-   `environmentManager`  
+-   `confManager`  
 
 ### constructor
 
@@ -5111,8 +5334,189 @@ Constructor
 -   `appConfiguration` **AppConfiguration** The app configuration object
 -   `webServices` **[WebServices](#webservices)** The web services
 -   `installationManager` **[InstallationManager](#installationmanager)** The installation manager
+-   `formManager` **[FormManager](#formmanager)** The form manager
+-   `environmentManager` **[EnvironmentManager](#environmentmanager)** The environment manager
+-   `confManager` **[ConfManager](#confmanager)** The configuration manager
 
 Returns **[IotManager](#iotmanager)** The instance
+
+### registerIotsListForm
+
+Register an iots list form
+
+### registerLib
+
+Register an IoT library
+A library folder should contain `global_lib` and `lib` folder, inside `path` parameter
+
+**Parameters**
+
+-   `path` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The library path
+-   `appId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An app identifier
+-   `version` **int** A version number (optional, default `0`)
+-   `form` **[FormObject](#formobject)** A form (optional, default `null`)
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some form injection parameters
+
+### constants
+
+Get the constants `constants().PLATFORMS`, `constants().BOARDS` and `constants().FRAMEWORKS`
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The constants object
+
+### registerApp
+
+Register an IoT library
+An IoT app folder should contain `global_lib`, `lib` and `src` folder, inside `path` parameter.
+A `main.cpp` file should be created under `src` folder.
+
+**Parameters**
+
+-   `path` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The application file path
+-   `appId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An app identifier
+-   `name` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The app name
+-   `version` **int** The application version number
+-   `platform` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A platform
+-   `board` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A board type
+-   `framework` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A framework
+-   `dependencies` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** The array of library dependencies. Can be en empty array or an array of library app identifiers.
+-   `options` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A list of options injected in IoT configuration during flash sequence (optional, default `null`)
+-   `form` **[FormObject](#formobject)** A form (optional, default `null`)
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some form injection parameters
+
+### build
+
+Build a firmware for a specific appId
+
+**Parameters**
+
+-   `appId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An app identifier
+-   `flash` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` if USB flash sequence should be done after build, `false` otherwise (optional, default `false`)
+-   `config` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A configuration injected to firmware (optional, default `null`)
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback `(error, result) => {}` called when firmware / flash is done. The result object contains 2 properties, `firmwarePath` for the firmware, `stdout` for the results
+
+### writeDescriptor
+
+Write platformio ini file descriptor
+
+**Parameters**
+
+-   `folder` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The folder where file should be written
+-   `appId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An app identifier
+
+### iotAppExists
+
+Check if an IoT app exists
+
+**Parameters**
+
+-   `appId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An app identifier
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` if the iot app is registered, `false` otherwise
+
+### getVersion
+
+Get a version for a specific IoT app
+
+**Parameters**
+
+-   `appId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An app identifier
+
+Returns **int** A version number
+
+### getIotApp
+
+Retrive an IoT app object
+
+**Parameters**
+
+-   `appId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An app identifier
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An IoT app
+
+### getIot
+
+Retrieve an IoT (not application, but configured instance)
+
+**Parameters**
+
+-   `id` **[number](#number)** An IoT identifier
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An IoT configuration object
+
+### processAPI
+
+Process API callback
+
+**Parameters**
+
+-   `apiRequest` **[APIRequest](#apirequest)** An APIRequest
+
+Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with an APIResponse object
+
+### comparator
+
+Compare IoT data
+
+**Parameters**
+
+-   `iotData1` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Iot data 1
+-   `iotData2` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Iot data 2
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if id is the same, false otherwise
+
+## IotsListForm
+
+**Extends FormObject.class**
+
+This class provides a iot list form
+
+**Parameters**
+
+-   `id`   (optional, default `null`)
+-   `identifier`   (optional, default `null`)
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `id` **[number](#number)** An identifier (optional, default `null`)
+-   `identifier` **[number](#number)** The iot identifier (optional, default `null`)
+
+Returns **[DevicesListForm](#deviceslistform)** The instance
+
+### identifier
+
+### json
+
+Convert json data
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some key / value data
+
+Returns **[IotsListForm](#iotslistform)** A form object
+
+### getIotsName
+
+Form injection method for Iots name
+
+**Parameters**
+
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The modules list array
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of iots name
+
+### getIotsId
+
+Form injection method for Iots ids
+
+**Parameters**
+
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The modules list array
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of iots id
 
 ## DbMessage
 
@@ -5790,6 +6194,86 @@ Public API for iot
 
 -   `iotManager`  
 
+### registerLib
+
+Register an IoT library
+A library folder should contain `global_lib` and `lib` folder, inside `path` parameter
+
+**Parameters**
+
+-   `path` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The library path
+-   `appId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An app identifier
+-   `form` **[FormObject](#formobject)** A form (optional, default `null`)
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some form injection parameters
+-   `version` **int** A version number (optional, default `0`)
+
+### registerApp
+
+Register an IoT library
+An IoT app folder should contain `global_lib`, `lib` and `src` folder, inside `path` parameter.
+A `main.cpp` file should be created under `src` folder.
+
+**Parameters**
+
+-   `path` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The application file path
+-   `appId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An app identifier
+-   `name` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The app name
+-   `version` **int** The application version number
+-   `platform` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A platform
+-   `board` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A board type
+-   `framework` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A framework
+-   `form` **[FormObject](#formobject)** A form (optional, default `null`)
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some form injection parameters
+-   `dependencies` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** The array of library dependencies. Can be en empty array or an array of library app identifiers.
+-   `options` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A list of options injected in IoT configuration during flash sequence (optional, default `null`)
+
+### iotAppExists
+
+Check if an IoT app exists
+
+**Parameters**
+
+-   `appId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An app identifier
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` if the iot app is registered, `false` otherwise
+
+### getVersion
+
+Get a version for a specific IoT app
+
+**Parameters**
+
+-   `appId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An app identifier
+
+Returns **int** A version number
+
+### getIot
+
+Retrieve an IoT (not application, but configured instance)
+
+**Parameters**
+
+-   `id` **[number](#number)** An IoT identifier
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An IoT configuration object
+
+### build
+
+Build a firmware for a specific appId
+
+**Parameters**
+
+-   `appId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An app identifier
+-   `flash` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` if USB flash sequence should be done after build, `false` otherwise (optional, default `false`)
+-   `config` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A configuration injected to firmware (optional, default `null`)
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback `(error, result) => {}` called when firmware / flash is done. The result object contains 2 properties, `firmwarePath` for the firmware, `stdout` for the results
+
+### constants
+
+Get the constants `constants().PLATFORMS`, `constants().BOARDS` and `constants().FRAMEWORKS`
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The constants object
+
 ## MessageAPI
 
 Public API for messages
@@ -6012,6 +6496,10 @@ Unregister a callback for a/all sensor
 
 Get all sensors
 
+**Parameters**
+
+-   `type` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Sensor's type or category. If not specified, send back all sensors. (optional, default `null`)
+
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** On object with id:name
 
 ### getValue
@@ -6023,6 +6511,21 @@ Get a sensor's value
 -   `id` **[number](#number)** The sensor's identifier
 -   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback e.g. `(err, res) => {}`
 -   `duration` **[number](#number)** A duration in seconds. If null or not provided, will provide last inserted database value. (optional, default `null`)
+
+### getSensor
+
+Get sensor by identifier
+
+**Parameters**
+
+-   `identifier` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An identiifer
+
+Returns **[Sensor](#sensor)** A sensor object
+
+### iotAppPowered
+
+Call this if your plugin is linked to an iot. The iot list form will be automatically added.
+The method should be called before `registerForm()` !
 
 ## ServicesManagerAPI
 
@@ -6936,6 +7439,10 @@ Unregister a callback for a/all sensor
 ### getAllSensors
 
 Get all sensors
+
+**Parameters**
+
+-   `type` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Sensor's type or category. If not specified, send back all sensors. (optional, default `null`)
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** On object with id:name
 
