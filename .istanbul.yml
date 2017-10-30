@@ -1,4 +1,4 @@
-verbose: false
+verbose: true
 instrumentation:
     extension: .js
     root: ./src
