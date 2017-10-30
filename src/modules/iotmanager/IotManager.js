@@ -42,7 +42,7 @@ class IotManager {
      * @param  {ConfManager} confManager    The configuration manager
      * @returns {IotManager}              The instance
      */
-    constructor(appConfiguration, webServices, installationManager, formManager, environmentManager, confManager, fs = null) {
+    constructor(appConfiguration, webServices, installationManager, formManager, environmentManager, confManager) {
         this.webServices = webServices;
         this.appConfiguration = appConfiguration;
         this.installationManager = installationManager;
@@ -51,10 +51,6 @@ class IotManager {
         this.confManager = confManager;
         this.iotApps = {};
         this.iotLibs = {};
-
-        if (!fs) {
-
-        }
 
         try {
             this.iots = this.confManager.loadData(Object, CONF_MANAGER_KEY, true);
@@ -279,7 +275,6 @@ class IotManager {
                 cb(error);
             } else {
                 const firmwarePath = tmpDir + ".pioenvs/" + this.iotApps[appId].board + "/firmware.bin";
-                console.log(firmwarePath);
                 if (fs.existsSync(firmwarePath)) {
                     cb(null, {firmwarePath:firmwarePath, stdout:stdout});
                 } else {
