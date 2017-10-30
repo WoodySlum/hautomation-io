@@ -290,6 +290,7 @@
     -   [json](#json-22)
 -   [Authentication](#authentication)
     -   [constructor](#constructor-44)
+    -   [checkLocalIp](#checklocalip)
 -   [AuthenticationData](#authenticationdata)
     -   [constructor](#constructor-45)
     -   [authorized](#authorized)
@@ -3273,6 +3274,7 @@ This class manage authentication for Web Services
 
 -   `webService`  
 -   `userManager`  
+-   `environmentManager`  
 
 ### constructor
 
@@ -3282,8 +3284,19 @@ Constructor
 
 -   `webService` **WebService** The web service instance
 -   `userManager` **[UserManager](#usermanager)** User manager
+-   `environmentManager` **[EnvironmentManager](#environmentmanager)** Environment manager
 
 Returns **[Authentication](#authentication)** Instance
+
+### checkLocalIp
+
+Check if an ip is on the same network
+
+**Parameters**
+
+-   `ipSource` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The source ip
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` if the ip is on the same network, `false` otherwise
 
 ## AuthenticationData
 
