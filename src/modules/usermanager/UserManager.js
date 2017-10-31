@@ -16,7 +16,8 @@ const CONF_KEY = "users";
 const ERROR_USER_NOT_FOUND = "ERROR_USER_NOT_FOUND";
 
 const ROUTE_USER_ZONE = ":/user/zone/set/";
-const ROUTE_USER_LCOATION = ":/user/location/set/";
+const ROUTE_USER_LOCATION = ":/user/location/set/";
+const ROUTE_USER_SETTINGS = ":/user/settings/get/";
 
 /**
  * This class allows to manage users (create, delete, search, ...)
@@ -32,20 +33,23 @@ class UserManager {
      * @param  {DashboardManager} dashboardManager  The dashboard manager
      * @param  {AppConfiguration} appConfiguration The app configuration object
      * @param  {ScenarioManager} scenarioManager  The scenario manager
+     * @param  {EnvironmentManager} environmentManager  The environment manager
      * @returns {UserManager} The instance
      */
-    constructor(confManager, formManager, webServices, dashboardManager, appConfiguration, scenarioManager) {
+    constructor(confManager, formManager, webServices, dashboardManager, appConfiguration, scenarioManager, environmentManager) {
         this.formConfiguration = new FormConfiguration.class(confManager, formManager, webServices, CONF_KEY, true, UserForm.class);
         this.confManager = confManager;
         this.dashboardManager = dashboardManager;
         this.webServices = webServices;
         this.appConfiguration = appConfiguration;
         this.scenarioManager = scenarioManager;
+        this.environmentManager = environmentManager;
         this.updateTile();
         this.registeredHomeNotifications = {};
 
         this.webServices.registerAPI(this, WebServices.POST, ROUTE_USER_ZONE + "[status]/", Authentication.AUTH_USAGE_LEVEL);
-        this.webServices.registerAPI(this, WebServices.POST, ROUTE_USER_LCOATION + "[longitude]/[latitude]/[radius*]/[speed*]/[timestamp*]/", Authentication.AUTH_USAGE_LEVEL);
+        this.webServices.registerAPI(this, WebServices.POST, ROUTE_USER_LOCATION + "[longitude]/[latitude]/[radius*]/[speed*]/[timestamp*]/", Authentication.AUTH_USAGE_LEVEL);
+        this.webServices.registerAPI(this, WebServices.GET, ROUTE_USER_SETTINGS, Authentication.AUTH_USAGE_LEVEL);
 
         this.scenarioManager.register(UserScenarioForm.class, null, "user.scenario.form.mode.trigger");
     }
@@ -258,10 +262,18 @@ class UserManager {
                 self.setUserZone(apiRequest.authenticationData.username, Boolean(parseInt(apiRequest.data.status)));
                 resolve(new APIResponse.class(true, {success:true}));
             });
-        } else if (apiRequest.route.startsWith(ROUTE_USER_LCOATION)) {
+        } else if (apiRequest.route.startsWith(ROUTE_USER_LOCATION)) {
             return new Promise((resolve) => {
                 self.setUserZone(apiRequest.authenticationData.username, GeoUtils.class.isInZone(this.appConfiguration.home.longitude, this.appConfiguration.home.latitude, this.appConfiguration.home.radius, parseFloat(apiRequest.data.longitude), parseFloat(apiRequest.data.latitude)));
                 resolve(new APIResponse.class(true, {success:true}));
+            });
+        } else if (apiRequest.route.startsWith(ROUTE_USER_SETTINGS)) {
+            return new Promise((resolve) => {
+                const settings = {
+                    home: this.environmentManager.getCoordinates(),
+                    tilesExcluded:[]
+                };
+                resolve(new APIResponse.class(true, settings));
             });
         }
     }
