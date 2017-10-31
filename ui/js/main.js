@@ -25,7 +25,6 @@ $(document).ready(function() {
     var refreshCameraInt = 5; // In seconds
     var refreshListInt = 5; // In seconds
     var cameraPanVal = 30;
-    var ambiancesItems = null;
     var alarmStatus = false;
     var holidaysStatus = false;
     var actionData = {};
@@ -106,7 +105,6 @@ $(document).ready(function() {
     var objectsList;
     var infoTileList = new Array();
     var tilesData = {};
-    var ambianceList;
     var houseInfo;
     var tileEditMode = false;
     var videoCameraMode = false;
@@ -1755,47 +1753,7 @@ $(document).ready(function() {
         $('#cameras').click(function() {
             $("#cameraTabAction").trigger("click");
         });
-
-        $('#ambiances--H--ambiances').click(function() {
-            $("#ambianceTabBtn").trigger("click");
-        });
     }
-
-    var getAmbiancesItems = function() {
-
-        ambiancesItems = JSON.parse(readCookie('ambiances-cache'));
-        if (ambiancesItems == null) {
-            showLoader();
-        } else {
-            generateTiles(ambiancesItems, 'tilesAmbiance');
-            tileActions();
-        }
-
-        $.ajax({
-            type: "POST",
-            url: vUrl,
-            data: {
-                username: username,
-                ePassword: ePassword,
-                method: "getAmbiancesItems"
-            }
-        }).done(function(msg) {
-            ambiancesItems = JSON.parse(msg);
-            if (ambiancesItems) {
-                generateTiles(ambiancesItems, 'tilesAmbiance');
-                tileActions();
-            }
-            bakeCookie('ambiances-cache', msg);
-            hideLoader();
-        }).fail(function(msg) {
-            setError(msg);
-            hideLoader();
-        });
-    };
-
-    $("#ambianceTabBtn").click(function() {
-        getAmbiancesItems();
-    });
 
     var refreshCamera = function() {
         /*if ($('#cameraTab').attr('class').indexOf("active") > 0) {
@@ -3870,211 +3828,6 @@ $(document).ready(function() {
         });
 
 
-    }
-
-    // Manage ambiances
-    var setAmbiances = function() {
-        consolelog(ambianceData);
-        dataString = JSON.stringify(ambianceData);
-        $("#ambiancesLoader").show();
-        $.ajax({
-            type: "POST",
-            url: vUrl,
-            data: {
-                username: username,
-                ePassword: ePassword,
-                method: "setAmbiances",
-                jsonData: dataString
-            }
-        }).done(function(msg) {
-            consolelog(dataString);
-            $("#manageAmbiancesItem").click();
-
-            consolelog("Success !");
-            window.scrollTo(0, 0);
-        }).fail(function(msg) {
-            setError(msg);
-        });
-    }
-
-    $("#manageAmbiancesItem").click(function() {
-        $("#ambianceTable").show();
-        $("#addAmbianceForm").empty();
-        showLoader();
-        $.ajax({
-            type: "POST",
-            url: vUrl,
-            data: {
-                username: username,
-                ePassword: ePassword,
-                method: "getAmbiances"
-            }
-        }).done(function(msg) {
-            var jsonData = JSON.parse(msg);
-            if (jsonData) {
-                keys = Object.keys(jsonData);
-                ambianceData = jsonData;
-
-                var length = keys.length;
-
-                var data = [];
-                for (var i = 0; i < length; i++) {
-                    var tmp = {};
-                    tmp.id = keys[i];
-                    tmp.description = jsonData[keys[i]].name;
-                    tmp.icon = jsonData[keys[i]].icon;
-                    data.push(tmp);
-                }
-
-                drawSquareAdminInterface(data, $("#ambiancesTable"), "ambiance-set-", "ambiance-del-", "setManageAmbiance", "delManageAmbiance");
-
-                $(".setManageAmbiance").click(function() {
-                    if (event.target.tagName.toLowerCase() === 'span') {
-                        targetId = event.target.parentNode.id.replace("ambiance-set-", "");
-                    } else {
-                        targetId = event.target.id.replace("ambiance-set-", "");
-                    }
-                    consolelog("changed !" + targetId);
-                    consolelog(jsonData[targetId]);
-
-                    manageAmbianceForm(jsonData[targetId], targetId);
-                });
-
-                $(".delManageAmbiance").click(function() {
-                    if (event.target.tagName.toLowerCase() === 'span') {
-                        targetId = event.target.parentNode.id.replace("ambiance-del-", "");
-                    } else {
-                        targetId = event.target.id.replace("ambiance-del-", "");
-                    }
-                    consolelog("changed !" + targetId);
-                    consolelog(jsonData[targetId]);
-
-                    swal(Object.assign({
-                        title: t('js.ambiances.form.confirm', [jsonData[targetId].name]),
-                        type: "warning",
-                        showCancelButton: true,
-                        confirmButtonText: t('js.continue', null),
-                        cancelButtonText: t('js.cancel', null)
-                    }, swalDefaults)).then(function() {
-                        // Confirm
-                        delete ambianceData[targetId];
-                        setAmbiances();
-                        $("#manageAmbiancesItem").click();
-                    }, function(mode) {
-                        // Cancel
-                        if (mode && mode != 'cancel') {
-                            return;
-                        }
-                    });
-                });
-            }
-            $("#addManageAmbiance").unbind();
-            $("#addManageAmbiance").click(function() {
-                manageAmbianceForm(null, null);
-            });
-            $("#ambiancesLoader").hide();
-            hideLoader();
-        }).fail(function(msg) {
-            hideLoader();
-            setError(msg);
-            $("#ambiancesLoader").hide();
-        });
-    });
-
-
-
-    var manageAmbianceForm = function(obj, key) {
-        $("#addAmbianceForm").empty();
-        ambianceTable = $("#ambianceTable");
-        ambianceTable.hide();
-        keyField = 'string';
-        if (key) keyField = 'hidden';
-
-        $("#addAmbianceForm").jsonForm({
-            schema: {
-                key: {
-                    type: 'hidden',
-                    title: t('js.ambiances.form.key', null),
-                    required: true
-                },
-                name: {
-                    type: 'string',
-                    title: t('js.ambiances.form.description', null),
-                    required: true
-                },
-                codes: {
-                    type: 'array',
-                    title: t('js.ambiances.form.devices', null),
-                    uniqueItems: true,
-                    "items": {
-                        "type": "string",
-                        "title": t('js.ambiances.form.devices', null),
-                        "enum": fullDevicesKeys
-                    }
-                },
-                icon: {
-                    type: 'string',
-                    title: t('js.ambiances.form.icon', null),
-                    enum: Object.keys(icons)
-                }
-            },
-            "form": [
-                "key", "name",
-                {
-                    "key": "icon",
-                    "titleMap": iconsLabel(),
-                    "fieldHtmlClass": "selectpicker",
-                    "htmlClass": "iconPicker"
-                },
-                {
-                    "key": "codes",
-                    "type": "checkboxes",
-                    "titleMap": fullDevicesLabels
-                },
-                {
-                    "type": "button",
-                    "title": "<span class=\"glyphicon glyphicon-remove\"></span> " + t('js.cancel', null),
-                    "onClick": function(evt) {
-                        //evt.preventDefault();
-                        $("#ambianceTable").show();
-                        $("#addAmbianceForm").empty();
-                        window.scrollTo(0, 0);
-                    }
-                },
-                {
-                    "type": "button",
-                    "htmlClass": "btn-primary",
-                    "title": "<span class=\"glyphicon glyphicon-floppy-disk\"></span>  " + t('js.save', null),
-                    "onClick": function(evt) {
-                        // evt.target.submit();
-                    }
-                }
-
-            ],
-            "value": obj,
-            onSubmit: function(errors, values) {
-                if (errors) {
-                    setError(t('js.invalid.form.data', null));
-                } else {
-                    dataKey = values.key;
-                    if ((dataKey == null) || (dataKey == '')) {
-                        dataKey = Math.floor(Date.now() / 1000);
-                        values.key = dataKey;
-                    }
-                    ambianceData[dataKey] = values;
-
-                    setAmbiances();
-
-                    toastr.success(t('js.form.success', null));
-                }
-            }
-        });
-        $('.selectpicker').selectpicker({
-            showTick: false,
-            style: "fa",
-            showIcon: false,
-            tickIcon: ''
-        });
     }
 
     // Manage devices
