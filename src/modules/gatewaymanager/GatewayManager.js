@@ -17,13 +17,15 @@ class GatewayManager {
      * @param  {EnvironmentManager} environmentManager The environment manager
      * @param  {string} version Hautomation version
      * @param  {TimeEventService} timeEventService Time event service
+     * @param  {Object} appConfiguration App configuration
      *
      * @returns {GatewayManager} The instance
      */
-    constructor(environmentManager, version, timeEventService) {
+    constructor(environmentManager, version, timeEventService, appConfiguration) {
         this.environmentManager = environmentManager;
         this.version = version;
         this.timeEventService = timeEventService;
+        this.appConfiguration = appConfiguration;
         Logger.info("Hautomation ID : " + this.getHautomationId());
         this.transmit();
 
@@ -63,7 +65,7 @@ class GatewayManager {
             headers: headers,
             form: {
                 hautomationId: this.getHautomationId(),
-                port: 8100,
+                port: (this.appConfiguration.ssl && this.appConfiguration.ssl.port)?this.appConfiguration.ssl.port:this.appConfiguration.port,
                 method: "register",
                 version: 0,
                 localIp: this.environmentManager.getLocalIp(),
