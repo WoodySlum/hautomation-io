@@ -39,7 +39,7 @@ class IotManager {
      * @param  {FormManager} formManager  The form manager
      * @param  {EnvironmentManager} environmentManager  The environment manager
      * @param  {ConfManager} confManager    The configuration manager
-     * @param  {ConfManager} confManager    The configuration manager
+     * 
      * @returns {IotManager}              The instance
      */
     constructor(appConfiguration, webServices, installationManager, formManager, environmentManager, confManager) {

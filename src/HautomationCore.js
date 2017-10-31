@@ -29,6 +29,7 @@ const MessageManager = require("./modules/messagemanager/MessageManager");
 const ScenarioManager = require("./modules/scenariomanager/ScenarioManager");
 const EnvironmentManager = require("./modules/environmentmanager/EnvironmentManager");
 const IotManager = require("./modules/iotmanager/IotManager");
+const GatewayManager = require("./modules/gatewaymanager/GatewayManager");
 
 const CONFIGURATION_FILE = "data/config.json";
 var AppConfiguration = require("./../data/config.json");
@@ -137,6 +138,8 @@ class HautomationCore {
         this.sensorsManager = new SensorsManager.class(this.pluginsManager, this.eventBus, this.webServices, this.formManager, this.confManager, this.translateManager, this.themeManager);
         // Alarm module
         this.alarmManager = new AlarmManager.class(this.confManager, this.formManager, this.webServices, this.dashboardManager, this.userManager, this.sensorsManager, this.translateManager, this.deviceManager, this.messageManager, this.schedulerService, this.camerasManager);
+        // Gateway manager module
+        this.gatewayManager = new GatewayManager.class(this.environmentManager, NpmPackage.version, this.timeEventService);
 
         // Plugins manager module
         this.pluginsManager = new PluginsManager.class(this.confManager, this.webServices, this.servicesManager, this.dbManager, this.translateManager, this.formManager, this.timeEventService, this.schedulerService, this.dashboardManager, this.eventBus, this.themeManager, this.sensorsManager, this.installationManager, this.userManager, this.messageManager, this.scenarioManager, this.alarmManager, this.camerasManager, this.radioManager, AppConfiguration, this.environmentManager, this.iotManager);

@@ -23,6 +23,7 @@ class EnvironmentManager {
      * @param  {DashboardManager} dashboardManager The dashboard manager
      * @param  {TranslateManager} translateManager    The translate manager
      * @param  {ScenarioManager} scenarioManager    The scenario manager
+     *
      * @returns {EnvironmentManager}              The instance
      */
     constructor(appConfiguration, confManager, formManager, webServices, dashboardManager, translateManager, scenarioManager) {
@@ -175,6 +176,28 @@ class EnvironmentManager {
         });
 
         return localIp;
+    }
+
+    /**
+     * Get the mac address
+     *
+     * @returns {string} The mac address, or `null` if not found
+     */
+    getMacAddress() {
+        const ifaces = os.networkInterfaces();
+        let macAddress = null;
+        Object.keys(ifaces).forEach(function (ifname) {
+            ifaces[ifname].forEach(function (iface) {
+                if ("IPv4" !== iface.family || iface.internal !== false) {
+                    // skip over internal (i.e. 127.0.0.1) and non-ipv4 addresses
+                    return;
+                }
+
+                macAddress = iface.mac;
+            });
+        });
+
+        return macAddress;
     }
 }
 
