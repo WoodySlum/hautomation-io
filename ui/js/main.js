@@ -3829,7 +3829,7 @@ $(document).ready(function() {
 
 
     }
-
+    
     // Manage devices
     var setDevices = function() {
         dataString = JSON.stringify(deviceData);
