@@ -25,7 +25,7 @@ describe("UserManager", function() {
         expect(userManager).to.have.property("formConfiguration");
         expect(userManager).to.have.property("confManager");
         expect(core.scenarioManager.register.calledOnce).to.be.true;
-        expect(core.webServices.registerAPI.callCount).to.be.equal(6);
+        expect(core.webServices.registerAPI.callCount).to.be.equal(7);
         core.scenarioManager.register.restore();
         core.webServices.registerAPI.restore();
     });
