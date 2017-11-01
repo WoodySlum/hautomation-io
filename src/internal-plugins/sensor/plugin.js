@@ -337,7 +337,7 @@ function loaded(api) {
             this.lastObject((err, lastObject) => {
                 if (!err && lastObject.value) {
                     const convertedValue = this.convertValue(lastObject.value);
-                    const tile = this.api.dashboardAPI.Tile("sensor-"+this.id, this.api.dashboardAPI.TileType().TILE_INFO_TWO_TEXT, this.icon, null, this.name, convertedValue.value + convertedValue.unit);
+                    const tile = this.api.dashboardAPI.Tile("sensor-"+this.id, this.api.dashboardAPI.TileType().TILE_INFO_TWO_TEXT, this.icon, null, this.name, convertedValue.value + convertedValue.unit, null, null, null, 800, "statistics");
                     if (this.configuration.dashboardColor) {
                         tile.colors.colorDefault = this.configuration.dashboardColor;
                     }

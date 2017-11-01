@@ -287,8 +287,11 @@ class WebServices extends Service.class {
      */
     manageResponse(req, endpoint, res) {
         let method = req.method;
-        const ipSplit = req.ip.split(":");
-        let ip = ipSplit[(ipSplit.length - 1)];
+        let ip = null;
+        if (req.ip) {
+            const ipSplit = req.ip.split(":");
+            ip = ipSplit[(ipSplit.length - 1)];
+        }
         let route = req.path.replace(endpoint, "");
         let path = route.split("/");
         let action = null;
