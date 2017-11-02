@@ -60,31 +60,33 @@ class UserManager {
     updateTile() {
         const pics = [];
         this.getUsers().forEach((user) => {
-            const pic = ImageUtils.class.sanitizeFormConfiguration(user.picture);
-            if (pic) {
-                if (user.atHome) {
-                    ImageUtils.class.resize(pic, (err, data) => {
-                        if (!err) {
-                            pics.push(data);
-                            const tile = new Tile.class(this.dashboardManager.themeManager, "users", Tile.TILE_PICTURES, Icons.class.list()["group"], null, null, null, null, pics);
-                            this.dashboardManager.registerTile(tile);
-                        } else {
-                            Logger.err(err.message);
-                        }
-                    });
-                } else {
-                    ImageUtils.class.blur(pic, (err, data) => {
-                        if (!err) {
-                            pics.push(data);
-                            const tile = new Tile.class(this.dashboardManager.themeManager, "users", Tile.TILE_PICTURES, Icons.class.list()["group"], null, null, null, null, pics);
-                            this.dashboardManager.registerTile(tile);
-                        } else {
-                            Logger.err(err.message);
-                        }
-                    });
+            if (user.picture) {
+                const pic = ImageUtils.class.sanitizeFormConfiguration(user.picture);
+                if (pic) {
+                    if (user.atHome) {
+                        ImageUtils.class.resize(pic, (err, data) => {
+                            if (!err) {
+                                pics.push(data);
+                            } else {
+                                Logger.err(err.message);
+                            }
+                        });
+                    } else {
+                        ImageUtils.class.blur(pic, (err, data) => {
+                            if (!err) {
+                                pics.push(data);
+                            } else {
+                                Logger.err(err.message);
+                            }
+                        });
+                    }
                 }
             }
+
         });
+
+        const tile = new Tile.class(this.dashboardManager.themeManager, "users", Tile.TILE_PICTURES, Icons.class.list()["group"], null, null, null, null, pics);
+        this.dashboardManager.registerTile(tile);
     }
 
     /**
