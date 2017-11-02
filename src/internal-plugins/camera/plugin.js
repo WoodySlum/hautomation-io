@@ -61,6 +61,7 @@ function loaded(api) {
              * @Required(true);
              * @Min(1);
              * @Max(65535);
+             * @Default(80);
              */
             this.port = port;
 

@@ -190,6 +190,8 @@ class HautomationCore {
      * Stop automation core
      */
     stop() {
+        // Logging
+        // this.translateManager.writeList();
         Logger.info("Stopping core");
         try {
             this.servicesManager.stop();
