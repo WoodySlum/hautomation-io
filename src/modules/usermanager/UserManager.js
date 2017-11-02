@@ -50,6 +50,9 @@ class UserManager {
         this.webServices.registerAPI(this, WebServices.POST, ROUTE_USER_ZONE + "[status]/", Authentication.AUTH_USAGE_LEVEL);
         this.webServices.registerAPI(this, WebServices.POST, ROUTE_USER_LOCATION + "[longitude]/[latitude]/[radius*]/[speed*]/[timestamp*]/", Authentication.AUTH_USAGE_LEVEL);
         this.webServices.registerAPI(this, WebServices.GET, ROUTE_USER_SETTINGS, Authentication.AUTH_USAGE_LEVEL);
+        this.formConfiguration.setUpdateCb((data) => {
+            this.updateTile();
+        });
 
         this.scenarioManager.register(UserScenarioForm.class, null, "user.scenario.form.mode.trigger");
     }
@@ -228,6 +231,8 @@ class UserManager {
         } else {
             Logger.warn("Could not change user zone. Unknown user " + username);
         }
+
+        this.updateTile();
     }
 
     /**
