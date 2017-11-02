@@ -77,6 +77,7 @@ function loaded(api) {
              * @Title("camera.form.password");
              * @Type("string");
              * @Required(false);
+             * @Display("password");
              */
             this.password = password;
         }

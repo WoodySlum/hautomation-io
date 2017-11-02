@@ -33,6 +33,7 @@ class UserForm extends FormObject.class {
          * @Title("user.form.password");
          * @Type("string");
          * @Required(true);
+         * @Display("password");
          */
         this.password = password;
 
