@@ -165,8 +165,8 @@ class CamerasManager {
     pluginsLoaded(pluginsManager, context) {
         context.pluginsManager = pluginsManager;
         context.initCameras();
-        this.registerCamerasListForm();
-        this.registerTile(this);
+        context.registerCamerasListForm();
+        context.registerTile(context);
         //this.record(1503653182, (err, s) => {});
     }
 
@@ -272,6 +272,7 @@ class CamerasManager {
             names.push(camera.name);
         });
         this.formManager.register(CamerasForm.class, ids, names);
+        this.registerTile(this);
     }
 
     /**
