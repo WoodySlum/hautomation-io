@@ -51,6 +51,7 @@ class DeviceManager {
 
         // Register to form configuration callback
         this.formConfiguration.setUpdateCb(() => {
+            this.registerDeviceTiles();
             this.registerDeviceListForm();
         });
 

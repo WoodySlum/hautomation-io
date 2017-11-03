@@ -15,7 +15,7 @@
     "cameras.tile": "Cameras",
     "device.form.name": "Name",
     "device.form.excludeFromAll": "Exclude from 'Turn all on' or 'Turn all off'",
-    "device.form.visible": "Dashboard tile dfisplay",
+    "device.form.visible": "Dashboard tile display",
     "device.form.worksOnlyOnDayNight": "Works on",
     "device.form.worksOnlyOnDayNight.both": "Day and night",
     "device.form.worksOnlyOnDayNight.day": "Day only",
@@ -86,5 +86,5 @@
     "alarm.form.devices.disable": "Turn off devices when alarm is disabled",
     "iot.form.app": "Application",
     "iot.form.name": "Name",
-    "iots.list.form.title": "IoTs available"
+    "iots.list.form.title": "Pick an IoT application"
 }
