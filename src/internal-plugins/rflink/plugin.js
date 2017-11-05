@@ -93,7 +93,7 @@ function loaded(api) {
                     this.service.restart();
                 }
             });
-            
+
             api.timeEventAPI.register(this.upgrade, this, api.timeEventAPI.constants().EVERY_DAYS);
         }
 
