@@ -3476,13 +3476,13 @@ $(document).ready(function() {
                 if (radioSignalData[targetId] != null) {
                     var reqRadioRawData = $.ajax({
                         type: "POST",
-                        url: vUrl,
-                        data: {
-                            username: username,
-                            ePassword: ePassword,
-                            method: "testRadioData",
-                            data: JSON.stringify(radioSignalData[targetId])
-                        }
+                        contentType: "application/json",
+                        url: vUrl + "radio/set/" + radioSignalData[targetId].module + "/" + radioSignalData[targetId].protocol + "/" + radioSignalData[targetId].switchId + "/" + radioSignalData[targetId].deviceId + "/" + radioSignalData[targetId].status + "/",
+                        data: JSON.stringify({
+                            u: username,
+                            p: password,
+                            data: {}
+                        })
                     }).done(function(msg) {
                         toastr.success(t('js.scanner.raw.scan.action.test.success'));
                     }).fail(function(msg) {
