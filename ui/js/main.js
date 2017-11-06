@@ -3392,9 +3392,9 @@ $(document).ready(function() {
                 for (i = 0; i < jsonData.length; i++) {
                     var radioSignal = jsonData[i];
                     consolelog(radioSignal);
-                    if (radioSignal.state != null) {
-                        if ((radioSignal.state == -1) || (radioSignal.state == 1)) {
-                            if (radioSignal.state === 1) {
+                    if (radioSignal.status != null) {
+                        if ((radioSignal.status == -1) || (radioSignal.status == 1)) {
+                            if (radioSignal.status === 1) {
                                 status = "<span class=\"label label-success\">" + t('js.on', null) + "</span>";
                             } else {
                                 status = "<span class=\"label label-danger\">" + t('js.off', null) + "</span>";
@@ -3430,7 +3430,7 @@ $(document).ready(function() {
                         subcode = "";
                     }
 
-                    radioInfoListTable.append("<tr class=\"left\"><td>" + radioSignal.date + "</td><td>" + radioSignal.protocol + "</td><td>" + code + "</td><td>" + subcode + "</td><td>" + status + "</td><td>" + found + " " + description + "</td><td class=\"center\"><button type=\"button\" class=\"assignToAction btn btn-primary btn-xs\" id=\"assignToAction-" + j + "\">" + t('js.assign.to.action', null) + "</button> <button type=\"button\" class=\"assignToDevice btn btn-primary btn-xs\" id=\"assignToDevice-" + j + "\">" + t('js.assign.to.device', null) + "</button> <button type=\"button\" class=\"radioTest btn btn-primary btn-xs\" id=\"radioTest-" + j + "\">" + t('js.test', null) + "</button></td></tr>");
+                    radioInfoListTable.append("<tr class=\"left\"><td>" + radioSignal.date + "</td><td>" + radioSignal.protocol + "</td><td>" + code + "</td><td>" + subcode + "</td><td>" + status + "</td><td>" + found + " " + description + "</td><td class=\"center\"><button type=\"button\" class=\"assignToAction btn btn-primary btn-xs\" id=\"assignToAction-" + j + "\">" + t('js.assign.to.scenario', null) + "</button> <button type=\"button\" class=\"assignToDevice btn btn-primary btn-xs\" id=\"assignToDevice-" + j + "\">" + t('js.assign.to.device', null) + "</button> <button type=\"button\" class=\"radioTest btn btn-primary btn-xs\" id=\"radioTest-" + j + "\">" + t('js.test', null) + "</button></td></tr>");
                     j++;
                 }
             }
@@ -3446,7 +3446,8 @@ $(document).ready(function() {
                 if (radioSignalData[targetId] != null) {
                     $('#configTabs a[href="#manageActions"]').tab('show');
                     $("#manageActionsItem").click();
-                    manageActionForm(radioSignalData[targetId], null);
+                    renderFormGlobal("scenarios", document.getElementById("scenariostable"), adminFormSchemaList["scenarios"], adminFormSchemaUIList["scenarios"], {"RadioScenariosForm":{"radioScenariosForm":[{"radio":{"module":radioSignalData[targetId].module
+,"protocol":radioSignalData[targetId].protocol,"deviceId":radioSignalData[targetId].deviceId,"switchId":radioSignalData[targetId].switchId},"status":radioSignalData[targetId].status}]}});
                 }
             });
 
@@ -3460,7 +3461,8 @@ $(document).ready(function() {
                 if (radioSignalData[targetId] != null) {
                     $('#configTabs a[href="#manageDevices"]').tab('show');
                     $("#manageDevicesItem").click();
-                    manageDeviceForm(radioSignalData[targetId], null);
+                    renderFormGlobal("devices", document.getElementById("devicestable"), adminFormSchemaList["devices"], adminFormSchemaUIList["devices"], {"radio":[{"module":radioSignalData[targetId].module,"protocol":radioSignalData[targetId].protocol,
+"deviceId":radioSignalData[targetId].deviceId,"switchId":radioSignalData[targetId].switchId}]});
                 }
             });
 
@@ -3829,7 +3831,7 @@ $(document).ready(function() {
 
 
     }
-    
+
     // Manage devices
     var setDevices = function() {
         dataString = JSON.stringify(deviceData);

@@ -1,3 +1,7 @@
+var renderFormGlobal;
+var adminFormSchemaList = {};
+var adminFormSchemaUIList = {};
+
 function adminFormReady() {
     function adminForm(item) {
         var formData = {};
@@ -77,7 +81,7 @@ function adminFormReady() {
                                     p: password
                                 }
                             }).done(function(data) {
-                                loadTiles();
+                                loadTiles(prefix);
                             }).fail(function(msg) {
                                 setError(msg);
                             });
@@ -92,7 +96,7 @@ function adminFormReady() {
             });
         }
 
-        function renderForm(prefix, tableDiv, schema, uiSchema, formData) {
+        var renderForm = function(prefix, tableDiv, schema, uiSchema, formData) {
             tableDiv.style.display = "none";
             document.getElementById(prefix + "form").style.display = "block";
             document.getElementById("add" + prefix).style.display = "none";
@@ -100,7 +104,7 @@ function adminFormReady() {
             ReactDOM.render(React.createElement(Form, {schema:schema, uiSchema:uiSchema, formData:formData, onSubmit: function(data) {
                 $.ajax({
                     type: "POST",
-                    url: vUrl + "conf/" + item + "/set/",
+                    url: vUrl + "conf/" + prefix + "/set/",
                     contentType: "application/json",
                     data: JSON.stringify({
                         u: username,
@@ -110,7 +114,7 @@ function adminFormReady() {
                 }).done(function(data) {
                     document.getElementById(prefix + "form").style.display = "none";
                     tableDiv.style.display = "block";
-                    loadTiles();
+                    loadTiles(prefix);
                 }).fail(function(msg) {
                     setError(msg);
                 });
@@ -118,7 +122,7 @@ function adminFormReady() {
             React.createElement(
               "button",
               { type: "button", className:"btn btn-info", onClick: function() {
-                  loadTiles();
+                  loadTiles(prefix);
               }},
               "button.cancel"
           ),
@@ -129,6 +133,8 @@ function adminFormReady() {
             )), document.getElementById(prefix + "form"));
         }
 
+        renderFormGlobal = renderForm;
+
         function buttonAdd(prefix, tableDiv, formData) {
             document.getElementById("add" + prefix).style.display = "block";
             $("#add" + prefix ).unbind();
@@ -137,7 +143,7 @@ function adminFormReady() {
             });
         }
 
-        function loadTiles() {
+        function loadTiles(item) {
             $.ajax({
                 type: "GET",
                 url: vUrl + "conf/" + item + "/form/",
@@ -147,6 +153,8 @@ function adminFormReady() {
                 }
             }).done(function(data) {
                 formData = data;
+                adminFormSchemaList[item] = formData.schema;
+                adminFormSchemaUIList[item] = formData.schemaUI;
                 var divTable = document.getElementById(item + "table");
                 if (formData.data instanceof Array)  {
                     buttonAdd(item, divTable, formData);
@@ -159,7 +167,7 @@ function adminFormReady() {
             });
         }
 
-        loadTiles();
+        loadTiles(item);
     }
 
 
