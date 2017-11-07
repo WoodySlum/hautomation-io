@@ -3477,7 +3477,7 @@ $(document).ready(function() {
                     var reqRadioRawData = $.ajax({
                         type: "POST",
                         contentType: "application/json",
-                        url: vUrl + "radio/set/" + radioSignalData[targetId].module + "/" + radioSignalData[targetId].protocol + "/" + radioSignalData[targetId].switchId + "/" + radioSignalData[targetId].deviceId + "/" + radioSignalData[targetId].status + "/",
+                        url: vUrl + "radio/set/" + radioSignalData[targetId].module + "/" + radioSignalData[targetId].protocol + "/" + radioSignalData[targetId].deviceId + "/" + radioSignalData[targetId].switchId + "/" + radioSignalData[targetId].status + "/",
                         data: JSON.stringify({
                             u: username,
                             p: password,
