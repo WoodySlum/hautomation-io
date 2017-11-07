@@ -283,5 +283,10 @@
     "js.scanner.raw.scan.action.assign.status.select": " [ On or Off ? ]",
     "js.scanner.raw.scan.action.assign.status.select.on": "On",
     "js.scanner.raw.scan.action.assign.status.select.off": "Off",
-    "js.test": "Test"
+    "js.test": "Test",
+    "iots.flash.ready": "Please plug the USB IoT into the Hautomation system",
+    "iots.flash.go": "Start !",
+    "flash.flashing": "Flashing the IoT, please be patient ...",
+    "iot.flash.error": "Oops, an error has occured while flashing. Are you sure the device has been well plugged ?",
+    "iot.flash.retry": "Retry"
 }

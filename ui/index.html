@@ -248,9 +248,9 @@
 	    			<div id="iotsForm"></div>
                     <div id="iotsFlash" class="center">
                         <div id="iotsFlashIndicator">
-                            <span class="glyphicon glyphicon-save" aria-hidden="true"></span><br /><br />
-                            <div id ="iotsFlashIndicatorText">iots.flash.ready</div><br /><br />
-                            <button type="button" class="btn btn-primary" id="iotsFlashBtn">iots.flash.go</button>
+                            <span class="glyphicon glyphicon-save" id="iotsBigIcon" aria-hidden="true"></span><br /><br />
+                            <div class="iotFlashText" id="iotsFlashIndicatorText"><script type="text/javascript">uit("iots.flash.ready");</script></div><br /><br />
+                            <button type="button" class="btn btn-primary iotFlashText" id="iotsFlashBtn"><script type="text/javascript">uit("iots.flash.go");</script></button>
                         </div>
                         <div id="iotsFlashRunning">
 
@@ -462,10 +462,10 @@
 									<tr class="camController"><td colspan="3"class="center">
 										<form class="form-inline" id="timeLapseForm">
 											<select class="form-control" id="timeLapseDuration">
-												  <option value="86400"><script type="text/javascript">uit("ui.timelapse.24hours");</script></option>
-												  <option value="3600"><script type="text/javascript">uit("ui.timelapse.1hour");</script></option>
-												  <option value="172800"><script type="text/javascript">uit("ui.timelapse.48hours");</script></option>
-												  <option value="432000"><script type="text/javascript">uit("ui.timelapse.5days");</script></option>
+												  <option value="86400">24 hours</option>
+												  <option value="3600">1 hour</option>
+												  <option value="172800">48 hours</option>
+												  <option value="432000">5 days</option>
 												</select>
 											<button type="button" class="btn btn-info" id="timeLapse"><span class="glyphicon glyphicon-facetime-video" aria-hidden="true"></span> <script type="text/javascript">uit("ui.timelapse.build");</script></button>
 											<button type="button" class="btn btn-info" id="timeLapseViewer"><span class="glyphicon glyphicon-facetime-video" aria-hidden="true"></span> <script type="text/javascript">uit("ui.timelapse.daily");</script></button>

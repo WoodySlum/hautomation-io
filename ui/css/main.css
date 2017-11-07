@@ -1533,7 +1533,7 @@ a:hover {
 	font-size:20px;
 }
 
-#iotsFlash span {
+#iotsBigIcon {
     color: #ABB0AF;
     font-size: 170px;
 }
@@ -1576,7 +1576,13 @@ a:hover {
   }
 }
 
-#iotsFlashFinishIcon span {
+#iotFlashFinishIconError {
+    color: #ABB0AF;
+    font-size: 75px;
+}
+
+#iotFlashFinishIconSuccess {
+    color: #ABB0AF;
     font-size: 75px;
 }
 

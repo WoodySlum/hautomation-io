@@ -4883,7 +4883,7 @@ $(document).ready(function() {
                 }
                 iotsContent = iotsContent + '<div class="col-md-2 iotsClick iotsTile" id="' + iots[i].identifier + '" style="">';
                 iotsContent = iotsContent + '<i class="fa iotsIcon" data-unicode="' + iots[i].icon + '">&#x' + iots[i].icon + '</i><br/>';
-                iotsContent = iotsContent + '<span class="label label-success">' + iots[i].iotApp + '</span><br/>';
+                iotsContent = iotsContent + '<span class="label label-success" style="white-space: pre-wrap;">' + iots[i].iotApp + '</span><br/>';
                 iotsContent = iotsContent + '<strong>' + iots[i].name + '</strong>';
                 iotsContent = iotsContent + '</div>';
                 colcount++;
@@ -5025,7 +5025,7 @@ $(document).ready(function() {
             }).done(function(result) {
                 $("#iotsFlashRunning").hide();
                 $("#iotsFlashFinish").show();
-                document.getElementById("iotsFlashFinishIcon").innerHTML = '<span class="glyphicon glyphicon-ok-sign iotFlashFinishIconSuccess" aria-hidden="true"></span>';
+                document.getElementById("iotsFlashFinishIcon").innerHTML = '<span class="glyphicon glyphicon-ok-sign iotFlashFinishIconSuccess" id="iotFlashFinishIconSuccess" aria-hidden="true"></span>';
                 document.getElementById("iotsFlashFinishText").innerHTML = t('iot.flash.success');
                 document.getElementById("iotsFlashFinishDetails").innerHTML = '<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#flashResults" aria-expanded="true" aria-controls="flashResults">' +
                 t('js.details') +
@@ -5040,7 +5040,7 @@ $(document).ready(function() {
             }).fail(function(msg) {
                 $("#iotsFlashRunning").hide();
                 $("#iotsFlashFinish").show();
-                document.getElementById("iotsFlashFinishIcon").innerHTML = '<span class="glyphicon glyphicon-remove-sign iotFlashFinishIconError" aria-hidden="true"></span>';
+                document.getElementById("iotsFlashFinishIcon").innerHTML = '<span class="glyphicon glyphicon-remove-sign iotFlashFinishIconError" id="iotFlashFinishIconError" aria-hidden="true"></span>';
                 document.getElementById("iotsFlashFinishText").innerHTML = t('iot.flash.error');
                 document.getElementById("iotsFlashFinishDetails").innerHTML = '<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#flashResults" aria-expanded="true" aria-controls="flashResults">' +
                 t('js.details') +
