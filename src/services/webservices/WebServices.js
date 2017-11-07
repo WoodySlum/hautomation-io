@@ -27,6 +27,7 @@ const POST = "POST";
 const DELETE = "DELETE";
 const ENDPOINT_API = "/api/";
 const ENDPOINT_UI = "/";
+const ENDPOINT_LNG = "/lng/";
 
 const API_UP_TO_DATE = 304;
 const API_ERROR_HTTP_CODE = 500;
@@ -42,6 +43,7 @@ class WebServices extends Service.class {
     /**
      * Constructor
      *
+     * @param  {TranslateManager} translateManager       The translation manager
      * @param  {int} [port=8080]        The listening HTTP port
      * @param  {int} [sslPort=8443]     The listening HTTPS port
      * @param  {string} [sslKey=null]   The path for SSL key
@@ -49,8 +51,9 @@ class WebServices extends Service.class {
      * @param  {string} [enableCompression=true]  Enable gzip data compression
      * @returns {WebServices}            The instance
      */
-    constructor(port = 8080, sslPort = 8043, sslKey = null, sslCert = null, enableCompression = true) {
+    constructor(translateManager, port = 8080, sslPort = 8043, sslKey = null, sslCert = null, enableCompression = true) {
         super("webservices");
+        this.translateManager = translateManager;
         this.port = port;
         this.sslPort = sslPort;
         this.app = express();
@@ -70,7 +73,13 @@ class WebServices extends Service.class {
             let instance = this;
 
             this.app.use(BodyParser.json({limit: "2mb"}));
+
+            // Web UI
+            this.translateManager.addTranslations(__dirname + "/../../../ui/");
             this.app.use(BodyParser.urlencoded({ extended: false }));
+            this.app.use(ENDPOINT_LNG, function(req, res){
+                res.json(instance.translateManager.translations);
+            });
             this.app.use(ENDPOINT_UI, express.static(__dirname + "/../../../ui"));
             if (this.enableCompression) {
                 this.app.use(compression({filter: (req, res) => {

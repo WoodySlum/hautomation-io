@@ -62,10 +62,6 @@
     <script src="js/react.min.js"></script>
     <script src="js/react-dom.min.js"></script>
     <script src="js/react-jsonschema-form.js"></script>
-	<script type="text/javascript">
-        var localization = {};
-		//var localization = <?php echo $l->getJavascriptPart(); ?>;
-	</script>
 	<script src="js/main.js"></script>
     <script src="js/admin-form.js"></script>
   </head>
@@ -116,16 +112,16 @@
     		<div class="modal-content">
       			<div class="modal-header">
 	    			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-	    			<h3 id="myBackupLabel">ui.popup.backup.title</h3>
+	    			<h3 id="myBackupLabel"><script type="text/javascript">uit("ui.popup.backup.title");</script></h3>
 	  			</div>
 	  			<div class="modal-body">
 	    			<select id="backupMode" class="form-control">
-					  <option value="0">ui.popup.backup.option.data</option>
+					  <option value="0"><script type="text/javascript">uit("ui.popup.backup.option.data");</script></option>
 					</select>
 	  			</div>
 	  			<div class="modal-footer">
-	    			<button class="btn btn-default" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> ui.close</button>
-	    			<button class="btn btn-info" data-dismiss="modal" aria-hidden="true" id="btnBackupMode">ui.popup.backup.btn</button>
+	    			<button class="btn btn-default" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> <script type="text/javascript">uit("ui.close");</script></button>
+	    			<button class="btn btn-info" data-dismiss="modal" aria-hidden="true" id="btnBackupMode"><script type="text/javascript">uit("ui.popup.backup.btn");</script></button>
 	  			</div>
 	  		</div>
 	  	</div>
@@ -165,13 +161,13 @@
 	    				<img id="cameraHistorySource" class="img-rounded" />
 					</div>
 					<div class="alert alert-info">
-	    				<span><strong>ui.date: </strong></span><span id="pictureDate"></span><br />
-	    				<span><strong>ui.time : </strong></span><span id="pictureTime"></span><br />
-	    				<span><strong>ui.popup.camera.location : </strong></span><span id="pictureLocation"></span>
+	    				<span><strong><script type="text/javascript">uit("ui.date");</script> : </strong></span><span id="pictureDate"></span><br />
+	    				<span><strong><script type="text/javascript">uit("ui.time");</script> : </strong></span><span id="pictureTime"></span><br />
+	    				<span><strong><script type="text/javascript">uit("ui.popup.camera.location");</script> : </strong></span><span id="pictureLocation"></span>
 					</div>
 	  			</div>
 	  			<div class="modal-footer">
-	    			<button class="btn btn-default" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> ui.close</button>
+	    			<button class="btn btn-default" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> <script type="text/javascript">uit("ui.close");</script></button>
 	  			</div>
 	  		</div>
 	  	</div>
@@ -209,7 +205,7 @@
 					</div>
 	  			</div>
 	  			<div class="modal-footer">
-	    			<button class="btn btn-default" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> ui.close</button>
+	    			<button class="btn btn-default" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> <script type="text/javascript">uit("ui.close");</script></button>
 	  			</div>
 	  		</div>
 	  	</div>
@@ -222,8 +218,8 @@
 	    			<div id="pluginForm"></div>
 	  			</div>
 	  			<div class="modal-footer">
-	  				<button class="btn btn-primary" aria-hidden="true" id="savePluginForm">ui.save</button>
-	    			<button class="btn btn-default" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> ui.close</button>
+	  				<button class="btn btn-primary" aria-hidden="true" id="savePluginForm"><script type="text/javascript">uit("ui.save");</script></button>
+	    			<button class="btn btn-default" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> <script type="text/javascript">uit("ui.close");</script></button>
 	  			</div>
 	  		</div>
 	  	</div>
@@ -237,9 +233,9 @@
 	    			<div id="sensorForm"></div>
 	  			</div>
 	  			<div class="modal-footer">
-	  				<button class="btn btn-danger" aria-hidden="true" id="deleteSensorForm"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> ui.delete</button>
-	  				<button class="btn btn-primary" aria-hidden="true" id="saveSensorForm"><span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span> ui.save</button>
-	    			<button class="btn btn-default" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> ui.close</button>
+	  				<button class="btn btn-danger" aria-hidden="true" id="deleteSensorForm"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> <script type="text/javascript">uit("ui.delete");</script></button>
+	  				<button class="btn btn-primary" aria-hidden="true" id="saveSensorForm"><span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span> <script type="text/javascript">uit("ui.save");</script></button>
+	    			<button class="btn btn-default" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> <script type="text/javascript">uit("ui.close");</script></button>
 	  			</div>
 	  		</div>
 	  	</div>
@@ -274,10 +270,10 @@
 	  			</div>
 	  			<div class="modal-footer">
 	  				<span id="iotsOtaFlashBtn"></span>
-                    <button class="btn btn-primary" aria-hidden="true" id="flashIotsBtn"><span class="glyphicon glyphicon-save" aria-hidden="true"></span> ui.flash</button>
-	  				<button class="btn btn-danger" aria-hidden="true" id="deleteIotsForm"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> ui.delete</button>
-	  				<button class="btn btn-primary" aria-hidden="true" id="saveIotsForm"><span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span> ui.save</button>
-	    			<button class="btn btn-default" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> ui.close</button>
+                    <button class="btn btn-primary" aria-hidden="true" id="flashIotsBtn"><span class="glyphicon glyphicon-save" aria-hidden="true"></span> <script type="text/javascript">uit("ui.flash");</script></button>
+	  				<button class="btn btn-danger" aria-hidden="true" id="deleteIotsForm"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> <script type="text/javascript">uit("ui.delete");</script></button>
+	  				<button class="btn btn-primary" aria-hidden="true" id="saveIotsForm"><span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span> <script type="text/javascript">uit("ui.save");</script></button>
+	    			<button class="btn btn-default" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> <script type="text/javascript">uit("ui.close");</script></button>
 	  			</div>
 	  		</div>
 	  	</div>
@@ -291,9 +287,9 @@
                 </div>
                 <div class="modal-footer">
                     <span id="cameraOtaFlashBtn"></span>
-                    <button class="btn btn-danger" aria-hidden="true" id="deleteCameraForm"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> ui.delete</button>
-                    <button class="btn btn-primary" aria-hidden="true" id="saveCameraForm"><span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span> ui.save</button>
-                    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> ui.close</button>
+                    <button class="btn btn-danger" aria-hidden="true" id="deleteCameraForm"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> <script type="text/javascript">uit("ui.delete");</script></button>
+                    <button class="btn btn-primary" aria-hidden="true" id="saveCameraForm"><span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span> <script type="text/javascript">uit("ui.save");</script></button>
+                    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> <script type="text/javascript">uit("ui.close");</script></button>
                 </div>
             </div>
         </div>
@@ -307,9 +303,9 @@
 	    			<div id="flashResults"></div>
 	  			</div>
 	  			<div class="modal-footer">
-	  				<button class="btn btn-primary" aria-hidden="true" id="dlFirmwareIoTBtn"><span class="glyphicon glyphicon-import" aria-hidden="true"></span> ui.flash.download</button>
-	  				<button class="btn btn-primary" aria-hidden="true" id="flashIoTBtn"><span class="glyphicon glyphicon-export" aria-hidden="true"></span> ui.flash</button>
-	    			<button class="btn btn-default" data-dismiss="modal" id="closeIoTBtn" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> ui.close</button>
+	  				<button class="btn btn-primary" aria-hidden="true" id="dlFirmwareIoTBtn"><span class="glyphicon glyphicon-import" aria-hidden="true"></span> <script type="text/javascript">uit("ui.flash.download");</script></button>
+	  				<button class="btn btn-primary" aria-hidden="true" id="flashIoTBtn"><span class="glyphicon glyphicon-export" aria-hidden="true"></span> <script type="text/javascript">uit("ui.flash");</script></button>
+	    			<button class="btn btn-default" data-dismiss="modal" id="closeIoTBtn" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> <script type="text/javascript">uit("ui.close");</script></button>
 	  			</div>
 	  		</div>
 	  	</div>
@@ -327,7 +323,7 @@
 	    			<div id="map" class="map"></div>
 	  			</div>
 	  			<div class="modal-footer">
-	    			<button class="btn btn-default" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> ui.close</button>
+	    			<button class="btn btn-default" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> <script type="text/javascript">uit("ui.close");</script></button>
 	  			</div>
 	  		</div>
 	  	</div>
@@ -341,7 +337,7 @@
 	  				<div id="rawScanAnimation"></div>
 	  			</div>
 	  			<div class="modal-footer">
-	    			<button class="btn btn-default" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> ui.close</button>
+	    			<button class="btn btn-default" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> <script type="text/javascript">uit("ui.close");</script></button>
 	  			</div>
 	  		</div>
 	  	</div>
@@ -359,23 +355,23 @@
   				<div class="form-group">
 					<div class="input-prepend">
 					  <span class="add-on"><i class="icon-user icon-white"></i></span>
-			      	  <input type="text" class="form-control" id="username" placeholder="ui.login.username.placeholder">
+			      	  <input type="text" class="form-control" id="username" placeholder="username">
 					</div>
 			    </div>
 			    <div class="form-group">
 					<div class="input-prepend">
 					  <span class="add-on"><i class="icon-lock icon-white"></i></span>
-				      <input type="password" class="form-control" id="password" placeholder="ui.login.password.placeholder">
+				      <input type="password" class="form-control" id="password" placeholder="password">
 					</div>
 			    </div>
 				<div class="checkbox rememberMe">
 				    <label>
-				      <input type="checkbox" name="rememberMe" id="rememberMe" checked="checked" /> ui.login.rememberme
+				      <input type="checkbox" name="rememberMe" id="rememberMe" checked="checked" /> <script type="text/javascript">uit("ui.login.rememberme");</script>
 				    </label>
 				  </div>
 			    <div class="form-group">
 				    <div class="col-lg-20" id="signInButton">
-				      <button type="button" id="login" class="btn btn-default btn-large">ui.login.signin</button>
+				      <button type="button" id="login" class="btn btn-default btn-large"><script type="text/javascript">uit("ui.login.signin");</script></button>
 				    </div>
 				</div>
   			</form>
@@ -392,7 +388,7 @@
 	  			</div>
 	  			<div class="modal-footer">
 	  				<span id="dailyTimeLapse"></span>
-	    			<button class="btn btn-default" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> ui.close</button>
+	    			<button class="btn btn-default" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> <script type="text/javascript">uit("ui.close");</script></button>
 	  			</div>
 	  		</div>
 	  	</div>
@@ -407,14 +403,14 @@
 					<img src="img/logo-2.png" />
 				</div>
 				<ul class="nav nav-pills nav-stacked" id="menu">
-					<li><a href="#switchsTab" data-toggle="tab" id="dashboardItem"><span class="glyphicon glyphicon-th"></span> ui.dashboard</a></li>
-					<li><a href="#cameraTab" data-toggle="tab" id="cameraTabAction"><span class="glyphicon glyphicon-facetime-video"></span> ui.cameras</a></li>
-					<li><a href="#telemetryTab" data-toggle="tab" id="statisticsBtn"><span class="glyphicon glyphicon-stats"></span> ui.statistics</a></li>
-					<li><a href="#manageTab" data-toggle="tab" id="manageZone"><span class="glyphicon glyphicon-cog"></span> ui.manage</a></li>
+					<li><a href="#switchsTab" data-toggle="tab" id="dashboardItem"><span class="glyphicon glyphicon-th"></span> <script type="text/javascript">uit("ui.dashboard");</script></a></li>
+					<li><a href="#cameraTab" data-toggle="tab" id="cameraTabAction"><span class="glyphicon glyphicon-facetime-video"></span> <script type="text/javascript">uit("ui.cameras");</script></a></li>
+					<li><a href="#telemetryTab" data-toggle="tab" id="statisticsBtn"><span class="glyphicon glyphicon-stats"></span> <script type="text/javascript">uit("ui.statistics");</script></a></li>
+					<li><a href="#manageTab" data-toggle="tab" id="manageZone"><span class="glyphicon glyphicon-cog"></span> <script type="text/javascript">uit("ui.manage");</script></a></li>
 			  	</ul>
 
 				<div class="center signOutButton">
-					<button class="btn btn-default btn-xs" id="signOut">ui.logout</button>
+					<button class="btn btn-default btn-xs" id="signOut"><script type="text/javascript">uit("ui.logout");</script></button>
 				</div>
 		    </div>
 
@@ -427,7 +423,7 @@
 							</div>
 							<br />
 							<div class="center" id="dashboard-generated-date"></div>
-							<div class="center" id="dashboard-generated-date"><h6>ui.modify.tiles.description</h6></div>
+							<div class="center" id="dashboard-generated-date"><h6><script type="text/javascript">uit("ui.modify.tiles.description");</script></h6></div>
 						</div>
 
 						<div class="tab-pane active" id="cameraTab">
@@ -466,13 +462,13 @@
 									<tr class="camController"><td colspan="3"class="center">
 										<form class="form-inline" id="timeLapseForm">
 											<select class="form-control" id="timeLapseDuration">
-												  <option value="86400">ui.timelapse.24hours</option>
-												  <option value="3600">ui.timelapse.1hour</option>
-												  <option value="172800">ui.timelapse.48hours</option>
-												  <option value="432000">ui.timelapse.5days</option>
+												  <option value="86400"><script type="text/javascript">uit("ui.timelapse.24hours");</script></option>
+												  <option value="3600"><script type="text/javascript">uit("ui.timelapse.1hour");</script></option>
+												  <option value="172800"><script type="text/javascript">uit("ui.timelapse.48hours");</script></option>
+												  <option value="432000"><script type="text/javascript">uit("ui.timelapse.5days");</script></option>
 												</select>
-											<button type="button" class="btn btn-info" id="timeLapse"><span class="glyphicon glyphicon-facetime-video" aria-hidden="true"></span> ui.timelapse.build</button>
-											<button type="button" class="btn btn-info" id="timeLapseViewer"><span class="glyphicon glyphicon-facetime-video" aria-hidden="true"></span> ui.timelapse.daily</button>
+											<button type="button" class="btn btn-info" id="timeLapse"><span class="glyphicon glyphicon-facetime-video" aria-hidden="true"></span> <script type="text/javascript">uit("ui.timelapse.build");</script></button>
+											<button type="button" class="btn btn-info" id="timeLapseViewer"><span class="glyphicon glyphicon-facetime-video" aria-hidden="true"></span> <script type="text/javascript">uit("ui.timelapse.daily");</script></button>
 										</form>
 										<span id="timeLapseResults"></span>
 									</td></tr>
@@ -490,9 +486,9 @@
 
 						<div class="tab-pane active" id="telemetryTab">
 							<ul class="nav nav-tabs" id="teleinfoCharts">
-							  <li id="dayStatisticsTab"><a href="#dayStatistics" data-toggle="tab">ui.statistics.day</a></li>
-							  <li id="monthStatisticsTab"><a href="#monthStatistics" data-toggle="tab">ui.statistics.month</a></li>
-							  <li id="yearStatisticsTab"><a href="#yearStatistics" data-toggle="tab">ui.statistics.year</a></li>
+							  <li id="dayStatisticsTab"><a href="#dayStatistics" data-toggle="tab"><script type="text/javascript">uit("ui.statistics.day");</script></a></li>
+							  <li id="monthStatisticsTab"><a href="#monthStatistics" data-toggle="tab"><script type="text/javascript">uit("ui.statistics.month");</script></a></li>
+							  <li id="yearStatisticsTab"><a href="#yearStatistics" data-toggle="tab"><script type="text/javascript">uit("ui.statistics.year");</script></a></li>
 							</ul>
 							<div class="tab-content">
 								<div id="dayStatistics" class="tab-pane teleinfoChart"></div>
@@ -504,8 +500,8 @@
 							<table class="table table-condensed table-striped table-bordered">
 						        <thead>
 						          <tr>
-						          	<th>ui.date</th>
-						            <th>ui.notification.message</th>
+						          	<th><script type="text/javascript">uit("ui.date");</script></th>
+						            <th><script type="text/javascript">uit("ui.notification.message");</script></th>
 						          </tr>
 						        </thead>
 						        <tbody id="notificationsTable">
@@ -531,22 +527,22 @@
 							<div class="tab-content">
 
 					  			<div id="logRadio" class="tab-pane active">
-					  				<h3>ui.manage.scanner.title</h3>
-					  				<h6><span class="glyphicon glyphicon-question-sign"></span> ui.manage.scanner.subtitle</h6>
+					  				<h3><script type="text/javascript">uit("ui.manage.scanner.title");</script></h3>
+					  				<h6><span class="glyphicon glyphicon-question-sign"></span> <script type="text/javascript">uit("ui.manage.scanner.subtitle");</script></h6>
 					  				<p>
-					  					<br /><button type="button" class="btn btn-info" id="refreshRadioSignal"><span class="glyphicon glyphicon-refresh"></span> ui.refresh</button> <button type="button" class="btn btn-info" id="scanRawRadioData"><span class="glyphicon glyphicon glyphicon-search"></span> ui.manage.scanner.raw.scan</button> <img src="img/squares.svg" id="radioLoader" />
+					  					<br /><button type="button" class="btn btn-info" id="refreshRadioSignal"><span class="glyphicon glyphicon-refresh"></span> <script type="text/javascript">uit("ui.refresh");</script></button> <button type="button" class="btn btn-info" id="scanRawRadioData"><span class="glyphicon glyphicon glyphicon-search"></span> <script type="text/javascript">uit("ui.manage.scanner.raw.scan");</script></button> <img src="img/squares.svg" id="radioLoader" />
 					  				</p>
 					  				<p>
 					  					<table class="table table-condensed table-striped table-bordered">
 									        <thead>
 									          <tr>
-												<th>ui.date</th>
-												<th>ui.manage.scanner.protocol</th>
-									            <th>ui.manage.scanner.code</th>
-									            <th>ui.manage.scanner.subcode</th>
-									            <th>ui.manage.scanner.state</th>
-									            <th>ui.manage.scanner.device.action</th>
-									            <th>ui.manage.scanner.scenarios</th>
+												<th><script type="text/javascript">uit("ui.date");</script></th>
+												<th><script type="text/javascript">uit("ui.manage.scanner.protocol");</script></th>
+									            <th><script type="text/javascript">uit("ui.manage.scanner.code");</script></th>
+									            <th><script type="text/javascript">uit("ui.manage.scanner.subcode");</script></th>
+									            <th><script type="text/javascript">uit("ui.manage.scanner.state");</script></th>
+									            <th><script type="text/javascript">uit("ui.manage.scanner.device.action");</script></th>
+									            <th><script type="text/javascript">uit("ui.manage.scanner.actions");</script></th>
 									          </tr>
 									        </thead>
 									        <tbody id="radioSignalTable">
@@ -556,50 +552,50 @@
 					  				</p>
 					  			</div>
                                 <div id="manageIots" class="tab-pane active">
-					  				<h3>ui.manage.iots.title</h3>
-					  				<h6><span class="glyphicon glyphicon-question-sign"></span> ui.manage.iots.subtitle</h6>
+					  				<h3><script type="text/javascript">uit("ui.manage.iots.title");</script></h3>
+					  				<h6><span class="glyphicon glyphicon-question-sign"></span> <script type="text/javascript">uit("ui.manage.iots.subtitle");</script></h6>
 					  				<div>
 					  					<img src="img/squares.svg" id="iotsLoader" />
 					  				</div>
 					  				<div id="iotsTable">
-					  					<button type="button" id="addIots" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus"></span>  ui.add</button>&nbsp;&nbsp;
+					  					<button type="button" id="addIots" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus"></span>  <script type="text/javascript">uit("ui.add");</script></button>&nbsp;&nbsp;
 					  					<div id="iotsContent">
 					  					</div>
 					  				</div>
 					  			</div>
 					  			<div id="manageSensors" class="tab-pane active">
-					  				<h3>ui.manage.sensors.title</h3>
-					  				<h6><span class="glyphicon glyphicon-question-sign"></span> ui.manage.sensors.subtitle</h6>
+					  				<h3><script type="text/javascript">uit("ui.manage.sensors.title");</script></h3>
+					  				<h6><span class="glyphicon glyphicon-question-sign"></span> <script type="text/javascript">uit("ui.manage.sensors.subtitle");</script></h6>
 					  				<div>
 					  					<img src="img/squares.svg" id="sensorsLoader" />
 					  				</div>
 					  				<div id="sensorsTable">
-					  					<button type="button" id="addSensors" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus"></span>  ui.add</button>&nbsp;&nbsp;
-					  					<button type="button" id="flashSensor" class="btn btn-primary btn-sm hidden"><span class="glyphicon glyphicon-open"></span>  ui.manage.sensors.flash</button>
+					  					<button type="button" id="addSensors" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus"></span>  <script type="text/javascript">uit("ui.add");</script></button>&nbsp;&nbsp;
+					  					<button type="button" id="flashSensor" class="btn btn-primary btn-sm hidden"><span class="glyphicon glyphicon-open"></span>  <script type="text/javascript">uit("ui.manage.sensors.flash");</script></button>
 					  					<div id="sensorsContent">
 					  					</div>
 					  				</div>
 					  			</div>
                                 <div id="manageCameras" class="tab-pane active">
-                                    	<h3>ui.manage.cameras.title</h3>
-                                    	<h6><span class="glyphicon glyphicon-question-sign"></span> ui.manage.cameras.subtitle</h6>
+                                    	<h3><script type="text/javascript">uit("ui.manage.cameras.title");</script></h3>
+                                    	<h6><span class="glyphicon glyphicon-question-sign"></span> <script type="text/javascript">uit("ui.manage.cameras.subtitle");</script></h6>
                                 	<div>
                                 		<img src="img/squares.svg" id="camerasLoader" />
                                 	</div>
                                 	<div id="camerasTable">
-                                		<button type="button" id="addCameras" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus"></span>  ui.add</button>&nbsp;&nbsp;
+                                		<button type="button" id="addCameras" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus"></span>  <script type="text/javascript">uit("ui.add");</script></button>&nbsp;&nbsp;
                                 		<div class="squareAdminTable" id="camerasContent" >
                                 		</div>
                                 	</div>
                                 </div>
 								<div id="manageDevices" class="tab-pane active">
-					  				<h3>ui.manage.devices.title</h3>
-					  				<h6><span class="glyphicon glyphicon-question-sign"></span> ui.manage.devices.subtitle</h6>
+					  				<h3><script type="text/javascript">uit("ui.manage.devices.title");</script></h3>
+					  				<h6><span class="glyphicon glyphicon-question-sign"></span> <script type="text/javascript">uit("ui.manage.devices.subtitle");</script></h6>
 					  				<div>
 					  					<img src="img/squares.svg" id="devicesLoader" />
 					  				</div>
 					  				<div id="deviceTable">
-					  					<button type="button" id="adddevices" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus"></span> ui.add</button>
+					  					<button type="button" id="adddevices" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus"></span> <script type="text/javascript">uit("ui.add");</script></button>
 					  					<div class="squareAdminTable" id="devicestable">
 
 					  					</div>
@@ -609,10 +605,10 @@
 									</div>
 					  			</div>
 					  			<div id="manageActions" class="tab-pane active">
-					  				<h3>ui.manage.scenarios.title</h3>
-					  				<h6><span class="glyphicon glyphicon-question-sign"></span> ui.manage.scenarios.subtitle</h6>
+					  				<h3><script type="text/javascript">uit("ui.manage.scenarios.title");</script></h3>
+					  				<h6><span class="glyphicon glyphicon-question-sign"></span> <script type="text/javascript">uit("ui.manage.scenarios.subtitle");</script></h6>
                                     <div id="scenarioTable">
-					  					<button type="button" id="addscenarios" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus"></span> ui.add</button>
+					  					<button type="button" id="addscenarios" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus"></span> <script type="text/javascript">uit("ui.add");</script></button>
 					  					<div class="squareAdminTable" id="scenariostable">
 
 					  					</div>
@@ -622,13 +618,13 @@
 									</div>
 					  			</div>
 					  			<div id="manageUsers" class="tab-pane active">
-					  				<h3>ui.manage.users.title</h3>
-					  				<h6><span class="glyphicon glyphicon-question-sign"></span> ui.manage.users.subtitle</h6>
+					  				<h3><script type="text/javascript">uit("ui.manage.users.title");</script></h3>
+					  				<h6><span class="glyphicon glyphicon-question-sign"></span> <script type="text/javascript">uit("ui.manage.users.subtitle");</script></h6>
 					  				<div>
 					  					<img src="img/squares.svg" id="usersLoader" />
 					  				</div>
                                     <div id="usersTable">
-					  					<button type="button" id="addusers" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus"></span> ui.add</button>
+					  					<button type="button" id="addusers" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus"></span> <script type="text/javascript">uit("ui.add");</script></button>
 					  					<div class="squareAdminTable" id="userstable">
 
 					  					</div>
@@ -638,13 +634,13 @@
 									</div>
 					  			</div>
                                 <div id="manageAlarm" class="tab-pane active">
-					  				<h3>ui.manage.users.title</h3>
-					  				<h6><span class="glyphicon glyphicon-question-sign"></span> ui.manage.alarm.subtitle</h6>
+					  				<h3><script type="text/javascript">uit("ui.manage.alarm.title");</script></h3>
+					  				<h6><span class="glyphicon glyphicon-question-sign"></span> <script type="text/javascript">uit("ui.manage.alarm.subtitle");</script></h6>
 					  				<div>
 					  					<img src="img/squares.svg" id="usersLoader" />
 					  				</div>
                                     <div id="alarmTable">
-                                        <button type="button" id="addalarm" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus"></span> ui.add</button>
+                                        <button type="button" id="addalarm" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus"></span> <script type="text/javascript">uit("ui.add");</script></button>
 					  					<div class="squareAdminTable" id="alarmtable">
 
 					  					</div>
@@ -654,9 +650,9 @@
 									</div>
 					  			</div>
                                 <div id="manageConfig" class="tab-pane active">
-                                    <h3>ui.manage.configuration.title</h3>
-                                    <h6><span class="glyphicon glyphicon-question-sign"></span> ui.manage.configuration.subtitle</h6>
-                                    <div class="alert alert-danger">ui.manage.configuration.danger</div>
+                                    <h3><script type="text/javascript">uit("ui.manage.configuration.title");</script></h3>
+                                    <h6><span class="glyphicon glyphicon-question-sign"></span> <script type="text/javascript">uit("ui.manage.configuration.subtitle");</script></h6>
+                                    <div class="alert alert-danger"><script type="text/javascript">uit("ui.manage.configuration.danger");</script></div>
                                     <div>
 					  					<img src="img/squares.svg" id="configLoader" />
 					  				</div>
@@ -672,21 +668,21 @@
                                 	<div id="managePluginsLoader">
 					  					<img src="img/squares.svg" id="pluginsLoader" />
 					  				</div>
-                                	<h3>ui.manage.plugins.title</h3>
+                                	<h3><script type="text/javascript">uit("ui.manage.plugins.title");</script></h3>
                                 	<div id="pluginsTable">
-                                		<div class="input-group pluginFilter"> <span class="input-group-addon">ui.manage.plugins.search</span>
-										    <input id="pluginFilter" type="text" class="form-control" placeholder="ui.manage.plugins.typehere">
+                                		<div class="input-group pluginFilter"> <span class="input-group-addon"><script type="text/javascript">uit("ui.manage.plugins.search");</script></span>
+										    <input id="pluginFilter" type="text" class="form-control" placeholder="Type here ...">
 										</div>
 					  					<table class="table table-condensed table-striped manageTable">
 									        <thead>
 									          <tr>
-												<th>ui.manage.plugins.name</th>
-												<th>ui.manage.plugins.type</th>
-												<th>ui.manage.plugins.description</th>
-												<th>ui.manage.plugins.version</th>
-												<th>ui.manage.plugins.services</th>
-												<th>ui.manage.plugins.status</th>
-												<th>ui.actions</th>
+												<th><script type="text/javascript">uit("ui.manage.plugins.name");</script></th>
+												<th><script type="text/javascript">uit("ui.manage.plugins.type");</script></th>
+												<th><script type="text/javascript">uit("ui.manage.plugins.description");</script></th>
+												<th><script type="text/javascript">uit("ui.manage.plugins.version");</script></th>
+												<th><script type="text/javascript">uit("ui.manage.plugins.services");</script></th>
+												<th><script type="text/javascript">uit("ui.manage.plugins.status");</script></th>
+												<th><script type="text/javascript">uit("ui.actions");</script></th>
 									          </tr>
 									        </thead>
 									        <tbody id="pluginsTableBody" class="searchable">
@@ -696,53 +692,53 @@
 									</div>
                                 </div>
                                 <div id="manageLogs" class="tab-pane active">
-                                    <h3>ui.manage.logs.title</h3>
+                                    <h3><script type="text/javascript">uit("ui.manage.logs.title");</script></h3>
                                     <div>
-                                    	<button type="button" class="btn btn-info has-spinner" id="refreshLogsButton"> <span class="spinner"><i class="fa-spin glyphicon glyphicon-refresh"></i></span> ui.refresh</button>
-                                    	<button type="button" class="btn btn-warning has-spinner" id="stopRefreshLogsButton"> <i class="glyphicon glyphicon glyphicon-minus-sign"></i> ui.manage.logs.stop.refresh</button>
+                                    	<button type="button" class="btn btn-info has-spinner" id="refreshLogsButton"> <span class="spinner"><i class="fa-spin glyphicon glyphicon-refresh"></i></span> <script type="text/javascript">uit("ui.refresh");</script></button>
+                                    	<button type="button" class="btn btn-warning has-spinner" id="stopRefreshLogsButton"> <i class="glyphicon glyphicon glyphicon-minus-sign"></i> <script type="text/javascript">uit("ui.manage.logs.stop.refresh");</script></button>
                                     </div>
                                     <br />
-                                    <div class="input-group logFilter"> <span class="input-group-addon">ui.manage.log.filter</span>
-										    <input id="logFilter" type="text" class="form-control" placeholder="ui.manage.log.typehere">
+                                    <div class="input-group logFilter"> <span class="input-group-addon"><script type="text/javascript">uit("ui.manage.log.filter");</script></span>
+										    <input id="logFilter" type="text" class="form-control" placeholder="Type here ...">
 										</div>
                                     <div id="manageLogsDetails">
 
                                     </div>
                                 </div>
                                 <div id="manageMaintenance" class="tab-pane active">
-                                    <h3>ui.manage.maintenance.title</h3>
+                                    <h3><script type="text/javascript">uit("ui.manage.maintenance.title");</script></h3>
                                     <div>
                                     	<h4>hautomation.id : <span id="hautomationID" class="label label-primary"></span></h4>
                                     	<h4>hautomation.version : <span id="hautomationVersion"></span></h4>
-                                    	<div class="maintenanceActionsSide"><button type="button" class="btn btn-info" id="btnReboot"><i class="glyphicon glyphicon-flash"></i> ui.manage.maintenance.reboot</button> <span id="rebootMessage"></span></div>
-                                    	<div class="maintenanceActionsSide"><button type="button" class="btn btn-info" id="btnGateway"><i class="glyphicon glyphicon-cloud-upload"></i> ui.manage.maintenance.sync</button> <span id="gatewayMessage"></span></div>
-                                    	<div class="maintenanceActionsSide"><button type="button" class="btn btn-info" id="btnCertificate"><i class="glyphicon glyphicon-lock"></i> ui.manage.maintenance.https</button></div>
-                                    	<div class="maintenanceActionsSide"><button type="button" class="btn btn-info" id="btnDefaultConfig"><i class="glyphicon glyphicon-pushpin"></i> ui.manage.maintenance.defaultconfig</button></div>
-                                    	<div class="maintenanceActionsSide"><button type="button" class="btn btn-info" id="btnRestartServices"><i class="glyphicon glyphicon-repeat"></i> ui.manage.maintenance.restart.services</button> <span id="restartServicesMessage"></span></div>
-                                    	<div class="maintenanceActions"><button type="button" class="btn btn-info" id="btnTestNotification"><i class="glyphicon glyphicon-send"></i> ui.manage.maintenance.test.notification</button> <span id="testNotification"></span></div>
-                                    	<div class="maintenanceActions"><button type="button" class="btn btn-info" id="btnBackup"><i class="glyphicon glyphicon-save"></i> ui.manage.maintenance.backup</button> <span id="backupFile"></span></div>
+                                    	<div class="maintenanceActionsSide"><button type="button" class="btn btn-info" id="btnReboot"><i class="glyphicon glyphicon-flash"></i> <script type="text/javascript">uit("ui.manage.maintenance.reboot");</script></button> <span id="rebootMessage"></span></div>
+                                    	<div class="maintenanceActionsSide"><button type="button" class="btn btn-info" id="btnGateway"><i class="glyphicon glyphicon-cloud-upload"></i> <script type="text/javascript">uit("ui.manage.maintenance.sync");</script></button> <span id="gatewayMessage"></span></div>
+                                    	<div class="maintenanceActionsSide"><button type="button" class="btn btn-info" id="btnCertificate"><i class="glyphicon glyphicon-lock"></i> <script type="text/javascript">uit("ui.manage.maintenance.https");</script></button></div>
+                                    	<div class="maintenanceActionsSide"><button type="button" class="btn btn-info" id="btnDefaultConfig"><i class="glyphicon glyphicon-pushpin"></i> <script type="text/javascript">uit("ui.manage.maintenance.defaultconfig");</script></button></div>
+                                    	<div class="maintenanceActionsSide"><button type="button" class="btn btn-info" id="btnRestartServices"><i class="glyphicon glyphicon-repeat"></i> <script type="text/javascript">uit("ui.manage.maintenance.restart.services");</script></button> <span id="restartServicesMessage"></span></div>
+                                    	<div class="maintenanceActions"><button type="button" class="btn btn-info" id="btnTestNotification"><i class="glyphicon glyphicon-send"></i> <script type="text/javascript">uit("ui.manage.maintenance.test.notification");</script></button> <span id="testNotification"></span></div>
+                                    	<div class="maintenanceActions"><button type="button" class="btn btn-info" id="btnBackup"><i class="glyphicon glyphicon-save"></i> <script type="text/javascript">uit("ui.manage.maintenance.backup");</script></button> <span id="backupFile"></span></div>
                                     	<div class="maintenanceActions"><div id="restoreBackupUploader"></div><span id="restoreBackup"></span></div>
 
                                     	<div id="deviceInfo">
                                     		<button type="button" class="btn btn-info btn-xs" id="btnRefreshDeviceInfo"><i class="glyphicon glyphicon-repeat"></i></button>
 											<p>
-												<span id="dateInfo"><i class="icon-adjust icon-white"></i> ui.date : <strong><span id="dateInfoValue">ui.na</span></strong><br /></span>
-												<span id="timeInfo"><i class="icon-adjust icon-white"></i> ui.time : <strong><span id="timeInfoValue">ui.na</span></strong><br /></span>
+												<span id="dateInfo"><i class="icon-adjust icon-white"></i> <script type="text/javascript">uit("ui.date");</script> : <strong><span id="dateInfoValue"><script type="text/javascript">uit("ui.na");</script></span></strong><br /></span>
+												<span id="timeInfo"><i class="icon-adjust icon-white"></i> <script type="text/javascript">uit("ui.time");</script> : <strong><span id="timeInfoValue"><script type="text/javascript">uit("ui.na");</script></span></strong><br /></span>
 
-												<span id="localIp"><i class="icon-adjust icon-white"></i> ui.manage.maintenance.localip : <strong><span id="localIpValue">ui.na</span></strong><br /></span>
-												<span id="distantAccess"><i class="icon-adjust icon-white"></i> ui.manage.maintenance.distantaccess : <strong><span id="distantAccessValue">ui.na</span></strong><br /></span>
-												<span id="https"><i class="icon-adjust icon-white"></i> ui.manage.maintenance.https.label : <strong><span id="httpsValue">ui.na</span></strong><br /></span>
+												<span id="localIp"><i class="icon-adjust icon-white"></i> <script type="text/javascript">uit("ui.manage.maintenance.localip");</script> : <strong><span id="localIpValue"><script type="text/javascript">uit("ui.na");</script></span></strong><br /></span>
+												<span id="distantAccess"><i class="icon-adjust icon-white"></i> <script type="text/javascript">uit("ui.manage.maintenance.distantaccess");</script> : <strong><span id="distantAccessValue"><script type="text/javascript">uit("ui.na");</script></span></strong><br /></span>
+												<span id="https"><i class="icon-adjust icon-white"></i> <script type="text/javascript">uit("ui.manage.maintenance.https.label");</script> : <strong><span id="httpsValue"><script type="text/javascript">uit("ui.na");</script></span></strong><br /></span>
 
-												<span id="diskInfo"><i class="icon-off icon-white"></i> ui.manage.maintenance.disk.usage : <strong><span id="diskInfoValue">ui.na</span></strong><br /></span>
-												<span id="memoryInfo"><i class="icon-tasks icon-white"></i> ui.manage.maintenance.memory : <strong><span id="memoryInfoValue">ui.na</span></strong><br /></span>
-												<span id="cpuInfo"><i class="icon-tasks icon-user"></i> ui.manage.maintenance.cpu : <strong><span id="cpuInfoValue">ui.na</span></strong><br /></span>
-												<span id="uptimeInfo"><i class="icon-tasks icon-user"></i> ui.manage.maintenance.uptime : <strong><span id="uptimeInfoValue">ui.na</span></strong><br /></span>
-												<span id="oneWireInfo"><i class="icon-tasks icon-user"></i> ui.manage.maintenance.1wire : <strong><span id="oneWireInfoValue">ui.na</span></strong><br /></span>
+												<span id="diskInfo"><i class="icon-off icon-white"></i> <script type="text/javascript">uit("ui.manage.maintenance.disk.usage");</script> : <strong><span id="diskInfoValue"><script type="text/javascript">uit("ui.na");</script></span></strong><br /></span>
+												<span id="memoryInfo"><i class="icon-tasks icon-white"></i> <script type="text/javascript">uit("ui.manage.maintenance.memory");</script> : <strong><span id="memoryInfoValue"><script type="text/javascript">uit("ui.na");</script></span></strong><br /></span>
+												<span id="cpuInfo"><i class="icon-tasks icon-user"></i> <script type="text/javascript">uit("ui.manage.maintenance.cpu");</script> : <strong><span id="cpuInfoValue"><script type="text/javascript">uit("ui.na");</script></span></strong><br /></span>
+												<span id="uptimeInfo"><i class="icon-tasks icon-user"></i> <script type="text/javascript">uit("ui.manage.maintenance.uptime");</script> : <strong><span id="uptimeInfoValue"><script type="text/javascript">uit("ui.na");</script></span></strong><br /></span>
+												<span id="oneWireInfo"><i class="icon-tasks icon-user"></i> <script type="text/javascript">uit("ui.manage.maintenance.1wire");</script> : <strong><span id="oneWireInfoValue"><script type="text/javascript">uit("ui.na");</script></span></strong><br /></span>
 												<br />
 											</p>
 										</div>
-										<div class="maintenanceActionsSide"><button type="button" class="btn btn-danger" id="btnHalt"><i class="glyphicon glyphicon-off"></i> ui.manage.maintenance.stop</button></div>
-										<div class="maintenanceActionsSide"><button type="button" class="btn btn-danger" id="btnReset"><i class="glyphicon glyphicon-certificate"></i> ui.manage.maintenance.factory.reset</button></div>
+										<div class="maintenanceActionsSide"><button type="button" class="btn btn-danger" id="btnHalt"><i class="glyphicon glyphicon-off"></i> <script type="text/javascript">uit("ui.manage.maintenance.stop");</script></button></div>
+										<div class="maintenanceActionsSide"><button type="button" class="btn btn-danger" id="btnReset"><i class="glyphicon glyphicon-certificate"></i> <script type="text/javascript">uit("ui.manage.maintenance.factory.reset");</script></button></div>
                                     </div>
                                 </div>
 							</div>

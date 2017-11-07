@@ -1,3 +1,21 @@
+var localization = {};
+var uiTranslationRegistration = {};
+var uiTranslationRegistrationCounter = 0;
+var uit = function(key, map, writeSpan = true) {
+    var gKey = 'translate-' + key + '-' + uiTranslationRegistrationCounter
+    uiTranslationRegistration[gKey] = {
+        key: key,
+        map: map,
+        htmlId: gKey
+    }
+
+    if (writeSpan) {
+        document.write('<span id="' + gKey + '">' + key + '</span>');
+    }
+
+    uiTranslationRegistrationCounter++;
+}
+
 var vUrl = 'api/';
 var username = null;
 var password = null;
@@ -110,6 +128,33 @@ $(document).ready(function() {
     var videoCameraMode = false;
     var cameraWallStream;
 
+    $.getJSON("/lng/", function(json) {
+        localization = json;
+        Object.keys(uiTranslationRegistration).forEach(function(uiKey) {
+            if (document.getElementById(uiTranslationRegistration[uiKey].htmlId)) {
+                document.getElementById(uiTranslationRegistration[uiKey].htmlId).innerHTML = t(uiTranslationRegistration[uiKey].key, uiTranslationRegistration[uiKey].map);
+            }
+
+        });
+    });
+
+    var t = function(key, map) {
+        var l = key;
+        if (localization && localization[key]) {
+            l = localization[key];
+            if (l == null || l == '') {
+                l = key;
+            }
+            if (map) {
+                for (i = 0; i < map.length; i++) {
+                    l = l.replace("%@", map[i]);
+                }
+            }
+        }
+
+        return l;
+    }
+
     var Base64 = {
         _keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
         encode: function(e) {
@@ -219,23 +264,6 @@ $(document).ready(function() {
             zoom: 2
         })
     });
-
-    var t = function(key, map) {
-        var l = key;
-        if (localization && localization[key]) {
-            l = localization[key];
-            if (l == null || l == '') {
-                l = key;
-            }
-            if (map) {
-                for (i = 0; i < map.length; i++) {
-                    l = l.replace("%@", map[i]);
-                }
-            }
-        }
-
-        return l;
-    }
 
     var getColor = function(colorName) {
         return $("#" + colorName).css("background-color");
