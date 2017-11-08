@@ -112,19 +112,20 @@ function adminFormReady() {
                         data: data.formData
                     })
                 }).done(function(data) {
-                    $(".selectpicker").selectpicker("destroy");
                     document.getElementById(prefix + "form").style.display = "none";
                     tableDiv.style.display = "block";
                     loadTiles(prefix);
+                    $(".selectpicker").selectpicker("destroy");
                 }).fail(function(msg) {
                     setError(msg);
+                    $(".selectpicker").selectpicker("destroy");
                 });
             }},
             React.createElement(
               "button",
               { type: "button", className:"btn btn-info", onClick: function() {
-                  $(".selectpicker").selectpicker("destroy");
                   loadTiles(prefix);
+                  $(".selectpicker").selectpicker("destroy");
               }},
               "button.cancel"
           ),
