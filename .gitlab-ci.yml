@@ -5,7 +5,6 @@ cache:
   - ~/.pkg-cache/
 
 before_script:
-  - npm install
   - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
   - mkdir -p ~/.ssh
   - eval $(ssh-agent -s)
@@ -21,6 +20,7 @@ stages:
 test:
   stage: test
   script:
+  - npm install
   - npm run --verbose test-ci
   coverage: '/Statements   : \d+\.\d+/'
 
@@ -29,11 +29,13 @@ lint:
   only:
     - master
   script:
+  - npm install
   - npm run --verbose lint
 
 build:
   stage: build
   script:
+  - npm install
   - npm run --verbose build
   artifacts:
     paths:
