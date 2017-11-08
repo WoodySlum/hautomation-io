@@ -24,7 +24,7 @@ class TimeEventAPI {
     /**
      * Register an timer element
      *
-     * @param  {Function} cb            A callback triggered when conditions are reached (context will be set back as parameter). Example : `cb(self) {}`
+     * @param  {Function} cb            A callback triggered when conditions are reached (context will be set back as parameter). Example : `(self) => {}`
      * @param  {Object} context            The context to exectue the callback
      * @param  {int}   mode          Mode (enum) : `EVERY_SECONDS`, `EVERY_MINUTES`, `EVERY_HOURS`, `EVERY_DAYS` or `CUSTOM`
      * @param  {string}   [hour=null]   The hour value. `*` for all
