@@ -9,7 +9,7 @@ class Icons {
     /**
      * Return a list of icons (key / value)
      *
-     * @returns {Object} The icons under Key / Valye format
+     * @returns {Object} The icons under Key / Value format
      */
     static list() {
         const glyphs = iconsDescriptor.glyphs.sort((glyph1, glyph2) => {

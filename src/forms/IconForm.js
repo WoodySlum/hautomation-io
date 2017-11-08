@@ -20,7 +20,7 @@ class IconForm extends FormObject.class {
          * @Type("string");
          * @Title("icon.form.name");
          * @Enum("getIcons");
-         * @EnumNames("getIcons");
+         * @EnumNames("getIconsLabels");
          */
         this.icon = icon;
     }
@@ -33,6 +33,16 @@ class IconForm extends FormObject.class {
      */
     static getIcons(...inject) {
         return inject[0];
+    }
+
+    /**
+     * Form injection method
+     *
+     * @param  {...Object} inject The icons labels list array
+     * @returns {Array}        An array of icons labels
+     */
+    static getIconsLabels(...inject) {
+        return inject[1];
     }
 
     /**

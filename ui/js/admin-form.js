@@ -112,6 +112,7 @@ function adminFormReady() {
                         data: data.formData
                     })
                 }).done(function(data) {
+                    $(".selectpicker").selectpicker("destroy");
                     document.getElementById(prefix + "form").style.display = "none";
                     tableDiv.style.display = "block";
                     loadTiles(prefix);
@@ -122,6 +123,7 @@ function adminFormReady() {
             React.createElement(
               "button",
               { type: "button", className:"btn btn-info", onClick: function() {
+                  $(".selectpicker").selectpicker("destroy");
                   loadTiles(prefix);
               }},
               "button.cancel"
@@ -131,6 +133,42 @@ function adminFormReady() {
               { type: "submit", className:"btn btn-success" },
               "button.save"
             )), document.getElementById(prefix + "form"));
+
+            var htmlForm = document.getElementById(prefix + "form");//.innerHTML;
+            var selects = htmlForm.getElementsByTagName("select");
+
+            if (htmlForm && selects) {
+                for (i=0 ; i < selects.length ; i++) {
+                    var select = selects[i];
+                    select.classList.add("selectpicker");
+                    select.classList.add("show-tick");
+                    select.setAttribute("data-live-search", "true");
+                    // Icons !
+                    if (select.id == "root_icon_icon") {
+                        var sheet = window.document.styleSheets[0];
+                        var options = select.getElementsByTagName("option");
+                        for (j=0 ; j < options.length ; j++) {
+                            var option = options[j];
+                            var val = option.value;
+                            var cssClass = 'icon-' + val;
+                            var cssRulesStringified = JSON.stringify(sheet.cssRules);
+                            if (val && val != "") {
+                                if ($("." + cssClass).length == 0) {
+                                    sheet.insertRule('.' + cssClass + ':before{content:"\\' + val + '"}', sheet.cssRules.length);
+                                }
+
+                                option.setAttribute("data-icon", 'fa ' + cssClass);
+                            }
+                        }
+
+                    }
+                }
+
+                $(".selectpicker").selectpicker({
+                    style: 'btn-default',
+                    size: 10,
+                });
+            }
         }
 
         renderFormGlobal = renderForm;
