@@ -1,6 +1,6 @@
 {
     "presence.unit.seconds": "Sec",
     "presence.unit.minutes": "Min",
-    "presence.unit.hours": "Days",
-    "presence.unit.months": "Months"
+    "presence.unit.hours": "Hours",
+    "presence.unit.months": "Days"
 }
