@@ -1,5 +1,13 @@
 {
-    "openweather.rain.forecast.no.rain":"No rain",
-    "openweather.rain.forecast.rain":"%@h raining",
-    "openweather.rain.forecast.snow":"%@h snowing"
+    "openweather.rain.forecast.no.rain": "No rain",
+    "openweather.rain.forecast.rain": "%@h raining",
+    "openweather.rain.forecast.snow": "%@h snowing",
+    "openweather.api.key": "Open weather API key",
+    "openweather.autoDayNight": "Change day / night cycle automatically",
+    "openweather.weatherTile": "Display weather dashboard tile",
+    "openweather.rainForecastTileMode": "Weather forecast mode",
+    "openweather.rainForecastTileMode.none": "None",
+    "openweather.rainForecastTileMode.hours": "Next hours forecast",
+    "openweather.rainForecastTileMode.day": "Day forecast",
+    "openweather.rainForecastTileMode.days": "Next days forecast"
 }
