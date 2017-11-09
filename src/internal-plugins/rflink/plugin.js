@@ -196,9 +196,9 @@ function loaded(api) {
         onDetectedPortsReceive(data) {
             const ports  = [];
             data.forEach((d) => {
-                //if (d.manufacturer && (d.manufacturer.toLowerCase().indexOf("arduino") !== -1)) {
+                if (d.manufacturer && (d.manufacturer.toLowerCase().indexOf("arduino") !== -1)) {
                     ports.push(d.endpoint);
-                //}
+                }
             });
 
             // Register the rflink form

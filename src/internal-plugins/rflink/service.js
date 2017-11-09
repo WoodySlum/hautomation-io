@@ -1,7 +1,6 @@
 "use strict";
 
 var self = null;
-const AUTO_REFRESH_TIMER = 5; // In seconds
 
 /**
  * Loaded plugin function
@@ -46,6 +45,8 @@ function loaded(api) {
         run(data, send) {
             const TYPE_RADIO = "RADIO";
             const TYPE_VERSION = "VERSION";
+            const AUTO_REFRESH_TIMER = 5; // In seconds
+
             let sclient;
             let sp;
             let processData = (telegram) => {
@@ -193,8 +194,8 @@ function loaded(api) {
                         });
 
                         sp.on("error", function(err) {
-                            Logger.err("RFLink error : ");
-                            Logger.err(err.message);
+                            Logger.warn("RFLink error : ");
+                            Logger.warn(err.message);
                             status = 0;
                             autoConnect();
                         });
@@ -207,7 +208,7 @@ function loaded(api) {
 
 
 
-                this.getPorts = (autoConnect = false) => {
+                this.getPorts = (autoConnectDo = false) => {
                     const detectedPorts = [];
                     SerialPort.list(function (err, ports) {
                         if (!err && ports) {
@@ -219,7 +220,7 @@ function loaded(api) {
                             Logger.err("Error on serial ports detection : " + err.message);
                         }
 
-                        if (autoConnect) {
+                        if (autoConnectDo) {
                             autoConnect();
                         }
                     });
