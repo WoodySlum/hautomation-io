@@ -1,6 +1,7 @@
 "use strict";
 
 var self = null;
+const AUTO_REFRESH_TIMER = 5; // In seconds
 
 /**
  * Loaded plugin function
@@ -139,8 +140,26 @@ function loaded(api) {
             try {
                 const SerialPort = require("serialport");
                 const Readline = SerialPort.parsers.Readline;
+                var gPort = null;
+                var status = 0;
+
+                autoConnect = () => {
+                    if (gPort && gPort != "" && status == 0) {
+                        setTimeout(() => {
+                            this.listen(gPort);
+                        }, AUTO_REFRESH_TIMER * 1000);
+                    }
+
+                    if (!gPort && gPort === "" && status == 0) {
+                        setTimeout(() => {
+                            this.getPorts(true);
+                        }, AUTO_REFRESH_TIMER * 1000);
+                    }
+                }
+
                 this.listen = (port) => {
                     if (port) {
+                        gPort = port;
                         sp = new SerialPort(port, {
                             baudRate: 57600
                         });
@@ -164,23 +183,31 @@ function loaded(api) {
                             Logger.info("RFLink connected, ready to receive data");
                             // Request version
                             sp.write("10;VERSION\r\n");
+                            status = 1;
                         });
 
                         sp.on("close", function() {
                             Logger.info("RFLink connection closed");
+                            status = 0;
+                            autoConnect();
                         });
 
                         sp.on("error", function(err) {
                             Logger.err("RFLink error : ");
                             Logger.err(err.message);
+                            status = 0;
+                            autoConnect();
                         });
                     } else {
                         Logger.info("RFLink empty port. Could not start.");
                         this.getPorts();
+                        autoConnect();
                     }
                 };
 
-                this.getPorts = () => {
+
+
+                this.getPorts = (autoConnect = false) => {
                     const detectedPorts = [];
                     SerialPort.list(function (err, ports) {
                         if (!err && ports) {
@@ -190,6 +217,10 @@ function loaded(api) {
                             send({method:"detectedPorts", data:detectedPorts});
                         } else {
                             Logger.err("Error on serial ports detection : " + err.message);
+                        }
+
+                        if (autoConnect) {
+                            autoConnect();
                         }
                     });
                 };
