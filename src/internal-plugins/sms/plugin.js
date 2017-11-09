@@ -1,6 +1,7 @@
 "use strict";
 
 const fs = require("fs-extra");
+const SerialPort = require("serialport");
 const SMSServiceClass = require("./service.js");
 
 const GAMMU_CONFIG_FOLDER = "gammu/";
@@ -34,12 +35,20 @@ function loaded(api) {
             super(api);
             this.api = api;
             this.service = null;
+            this.gammuConfigFile = null;
             this.init();
         }
 
         init() {
+            // Check serial ports
+            this.getAvailableDevices((results) => {
+                console.log(results);
+            });
+
+            this.sendSMS("0677386814", "Hello world");
+
             // Write file config
-            const gammuConfigFile = api.exported.cachePath + GAMMU_CONFIG_FOLDER + GAMMU_CONFIG_FILE;
+            this.gammuConfigFile = api.exported.cachePath + GAMMU_CONFIG_FOLDER + GAMMU_CONFIG_FILE;
             const inbox = api.exported.cachePath + GAMMU_CONFIG_FOLDER + GAMMU_CONFIG_FOLDER_INBOX;
             const outbox = api.exported.cachePath + GAMMU_CONFIG_FOLDER + GAMMU_CONFIG_FOLDER_OUTBOX;
             const sent = api.exported.cachePath + GAMMU_CONFIG_FOLDER + GAMMU_CONFIG_FOLDER_SENT;
@@ -49,11 +58,31 @@ function loaded(api) {
             fs.ensureDirSync(outbox);
             fs.ensureDirSync(sent);
             fs.ensureDirSync(error);
-            fs.writeFileSync(gammuConfigFile, this.generateGammuConfig("/dev/ttyUSB1", inbox, outbox, sent, error));
+            fs.writeFileSync(this.gammuConfigFile, this.generateGammuConfig("/dev/ttyUSB1", inbox, outbox, sent, error));
 
             const SMSService = SMSServiceClass(api);
-            this.service = new SMSService(this, gammuConfigFile);
+            this.service = new SMSService(this, this.gammuConfigFile);
             api.servicesManagerAPI.add(this.service);
+        }
+
+        /**
+         * Get available devices
+         *
+         * @param  {Function} cb A callback with the list of devices `(devices) => {}`
+         */
+        getAvailableDevices(cb) {
+            SerialPort.list(function (err, ports) {
+                const results = [];
+                if (!err && ports) {
+                    ports.forEach((port) => {
+                        results.push({
+                            port: port.comName,
+                            name: port.productId + " (" + port.comName + ")"
+                        });
+                    });
+                }
+                cb(results);
+            })
         }
 
         /**
@@ -94,6 +123,17 @@ errorsmspath = ` + error + `
 `;
 
                 return gammuConfig;
+        }
+
+        /**
+         * Send a SMS message
+         * @param  {string} number  The pgone number
+         * @param  {string} message the message
+         */
+        sendSMS(number, message) {
+            this.installerAPI.executeCommand("echo \"" + message + "\" | gammu sendsms TEXT " + number, false, (error, stdout, stderr) => {
+
+            });
         }
 
         /**
