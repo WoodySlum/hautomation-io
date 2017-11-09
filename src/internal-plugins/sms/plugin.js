@@ -1,6 +1,8 @@
 "use strict";
-const SmsDevice = require("sms-device").SmsDevice;
+
 const fs = require("fs-extra");
+const SMSServiceClass = require("./service.js");
+
 const GAMMU_CONFIG_FOLDER = "gammu/";
 const GAMMU_CONFIG_FILE = "gammu.rc";
 const GAMMU_CONFIG_FOLDER_INBOX = "spool/sms/inbox/";
@@ -31,7 +33,11 @@ function loaded(api) {
         constructor(api) {
             super(api);
             this.api = api;
-            this.smsDevice = SmsDevice.create();
+            this.service = null;
+            this.init();
+        }
+
+        init() {
             // Write file config
             const gammuConfigFile = api.exported.cachePath + GAMMU_CONFIG_FOLDER + GAMMU_CONFIG_FILE;
             const inbox = api.exported.cachePath + GAMMU_CONFIG_FOLDER + GAMMU_CONFIG_FOLDER_INBOX;
@@ -43,28 +49,23 @@ function loaded(api) {
             fs.ensureDirSync(outbox);
             fs.ensureDirSync(sent);
             fs.ensureDirSync(error);
-
             fs.writeFileSync(gammuConfigFile, this.generateGammuConfig("/dev/ttyUSB1", inbox, outbox, sent, error));
 
-            this.smsDevice.setConfigFile(gammuConfigFile)
-            .subscribe(null, (err) => {
-                api.exported.Logger.err("Error probably file not exists, error : " + error.msg);
-            }, () => {
-                api.exported.Logger.info("SMS Service ready");
-            });
-
-            setInterval((self) => {
-                self.smsDevice.readAllSms().subscribe(smsList =>{
-                    console.log(smsList[0].text);
-                }, err =>{
-                    console.log('readAllSms error:', err)
-                }, ()=>{
-                    console.log('readAllSms completed!');
-                });
-            }, 10000, this);
-
+            const SMSService = SMSServiceClass(api);
+            this.service = new SMSService(this, gammuConfigFile);
+            api.servicesManagerAPI.add(this.service);
         }
 
+        /**
+         * Generates the Gammu configuration file
+         *
+         * @param  {string} port   The port
+         * @param  {string} inbox  The inbox path
+         * @param  {string} outbox The outbox path
+         * @param  {string} sent   The sent path
+         * @param  {string} error  The error path
+         * @returns {string}        The configuration path
+         */
         generateGammuConfig(port, inbox, outbox, sent, error) {
             const gammuConfig = `[gammu]
 port = ` + port + `
