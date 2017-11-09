@@ -7,6 +7,7 @@ const EnvironmentForm = require("./EnvironmentForm");
 const Tile = require("./../dashboardmanager/Tile");
 const Icons = require("./../../utils/Icons");
 const DayNightScenarioForm = require("./DayNightScenarioForm");
+const WebServices = require("./../../services/webservices/WebServices");
 
 /**
  * This class allows to manage house environment
@@ -198,6 +199,15 @@ class EnvironmentManager {
         });
 
         return macAddress;
+    }
+
+    /**
+     * Get the local API Url
+     *
+     * @return {string} The local API url (e.g. : http://192.168.2.34:8100/api/)
+     */
+    getLocalAPIUrl() {
+        return "http://" + this.getLocalIp() + ":" + this.getLocalPort() + WebServices.ENDPOINT_API;
     }
 }
 
