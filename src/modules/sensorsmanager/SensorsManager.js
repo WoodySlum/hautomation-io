@@ -323,7 +323,7 @@ class SensorsManager {
                 return DateUtils.class.roundedTimestamp(timestamp, DateUtils.ROUND_TIMESTAMP_DAY);
             }, "%Y-%m-%d 00:00:00");
         } else if (apiRequest.route === SENSORS_MANAGER_STATISTICS_YEAR) {
-            return this.statisticsWsResponse(DateUtils.class.roundedTimestamp(DateUtils.class.timestamp(), DateUtils.ROUND_TIMESTAMP_MONTH), 12 * 31 * 24 * 60 * 60, 31 * 24 * 60 * 60, this.translateManager.t("sensors.statistics.year.dateformat"), (timestamp) => {
+            return this.statisticsWsResponse(DateUtils.class.timestamp(), 12 * 31 * 24 * 60 * 60, 31 * 24 * 60 * 60, this.translateManager.t("sensors.statistics.year.dateformat"), (timestamp) => {
                 return DateUtils.class.roundedTimestamp(timestamp, DateUtils.ROUND_TIMESTAMP_MONTH);
             }, "%Y-%m-01 00:00:00");
         }
