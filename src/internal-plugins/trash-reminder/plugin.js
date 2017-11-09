@@ -130,8 +130,8 @@ function loaded(api) {
                         if (hour === HOUR_TRIGGER
                             && reminderConfiguration.day === currentDayNumber
                             && (reminderConfiguration.weekMode === 0
-                            || (reminderConfiguration.weekMode === 1 && isPair))
-                            || (reminderConfiguration.weekMode === 2 && !isPair)) {
+                            || (reminderConfiguration.weekMode === 1 && isPair)
+                            || (reminderConfiguration.weekMode === 2 && !isPair))) {
                             self.api.messageAPI.sendMessage("*", self.api.translateAPI.t("trash.reminder.configuration.message", reminderConfiguration.name));
                         }
 
