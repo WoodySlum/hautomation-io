@@ -144,7 +144,7 @@ function loaded(api) {
                 var gPort = null;
                 var status = 0;
 
-                autoConnect = () => {
+                var autoConnect = () => {
                     if (gPort && gPort != "" && status == 0) {
                         setTimeout(() => {
                             this.listen(gPort);
@@ -156,7 +156,7 @@ function loaded(api) {
                             this.getPorts(true);
                         }, AUTO_REFRESH_TIMER * 1000);
                     }
-                }
+                };
 
                 this.listen = (port) => {
                     if (port) {
