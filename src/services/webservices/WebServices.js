@@ -75,7 +75,7 @@ class WebServices extends Service.class {
             this.app.use(BodyParser.json({limit: "2mb"}));
 
             // Web UI
-            this.translateManager.addTranslations(__dirname + "/../../../ui/");
+            this.translateManager.addTranslations(__dirname + "../../../ui/");
             this.app.use(BodyParser.urlencoded({ extended: false }));
             this.app.use(ENDPOINT_LNG, function(req, res){
                 res.json(instance.translateManager.translations);
