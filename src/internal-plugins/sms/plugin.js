@@ -11,7 +11,8 @@ const GAMMU_CONFIG_FOLDER_INBOX = "spool/sms/inbox/";
 const GAMMU_CONFIG_FOLDER_OUTBOX = "spool/sms/outbox/";
 const GAMMU_CONFIG_FOLDER_SENT = "spool/sms/sent/";
 const GAMMU_CONFIG_FOLDER_ERROR = "spool/sms/error/";
-const ROUTE_RECEIVE_POST = ":/sms/receive/";
+const ROUTE_RECEIVE = "sms/receive/";
+const ROUTE_RECEIVE_POST = ":/" + ROUTE_RECEIVE;
 
 /**
  * Loaded function
@@ -21,6 +22,7 @@ const ROUTE_RECEIVE_POST = ":/sms/receive/";
 function loaded(api) {
     api.installerAPI.register(["x32", "x64"], "brew install gammu", false, false, true);
     api.installerAPI.register(["arm", "arm64"], "apt-get install -y gammu gammu-smsd", true, true);
+    api.init();
 
     /**
      * This class provides configuration form for SMS
@@ -131,14 +133,17 @@ function loaded(api) {
             this.service = null;
             this.gammuConfigFile = null;
             this.init();
-//AUTH_LOCAL_NETWORK_LEVEL
-            this.api.webAPI.register(this, this.api.webAPI.constants().POST, ROUTE_RECEIVE_POST, this.api.webAPI.Authentication().AUTH_NO_LEVEL);
+
+            this.api.webAPI.register(this, this.api.webAPI.constants().POST, ROUTE_RECEIVE_POST, this.api.webAPI.Authentication().AUTH_LOCAL_NETWORK_LEVEL);
 
             this.api.configurationAPI.setUpdateCb(() => {
                 this.init();
             });
         }
 
+        /**
+         * Init configuration and other stuff
+         */
         init() {
             this.api.exported.Logger.info("Initializing SMS module");
             // Check serial ports
@@ -170,10 +175,19 @@ function loaded(api) {
                 fs.ensureDirSync(error);
                 fs.writeFileSync(this.gammuConfigFile, this.generateGammuConfig(configuration.port, inbox, outbox, sent, error, shellReceiveScriptFile));
                 fs.writeFileSync(shellReceiveScriptFile, this.generateGammuReceiveSh(this.api.environmentAPI.getLocalAPIUrl(), inbox));
+                fs.chmodSync(shellReceiveScriptFile, "755");
 
-                const SMSService = SMSServiceClass(api);
-                this.service = new SMSService(this, this.gammuConfigFile);
-                api.servicesManagerAPI.add(this.service);
+                if (!this.service) {
+                    const SMSService = SMSServiceClass(api);
+                    this.service = new SMSService(this, this.gammuConfigFile);
+                    api.servicesManagerAPI.add(this.service);
+                } else {
+                    this.service.restart();
+                }
+            } else {
+                if (this.service) {
+                    this.service.stop();
+                }
             }
         }
 
@@ -194,7 +208,7 @@ function loaded(api) {
                     });
                 }
                 cb(results);
-            })
+            });
         }
 
         /**
@@ -212,30 +226,29 @@ function loaded(api) {
             const gammuConfig = `[gammu]
 port = ` + port + `
 connection = at
-model =
-synchronizetime = no
+debuglevel = 0
 logfile =
-logformat = nothing
-use_locking =
-gammuloc =
-
-[smsd]
-port = ` + port + `
-connection = at
-model =
-synchronizetime = no
-logfile =
-logformat = nothing
-use_locking =
-gammuloc =
 service = FILES
 inboxpath = `+ inbox + `
 outboxpath = `+ outbox + `
 sentsmspath = ` + sent + `
 errorsmspath = ` + error + `
-runonreceive = ` + shellReceiveScript;
+runonreceive = ` + shellReceiveScript + `
 
-                return gammuConfig;
+[smsd]
+port = ` + port + `
+connection = at
+debuglevel = 0
+logfile =
+service = FILES
+inboxpath = `+ inbox + `
+outboxpath = `+ outbox + `
+sentsmspath = ` + sent + `
+errorsmspath = ` + error + `
+runonreceive = ` + shellReceiveScript + `
+`;
+
+            return gammuConfig;
         }
 
         /**
@@ -251,21 +264,11 @@ FILE=$1
 MESSAGE=$SMS_1_TEXT
 FROM=$SMS_1_NUMBER
 INPUT="` + inbox + `"
-curl -H "Content-Type: application/json" -X POST -k -L --data "{\\"data\":{\\"from\\":\\"$FROM\\", \\"message\\":\\"$MESSAGE\\"}}" ` + url;
+curl -H "Content-Type: application/json" -X POST -k -L --data "{\\"data\\":{\\"from\\":\\"$FROM\\", \\"message\\":\\"$MESSAGE\\"}}" ` + url + ROUTE_RECEIVE + `
+`;
 
             return shellScript;
         }
-
-        /*
-        #!/bin/sh
-
-        FILE=$1
-        MESSAGE=$SMS_1_TEXT
-        FROM=$SMS_1_NUMBER
-        INPUT="/var/spool/sms/inbox/"
-        echo $1 > /tmp/toto
-        curl -k -L --data "number=$FROM&message=$MESSAGE&method=smsReceive" https://127.0.0.1/services/
-         */
 
         /**
          * Send a SMS message
@@ -294,7 +297,7 @@ curl -H "Content-Type: application/json" -X POST -k -L --data "{\\"data\":{\\"fr
             this.api.userAPI.getUsers().forEach((user) => {
                 if (recipients === "*" || (recipients instanceof Array && recipients.indexOf(user.username) !== -1)) {
                     if (this.gammuConfigFile && user.SMSUserForm && user.SMSUserForm.phoneNumber && user.SMSUserForm.phoneNumber.length > 0) {
-                        this.sendSMS(user.SMSUserForm.phoneNumber, message);
+                        this.sendSMS(user.SMSUserForm.phoneNumber.split(" ").join(""), message);
                     }
                 }
             });
@@ -308,9 +311,27 @@ curl -H "Content-Type: application/json" -X POST -k -L --data "{\\"data\":{\\"fr
          */
         processAPI(apiRequest) {
             if (apiRequest.route === ROUTE_RECEIVE_POST) {
-                console.log(apiRequest.data);
-                return new Promise((resolve, reject) => {
-                    resolve(this.api.webAPI.APIResponse(true, {success:true}));
+                return new Promise((resolve) => {
+                    if (apiRequest.data.from && apiRequest.data.message && apiRequest.data.from.length > 6) {
+                        const fromNumberRaw = apiRequest.data.from.split(" ").join("");
+                        const fromNumber = parseInt(fromNumberRaw.substr(fromNumberRaw.length - 6));
+                        this.api.userAPI.getUsers().forEach((user) => {
+                            if (user.SMSUserForm && user.SMSUserForm.phoneNumber && user.SMSUserForm.phoneNumber.length > 5) {
+                                const userNumberRaw = user.SMSUserForm.phoneNumber.split(" ").join("");
+                                const userNumber = parseInt(userNumberRaw.substr(userNumberRaw.length - 6));
+
+                                if (userNumber === fromNumber) {
+                                    this.onMessageReceived(user.username, apiRequest.data.message);
+                                }
+                            }
+                        });
+
+                        resolve(this.api.webAPI.APIResponse(true, {success:true}));
+                    } else {
+                        this.api.exported.Logger.err("Invalid SMS received : " + JSON.stringify(apiRequest.data));
+                        resolve(this.api.webAPI.APIResponse(true, {success:false, message:"Invalid parameters, phone number smaller than 6 characters"}));
+                    }
+
                 });
             }
         }

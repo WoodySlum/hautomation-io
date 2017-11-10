@@ -204,7 +204,7 @@ class EnvironmentManager {
     /**
      * Get the local API Url
      *
-     * @return {string} The local API url (e.g. : http://192.168.2.34:8100/api/)
+     * @returns {string} The local API url (e.g. : http://192.168.2.34:8100/api/)
      */
     getLocalAPIUrl() {
         return "http://" + this.getLocalIp() + ":" + this.getLocalPort() + WebServices.ENDPOINT_API;

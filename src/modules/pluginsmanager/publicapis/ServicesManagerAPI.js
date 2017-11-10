@@ -26,11 +26,6 @@ class ServicesManagerAPI {
      * @param {Service} service The service
      */
     add(service) {
-        if (PrivateProperties.oprivate(this).servicesManager.getService(service.name)) {
-            PrivateProperties.oprivate(this).servicesManager.getService(service.name).stop();
-            PrivateProperties.oprivate(this).servicesManager.remove(service);
-        }
-
         PrivateProperties.oprivate(this).servicesManager.add(service);
         this.services.push(service);
     }

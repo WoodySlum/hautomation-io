@@ -6,7 +6,6 @@
  * @param  {PluginAPI} api The core APIs
  */
 function loaded(api) {
-    var Logger;
     /**
      * This class conect to SMS using gammu
      * @class
@@ -16,6 +15,7 @@ function loaded(api) {
          * Constructor
          *
          * @param  {SMS} plugin The SMS plugin
+         * @param  {string} gammuConfigurationFile The gammue configuration file
          * @returns {SMSService}        The instance
          */
         constructor(plugin, gammuConfigurationFile) {
