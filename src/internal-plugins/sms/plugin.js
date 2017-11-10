@@ -278,7 +278,7 @@ curl -H "Content-Type: application/json" -X POST -k -L --data "{\\"data\\":{\\"f
          */
         sendSMS(number, message) {
             if (this.gammuConfigFile) {
-                this.installerAPI.executeCommand("gammu-smsd-inject -c " + this.gammuConfigFile + " TEXT " + number + " -text \"" + message + "\"" , false, (error, stdout, stderr) => {
+                this.api.installerAPI.executeCommand("gammu-smsd-inject -c " + this.gammuConfigFile + " TEXT " + number + " -text \"" + message + "\"" , false, (error, stdout, stderr) => {
                     if (error) {
                         this.api.exported.Logger.err(error.message);
                         this.api.exported.Logger.err(stderr);
