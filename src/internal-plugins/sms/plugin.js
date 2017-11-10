@@ -2,6 +2,7 @@
 
 const fs = require("fs-extra");
 const SerialPort = require("serialport");
+const usbDetect = require("usb-detection");
 const SMSServiceClass = require("./service.js");
 
 const GAMMU_CONFIG_FOLDER = "gammu/";
@@ -139,6 +140,13 @@ function loaded(api) {
             this.api.configurationAPI.setUpdateCb(() => {
                 this.init();
             });
+
+            usbDetect.on("change", (device) => {
+                setTimeout((self) => {
+                    self.init();
+                }, 2000, this);
+            });
+
         }
 
         /**

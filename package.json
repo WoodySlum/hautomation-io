@@ -87,6 +87,7 @@
     "mjpeg-proxy": "^0.2",
     "fs-extra": "^4.0",
     "xml2js": "^0.4",
-    "md5-file": "^3.2"
+    "md5-file": "^3.2",
+    "usb-detection": "^1.4"
   }
 }

@@ -143,17 +143,22 @@ function loaded(api) {
                 const Readline = SerialPort.parsers.Readline;
                 var gPort = null;
                 var status = 0;
+                const usbDetect = require("usb-detection");
+                usbDetect.on("change", (device) => {
+                    Logger.info("USB status changed");
+                    if (gPort && gPort != "" && status == 0) {
+                        this.listen(gPort);
+                    }
+                    setTimeout((self) => {
+                        self.getPorts();
+                    }, 2000, this);
+
+                });
 
                 var autoConnect = () => {
                     if (gPort && gPort != "" && status == 0) {
                         setTimeout(() => {
                             this.listen(gPort);
-                        }, AUTO_REFRESH_TIMER * 1000);
-                    }
-
-                    if (!gPort && gPort === "" && status == 0) {
-                        setTimeout(() => {
-                            this.getPorts(true);
                         }, AUTO_REFRESH_TIMER * 1000);
                     }
                 };
@@ -208,7 +213,7 @@ function loaded(api) {
 
 
 
-                this.getPorts = (autoConnectDo = false) => {
+                this.getPorts = () => {
                     const detectedPorts = [];
                     SerialPort.list(function (err, ports) {
                         if (!err && ports) {
@@ -218,10 +223,6 @@ function loaded(api) {
                             send({method:"detectedPorts", data:detectedPorts});
                         } else {
                             Logger.err("Error on serial ports detection : " + err.message);
-                        }
-
-                        if (autoConnectDo) {
-                            autoConnect();
                         }
                     });
                 };
