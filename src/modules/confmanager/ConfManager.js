@@ -104,7 +104,7 @@ class ConfManager {
             }
         } catch (e) {
             if (e.message !== ERROR_EMPTY_FILE && e.message !== ERROR_INVALID_JSON) {
-                Logger.err("Invalid json file for path " + jsonPath);
+                Logger.warn("Invalid json file for path " + jsonPath);
                 throw Error(ERROR_INVALID_FILE);
             } else {
                 throw e;

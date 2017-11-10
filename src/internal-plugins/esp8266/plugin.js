@@ -119,7 +119,7 @@ function loaded(api) {
         /**
          * Process API callback
          *
-         * @param  {[type]} apiRequest An APIRequest
+         * @param  {APIRequest} apiRequest An APIRequest
          * @returns {Promise}  A promise with an APIResponse object
          */
         processAPI(apiRequest) {
@@ -150,7 +150,6 @@ function loaded(api) {
             } else if (apiRequest.route.startsWith(WS_PING_ROUTE)) {
                 const iot = this.api.iotAPI.getIot(apiRequest.data.id);
                 return new Promise((resolve) => {
-                    console.log({success:true, version:(errorFirmware[iot.iotApp]?-1:this.api.iotAPI.getVersion(this.api.iotAPI.getIot(apiRequest.data.id).iotApp))});
                     resolve(this.api.webAPI.APIResponse(true, {success:true, version:(errorFirmware[iot.iotApp]?-1:this.api.iotAPI.getVersion(this.api.iotAPI.getIot(apiRequest.data.id).iotApp))}));
                 });
             } else if (apiRequest.route.startsWith(WS_FIRMWARE_ROUTE)) {

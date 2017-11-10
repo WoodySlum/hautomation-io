@@ -136,11 +136,9 @@ void Hautomation::checkRun() {
 }
 
 String Hautomation::baseUrl() {
+    const char* apiUrl = config["apiUrl"];
 
-    const char* ip = config["ip"];
-    int port = config["port"];
-
-    return String("http://" + String(ip) + ":" + String(port) + "/api/");
+    return apiUrl;
 }
 
 void Hautomation::httpUpdateServer() {
@@ -208,8 +206,6 @@ void Hautomation::ping() {
 
 void Hautomation::updateFirmware() {
     const char* id = config["id"];
-    const char* ip = config["ip"];
-    int port = config["port"];
     Serial.println("Updating ...");
     resetFirmwareUpdate();
     updating = true;

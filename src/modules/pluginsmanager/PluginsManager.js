@@ -50,7 +50,8 @@ const INTERNAL_PLUGINS = [
     "openweather-wind-sensor",
     "esp8266",
     "esp8266-dht22",
-    "trash-reminder"
+    "trash-reminder",
+    "sms"
 ];
 
 /**

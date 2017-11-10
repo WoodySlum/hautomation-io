@@ -7,6 +7,8 @@ const Prowler = require("prowler");
  * @param  {PluginAPI} api The api
  */
 function loaded(api) {
+    api.init();
+    
     /**
      * This class is extended by user form
      * @class

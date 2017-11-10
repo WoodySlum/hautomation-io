@@ -39,7 +39,7 @@ class IotManager {
      * @param  {FormManager} formManager  The form manager
      * @param  {EnvironmentManager} environmentManager  The environment manager
      * @param  {ConfManager} confManager    The configuration manager
-     * 
+     *
      * @returns {IotManager}              The instance
      */
     constructor(appConfiguration, webServices, installationManager, formManager, environmentManager, confManager) {
@@ -244,8 +244,7 @@ class IotManager {
 
         // Configuration injection
         const baseConfiguration = {
-            ip:this.environmentManager.getLocalIp(),
-            port:this.environmentManager.getLocalPort(),
+            apiUrl:this.environmentManager.getLocalAPIUrl(),
             version:this.getVersion(appId),
             options:this.iotApps[appId].options
         };
