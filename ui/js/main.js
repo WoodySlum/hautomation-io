@@ -1682,7 +1682,7 @@ $(document).ready(function() {
                 var timestamp = 0;
                 if (notifications) {
                     if (notifications.length > 0) {
-                        timestamp = notifications[0].ts;
+                        timestamp = notifications[0].timestamp;
                     }
 
                     setTimeout(function() {
