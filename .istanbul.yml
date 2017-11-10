@@ -4,7 +4,7 @@ instrumentation:
     root: ./src
     default-excludes: true
     include-all-sources: true
-    excludes: ['**/*Form.js', '**/forms/*', '**/logger/*', '**/internal-plugins/*-sensor/*', '**/modules/pluginsmanager/publicapis/*', '**/modules/camerasmanager/*', '**/internal-plugins/rflink/*', '**/internal-plugins/openweather/*', '**/internal-plugins/esp*', '**/internal-plugins/trash-reminder*']
+    excludes: ['**/*Form.js', '**/forms/*', '**/logger/*', '**/internal-plugins/*-sensor/*', '**/modules/pluginsmanager/publicapis/*', '**/modules/camerasmanager/*', '**/internal-plugins/rflink/*', '**/internal-plugins/openweather/*', '**/internal-plugins/esp*', '**/internal-plugins/trash-reminder*', '**/internal-plugins/sms*']
     embed-source: false
     variable: __coverage__
     compact: true
