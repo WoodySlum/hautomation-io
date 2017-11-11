@@ -20,7 +20,7 @@ stages:
 test:
   stage: test
   script:
-  - apt-get install -y libudev-dev
+  - apt-get install -y libudev1
   - npm install
   - npm run --verbose test-ci
   coverage: '/Statements   : \d+\.\d+/'
@@ -30,14 +30,14 @@ lint:
   only:
     - master
   script:
-  - apt-get install -y libudev-dev
+  - apt-get install -y libudev1
   - npm install
   - npm run --verbose lint
 
 build:
   stage: build
   script:
-  - apt-get install -y libudev-dev
+  - apt-get install -y libudev1
   - npm install
   - npm run --verbose build
   artifacts:
