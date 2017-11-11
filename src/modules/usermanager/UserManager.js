@@ -74,14 +74,6 @@ class UserManager {
                                 Logger.err(err.message);
                             }
                         });
-                    } else {
-                        ImageUtils.class.blur(pic, (err, data) => {
-                            if (!err) {
-                                pics.push(data);
-                            } else {
-                                Logger.err(err.message);
-                            }
-                        });
                     }
                 }
             }
