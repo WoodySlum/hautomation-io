@@ -21,6 +21,8 @@ test:
   stage: test
   script:
   - apt-get install -y libudev1
+  - ln -sf /lib/arm-linux-gnueabihf/libudev.so.1 /lib/arm-linux-gnueabihf/libudev.so.0
+  - ln -sf /lib/arm-linux-gnueabihf/libudev.so.1 /lib/arm-linux-gnueabihf/libudev.so
   - npm install
   - npm run --verbose test-ci
   coverage: '/Statements   : \d+\.\d+/'
@@ -31,6 +33,8 @@ lint:
     - master
   script:
   - apt-get install -y libudev1
+  - ln -sf /lib/arm-linux-gnueabihf/libudev.so.1 /lib/arm-linux-gnueabihf/libudev.so.0
+  - ln -sf /lib/arm-linux-gnueabihf/libudev.so.1 /lib/arm-linux-gnueabihf/libudev.so
   - npm install
   - npm run --verbose lint
 
@@ -38,6 +42,8 @@ build:
   stage: build
   script:
   - apt-get install -y libudev1
+  - ln -sf /lib/arm-linux-gnueabihf/libudev.so.1 /lib/arm-linux-gnueabihf/libudev.so.0
+  - ln -sf /lib/arm-linux-gnueabihf/libudev.so.1 /lib/arm-linux-gnueabihf/libudev.so
   - npm install
   - npm run --verbose build
   artifacts:
