@@ -1144,7 +1144,9 @@ $(document).ready(function() {
 
             case "InfoOneText":
                 htmlTile += '<div id="' + tile.identifier + '" class="' + actionCss + ' subTile" style="background-color:' + backgroundColor + ';color:' + foregroundColor + ';">';
-                htmlTile += '<i class="fa deviceIcon" data-unicode="' + tile.icon + '">&#x' + tile.icon + '</i><br/>';
+                if (tile.icon) {
+                    htmlTile += '<i class="fa deviceIcon" data-unicode="' + tile.icon + '">&#x' + tile.icon + '</i><br/>';
+                }
                 if (tile.text.length > 50) {
                     htmlTile += '<span class="smallerText">' + tile.text + '</span>';
                 } else {
@@ -1154,21 +1156,27 @@ $(document).ready(function() {
                 break;
             case "InfoTwoText":
                 htmlTile += '<div id="' + tile.identifier + '" class="' + actionCss + ' infoTile subTile" style="background-color:' + backgroundColor + ';color:' + foregroundColor + ';">';
-                htmlTile += '<i class="fa deviceIcon" data-unicode="' + tile.icon + '">&#x' + tile.icon + '</i><br/>';
+                if (tile.icon) {
+                    htmlTile += '<i class="fa deviceIcon" data-unicode="' + tile.icon + '">&#x' + tile.icon + '</i><br/>';
+                }
                 htmlTile += tile.text;
                 htmlTile += '<h5>' + tile.subtext + '</h5>';
                 htmlTile += '</div>';
                 break;
             case "InfoTwoIcon":
                 htmlTile += '<div id="' + tile.identifier + '" class="' + actionCss + ' infoTile subTile" style="background-color:' + backgroundColor + ';color:' + foregroundColor + ';">';
-                htmlTile += '<i class="fa deviceIcon" data-unicode="' + tile.icon + '">&#x' + tile.icon + '</i><br/>';
+                if (tile.icon) {
+                    htmlTile += '<i class="fa deviceIcon" data-unicode="' + tile.icon + '">&#x' + tile.icon + '</i><br/>';
+                }
                 htmlTile += '<i class="fa deviceSubIcon" data-unicode="' + tile.subicon + '">&#x' + tile.subicon + '</i><br />';
                 htmlTile += tile.text;
                 htmlTile += '</div>';
                 break;
             case "ActionOneIcon":
                 htmlTile += '<div id="' + tile.identifier + '" class="' + actionCss + ' action actionNoStatusTile subTile" style="background-color:' + backgroundColor + ';color:' + foregroundColor + ';">';
-                htmlTile += '<i class="fa deviceIcon" data-unicode="' + tile.icon + '">&#x' + tile.icon + '</i><br/>';
+                if (tile.icon) {
+                    htmlTile += '<i class="fa deviceIcon" data-unicode="' + tile.icon + '">&#x' + tile.icon + '</i><br/>';
+                }
                 htmlTile += tile.text;
                 htmlTile += '</div>';
                 break;
@@ -1180,7 +1188,9 @@ $(document).ready(function() {
                 htmlTile += 'class="action deviceTile ';
                 if (tile.status) htmlTile += 'deviceTileActive ';
                 htmlTile += 'subTile" style="background-color:' + backgroundColor + ';color:' + foregroundColor + ';">';
-                htmlTile += '<i class="fa deviceIcon" data-unicode="' + tile.icon + '">&#x' + tile.icon + '</i><br/>';
+                if (tile.icon) {
+                    htmlTile += '<i class="fa deviceIcon" data-unicode="' + tile.icon + '">&#x' + tile.icon + '</i><br/>';
+                }
                 htmlTile += tile.text;
                 htmlTile += '</div>';
                 break;
@@ -1192,7 +1202,9 @@ $(document).ready(function() {
                 break;
             case "PicturesIcon":
                 htmlTile += '<div id="' + tile.identifier + '" class="' + actionCss + ' infoTile subTile" style="background-color:' + backgroundColor + ';color:' + foregroundColor + ';">';
-                htmlTile += '<i class="fa deviceIcon" data-unicode="' + tile.icon + '">&#x' + tile.icon + '</i><br/>';
+                if (tile.icon) {
+                    htmlTile += '<i class="fa deviceIcon" data-unicode="' + tile.icon + '">&#x' + tile.icon + '</i><br/>';
+                }
                 for (i = 0; i < tile.pictures.length; i++) {
                     htmlTile += '<img src="data:image/jpg;base64,' + tile.pictures[i] + '" />&nbsp;&nbsp;';
                 }
@@ -1200,7 +1212,9 @@ $(document).ready(function() {
                 break;
             case "GenericAction":
                 htmlTile += '<div id="' + tile.identifier + '" class="' + actionCss + ' genericAction action actionNoStatusTile subTile" style="background-color:' + backgroundColor + ';color:' + foregroundColor + ';">';
-                htmlTile += '<i class="fa deviceIcon" data-unicode="' + tile.icon + '">&#x' + tile.icon + '</i><br/>';
+                if (tile.icon) {
+                    htmlTile += '<i class="fa deviceIcon" data-unicode="' + tile.icon + '">&#x' + tile.icon + '</i><br/>';
+                }
                 htmlTile += tile.text;
                 htmlTile += '</div>';
                 break;
@@ -1212,13 +1226,17 @@ $(document).ready(function() {
                 htmlTile += 'class="' + actionCss + ' genericActionWithStatus action deviceTile ';
                 if (tile.status) htmlTile += 'deviceTileActive ';
                 htmlTile += 'subTile" style="background-color:' + backgroundColor + ';color:' + foregroundColor + ';">';
-                htmlTile += '<i class="fa deviceIcon" data-unicode="' + tile.icon + '">&#x' + tile.icon + '</i><br/>';
+                if (tile.icon) {
+                    htmlTile += '<i class="fa deviceIcon" data-unicode="' + tile.icon + '">&#x' + tile.icon + '</i><br/>';
+                }
                 htmlTile += tile.text;
                 htmlTile += '</div>';
                 break;
             default:
                 htmlTile += '<div id="' + tile.identifier + '" class="' + actionCss + ' infoTile subTile" style="background-color:' + backgroundColor + ';color:' + foregroundColor + ';">';
-                htmlTile += '<i class="fa deviceIcon" data-unicode="' + tile.icon + '">&#x' + tile.icon + '</i><br/>';
+                if (tile.icon) {
+                    htmlTile += '<i class="fa deviceIcon" data-unicode="' + tile.icon + '">&#x' + tile.icon + '</i><br/>';
+                }
                 htmlTile += tile.text;
                 htmlTile += '<h5>' + tile.subtext + '</h5>';
                 htmlTile += '</div>';
