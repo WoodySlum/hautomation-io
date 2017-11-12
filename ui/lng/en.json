@@ -4,7 +4,7 @@
     "ui.cameras.archive": "Cam. archives",
     "ui.statistics": "Statistics",
     "ui.manage": "Manage",
-    "ui.logout": "Sign out",
+    "ui.logout": "Logout",
     "ui.date": "Date",
     "ui.time": "Time",
     "ui.refresh": "Refresh",
@@ -288,5 +288,8 @@
     "iots.flash.go": "Start !",
     "flash.flashing": "Flashing the IoT, please be patient ...",
     "iot.flash.error": "Oops, an error has occured while flashing. Are you sure the device has been well plugged ?",
-    "iot.flash.retry": "Retry"
+    "iot.flash.retry": "Retry",
+    "button.cancel": "Cancel",
+    "button.save": "Save",
+    "js.delete.confirm": "Are you sure to delete this element ?"
 }

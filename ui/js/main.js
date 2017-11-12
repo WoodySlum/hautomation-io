@@ -459,7 +459,7 @@ $(document).ready(function() {
                 $('#manageZone').remove();
                 $('#manageTab').remove();
             }
-            adminFormReady();
+            adminFormReady(t);
 
             // Login
             if ($("#rememberMe").is(':checked')) {
@@ -4948,7 +4948,7 @@ $(document).ready(function() {
                 $("#deleteIotsForm").click(function() {
 
                     swal(Object.assign({
-                        title: t('js.global.iots.form.confirm', null),
+                        title: t('js.delete.confirm', null),
                         type: "warning",
                         showCancelButton: true,
                         confirmButtonText: t('js.continue', null),

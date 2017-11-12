@@ -2,7 +2,7 @@ var renderFormGlobal;
 var adminFormSchemaList = {};
 var adminFormSchemaUIList = {};
 
-function adminFormReady() {
+function adminFormReady(t) {
     function adminForm(item) {
         var formData = {};
         var Form = JSONSchemaForm.default;
@@ -65,11 +65,11 @@ function adminFormReady() {
                 for (var i = 0 ; i < formData.data.length ; i++) {
                     if (parseInt(formData.data[i].id) === parseInt(targetId)) {
                         swal(Object.assign({
-                            title: "js.delete.confirm",
+                            title: t("js.delete.confirm"),
                             type: "warning",
                             showCancelButton: true,
-                            confirmButtonText: "js.continue",
-                            cancelButtonText: "js.cancel",
+                            confirmButtonText: t("js.continue"),
+                            cancelButtonText: t("js.cancel"),
                             showLoaderOnConfirm: true
                         }, swalDefaults)).then(function() {
                             // Confirm
@@ -127,12 +127,12 @@ function adminFormReady() {
                   loadTiles(prefix);
                   $(".selectpicker").selectpicker("destroy");
               }},
-              "button.cancel"
+              t("button.cancel")
           ),
             React.createElement(
               "button",
               { type: "submit", className:"btn btn-success" },
-              "button.save"
+              t("button.save")
             )), document.getElementById(prefix + "form"));
 
             var htmlForm = document.getElementById(prefix + "form");//.innerHTML;
