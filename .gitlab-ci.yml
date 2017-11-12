@@ -1,4 +1,4 @@
-image: node:8.9.1
+image: hypriot/rpi-node:7
 
 cache:
   paths:
