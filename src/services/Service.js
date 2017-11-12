@@ -129,7 +129,7 @@ class Service {
         if (this.command) {
             const r = cp.exec(this.command, function callback(error, stdout, stderr){
                 if (error) {
-                    if (error.signal !== "SIGKILL") {
+                    if (error.signal !== "SIGKILL" || error.signal !== "SIGTERM" || error.signal !== "SIGINT") {
                         Logger.err(error);
                     }
                 }
@@ -152,7 +152,6 @@ class Service {
             this.childProcess.kill("SIGKILL");
             this.pid = null;
             this.childProcess = null;
-
         } else {
             Logger.err("Empty process for service " + this.name);
         }

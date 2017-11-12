@@ -64,14 +64,16 @@ class HautomationRunner {
 
 const runner = new HautomationRunner();
 
-process.on("SIGINT", function () {
+process.on("SIGINT", () => {
     console.log("Received SIGINT");
     runner.stop(runner);
+    process.kill(process.pid, "SIGKILL");
     process.exit(0);
 });
 
-process.on("SIGTERM", function () {
+process.on("SIGTERM", () => {
     console.log("Received SIGTERM");
     runner.stop(runner);
+    process.kill(process.pid, "SIGKILL");
     process.exit(0);
 });
