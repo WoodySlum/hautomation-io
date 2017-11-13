@@ -117,7 +117,7 @@ class HautomationCore {
         // RadioManager. The plugins manager will be set later, when the pluginsLoaded event will be triggered
         this.radioManager = new RadioManager.class(this.pluginsManager, this.formManager, this.eventBus, this.scenarioManager, this.webServices, this.translateManager);
         // Dashboard manager
-        this.dashboardManager = new DashboardManager.class(this.themeManager, this.webServices, this.translateManager);
+        this.dashboardManager = new DashboardManager.class(this.themeManager, this.webServices, this.translateManager, this.confManager);
         // Installation manager
         this.installationManager = new InstallationManager.class(this.confManager, this.eventBus);
         // Cameras manager module

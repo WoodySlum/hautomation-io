@@ -1,3 +1,4 @@
+var globalExcludeTiles = [];
 var localization = {};
 var uiTranslationRegistration = {};
 var uiTranslationRegistrationCounter = 0;
@@ -1434,19 +1435,17 @@ $(document).ready(function() {
                     showLoader();
 
                     $.ajax({
-                        type: "POST",
-                        url: vUrl,
+                        type: "GET",
+                        url: vUrl + "dashboard/get/0/1/",
                         data: {
-                            username: username,
-                            ePassword: ePassword,
-                            method: "getDashboard",
-                            data: JSON.stringify({
-                                all: !tileEditMode
-                            })
+                            u: username,
+                            p: password,
                         }
                     }).done(function(msg) {
-                        var dashboardItems = JSON.parse(msg);
+                        var dashboardItems = msg;
+
                         if (!tileEditMode) {
+                            globalExcludeTiles = msg.excludeTiles;
                             if (dashboardItems) {
                                 generateTiles(dashboardItems.tiles, 'tiles');
                                 tileActions();
@@ -1458,8 +1457,8 @@ $(document).ready(function() {
                             $(".tile").addClass("shake-constant");
                             for (k = 0; k < dashboardItems.tiles.length; k++) {
                                 var excluded = false;
-                                if ((settings.user !== null) && (settings.user.excludeTiles !== null)) {
-                                    if (jQuery.inArray(dashboardItems.tiles[k].identifier, settings.user.excludeTiles) !== -1) {
+                                if ((settings.user !== null) && (globalExcludeTiles !== null)) {
+                                    if (jQuery.inArray(dashboardItems.tiles[k].identifier, globalExcludeTiles) !== -1) {
                                         excluded = true;
                                     }
                                 }
@@ -1508,20 +1507,31 @@ $(document).ready(function() {
                                 consolelog(visible);
                                 identifier = identifier.replace("-editTiles-visible", "").replace("-editTiles-invisible", "");
 
-                                if (!settings.user.excludeTiles) {
-                                    settings.user.excludeTiles = new Array();
+                                if (!globalExcludeTiles) {
+                                    globalExcludeTiles = new Array();
                                 }
+
+                                var index = globalExcludeTiles.indexOf(identifier);
                                 if (!visible) {
-                                    if (jQuery.inArray(identifier, settings.user.excludeTiles) === -1) {
-                                        settings.user.excludeTiles.push(identifier);
+                                    if (index === -1) {
+                                        globalExcludeTiles.push(identifier);
                                     }
                                 } else {
-                                    if (jQuery.inArray(identifier, settings.user.excludeTiles) !== -1) {
-                                        settings.user.excludeTiles = jQuery.grep(settings.user.excludeTiles, function(value) {
+                                    if (index !== -1) {
+                                        globalExcludeTiles.splice(index, 1);
+                                    }
+                                }
+                                /*if (!visible) {
+                                    if (jQuery.inArray(identifier, globalExcludeTiles) === -1) {
+                                        globalExcludeTiles.push(identifier);
+                                    }
+                                } else {
+                                    if (jQuery.inArray(identifier, globalExcludeTiles) !== -1) {
+                                        globalExcludeTiles = jQuery.grep(globalExcludeTiles, function(value) {
                                             return value != identifier;
                                         });
                                     }
-                                }
+                                }*/
 
                             });
                         } else {
@@ -1533,15 +1543,15 @@ $(document).ready(function() {
                             showLoader();
                             $.ajax({
                                 type: "POST",
-                                url: vUrl,
-                                data: {
-                                    username: username,
-                                    ePassword: ePassword,
-                                    method: "setExcludeTiles",
-                                    data: JSON.stringify({
-                                        excludeTiles: settings.user.excludeTiles
-                                    })
-                                }
+                                url: vUrl + "dashboard/preferences/set/",
+                                contentType: "application/json",
+                                data: JSON.stringify({
+                                    u: username,
+                                    p: password,
+                                    data:{
+                                        excludeTiles:globalExcludeTiles
+                                    }
+                                })
                             }).done(function(msg) {
                                 getDashboard();
                                 hideLoader();
