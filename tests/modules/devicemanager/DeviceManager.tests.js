@@ -162,6 +162,26 @@ describe("DeviceManager", function() {
         core.environmentManager.isNight.restore();
     });
 
+    it("switchDevice should call twice send radio because status is inverted", function() {
+        devices[0].worksOnlyOnDayNight = 0;
+        devices[0].status = 1;
+        sinon.spy(radioManager, "switchDevice");
+        deviceManager.switchDevice(1981, "InverT");
+        expect(radioManager.switchDevice.calledTwice).to.be.true;
+        expect(devices[0].status).to.be.equal(-1);
+        radioManager.switchDevice.restore();
+    });
+
+    it("switchDevice should call twice send radio because status is inverted", function() {
+        devices[0].worksOnlyOnDayNight = 0;
+        devices[0].status = -1;
+        sinon.spy(radioManager, "switchDevice");
+        deviceManager.switchDevice(1981, "invert");
+        expect(radioManager.switchDevice.calledTwice).to.be.true;
+        expect(devices[0].status).to.be.equal(1);
+        radioManager.switchDevice.restore();
+    });
+
     after(() => {
         radioPlugin.instance.service.send.restore();
     });

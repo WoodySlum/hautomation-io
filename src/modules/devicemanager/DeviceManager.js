@@ -13,6 +13,7 @@ const Icons = require("./../../utils/Icons");
 
 const STATUS_ON = "on";
 const STATUS_OFF = "off";
+const STATUS_INVERT = "invert";
 const ROUTE_ALL_ON = "/devices/allon/";
 const ROUTE_ALL_OFF = "/devices/alloff/";
 
@@ -138,6 +139,8 @@ class DeviceManager {
             status = Radio.STATUS_ON;
         } else if (status && status.toLowerCase() === STATUS_OFF) {
             status = Radio.STATUS_OFF;
+        } else if (status && status.toLowerCase() === STATUS_INVERT) {
+            status = null;
         }
 
         this.formConfiguration.getDataCopy().forEach((device) => {
@@ -211,4 +214,4 @@ class DeviceManager {
     }
 }
 
-module.exports = {class:DeviceManager, STATUS_ON:STATUS_ON, STATUS_OFF:STATUS_OFF};
+module.exports = {class:DeviceManager, STATUS_ON:STATUS_ON, STATUS_OFF:STATUS_OFF, STATUS_INVERT:STATUS_INVERT};
