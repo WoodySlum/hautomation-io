@@ -96,7 +96,7 @@ class DashboardManager {
      *
      * @param  {Array} tiles The tiles
      * @param  {string} username Username
-     * @return {Array}          Tiles
+     * @returns {Array}          Tiles
      */
     filterTiles(tiles, username = null) {
         if (this.dashboardPreferences[username] && this.dashboardPreferences[username].excludeTiles) {
