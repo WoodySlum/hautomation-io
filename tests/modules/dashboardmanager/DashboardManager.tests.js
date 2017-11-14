@@ -27,7 +27,7 @@ describe("DashboardManager", function() {
         expect(dashboardManager).to.have.property("translateManager");
         expect(dashboardManager.tiles.length).to.be.equal(0);
         expect(dashboardManager.lastGenerated > 100000).to.be.true;
-        expect(webServices.registerAPI.calledOnce).to.be.true;
+        expect(webServices.registerAPI.calledTwice).to.be.true;
         webServices.registerAPI.restore();
     });
 
