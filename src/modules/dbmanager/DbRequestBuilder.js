@@ -350,7 +350,7 @@ class DbRequestBuilder {
      */
     where(field, operator, value) {
         const meta = this.getMetaForField(field);
-        if (meta && meta.type === "timestamp") {
+        if (meta && meta.type === "timestamp" && field === FIELD_TIMESTAMP) {
             this.whereList.push("CAST(strftime('%s', " + field + ") AS NUMERIC) " + operator + " " + this.getValueEncapsulated(value, meta));
         } else {
             this.whereList.push(field + " " + operator + " " + this.getValueEncapsulated(value, meta));

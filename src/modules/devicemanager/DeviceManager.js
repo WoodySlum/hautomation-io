@@ -147,7 +147,8 @@ class DeviceManager {
 
             if (parseInt(device.id) === parseInt(id)) {
                 // Check for day and night mode
-                if (!device.worksOnlyOnDayNight
+                if (device.radio
+                    && !device.worksOnlyOnDayNight
                     || (device.worksOnlyOnDayNight === 1)
                     || (device.worksOnlyOnDayNight === 2 && !this.environmentManager.isNight())
                     || (device.worksOnlyOnDayNight === 3 && this.environmentManager.isNight())
