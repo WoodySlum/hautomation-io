@@ -508,7 +508,12 @@ class DbRequestBuilder {
             req += ") VALUES (";
             let i = 0;
             this.valuesList.forEach((value) => {
-                req += this.getValueEncapsulated(value, this.getMetaForField(this.insertList[i])) + ",";
+                if (this.getMetaForField(this.insertList[i]).type === "timestamp") {
+                    const tsValue = this.getValueEncapsulated(value, this.getMetaForField(this.insertList[i]));
+                    req += parseInt(tsValue)?"datetime(" + parseInt(tsValue) + ", 'unixepoch'),":tsValue + ",";
+                } else {
+                    req += this.getValueEncapsulated(value, this.getMetaForField(this.insertList[i])) + ",";
+                }
                 i++;
             });
             req = this.removeLastComma(req);
@@ -519,18 +524,29 @@ class DbRequestBuilder {
             req += "UPDATE `" + this.table + "` SET ";
             let i = 0;
             this.updateList.forEach((field) => {
+
                 if (field === FIELD_ID) {
                     // Add to where clause
                     this.whereList.push(FIELD_ID + EQ + this.valuesList[i]);
                 } if (field === FIELD_TIMESTAMP) {
-                    req += field + "=" + this.getValueEncapsulated(DateUtils.class.timestamp(), this.getMetaForField(field)) + ",";
+                    if (!this.valuesList[i]) {
+                        req += FIELD_TIMESTAMP + "=" + this.getValueEncapsulated(DateUtils.class.timestamp(), this.getMetaForField(field)) + ",";
+                    } else {
+                        const tsValue = this.getValueEncapsulated(this.valuesList[i], this.getMetaForField(field));
+                        req += FIELD_TIMESTAMP + "=" + (parseInt(tsValue)?"datetime(" + parseInt(tsValue) + ", 'unixepoch'),":tsValue) + ",";
+                    }
                 } else {
-                    req += field + "=" + this.getValueEncapsulated(this.valuesList[i], this.getMetaForField(field)) + ",";
+                    if (this.getMetaForField(field).type === "timestamp") {
+                        const tsValue = this.getValueEncapsulated(this.valuesList[i], this.getMetaForField(field));
+                        req += field + "=" + (parseInt(tsValue)?"datetime(" + parseInt(tsValue) + ", 'unixepoch'),":tsValue) + ",";
+                    } else {
+                        req += field + "=" + this.getValueEncapsulated(this.valuesList[i], this.getMetaForField(field)) + ",";
+                    }
                 }
 
                 i++;
             });
-            req += FIELD_TIMESTAMP + EQ + "current_timestamp,";
+            //req += FIELD_TIMESTAMP + EQ + "current_timestamp,";
             req = this.removeLastComma(req);
         }
         // Delete

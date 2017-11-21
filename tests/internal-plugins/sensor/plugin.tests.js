@@ -332,14 +332,6 @@ describe("Sensor", function() {
         val1.save((error) => {
             val2.save((error) => {
                 val3.save((error) => {
-                    // sensor.dbHelper.getObjects(sensor.dbHelper.RequestBuilder().select().where("sensorId", "=", "foofoofoofoofoo"), (error, objects) => {
-                    //     console.log(objects);
-                    //     done();
-                    // });
-                    // sensor.lastObject((err, res) => {
-                    //     console.log(res);
-                    //     done();
-                    // });
                     sensor.getStatistics(1499897104, 1499897104 + (24 * 60 * 60), (60 * 60), (err, results) => {
                         expect(err).to.be.null;
                         expect(results.unit).to.be.equal("foo");
@@ -423,6 +415,21 @@ describe("Sensor", function() {
                 });
             });
         });
+    });
+
+    it("setValue with timestamp should store good value in database", function(done) {
+        let sensor = new Sensor(plugin, 3009, "FOOBARBAR", {});
+        sensor.unit = "foo";
+        sensor.round = 2;
+        sensor.aggregationMode = Sensor.constants().AGGREGATION_MODE_MAX;
+        sensor.setValue(128, 20, (err) => {
+            expect(err).to.be.null;
+            sensor.lastObject((err, res) => {
+                expect(res.value).to.be.equal(128);
+                expect(DateUtils.class.dateToTimestamp(res.timestamp)).to.be.equal(1511216691);
+                done();
+            });
+        }, 1511216691);
     });
 
     after(() => {

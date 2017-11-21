@@ -36,7 +36,8 @@
       "./src/**/*.cpp",
       "./src/**/*.h",
       "./src/**/lib/",
-      "./src/**/global_lib/"
+      "./src/**/global_lib/",
+      "./**/*.py"
     ]
   },
   "repository": {

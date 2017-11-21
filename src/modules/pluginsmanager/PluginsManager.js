@@ -51,7 +51,9 @@ const INTERNAL_PLUGINS = [
     "esp8266",
     "esp8266-dht22",
     "trash-reminder",
-    "sms"
+    "sms",
+    "electric-sensor",
+    "enedis-linky-electric-sensor"
 ];
 
 /**

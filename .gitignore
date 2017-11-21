@@ -1,6 +1,9 @@
 # Mac
 .DS_Store
 
+# Python build
+*.pyc
+
 # Vim
 *.swp
 
@@ -84,4 +87,3 @@ typings/
 
 # dotenv environment variables file
 .env
-

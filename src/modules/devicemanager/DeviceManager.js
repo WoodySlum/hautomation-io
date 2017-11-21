@@ -147,12 +147,12 @@ class DeviceManager {
 
             if (parseInt(device.id) === parseInt(id)) {
                 // Check for day and night mode
-                if (device.radio
-                    && !device.worksOnlyOnDayNight
+                if (device.radio && (
+                    !device.worksOnlyOnDayNight
                     || (device.worksOnlyOnDayNight === 1)
                     || (device.worksOnlyOnDayNight === 2 && !this.environmentManager.isNight())
                     || (device.worksOnlyOnDayNight === 3 && this.environmentManager.isNight())
-                    || device.status === Radio.STATUS_ON) {
+                    || device.status === Radio.STATUS_ON)) {
                     let newStatus = null;
                     device.radio.forEach((radio) => {
                         const radioObject = this.radioManager.switchDevice(radio.module, radio.protocol, radio.deviceId, radio.switchId, status, radio.frequency, device.status);
