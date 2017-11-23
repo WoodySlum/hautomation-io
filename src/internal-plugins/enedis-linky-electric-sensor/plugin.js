@@ -1,6 +1,7 @@
 "use strict";
 const pathl = require("path");
 const callsite = require("callsite");
+const fs = require("fs-extra");
 
 /**
  * Loaded function
@@ -9,6 +10,8 @@ const callsite = require("callsite");
  */
 function loaded(api) {
     api.init();
+    api.installerAPI.register("0.0.0", ["x32", "x64"], "brew install python", false, false, true);
+    api.installerAPI.register("0.0.0", ["arm", "arm64"], "apt-get install -y python", true, true);
 
     /**
      * Linky form sensor
@@ -97,46 +100,60 @@ function loaded(api) {
             super(api, id, configuration, null);
             this.aggregationMode = api.exported.Sensor.constants().AGGREGATION_MODE_SUM;
             this.chartType = api.exported.Sensor.constants().CHART_TYPE_BAR;
+            const dir = api.exported.cachePath + "linky/";
 
-            api.timeEventAPI.register((self) => {
-                if (configuration && configuration.username && configuration.password) {
-                    self.api.installerAPI.executeCommand("python " + pathl.dirname(callsite()[0].getFileName()) + "/app/linky_start.py  --username '" + configuration.username + "' --password '" + configuration.password + "'", false, (error, stdout) => {
-                        if (error) {
-                            self.api.exported.Logger.err(error.message);
-                        } else {
-                            try {
-                                const data = JSON.parse(stdout);
-                                if (data && data.graphe.data && data.graphe.periode.dateDebut) {
-                                    const dateParts = data.graphe.periode.dateDebut.split("/");
-                                    let timestamp = self.api.exported.DateUtils.class.dateToTimestamp(dateParts[2] + "-" + dateParts[1] + "-" + dateParts[0] +"T00:00:00");
+            try {
+                fs.removeSync(dir);
+                fs.ensureDirSync(dir);
 
-                                    // Every 30 minutes, so aaggregate to hour
-                                    let i = 0;
-                                    let intermediateData = 0;
-                                    data.graphe.data.forEach((data) => {
-                                        intermediateData += data.valeur*1000;
+                const linkyStartScript = fs.readFileSync(pathl.dirname(callsite()[0].getFileName()) + "/app/linky_start.py");
+                const linkyScript = fs.readFileSync(pathl.dirname(callsite()[0].getFileName())+ "/app/linky.py");
+
+                fs.writeFileSync(dir + "linky_start.py", linkyStartScript);
+                fs.writeFileSync(dir + "linky.py", linkyScript);
+
+                api.timeEventAPI.register((self) => {
+                    if (configuration && configuration.username && configuration.password) {
+                        self.api.installerAPI.executeCommand("python " + dir + "linky_start.py --username '" + configuration.username + "' --password '" + configuration.password + "'", false, (error, stdout) => {
+                            if (error) {
+                                self.api.exported.Logger.err(error.message);
+                            } else {
+                                try {
+                                    const data = JSON.parse(stdout);
+                                    if (data && data.graphe.data && data.graphe.periode.dateDebut) {
+                                        const dateParts = data.graphe.periode.dateDebut.split("/");
+                                        let timestamp = self.api.exported.DateUtils.class.dateToTimestamp(dateParts[2] + "-" + dateParts[1] + "-" + dateParts[0] +"T00:00:00");
+
+                                        // Every 30 minutes, so aaggregate to hour
+                                        let i = 0;
+                                        let intermediateData = 0;
+                                        data.graphe.data.forEach((data) => {
+                                            intermediateData += data.valeur*1000;
 
 
-                                        if (i%2 === 1) {
-                                            self.setValue(intermediateData, 0, null, timestamp);
-                                            intermediateData = 0;
-                                            timestamp += 3600;
-                                        }
+                                            if (i%2 === 1) {
+                                                self.setValue(intermediateData, 0, null, timestamp);
+                                                intermediateData = 0;
+                                                timestamp += 3600;
+                                            }
 
-                                        i++;
-                                    });
+                                            i++;
+                                        });
+                                    }
+                                } catch(e) {
+                                    self.api.exported.Logger.err("Could not parse enedis data retrieved");
+                                    self.api.exported.Logger.err(e.message);
+                                    self.api.exported.Logger.err(stdout);
                                 }
-                            } catch(e) {
-                                self.api.exported.Logger.err("Could not parse enedis data retrieved");
-                                self.api.exported.Logger.err(e.message);
-                                self.api.exported.Logger.err(stdout);
+
                             }
+                        });
+                    }
 
-                        }
-                    });
-                }
-
-            }, this, api.timeEventAPI.constants().EVERY_HOURS);
+                }, this, api.timeEventAPI.constants().EVERY_HOURS);
+            } catch(e) {
+                api.exported.Logger.err(e.message);
+            }
         }
 
         /**

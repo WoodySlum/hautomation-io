@@ -30,6 +30,14 @@
     -   [getDataCopy](#getdatacopy)
     -   [getConfig](#getconfig)
     -   [getForm](#getform-1)
+-   [Logger](#logger)
+    -   [setLogLevel](#setloglevel)
+    -   [log](#log)
+    -   [warn](#warn)
+    -   [err](#err)
+    -   [verbose](#verbose)
+    -   [info](#info)
+    -   [debug](#debug)
 -   [DashboardAPI](#dashboardapi)
     -   [registerTile](#registertile)
     -   [unregisterTile](#unregistertile)
@@ -38,6 +46,9 @@
 -   [Tile](#tile-1)
     -   [constructor](#constructor-1)
     -   [get](#get)
+-   [Cleaner](#cleaner)
+    -   [exportConstants](#exportconstants)
+    -   [cleanDbObject](#cleandbobject)
 -   [DatabaseAPI](#databaseapi)
     -   [register](#register-1)
     -   [dbHelper](#dbhelper)
@@ -96,6 +107,7 @@
     -   [isNight](#isnight)
     -   [registerDayNightNotifications](#registerdaynightnotifications)
     -   [unregisterDayNightNotifications](#unregisterdaynightnotifications)
+    -   [getLocalAPIUrl](#getlocalapiurl)
 -   [InstallerAPI](#installerapi)
     -   [register](#register-2)
     -   [executeCommand](#executecommand)
@@ -136,8 +148,24 @@
     -   [schedule](#schedule-1)
     -   [cancel](#cancel-1)
     -   [timeEvent](#timeevent)
--   [SchedulerDbObject](#schedulerdbobject)
+-   [Service](#service)
     -   [constructor](#constructor-6)
+    -   [start](#start-1)
+    -   [run](#run)
+    -   [threadCallback](#threadcallback)
+    -   [send](#send)
+    -   [startThreaded](#startthreaded)
+    -   [stopThreaded](#stopthreaded)
+    -   [startExternal](#startexternal)
+    -   [stopExternal](#stopexternal)
+    -   [stop](#stop-1)
+    -   [restart](#restart)
+    -   [status](#status)
+    -   [register](#register-8)
+    -   [unregister](#unregister-5)
+    -   [setThreadsManager](#setthreadsmanager)
+-   [SchedulerDbObject](#schedulerdbobject)
+    -   [constructor](#constructor-7)
 -   [identifier](#identifier)
 -   [data](#data)
 -   [triggerDate](#triggerdate)
@@ -159,13 +187,13 @@
     -   [getSensor](#getsensor)
     -   [iotAppPowered](#iotapppowered)
 -   [IotsListForm](#iotslistform)
-    -   [constructor](#constructor-7)
+    -   [constructor](#constructor-8)
     -   [identifier](#identifier-1)
     -   [json](#json)
     -   [getIotsName](#getiotsname)
     -   [getIotsId](#getiotsid)
 -   [FormObject](#formobject)
-    -   [constructor](#constructor-8)
+    -   [constructor](#constructor-9)
     -   [json](#json-1)
 -   [id](#id)
 -   [ServicesManagerAPI](#servicesmanagerapi)
@@ -173,17 +201,17 @@
 -   [ThemeAPI](#themeapi)
     -   [getColors](#getcolors)
 -   [TimeEventAPI](#timeeventapi)
-    -   [register](#register-8)
-    -   [unregister](#unregister-5)
-    -   [constants](#constants-2)
--   [TimeEventService](#timeeventservice)
-    -   [constructor](#constructor-9)
-    -   [start](#start-1)
-    -   [stop](#stop-1)
-    -   [hash](#hash)
-    -   [elementForHash](#elementforhash)
     -   [register](#register-9)
     -   [unregister](#unregister-6)
+    -   [constants](#constants-2)
+-   [TimeEventService](#timeeventservice)
+    -   [constructor](#constructor-10)
+    -   [start](#start-2)
+    -   [stop](#stop-2)
+    -   [hash](#hash)
+    -   [elementForHash](#elementforhash)
+    -   [register](#register-10)
+    -   [unregister](#unregister-7)
     -   [convertMode](#convertmode)
     -   [timeEvent](#timeevent-1)
 -   [TranslateAPI](#translateapi)
@@ -198,66 +226,39 @@
     -   [registerHomeNotifications](#registerhomenotifications)
     -   [unregisterHomeNotifications](#unregisterhomenotifications)
 -   [WebAPI](#webapi)
-    -   [register](#register-10)
-    -   [unregister](#unregister-7)
+    -   [register](#register-11)
+    -   [unregister](#unregister-8)
     -   [Authentication](#authentication)
     -   [APIResponse](#apiresponse)
     -   [constants](#constants-3)
 -   [Authentication](#authentication-1)
-    -   [constructor](#constructor-10)
+    -   [constructor](#constructor-11)
     -   [checkLocalIp](#checklocalip)
 -   [AuthenticationData](#authenticationdata)
-    -   [constructor](#constructor-11)
+    -   [constructor](#constructor-12)
     -   [authorized](#authorized)
     -   [username](#username)
     -   [level](#level)
 -   [APIResponse](#apiresponse-1)
-    -   [constructor](#constructor-12)
+    -   [constructor](#constructor-13)
     -   [success](#success)
     -   [response](#response)
     -   [errorCode](#errorcode)
     -   [errorMessage](#errormessage)
--   [Cleaner](#cleaner)
-    -   [exportConstants](#exportconstants)
-    -   [cleanDbObject](#cleandbobject)
 -   [WebServices](#webservices)
-    -   [constructor](#constructor-13)
-    -   [start](#start-2)
-    -   [stop](#stop-2)
+    -   [constructor](#constructor-14)
+    -   [start](#start-3)
+    -   [stop](#stop-3)
     -   [registerInfos](#registerinfos)
     -   [processAPI](#processapi-1)
-    -   [register](#register-11)
-    -   [unregister](#unregister-8)
+    -   [register](#register-12)
+    -   [unregister](#unregister-9)
     -   [registerAPI](#registerapi)
     -   [unregisterAPI](#unregisterapi)
     -   [manageResponse](#manageresponse)
     -   [buildPromises](#buildpromises)
     -   [runPromises](#runpromises)
     -   [sendAPIResponse](#sendapiresponse)
--   [Logger](#logger)
-    -   [setLogLevel](#setloglevel)
-    -   [log](#log)
-    -   [warn](#warn)
-    -   [err](#err)
-    -   [verbose](#verbose)
-    -   [info](#info)
-    -   [debug](#debug)
--   [Service](#service)
-    -   [constructor](#constructor-14)
-    -   [start](#start-3)
-    -   [run](#run)
-    -   [threadCallback](#threadcallback)
-    -   [send](#send)
-    -   [startThreaded](#startthreaded)
-    -   [stopThreaded](#stopthreaded)
-    -   [startExternal](#startexternal)
-    -   [stopExternal](#stopexternal)
-    -   [stop](#stop-3)
-    -   [restart](#restart)
-    -   [status](#status)
-    -   [register](#register-12)
-    -   [unregister](#unregister-9)
-    -   [setThreadsManager](#setthreadsmanager)
 -   [APIRequest](#apirequest)
     -   [constructor](#constructor-15)
     -   [method](#method)
@@ -506,6 +507,67 @@ Return the form
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A formatted form object
 
+## Logger
+
+This class provides static methods to log into a file.
+
+### setLogLevel
+
+Set the log level
+
+**Parameters**
+
+-   `level` **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** Log level between 0 and 5 (optional, default `3`)
+
+### log
+
+Log to a file
+
+**Parameters**
+
+-   `message` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A log message
+-   `level` **int** Log level between 0 to 5 (optional, default `3`)
+
+### warn
+
+Log a warning to a file
+
+**Parameters**
+
+-   `message` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A log message
+
+### err
+
+Log an error to a file
+
+**Parameters**
+
+-   `message` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A log message
+
+### verbose
+
+Log a verbose message to a file
+
+**Parameters**
+
+-   `message` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A log message
+
+### info
+
+Log an information to a file
+
+**Parameters**
+
+-   `message` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A log message
+
+### debug
+
+Log a debug message to a file, with stacktrace
+
+**Parameters**
+
+-   `message` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A log message
+
 ## DashboardAPI
 
 Public API for dashboard
@@ -604,6 +666,30 @@ Returns **[Tile](#tile)** A tile
 Get the tile without useless informations
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A tile ready to be serialized
+
+## Cleaner
+
+Utility class for cleaning stuff
+
+### exportConstants
+
+Clean an exported class by removing the `class` property
+
+**Parameters**
+
+-   `exported` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An exported object with `class` property
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A clean object
+
+### cleanDbObject
+
+Clean a DbObject by removing DbHelper
+
+**Parameters**
+
+-   `dbObject` **[DbObject](#dbobject)** A database object
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A cleaned object
 
 ## DatabaseAPI
 
@@ -1163,6 +1249,12 @@ Unegister for day/night notifications
 -   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback triggered when day/night information is received. Example : `(isNight) => {}`
 -   `id` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An identifier (optional, default `null`)
 
+### getLocalAPIUrl
+
+Get the local API Url
+
+Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The local API url (e.g. : <http://192.168.2.34:8100/api/>)
+
 ## InstallerAPI
 
 Public API for installation of external apps
@@ -1528,6 +1620,121 @@ Timer event registered
 
 -   `self` **[SchedulerService](#schedulerservice)** The SchedulerService instance
 
+## Service
+
+This class should not be implemented but only inherited.
+This class is used for services, start, stop, ...
+
+**Parameters**
+
+-   `name`  
+-   `threadsManager`   (optional, default `null`)
+-   `mode`   (optional, default `SERVICE_MODE_CLASSIC`)
+-   `command`   (optional, default `null`)
+
+### constructor
+
+Constructor
+
+**Parameters**
+
+-   `name` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The service identifier
+-   `threadsManager` **ThreadManager** The thread manager, mandatory if using SERVICE_MODE_THREADED mode service (optional, default `null`)
+-   `mode` **int** The service running mode : SERVICE_MODE_CLASSIC, SERVICE_MODE_THREADED, SERVICE_MODE_EXTERNAL (optional, default `SERVICE_MODE_CLASSIC`)
+-   `command` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The external service command to execute, in case of SERVICE_MODE_EXTERNAL (optional, default `null`)
+
+Returns **[Service](#service)** The instance
+
+### start
+
+Start the service
+
+### run
+
+Run function prototype threaded
+Should be overloaded by service
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A data passed as initial value
+-   `send` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Send a message to parent process
+
+### threadCallback
+
+Retrieve data from process
+Should be overloaded by service
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A data passed as initial value
+
+### send
+
+Send data to sub process
+
+**Parameters**
+
+-   `event` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An event
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A data (optional, default `null`)
+
+### startThreaded
+
+Internal
+Start in threaded mode (sub process)
+
+### stopThreaded
+
+Internal
+Stop in threaded mode (sub process)
+
+### startExternal
+
+Internal
+Start an external command
+
+### stopExternal
+
+Internal
+Stop an external command
+
+### stop
+
+Stop the service
+
+### restart
+
+Restart the service
+
+### status
+
+Return the service status
+
+Returns **int** STOPPED or RUNNING
+
+### register
+
+Register service callback
+
+**Parameters**
+
+-   `delegate` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The service delegate
+
+### unregister
+
+Unregister service callback
+
+**Parameters**
+
+-   `delegate` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The service delegate
+
+### setThreadsManager
+
+Set threads manager
+
+**Parameters**
+
+-   `threadsManager` **ThreadsManagaer** A threads manager
+
 ## SchedulerDbObject
 
 **Extends DbObject.class**
@@ -1831,7 +2038,7 @@ Register an timer element
 
 **Parameters**
 
--   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback triggered when conditions are reached (context will be set back as parameter). Example : `cb(self) {}`
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback triggered when conditions are reached (context will be set back as parameter). Example : `(self) => {}`
 -   `context` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The context to exectue the callback
 -   `mode` **int** Mode (enum) : `EVERY_SECONDS`, `EVERY_MINUTES`, `EVERY_HOURS`, `EVERY_DAYS` or `CUSTOM`
 -   `hour` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The hour value. `*` for all (optional, default `null`)
@@ -2187,30 +2394,6 @@ Error code
 
 The error message
 
-## Cleaner
-
-Utility class for cleaning stuff
-
-### exportConstants
-
-Clean an exported class by removing the `class` property
-
-**Parameters**
-
--   `exported` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An exported object with `class` property
-
-Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A clean object
-
-### cleanDbObject
-
-Clean a DbObject by removing DbHelper
-
-**Parameters**
-
--   `dbObject` **[DbObject](#dbobject)** A database object
-
-Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A cleaned object
-
 ## WebServices
 
 **Extends Service.class**
@@ -2219,6 +2402,7 @@ This class manage Web Services call, and more specifically the external APIs
 
 **Parameters**
 
+-   `translateManager`  
 -   `port`   (optional, default `8080`)
 -   `sslPort`   (optional, default `8043`)
 -   `sslKey`   (optional, default `null`)
@@ -2231,6 +2415,7 @@ Constructor
 
 **Parameters**
 
+-   `translateManager` **TranslateManager** The translation manager
 -   `port` **int** The listening HTTP port (optional, default `8080`)
 -   `sslPort` **int** The listening HTTPS port (optional, default `8443`)
 -   `sslKey` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The path for SSL key (optional, default `null`)
@@ -2338,182 +2523,6 @@ Process sending results in JSON to API caller
 
 -   `apiResponses` **\[[APIResponse](#apiresponse)]** The API responses
 -   `res` **[Response](https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/HTML5)** The response
-
-## Logger
-
-This class provides static methods to log into a file.
-
-### setLogLevel
-
-Set the log level
-
-**Parameters**
-
--   `level` **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** Log level between 0 and 5 (optional, default `3`)
-
-### log
-
-Log to a file
-
-**Parameters**
-
--   `message` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A log message
--   `level` **int** Log level between 0 to 5 (optional, default `3`)
-
-### warn
-
-Log a warning to a file
-
-**Parameters**
-
--   `message` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A log message
-
-### err
-
-Log an error to a file
-
-**Parameters**
-
--   `message` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A log message
-
-### verbose
-
-Log a verbose message to a file
-
-**Parameters**
-
--   `message` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A log message
-
-### info
-
-Log an information to a file
-
-**Parameters**
-
--   `message` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A log message
-
-### debug
-
-Log a debug message to a file, with stacktrace
-
-**Parameters**
-
--   `message` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A log message
-
-## Service
-
-This class should not be implemented but only inherited.
-This class is used for services, start, stop, ...
-
-**Parameters**
-
--   `name`  
--   `threadsManager`   (optional, default `null`)
--   `mode`   (optional, default `SERVICE_MODE_CLASSIC`)
--   `command`   (optional, default `null`)
-
-### constructor
-
-Constructor
-
-**Parameters**
-
--   `name` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The service identifier
--   `threadsManager` **ThreadManager** The thread manager, mandatory if using SERVICE_MODE_THREADED mode service (optional, default `null`)
--   `mode` **int** The service running mode : SERVICE_MODE_CLASSIC, SERVICE_MODE_THREADED, SERVICE_MODE_EXTERNAL (optional, default `SERVICE_MODE_CLASSIC`)
--   `command` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The external service command to execute, in case of SERVICE_MODE_EXTERNAL (optional, default `null`)
-
-Returns **[Service](#service)** The instance
-
-### start
-
-Start the service
-
-### run
-
-Run function prototype threaded
-Should be overloaded by service
-
-**Parameters**
-
--   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A data passed as initial value
--   `send` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Send a message to parent process
-
-### threadCallback
-
-Retrieve data from process
-Should be overloaded by service
-
-**Parameters**
-
--   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A data passed as initial value
-
-### send
-
-Send data to sub process
-
-**Parameters**
-
--   `event` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An event
--   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A data (optional, default `null`)
-
-### startThreaded
-
-Internal
-Start in threaded mode (sub process)
-
-### stopThreaded
-
-Internal
-Stop in threaded mode (sub process)
-
-### startExternal
-
-Internal
-Start an external command
-
-### stopExternal
-
-Internal
-Stop an external command
-
-### stop
-
-Stop the service
-
-### restart
-
-Restart the service
-
-### status
-
-Return the service status
-
-Returns **int** STOPPED or RUNNING
-
-### register
-
-Register service callback
-
-**Parameters**
-
--   `delegate` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The service delegate
-
-### unregister
-
-Unregister service callback
-
-**Parameters**
-
--   `delegate` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The service delegate
-
-### setThreadsManager
-
-Set threads manager
-
-**Parameters**
-
--   `threadsManager` **ThreadsManagaer** A threads manager
 
 ## APIRequest
 
