@@ -141,12 +141,12 @@ function loaded(api) {
             });
 
             if (!process.env.TEST) {
-                const usbDetect = require("usb-detection");
+                /*const usbDetect = require("usb-detection");
                 usbDetect.on("change", () => {
                     setTimeout((self) => {
                         self.init();
                     }, 2000, this);
-                });
+                });*/
             }
 
         }
