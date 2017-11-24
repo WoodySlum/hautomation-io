@@ -10,8 +10,12 @@ const fs = require("fs-extra");
  */
 function loaded(api) {
     api.init();
-    api.installerAPI.register("0.0.0", ["x32", "x64"], "brew install python", false, false, true);
-    api.installerAPI.register("0.0.0", ["arm", "arm64"], "apt-get install -y python", true, true);
+    api.installerAPI.register("0.0.0", ["x32", "x64"], "brew install python3 python3-pip", false, false, true);
+    api.installerAPI.register("0.0.0", ["x32", "x64"], "pip3 install python-dateutil", false, false, true);
+
+    api.installerAPI.register("0.0.0", ["arm", "arm64"], "apt-get install -y python3 python3-pip", true, true);
+    api.installerAPI.register("0.0.0", ["arm", "arm64"], "pip3 install python-dateutil", true, true);
+
 
     /**
      * Linky form sensor
@@ -114,7 +118,7 @@ function loaded(api) {
 
                 api.timeEventAPI.register((self) => {
                     if (configuration && configuration.username && configuration.password) {
-                        self.api.installerAPI.executeCommand("python " + dir + "linky_start.py --username '" + configuration.username + "' --password '" + configuration.password + "'", false, (error, stdout) => {
+                        self.api.installerAPI.executeCommand("python3 " + dir + "linky_start.py --username '" + configuration.username + "' --password '" + configuration.password + "'", false, (error, stdout) => {
                             if (error) {
                                 self.api.exported.Logger.err(error.message);
                             } else {

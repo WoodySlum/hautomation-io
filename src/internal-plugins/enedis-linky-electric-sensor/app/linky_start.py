@@ -24,6 +24,8 @@ import os
 import datetime
 import argparse
 import logging
+logging.getLogger('urllib3.connectionpool').setLevel(logging.ERROR)
+logging.getLogger('requests.packages.urllib3.connectionpool').setLevel(logging.ERROR)
 import sys
 import locale
 from dateutil.relativedelta import relativedelta
