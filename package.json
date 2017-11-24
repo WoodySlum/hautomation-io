@@ -52,7 +52,7 @@
   "license": "ISC",
   "devDependencies": {
     "chai": "^3.5",
-    "documentation": "^4.0.0",
+    "documentation": "^5",
     "eslint": "^3.19",
     "eslint-plugin-jsdoc": "^3.1.2",
     "eslint-plugin-mocha": "^4.11.0",
