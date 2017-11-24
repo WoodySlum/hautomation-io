@@ -121,6 +121,9 @@ class DashboardManager {
      * @returns {Object} A dashboard object
      */
     buildDashboard(username, allTiles = true) {
+        this.tiles.sort(function(a, b) {
+            return parseFloat(a.order) - parseFloat(b.order);
+        });
         return {
             timestamp:this.lastGenerated,
             timestampFormatted: DateUtils.class.dateFormatted(this.translateManager.t("datetime.format"), this.lastGenerated),
