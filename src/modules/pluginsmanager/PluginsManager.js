@@ -34,9 +34,26 @@ const INTERNAL_PLUGINS = [
     "humidity-sensor",
     "throughput-sensor",
     "pressure-sensor",
+    "wind-sensor",
     "esp-temperature-sensor",
+    "esp-humidity-sensor",
     "message-provider",
-    "prowl"
+    "prowl",
+    "camera",
+    "sumpple",
+    "presence-sensor",
+    "radio-presence-sensor",
+    "openweather",
+    "openweather-temperature-sensor",
+    "openweather-humidity-sensor",
+    "openweather-pressure-sensor",
+    "openweather-wind-sensor",
+    "esp8266",
+    "esp8266-dht22",
+    "trash-reminder",
+    "sms",
+    "electric-sensor",
+    "enedis-linky-electric-sensor"
 ];
 
 /**
@@ -62,9 +79,16 @@ class PluginsManager {
      * @param {InstallationManager} installationManager  The installation manager
      * @param {UserManager} userManager  The user manager
      * @param {MessageManager} messageManager  The message manager
+     * @param  {ScenarioManager} scenarioManager The scenario manager
+     * @param  {AlarmManager} alarmManager The alarm manager
+     * @param  {CamerasManager} camerasManager The cameras manager
+     * @param  {RadioManager} radioManager The radio manager
+     * @param  {Object} appConfiguration The global configuration
+     * @param  {EnvironmentManager} environmentManager The environment manager
+     * @param  {IotManager} iotManager The IoT manager
      * @returns {PluginsManager} The instance
      */
-    constructor(confManager, webServices, servicesManager, dbManager, translateManager, formManager, timeEventService, schedulerService, dashboardManager, eventBus, themeManager, sensorsManager, installationManager, userManager, messageManager) {
+    constructor(confManager, webServices, servicesManager, dbManager, translateManager, formManager, timeEventService, schedulerService, dashboardManager, eventBus, themeManager, sensorsManager, installationManager, userManager, messageManager, scenarioManager, alarmManager, camerasManager, radioManager, appConfiguration, environmentManager, iotManager) {
         this.fs = fs;
         this.path = path;
         this.remi = remi;
@@ -83,6 +107,13 @@ class PluginsManager {
         this.installationManager = installationManager;
         this.userManager = userManager;
         this.messageManager = messageManager;
+        this.scenarioManager = scenarioManager;
+        this.alarmManager = alarmManager;
+        this.camerasManager = camerasManager;
+        this.radioManager = radioManager;
+        this.appConfiguration = appConfiguration;
+        this.environmentManager = environmentManager;
+        this.iotManager = iotManager;
 
         this.plugins = [];
         try {
@@ -180,19 +211,27 @@ class PluginsManager {
                 oldVersion,
                 p,
                 this.webServices,
+                this.appConfiguration,
                 this.servicesManager,
                 this.dbManager,
                 this.translateManager,
                 this.formManager,
                 this.confManager,
                 this.timeEventService,
-                this.SchedulerService,
+                this.schedulerService,
                 this.dashboardManager,
                 this.themeManager,
                 this.sensorsManager,
                 this.installationManager,
                 this.userManager,
-                this.messageManager
+                this.messageManager,
+                this.scenarioManager,
+                this.alarmManager,
+                this.camerasManager,
+                this.radioManager,
+                this.environmentManager,
+                this,
+                this.iotManager
             );
 
             initializedPlugins.push(pApi);
@@ -264,7 +303,11 @@ class PluginsManager {
                 // Reload exported
                 classes = plugin.exported;
             } catch(e) {
-                Logger.err("Plugin " + plugin.identifier + " crashed");
+                Logger.err("Plugin " + plugin.identifier + " crashed : " + e.message);
+                Logger.err(e.stack);
+                if (this.appConfiguration && this.appConfiguration.crashOnPluginError) {
+                    process.exit(1);
+                }
             }
         });
     }

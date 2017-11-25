@@ -6,7 +6,6 @@ var sinon = require("sinon");
 const HautomationCore = require("./../../../src/HautomationCore");
 const InstallationManager = require("./../../../src/modules/installationmanager/InstallationManager");
 const core = new HautomationCore.class();
-
 describe("InstallationManager", function() {
     before(() => {
 

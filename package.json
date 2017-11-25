@@ -1,90 +1,103 @@
 {
-  "name": "hautomation-core",
-  "version": "0.0.3",
-  "description": "Hautomation core module",
-  "main": "HautomationRunner.js",
-  "publishConfig": {
-    "registry": "http://honey.hd.free.fr:4873"
-  },
-  "engines": {
-    "node": ">=6.0"
-  },
-  "engineStrict": true,
-  "scripts": {
-    "dev": "nodemon --config .nodemon.json  HautomationRunner.js",
-    "start": "node HautomationRunner.js",
-    "pre-test": "rm -Rf /tmp/data && mkdir /tmp/data && cp -f ./data/config.json /tmp/data",
-    "test": "npm run pre-test && env TEST=1 NO_LOG=1 mocha --timeout 600000 --reporter progress $(find tests -name '*.tests.js')",
-    "test-ci": "npm run pre-test && env TEST=1 NO_LOG=1 istanbul cover _mocha -- --timeout 600000 --reporter mocha-junit-reporter $(find tests -name '*.tests.js')",
-    "coverage": "npm run pre-test && env TEST=1 NO_LOG=1 istanbul cover _mocha -- --timeout 600000 $(find tests -name '*.tests.js')",
-    "lint": "eslint ./src/ --ext .js",
-    "doc": "documentation build ./src/** -f md -o ./doc/DOCUMENTATION.md && documentation build ./src/modules/pluginsmanager/publicapis/** -f md -o ./doc/PUBLIC-APIS.md",
-    "pre-build": "npm run doc && rm -Rf ./build/* && mkdir -p ./build/plugins && mkdir -p ./build/doc && cp -R ./data ./build/ && cp ./doc/PLUGIN.md ./build/doc/ && cp ./doc/PUBLIC-APIS.md ./build/doc/ && cp -R ./scripts ./build/ && find ./node_modules -name '*.node' -exec cp -Rf {} ./build/ \\;",
-    "build": "npm run pre-build && pkg -o ./build/hautomation ."
-  },
-  "bin": "HautomationRunner.js",
-  "pkg": {
-    "scripts": [
-      "./src/**/*.js"
-    ],
-    "assets": [
-      "./src/internal-plugins/**/*.js",
-      "./node_modules/threads/lib/worker.node/slave.js",
-      "./**/*.json",
-      "./ui/**/*"
-    ]
-  },
-  "repository": {
-    "type": "git",
-    "url": "git@honey.hd.free.fr:hautomation/core-node.git"
-  },
-  "keywords": [
-    "hautomation",
-    "core"
-  ],
-  "author": "WoodySlum",
-  "license": "ISC",
-  "devDependencies": {
-    "chai": "^3.5",
-    "documentation": "^4.0.0",
-    "eslint": "^3.19",
-    "eslint-plugin-jsdoc": "^3.1.2",
-    "eslint-plugin-mocha": "^4.11.0",
-    "eslint-plugin-require-jsdoc": "^1.0",
-    "istanbul": "^1.1.0-alpha.1",
-    "mocha": "^3.5.0",
-    "mocha-junit-reporter": "^1.13",
-    "nodemon": "^1.11.0",
-    "pkg": "^3.0",
-    "sinon": "^2.4.1"
-  },
-  "dependencies": {
-    "annotation": "git+https://github.com/WoodySlum/node-annotation.git#master",
-    "body-parser": "^1.17",
-    "callsite": "^1.0.0",
-    "columnify": "^1.5",
-    "express": "^4.15",
-    "is-running": "^2.1.0",
-    "moment": "^2.18",
-    "moment-timezone": "^0.5",
-    "node-datetime": "^1.0.1",
-    "remi": "^2.0",
-    "remi-runner": "^1.1",
-    "serialport": "^4.0",
-    "sha256": "^0.2",
-    "sqlite3": "^3.1.8",
-    "stack-trace": "^0.0",
-    "threads": "git://github.com/WoodySlum/threads.js.git#master",
-    "toposort": "^1.0",
-    "gm": "^1.23",
-    "prowler": "^0.0",
-    "node-record-lpcm16": "^0.3",
-    "waveheader": "^0.0",
-    "node-witai-speech": "^1.0",
-    "node-wit": "^4.3",
-    "underscore": "^1.8",
-    "audiohub": "^0.1",
-    "say": "^0.11",
-    "lame": "^1.2"
-  }
+    "name": "hautomation-core",
+    "version": "0.0.3",
+    "description": "Hautomation core module",
+    "main": "HautomationRunner.js",
+    "publishConfig": {
+        "registry": "http://honey.hd.free.fr:4873"
+    },
+    "engines": {
+        "node": ">=6.0"
+    },
+    "engineStrict": true,
+    "scripts": {
+        "dev": "nodemon --config .nodemon.json  HautomationRunner.js",
+        "start": "node HautomationRunner.js",
+        "pre-test": "rm -Rf /tmp/data && mkdir /tmp/data && cp -f ./data/config.json /tmp/data",
+        "test": "npm run pre-test && env TEST=1 NO_LOG=1 mocha --timeout 600000 --reporter progress $(find tests -name '*.tests.js')",
+        "test-ci": "npm run pre-test && env TEST=1 NO_LOG=1 istanbul cover _mocha -- --timeout 600000 --reporter mocha-junit-reporter $(find tests -name '*.tests.js')",
+        "coverage": "npm run pre-test && env TEST=1 NO_LOG=1 istanbul cover _mocha -- --timeout 600000 $(find tests -name '*.tests.js')",
+        "lint": "eslint ./src/ --ext .js",
+        "doc": "documentation build ./src/** -f md -o ./doc/DOCUMENTATION.md && documentation build ./src/modules/pluginsmanager/publicapis/** -f md -o ./doc/PUBLIC-APIS.md",
+        "pre-build": "npm run doc && rm -Rf ./build/* && mkdir -p ./build/plugins && mkdir -p ./build/doc && cp -R ./data ./build/ && cp ./doc/PLUGIN.md ./build/doc/ && cp ./doc/PUBLIC-APIS.md ./build/doc/ && cp -R ./scripts ./build/ && find ./node_modules -name '*.node' -exec cp -Rf {} ./build/ \\;",
+        "build": "npm run pre-build && pkg -o ./build/hautomation ."
+    },
+    "bin": "HautomationRunner.js",
+    "pkg": {
+        "scripts": [
+                    "./src/**/*.js"
+                    ],
+        "assets": [
+                   "./src/internal-plugins/**/*.js",
+                   "./node_modules/threads/lib/worker.node/slave.js",
+                   "./**/*.json",
+                   "./ui/**/*",
+                   "./src/**/*.c",
+                   "./src/**/*.cpp",
+                   "./src/**/*.h",
+                   "./src/**/lib/",
+                   "./src/**/global_lib/",
+                   "./**/*.py"
+                   ]
+    },
+    "repository": {
+        "type": "git",
+        "url": "git@honey.hd.free.fr:hautomation/core-node.git"
+    },
+    "keywords": [
+                 "hautomation",
+                 "core"
+                 ],
+    "author": "WoodySlum",
+    "license": "ISC",
+    "devDependencies": {
+        "chai": "^3.5",
+        "documentation": "^5",
+        "eslint": "^3.19",
+        "eslint-plugin-jsdoc": "^3.1.2",
+        "eslint-plugin-mocha": "^4.11.0",
+        "eslint-plugin-require-jsdoc": "^1.0",
+        "istanbul": "^1.0.0-alpha.2",
+        "mocha": "^3.5.0",
+        "mocha-junit-reporter": "^1.13",
+        "nodemon": "^1.11.0",
+        "pkg": "^4.0",
+        "sinon": "^2.4.1"
+    },
+    "dependencies": {
+        "annotation": "git+https://github.com/WoodySlum/node-annotation.git#master",
+        "body-parser": "^1.17",
+        "callsite": "^1.0.0",
+        "columnify": "^1.5",
+        "compression": "^1.7",
+        "express": "^4.15",
+        "fs-extra": "^4.0",
+        "gm": "^1.23",
+        "is-running": "^2.1.0",
+        "md5-file": "^3.2",
+        "mjpeg-proxy": "^0.2",
+        "moment": "^2.18",
+        "moment-timezone": "^0.5",
+        "node-datetime": "^1.0.1",
+        "prowler": "^0.0",
+        "remi": "^2.0",
+        "remi-runner": "^1.1",
+        "serialport": "^5.0",
+        "sha256": "^0.2",
+        "sqlite3": "^3.1.8",
+        "stack-trace": "^0.0",
+        "threads": "git://github.com/WoodySlum/threads.js.git#master",
+        "toposort": "^1.0",
+        "usb-detection": "^1.4",
+        "xml2js": "^0.4",
+        "node-record-lpcm16": "^0.3",
+        "waveheader": "^0.0",
+        "node-witai-speech": "^1.0",
+        "node-wit": "^4.3",
+        "underscore": "^1.8",
+        "audiohub": "^0.1",
+        "say": "^0.11",
+        "lame": "^1.2",
+        "snowboy": "^1.2"
+    }
 }

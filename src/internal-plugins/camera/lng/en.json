@@ -1,0 +1,8 @@
+{
+    "camera.name": "Name",
+    "camera.default": "Default camera",
+    "camera.form.ip": "IP Address",
+    "camera.form.port": "Port",
+    "camera.form.username": "Username",
+    "camera.form.password": "Password"
+}

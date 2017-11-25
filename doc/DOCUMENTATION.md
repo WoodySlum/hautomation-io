@@ -3,14 +3,12 @@
 ### Table of Contents
 
 -   [IconForm](#iconform)
-    -   [constructor](#constructor)
     -   [icon](#icon)
     -   [json](#json)
     -   [getIcons](#geticons)
+    -   [getIconsLabels](#geticonslabels)
 -   [IconFormManager](#iconformmanager)
-    -   [constructor](#constructor-1)
 -   [HautomationCore](#hautomationcore)
-    -   [constructor](#constructor-2)
     -   [restart](#restart)
     -   [start](#start)
     -   [stop](#stop)
@@ -26,36 +24,129 @@
 -   [loaded](#loaded-8)
 -   [loaded](#loaded-9)
 -   [loaded](#loaded-10)
--   [EspTemperatureSensorForm](#esptemperaturesensorform)
+-   [loaded](#loaded-11)
+-   [loaded](#loaded-12)
+-   [loaded](#loaded-13)
+-   [loaded](#loaded-14)
+-   [loaded](#loaded-15)
+-   [loaded](#loaded-16)
+-   [loaded](#loaded-17)
+-   [loaded](#loaded-18)
+-   [loaded](#loaded-19)
+-   [loaded](#loaded-20)
+-   [loaded](#loaded-21)
+-   [loaded](#loaded-22)
+-   [loaded](#loaded-23)
+-   [loaded](#loaded-24)
+-   [loaded](#loaded-25)
+-   [loaded](#loaded-26)
+-   [loaded](#loaded-27)
+-   [loaded](#loaded-28)
+-   [CameraForm](#cameraform)
+    -   [name](#name)
+    -   [name](#name-1)
+    -   [ip](#ip)
+    -   [port](#port)
+    -   [username](#username)
+    -   [password](#password)
     -   [json](#json-1)
+-   [Camera](#camera)
+    -   [init](#init)
+    -   [mjpegSupport](#mjpegsupport)
+    -   [rtspSupport](#rtspsupport)
+    -   [moveSupport](#movesupport)
+    -   [generateUrlFromTemplate](#generateurlfromtemplate)
+    -   [moveLeft](#moveleft)
+    -   [moveRight](#moveright)
+    -   [moveUp](#moveup)
+    -   [moveDown](#movedown)
+-   [ElectricSensorForm](#electricsensorform)
+    -   [json](#json-2)
+-   [ElectricSensor](#electricsensor)
+-   [LinkySensorForm](#linkysensorform)
+    -   [username](#username-1)
+    -   [password](#password-1)
+    -   [json](#json-3)
+-   [LinkySensor](#linkysensor)
+    -   [updateTile](#updatetile)
+-   [EspHumiditySensorForm](#esphumiditysensorform)
+    -   [json](#json-4)
+-   [EspHumiditySensor](#esphumiditysensor)
+-   [EspTemperatureSensorForm](#esptemperaturesensorform)
+    -   [json](#json-5)
 -   [EspTemperatureSensor](#esptemperaturesensor)
-    -   [constructor](#constructor-3)
+-   [ESP8266Form](#esp8266form)
+    -   [ssid](#ssid)
+    -   [passphrase](#passphrase)
+    -   [json](#json-6)
+-   [Esp8266](#esp8266)
+    -   [constants](#constants)
+    -   [generateOptions](#generateoptions)
     -   [processAPI](#processapi)
 -   [HumiditySensorForm](#humiditysensorform)
-    -   [constructor](#constructor-4)
-    -   [json](#json-2)
+    -   [json](#json-7)
 -   [HumiditySensor](#humiditysensor)
-    -   [constructor](#constructor-5)
 -   [MessageProvider](#messageprovider)
-    -   [constructor](#constructor-6)
     -   [onMessageReceived](#onmessagereceived)
 -   [text](#text)
 -   [number](#number)
 -   [myParameter](#myparameter)
+-   [OpenweatherHumiditySensorForm](#openweatherhumiditysensorform)
+    -   [json](#json-8)
+-   [OpenweatherHumiditySensor](#openweatherhumiditysensor)
+-   [OpenweatherPressureSensorForm](#openweatherpressuresensorform)
+    -   [json](#json-9)
+-   [OpenweatherPressureSensor](#openweatherpressuresensor)
+-   [OpenweatherTemperatureSensorForm](#openweathertemperaturesensorform)
+    -   [json](#json-10)
+-   [OpenweatherTemperatureSensor](#openweathertemperaturesensor)
+-   [OpenweatherWindSensorForm](#openweatherwindsensorform)
+    -   [json](#json-11)
+-   [OpenweatherWindSensor](#openweatherwindsensor)
+-   [OpenWeatherDb](#openweatherdb)
+-   [weatherId](#weatherid)
+-   [weatherName](#weathername)
+-   [weatherIcon](#weathericon)
+-   [visibility](#visibility)
+-   [temperature](#temperature)
+-   [pressure](#pressure)
+-   [humidity](#humidity)
+-   [windSpeed](#windspeed)
+-   [windDirection](#winddirection)
+-   [sunrise](#sunrise)
+-   [sunset](#sunset)
+-   [OpenWeatherForm](#openweatherform)
+    -   [apiKey](#apikey)
+    -   [autoDayNight](#autodaynight)
+    -   [weatherTile](#weathertile)
+    -   [rainForecastTileMode](#rainforecasttilemode)
+    -   [json](#json-12)
+-   [OpenWeather](#openweather)
+    -   [register](#register)
+    -   [unregister](#unregister)
+    -   [prepareUrl](#prepareurl)
+    -   [getWeather](#getweather)
+    -   [getWeatherForecast](#getweatherforecast)
+    -   [weatherIcon](#weathericon-1)
+    -   [registerWeatherTile](#registerweathertile)
+    -   [forecastProcessing](#forecastprocessing)
+    -   [registerRainForecastTile](#registerrainforecasttile)
+-   [PresenceSensorForm](#presencesensorform)
+    -   [json](#json-13)
+-   [PresenceSensor](#presencesensor)
 -   [PressureSensorForm](#pressuresensorform)
-    -   [constructor](#constructor-7)
-    -   [json](#json-3)
+    -   [json](#json-14)
 -   [PressureSensor](#pressuresensor)
-    -   [constructor](#constructor-8)
 -   [ProwlForm](#prowlform)
-    -   [constructor](#constructor-9)
     -   [prowlApiKey](#prowlapikey)
-    -   [json](#json-4)
+    -   [json](#json-15)
 -   [Prowl](#prowl)
-    -   [constructor](#constructor-10)
     -   [sendMessage](#sendmessage)
+-   [RadioPresenceSensorForm](#radiopresencesensorform)
+    -   [radio](#radio)
+    -   [json](#json-16)
+-   [RadioPresenceSensor](#radiopresencesensor)
 -   [DbRadio](#dbradio)
-    -   [constructor](#constructor-11)
 -   [module](#module)
 -   [frequency](#frequency)
 -   [protocol](#protocol)
@@ -64,25 +155,33 @@
 -   [value](#value)
 -   [value](#value-1)
 -   [status](#status)
--   [Radio](#radio)
-    -   [constructor](#constructor-12)
+-   [Radio](#radio-1)
     -   [getProtocolList](#getprotocollist)
+    -   [getLastReceivedRadioInformations](#getlastreceivedradioinformations)
     -   [processAPI](#processapi-1)
     -   [defaultFrequency](#defaultfrequency)
     -   [emit](#emit)
     -   [onRadioEvent](#onradioevent)
-    -   [constants](#constants)
-    -   [register](#register)
-    -   [unregister](#unregister)
+    -   [constants](#constants-1)
+    -   [register](#register-1)
+    -   [unregister](#unregister-1)
+-   [RFlinkForm](#rflinkform)
+    -   [port](#port-1)
+    -   [json](#json-17)
+    -   [getPorts](#getports)
 -   [RFLink](#rflink)
-    -   [constructor](#constructor-13)
     -   [rflinkStatusToRadioStatus](#rflinkstatustoradiostatus)
     -   [radioStatusToRflinkStatus](#radiostatustorflinkstatus)
     -   [formatRadioObjectBeforeSending](#formatradioobjectbeforesending)
     -   [onRflinkReceive](#onrflinkreceive)
+    -   [onRflinkVersion](#onrflinkversion)
+    -   [onDetectedPortsReceive](#ondetectedportsreceive)
     -   [emit](#emit-1)
+    -   [getProtocolList](#getprotocollist-1)
+    -   [reboot](#reboot)
+    -   [upgrade](#upgrade)
 -   [RFLinkService](#rflinkservice)
-    -   [constructor](#constructor-14)
+    -   [start](#start-1)
     -   [run](#run)
     -   [threadCallback](#threadcallback)
 -   [xo](#xo)
@@ -90,64 +189,143 @@
     -   [processAPI](#processapi-2)
     -   [test](#test)
 -   [DbSensor](#dbsensor)
-    -   [constructor](#constructor-15)
 -   [sensorId](#sensorid)
 -   [vcc](#vcc)
 -   [SensorForm](#sensorform)
-    -   [constructor](#constructor-16)
-    -   [name](#name)
+    -   [name](#name-2)
     -   [dashboard](#dashboard)
     -   [statistics](#statistics)
     -   [dashboardColor](#dashboardcolor)
     -   [statisticsColor](#statisticscolor)
-    -   [json](#json-5)
+    -   [json](#json-18)
 -   [Sensor](#sensor)
-    -   [constructor](#constructor-17)
-    -   [init](#init)
+    -   [init](#init-1)
     -   [addUnitAggregation](#addunitaggregation)
     -   [aggregateUnit](#aggregateunit)
     -   [convertValue](#convertvalue)
     -   [lastObject](#lastobject)
-    -   [updateTile](#updatetile)
+    -   [updateTile](#updatetile-1)
     -   [setValue](#setvalue)
     -   [roundTimestamp](#roundtimestamp)
     -   [getStatistics](#getstatistics)
-    -   [constants](#constants-1)
+    -   [getIotIdentifier](#getiotidentifier)
+    -   [constants](#constants-2)
+-   [SMSForm](#smsform)
+    -   [port](#port-2)
+    -   [json](#json-19)
+    -   [getPorts](#getports-1)
+    -   [getPortsLabels](#getportslabels)
+-   [SMSUserForm](#smsuserform)
+    -   [phoneNumber](#phonenumber)
+    -   [json](#json-20)
+-   [SMS](#sms)
+    -   [init](#init-2)
+    -   [getAvailableDevices](#getavailabledevices)
+    -   [generateGammuConfig](#generategammuconfig)
+    -   [generateGammuReceiveSh](#generategammureceivesh)
+    -   [sendSMS](#sendsms)
+    -   [sendMessage](#sendmessage-1)
+    -   [processAPI](#processapi-3)
+-   [SMSService](#smsservice)
+-   [SumppleCameraForm](#sumpplecameraform)
+    -   [json](#json-21)
+-   [Sumpple](#sumpple)
 -   [TemperatureSensorForm](#temperaturesensorform)
-    -   [constructor](#constructor-18)
     -   [unit](#unit)
-    -   [json](#json-6)
+    -   [json](#json-22)
 -   [TemperatureSensor](#temperaturesensor)
-    -   [constructor](#constructor-19)
     -   [setUnit](#setunit)
 -   [ThroughputSensorForm](#throughputsensorform)
-    -   [constructor](#constructor-20)
-    -   [json](#json-7)
+    -   [json](#json-23)
 -   [ThroughputSensor](#throughputsensor)
-    -   [constructor](#constructor-21)
+-   [TrashReminderSubform](#trashremindersubform)
+    -   [day](#day)
+    -   [weekMode](#weekmode)
+    -   [name](#name-3)
+    -   [json](#json-24)
+-   [TrashReminderForm](#trashreminderform)
+    -   [reminders](#reminders)
+    -   [json](#json-25)
+-   [TrashReminders](#trashreminders)
+-   [WindSensorForm](#windsensorform)
+    -   [unit](#unit-1)
+    -   [json](#json-26)
+-   [WindSensor](#windsensor)
+    -   [setUnit](#setunit-1)
 -   [Logger](#logger)
+    -   [setLogLevel](#setloglevel)
     -   [log](#log)
     -   [warn](#warn)
     -   [err](#err)
     -   [verbose](#verbose)
     -   [info](#info)
     -   [debug](#debug)
--   [Alarm](#alarm)
-    -   [constructor](#constructor-22)
-    -   [json](#json-8)
+-   [AlarmForm](#alarmform)
+    -   [enabled](#enabled)
+    -   [armed](#armed)
+    -   [userLocationTrigger](#userlocationtrigger)
+    -   [userLocationTrigger](#userlocationtrigger-1)
+    -   [sensors](#sensors)
+    -   [devicesOnEnable](#devicesonenable)
+    -   [devicesOnDisable](#devicesondisable)
+    -   [json](#json-27)
 -   [AlarmManager](#alarmmanager)
-    -   [constructor](#constructor-23)
-    -   [setAlarm](#setalarm)
-    -   [processAPI](#processapi-3)
+    -   [sensorReadyForTriggering](#sensorreadyfortriggering)
+    -   [registerTile](#registertile)
+    -   [alarmStatus](#alarmstatus)
+    -   [armAlarm](#armalarm)
+    -   [armCancel](#armcancel)
+    -   [enableAlarm](#enablealarm)
+    -   [disableAlarm](#disablealarm)
+    -   [triggerAlarm](#triggeralarm)
+    -   [stopAlarm](#stopalarm)
+    -   [processAPI](#processapi-4)
+-   [AlarmSensorsForm](#alarmsensorsform)
+    -   [sensor](#sensor-1)
+    -   [triggerAlarm](#triggeralarm-1)
+    -   [captureVideo](#capturevideo)
+    -   [json](#json-28)
 -   [Authentication](#authentication)
-    -   [constructor](#constructor-24)
+    -   [checkLocalIp](#checklocalip)
 -   [AuthenticationData](#authenticationdata)
-    -   [constructor](#constructor-25)
     -   [authorized](#authorized)
-    -   [username](#username)
+    -   [username](#username-2)
     -   [level](#level)
+-   [CamerasForm](#camerasform)
+    -   [cameraId](#cameraid)
+    -   [json](#json-29)
+    -   [getCameraIds](#getcameraids)
+    -   [getCameraNames](#getcameranames)
+-   [CamerasListForm](#cameraslistform)
+    -   [identifier](#identifier)
+    -   [json](#json-30)
+    -   [getCamerasName](#getcamerasname)
+    -   [getCamerasId](#getcamerasid)
+-   [CamerasManager](#camerasmanager)
+    -   [pluginsLoaded](#pluginsloaded)
+    -   [archiveCameras](#archivecameras)
+    -   [initCameras](#initcameras)
+    -   [initCamera](#initcamera)
+    -   [getAllCameras](#getallcameras)
+    -   [registerTile](#registertile-1)
+    -   [processAPI](#processapi-5)
+    -   [comparator](#comparator)
+    -   [getCameraConfiguration](#getcameraconfiguration)
+    -   [registerCamerasListForm](#registercameraslistform)
+    -   [getCamerasList](#getcameraslist)
+    -   [getCamera](#getcamera)
+    -   [getDefaultCamera](#getdefaultcamera)
+    -   [getImage](#getimage)
+    -   [timelapseStatus](#timelapsestatus)
+    -   [dailyFilepath](#dailyfilepath)
+    -   [generateDailyTimeLapses](#generatedailytimelapses)
+    -   [generateTimelapse](#generatetimelapse)
+    -   [record](#record)
+-   [TimelapseGenerator](#timelapsegenerator)
+    -   [generateTimelapse](#generatetimelapse-1)
+    -   [pad](#pad)
+    -   [prepareFiles](#preparefiles)
 -   [ConfManager](#confmanager)
-    -   [constructor](#constructor-26)
     -   [appConfiguration](#appconfiguration)
     -   [fs](#fs)
     -   [getFilePath](#getfilepath)
@@ -160,16 +338,14 @@
     -   [setData](#setdata)
     -   [removeData](#removedata)
 -   [DashboardManager](#dashboardmanager)
-    -   [constructor](#constructor-27)
-    -   [registerTile](#registertile)
+    -   [registerTile](#registertile-2)
     -   [unregisterTile](#unregistertile)
+    -   [filterTiles](#filtertiles)
     -   [buildDashboard](#builddashboard)
-    -   [processAPI](#processapi-4)
+    -   [processAPI](#processapi-6)
 -   [Tile](#tile)
-    -   [constructor](#constructor-28)
     -   [get](#get)
 -   [DbHelper](#dbhelper)
-    -   [constructor](#constructor-29)
     -   [RequestBuilder](#requestbuilder)
     -   [Operators](#operators)
     -   [getFieldsForTable](#getfieldsfortable)
@@ -180,7 +356,6 @@
     -   [delObject](#delobject)
     -   [delObjects](#delobjects)
 -   [DbManager](#dbmanager)
-    -   [constructor](#constructor-30)
     -   [close](#close)
     -   [getFieldsForTable](#getfieldsfortable-1)
     -   [numberVersion](#numberversion)
@@ -195,12 +370,10 @@
     -   [delObject](#delobject-1)
     -   [delObjects](#delobjects-1)
 -   [DbObject](#dbobject)
-    -   [constructor](#constructor-31)
     -   [base](#base)
     -   [save](#save)
     -   [del](#del)
 -   [DbRequestBuilder](#dbrequestbuilder)
-    -   [constructor](#constructor-32)
     -   [removeLastComma](#removelastcomma)
     -   [escapeString](#escapestring)
     -   [getValueEncapsulated](#getvalueencapsulated)
@@ -230,34 +403,67 @@
     -   [tableName](#tablename)
     -   [toSchema](#toschema)
 -   [DeviceForm](#deviceform)
-    -   [constructor](#constructor-33)
-    -   [name](#name-1)
+    -   [name](#name-4)
     -   [excludeFromAll](#excludefromall)
     -   [visible](#visible)
     -   [worksOnlyOnDayNight](#worksonlyondaynight)
     -   [icon](#icon-1)
-    -   [radio](#radio-1)
+    -   [radio](#radio-2)
     -   [status](#status-1)
-    -   [json](#json-9)
+    -   [json](#json-31)
 -   [DeviceManager](#devicemanager)
-    -   [constructor](#constructor-34)
+    -   [triggerScenario](#triggerscenario)
+    -   [registerDeviceListForm](#registerdevicelistform)
     -   [registerDeviceTiles](#registerdevicetiles)
     -   [registerDeviceTile](#registerdevicetile)
     -   [switchDevice](#switchdevice)
-    -   [processAPI](#processapi-5)
+    -   [switchAll](#switchall)
+    -   [processAPI](#processapi-7)
+-   [DevicesListForm](#deviceslistform)
+    -   [identifier](#identifier-1)
+    -   [status](#status-2)
+    -   [json](#json-32)
+    -   [getDevicesName](#getdevicesname)
+    -   [getDevicesId](#getdevicesid)
+-   [DevicesListScenarioForm](#deviceslistscenarioform)
+    -   [turnOnAll](#turnonall)
+    -   [turnOffAll](#turnoffall)
+    -   [devices](#devices)
+    -   [json](#json-33)
+-   [DayNightScenarioForm](#daynightscenarioform)
+    -   [day](#day-1)
+    -   [night](#night)
+    -   [json](#json-34)
+-   [EnvironmentForm](#environmentform)
+    -   [day](#day-2)
+    -   [json](#json-35)
+-   [EnvironmentManager](#environmentmanager)
+    -   [registerDayNightNotifications](#registerdaynightnotifications)
+    -   [unregisterDayNightNotifications](#unregisterdaynightnotifications)
+    -   [registerTile](#registertile-3)
+    -   [getCoordinates](#getcoordinates)
+    -   [dispatchDayNightChange](#dispatchdaynightchange)
+    -   [setDay](#setday)
+    -   [setNight](#setnight)
+    -   [isNight](#isnight)
+    -   [getLocalPort](#getlocalport)
+    -   [getLocalIp](#getlocalip)
+    -   [getMacAddress](#getmacaddress)
+    -   [getLocalAPIUrl](#getlocalapiurl)
 -   [FormConfiguration](#formconfiguration)
-    -   [constructor](#constructor-35)
+    -   [setUpdateCb](#setupdatecb)
     -   [addAdditionalFields](#addadditionalfields)
     -   [loadConfig](#loadconfig)
     -   [saveConfig](#saveconfig)
-    -   [comparator](#comparator)
+    -   [save](#save-2)
+    -   [comparator](#comparator-1)
     -   [registerForm](#registerform)
-    -   [processAPI](#processapi-6)
+    -   [processAPI](#processapi-8)
+    -   [getDataCopy](#getdatacopy)
     -   [getConfig](#getconfig)
     -   [getForm](#getform)
 -   [FormManager](#formmanager)
-    -   [constructor](#constructor-36)
-    -   [register](#register-1)
+    -   [register](#register-2)
     -   [registerWithAdditionalFields](#registerwithadditionalfields)
     -   [addAdditionalFields](#addadditionalfields-1)
     -   [sanitize](#sanitize)
@@ -267,19 +473,41 @@
     -   [getForm](#getform-1)
     -   [generateForm](#generateform)
 -   [FormObject](#formobject)
-    -   [constructor](#constructor-37)
-    -   [json](#json-10)
+    -   [json](#json-36)
 -   [id](#id)
+-   [GatewayManager](#gatewaymanager)
+    -   [getHautomationId](#gethautomationid)
+    -   [transmit](#transmit)
 -   [InstallationManager](#installationmanager)
-    -   [constructor](#constructor-38)
-    -   [register](#register-2)
+    -   [register](#register-3)
     -   [executeCommand](#executecommand)
     -   [execute](#execute)
     -   [isAlreadyExecuted](#isalreadyexecuted)
     -   [isValidForArchitecture](#isvalidforarchitecture)
     -   [restart](#restart-1)
+-   [IotForm](#iotform)
+    -   [iotApp](#iotapp)
+    -   [name](#name-5)
+    -   [json](#json-37)
+-   [IotManager](#iotmanager)
+    -   [registerIotsListForm](#registeriotslistform)
+    -   [registerLib](#registerlib)
+    -   [constants](#constants-3)
+    -   [registerApp](#registerapp)
+    -   [build](#build)
+    -   [writeDescriptor](#writedescriptor)
+    -   [iotAppExists](#iotappexists)
+    -   [getVersion](#getversion)
+    -   [getIotApp](#getiotapp)
+    -   [getIot](#getiot)
+    -   [processAPI](#processapi-9)
+    -   [comparator](#comparator-2)
+-   [IotsListForm](#iotslistform)
+    -   [identifier](#identifier-2)
+    -   [json](#json-38)
+    -   [getIotsName](#getiotsname)
+    -   [getIotsId](#getiotsid)
 -   [DbMessage](#dbmessage)
-    -   [constructor](#constructor-39)
 -   [recipient](#recipient)
 -   [sender](#sender)
 -   [message](#message)
@@ -288,23 +516,21 @@
 -   [picture](#picture)
 -   [received](#received)
 -   [MessageManager](#messagemanager)
-    -   [constructor](#constructor-40)
-    -   [register](#register-3)
-    -   [unregister](#unregister-1)
-    -   [sendMessage](#sendmessage-1)
+    -   [register](#register-4)
+    -   [unregister](#unregister-2)
+    -   [sendMessage](#sendmessage-2)
     -   [onMessageReceived](#onmessagereceived-1)
     -   [getMessages](#getmessages)
     -   [getLastTimestamp](#getlasttimestamp)
-    -   [processAPI](#processapi-7)
+    -   [processAPI](#processapi-10)
 -   [PluginsAPI](#pluginsapi)
     -   [exportClass](#exportclass)
-    -   [init](#init-1)
+    -   [init](#init-3)
     -   [registerInstance](#registerinstance)
+    -   [getPluginInstance](#getplugininstance)
 -   [PluginConf](#pluginconf)
-    -   [constructor](#constructor-41)
-    -   [json](#json-11)
+    -   [json](#json-39)
 -   [PluginsManager](#pluginsmanager)
-    -   [constructor](#constructor-42)
     -   [getPluginsFromDirectory](#getpluginsfromdirectory)
     -   [checkPluginSanity](#checkpluginsanity)
     -   [initPlugins](#initplugins)
@@ -315,111 +541,194 @@
     -   [prepareToposortArray](#preparetoposortarray)
     -   [toposort](#toposort)
     -   [topsortedArrayConverter](#topsortedarrayconverter)
-    -   [processAPI](#processapi-8)
+    -   [processAPI](#processapi-11)
+-   [AlarmAPI](#alarmapi)
+    -   [alarmStatus](#alarmstatus-1)
+    -   [enableAlarm](#enablealarm-1)
+    -   [disableAlarm](#disablealarm-1)
+-   [CameraAPI](#cameraapi)
+    -   [registerForm](#registerform-1)
+    -   [registerClass](#registerclass)
+    -   [getCameras](#getcameras)
+    -   [getImage](#getimage-1)
+    -   [record](#record-1)
 -   [ConfigurationAPI](#configurationapi)
-    -   [register](#register-4)
+    -   [register](#register-5)
     -   [getConfiguration](#getconfiguration)
     -   [getForm](#getform-2)
+    -   [setUpdateCb](#setupdatecb-1)
 -   [DashboardAPI](#dashboardapi)
-    -   [registerTile](#registertile-1)
+    -   [registerTile](#registertile-4)
     -   [unregisterTile](#unregistertile-1)
     -   [Tile](#tile-1)
     -   [TileType](#tiletype)
 -   [DatabaseAPI](#databaseapi)
-    -   [register](#register-5)
-    -   [dbHelper](#dbhelper-1)
--   [InstallerAPI](#installerapi)
     -   [register](#register-6)
-    -   [executeCommand](#executecommand-1)
--   [MessageAPI](#messageapi)
-    -   [sendMessage](#sendmessage-2)
+    -   [dbHelper](#dbhelper-1)
+-   [EnvironmentAPI](#environmentapi)
+    -   [getCoordinates](#getcoordinates-1)
+    -   [setDay](#setday-1)
+    -   [setNight](#setnight-1)
+    -   [isNight](#isnight-1)
+    -   [registerDayNightNotifications](#registerdaynightnotifications-1)
+    -   [unregisterDayNightNotifications](#unregisterdaynightnotifications-1)
+    -   [getLocalAPIUrl](#getlocalapiurl-1)
+-   [InstallerAPI](#installerapi)
     -   [register](#register-7)
-    -   [unregister](#unregister-2)
-    -   [onMessageReceived](#onmessagereceived-2)
-    -   [getMessages](#getmessages-1)
--   [SchedulerAPI](#schedulerapi)
+    -   [executeCommand](#executecommand-1)
+-   [IotAPI](#iotapi)
+    -   [registerLib](#registerlib-1)
+    -   [registerApp](#registerapp-1)
+    -   [iotAppExists](#iotappexists-1)
+    -   [getVersion](#getversion-1)
+    -   [getIot](#getiot-1)
+    -   [build](#build-1)
+    -   [constants](#constants-4)
+-   [MessageAPI](#messageapi)
+    -   [sendMessage](#sendmessage-3)
     -   [register](#register-8)
     -   [unregister](#unregister-3)
+    -   [onMessageReceived](#onmessagereceived-2)
+    -   [getMessages](#getmessages-1)
+-   [RadioAPI](#radioapi)
+    -   [register](#register-9)
+    -   [unregister](#unregister-4)
+-   [ScenarioAPI](#scenarioapi)
+    -   [register](#register-10)
+    -   [unregister](#unregister-5)
+    -   [triggerScenario](#triggerscenario-1)
+    -   [getScenarios](#getscenarios)
+-   [SchedulerAPI](#schedulerapi)
+    -   [register](#register-11)
+    -   [unregister](#unregister-6)
     -   [schedule](#schedule)
-    -   [constants](#constants-2)
+    -   [cancel](#cancel)
+    -   [constants](#constants-5)
 -   [SensorAPI](#sensorapi)
-    -   [registerForm](#registerform-1)
-    -   [registerClass](#registerclass)
+    -   [registerForm](#registerform-2)
+    -   [registerClass](#registerclass-1)
     -   [registerSensorEvent](#registersensorevent)
     -   [unregisterSensorEvent](#unregistersensorevent)
     -   [getSensors](#getsensors)
     -   [getValue](#getvalue)
+    -   [getSensor](#getsensor)
+    -   [iotAppPowered](#iotapppowered)
 -   [ServicesManagerAPI](#servicesmanagerapi)
     -   [add](#add)
 -   [ThemeAPI](#themeapi)
     -   [getColors](#getcolors)
 -   [TimeEventAPI](#timeeventapi)
-    -   [register](#register-9)
-    -   [unregister](#unregister-4)
-    -   [constants](#constants-3)
+    -   [register](#register-12)
+    -   [unregister](#unregister-7)
+    -   [constants](#constants-6)
 -   [TranslateAPI](#translateapi)
     -   [load](#load-1)
     -   [t](#t)
 -   [UserAPI](#userapi)
     -   [addAdditionalFields](#addadditionalfields-2)
     -   [getUsers](#getusers)
+    -   [allUsersAtHome](#allusersathome)
+    -   [nobodyAtHome](#nobodyathome)
+    -   [somebodyAtHome](#somebodyathome)
+    -   [registerHomeNotifications](#registerhomenotifications)
+    -   [unregisterHomeNotifications](#unregisterhomenotifications)
 -   [WebAPI](#webapi)
-    -   [register](#register-10)
-    -   [unregister](#unregister-5)
+    -   [register](#register-13)
+    -   [unregister](#unregister-8)
     -   [Authentication](#authentication-1)
     -   [APIResponse](#apiresponse)
-    -   [constants](#constants-4)
+    -   [constants](#constants-7)
 -   [RadioForm](#radioform)
-    -   [constructor](#constructor-43)
     -   [module](#module-1)
     -   [protocol](#protocol-1)
     -   [deviceId](#deviceid-1)
     -   [switchId](#switchid-1)
-    -   [json](#json-12)
+    -   [json](#json-40)
     -   [getModules](#getmodules)
     -   [getProtocols](#getprotocols)
 -   [RadioManager](#radiomanager)
-    -   [constructor](#constructor-44)
-    -   [pluginsLoaded](#pluginsloaded)
+    -   [pluginsLoaded](#pluginsloaded-1)
+    -   [register](#register-14)
+    -   [unregister](#unregister-9)
     -   [registerRadioEvents](#registerradioevents)
     -   [unregisterRadioEvents](#unregisterradioevents)
     -   [onRadioEvent](#onradioevent-1)
     -   [getModules](#getmodules-1)
     -   [getProtocols](#getprotocols-1)
     -   [switchDevice](#switchdevice-1)
+    -   [getLastReceivedRadioInformations](#getlastreceivedradioinformations-1)
+    -   [processAPI](#processapi-12)
+-   [RadioScenarioForm](#radioscenarioform)
+    -   [radioForm](#radioform-1)
+    -   [status](#status-3)
+    -   [json](#json-41)
+-   [RadioScenariosForm](#radioscenariosform)
+    -   [radioScenariosForm](#radioscenariosform-1)
+    -   [json](#json-42)
+-   [ScenarioForm](#scenarioform)
+    -   [name](#name-6)
+    -   [enabled](#enabled-1)
+    -   [icon](#icon-2)
+    -   [timeTrigger](#timetrigger)
+    -   [subActions](#subactions)
+    -   [json](#json-43)
+-   [ScenarioManager](#scenariomanager)
+    -   [registerScenariosListForm](#registerscenarioslistform)
+    -   [generateKey](#generatekey)
+    -   [register](#register-15)
+    -   [unregister](#unregister-10)
+    -   [triggerScenario](#triggerscenario-2)
+    -   [getScenarios](#getscenarios-1)
+    -   [timeEventScenario](#timeeventscenario)
+-   [ScenariosListForm](#scenarioslistform)
+    -   [identifier](#identifier-3)
+    -   [json](#json-44)
+    -   [getScenariosName](#getscenariosname)
+    -   [getScenariosId](#getscenariosid)
+-   [ScenarioSubActionForm](#scenariosubactionform)
+    -   [scenario](#scenario)
+    -   [delay](#delay)
+    -   [json](#json-45)
+-   [TimeScenarioForm](#timescenarioform)
+    -   [day](#day-3)
+    -   [time](#time)
+    -   [json](#json-46)
 -   [SensorsForm](#sensorsform)
-    -   [constructor](#constructor-45)
     -   [sensorId](#sensorid-1)
-    -   [json](#json-13)
+    -   [json](#json-47)
     -   [getSensorIds](#getsensorids)
     -   [getSensorNames](#getsensornames)
+-   [SensorsListForm](#sensorslistform)
+    -   [identifier](#identifier-4)
+    -   [json](#json-48)
+    -   [getSensorsName](#getsensorsname)
+    -   [getSensorsId](#getsensorsid)
 -   [SensorsManager](#sensorsmanager)
-    -   [constructor](#constructor-46)
-    -   [pluginsLoaded](#pluginsloaded-1)
+    -   [pluginsLoaded](#pluginsloaded-2)
     -   [initSensors](#initsensors)
     -   [initSensor](#initsensor)
     -   [registerSensorEvent](#registersensorevent-1)
+    -   [getSensor](#getsensor-1)
     -   [unregisterSensorEvent](#unregistersensorevent-1)
     -   [getAllSensors](#getallsensors)
     -   [onNewSensorValue](#onnewsensorvalue)
     -   [getValue](#getvalue-1)
-    -   [processAPI](#processapi-9)
+    -   [processAPI](#processapi-13)
     -   [statisticsWsResponse](#statisticswsresponse)
-    -   [comparator](#comparator-1)
+    -   [comparator](#comparator-3)
+    -   [getSensorConfiguration](#getsensorconfiguration)
+    -   [registerSensorsListForm](#registersensorslistform)
 -   [ServicesManager](#servicesmanager)
-    -   [constructor](#constructor-47)
     -   [isServiceRegistered](#isserviceregistered)
     -   [add](#add-1)
     -   [remove](#remove-1)
-    -   [start](#start-1)
+    -   [start](#start-2)
     -   [stop](#stop-1)
     -   [restart](#restart-2)
     -   [getService](#getservice)
 -   [ThemeManager](#thememanager)
-    -   [constructor](#constructor-48)
     -   [getColors](#getcolors-1)
 -   [ThreadsManager](#threadsmanager)
-    -   [constructor](#constructor-49)
     -   [stringifyFunc](#stringifyfunc)
     -   [run](#run-1)
     -   [send](#send)
@@ -427,41 +736,47 @@
     -   [getPid](#getpid)
     -   [isRunning](#isrunning)
 -   [TranslateManager](#translatemanager)
-    -   [constructor](#constructor-50)
     -   [addTranslations](#addtranslations)
     -   [t](#t-1)
     -   [translateArray](#translatearray)
 -   [UserForm](#userform)
-    -   [constructor](#constructor-51)
-    -   [username](#username-1)
-    -   [password](#password)
+    -   [username](#username-3)
+    -   [password](#password-2)
     -   [level](#level-1)
-    -   [name](#name-2)
+    -   [name](#name-7)
     -   [picture](#picture-1)
     -   [atHome](#athome)
-    -   [json](#json-14)
+    -   [json](#json-49)
 -   [UserManager](#usermanager)
-    -   [constructor](#constructor-52)
-    -   [updateTile](#updatetile-1)
+    -   [updateTile](#updatetile-2)
     -   [getUsers](#getusers-1)
     -   [getUser](#getuser)
     -   [getAdminUser](#getadminuser)
+    -   [allUsersAtHome](#allusersathome-1)
+    -   [nobodyAtHome](#nobodyathome-1)
+    -   [somebodyAtHome](#somebodyathome-1)
+    -   [setUserZone](#setuserzone)
+    -   [registerHomeNotifications](#registerhomenotifications-1)
+    -   [unregisterHomeNotifications](#unregisterhomenotifications-1)
+    -   [processAPI](#processapi-14)
+-   [UserScenarioForm](#userscenarioform)
+    -   [mode](#mode)
+    -   [json](#json-50)
 -   [SchedulerDbObject](#schedulerdbobject)
-    -   [constructor](#constructor-53)
--   [identifier](#identifier)
+-   [identifier](#identifier-5)
 -   [data](#data)
 -   [triggerDate](#triggerdate)
+-   [triggered](#triggered)
 -   [SchedulerService](#schedulerservice)
-    -   [constructor](#constructor-54)
-    -   [start](#start-2)
+    -   [start](#start-3)
     -   [stop](#stop-2)
-    -   [register](#register-11)
-    -   [unregister](#unregister-6)
+    -   [register](#register-16)
+    -   [unregister](#unregister-11)
     -   [schedule](#schedule-1)
+    -   [cancel](#cancel-1)
     -   [timeEvent](#timeevent)
 -   [Service](#service)
-    -   [constructor](#constructor-55)
-    -   [start](#start-3)
+    -   [start](#start-4)
     -   [run](#run-2)
     -   [threadCallback](#threadcallback-1)
     -   [send](#send-1)
@@ -471,31 +786,28 @@
     -   [stopExternal](#stopexternal)
     -   [stop](#stop-3)
     -   [restart](#restart-3)
-    -   [status](#status-2)
-    -   [register](#register-12)
-    -   [unregister](#unregister-7)
+    -   [status](#status-4)
+    -   [register](#register-17)
+    -   [unregister](#unregister-12)
     -   [setThreadsManager](#setthreadsmanager)
 -   [TimeEventService](#timeeventservice)
-    -   [constructor](#constructor-56)
-    -   [start](#start-4)
+    -   [start](#start-5)
     -   [stop](#stop-4)
     -   [hash](#hash)
     -   [elementForHash](#elementforhash)
-    -   [register](#register-13)
-    -   [unregister](#unregister-8)
+    -   [register](#register-18)
+    -   [unregister](#unregister-13)
     -   [convertMode](#convertmode)
     -   [timeEvent](#timeevent-1)
 -   [APIRegistration](#apiregistration)
-    -   [constructor](#constructor-57)
     -   [delegate](#delegate)
     -   [method](#method)
     -   [route](#route)
     -   [authLevel](#authlevel)
     -   [isEqual](#isequal)
 -   [APIRequest](#apirequest)
-    -   [constructor](#constructor-58)
     -   [method](#method-1)
-    -   [ip](#ip)
+    -   [ip](#ip-1)
     -   [route](#route-1)
     -   [path](#path)
     -   [action](#action-1)
@@ -504,19 +816,17 @@
     -   [authenticationData](#authenticationdata-1)
     -   [addAuthenticationData](#addauthenticationdata)
 -   [APIResponse](#apiresponse-1)
-    -   [constructor](#constructor-59)
     -   [success](#success)
     -   [response](#response)
     -   [errorCode](#errorcode)
     -   [errorMessage](#errormessage)
 -   [WebServices](#webservices)
-    -   [constructor](#constructor-60)
-    -   [start](#start-5)
+    -   [start](#start-6)
     -   [stop](#stop-5)
     -   [registerInfos](#registerinfos)
-    -   [processAPI](#processapi-10)
-    -   [register](#register-14)
-    -   [unregister](#unregister-9)
+    -   [processAPI](#processapi-15)
+    -   [register](#register-19)
+    -   [unregister](#unregister-14)
     -   [registerAPI](#registerapi)
     -   [unregisterAPI](#unregisterapi)
     -   [manageResponse](#manageresponse)
@@ -525,6 +835,7 @@
     -   [sendAPIResponse](#sendapiresponse)
 -   [Cleaner](#cleaner)
     -   [exportConstants](#exportconstants)
+    -   [cleanDbObject](#cleandbobject)
 -   [Convert](#convert)
     -   [convertProperties](#convertproperties)
 -   [DateUtils](#dateutils)
@@ -533,6 +844,11 @@
     -   [dateToTimestamp](#datetotimestamp)
     -   [roundedTimestamp](#roundedtimestamp)
     -   [dateFormatted](#dateformatted)
+    -   [secondsElapsedSinceMidnight](#secondselapsedsincemidnight)
+-   [GeoUtils](#geoutils)
+    -   [isInZone](#isinzone)
+    -   [deg2rad](#deg2rad)
+    -   [getDistance](#getdistance)
 -   [Icons](#icons)
     -   [list](#list)
     -   [raw](#raw)
@@ -551,17 +867,6 @@ This class provides an icon select box form part
 
 -   `id`   (optional, default `null`)
 -   `icon`   (optional, default `null`)
-
-### constructor
-
-Constructor
-
-**Parameters**
-
--   `id` **[number](#number)** An identifier (optional, default `null`)
--   `icon` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An icon number (optional, default `null`)
-
-Returns **[IconForm](#iconform)** The instance
 
 ### icon
 
@@ -585,6 +890,16 @@ Form injection method
 
 Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of icons
 
+### getIconsLabels
+
+Form injection method
+
+**Parameters**
+
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The icons labels list array
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of icons labels
+
 ## IconFormManager
 
 This class allows to generate a form part with an icon select box
@@ -593,16 +908,6 @@ This class allows to generate a form part with an icon select box
 
 -   `formManager`  
 
-### constructor
-
-Constructor
-
-**Parameters**
-
--   `formManager` **[FormManager](#formmanager)** A form manager
-
-Returns **[IconFormManager](#iconformmanager)** The instance
-
 ## HautomationCore
 
 The main class for core.
@@ -610,16 +915,6 @@ The main class for core.
 **Parameters**
 
 -   `runnerEventBus`  
-
-### constructor
-
-Constructor
-
-**Parameters**
-
--   `runnerEventBus` **EventEmitter** Runner event bus, used for restart
-
-Returns **[HautomationCore](#hautomationcore)** The instance
 
 ### restart
 
@@ -679,6 +974,110 @@ Loaded function
 
 ## loaded
 
+Loaded function
+
+**Parameters**
+
+-   `api` **PluginAPI** The api
+
+## loaded
+
+Loaded function
+
+**Parameters**
+
+-   `api` **PluginAPI** The api
+
+## loaded
+
+Loaded function
+
+**Parameters**
+
+-   `api` **PluginAPI** The api
+
+## loaded
+
+Loaded function
+
+**Parameters**
+
+-   `api` **PluginAPI** The api
+
+## loaded
+
+Loaded function
+
+**Parameters**
+
+-   `api` **PluginAPI** The api
+
+## loaded
+
+Loaded function
+
+**Parameters**
+
+-   `api` **PluginAPI** The api
+
+## loaded
+
+Loaded function
+
+**Parameters**
+
+-   `api` **PluginAPI** The api
+
+## loaded
+
+Loaded function
+
+**Parameters**
+
+-   `api` **PluginAPI** The api
+
+## loaded
+
+Loaded function
+
+**Parameters**
+
+-   `api` **PluginAPI** The api
+
+## loaded
+
+Loaded function
+
+**Parameters**
+
+-   `api` **PluginAPI** The api
+
+## loaded
+
+Loaded function
+
+**Parameters**
+
+-   `api` **PluginAPI** The api
+
+## loaded
+
+Loaded function
+
+**Parameters**
+
+-   `api` **PluginAPI** The api
+
+## loaded
+
+Loaded function
+
+**Parameters**
+
+-   `api` **PluginAPI** The api
+
+## loaded
+
 Loaded plugin function
 
 **Parameters**
@@ -719,11 +1118,272 @@ Loaded function
 
 ## loaded
 
+Loaded plugin function
+
+**Parameters**
+
+-   `api` **PluginAPI** The core APIs
+
+## loaded
+
 Loaded function
 
 **Parameters**
 
 -   `api` **PluginAPI** The api
+
+## loaded
+
+Loaded function
+
+**Parameters**
+
+-   `api` **PluginAPI** The api
+
+## loaded
+
+Loaded function
+
+**Parameters**
+
+-   `api` **PluginAPI** The api
+
+## loaded
+
+Loaded plugin function
+
+**Parameters**
+
+-   `api` **PluginAPI** The core APIs
+
+## loaded
+
+Loaded function
+
+**Parameters**
+
+-   `api` **PluginAPI** The api
+
+## CameraForm
+
+**Extends api.exported.FormObject.class**
+
+This class is extended by cameras forms
+
+**Parameters**
+
+-   `id`  
+-   `plugin`  
+-   `name`  
+-   `ip`  
+-   `port`  
+-   `username`  
+-   `password`  
+
+### name
+
+### name
+
+### ip
+
+### port
+
+### username
+
+### password
+
+### json
+
+Convert JSON data to object
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some data
+
+Returns **[CameraForm](#cameraform)** An instance
+
+## Camera
+
+This class is extended by cameras
+
+**Parameters**
+
+-   `api`  
+-   `id`   (optional, default `null`)
+-   `configuration`   (optional, default `null`)
+-   `snapshotUrl`   (optional, default `null`)
+-   `mjpegUrl`   (optional, default `null`)
+-   `rtspUrl`   (optional, default `null`)
+-   `leftCb`   (optional, default `null`)
+-   `rightCb`   (optional, default `null`)
+-   `upCb`   (optional, default `null`)
+-   `downCb`   (optional, default `null`)
+
+### init
+
+Needs to be call when camera is ready
+
+### mjpegSupport
+
+Does the plugin suppport mjpeg stream
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** true if supported, false otherwise
+
+### rtspSupport
+
+Does the plugin suppport rtsp stream
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** true if supported, false otherwise
+
+### moveSupport
+
+Does the plugin suppport moves
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** true if supported, false otherwise
+
+### generateUrlFromTemplate
+
+Generate an URL from the template
+
+**Parameters**
+
+-   `url` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An URL template (Parameters : %port%, %ip%, %username%, %password%), without protocol and ip. For example, `cgi-bin/videostream.cgi?username=%username%&password=%password%` (optional, default `null`)
+
+Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The complete URL
+
+### moveLeft
+
+Move left camera
+
+### moveRight
+
+Move right camera
+
+### moveUp
+
+Move up camera
+
+### moveDown
+
+Move down camera
+
+## ElectricSensorForm
+
+**Extends api.exported.SensorForm**
+
+This class is extended by humidity sensors
+
+**Parameters**
+
+-   `id`  
+-   `plugin`  
+-   `name`  
+-   `dashboard`  
+-   `statistics`  
+-   `dashboardColor`  
+-   `statisticsColor`  
+
+### json
+
+Convert JSON data to object
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some data
+
+Returns **[ElectricSensorForm](#electricsensorform)** An instance
+
+## ElectricSensor
+
+**Extends api.exported.Sensor**
+
+This class is overloaded by sensors
+
+**Parameters**
+
+-   `api`  
+-   `id`  
+-   `configuration`  
+
+## LinkySensorForm
+
+**Extends api.exported.ElectricSensorForm**
+
+Linky form sensor
+
+**Parameters**
+
+-   `id`  
+-   `plugin`  
+-   `name`  
+-   `dashboard`  
+-   `statistics`  
+-   `dashboardColor`  
+-   `statisticsColor`  
+-   `username`  
+-   `password`  
+
+### username
+
+### password
+
+### json
+
+Convert JSON data to object
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some data
+
+Returns **[LinkySensorForm](#linkysensorform)** An instance
+
+## LinkySensor
+
+**Extends api.exported.ElectricSensor**
+
+This class is overloaded by sensors
+
+**Parameters**
+
+-   `api`  
+-   `id`  
+-   `configuration`  
+
+### updateTile
+
+Update tile and register to dashboard
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback without parameters when done. Used for testing only. (optional, default `null`)
+
+## EspHumiditySensorForm
+
+**Extends api.exported.HumiditySensorForm**
+
+Esp humidity form sensor
+
+### json
+
+Convert JSON data to object
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some data
+
+Returns **[EspHumiditySensorForm](#esphumiditysensorform)** An instance
+
+## EspHumiditySensor
+
+**Extends api.exported.HumiditySensor**
+
+This class is overloaded by sensors
+
+**Parameters**
+
+-   `api`  
+-   `id`  
+-   `configuration`  
 
 ## EspTemperatureSensorForm
 
@@ -753,17 +1413,58 @@ This class is overloaded by sensors
 -   `id`  
 -   `configuration`  
 
-### constructor
+## ESP8266Form
 
-ESP Temperature sensor class (should be extended)
+**Extends api.exported.FormObject.class**
+
+ESP8266 form class
 
 **Parameters**
 
--   `api` **PluginAPI** A plugin api
--   `id` **[number](#number)** An id (optional, default `null`)
--   `configuration` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The configuration for sensor (optional, default `null`)
+-   `id`   (optional, default `null`)
+-   `ssid`   (optional, default `null`)
+-   `passphrase`   (optional, default `null`)
 
-Returns **[EspTemperatureSensor](#esptemperaturesensor)** The instance
+### ssid
+
+### passphrase
+
+### json
+
+Convert JSON data to object
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some data
+
+Returns **[ESP8266Form](#esp8266form)** An instance
+
+## Esp8266
+
+ESP8266 manager class
+
+**Parameters**
+
+-   `api`  
+
+### constants
+
+ESP8266 constants :
+Modes : `MODE_DEEP_SLEEP`, `MODE_SLEEP`, `MODE_ALWAYS_POWERED` or `MODE_LIGHT_SLEEP`
+Time : `EVERY_HOUR`, `EVERY_DAY` or `EVERY_WEEK`
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The constants
+
+### generateOptions
+
+Generate Iot app options
+
+**Parameters**
+
+-   `powerMode` **int** The power mode. Can be `api.getPluginInstance("esp8266").constants().MODE_DEEP_SLEEP`, `api.getPluginInstance("esp8266").constants().MODE_SLEEP`, `api.getPluginInstance("esp8266").constants().MODE_ALWAYS_POWERED` or `api.getPluginInstance("esp8266").constants().MODE_LIGHT_SLEEP`
+-   `timer` **int** A timer for mode deep sleep, light sleep or sleep in `seconds`. Can be a constant `api.getPluginInstance("esp8266").constants().EVERY_HOUR`, `api.getPluginInstance("esp8266").constants().EVERY_DAY` or `api.getPluginInstance("esp8266").constants().EVERY_WEEK`
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The options object
 
 ### processAPI
 
@@ -771,7 +1472,7 @@ Process API callback
 
 **Parameters**
 
--   `apiRequest` **\[type]** An APIRequest
+-   `apiRequest` **[APIRequest](#apirequest)** An APIRequest
 
 Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with an APIResponse object
 
@@ -790,22 +1491,6 @@ This class is extended by humidity sensors
 -   `statistics`  
 -   `dashboardColor`  
 -   `statisticsColor`  
-
-### constructor
-
-Sensor form
-
-**Parameters**
-
--   `id` **[number](#number)** An identifier
--   `plugin` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A plugin
--   `name` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Sensor's name
--   `dashboard` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if display on dashboard, otherwise false
--   `statistics` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if display on statistics, otherwise false
--   `dashboardColor` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The dashboard color
--   `statisticsColor` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The statistics color
-
-Returns **[HumiditySensorForm](#humiditysensorform)** The instance
 
 ### json
 
@@ -829,18 +1514,6 @@ This class is overloaded by sensors
 -   `id`  
 -   `configuration`  
 
-### constructor
-
-Humidity sensor class (should be extended)
-
-**Parameters**
-
--   `api` **PluginAPI** A plugin api
--   `id` **[number](#number)** An id (optional, default `null`)
--   `configuration` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The configuration for sensor (optional, default `null`)
-
-Returns **[HumiditySensor](#humiditysensor)** The instance
-
 ## MessageProvider
 
 This class is extended by message providers
@@ -848,16 +1521,6 @@ This class is extended by message providers
 **Parameters**
 
 -   `api`  
-
-### constructor
-
-Constructor
-
-**Parameters**
-
--   `api` **PluginAPI** The api
-
-Returns **[MessageProvider](#messageprovider)** The instance
 
 ### onMessageReceived
 
@@ -874,6 +1537,290 @@ Callback when a message is received, dispatched to registered elements
 
 ## myParameter
 
+## OpenweatherHumiditySensorForm
+
+**Extends api.exported.HumiditySensorForm**
+
+OpenWeather humidity form sensor
+
+### json
+
+Convert JSON data to object
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some data
+
+Returns **[OpenweatherHumiditySensorForm](#openweatherhumiditysensorform)** An instance
+
+## OpenweatherHumiditySensor
+
+**Extends api.exported.HumiditySensor**
+
+This class is overloaded by sensors
+
+**Parameters**
+
+-   `api`  
+-   `id`  
+-   `configuration`  
+
+## OpenweatherPressureSensorForm
+
+**Extends api.exported.PressureSensorForm**
+
+OpenWeather pressure form sensor
+
+### json
+
+Convert JSON data to object
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some data
+
+Returns **[OpenweatherPressureSensorForm](#openweatherpressuresensorform)** An instance
+
+## OpenweatherPressureSensor
+
+**Extends api.exported.PressureSensor**
+
+This class is overloaded by sensors
+
+**Parameters**
+
+-   `api`  
+-   `id`  
+-   `configuration`  
+
+## OpenweatherTemperatureSensorForm
+
+**Extends api.exported.TemperatureSensorForm**
+
+OpenWeather temperature form sensor
+
+### json
+
+Convert JSON data to object
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some data
+
+Returns **[OpenweatherTemperatureSensorForm](#openweathertemperaturesensorform)** An instance
+
+## OpenweatherTemperatureSensor
+
+**Extends api.exported.TemperatureSensor**
+
+This class is overloaded by sensors
+
+**Parameters**
+
+-   `api`  
+-   `id`  
+-   `configuration`  
+
+## OpenweatherWindSensorForm
+
+**Extends api.exported.WindSensorForm**
+
+OpenWeather wind form sensor
+
+### json
+
+Convert JSON data to object
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some data
+
+Returns **[OpenweatherWindSensorForm](#openweatherwindsensorform)** An instance
+
+## OpenweatherWindSensor
+
+**Extends api.exported.WindSensor**
+
+This class is overloaded by sensors
+
+**Parameters**
+
+-   `api`  
+-   `id`  
+-   `configuration`  
+
+## OpenWeatherDb
+
+**Extends api.exported.DbObject.class**
+
+This class is used for Openweather database
+
+**Parameters**
+
+-   `dbHelper`   (optional, default `null`)
+-   `values` **...any** 
+
+## weatherId
+
+## weatherName
+
+## weatherIcon
+
+## visibility
+
+## temperature
+
+## pressure
+
+## humidity
+
+## windSpeed
+
+## windDirection
+
+## sunrise
+
+## sunset
+
+## OpenWeatherForm
+
+**Extends api.exported.FormObject.class**
+
+This class is used for OpenWeather form
+
+**Parameters**
+
+-   `id`  
+-   `apiKey`  
+-   `autoDayNight`   (optional, default `true`)
+-   `weatherTile`   (optional, default `false`)
+-   `rainForecastTileMode`   (optional, default `3`)
+
+### apiKey
+
+### autoDayNight
+
+### weatherTile
+
+### rainForecastTileMode
+
+### json
+
+Convert json data
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some key / value data
+
+Returns **[OpenWeatherForm](#openweatherform)** A form object
+
+## OpenWeather
+
+This class manage openweather APIs
+
+**Parameters**
+
+-   `api`  
+
+### register
+
+Register for weather elements
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback triggered when weather information is received. Example : `(error, weatherDbObject) => {}`
+-   `id` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An identifier (optional, default `null`)
+
+### unregister
+
+Unegister a weather element
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback triggered when weather information is received. Example : `(error, weatherDbObject) => {}`
+-   `id` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An identifier (optional, default `null`)
+
+### prepareUrl
+
+Prepare weather URL
+
+**Parameters**
+
+-   `url` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Base template URL
+
+Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Replaced URL
+
+### getWeather
+
+Get weather informations
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback `(error, dbObject) => {}`
+
+### getWeatherForecast
+
+Get weather informations
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback `(error, forecastObject) => {}`
+-   `duration` **[number](#number)** Forecast duration (optional, default `FORECAST_TIME_SLOT`)
+
+### weatherIcon
+
+Transform Openweather icon to good icon
+
+**Parameters**
+
+-   `weatherIcon` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Openweather icon
+
+Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The hautomation icon's string name
+
+### registerWeatherTile
+
+Register weather tile
+
+### forecastProcessing
+
+Forecast processing
+
+### registerRainForecastTile
+
+Register weather rain forecast tile
+
+**Parameters**
+
+-   `forecast` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Forecast object
+
+## PresenceSensorForm
+
+**Extends api.exported.SensorForm**
+
+This class is extended by throughput sensors
+
+### json
+
+Convert JSON data to object
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some data
+
+Returns **[PresenceSensorForm](#presencesensorform)** An instance
+
+## PresenceSensor
+
+**Extends api.exported.Sensor**
+
+This class is overloaded by sensors
+
+**Parameters**
+
+-   `api`  
+-   `id`  
+-   `configuration`  
+
 ## PressureSensorForm
 
 **Extends api.exported.SensorForm**
@@ -889,22 +1836,6 @@ This class is extended by pressure sensors
 -   `statistics`  
 -   `dashboardColor`  
 -   `statisticsColor`  
-
-### constructor
-
-Sensor form
-
-**Parameters**
-
--   `id` **[number](#number)** An identifier
--   `plugin` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A plugin
--   `name` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Sensor's name
--   `dashboard` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if display on dashboard, otherwise false
--   `statistics` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if display on statistics, otherwise false
--   `dashboardColor` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The dashboard color
--   `statisticsColor` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The statistics color
-
-Returns **[PressureSensorForm](#pressuresensorform)** The instance
 
 ### json
 
@@ -928,18 +1859,6 @@ This class is overloaded by sensors
 -   `id`  
 -   `configuration`  
 
-### constructor
-
-Throughput sensor class (should be extended)
-
-**Parameters**
-
--   `api` **PluginAPI** A plugin api
--   `id` **[number](#number)** An id (optional, default `null`)
--   `configuration` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The configuration for sensor (optional, default `null`)
-
-Returns **[PressureSensor](#pressuresensor)** The instance
-
 ## ProwlForm
 
 **Extends api.exported.FormObject.class**
@@ -950,17 +1869,6 @@ This class is extended by user form
 
 -   `id`  
 -   `prowlApiKey`  
-
-### constructor
-
-Prowl user form
-
-**Parameters**
-
--   `id` **[number](#number)** An identifier
--   `prowlApiKey` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A prowl API key
-
-Returns **[SensorForm](#sensorform)** The instance
 
 ### prowlApiKey
 
@@ -984,16 +1892,6 @@ Prowl plugin class
 
 -   `api`  
 
-### constructor
-
-Constructor
-
-**Parameters**
-
--   `api` **PluginAPI** The API
-
-Returns **[Prowl](#prowl)** The instance
-
 ### sendMessage
 
 Send a message to all plugins.
@@ -1002,6 +1900,47 @@ Send a message to all plugins.
 
 -   `recipients` **([string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array))** The recipients. `*` for all users, otherwise an array of usernames - user `userAPI`, e.g. `["seb", "ema"]` (optional, default `"*"`)
 -   `message` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The notification message
+
+## RadioPresenceSensorForm
+
+**Extends api.exported.PresenceSensorForm**
+
+Radio presence form sensor
+
+**Parameters**
+
+-   `id`  
+-   `plugin`  
+-   `name`  
+-   `dashboard`  
+-   `statistics`  
+-   `dashboardColor`  
+-   `statisticsColor`  
+-   `radio`  
+
+### radio
+
+### json
+
+Convert JSON data to object
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some data
+
+Returns **[RadioPresenceSensorForm](#radiopresencesensorform)** An instance
+
+## RadioPresenceSensor
+
+**Extends api.exported.PresenceSensor**
+
+This class is overloaded by sensors
+
+**Parameters**
+
+-   `api`  
+-   `id`  
+-   `configuration`  
 
 ## DbRadio
 
@@ -1014,17 +1953,6 @@ This class is used for radio database
 
 -   `dbHelper`   (optional, default `null`)
 -   `values` **...any** 
-
-### constructor
-
-Radio table descriptor
-
-**Parameters**
-
--   `dbHelper` **[DbHelper](#dbhelper)** A database helper (optional, default `null`)
--   `values` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The values
-
-Returns **[DbObject](#dbobject)** A database object
 
 ## module
 
@@ -1050,21 +1978,20 @@ This class shoud be extended by radio modules
 
 -   `api`  
 
-### constructor
-
-Constructor (called with super)
-
-**Parameters**
-
--   `api` **PluginAPI** The core APIs
-
-Returns **[Radio](#radio)** The instance
-
 ### getProtocolList
 
 **Parameters**
 
 -   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback function `(err, protocols) => {}`
+
+### getLastReceivedRadioInformations
+
+Return the list of last radio information received
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback function `(err, objects) => {}`
+-   `nbElements` **[number](#number)** Max number elements (optional, default `100`)
 
 ### processAPI
 
@@ -1128,6 +2055,39 @@ Unregister an object to radio events
 
 -   `o` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An object that implements callback
 
+## RFlinkForm
+
+**Extends api.exported.FormObject.class**
+
+This class manage RFLink form configuration
+
+**Parameters**
+
+-   `id`  
+-   `port`  
+
+### port
+
+### json
+
+Convert a json object to RFLinkForm object
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some data
+
+Returns **[RFlinkForm](#rflinkform)** An instance
+
+### getPorts
+
+Form injection method for ports
+
+**Parameters**
+
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The ports list array
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of ports
+
 ## RFLink
 
 **Extends api.exported.Radio**
@@ -1137,16 +2097,6 @@ This class manage RFLink
 **Parameters**
 
 -   `api`  
-
-### constructor
-
-Constructor
-
-**Parameters**
-
--   `api` **PluginAPI** The core APIs
-
-Returns **[RFLink](#rflink)** The instance
 
 ### rflinkStatusToRadioStatus
 
@@ -1186,6 +2136,23 @@ Callback when an information is received from rf link service thread
 
 -   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A data object containing radio informations
 
+### onRflinkVersion
+
+Called when version is retrieved from RFLink
+
+**Parameters**
+
+-   `version` **[number](#number)** Version
+-   `revision` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Revision
+
+### onDetectedPortsReceive
+
+Callback when port data is received
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A data object containing serial ports
+
 ### emit
 
 Emit radio request
@@ -1201,6 +2168,30 @@ Emit radio request
 
 Returns **[DbRadio](#dbradio)** A radio  object
 
+### getProtocolList
+
+Return the list of supported protocolList
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback function `(err, protocols) => {}`
+
+### reboot
+
+Reboot the RFLink device
+
+**Parameters**
+
+-   `context` **[RFLink](#rflink)** The context. If not specified, set to `this` (optional, default `null`)
+
+### upgrade
+
+Try to upgrade RFLink firmware
+
+**Parameters**
+
+-   `context` **[RFLink](#rflink)** The context. If not specified, set to `this` (optional, default `null`)
+
 ## RFLinkService
 
 **Extends api.exported.Service.class**
@@ -1211,15 +2202,9 @@ This class conect to RFLink using serial port on a pseicif thread.
 
 -   `plugin`  
 
-### constructor
+### start
 
-Constructor
-
-**Parameters**
-
--   `plugin` **[RFLink](#rflink)** The RFLink plugin
-
-Returns **[RFLinkService](#rflinkservice)** The instance
+Start the service
 
 ### run
 
@@ -1275,17 +2260,6 @@ This class is used for sensors database
 -   `dbHelper`   (optional, default `null`)
 -   `values` **...any** 
 
-### constructor
-
-Radio table descriptor
-
-**Parameters**
-
--   `dbHelper` **[DbHelper](#dbhelper)** A database helper (optional, default `null`)
--   `values` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The values
-
-Returns **[DbObject](#dbobject)** A database object
-
 ## sensorId
 
 ## vcc
@@ -1305,22 +2279,6 @@ This class is extended by sensors forms
 -   `statistics`  
 -   `dashboardColor`  
 -   `statisticsColor`  
-
-### constructor
-
-Sensor form
-
-**Parameters**
-
--   `id` **[number](#number)** An identifier
--   `plugin` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A plugin
--   `name` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Sensor's name
--   `dashboard` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if display on dashboard, otherwise false
--   `statistics` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if display on statistics, otherwise false
--   `dashboardColor` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The dashboard color
--   `statisticsColor` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The statistics color
-
-Returns **[SensorForm](#sensorform)** The instance
 
 ### name
 
@@ -1359,26 +2317,6 @@ This class is extended by sensors
 -   `dashboardGranularity`   (optional, default `DEFAULT_DASHBOARD_AGGREGATION_GRANULARITY`)
 -   `chartType`   (optional, default `CHART_TYPE_LINE`)
 -   `cb`   (optional, default `null`)
-
-### constructor
-
-Sensor class (should be extended)
-
-**Parameters**
-
--   `api` **PluginAPI** A plugin api
--   `id` **[number](#number)** An id (optional, default `null`)
--   `type` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A plugin type (optional, default `"UNKNOWN"`)
--   `configuration` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The configuration for sensor (optional, default `null`)
--   `icon` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An icon (optional, default `null`)
--   `round` **[number](#number)** Round value (number of digits after comma) (optional, default `0`)
--   `unit` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Base unit (optional, default `null`)
--   `aggregationMode` **int** Aggregation mode (optional, default `AGGREGATION_MODE_AVG`)
--   `dashboardGranularity` **[number](#number)** Dashboard granularity in seconds. Default is one hour. (optional, default `DEFAULT_DASHBOARD_AGGREGATION_GRANULARITY`)
--   `chartType` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Chart display type (bar or line) (optional, default `CHART_TYPE_LINE`)
--   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback with an error in parameter, called when database is initialized : `(err) => {}` (optional, default `null`)
-
-Returns **[Sensor](#sensor)** The instance
 
 ### init
 
@@ -1442,6 +2380,7 @@ Set a value and store in database
 -   `value` **[number](#number)** A value
 -   `vcc` **[number](#number)** A voltage level (optional, default `null`)
 -   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback with an error parameter, called when done. Used for testing only. (optional, default `null`)
+-   `timestamp` **[number](#number)** A timestamp (optional, default `null`)
 
 ### roundTimestamp
 
@@ -1467,11 +2406,198 @@ Get sensor's statistics
 -   `roundTimestampFunction` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A  e.g. `(timestamp) => {return  timestamp;}` (optional, default `null`)
 -   `roundDateSqlFormat` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** In relation with roundTimeStampFunction, the SQL date format. E.g. : "%Y-%m-01 00:00:00" (optional, default `null`)
 
+### getIotIdentifier
+
+Returns the linked iot identifier
+
+Returns **[number](#number)** Iot identifier
+
 ### constants
 
 Access to constants
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A list of constants
+
+## SMSForm
+
+**Extends api.exported.FormObject.class**
+
+This class provides configuration form for SMS
+
+**Parameters**
+
+-   `id`   (optional, default `null`)
+-   `port`   (optional, default `null`)
+
+### port
+
+### json
+
+Convert json data
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some key / value data
+
+Returns **[SMSForm](#smsform)** A form object
+
+### getPorts
+
+Form injection method for ports
+
+**Parameters**
+
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The modules list array
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of ports
+
+### getPortsLabels
+
+Form injection method for ports labels
+
+**Parameters**
+
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The modules list array
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of ports labels
+
+## SMSUserForm
+
+**Extends api.exported.FormObject.class**
+
+This class is extended by user form
+
+**Parameters**
+
+-   `id`  
+-   `phoneNumber`  
+
+### phoneNumber
+
+### json
+
+Convert JSON data to object
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some data
+
+Returns **[SMSUserForm](#smsuserform)** An instance
+
+## SMS
+
+**Extends api.exported.MessageProvider**
+
+Prowl plugin class
+
+**Parameters**
+
+-   `api`  
+
+### init
+
+Init configuration and other stuff
+
+### getAvailableDevices
+
+Get available devices
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback with the list of devices `(devices) => {}`
+
+### generateGammuConfig
+
+Generates the Gammu configuration file
+
+**Parameters**
+
+-   `port` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The port
+-   `inbox` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The inbox path
+-   `outbox` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The outbox path
+-   `sent` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The sent path
+-   `error` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The error path
+-   `shellReceiveScript` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The shell receive script
+
+Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The configuration path
+
+### generateGammuReceiveSh
+
+Generates the content of the receive script
+
+**Parameters**
+
+-   `url` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The url
+-   `inbox` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The inbox folder
+
+Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** the shell content
+
+### sendSMS
+
+Send a SMS message
+
+**Parameters**
+
+-   `number` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The pgone number
+-   `message` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** the message
+
+### sendMessage
+
+Send a message to all plugins.
+
+**Parameters**
+
+-   `recipients` **([string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array))** The recipients. `*` for all users, otherwise an array of usernames - user `userAPI`, e.g. `["seb", "ema"]` (optional, default `"*"`)
+-   `message` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The notification message
+
+### processAPI
+
+Process API callback
+
+**Parameters**
+
+-   `apiRequest` **[APIRequest](#apirequest)** An APIRequest
+
+Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with an APIResponse object
+
+## SMSService
+
+**Extends api.exported.Service.class**
+
+This class conect to SMS using gammu
+
+**Parameters**
+
+-   `plugin`  
+-   `gammuConfigurationFile`  
+
+## SumppleCameraForm
+
+**Extends api.exported.CameraForm**
+
+Sumpple form camera
+
+### json
+
+Convert JSON data to object
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some data
+
+Returns **[SumppleCameraForm](#sumpplecameraform)** An instance
+
+## Sumpple
+
+**Extends api.exported.Camera**
+
+Sumpple camera class
+
+**Parameters**
+
+-   `api`  
+-   `id`  
+-   `configuration`  
 
 ## TemperatureSensorForm
 
@@ -1489,23 +2615,6 @@ This class is extended by temperature sensors
 -   `dashboardColor`  
 -   `statisticsColor`  
 -   `unit`  
-
-### constructor
-
-Sensor form
-
-**Parameters**
-
--   `id` **[number](#number)** An identifier
--   `plugin` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A plugin
--   `name` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Sensor's name
--   `dashboard` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if display on dashboard, otherwise false
--   `statistics` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if display on statistics, otherwise false
--   `dashboardColor` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The dashboard color
--   `statisticsColor` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The statistics color
--   `unit` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The default unit
-
-Returns **[TemperatureSensorForm](#temperaturesensorform)** The instance
 
 ### unit
 
@@ -1531,18 +2640,6 @@ This class is overloaded by sensors
 -   `id`  
 -   `configuration`  
 
-### constructor
-
-Temperature sensor class (should be extended)
-
-**Parameters**
-
--   `api` **PluginAPI** A plugin api
--   `id` **[number](#number)** An id (optional, default `null`)
--   `configuration` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The configuration for sensor (optional, default `null`)
-
-Returns **[TemperatureSensor](#temperaturesensor)** The instance
-
 ### setUnit
 
 Set the unit depending on configuration
@@ -1567,22 +2664,6 @@ This class is extended by throughput sensors
 -   `dashboardColor`  
 -   `statisticsColor`  
 
-### constructor
-
-Sensor form
-
-**Parameters**
-
--   `id` **[number](#number)** An identifier
--   `plugin` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A plugin
--   `name` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Sensor's name
--   `dashboard` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if display on dashboard, otherwise false
--   `statistics` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if display on statistics, otherwise false
--   `dashboardColor` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The dashboard color
--   `statisticsColor` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The statistics color
-
-Returns **[ThroughputSensorForm](#throughputsensorform)** The instance
-
 ### json
 
 Convert JSON data to object
@@ -1605,21 +2686,126 @@ This class is overloaded by sensors
 -   `id`  
 -   `configuration`  
 
-### constructor
+## TrashReminderSubform
 
-Throughput sensor class (should be extended)
+**Extends api.exported.FormObject.class**
+
+This class manage trash reminder sub form
 
 **Parameters**
 
--   `api` **PluginAPI** A plugin api
--   `id` **[number](#number)** An id (optional, default `null`)
--   `configuration` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The configuration for sensor (optional, default `null`)
+-   `id`  
+-   `day`  
+-   `weekMode`  
+-   `name`  
 
-Returns **[ThroughputSensor](#throughputsensor)** The instance
+### day
+
+### weekMode
+
+### name
+
+### json
+
+Convert a json object to TrashReminderSubform object
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some data
+
+Returns **[TrashReminderSubform](#trashremindersubform)** An instance
+
+## TrashReminderForm
+
+**Extends api.exported.FormObject.class**
+
+This class manage trash reminder form
+
+**Parameters**
+
+-   `id`  
+-   `reminders`  
+
+### reminders
+
+### json
+
+Convert a json object to TrashReminderSubform object
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some data
+
+Returns **[TrashReminderForm](#trashreminderform)** An instance
+
+## TrashReminders
+
+This class manage Trash reminders
+
+**Parameters**
+
+-   `api`  
+
+## WindSensorForm
+
+**Extends api.exported.SensorForm**
+
+This class is extended by wind sensors
+
+**Parameters**
+
+-   `id`  
+-   `plugin`  
+-   `name`  
+-   `dashboard`  
+-   `statistics`  
+-   `dashboardColor`  
+-   `statisticsColor`  
+-   `unit`  
+
+### unit
+
+### json
+
+Convert JSON data to object
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some data
+
+Returns **[WindSensorForm](#windsensorform)** An instance
+
+## WindSensor
+
+**Extends api.exported.Sensor**
+
+This class is overloaded by sensors
+
+**Parameters**
+
+-   `api`  
+-   `id`  
+-   `configuration`  
+
+### setUnit
+
+Set the unit depending on configuration
+
+**Parameters**
+
+-   `unit` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A unit configuration (`deg` or `far`)
 
 ## Logger
 
 This class provides static methods to log into a file.
+
+### setLogLevel
+
+Set the log level
+
+**Parameters**
+
+-   `level` **[number](#number)** Log level between 0 and 5 (optional, default `3`)
 
 ### log
 
@@ -1670,33 +2856,45 @@ Log a debug message to a file, with stacktrace
 
 -   `message` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A log message
 
-## Alarm
+## AlarmForm
 
-This class is an Alarm POJO
+**Extends FormObject.class**
+
+This class provides a form for the alarm
 
 **Parameters**
 
+-   `id`   (optional, default `null`)
 -   `enabled`   (optional, default `false`)
+-   `armed`   (optional, default `false`)
+-   `userLocationTrigger`   (optional, default `true`)
+-   `sensors`   (optional, default `[]`)
+-   `devicesOnEnable`   (optional, default `[]`)
+-   `devicesOnDisable`   (optional, default `[]`)
 
-### constructor
+### enabled
 
-Constructor
+### armed
 
-**Parameters**
+### userLocationTrigger
 
--   `enabled` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if alarm is enabled, else false (optional, default `false`)
+### userLocationTrigger
 
-Returns **[Alarm](#alarm)** The instance
+### sensors
+
+### devicesOnEnable
+
+### devicesOnDisable
 
 ### json
 
-Transform json raw object to instance
+Convert json data
 
 **Parameters**
 
--   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** JSON object data
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some key / value data
 
-Returns **[Alarm](#alarm)** A User instance
+Returns **[AlarmForm](#alarmform)** A form object
 
 ## AlarmManager
 
@@ -1705,36 +2903,99 @@ This class allows to manage alarm (nable, disable, ...)
 **Parameters**
 
 -   `confManager`  
+-   `formManager`  
 -   `webServices`  
+-   `dashboardManager`  
+-   `userManager`  
+-   `sensorsManager`  
+-   `translateManager`  
+-   `deviceManager`  
+-   `messageManager`  
+-   `schedulerService`  
+-   `camerasManager`  
 
-### constructor
+### sensorReadyForTriggering
 
-Constructor
-
-**Parameters**
-
--   `confManager` **[ConfManager](#confmanager)** A configuration manager needed for persistence
--   `webServices` **[WebServices](#webservices)** The web services to register APIs
-
-Returns **[Alarm](#alarm)** The instance
-
-### setAlarm
-
-Set alarm from a generic JSON object
+Check if sensor is ready for triggering events
 
 **Parameters**
 
--   `object` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The JSON object
+-   `sensorId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The sensor identifier
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if alarm can be trigger, false otherwise
+
+### registerTile
+
+Register alarm tile
+
+### alarmStatus
+
+Get alarm state
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if alarm is enabled, false otherwise
+
+### armAlarm
+
+Arm the alarm
+
+### armCancel
+
+Cancel the armed alarm
+
+### enableAlarm
+
+Enable alarm
+
+### disableAlarm
+
+Disable alarm
+
+### triggerAlarm
+
+Trigger the alarm (sirens, ...)
+
+### stopAlarm
+
+Stop the alarm (sirens, ...)
 
 ### processAPI
 
-Process web API callback
+Process API callback
 
 **Parameters**
 
--   `apiRequest` **[APIRequest](#apirequest)** An API Request
+-   `apiRequest` **[APIRequest](#apirequest)** An APIRequest
 
-Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with APIResponse
+Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with an APIResponse object
+
+## AlarmSensorsForm
+
+**Extends FormObject.class**
+
+This class provides a form for alarm sensors form
+
+**Parameters**
+
+-   `id`   (optional, default `null`)
+-   `sensor`   (optional, default `null`)
+-   `triggerAlarm`   (optional, default `true`)
+-   `captureVideo`   (optional, default `false`)
+
+### sensor
+
+### triggerAlarm
+
+### captureVideo
+
+### json
+
+Convert json data
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some key / value data
+
+Returns **[AlarmSensorsForm](#alarmsensorsform)** A form object
 
 ## Authentication
 
@@ -1744,17 +3005,17 @@ This class manage authentication for Web Services
 
 -   `webService`  
 -   `userManager`  
+-   `environmentManager`  
 
-### constructor
+### checkLocalIp
 
-Constructor
+Check if an ip is on the same network
 
 **Parameters**
 
--   `webService` **WebService** The web service instance
--   `userManager` **[UserManager](#usermanager)** User manager
+-   `ipSource` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The source ip
 
-Returns **[Authentication](#authentication)** Instance
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` if the ip is on the same network, `false` otherwise
 
 ## AuthenticationData
 
@@ -1765,18 +3026,6 @@ This class encapsulate authentication data
 -   `authorized`   (optional, default `false`)
 -   `username`   (optional, default `null`)
 -   `level`   (optional, default `-1`)
-
-### constructor
-
-Constructor
-
-**Parameters**
-
--   `authorized` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if authorized, else false (optional, default `false`)
--   `username` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Username (optional, default `null`)
--   `level` **[number](#number)** Authorization level (optional, default `-1`)
-
-Returns **[Authentication](#authentication)** The instance
 
 ### authorized
 
@@ -1790,6 +3039,309 @@ Username
 
 App access level
 
+## CamerasForm
+
+**Extends FormObject.class**
+
+This class provides a form for one device
+
+**Parameters**
+
+-   `id`   (optional, default `null`)
+-   `cameraId`   (optional, default `null`)
+
+### cameraId
+
+### json
+
+Convert json data
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some key / value data
+
+Returns **[CamerasForm](#camerasform)** A form object
+
+### getCameraIds
+
+Cameras id injection
+
+**Parameters**
+
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Inject parameters
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of ids
+
+### getCameraNames
+
+Cameras name injection
+
+**Parameters**
+
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Inject parameters
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of names
+
+## CamerasListForm
+
+**Extends FormObject.class**
+
+This class provides a form for cameras
+
+**Parameters**
+
+-   `id`   (optional, default `null`)
+-   `identifier`   (optional, default `null`)
+
+### identifier
+
+### json
+
+Convert json data
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some key / value data
+
+Returns **[CamerasListForm](#cameraslistform)** A form object
+
+### getCamerasName
+
+Form injection method for Cameras name
+
+**Parameters**
+
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The modules list array
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of cameras name
+
+### getCamerasId
+
+Form injection method for Cameras ids
+
+**Parameters**
+
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The modules list array
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of cameras id
+
+## CamerasManager
+
+This class allows to manage cameras
+
+**Parameters**
+
+-   `pluginsManager`  
+-   `eventBus`  
+-   `webServices`  
+-   `formManager`  
+-   `confManager`  
+-   `translateManager`  
+-   `themeManager`  
+-   `dashboardManager`  
+-   `timeEventService`  
+-   `camerasConfiguration`   (optional, default `null`)
+-   `cachePath`   (optional, default `null`)
+-   `installationManager`   (optional, default `null`)
+
+### pluginsLoaded
+
+Called automatically when plugins are loaded. Used in separate methods for testing.
+Initially, this method wad used in contructor.
+
+**Parameters**
+
+-   `pluginsManager` **[PluginsManager](#pluginsmanager)** The plugins manager instance
+-   `context` **[CamerasManager](#camerasmanager)** The context (self, this, etc ...)
+
+### archiveCameras
+
+Archive all cameras
+
+**Parameters**
+
+-   `context` **[CamerasManager](#camerasmanager)** The instance
+
+### initCameras
+
+Initialize cameras
+
+### initCamera
+
+Init a camera instance and add to local array
+
+**Parameters**
+
+-   `configuration` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The camera configuration
+
+### getAllCameras
+
+Get all cameras
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** On object with id:name
+
+### registerTile
+
+Register camera tile
+
+**Parameters**
+
+-   `context` **[CamerasManager](#camerasmanager)** The instance
+
+### processAPI
+
+Process API callback
+
+**Parameters**
+
+-   `apiRequest` **[APIRequest](#apirequest)** An APIRequest
+
+Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with an APIResponse object
+
+### comparator
+
+Compare camera data
+
+**Parameters**
+
+-   `cameraData1` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Camera data 1
+-   `cameraData2` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Camera data 2
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if id is the same, false otherwise
+
+### getCameraConfiguration
+
+Get camera configuration. If no parameters are passed, returns the array of all camera configuration.
+
+**Parameters**
+
+-   `cameraId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The camera identifier. Can be null. (optional, default `null`)
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The camera configuration, or configurations, or null if nothing found
+
+### registerCamerasListForm
+
+Register a cameras list form
+
+### getCamerasList
+
+Retrieve the list of cameras with name and identifier
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** The list of cameras
+
+### getCamera
+
+Get the camera Object
+
+**Parameters**
+
+-   `id` **[number](#number)** Camera identifier
+
+Returns **[Camera](#camera)** A camera extended object. Returns null if nothing found.
+
+### getDefaultCamera
+
+Get the default camera
+
+Returns **[Camera](#camera)** A default camera
+
+### getImage
+
+Get a picture
+
+**Parameters**
+
+-   `id` **[number](#number)** Camera identifier
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback with error, image buffer and mime type. Example : `(err, data, mime) => {}`
+-   `timestamp` **[number](#number)** The timestamp of the picture. If `null`, live snapshot. (optional, default `null`)
+
+### timelapseStatus
+
+Retrieve a timelapse status for a specific token
+
+**Parameters**
+
+-   `token` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Time lapse token
+
+Returns **[number](#number)** The status
+
+### dailyFilepath
+
+Get the daily timelapse file path
+
+**Parameters**
+
+-   `camera` **[Camera](#camera)** A camera
+-   `camerasArchiveFolder` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Camera archive folder
+
+Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The path
+
+### generateDailyTimeLapses
+
+Generate a daily timelapse
+
+**Parameters**
+
+-   `context` **[CamerasManager](#camerasmanager)** The context (self)
+
+### generateTimelapse
+
+Generate a timelapse for a camera id
+
+**Parameters**
+
+-   `id` **[number](#number)** The camera identifier
+-   `duration` **[number](#number)** The duration in seconds (optional, default `24*60*60`)
+
+### record
+
+Record a video session for a specific camera
+
+**Parameters**
+
+-   `id` **[number](#number)** The camera identifier
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback `(err, generatedFilepath) => {}`
+-   `timer` **[number](#number)** Duration of capture in seconds (optional, default `60`)
+
+## TimelapseGenerator
+
+This class allows to generate timelapse
+
+**Parameters**
+
+-   `camera`  
+-   `installationManager`  
+-   `cachePath`  
+-   `cameraArchiveFolder`  
+-   `duration`   (optional, default `24*60*60`)
+
+### generateTimelapse
+
+Generate a timelapse
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback as `(status, error, timelapseFilepath) => {}`
+
+### pad
+
+Add padding to number
+
+**Parameters**
+
+-   `num` **[number](#number)** The number
+-   `size` **[number](#number)** The leading 0 count
+
+Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The transformed number
+
+### prepareFiles
+
+Prepare camera files
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback as `(err, pictureList, cacheImages, folder) => {}`
+
 ## ConfManager
 
 This class manage object persistence with JSON format
@@ -1800,19 +3352,6 @@ This class manage object persistence with JSON format
 -   `eventBus`  
 -   `stopEventName`  
 -   `timeEventService`  
-
-### constructor
-
-Constructor
-
-**Parameters**
-
--   `appConfiguration` **AppConfiguration** The app configuration object
--   `eventBus` **EventEmitter** The global event bus
--   `stopEventName` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The stop event name
--   `timeEventService` **[TimeEventService](#timeeventservice)** The time event service
-
-Returns **[ConfManager](#confmanager)** The instance
 
 ### appConfiguration
 
@@ -1929,18 +3468,7 @@ This class generates dashboard from tiles
 -   `themeManager`  
 -   `webServices`  
 -   `translateManager`  
-
-### constructor
-
-Constructor
-
-**Parameters**
-
--   `themeManager` **[ThemeManager](#thememanager)** A theme manager
--   `webServices` **[WebServices](#webservices)** Web services instance
--   `translateManager` **[TranslateManager](#translatemanager)** A translate manager
-
-Returns **[DashboardManager](#dashboardmanager)** The instance
+-   `confManager`  
 
 ### registerTile
 
@@ -1958,9 +3486,25 @@ Remove a tile with identifier
 
 -   `identifier` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A tile identifier
 
+### filterTiles
+
+Remove tiles depending on user preferences
+
+**Parameters**
+
+-   `tiles` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** The tiles
+-   `username` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Username (optional, default `null`)
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** Tiles
+
 ### buildDashboard
 
 Build a dashboard object
+
+**Parameters**
+
+-   `username` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Username
+-   `allTiles` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` if ot should return all tiles, `false` otherwise (optional, default `true`)
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A dashboard object
 
@@ -1994,28 +3538,6 @@ This class describes tiles
 -   `action`   (optional, default `null`)
 -   `object`   (optional, default `null`)
 
-### constructor
-
-Constructor
-
-**Parameters**
-
--   `themeManager` **[ThemeManager](#thememanager)** The theme manager
--   `identifier` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The tile identifier (must be unique)
--   `type` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The tile's model (or type). Check enum. (optional, default `TILE_INFO_ONE_TEXT`)
--   `icon` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The icon (optional, default `null`)
--   `subIcon` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The subicon (optional, default `null`)
--   `text` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The text (optional, default `null`)
--   `subText` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The sub text (optional, default `null`)
--   `picture` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A picture in base64 format (optional, default `null`)
--   `pictures` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** A list of Base64 pictures (optional, default `null`)
--   `status` **[number](#number)** A status (0, 1, ...) (optional, default `0`)
--   `order` **[number](#number)** A number that represents the place of the tile. 1 is on top, 999999 is on bottom :) (optional, default `1`)
--   `action` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The action (route endpoint without `:`) (optional, default `null`)
--   `object` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An object (optional, default `null`)
-
-Returns **[Tile](#tile)** A tile
-
 ### get
 
 Get the tile without useless informations
@@ -2032,19 +3554,6 @@ Public API for database manager
 -   `schema`  
 -   `table`  
 -   `dbObjectClass`   (optional, default `null`)
-
-### constructor
-
-Encapsulate DbManager to be more easier
-
-**Parameters**
-
--   `dbManager` **[DbManager](#dbmanager)** A DbManager instance
--   `schema` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A database schema
--   `table` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A table
--   `dbObjectClass` **Class** A DbObject extended class. If not provided, a classic DbObject will be provided (optional, default `null`)
-
-Returns **[DbHelper](#dbhelper)** The instance
 
 ### RequestBuilder
 
@@ -2143,17 +3652,6 @@ Public API for database manager
 
 -   `appConfiguration`  
 -   `sqlite3lib`   (optional, default `null`)
-
-### constructor
-
-Constructor
-
-**Parameters**
-
--   `appConfiguration` **AppConfiguration** The app configuration object
--   `sqlite3lib` **sqlite3** sqlite3lib The database library, for testing only (optional, default `null`)
-
-Returns **[DbManager](#dbmanager)** The instance
 
 ### close
 
@@ -2313,15 +3811,6 @@ This class must be extended
 -   `dbHelper`   (optional, default `null`)
 -   `values` **...any** 
 
-### constructor
-
-**Parameters**
-
--   `dbHelper` **[DbHelper](#dbhelper)** A database helper object (optional, default `null`)
--   `values` **...any** A list of values
-
-Returns **[DbObject](#dbobject)** The instance
-
 ### base
 
 Creates an object cloned with only field properties
@@ -2353,17 +3842,6 @@ This class generates a SQL query from parameters, but does NOT check that SQL qu
 
 -   `table`  
 -   `schema`  
-
-### constructor
-
-Constructor
-
-**Parameters**
-
--   `table` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Database table
--   `schema` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A JSON Database schema
-
-Returns **[DbRequestBuilder](#dbrequestbuilder)** The instance
 
 ### removeLastComma
 
@@ -2675,23 +4153,6 @@ This class provides a form for one device
 -   `radio`   (optional, default `[]`)
 -   `status`   (optional, default `-1`)
 
-### constructor
-
-Constructor
-
-**Parameters**
-
--   `id` **[number](#number)** An identifier (optional, default `null`)
--   `name` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A device name (optional, default `null`)
--   `excludeFromAll` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** When all on or all of is called, set this value to `true` won't do action (optional, default `null`)
--   `visible` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Show in dashboard (optional, default `null`)
--   `worksOnlyOnDayNight` **[number](#number)** Trigger on condition : `0` for Both, `1` for day, `2` for night (optional, default `null`)
--   `icon` **[IconForm](#iconform)** An icon (optional, default `null`)
--   `radio` **[RadioForm](#radioform)** A radio informations (optional, default `null`)
--   `status` **[number](#number)** A status (optional, default `null`)
-
-Returns **[DeviceForm](#deviceform)** The instance
-
 ### name
 
 ### excludeFromAll
@@ -2727,20 +4188,22 @@ This class allows to manage devices
 -   `webServices`  
 -   `radioManager`  
 -   `dashboardManager`  
+-   `scenarioManager`  
+-   `translateManager`  
+-   `environmentManager`  
 
-### constructor
+### triggerScenario
 
-Constructor
+Trigger scenario elements
 
 **Parameters**
 
--   `confManager` **[ConfManager](#confmanager)** A configuration manager
--   `formManager` **[FormManager](#formmanager)** A form manager
--   `webServices` **[WebServices](#webservices)** The web services
--   `radioManager` **[RadioManager](#radiomanager)** The radio manager
--   `dashboardManager` **[DashboardManager](#dashboardmanager)** The dashboard manager
+-   `scenario` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A dynamic scenario object
+-   `context` **[DeviceManager](#devicemanager)** The context
 
-Returns **[DeviceManager](#devicemanager)** The instance
+### registerDeviceListForm
+
+Register a device list form
 
 ### registerDeviceTiles
 
@@ -2763,6 +4226,14 @@ Switch a device radio status
 -   `id` **[number](#number)** A device identifier
 -   `status` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A status  (`on`, `off` or radio status) (optional, default `null`)
 
+### switchAll
+
+Switch all devices depending on excludeAll flag
+
+**Parameters**
+
+-   `status` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The status
+
 ### processAPI
 
 Process API callback
@@ -2772,6 +4243,214 @@ Process API callback
 -   `apiRequest` **[APIRequest](#apirequest)** An APIRequest
 
 Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with an APIResponse object
+
+## DevicesListForm
+
+**Extends FormObject.class**
+
+This class provides a form for one device
+
+**Parameters**
+
+-   `id`   (optional, default `null`)
+-   `identifier`   (optional, default `null`)
+-   `status`   (optional, default `null`)
+
+### identifier
+
+### status
+
+### json
+
+Convert json data
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some key / value data
+
+Returns **[DevicesListForm](#deviceslistform)** A form object
+
+### getDevicesName
+
+Form injection method for Devices name
+
+**Parameters**
+
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The modules list array
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of devices name
+
+### getDevicesId
+
+Form injection method for Devices ids
+
+**Parameters**
+
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The modules list array
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of devices id
+
+## DevicesListScenarioForm
+
+**Extends FormObject.class**
+
+This class provides a form for one device
+
+**Parameters**
+
+-   `id`   (optional, default `null`)
+-   `turnOnAll`   (optional, default `null`)
+-   `turnOffAll`   (optional, default `null`)
+-   `devices`   (optional, default `null`)
+
+### turnOnAll
+
+### turnOffAll
+
+### devices
+
+### json
+
+Convert json data
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some key / value data
+
+Returns **[DevicesListScenarioForm](#deviceslistscenarioform)** A form object
+
+## DayNightScenarioForm
+
+**Extends FormObject.class**
+
+This class provides a form for a day / night trigger event for scenario
+
+**Parameters**
+
+-   `id`   (optional, default `null`)
+-   `day`   (optional, default `false`)
+-   `night`   (optional, default `false`)
+
+### day
+
+### night
+
+### json
+
+Convert json data
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some key / value data
+
+Returns **[DayNightScenarioForm](#daynightscenarioform)** A form object
+
+## EnvironmentForm
+
+**Extends FormObject.class**
+
+This class provides home environment form
+
+**Parameters**
+
+-   `id`   (optional, default `null`)
+-   `day`   (optional, default `null`)
+
+### day
+
+### json
+
+Convert json data
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some key / value data
+
+Returns **[EnvironmentForm](#environmentform)** A form object
+
+## EnvironmentManager
+
+This class allows to manage house environment
+
+**Parameters**
+
+-   `appConfiguration`  
+-   `confManager`  
+-   `formManager`  
+-   `webServices`  
+-   `dashboardManager`  
+-   `translateManager`  
+-   `scenarioManager`  
+
+### registerDayNightNotifications
+
+Register for day/night notifications
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback triggered when day/night information is received. Example : `(isNight) => {}`
+-   `id` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An identifier (optional, default `null`)
+
+### unregisterDayNightNotifications
+
+Unegister for day/night notifications
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback triggered when day/night information is received. Example : `(isNight) => {}`
+-   `id` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An identifier (optional, default `null`)
+
+### registerTile
+
+Register day / night tile
+
+### getCoordinates
+
+Return the home's coordinates
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The coordinates
+
+### dispatchDayNightChange
+
+Dispatch day or night changes
+
+### setDay
+
+Set day
+
+### setNight
+
+Set night
+
+### isNight
+
+Is it night ?
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` if night mode, otherwise `false`
+
+### getLocalPort
+
+Get the local HTTP port
+
+Returns **[number](#number)** The local hautomation HTTP port
+
+### getLocalIp
+
+Get the local IP address, null if not found
+
+Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The local IP address
+
+### getMacAddress
+
+Get the mac address
+
+Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The mac address, or `null` if not found
+
+### getLocalAPIUrl
+
+Get the local API Url
+
+Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The local API url (e.g. : <http://192.168.2.34:8100/api/>)
 
 ## FormConfiguration
 
@@ -2787,21 +4466,13 @@ This class allows to manage form configuration
 -   `formClass`   (optional, default `null`)
 -   `inject` **...any** 
 
-### constructor
+### setUpdateCb
 
-Constructor
+Set the update callback. Called back when delete or save action is done.
 
 **Parameters**
 
--   `confManager` **[ConfManager](#confmanager)** A configuration manager
--   `formManager` **[FormManager](#formmanager)** A form manager
--   `webServices` **[WebServices](#webservices)** Web services instance
--   `name` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A name or identifier
--   `list` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if form configuration manage a list, false otherwise (optional, default `false`)
--   `formClass` **Class** A form annotation's implemented class. Can be called later through `register` method (optional, default `null`)
--   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Parameters injection on static methods
-
-Returns **[FormConfiguration](#formconfiguration)** The instance
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback with data as parameter, e.g. `cb(data) => {}`
 
 ### addAdditionalFields
 
@@ -2810,6 +4481,8 @@ Add additional fields
 **Parameters**
 
 -   `form` **Class** A form
+-   `title` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The form title
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Parameters injection on static methods
 
 ### loadConfig
 
@@ -2822,6 +4495,10 @@ Save configuration
 **Parameters**
 
 -   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Object data
+
+### save
+
+Save data
 
 ### comparator
 
@@ -2853,6 +4530,12 @@ Process API callback
 
 Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with an APIResponse object
 
+### getDataCopy
+
+Returns a copy of the data object
+
+Returns **([Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) \| [Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object))** A copy of data
+
 ### getConfig
 
 Return configuration
@@ -2873,16 +4556,6 @@ The generated form is compatible with <https://mozilla-services.github.io/react-
 **Parameters**
 
 -   `translateManager`  
-
-### constructor
-
-Constructor
-
-**Parameters**
-
--   `translateManager` **[TranslateManager](#translatemanager)** A translate manager
-
-Returns **[FormManager](#formmanager)** A form manager
 
 ### register
 
@@ -2910,6 +4583,7 @@ Add additional fields to a form base
 **Parameters**
 
 -   `formBase` **Class** The base form
+-   `title` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The form title
 -   `forms` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of forms
 
 ### sanitize
@@ -2976,16 +4650,6 @@ This class must be extended
 
 -   `id`   (optional, default `null`)
 
-### constructor
-
-Constructor
-
-**Parameters**
-
--   `id` **[number](#number)** An identifier (optional, default `null`)
-
-Returns **[FormObject](#formobject)** The instance
-
 ### json
 
 Convert json data
@@ -2998,6 +4662,27 @@ Returns **[FormObject](#formobject)** A form object
 
 ## id
 
+## GatewayManager
+
+This class manage gateway communications
+
+**Parameters**
+
+-   `environmentManager`  
+-   `version`  
+-   `timeEventService`  
+-   `appConfiguration`  
+
+### getHautomationId
+
+Returns the hautomation ID
+
+Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Hautomation identifier
+
+### transmit
+
+Transmit informations to gateway
+
 ## InstallationManager
 
 This class allows to manage external installation
@@ -3006,17 +4691,6 @@ This class allows to manage external installation
 
 -   `confManager`  
 -   `eventBus`  
-
-### constructor
-
-Constructor
-
-**Parameters**
-
--   `confManager` **[ConfManager](#confmanager)** The configuration manager
--   `eventBus` **EventEmitter** The global event bus
-
-Returns **[InstallationManager](#installationmanager)** The instance
 
 ### register
 
@@ -3077,6 +4751,212 @@ Process Hautomation when all commands has been done
 -   `i` **[number](#number)** The current comment indice
 -   `nb` **[number](#number)** The max number of commands to execute
 
+## IotForm
+
+**Extends FormObject.class**
+
+This class provides an Iot device. Need to be overloaded.
+
+**Parameters**
+
+-   `id`   (optional, default `null`)
+-   `iotApp`   (optional, default `null`)
+-   `name`   (optional, default `null`)
+
+### iotApp
+
+### name
+
+### json
+
+Convert json data
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some key / value data
+
+Returns **[IotForm](#iotform)** A form object
+
+## IotManager
+
+This class allows to manage iot apps
+
+**Parameters**
+
+-   `appConfiguration`  
+-   `webServices`  
+-   `installationManager`  
+-   `formManager`  
+-   `environmentManager`  
+-   `confManager`  
+
+### registerIotsListForm
+
+Register an iots list form
+
+### registerLib
+
+Register an IoT library
+A library folder should contain `global_lib` and `lib` folder, inside `path` parameter
+
+**Parameters**
+
+-   `path` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The library path
+-   `appId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An app identifier
+-   `version` **int** A version number (optional, default `0`)
+-   `form` **[FormObject](#formobject)** A form (optional, default `null`)
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some form injection parameters
+
+### constants
+
+Get the constants `constants().PLATFORMS`, `constants().BOARDS` and `constants().FRAMEWORKS`
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The constants object
+
+### registerApp
+
+Register an IoT library
+An IoT app folder should contain `global_lib`, `lib` and `src` folder, inside `path` parameter.
+A `main.cpp` file should be created under `src` folder.
+
+**Parameters**
+
+-   `path` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The application file path
+-   `appId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An app identifier
+-   `name` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The app name
+-   `version` **int** The application version number
+-   `platform` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A platform
+-   `board` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A board type
+-   `framework` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A framework
+-   `dependencies` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** The array of library dependencies. Can be en empty array or an array of library app identifiers.
+-   `options` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A list of options injected in IoT configuration during flash sequence (optional, default `null`)
+-   `form` **[FormObject](#formobject)** A form (optional, default `null`)
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some form injection parameters
+
+### build
+
+Build a firmware for a specific appId
+
+**Parameters**
+
+-   `appId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An app identifier
+-   `flash` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` if USB flash sequence should be done after build, `false` otherwise (optional, default `false`)
+-   `config` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A configuration injected to firmware (optional, default `null`)
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback `(error, result) => {}` called when firmware / flash is done. The result object contains 2 properties, `firmwarePath` for the firmware, `stdout` for the results
+
+### writeDescriptor
+
+Write platformio ini file descriptor
+
+**Parameters**
+
+-   `folder` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The folder where file should be written
+-   `appId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An app identifier
+
+### iotAppExists
+
+Check if an IoT app exists
+
+**Parameters**
+
+-   `appId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An app identifier
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` if the iot app is registered, `false` otherwise
+
+### getVersion
+
+Get a version for a specific IoT app
+
+**Parameters**
+
+-   `appId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An app identifier
+
+Returns **int** A version number
+
+### getIotApp
+
+Retrive an IoT app object
+
+**Parameters**
+
+-   `appId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An app identifier
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An IoT app
+
+### getIot
+
+Retrieve an IoT (not application, but configured instance)
+
+**Parameters**
+
+-   `id` **[number](#number)** An IoT identifier
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An IoT configuration object
+
+### processAPI
+
+Process API callback
+
+**Parameters**
+
+-   `apiRequest` **[APIRequest](#apirequest)** An APIRequest
+
+Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with an APIResponse object
+
+### comparator
+
+Compare IoT data
+
+**Parameters**
+
+-   `iotData1` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Iot data 1
+-   `iotData2` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Iot data 2
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if id is the same, false otherwise
+
+## IotsListForm
+
+**Extends FormObject.class**
+
+This class provides a iot list form
+
+**Parameters**
+
+-   `id`   (optional, default `null`)
+-   `identifier`   (optional, default `null`)
+
+### identifier
+
+### json
+
+Convert json data
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some key / value data
+
+Returns **[IotsListForm](#iotslistform)** A form object
+
+### getIotsName
+
+Form injection method for Iots name
+
+**Parameters**
+
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The modules list array
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of iots name
+
+### getIotsId
+
+Form injection method for Iots ids
+
+**Parameters**
+
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The modules list array
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of iots id
+
 ## DbMessage
 
 **Extends DbObject.class**
@@ -3087,17 +4967,6 @@ This class is used for messages database
 
 -   `dbHelper`   (optional, default `null`)
 -   `values` **...any** 
-
-### constructor
-
-Radio table descriptor
-
-**Parameters**
-
--   `dbHelper` **[DbHelper](#dbhelper)** A database helper (optional, default `null`)
--   `values` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The values
-
-Returns **[DbObject](#dbobject)** A database object
 
 ## recipient
 
@@ -3126,22 +4995,6 @@ This class allows to manage message sending
 -   `webServices`  
 -   `translateManager`  
 -   `dashboardManager`  
-
-### constructor
-
-Constructor
-
-**Parameters**
-
--   `pluginsManager` **[PluginsManager](#pluginsmanager)** The plugins manager (optional, default `null`)
--   `eventBus` **EventEmitter** The global event bus
--   `userManager` **[UserManager](#usermanager)** The user manager
--   `dbManager` **[DbManager](#dbmanager)** The database manager
--   `webServices` **[WebServices](#webservices)** The web services
--   `translateManager` **[TranslateManager](#translatemanager)** The translate manager
--   `dashboardManager` **[DashboardManager](#dashboardmanager)** The dashboard manager
-
-Returns **[InstallationManager](#installationmanager)** The instance
 
 ### register
 
@@ -3218,6 +5071,7 @@ This class is an interface for plugins
 -   `previousVersion`  
 -   `p`  
 -   `webServices`  
+-   `appConfiguration`  
 -   `servicesManager`  
 -   `dbManager`  
 -   `translateManager`  
@@ -3231,6 +5085,13 @@ This class is an interface for plugins
 -   `installationManager`  
 -   `userManager`  
 -   `messageManager`  
+-   `scenarioManager`  
+-   `alarmManager`  
+-   `camerasManager`  
+-   `radioManager`  
+-   `environmentManager`  
+-   `pluginsManager`  
+-   `iotManager`  
 
 ### exportClass
 
@@ -3252,6 +5113,16 @@ Register an instance as Entry point.
 
 -   `i` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An instance
 
+### getPluginInstance
+
+Get a plugin instance
+
+**Parameters**
+
+-   `identifier` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A plugin identifier
+
+Returns **PluginAPI** A plugin
+
 ## PluginConf
 
 This class is a Plugin POJO
@@ -3260,17 +5131,6 @@ This class is a Plugin POJO
 
 -   `identifier`   (optional, default `null`)
 -   `version`   (optional, default `null`)
-
-### constructor
-
-Constructor
-
-**Parameters**
-
--   `identifier` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Plugin identifier (optional, default `null`)
--   `version` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Plugin version (optional, default `null`)
-
-Returns **User** The instance
 
 ### json
 
@@ -3303,30 +5163,13 @@ This class manage plugins
 -   `installationManager`  
 -   `userManager`  
 -   `messageManager`  
-
-### constructor
-
-Constructor
-
-**Parameters**
-
--   `confManager` **[ConfManager](#confmanager)** The configuration manager
--   `webServices` **[WebServices](#webservices)** The web services
--   `servicesManager` **[ServicesManager](#servicesmanager)** The services manager
--   `dbManager` **[DbManager](#dbmanager)** The database manager
--   `translateManager` **[TranslateManager](#translatemanager)** The translate manager
--   `formManager` **[FormManager](#formmanager)** The form manager
--   `timeEventService` **[TimeEventService](#timeeventservice)** The time event service
--   `schedulerService` **[SchedulerService](#schedulerservice)** The scheduler service
--   `dashboardManager` **[DashboardManager](#dashboardmanager)** The dashboard manager
--   `eventBus` **EventEmitter** The global event bus
--   `themeManager` **[ThemeManager](#thememanager)** The theme manager
--   `sensorsManager` **[SensorsManager](#sensorsmanager)** The sensors manager
--   `installationManager` **[InstallationManager](#installationmanager)** The installation manager
--   `userManager` **[UserManager](#usermanager)** The user manager
--   `messageManager` **[MessageManager](#messagemanager)** The message manager
-
-Returns **[PluginsManager](#pluginsmanager)** The instance
+-   `scenarioManager`  
+-   `alarmManager`  
+-   `camerasManager`  
+-   `radioManager`  
+-   `appConfiguration`  
+-   `environmentManager`  
+-   `iotManager`  
 
 ### getPluginsFromDirectory
 
@@ -3436,6 +5279,81 @@ Process API callback
 
 Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with an APIResponse object
 
+## AlarmAPI
+
+Public API for alarm
+
+**Parameters**
+
+-   `alarmManager`  
+
+### alarmStatus
+
+Get alarm state
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if alarm is enabled, false otherwise
+
+### enableAlarm
+
+Enable alarm
+
+### disableAlarm
+
+Disable alarm
+
+## CameraAPI
+
+Public API for camera
+
+**Parameters**
+
+-   `formManager`  
+-   `plugin`  
+-   `camerasManager`  
+
+### registerForm
+
+Register a camera form
+
+**Parameters**
+
+-   `formClass` **Class** A form annotation's implemented class
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The injected objects
+
+### registerClass
+
+Register a camera class
+
+**Parameters**
+
+-   `c` **Class** A camera extended class
+
+### getCameras
+
+Get all cameras
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** On object with id:name
+
+### getImage
+
+Get a picture
+
+**Parameters**
+
+-   `id` **[number](#number)** Camera identifier
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback with error, image buffer and mime type. Example : `(err, data, mime) => {}`
+-   `timestamp` **[number](#number)** The timestamp of the picture. If `null`, live snapshot. (optional, default `null`)
+
+### record
+
+Record a video session for a specific camera
+
+**Parameters**
+
+-   `id` **[number](#number)** The camera identifier
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback `(err, generatedFilepath) => {}`
+-   `timer` **[number](#number)** Duration of capture in seconds (optional, default `60`)
+
 ## ConfigurationAPI
 
 Public API for configuration
@@ -3469,6 +5387,14 @@ Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refer
 Return the formatted form object
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Formatted form object
+
+### setUpdateCb
+
+Set the update callback. Called back when delete or save action is done.
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback with data as parameter, e.g. `cb(data) => {}`
 
 ## DashboardAPI
 
@@ -3551,6 +5477,58 @@ The DbHelper object allows you to create, update, delete or execute queries on t
 
 Returns **[DbHelper](#dbhelper)** A DbHelper object
 
+## EnvironmentAPI
+
+Public API for home environement
+
+**Parameters**
+
+-   `environmentManager`  
+
+### getCoordinates
+
+Return the home's coordinates
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The coordinates
+
+### setDay
+
+Set day
+
+### setNight
+
+Set night
+
+### isNight
+
+Is it night ?
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` if night mode, otherwise `false`
+
+### registerDayNightNotifications
+
+Register for day/night notifications
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback triggered when day/night information is received. Example : `(isNight) => {}`
+-   `id` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An identifier (optional, default `null`)
+
+### unregisterDayNightNotifications
+
+Unegister for day/night notifications
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback triggered when day/night information is received. Example : `(isNight) => {}`
+-   `id` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An identifier (optional, default `null`)
+
+### getLocalAPIUrl
+
+Get the local API Url
+
+Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The local API url (e.g. : <http://192.168.2.34:8100/api/>)
+
 ## InstallerAPI
 
 Public API for installation of external apps
@@ -3583,6 +5561,94 @@ Execute a command. Can throw an error if wait is `true`
 -   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback (only if wait parameter is false) : `(error, stdout, stderr) => {}` (optional, default `null`)
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An object result if wait is `true`
+
+## IotAPI
+
+Public API for iot
+
+**Parameters**
+
+-   `iotManager`  
+
+### registerLib
+
+Register an IoT library
+A library folder should contain `global_lib` and `lib` folder, inside `path` parameter
+
+**Parameters**
+
+-   `path` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The library path
+-   `appId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An app identifier
+-   `form` **[FormObject](#formobject)** A form (optional, default `null`)
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some form injection parameters
+-   `version` **int** A version number (optional, default `0`)
+
+### registerApp
+
+Register an IoT library
+An IoT app folder should contain `global_lib`, `lib` and `src` folder, inside `path` parameter.
+A `main.cpp` file should be created under `src` folder.
+
+**Parameters**
+
+-   `path` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The application file path
+-   `appId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An app identifier
+-   `name` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The app name
+-   `version` **int** The application version number
+-   `platform` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A platform
+-   `board` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A board type
+-   `framework` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A framework
+-   `form` **[FormObject](#formobject)** A form (optional, default `null`)
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some form injection parameters
+-   `dependencies` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** The array of library dependencies. Can be en empty array or an array of library app identifiers.
+-   `options` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A list of options injected in IoT configuration during flash sequence (optional, default `null`)
+
+### iotAppExists
+
+Check if an IoT app exists
+
+**Parameters**
+
+-   `appId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An app identifier
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` if the iot app is registered, `false` otherwise
+
+### getVersion
+
+Get a version for a specific IoT app
+
+**Parameters**
+
+-   `appId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An app identifier
+
+Returns **int** A version number
+
+### getIot
+
+Retrieve an IoT (not application, but configured instance)
+
+**Parameters**
+
+-   `id` **[number](#number)** An IoT identifier
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An IoT configuration object
+
+### build
+
+Build a firmware for a specific appId
+
+**Parameters**
+
+-   `appId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An app identifier
+-   `flash` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` if USB flash sequence should be done after build, `false` otherwise (optional, default `false`)
+-   `config` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A configuration injected to firmware (optional, default `null`)
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback `(error, result) => {}` called when firmware / flash is done. The result object contains 2 properties, `firmwarePath` for the firmware, `stdout` for the results
+
+### constants
+
+Get the constants `constants().PLATFORMS`, `constants().BOARDS` and `constants().FRAMEWORKS`
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The constants object
 
 ## MessageAPI
 
@@ -3639,6 +5705,73 @@ Get messages
 -   `username` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A username
 -   `lastTimestamp` **[number](#number)** Last timestamp retrieval (optional, default `null`)
 
+## RadioAPI
+
+Public API for radio events
+
+**Parameters**
+
+-   `radioManager`  
+
+### register
+
+Register for radio events
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback triggered when radio information is received. Example : `(radioObj) => {}`
+-   `id` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An identifier (optional, default `null`)
+
+### unregister
+
+Unegister an timer element
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback triggered when radio information is received. Example : `(radioObj) => {}`
+-   `id` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An identifier (optional, default `null`)
+
+## ScenarioAPI
+
+Public API for scenarios
+
+**Parameters**
+
+-   `scenarioManager`  
+
+### register
+
+Register to scenario execution engine
+
+**Parameters**
+
+-   `formPart` **[FormObject](#formobject)** A form part
+-   `triggerCb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A trigger called when a scenario should be executed. E.g. : `(scenario) => {}` (optional, default `null`)
+-   `title` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The title for sub form (can be translation key) (optional, default `null`)
+
+### unregister
+
+Unregister to scenario execution engine
+
+**Parameters**
+
+-   `formPart` **[FormObject](#formobject)** A form part
+-   `triggerCb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A trigger called when a scenario should be executed. E.g. : `(scenario) => {}` (optional, default `null`)
+
+### triggerScenario
+
+Called when a scenario is triggered
+
+**Parameters**
+
+-   `scenario` **[ScenarioForm](#scenarioform)** A scenario
+
+### getScenarios
+
+Return a COPY of the scenarios array
+
+Returns **\[[ScenarioForm](#scenarioform)]** An array of Scenario
+
 ## SchedulerAPI
 
 Public API for time events
@@ -3673,6 +5806,14 @@ Schedule an operation for a registered callback
 -   `id` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An identifier (must be unique)
 -   `timestamp` **timestamp** A timestamp or a constant : `IN_A_MINUTE`, `IN_FIVE_MINUTES`, `IN_TEN_MINUTES`, `IN_THIRTY_MINUTES`, `IN_A_HOUR`, `IN_TWELVE_HOUR`, `IN_A_DAY`
 -   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A data passed to callback when triggered (optional, default `{}`)
+
+### cancel
+
+Cancel a scheduled operation
+
+**Parameters**
+
+-   `id` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An identifier (must be unique)
 
 ### constants
 
@@ -3731,6 +5872,10 @@ Unregister a callback for a/all sensor
 
 Get all sensors
 
+**Parameters**
+
+-   `type` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Sensor's type or category. If not specified, send back all sensors. (optional, default `null`)
+
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** On object with id:name
 
 ### getValue
@@ -3742,6 +5887,21 @@ Get a sensor's value
 -   `id` **[number](#number)** The sensor's identifier
 -   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback e.g. `(err, res) => {}`
 -   `duration` **[number](#number)** A duration in seconds. If null or not provided, will provide last inserted database value. (optional, default `null`)
+
+### getSensor
+
+Get sensor by identifier
+
+**Parameters**
+
+-   `identifier` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An identiifer
+
+Returns **[Sensor](#sensor)** A sensor object
+
+### iotAppPowered
+
+Call this if your plugin is linked to an iot. The iot list form will be automatically added.
+The method should be called before `registerForm()` !
 
 ## ServicesManagerAPI
 
@@ -3787,7 +5947,7 @@ Register an timer element
 
 **Parameters**
 
--   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback triggered when conditions are reached (context will be set back as parameter). Example : `cb(self) {}`
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback triggered when conditions are reached (context will be set back as parameter). Example : `(self) => {}`
 -   `context` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The context to exectue the callback
 -   `mode` **int** Mode (enum) : `EVERY_SECONDS`, `EVERY_MINUTES`, `EVERY_HOURS`, `EVERY_DAYS` or `CUSTOM`
 -   `hour` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The hour value. `*` for all (optional, default `null`)
@@ -3850,12 +6010,47 @@ Add additional fields to user registration
 **Parameters**
 
 -   `form` **[FormObject](#formobject)** A form object
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Parameters injection on static methods
 
 ### getUsers
 
 Get all users (anonymized)
 
 Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of users
+
+### allUsersAtHome
+
+Check if all users are at home
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if everybody is at home, false otherwise
+
+### nobodyAtHome
+
+Check if no users are at home
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if nobody is at home, false otherwise
+
+### somebodyAtHome
+
+Check if at lesat one user is at home
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if somebody is at home, false otherwise
+
+### registerHomeNotifications
+
+Register for user's home notifications, ie when a user leaves / enter home
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback `(user) => {}`
+
+### unregisterHomeNotifications
+
+Unregister for user's home notifications, ie when a user leaves / enter home
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback `(user) => {}`
 
 ## WebAPI
 
@@ -3925,20 +6120,6 @@ This class provides a radio form part
 -   `deviceId`   (optional, default `null`)
 -   `switchId`   (optional, default `null`)
 
-### constructor
-
-Constructor
-
-**Parameters**
-
--   `id` **[number](#number)** The id (optional, default `null`)
--   `module` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The module (optional, default `null`)
--   `protocol` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The protocol (optional, default `null`)
--   `deviceId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The device id (optional, default `null`)
--   `switchId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The switch id (optional, default `null`)
-
-Returns **[RadioForm](#radioform)** The instance
-
 ### module
 
 ### protocol
@@ -3986,18 +6167,9 @@ This class manage radio stuff
 -   `pluginsManager`  
 -   `formManager`  
 -   `eventBus`  
-
-### constructor
-
-Constructor
-
-**Parameters**
-
--   `pluginsManager` **PluginManager** A plugin manager instance
--   `formManager` **[FormManager](#formmanager)** A form manager
--   `eventBus` **EventEmitter** The global event bus
-
-Returns **[RadioManager](#radiomanager)** The instance
+-   `scenarioManager`  
+-   `webServices`  
+-   `translateManager`  
 
 ### pluginsLoaded
 
@@ -4008,6 +6180,24 @@ Initially, this method wad used in contructor.
 
 -   `pluginsManager` **[PluginsManager](#pluginsmanager)** THe plugins manager instance
 -   `context` **[RadioManager](#radiomanager)** The context (self, this, etc ...)
+
+### register
+
+Register for radio events
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback triggered when radio information is received. Example : `(radioObj) => {}`
+-   `id` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An identifier (optional, default `null`)
+
+### unregister
+
+Unegister an timer element
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback triggered when radio information is received. Example : `(radioObj) => {}`
+-   `id` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An identifier (optional, default `null`)
 
 ### registerRadioEvents
 
@@ -4050,6 +6240,272 @@ Emit radio request
 
 Returns **[DbRadio](#dbradio)** A radio  object
 
+### getLastReceivedRadioInformations
+
+Get last received radio informations
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback `cb(radioObjects) => {}`
+-   `nbElements` **[number](#number)** Number of elements (optional, default `100`)
+
+### processAPI
+
+Process API callback
+
+**Parameters**
+
+-   `apiRequest` **[APIRequest](#apirequest)** An APIRequest
+
+Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with an APIResponse object
+
+## RadioScenarioForm
+
+**Extends FormObject.class**
+
+This class provides a radio form part
+
+**Parameters**
+
+-   `id`   (optional, default `null`)
+-   `radioForm`   (optional, default `null`)
+-   `status`   (optional, default `null`)
+
+### radioForm
+
+### status
+
+### json
+
+Convert json data
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some key / value data
+
+Returns **[RadioScenarioForm](#radioscenarioform)** A form object
+
+## RadioScenariosForm
+
+**Extends FormObject.class**
+
+This class provides a list of radio form part
+
+**Parameters**
+
+-   `id`   (optional, default `null`)
+-   `radioScenariosForm`   (optional, default `null`)
+
+### radioScenariosForm
+
+### json
+
+Convert json data
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some key / value data
+
+Returns **[RadioScenariosForm](#radioscenariosform)** A form object
+
+## ScenarioForm
+
+**Extends FormObject.class**
+
+This class provides a form for an scenario
+
+**Parameters**
+
+-   `id`   (optional, default `null`)
+-   `name`   (optional, default `null`)
+-   `enabled`   (optional, default `null`)
+-   `icon`   (optional, default `null`)
+-   `timeTrigger`   (optional, default `null`)
+-   `subActions`   (optional, default `null`)
+
+### name
+
+### enabled
+
+### icon
+
+### timeTrigger
+
+### subActions
+
+### json
+
+Convert json data
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some key / value data
+
+Returns **[ScenarioForm](#scenarioform)** A form object
+
+## ScenarioManager
+
+This class allows to manage scenarios
+
+**Parameters**
+
+-   `confManager`  
+-   `formManager`  
+-   `webServices`  
+-   `timeEventService`  
+-   `schedulerService`  
+
+### registerScenariosListForm
+
+Register a scenario list form
+
+### generateKey
+
+Generate a registration key
+
+**Parameters**
+
+-   `formPart` **[FormObject](#formobject)** A form part
+-   `triggerCb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A trigger called when a scenario should be executed. E.g. : `(scenario) => {}` (optional, default `null`)
+
+Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A generated key
+
+### register
+
+Register to scenario execution engine
+
+**Parameters**
+
+-   `formPart` **[FormObject](#formobject)** A form part
+-   `triggerCb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A trigger called when a scenario should be executed. E.g. : `(scenario) => {}` (optional, default `null`)
+-   `title` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The title for sub form (optional, default `null`)
+
+### unregister
+
+Unregister to scenario execution engine
+
+**Parameters**
+
+-   `formPart` **[FormObject](#formobject)** A form part
+-   `triggerCb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A trigger called when a scenario should be executed. E.g. : `(scenario) => {}` (optional, default `null`)
+
+### triggerScenario
+
+Called when a scenario is triggered
+
+**Parameters**
+
+-   `scenario` **[ScenarioForm](#scenarioform)** A scenario
+
+### getScenarios
+
+Return a COPY of the scenarios array
+
+Returns **\[[ScenarioForm](#scenarioform)]** An array of Scenario
+
+### timeEventScenario
+
+Time event scenario, called every minutes
+
+**Parameters**
+
+-   `context` **[ScenarioManager](#scenariomanager)** The instance (self, this, ...)
+
+## ScenariosListForm
+
+**Extends FormObject.class**
+
+This class provides the list of scenarios
+
+**Parameters**
+
+-   `id`   (optional, default `null`)
+-   `identifier`   (optional, default `null`)
+
+### identifier
+
+### json
+
+Convert json data
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some key / value data
+
+Returns **[ScenariosListForm](#scenarioslistform)** A form object
+
+### getScenariosName
+
+Form injection method for Scenarios name
+
+**Parameters**
+
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The modules list array
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of devices name
+
+### getScenariosId
+
+Form injection method for Scenarios ids
+
+**Parameters**
+
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The modules list array
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of devices id
+
+## ScenarioSubActionForm
+
+**Extends FormObject.class**
+
+This class provides the sub actions
+
+**Parameters**
+
+-   `id`   (optional, default `null`)
+-   `scenario`   (optional, default `null`)
+-   `delay`   (optional, default `null`)
+
+### scenario
+
+### delay
+
+### json
+
+Convert json data
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some key / value data
+
+Returns **[ScenarioSubActionForm](#scenariosubactionform)** A form object
+
+## TimeScenarioForm
+
+**Extends FormObject.class**
+
+This class provides a form for a time trigger event for scenario
+
+**Parameters**
+
+-   `id`   (optional, default `null`)
+-   `day`   (optional, default `null`)
+-   `time`   (optional, default `null`)
+
+### day
+
+### time
+
+### json
+
+Convert json data
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some key / value data
+
+Returns **[TimeScenarioForm](#timescenarioform)** A form object
+
 ## SensorsForm
 
 **Extends FormObject.class**
@@ -4060,17 +6516,6 @@ This class provides a form for one device
 
 -   `id`   (optional, default `null`)
 -   `sensorId`   (optional, default `null`)
-
-### constructor
-
-Constructor
-
-**Parameters**
-
--   `id` **[number](#number)** An identifier (optional, default `null`)
--   `sensorId` **[number](#number)** A sensor identifier (optional, default `null`)
-
-Returns **[SensorsForm](#sensorsform)** The instance
 
 ### sensorId
 
@@ -4104,6 +6549,49 @@ Sensors name injection
 
 Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of names
 
+## SensorsListForm
+
+**Extends FormObject.class**
+
+This class provides a form for sensors
+
+**Parameters**
+
+-   `id`   (optional, default `null`)
+-   `identifier`   (optional, default `null`)
+
+### identifier
+
+### json
+
+Convert json data
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some key / value data
+
+Returns **[SensorsListForm](#sensorslistform)** A form object
+
+### getSensorsName
+
+Form injection method for Sensors name
+
+**Parameters**
+
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The modules list array
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of sensors name
+
+### getSensorsId
+
+Form injection method for Sensors ids
+
+**Parameters**
+
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The modules list array
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of sensors id
+
 ## SensorsManager
 
 This class allows to manage sensors
@@ -4118,22 +6606,6 @@ This class allows to manage sensors
 -   `translateManager`  
 -   `themeManager`  
 
-### constructor
-
-Constructor
-
-**Parameters**
-
--   `pluginsManager` **[PluginsManager](#pluginsmanager)** A plugin manager
--   `eventBus` **EventEmitter** The global event bus
--   `webServices` **[WebServices](#webservices)** The web services
--   `formManager` **[FormManager](#formmanager)** The form manager
--   `confManager` **[ConfManager](#confmanager)** The configuration manager
--   `translateManager` **[TranslateManager](#translatemanager)** The translate manager
--   `themeManager` **[ThemeManager](#thememanager)** The theme manager
-
-Returns **[SensorsManager](#sensorsmanager)** The instance
-
 ### pluginsLoaded
 
 Called automatically when plugins are loaded. Used in separate methods for testing.
@@ -4141,7 +6613,7 @@ Initially, this method wad used in contructor.
 
 **Parameters**
 
--   `pluginsManager` **[PluginsManager](#pluginsmanager)** THe plugins manager instance
+-   `pluginsManager` **[PluginsManager](#pluginsmanager)** The plugins manager instance
 -   `context` **[SensorsManager](#sensorsmanager)** The context (self, this, etc ...)
 
 ### initSensors
@@ -4166,6 +6638,16 @@ Register a callback for a/all sensor
 -   `identifier` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A sensor identifier (retrieved through `getAllSensors()`, or `*` for all) (optional, default `"*"`)
 -   `type` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A sensor type. For all types, use `*` (optional, default `"*"`)
 
+### getSensor
+
+Get sensor by identifier
+
+**Parameters**
+
+-   `identifier` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An identiifer
+
+Returns **[Sensor](#sensor)** A sensor object
+
 ### unregisterSensorEvent
 
 Unregister a callback for a/all sensor
@@ -4179,6 +6661,10 @@ Unregister a callback for a/all sensor
 ### getAllSensors
 
 Get all sensors
+
+**Parameters**
+
+-   `type` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Sensor's type or category. If not specified, send back all sensors. (optional, default `null`)
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** On object with id:name
 
@@ -4242,6 +6728,20 @@ Compare sensor data
 
 Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if id is the same, false otherwise
 
+### getSensorConfiguration
+
+Get sensor configuration. If no parameters are passed, returns the array of all sensor configuration.
+
+**Parameters**
+
+-   `sensorId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The sensor identifier. Can be null. (optional, default `null`)
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The sensor configuration, or configurations, or null if nothing found
+
+### registerSensorsListForm
+
+Register a sensors list form
+
 ## ServicesManager
 
 This class allows to manage services
@@ -4249,16 +6749,6 @@ This class allows to manage services
 **Parameters**
 
 -   `threadsManager`   (optional, default `null`)
-
-### constructor
-
-Constructor
-
-**Parameters**
-
--   `threadsManager` **[ThreadsManager](#threadsmanager)** A thread manager (optional, default `null`)
-
-Returns **[ServicesManager](#servicesmanager)** The instance
 
 ### isServiceRegistered
 
@@ -4319,16 +6809,6 @@ This class generates dashboard
 
 -   `appConfiguration`  
 
-### constructor
-
-Constructor
-
-**Parameters**
-
--   `appConfiguration` **AppConfiguration** Configuration
-
-Returns **[ThemeManager](#thememanager)** The instance
-
 ### getColors
 
 Retrieve the theme colors
@@ -4338,12 +6818,6 @@ Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refer
 ## ThreadsManager
 
 This class allows to manage threads
-
-### constructor
-
-Constructor
-
-Returns **[ThreadsManager](#threadsmanager)** The thread manager
 
 ### stringifyFunc
 
@@ -4429,16 +6903,6 @@ This class manage translations
 
 -   `lng`  
 
-### constructor
-
-Constructor
-
-**Parameters**
-
--   `lng` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The language
-
-Returns **TranslatorManager** The instance
-
 ### addTranslations
 
 Add translation data
@@ -4484,22 +6948,6 @@ This class provides a form for one user
 -   `picture`   (optional, default `null`)
 -   `atHome`   (optional, default `false`)
 
-### constructor
-
-Constructor
-
-**Parameters**
-
--   `id` **[number](#number)** An identifier (optional, default `null`)
--   `username` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Username (optional, default `null`)
--   `password` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Password (optional, default `null`)
--   `level` **int** Authorization level (optional, default `null`)
--   `name` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Full name (optional, default `null`)
--   `picture` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Picture, in base64 format (optional, default `null`)
--   `atHome` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if user is at home, false otherwise (optional, default `false`)
-
-Returns **User** The instance
-
 ### username
 
 ### password
@@ -4532,19 +6980,9 @@ This class allows to manage users (create, delete, search, ...)
 -   `formManager`  
 -   `webServices`  
 -   `dashboardManager`  
-
-### constructor
-
-Constructor
-
-**Parameters**
-
--   `confManager` **[ConfManager](#confmanager)** A configuration manager needed for persistence
--   `formManager` **[FormManager](#formmanager)** A form manager
--   `webServices` **[WebServices](#webservices)** The web services
--   `dashboardManager` **[DashboardManager](#dashboardmanager)** The dashboard manager
-
-Returns **[UserManager](#usermanager)** The instance
+-   `appConfiguration`  
+-   `scenarioManager`  
+-   `environmentManager`  
 
 ### updateTile
 
@@ -4572,6 +7010,82 @@ Get the admin user
 
 Returns **User** The admin user, null if admin user is disabled
 
+### allUsersAtHome
+
+Check if all users are at home
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if everybody is at home, false otherwise
+
+### nobodyAtHome
+
+Check if no users are at home
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if nobody is at home, false otherwise
+
+### somebodyAtHome
+
+Check if a user is at home
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if somebody is at home, false otherwise
+
+### setUserZone
+
+Set user zone
+
+**Parameters**
+
+-   `username` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The username
+-   `inZone` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if user is in zone, false otherwise
+
+### registerHomeNotifications
+
+Register for user's home notifications, ie when a user leaves / enter home
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback `(user) => {}`
+
+### unregisterHomeNotifications
+
+Unregister for user's home notifications, ie when a user leaves / enter home
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback `(user) => {}`
+
+### processAPI
+
+Process API callback
+
+**Parameters**
+
+-   `apiRequest` **[APIRequest](#apirequest)** An APIRequest
+
+Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with an APIResponse object
+
+## UserScenarioForm
+
+**Extends FormObject.class**
+
+This class provides a form for user location trigger event for scenario
+
+**Parameters**
+
+-   `id`   (optional, default `null`)
+-   `mode`   (optional, default `null`)
+
+### mode
+
+### json
+
+Convert json data
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some key / value data
+
+Returns **[UserScenarioForm](#userscenarioform)** A form object
+
 ## SchedulerDbObject
 
 **Extends DbObject.class**
@@ -4583,22 +7097,13 @@ Database object and schema for scheduler
 -   `dbHelper`   (optional, default `null`)
 -   `values` **...any** 
 
-### constructor
-
-Constructor
-
-**Parameters**
-
--   `dbHelper` **[DbHelper](#dbhelper)** A DbHelper object mapping (optional, default `null`)
--   `values` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The values
-
-Returns **[SchedulerDbObject](#schedulerdbobject)** The instance
-
 ## identifier
 
 ## data
 
 ## triggerDate
+
+## triggered
 
 ## SchedulerService
 
@@ -4610,17 +7115,6 @@ This class allows to execute some operations in future
 
 -   `dbManager`  
 -   `timeEventService`  
-
-### constructor
-
-Constructor
-
-**Parameters**
-
--   `dbManager` **[DbManager](#dbmanager)** A DbManager object
--   `timeEventService` **[TimeEventService](#timeeventservice)** The TimeEventService instan e
-
-Returns **[SchedulerService](#schedulerservice)** The instance
 
 ### start
 
@@ -4657,6 +7151,14 @@ Schedule an operation for a registered callback
 -   `timestamp` **timestamp** A timestamp or a constant : `IN_A_MINUTE`, `IN_FIVE_MINUTES`, `IN_TEN_MINUTES`, `IN_THIRTY_MINUTES`, `IN_A_HOUR`, `IN_TWELVE_HOUR`, `IN_A_DAY`
 -   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A data passed to callback when triggered (optional, default `{}`)
 
+### cancel
+
+Cancel a scheduled operation
+
+**Parameters**
+
+-   `id` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An identifier (must be unique)
+
 ### timeEvent
 
 Timer event registered
@@ -4676,19 +7178,6 @@ This class is used for services, start, stop, ...
 -   `threadsManager`   (optional, default `null`)
 -   `mode`   (optional, default `SERVICE_MODE_CLASSIC`)
 -   `command`   (optional, default `null`)
-
-### constructor
-
-Constructor
-
-**Parameters**
-
--   `name` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The service identifier
--   `threadsManager` **ThreadManager** The thread manager, mandatory if using SERVICE_MODE_THREADED mode service (optional, default `null`)
--   `mode` **int** The service running mode : SERVICE_MODE_CLASSIC, SERVICE_MODE_THREADED, SERVICE_MODE_EXTERNAL (optional, default `SERVICE_MODE_CLASSIC`)
--   `command` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The external service command to execute, in case of SERVICE_MODE_EXTERNAL (optional, default `null`)
-
-Returns **[Service](#service)** The instance
 
 ### start
 
@@ -4786,12 +7275,6 @@ Set threads manager
 
 This class allows registered items to be notified on tile recursively
 
-### constructor
-
-Constructor
-
-Returns **[TimeEventService](#timeeventservice)** The instance
-
 ### start
 
 Start the service
@@ -4878,19 +7361,6 @@ This class is a POJO representing an APIRegistration item
 -   `route`   (optional, default `"*"`)
 -   `authLevel`   (optional, default `Authentication.AUTH_USAGE_LEVEL`)
 
-### constructor
-
-Constructor
-
-**Parameters**
-
--   `delegate` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The object which implements the processAPI callback
--   `method` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The method (GET, POST, ...) (optional, default `"*"`)
--   `route` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The needed route (:/foo/bar) (optional, default `"*"`)
--   `authLevel` **int** The authentication level needed to be called (optional, default `Authentication.AUTH_USAGE_LEVEL`)
-
-Returns **[APIRegistration](#apiregistration)** The instance
-
 ### delegate
 
 delegate
@@ -4929,23 +7399,9 @@ This class is a POJO representing an APIRequest item
 -   `path`  
 -   `action`  
 -   `params`  
+-   `req`  
+-   `res`  
 -   `data`   (optional, default `null`)
-
-### constructor
-
-Constructor
-
-**Parameters**
-
--   `method` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The method
--   `ip` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** IP address
--   `route` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The route
--   `path` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** The path (route splitted in array)
--   `action` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The action (first element of route)
--   `params` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The parameters under key / value format
--   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The object sent (optional, default `null`)
-
-Returns **[APIRequest](#apirequest)** The instance
 
 ### method
 
@@ -4998,20 +7454,7 @@ This class is a POJO representing an APIResponse item
 -   `errorCode`   (optional, default `-1`)
 -   `errorMessage`   (optional, default `null`)
 -   `upToDate`   (optional, default `false`)
-
-### constructor
-
-Constructor
-
-**Parameters**
-
--   `success` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Set to true if API success, else false (optional, default `false`)
--   `response` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A response object to transmit (optional) (optional, default `{}`)
--   `errorCode` **int** The error code (optional) (optional, default `-1`)
--   `errorMessage` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The error message (optional) (optional, default `null`)
--   `upToDate` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True will return 304 no content. (optional, default `false`)
-
-Returns **[APIResponse](#apiresponse)** The instance
+-   `contentType`   (optional, default `JSON_CONTENT_TYPE`)
 
 ### success
 
@@ -5037,23 +7480,12 @@ This class manage Web Services call, and more specifically the external APIs
 
 **Parameters**
 
+-   `translateManager`  
 -   `port`   (optional, default `8080`)
 -   `sslPort`   (optional, default `8043`)
 -   `sslKey`   (optional, default `null`)
 -   `sslCert`   (optional, default `null`)
-
-### constructor
-
-Constructor
-
-**Parameters**
-
--   `port` **int** The listening HTTP port (optional, default `8080`)
--   `sslPort` **int** The listening HTTPS port (optional, default `8443`)
--   `sslKey` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The path for SSL key (optional, default `null`)
--   `sslCert` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The path for sslCert key (optional, default `null`)
-
-Returns **[WebServices](#webservices)** The instance
+-   `enableCompression`   (optional, default `true`)
 
 ### start
 
@@ -5122,6 +7554,7 @@ Create an API
 
 -   `req` **[Request](https://developer.mozilla.org/en-US/Add-ons/SDK/High-Level_APIs/request)** The WS request
 -   `endpoint` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The WS endpoint
+-   `res` **[Response](https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/HTML5)** The WS response
 
 Returns **[APIRequest](#apirequest)** An API Request
 
@@ -5167,6 +7600,16 @@ Clean an exported class by removing the `class` property
 -   `exported` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An exported object with `class` property
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A clean object
+
+### cleanDbObject
+
+Clean a DbObject by removing DbHelper
+
+**Parameters**
+
+-   `dbObject` **[DbObject](#dbobject)** A database object
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A cleaned object
 
 ## Convert
 
@@ -5234,6 +7677,57 @@ Format the current date with parameter
 
 Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The formatted date
 
+### secondsElapsedSinceMidnight
+
+Return the number of seconds elapsed since midnight in UTC format
+
+**Parameters**
+
+-   `timestamp` **[number](#number)** A timestamp in seconds
+
+Returns **[number](#number)** A number of seconds elapsed
+
+## GeoUtils
+
+Utility class for coordinates manipulation
+
+### isInZone
+
+Check if coordinates is contained by others coordinates
+
+**Parameters**
+
+-   `longitudeA` **[number](#number)** The longitude's zone
+-   `latitudeA` **[number](#number)** The latitude's zone
+-   `radius` **[number](#number)** The radius in meters
+-   `longitudeB` **[number](#number)** The longitude coordinate to check
+-   `latitudeB` **[number](#number)** The latitude coordinate to check
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True if coordinates B is in zone, false otherwise
+
+### deg2rad
+
+Convert degrees to radian
+
+**Parameters**
+
+-   `angle` **[number](#number)** An degree angle
+
+Returns **[number](#number)** A radian angle
+
+### getDistance
+
+Get the distance in meters of 2 coordinates
+
+**Parameters**
+
+-   `longitudeA` **[number](#number)** The first longitude
+-   `latitudeA` **[number](#number)** The first latitude
+-   `longitudeB` **[number](#number)** The second longitude
+-   `latitudeB` **[number](#number)** The second latitude
+
+Returns **[number](#number)** The distance between coordinates in meter
+
 ## Icons
 
 Utility class for icons
@@ -5242,7 +7736,7 @@ Utility class for icons
 
 Return a list of icons (key / value)
 
-Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The icons under Key / Valye format
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The icons under Key / Value format
 
 ### raw
 
@@ -5271,7 +7765,7 @@ Resize an image and convert to png
 **Parameters**
 
 -   `b64string` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The base64 image string
--   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback when image process is done \`(err, data) => {}``
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback when image process is done `(err, data) => {}`
 -   `size` **[number](#number)** The size in pixel (optional, default `100`)
 
 Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The base64 output image string

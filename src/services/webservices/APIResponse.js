@@ -1,5 +1,7 @@
 "use strict";
 
+const JSON_CONTENT_TYPE = "application/json";
+
 /**
  * This class is a POJO representing an APIResponse item
  * @class
@@ -13,9 +15,10 @@ class APIResponse {
      * @param  {int}  [errorCode=-1]         The error code (optional)
      * @param  {string}  [errorMessage=null] The error message (optional)
      * @param  {boolean}  [upToDate=false] True will return 304 no content.
+     * @param  {string}  [contentType="application/json"] The content type
      * @returns {APIResponse}                 The instance
      */
-    constructor(success = false, response = {}, errorCode = -1, errorMessage = null, upToDate = false) {
+    constructor(success = false, response = {}, errorCode = -1, errorMessage = null, upToDate = false, contentType = JSON_CONTENT_TYPE) {
         /**
          * Success
          * @type {bool} sucess True if no errors
@@ -37,8 +40,9 @@ class APIResponse {
          */
         this.errorMessage = errorMessage;
         this.upToDate = upToDate;
+        this.contentType = contentType;
     }
 
 }
 
-module.exports = {class:APIResponse};
+module.exports = {class:APIResponse, JSON_CONTENT_TYPE:JSON_CONTENT_TYPE};

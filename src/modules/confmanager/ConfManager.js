@@ -49,7 +49,7 @@ class ConfManager {
         if (!process.env.TEST) {
             this.timeEventService.register((self) => {
                 self.writeDataToDisk(self, true);
-            }, this, TimeEventService.EVERY_MINUTES);
+            }, this, TimeEventService.EVERY_HOURS);
         }
     }
 
@@ -104,7 +104,7 @@ class ConfManager {
             }
         } catch (e) {
             if (e.message !== ERROR_EMPTY_FILE && e.message !== ERROR_INVALID_JSON) {
-                Logger.err("Invalid json file for path " + jsonPath);
+                Logger.warn("Invalid json file for path " + jsonPath);
                 throw Error(ERROR_INVALID_FILE);
             } else {
                 throw e;
@@ -145,7 +145,6 @@ class ConfManager {
             } else {
                 try {
                     context.fs.writeFileSync(context.getFilePath(key), context.toBeSaved[key]);
-                    delete context.toBeSaved[key];
                 } catch(e) {
                     Logger.err(e.message);
                 }

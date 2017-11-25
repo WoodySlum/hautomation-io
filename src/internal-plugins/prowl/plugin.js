@@ -7,6 +7,8 @@ const Prowler = require("prowler");
  * @param  {PluginAPI} api The api
  */
 function loaded(api) {
+    api.init();
+    
     /**
      * This class is extended by user form
      * @class
@@ -69,7 +71,7 @@ function loaded(api) {
             this.api.userAPI.getUsers().forEach((user) => {
                 if (recipients === "*" || (recipients instanceof Array && recipients.indexOf(user.username) !== -1)) {
                     try {
-                        var notification = new Prowler.connection(user.prowlApiKey);
+                        var notification = new Prowler.connection(user.ProwlForm.prowlApiKey);
                         // let actionprefixed = "hautomation://";
                         // if (action) {
                         //     actionprefixed += action;

@@ -29,6 +29,13 @@ class ConfigurationAPI {
         PrivateProperties.oprivate(this).formConfiguration = null;
         PrivateProperties.oprivate(this).plugin = plugin;
         this.form = null;
+
+        PrivateProperties.oprivate(this).formConfiguration = new FormConfiguration.class(
+            PrivateProperties.oprivate(this).confManager,
+            PrivateProperties.oprivate(this).formManager,
+            PrivateProperties.oprivate(this).webServices,
+            PrivateProperties.oprivate(this).name
+        );
     }
     /* eslint-enable */
 
@@ -39,12 +46,6 @@ class ConfigurationAPI {
      * @param  {...Object} inject    The injected objects
      */
     register(formClass, ...inject) {
-        PrivateProperties.oprivate(this).formConfiguration = new FormConfiguration.class(
-            PrivateProperties.oprivate(this).confManager,
-            PrivateProperties.oprivate(this).formManager,
-            PrivateProperties.oprivate(this).webServices,
-            PrivateProperties.oprivate(this).name
-        );
         PrivateProperties.oprivate(this).formConfiguration.registerForm(formClass, ...inject);
         PrivateProperties.oprivate(this).plugin.exportClass(formClass);
 
@@ -73,6 +74,15 @@ class ConfigurationAPI {
         } else {
             return null;
         }
+    }
+
+    /**
+     * Set the update callback. Called back when delete or save action is done.
+     *
+     * @param {Function} cb A callback with data as parameter, e.g. `cb(data) => {}`
+     */
+    setUpdateCb(cb) {
+        return PrivateProperties.oprivate(this).formConfiguration.updateCb = cb;
     }
 
 }

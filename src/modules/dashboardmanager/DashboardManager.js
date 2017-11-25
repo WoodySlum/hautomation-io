@@ -7,7 +7,9 @@ const APIResponse = require("./../../services/webservices/APIResponse");
 const DateUtils = require("./../../utils/DateUtils");
 
 const BASE_ROUTE = ":/dashboard/get/";
-const ROUTE = BASE_ROUTE + "[timestamp*]/";
+const ROUTE = BASE_ROUTE + "[timestamp*]/[all*]/";
+const BASE_ROUTE_CUSTOMIZE = ":/dashboard/preferences/set/";
+const CONF_KEY = "dashboard-preferences";
 
 /**
  * This class generates dashboard from tiles
@@ -20,13 +22,24 @@ class DashboardManager {
      * @param  {ThemeManager} themeManager     A theme manager
      * @param  {WebServices} webServices      Web services instance
      * @param  {TranslateManager} translateManager A translate manager
+     * @param  {ConfManager} confManager A configuration manager
      * @returns {DashboardManager}                  The instance
      */
-    constructor(themeManager, webServices, translateManager) {
+    constructor(themeManager, webServices, translateManager, confManager) {
         this.themeManager = themeManager;
         this.webServices = webServices;
         this.translateManager = translateManager;
+        this.confManager = confManager;
         this.webServices.registerAPI(this, WebServices.GET, ROUTE, Authentication.AUTH_USAGE_LEVEL);
+        this.webServices.registerAPI(this, WebServices.POST, BASE_ROUTE_CUSTOMIZE, Authentication.AUTH_USAGE_LEVEL);
+
+        try {
+            this.dashboardPreferences = this.confManager.loadData(Object, CONF_KEY, true);
+        } catch(e) {
+            this.dashboardPreferences = {};
+        }
+
+
         this.lastGenerated = DateUtils.class.timestamp();
 
         this.tiles = [];
@@ -79,15 +92,43 @@ class DashboardManager {
     }
 
     /**
+     * Remove tiles depending on user preferences
+     *
+     * @param  {Array} tiles The tiles
+     * @param  {string} username Username
+     * @returns {Array}          Tiles
+     */
+    filterTiles(tiles, username = null) {
+        if (this.dashboardPreferences[username] && this.dashboardPreferences[username].excludeTiles) {
+            const includeTiles = [];
+            tiles.forEach((tile) => {
+                if (this.dashboardPreferences[username].excludeTiles.indexOf(tile.identifier) === -1) {
+                    includeTiles.push(tile);
+                }
+            });
+
+            return includeTiles;
+        } else {
+            return tiles;
+        }
+    }
+
+    /**
      * Build a dashboard object
      *
+     * @param  {string} username Username
+     * @param  {boolean} allTiles `true` if ot should return all tiles, `false` otherwise
      * @returns {Object} A dashboard object
      */
-    buildDashboard() {
+    buildDashboard(username, allTiles = true) {
+        this.tiles.sort(function(a, b) {
+            return parseFloat(a.order) - parseFloat(b.order);
+        });
         return {
             timestamp:this.lastGenerated,
             timestampFormatted: DateUtils.class.dateFormatted(this.translateManager.t("datetime.format"), this.lastGenerated),
-            tiles:this.tiles
+            excludeTiles:(this.dashboardPreferences[username] && this.dashboardPreferences[username].excludeTiles)?this.dashboardPreferences[username].excludeTiles:[],
+            tiles:this.filterTiles(this.tiles, allTiles?null:username)
         };
     }
 
@@ -106,11 +147,30 @@ class DashboardManager {
                         // Up to date !
                         resolve(new APIResponse.class(true, {}, null, null, true));
                     } else {
-                        resolve(new APIResponse.class(true, self.buildDashboard()));
+                        resolve(new APIResponse.class(true, self.buildDashboard(apiRequest.authenticationData.username, apiRequest.data.all?true:false)));
                     }
                 } else {
-                    resolve(new APIResponse.class(true, self.buildDashboard()));
+                    resolve(new APIResponse.class(true, self.buildDashboard(apiRequest.authenticationData.username, apiRequest.data.all?true:false)));
                 }
+            });
+        } else if (apiRequest.route === BASE_ROUTE_CUSTOMIZE) {
+            return new Promise((resolve) => {
+                if (apiRequest.data.excludeTiles) {
+                    this.dashboardPreferences[apiRequest.authenticationData.username] = {excludeTiles: apiRequest.data.excludeTiles};
+                    // Remove duplicates
+                    const excludeTiles = [];
+                    apiRequest.data.excludeTiles.forEach((excludeTile) => {
+                        if (excludeTiles.indexOf(excludeTile) === -1) {
+                            excludeTiles.push(excludeTile);
+                        }
+                    });
+                    this.confManager.saveData(this.dashboardPreferences, CONF_KEY);
+                    this.lastGenerated = DateUtils.class.timestamp();
+                    resolve(new APIResponse.class(true, {success:true}));
+                } else {
+                    resolve(new APIResponse.class(false, {success:true}));
+                }
+
             });
         }
     }

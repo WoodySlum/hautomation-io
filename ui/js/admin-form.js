@@ -1,4 +1,8 @@
-function adminFormReady() {
+var renderFormGlobal;
+var adminFormSchemaList = {};
+var adminFormSchemaUIList = {};
+
+function adminFormReady(t) {
     function adminForm(item) {
         var formData = {};
         var Form = JSONSchemaForm.default;
@@ -61,11 +65,11 @@ function adminFormReady() {
                 for (var i = 0 ; i < formData.data.length ; i++) {
                     if (parseInt(formData.data[i].id) === parseInt(targetId)) {
                         swal(Object.assign({
-                            title: "js.delete.confirm",
+                            title: t("js.delete.confirm"),
                             type: "warning",
                             showCancelButton: true,
-                            confirmButtonText: "js.continue",
-                            cancelButtonText: "js.cancel",
+                            confirmButtonText: t("js.continue"),
+                            cancelButtonText: t("js.cancel"),
                             showLoaderOnConfirm: true
                         }, swalDefaults)).then(function() {
                             // Confirm
@@ -77,7 +81,7 @@ function adminFormReady() {
                                     p: password
                                 }
                             }).done(function(data) {
-                                loadTiles();
+                                loadTiles(prefix);
                             }).fail(function(msg) {
                                 setError(msg);
                             });
@@ -92,7 +96,7 @@ function adminFormReady() {
             });
         }
 
-        function renderForm(prefix, tableDiv, schema, uiSchema, formData) {
+        var renderForm = function(prefix, tableDiv, schema, uiSchema, formData) {
             tableDiv.style.display = "none";
             document.getElementById(prefix + "form").style.display = "block";
             document.getElementById("add" + prefix).style.display = "none";
@@ -100,7 +104,7 @@ function adminFormReady() {
             ReactDOM.render(React.createElement(Form, {schema:schema, uiSchema:uiSchema, formData:formData, onSubmit: function(data) {
                 $.ajax({
                     type: "POST",
-                    url: vUrl + "conf/" + item + "/set/",
+                    url: vUrl + "conf/" + prefix + "/set/",
                     contentType: "application/json",
                     data: JSON.stringify({
                         u: username,
@@ -110,24 +114,65 @@ function adminFormReady() {
                 }).done(function(data) {
                     document.getElementById(prefix + "form").style.display = "none";
                     tableDiv.style.display = "block";
-                    loadTiles();
+                    loadTiles(prefix);
+                    $(".selectpicker").selectpicker("destroy");
                 }).fail(function(msg) {
                     setError(msg);
+                    $(".selectpicker").selectpicker("destroy");
                 });
             }},
             React.createElement(
               "button",
               { type: "button", className:"btn btn-info", onClick: function() {
-                  loadTiles();
+                  loadTiles(prefix);
+                  $(".selectpicker").selectpicker("destroy");
               }},
-              "button.cancel"
+              t("button.cancel")
           ),
             React.createElement(
               "button",
               { type: "submit", className:"btn btn-success" },
-              "button.save"
+              t("button.save")
             )), document.getElementById(prefix + "form"));
+
+            var htmlForm = document.getElementById(prefix + "form");//.innerHTML;
+            var selects = htmlForm.getElementsByTagName("select");
+
+            if (htmlForm && selects) {
+                for (i=0 ; i < selects.length ; i++) {
+                    var select = selects[i];
+                    select.classList.add("selectpicker");
+                    select.classList.add("show-tick");
+                    select.setAttribute("data-live-search", "true");
+                    // Icons !
+                    if (select.id == "root_icon_icon") {
+                        var sheet = window.document.styleSheets[0];
+                        var options = select.getElementsByTagName("option");
+                        for (j=0 ; j < options.length ; j++) {
+                            var option = options[j];
+                            var val = option.value;
+                            var cssClass = 'icon-' + val;
+                            var cssRulesStringified = JSON.stringify(sheet.cssRules);
+                            if (val && val != "") {
+                                if ($("." + cssClass).length == 0) {
+                                    sheet.insertRule('.' + cssClass + ':before{content:"\\' + val + '"}', sheet.cssRules.length);
+                                }
+
+                                option.setAttribute("data-icon", 'fa ' + cssClass);
+                            }
+                        }
+
+                    }
+                }
+
+                $(".selectpicker").selectpicker({
+                    style: 'btn-default',
+                    size: 10,
+                });
+            }
         }
+
+        renderFormGlobal = renderForm;
 
         function buttonAdd(prefix, tableDiv, formData) {
             document.getElementById("add" + prefix).style.display = "block";
@@ -137,7 +182,7 @@ function adminFormReady() {
             });
         }
 
-        function loadTiles() {
+        function loadTiles(item) {
             $.ajax({
                 type: "GET",
                 url: vUrl + "conf/" + item + "/form/",
@@ -147,8 +192,10 @@ function adminFormReady() {
                 }
             }).done(function(data) {
                 formData = data;
+                adminFormSchemaList[item] = formData.schema;
+                adminFormSchemaUIList[item] = formData.schemaUI;
+                var divTable = document.getElementById(item + "table");
                 if (formData.data instanceof Array)  {
-                    var divTable = document.getElementById(item + "table");
                     buttonAdd(item, divTable, formData);
                     drawSquareInterface(formData, item, divTable, item + "-set", item + "-del", item + "-set", item + "-del");
                 } else {
@@ -159,10 +206,12 @@ function adminFormReady() {
             });
         }
 
-        loadTiles();
+        loadTiles(item);
     }
 
 
     adminForm("devices");
     adminForm("users");
+    adminForm("scenarios");
+    adminForm("alarm");
 }

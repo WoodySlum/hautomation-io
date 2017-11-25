@@ -15,10 +15,12 @@ class APIRequest {
      * @param  {Array} path         The path (route splitted in array)
      * @param  {string} action      The action (first element of route)
      * @param  {Object} params      The parameters under key / value format
+     * @param  {Request} [req]      The request
+     * @param  {Response} [res]     The response
      * @param  {Object} [data=null] The object sent
-     * @returns {APIRequest}         The instance
+     * @returns {APIRequest}        The instance
      */
-    constructor(method, ip, route, path, action, params, data = null) {
+    constructor(method, ip, route, path, action, params, req, res, data = null) {
         /**
          * method
          * @type {string}
@@ -63,6 +65,8 @@ class APIRequest {
          * @type {AuthenticationData}
          */
         this.authenticationData = null;
+        this.req = req;
+        this.res = res;
     }
 
     /**

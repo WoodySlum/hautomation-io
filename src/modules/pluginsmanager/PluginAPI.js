@@ -18,10 +18,18 @@ var ThemeAPI = require("./publicapis/ThemeAPI");
 var InstallerAPI = require("./publicapis/InstallerAPI");
 var UserAPI = require("./publicapis/UserAPI");
 var MessageAPI = require("./publicapis/MessageAPI");
+var ScenarioAPI = require("./publicapis/ScenarioAPI");
+var AlarmAPI = require("./publicapis/AlarmAPI");
+var CameraAPI = require("./publicapis/CameraAPI");
+var RadioAPI = require("./publicapis/RadioAPI");
+var EnvironmentAPI = require("./publicapis/EnvironmentAPI");
+var IotAPI = require("./publicapis/IotAPI");
+var IotForm = require("../iotmanager/IotForm");
 
 var DateUtils = require("./../../utils/DateUtils");
 var Icons = require("./../../utils/Icons");
 var ImageUtils = require("./../../utils/ImageUtils");
+var Cleaner = require("./../../utils/Cleaner");
 
 /**
  * This class is an interface for plugins
@@ -34,6 +42,7 @@ class PluginsAPI {
     //  * @param  {string} previousVersion The plugin's previous version, used for migration
     //  * @param  {object} p The plugin require value
     //  * @param  {WebServices} webServices     The web services
+    //  * @param  {Object} appConfiguration The global configuration
     //  * @param  {ServicesManager} servicesManager     The services manager
     //  * @param  {DbManager} webServices     The database manager
     //  * @param  {TranslateManager} translateManager     The translate manager
@@ -47,9 +56,16 @@ class PluginsAPI {
     //  * @param  {InstallationManager} installationManager The installation manager
     //  * @param  {UserManager} userManager The user manager
     //  * @param  {MessageManager} messageManager The message manager
+    //  * @param  {ScenarioManager} scenarioManager The scenario manager
+    //  * @param  {AlarmManager} alarmManager The alarm manager
+    //  * @param  {CamerasManager} camerasManager The cameras manager
+    //  * @param  {RadioManager} radioManager The radio manager
+    //  * @param  {EnvironmentManager} environmentManager The environment manager
+    //  * @param  {PluginsManager} pluginsManager The plugins manager
+    //  * @param  {IotManager} iotManager The IoT manager
     //  * @returns {PluginAPI}                  Insntance
     //  */
-    constructor(previousVersion, p, webServices, servicesManager, dbManager, translateManager, formManager, confManager, timeEventService, schedulerService, dashboardManager, themeManager, sensorsManager, installationManager, userManager, messageManager) {
+    constructor(previousVersion, p, webServices, appConfiguration, servicesManager, dbManager, translateManager, formManager, confManager, timeEventService, schedulerService, dashboardManager, themeManager, sensorsManager, installationManager, userManager, messageManager, scenarioManager, alarmManager, camerasManager, radioManager, environmentManager, pluginsManager, iotManager) {
         PrivateProperties.createPrivateState(this);
         this.previousVersion = previousVersion;
         this.p = p;
@@ -71,8 +87,11 @@ class PluginsAPI {
             {FormObject: FormObject},
             {DateUtils: DateUtils},
             {Icons: Icons},
-            {ImageUtils:ImageUtils},
-            {Logger: Logger}
+            {ImageUtils: ImageUtils},
+            {Logger: Logger},
+            {Cleaner: Cleaner},
+            {cachePath:appConfiguration.cachePath},
+            {IotForm:IotForm.class}
         );
 
         // API part
@@ -89,6 +108,13 @@ class PluginsAPI {
         this.installerAPI = new InstallerAPI.class(installationManager, this.version);
         this.userAPI = new UserAPI.class(userManager);
         this.messageAPI = new MessageAPI.class(messageManager);
+        this.scenarioAPI = new ScenarioAPI.class(scenarioManager);
+        this.alarmAPI = new AlarmAPI.class(alarmManager);
+        this.cameraAPI = new CameraAPI.class(formManager, this, camerasManager);
+        this.radioAPI = new RadioAPI.class(radioManager);
+        this.environmentAPI = new EnvironmentAPI.class(environmentManager);
+        this.iotAPI = new IotAPI.class(iotManager);
+        PrivateProperties.oprivate(this).pluginsManager = pluginsManager;
     }
 
     // /**
@@ -138,6 +164,16 @@ class PluginsAPI {
      */
     registerInstance(i) {
         this.instance = i;
+    }
+
+    /**
+     * Get a plugin instance
+     *
+     * @param  {string} identifier A plugin identifier
+     * @returns {PluginAPI}            A plugin
+     */
+    getPluginInstance(identifier) {
+        return PrivateProperties.oprivate(this).pluginsManager.getPluginByIdentifier(identifier, true)?PrivateProperties.oprivate(this).pluginsManager.getPluginByIdentifier(identifier, true).instance:null;
     }
 }
 

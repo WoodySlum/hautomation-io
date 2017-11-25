@@ -29,6 +29,7 @@ class ServicesManagerAPI {
         PrivateProperties.oprivate(this).servicesManager.add(service);
         this.services.push(service);
     }
+
 }
 
 module.exports = {class:ServicesManagerAPI};

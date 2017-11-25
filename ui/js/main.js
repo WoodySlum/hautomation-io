@@ -1,3 +1,22 @@
+var globalExcludeTiles = [];
+var localization = {};
+var uiTranslationRegistration = {};
+var uiTranslationRegistrationCounter = 0;
+var uit = function(key, map, writeSpan = true) {
+    var gKey = 'translate-' + key + '-' + uiTranslationRegistrationCounter
+    uiTranslationRegistration[gKey] = {
+        key: key,
+        map: map,
+        htmlId: gKey
+    }
+
+    if (writeSpan) {
+        document.write('<span id="' + gKey + '">' + key + '</span>');
+    }
+
+    uiTranslationRegistrationCounter++;
+}
+
 var vUrl = 'api/';
 var username = null;
 var password = null;
@@ -25,7 +44,6 @@ $(document).ready(function() {
     var refreshCameraInt = 5; // In seconds
     var refreshListInt = 5; // In seconds
     var cameraPanVal = 30;
-    var ambiancesItems = null;
     var alarmStatus = false;
     var holidaysStatus = false;
     var actionData = {};
@@ -106,11 +124,37 @@ $(document).ready(function() {
     var objectsList;
     var infoTileList = new Array();
     var tilesData = {};
-    var ambianceList;
     var houseInfo;
     var tileEditMode = false;
     var videoCameraMode = false;
     var cameraWallStream;
+
+    $.getJSON("/lng/", function(json) {
+        localization = json;
+        Object.keys(uiTranslationRegistration).forEach(function(uiKey) {
+            if (document.getElementById(uiTranslationRegistration[uiKey].htmlId)) {
+                document.getElementById(uiTranslationRegistration[uiKey].htmlId).innerHTML = t(uiTranslationRegistration[uiKey].key, uiTranslationRegistration[uiKey].map);
+            }
+
+        });
+    });
+
+    var t = function(key, map) {
+        var l = key;
+        if (localization && localization[key]) {
+            l = localization[key];
+            if (l == null || l == '') {
+                l = key;
+            }
+            if (map) {
+                for (i = 0; i < map.length; i++) {
+                    l = l.replace("%@", map[i]);
+                }
+            }
+        }
+
+        return l;
+    }
 
     var Base64 = {
         _keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
@@ -221,23 +265,6 @@ $(document).ready(function() {
             zoom: 2
         })
     });
-
-    var t = function(key, map) {
-        var l = key;
-        if (localization && localization[key]) {
-            l = localization[key];
-            if (l == null || l == '') {
-                l = key;
-            }
-            if (map) {
-                for (i = 0; i < map.length; i++) {
-                    l = l.replace("%@", map[i]);
-                }
-            }
-        }
-
-        return l;
-    }
 
     var getColor = function(colorName) {
         return $("#" + colorName).css("background-color");
@@ -388,7 +415,7 @@ $(document).ready(function() {
 
     var start = function() {
         getDashboard();
-        getSettings();
+        //getSettings();
         //getCameras();
         getFullObjects();
     }
@@ -433,7 +460,7 @@ $(document).ready(function() {
                 $('#manageZone').remove();
                 $('#manageTab').remove();
             }
-            adminFormReady();
+            adminFormReady(t);
 
             // Login
             if ($("#rememberMe").is(':checked')) {
@@ -592,33 +619,36 @@ $(document).ready(function() {
         }
     });
 
-    var updateTimeLapseStatus = function() {
+    var updateTimeLapseStatus = function(token) {
+        //CAMERAS_MANAGER_TIMELAPSE_STATUS_GET_BASE
         if (!timeLapseRunning) {
             timeLapseRunning = true;
             reqTimeLapseStatus = $.ajax({
-                type: "POST",
-                url: vUrl,
+                type: "GET",
+                url: vUrl + "camera/timelapse/status/get/" + token + "/",
                 data: {
-                    username: username,
-                    ePassword: ePassword,
-                    method: "getTimeLapseStatus",
-                    videoToken: videoToken,
-                    videoTmpFile: videoTmpFile
+                    u: username,
+                    p: password
                 }
             }).done(function(msg) {
-                var obj = jQuery.parseJSON(msg);
-                consolelog(obj);
+                console.log(msg);
                 clearInterval(videoTimeLapseTimer);
-                if (obj.generated === true) {
+                if (msg.status === 3) {
                     toastr.info(t('js.timelapse.success', null));
-
-                    $("#timeLapseResults").html(t('js.timelapse.success.result', ['<a href="' + vUrl + '?username=' + username + '&ePassword=' + encodeURIComponent(ePassword) + '&method=getTimeLapse&videoToken=' + videoToken + '" target="_blank">', '</a>']));
+                    $("#timeLapseResults").html(t('js.timelapse.success.result', ['<a href="' + vUrl + 'camera/timelapse/get/' + token + '?u=' + username + '&p=' + encodeURIComponent(password) + '" target="_blank">', '</a>']));
                     $('timeLapse').prop('disabled', false);
+                } else if (msg.status === 4) {
+                    toastr.error(t('js.timelapse.error', null));
+                    $("#timeLapseResults").html('<div>' + t('js.timelapse.error', null) + '</div>');
                 } else {
-                    var percVideoProcess = Math.round((obj.size * 100) / videoLength);
-                    if (percVideoProcess >= 99) percVideoProcess = 99;
-                    $("#timeLapseResults").html('<div class="progress"><div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="' + percVideoProcess + '" aria-valuemin="0" aria-valuemax="100" style="width: ' + percVideoProcess + '%;">' + percVideoProcess + '%</div></div>');
-                    videoTimeLapseTimer = window.setInterval(updateTimeLapseStatus, 5000);
+                    if (msg.status === 0) {
+                        $("#timeLapseResults").html('<div>' + t('js.timelapse.pending', null) + '</div>');
+                    } else if (msg.status === 1) {
+                        $("#timeLapseResults").html('<div>' + t('js.timelapse.started', null) + '</div>');
+                    } else if (msg.status === 2) {
+                        $("#timeLapseResults").html('<div>' + t('js.timelapse.running', null) + '</div>');
+                    }
+                    videoTimeLapseTimer = window.setInterval(updateTimeLapseStatus, 5000, token);
                 }
                 timeLapseRunning = false;
             }).fail(function(msg) {
@@ -656,24 +686,18 @@ $(document).ready(function() {
 
             reqTimeLapse = $.ajax({
                 type: "POST",
-                url: vUrl,
-                data: {
-                    username: username,
-                    ePassword: ePassword,
-                    method: "timeLapse",
-                    camera: selectedCamera,
-                    nightScene: nightScene,
-                    timeLapseDuration: timeLapseDuration
-                }
+                url: vUrl + "camera/timelapse/set/" + selectedCamera + "/" + timeLapseDuration + "/",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    u: username,
+                    p: password,
+                    data: {}
+                })
             }).done(function(msg) {
-                var obj = jQuery.parseJSON(msg);
-                consolelog(obj);
-                videoLength = obj.estimatedSize;
-                videoToken = obj.token;
-                videoTmpFile = obj.tmpFile;
+                var token = msg.token;
 
-                $("#timeLapseResults").html(t('js.timelapse.generating2', [obj.width, obj.height]));
-                updateTimeLapseStatus();
+                $("#timeLapseResults").html(t('js.timelapse.generating2'));
+                updateTimeLapseStatus(token);
 
             }).fail(function(msg) {
                 $("#timeLapseResults").html('');
@@ -1121,7 +1145,9 @@ $(document).ready(function() {
 
             case "InfoOneText":
                 htmlTile += '<div id="' + tile.identifier + '" class="' + actionCss + ' subTile" style="background-color:' + backgroundColor + ';color:' + foregroundColor + ';">';
-                htmlTile += '<i class="fa deviceIcon" data-unicode="' + tile.icon + '">&#x' + tile.icon + '</i><br/>';
+                if (tile.icon) {
+                    htmlTile += '<i class="fa deviceIcon" data-unicode="' + tile.icon + '">&#x' + tile.icon + '</i><br/>';
+                }
                 if (tile.text.length > 50) {
                     htmlTile += '<span class="smallerText">' + tile.text + '</span>';
                 } else {
@@ -1131,21 +1157,27 @@ $(document).ready(function() {
                 break;
             case "InfoTwoText":
                 htmlTile += '<div id="' + tile.identifier + '" class="' + actionCss + ' infoTile subTile" style="background-color:' + backgroundColor + ';color:' + foregroundColor + ';">';
-                htmlTile += '<i class="fa deviceIcon" data-unicode="' + tile.icon + '">&#x' + tile.icon + '</i><br/>';
+                if (tile.icon) {
+                    htmlTile += '<i class="fa deviceIcon" data-unicode="' + tile.icon + '">&#x' + tile.icon + '</i><br/>';
+                }
                 htmlTile += tile.text;
                 htmlTile += '<h5>' + tile.subtext + '</h5>';
                 htmlTile += '</div>';
                 break;
             case "InfoTwoIcon":
                 htmlTile += '<div id="' + tile.identifier + '" class="' + actionCss + ' infoTile subTile" style="background-color:' + backgroundColor + ';color:' + foregroundColor + ';">';
-                htmlTile += '<i class="fa deviceIcon" data-unicode="' + tile.icon + '">&#x' + tile.icon + '</i><br/>';
+                if (tile.icon) {
+                    htmlTile += '<i class="fa deviceIcon" data-unicode="' + tile.icon + '">&#x' + tile.icon + '</i><br/>';
+                }
                 htmlTile += '<i class="fa deviceSubIcon" data-unicode="' + tile.subicon + '">&#x' + tile.subicon + '</i><br />';
                 htmlTile += tile.text;
                 htmlTile += '</div>';
                 break;
             case "ActionOneIcon":
                 htmlTile += '<div id="' + tile.identifier + '" class="' + actionCss + ' action actionNoStatusTile subTile" style="background-color:' + backgroundColor + ';color:' + foregroundColor + ';">';
-                htmlTile += '<i class="fa deviceIcon" data-unicode="' + tile.icon + '">&#x' + tile.icon + '</i><br/>';
+                if (tile.icon) {
+                    htmlTile += '<i class="fa deviceIcon" data-unicode="' + tile.icon + '">&#x' + tile.icon + '</i><br/>';
+                }
                 htmlTile += tile.text;
                 htmlTile += '</div>';
                 break;
@@ -1157,7 +1189,9 @@ $(document).ready(function() {
                 htmlTile += 'class="action deviceTile ';
                 if (tile.status) htmlTile += 'deviceTileActive ';
                 htmlTile += 'subTile" style="background-color:' + backgroundColor + ';color:' + foregroundColor + ';">';
-                htmlTile += '<i class="fa deviceIcon" data-unicode="' + tile.icon + '">&#x' + tile.icon + '</i><br/>';
+                if (tile.icon) {
+                    htmlTile += '<i class="fa deviceIcon" data-unicode="' + tile.icon + '">&#x' + tile.icon + '</i><br/>';
+                }
                 htmlTile += tile.text;
                 htmlTile += '</div>';
                 break;
@@ -1169,7 +1203,9 @@ $(document).ready(function() {
                 break;
             case "PicturesIcon":
                 htmlTile += '<div id="' + tile.identifier + '" class="' + actionCss + ' infoTile subTile" style="background-color:' + backgroundColor + ';color:' + foregroundColor + ';">';
-                htmlTile += '<i class="fa deviceIcon" data-unicode="' + tile.icon + '">&#x' + tile.icon + '</i><br/>';
+                if (tile.icon) {
+                    htmlTile += '<i class="fa deviceIcon" data-unicode="' + tile.icon + '">&#x' + tile.icon + '</i><br/>';
+                }
                 for (i = 0; i < tile.pictures.length; i++) {
                     htmlTile += '<img src="data:image/jpg;base64,' + tile.pictures[i] + '" />&nbsp;&nbsp;';
                 }
@@ -1177,7 +1213,9 @@ $(document).ready(function() {
                 break;
             case "GenericAction":
                 htmlTile += '<div id="' + tile.identifier + '" class="' + actionCss + ' genericAction action actionNoStatusTile subTile" style="background-color:' + backgroundColor + ';color:' + foregroundColor + ';">';
-                htmlTile += '<i class="fa deviceIcon" data-unicode="' + tile.icon + '">&#x' + tile.icon + '</i><br/>';
+                if (tile.icon) {
+                    htmlTile += '<i class="fa deviceIcon" data-unicode="' + tile.icon + '">&#x' + tile.icon + '</i><br/>';
+                }
                 htmlTile += tile.text;
                 htmlTile += '</div>';
                 break;
@@ -1189,13 +1227,17 @@ $(document).ready(function() {
                 htmlTile += 'class="' + actionCss + ' genericActionWithStatus action deviceTile ';
                 if (tile.status) htmlTile += 'deviceTileActive ';
                 htmlTile += 'subTile" style="background-color:' + backgroundColor + ';color:' + foregroundColor + ';">';
-                htmlTile += '<i class="fa deviceIcon" data-unicode="' + tile.icon + '">&#x' + tile.icon + '</i><br/>';
+                if (tile.icon) {
+                    htmlTile += '<i class="fa deviceIcon" data-unicode="' + tile.icon + '">&#x' + tile.icon + '</i><br/>';
+                }
                 htmlTile += tile.text;
                 htmlTile += '</div>';
                 break;
             default:
                 htmlTile += '<div id="' + tile.identifier + '" class="' + actionCss + ' infoTile subTile" style="background-color:' + backgroundColor + ';color:' + foregroundColor + ';">';
-                htmlTile += '<i class="fa deviceIcon" data-unicode="' + tile.icon + '">&#x' + tile.icon + '</i><br/>';
+                if (tile.icon) {
+                    htmlTile += '<i class="fa deviceIcon" data-unicode="' + tile.icon + '">&#x' + tile.icon + '</i><br/>';
+                }
                 htmlTile += tile.text;
                 htmlTile += '<h5>' + tile.subtext + '</h5>';
                 htmlTile += '</div>';
@@ -1393,19 +1435,17 @@ $(document).ready(function() {
                     showLoader();
 
                     $.ajax({
-                        type: "POST",
-                        url: vUrl,
+                        type: "GET",
+                        url: vUrl + "dashboard/get/0/1/",
                         data: {
-                            username: username,
-                            ePassword: ePassword,
-                            method: "getDashboard",
-                            data: JSON.stringify({
-                                all: !tileEditMode
-                            })
+                            u: username,
+                            p: password,
                         }
                     }).done(function(msg) {
-                        var dashboardItems = JSON.parse(msg);
+                        var dashboardItems = msg;
+
                         if (!tileEditMode) {
+                            globalExcludeTiles = msg.excludeTiles;
                             if (dashboardItems) {
                                 generateTiles(dashboardItems.tiles, 'tiles');
                                 tileActions();
@@ -1417,8 +1457,8 @@ $(document).ready(function() {
                             $(".tile").addClass("shake-constant");
                             for (k = 0; k < dashboardItems.tiles.length; k++) {
                                 var excluded = false;
-                                if ((settings.user !== null) && (settings.user.excludeTiles !== null)) {
-                                    if (jQuery.inArray(dashboardItems.tiles[k].identifier, settings.user.excludeTiles) !== -1) {
+                                if ((settings.user !== null) && (globalExcludeTiles !== null)) {
+                                    if (jQuery.inArray(dashboardItems.tiles[k].identifier, globalExcludeTiles) !== -1) {
                                         excluded = true;
                                     }
                                 }
@@ -1467,20 +1507,31 @@ $(document).ready(function() {
                                 consolelog(visible);
                                 identifier = identifier.replace("-editTiles-visible", "").replace("-editTiles-invisible", "");
 
-                                if (!settings.user.excludeTiles) {
-                                    settings.user.excludeTiles = new Array();
+                                if (!globalExcludeTiles) {
+                                    globalExcludeTiles = new Array();
                                 }
+
+                                var index = globalExcludeTiles.indexOf(identifier);
                                 if (!visible) {
-                                    if (jQuery.inArray(identifier, settings.user.excludeTiles) === -1) {
-                                        settings.user.excludeTiles.push(identifier);
+                                    if (index === -1) {
+                                        globalExcludeTiles.push(identifier);
                                     }
                                 } else {
-                                    if (jQuery.inArray(identifier, settings.user.excludeTiles) !== -1) {
-                                        settings.user.excludeTiles = jQuery.grep(settings.user.excludeTiles, function(value) {
+                                    if (index !== -1) {
+                                        globalExcludeTiles.splice(index, 1);
+                                    }
+                                }
+                                /*if (!visible) {
+                                    if (jQuery.inArray(identifier, globalExcludeTiles) === -1) {
+                                        globalExcludeTiles.push(identifier);
+                                    }
+                                } else {
+                                    if (jQuery.inArray(identifier, globalExcludeTiles) !== -1) {
+                                        globalExcludeTiles = jQuery.grep(globalExcludeTiles, function(value) {
                                             return value != identifier;
                                         });
                                     }
-                                }
+                                }*/
 
                             });
                         } else {
@@ -1492,15 +1543,15 @@ $(document).ready(function() {
                             showLoader();
                             $.ajax({
                                 type: "POST",
-                                url: vUrl,
-                                data: {
-                                    username: username,
-                                    ePassword: ePassword,
-                                    method: "setExcludeTiles",
-                                    data: JSON.stringify({
-                                        excludeTiles: settings.user.excludeTiles
-                                    })
-                                }
+                                url: vUrl + "dashboard/preferences/set/",
+                                contentType: "application/json",
+                                data: JSON.stringify({
+                                    u: username,
+                                    p: password,
+                                    data:{
+                                        excludeTiles:globalExcludeTiles
+                                    }
+                                })
                             }).done(function(msg) {
                                 getDashboard();
                                 hideLoader();
@@ -1608,7 +1659,7 @@ $(document).ready(function() {
                     })
                 }).done(function(msg) {
                     var response = msg;
-                    if (response.success) {
+                    if (response.success && typeof(response.success) !== "boolean") {
                         toastr.success(response.success);
                     }
                     if (response.info) {
@@ -1659,7 +1710,7 @@ $(document).ready(function() {
                 var timestamp = 0;
                 if (notifications) {
                     if (notifications.length > 0) {
-                        timestamp = notifications[0].ts;
+                        timestamp = notifications[0].timestamp;
                     }
 
                     setTimeout(function() {
@@ -1761,47 +1812,7 @@ $(document).ready(function() {
         $('#cameras').click(function() {
             $("#cameraTabAction").trigger("click");
         });
-
-        $('#ambiances--H--ambiances').click(function() {
-            $("#ambianceTabBtn").trigger("click");
-        });
     }
-
-    var getAmbiancesItems = function() {
-
-        ambiancesItems = JSON.parse(readCookie('ambiances-cache'));
-        if (ambiancesItems == null) {
-            showLoader();
-        } else {
-            generateTiles(ambiancesItems, 'tilesAmbiance');
-            tileActions();
-        }
-
-        $.ajax({
-            type: "POST",
-            url: vUrl,
-            data: {
-                username: username,
-                ePassword: ePassword,
-                method: "getAmbiancesItems"
-            }
-        }).done(function(msg) {
-            ambiancesItems = JSON.parse(msg);
-            if (ambiancesItems) {
-                generateTiles(ambiancesItems, 'tilesAmbiance');
-                tileActions();
-            }
-            bakeCookie('ambiances-cache', msg);
-            hideLoader();
-        }).fail(function(msg) {
-            setError(msg);
-            hideLoader();
-        });
-    };
-
-    $("#ambianceTabBtn").click(function() {
-        getAmbiancesItems();
-    });
 
     var refreshCamera = function() {
         /*if ($('#cameraTab').attr('class').indexOf("active") > 0) {
@@ -1892,7 +1903,6 @@ $(document).ready(function() {
         if (cameras == null) {
             return false;
         }
-        keys = Object.keys(cameras);
         cameraSelector = $("#cameraSelector");
 
         foundDefaultCamera = false;
@@ -1904,23 +1914,24 @@ $(document).ready(function() {
             cameraSelector.append("<label class=\"btn btn-default cameraSelectorClick\" id=\"idcameraall\"><input type=\"radio\" name=\"options\" id=\"optCameraall\" />" + t('js.camera.selector.all', null) + "</label>");
 
             cameraWallStream = [];
-            for (i = 0; i < keys.length; i++) {
+            for (i = 0; i < cameras.length; i++) {
                 //camSelectorContent =
-                cameraSelector.append("<label class=\"btn btn-default cameraSelectorClick\" id=\"idcamera" + cameras[keys[i]]["key"] + "\"><input type=\"radio\" name=\"options\" id=\"optCamera" + cameras[keys[i]]["key"] + "\" />" + cameras[keys[i]]["description"] + "</label>");
+                cameraSelector.append("<label class=\"btn btn-default cameraSelectorClick\" id=\"idcamera" + cameras[i].id + "\"><input type=\"radio\" name=\"options\" id=\"optCamera" + cameras[i].id + "\" />" + cameras[i].name + "</label>");
 
-                if (cameras[keys[i]]["videoUrl"] !== null) {
+                var videoUrl = vUrl + "camera/get/mjpeg/" + cameras[i].id + "/?u=" + username + "&p=" + password;
+                if (videoUrl !== null) {
                     if ((j > 0) && ((j % 3) == 0)) {
                         wall += '</div><div class="row">';
                     }
 
 
-                    var canvasId = 'wall-stream-' + keys[i];
+                    var canvasId = 'wall-stream-' + cameras[i].id;
 
                     //var player = new MJPEG.Player(canvasId, (vUrl + cameras[keys[i]]["videoUrl"]), {});
                     //cameraWallStream.push(player);
 
                     // wall += '<div class="col-md-4 cameraWallCrop cameraSelectorClick" id="idcam' + cameras[keys[i]]["key"] + '"><div>' + cameras[keys[i]]["description"] + '</div><canvas id="' + canvasId + '"></canvas></div>';
-                    wall += '<div class="col-md-4 cameraWallCrop cameraSelectorClick" id="idcam' + cameras[keys[i]]["key"] + '"><div>' + cameras[keys[i]]["description"] + '</div><img class="cameraWallImage" id="camera-preview-' + cameras[keys[i]]["key"] + '" src="' + vUrl + cameras[keys[i]]["videoUrl"] + '" /></div>';
+                    wall += '<div class="col-md-4 cameraWallCrop cameraSelectorClick" id="idcam' + cameras[i].id + '"><div>' + cameras[i].name + '</div><img class="cameraWallImage" id="camera-preview-' + cameras[i].id + '" src="' + videoUrl + '" /></div>';
                     $("#cameraWall").html(wall);
 
                     j++;
@@ -1936,10 +1947,11 @@ $(document).ready(function() {
 
         } else {
             // Resume video
-            for (i = 0; i < keys.length; i++) {
-                if (cameras[keys[i]]["videoUrl"] !== null && $("#camera-preview-" + keys[i]).attr("src") == "") {
-                    consolelog("Resuming video for #camera-preview-" + cameras[keys[i]]["key"]);
-                    $("#camera-preview-" + cameras[keys[i]]["key"]).attr("src", vUrl + cameras[keys[i]]["videoUrl"]);
+            for (i = 0; i < cameras.length; i++) {
+                var videoUrl = vUrl + "camera/get/mjpeg/" + cameras[i].id + "/?u=" + username + "&p=" + password;
+                if (videoUrl !== null && $("#camera-preview-" + cameras[i].id).attr("src") == "") {
+                    consolelog("Resuming video for #camera-preview-" + cameras[i].id);
+                    $("#camera-preview-" + cameras[i].id).attr("src", videoUrl);
                 }
             }
         }
@@ -1967,11 +1979,11 @@ $(document).ready(function() {
                 }
 
                 // Restart cameraWall
-                var keys = Object.keys(cameras);
-                for (i = 0; i < keys.length; i++) {
-                    if ($("#camera-preview-" + keys[i]) && $("#camera-preview-" + keys[i]).attr("src") == "") {
-                        consolelog("Restart MJPEG flow for " + "#camera-preview-" + keys[i]);
-                        $("#camera-preview-" + cameras[keys[i]]["key"]).attr("src", vUrl + cameras[keys[i]]["videoUrl"]);
+                for (i = 0; i < cameras.length; i++) {
+                    var videoUrl = vUrl + "camera/get/mjpeg/" + cameras[i].id + "/?u=" + username + "&p=" + password;
+                    if ($("#camera-preview-" + keys[i]) && $("#camera-preview-" + cameras[i].id).attr("src") == "") {
+                        consolelog("Restart MJPEG flow for " + "#camera-preview-" + cameras[i].id);
+                        $("#camera-preview-" + cameras[i].id).attr("src", videoUrl);
                     }
                 }
 
@@ -1983,12 +1995,11 @@ $(document).ready(function() {
                 $("#cameraHistoryForm").show();
 
                 // Stop camera wall stream
-                var keys = Object.keys(cameras);
-                for (i = 0; i < keys.length; i++) {
-                    if ($("#camera-preview-" + keys[i]) && $("#camera-preview-" + keys[i]).attr("src") != "") {
+                for (i = 0; i < cameras.length; i++) {
+                    if ($("#camera-preview-" + keys[i]) && $("#camera-preview-" + cameras[i].id).attr("src") != "") {
                         // Clear MJPEG stream
-                        $("#camera-preview-" + keys[i]).attr("src", "");
-                        consolelog("Stopping MJPEG flow for " + "#camera-preview-" + keys[i]);
+                        $("#camera-preview-" + cameras[i].id).attr("src", "");
+                        consolelog("Stopping MJPEG flow for " + "#camera-preview-" + cameras[i].id);
                     }
                 }
 
@@ -2006,21 +2017,20 @@ $(document).ready(function() {
     var getCameras = function() {
         var camerasCache = readCookie('cameras-cache');
         if (camerasCache != null) {
-            cameras = JSON.parse(Base64.decode(readCookie('cameras-cache').replace(/apN/g, "a").replace(/ehx/g, "e").replace(/InO/g, "i")));
+            cameras = JSON.parse(Base64.decode(readCookie('cameras-cache')));
             drawCameras();
         }
         if (Object.keys(cameras).length == 0) showLoader();
         reqCamera = $.ajax({
-            type: "POST",
-            url: vUrl,
+            type: "GET",
+            url: vUrl + "cameras/list/",
             data: {
-                username: username,
-                ePassword: ePassword,
-                method: "getCameras"
+                u: username,
+                p: password
             }
         }).done(function(msg) {
-            bakeCookie('cameras-cache', Base64.encode(msg).replace(/a/g, "apN").replace(/e/g, "ehx").replace(/i/g, "InO"));
-            cameras = jQuery.parseJSON(msg);
+            bakeCookie('cameras-cache', Base64.encode(JSON.stringify(msg)));
+            cameras = msg;
             drawCameras();
             hideLoader();
         }).fail(function(msg) {
@@ -2035,7 +2045,7 @@ $(document).ready(function() {
     });
 
     var dailyTimeLapseLink = function() {
-        var hrDl = vUrl + '?username=' + username + '&password=' + encodeURIComponent(password) + '&method=getDailyTimeLapse&camera=' + selectedCamera;
+        var hrDl = vUrl + 'camera/timelapse/daily/get/' + selectedCamera + '/?u=' + username + '&p=' + encodeURIComponent(password);
         $('#dailyTimeLapse').html('<a class="btn btn-primary" href="' + hrDl + '" target="_blank" role="button"><span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> ' + t('js.download', null) + '</a>');
     }
 
@@ -2044,8 +2054,8 @@ $(document).ready(function() {
     });
 
     $("#timeLapseViewer").click(function() {
-        var hrStream = vUrl + '?username=' + username + '&password=' + encodeURIComponent(password) + '&method=getDailyTimeLapseStream&camera=' + selectedCamera;
-        $('#dailyTimeLapseStream').html('<div class="embed-responsive embed-responsive-16by9"><iframe class="embed-responsive-item" src="' + hrStream + '"></iframe></div>');
+        var hrStream = vUrl + 'camera/timelapse/daily/stream/' + selectedCamera + '/?u=' + username + '&p=' + encodeURIComponent(password);
+        $('#dailyTimeLapseStream').html('<div class="embed-responsive embed-responsive-16by9"><<video src=" ' + hrStream + '" controls></video></div>');
         $('#timeLapseVideoModal').modal('show');
     });
 
@@ -2124,26 +2134,45 @@ $(document).ready(function() {
 
     });
 
+    var parseDate = function(myDate) {
+        var parts, date, time, dt, ms;
+
+        parts = myDate.split(/[T ]/); // Split on `T` or a space to get date and time
+        date = parts[0];
+        time = parts[1];
+
+        dt = new Date();
+
+        parts = date.split(/[-\/]/);  // Split date on - or /
+        dt.setFullYear(parseInt(parts[0], 10));
+        dt.setMonth(parseInt(parts[1], 10) - 1); // Months start at 0 in JS
+        dt.setDate(parseInt(parts[2], 10));
+
+        parts = time.split(/:/);    // Split time on :
+        dt.setHours(parseInt(parts[0], 10));
+        dt.setMinutes(parseInt(parts[1], 10));
+        dt.setSeconds(parseInt(parts[2], 10));
+
+        ms = dt.getTime();
+        return ms;
+    }
+
     var getHistoryCamera = function() {
         var cameraHistoryDatePicker = $("#dtCameraHistory").val();
         $("#cameraHistoryStatus").html('<div class="loading-picture">' + t('js.camera.loading.pictures', null) + ' </div>');
 
         if (cameraHistoryDatePicker != '') {
-            reqGetHistoryPicture = $.ajax({
-                type: "POST",
-                url: vUrl,
+            reqGetHistoryPicture = $.ajax({//camera/get/static/1503653182/0/1504019460/?u=admin&p=admin
+                type: "GET",
+                url: vUrl + "camera/get/static/" + selectedCamera + "/1/" + Math.round(parseDate(cameraHistoryDatePicker + ':00') / 1000) + "/",
                 data: {
-                    username: username,
-                    ePassword: ePassword,
-                    method: "getHistoryPicture",
-                    picture: cameraHistoryDatePicker,
-                    base64: true,
-                    camera: selectedCamera
+                    u: username,
+                    p: password
                 }
             }).done(function(msg) {
                 cameraHistoryImage = msg;
                 //$("#cameraHistoryPicture").elevateZoom(null);
-                document.getElementById("cameraHistoryPicture").src = "data:image/jpg;base64," + cameraHistoryImage;
+                document.getElementById("cameraHistoryPicture").src = "data:image/jpg;base64," + cameraHistoryImage.data;
                 //$("#cameraHistoryPicture").elevateZoom({ zoomType: "lens", lensShape: "round", lensSize: 150});
 
                 var maxDate = currentDate() - (currentDate() - (86400 * cameraHistoryDays));
@@ -2526,11 +2555,23 @@ $(document).ready(function() {
         generateCertificate();
     });
 
+    var getCameraObject = function() {
+        if ((selectedCamera === null) || (selectedCamera == "")) return;
+        var camera = null;
+        for (var i = 0 ; i < cameras.length ; i++) {
+
+            if (parseInt(cameras[i].id) === parseInt(selectedCamera)) {
+                camera = cameras[i];
+            }
+        }
+
+        return camera;
+    }
 
     var getCamera = function() {
-        if ((selectedCamera === null) || (selectedCamera == "")) return;
-        if (cameras && cameras[selectedCamera] && cameras[selectedCamera].hasOwnProperty("videoUrl") && (cameras[selectedCamera]["videoUrl"] !== null)) {
-            document.getElementById("cameraSource").src = vUrl + cameras[selectedCamera]["videoUrl"];
+        camera = getCameraObject();
+        if (camera && camera.mjpeg) {
+            document.getElementById("cameraSource").src = vUrl + "camera/get/mjpeg/" + camera.id + "/?u=" + username + "&p=" + password;
 
             // Camera zoom
             window.setTimeout(function() {
@@ -2556,18 +2597,14 @@ $(document).ready(function() {
                 // Fallback to image
                 videoCameraMode = false;
                 $.ajax({
-                    type: "POST",
-                    url: vUrl,
+                    type: "GET",
+                    url: vUrl + "camera/get/static/" + selectedCamera + "/1/",
                     data: {
-                        username: username,
-                        ePassword: ePassword,
-                        method: "getCameraPicture",
-                        cameraQuality: "high",
-                        base64: true,
-                        camera: selectedCamera
+                        u: username,
+                        p: password
                     }
                 }).done(function(msg) {
-                    cameraImage = msg;
+                    cameraImage = msg.data;
                     //$("#cameraSource").elevateZoom(null);
                     if (cameraImage.length == 0) {
                         $('#cameraSource').hide();
@@ -2593,80 +2630,84 @@ $(document).ready(function() {
         }
     }
 
-    $("#cameraUp").click(function() {
-        $.ajax({
-            type: "POST",
-            url: vUrl,
-            data: {
-                username: username,
-                ePassword: ePassword,
-                method: "moveCameraUp",
-                cameraPan: cameraPanVal,
-                camera: selectedCamera
-            }
-        }).done(function(msg) {
-            consolelog("Camera up !");
-        }).fail(function(msg) {
-            //setError(msg);
-        });
-
-    });
-
     $("#cameraLeft").click(function() {
-        $.ajax({
-            type: "POST",
-            url: vUrl,
-            data: {
-                username: username,
-                ePassword: ePassword,
-                method: "moveCameraLeft",
-                cameraPan: cameraPanVal,
-                camera: selectedCamera
-            }
-        }).done(function(msg) {
-            consolelog("Camera left !");
-        }).fail(function(msg) {
-            //setError(msg);
-        });
-
+        camera = getCameraObject();
+        if (camera && camera.move) {
+            $.ajax({
+                type: "POST",
+                url: vUrl + "camera/move/" + camera.id + "/1/",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    u: username,
+                    p: password,
+                    data: {}
+                })
+            }).done(function(msg) {
+                consolelog("Camera left !");
+            }).fail(function(msg) {
+                //setError(msg);
+            });
+        }
     });
 
     $("#cameraRight").click(function() {
-        $.ajax({
-            type: "POST",
-            url: vUrl,
-            data: {
-                username: username,
-                ePassword: ePassword,
-                method: "moveCameraRight",
-                cameraPan: cameraPanVal,
-                camera: selectedCamera
-            }
-        }).done(function(msg) {
-            consolelog("Camera right !");
-        }).fail(function(msg) {
-            //setError(msg);
-        });
+        camera = getCameraObject();
+        if (camera && camera.move) {
+            $.ajax({
+                type: "POST",
+                url: vUrl + "camera/move/" + camera.id + "/2/",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    u: username,
+                    p: password,
+                    data: {}
+                })
+            }).done(function(msg) {
+                consolelog("Camera right !");
+            }).fail(function(msg) {
+                //setError(msg);
+            });
+        }
+    });
 
+    $("#cameraUp").click(function() {
+        camera = getCameraObject();
+        if (camera && camera.move) {
+            $.ajax({
+                type: "POST",
+                url: vUrl + "camera/move/" + camera.id + "/3/",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    u: username,
+                    p: password,
+                    data: {}
+                })
+            }).done(function(msg) {
+                consolelog("Camera up !");
+            }).fail(function(msg) {
+                //setError(msg);
+            });
+        }
     });
 
     $("#cameraDown").click(function() {
-        $.ajax({
-            type: "POST",
-            url: vUrl,
-            data: {
-                username: username,
-                ePassword: ePassword,
-                method: "moveCameraDown",
-                cameraPan: cameraPanVal,
-                camera: selectedCamera
-            }
-        }).done(function(msg) {
-            consolelog("Camera down !");
-        }).fail(function(msg) {
-            //setError(msg);
-        });
-
+        camera = getCameraObject();
+        if (camera && camera.move) {
+            $.ajax({
+                type: "POST",
+                url: vUrl + "camera/move/" + camera.id + "/4/",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    u: username,
+                    p: password,
+                    data: {}
+                })
+            }).done(function(msg) {
+                consolelog("Camera down !");
+            }).fail(function(msg) {
+                //setError(msg);
+            });
+        }
     });
 
     var getHouseInfo = function() {
@@ -2897,7 +2938,7 @@ $(document).ready(function() {
         });
     }
 
-    $("#manageActionsItem").click(function() {
+    /*$("#manageActionsItem").click(function() {
         $("#actionTable").show();
         $("#addActionForm").empty();
         $("#actionsLoader").show();
@@ -2970,10 +3011,10 @@ $(document).ready(function() {
                     });
                 });
             }
-            $("#addManageAction").unbind();
-            $("#addManageAction").click(function() {
-                manageActionForm(null, null);
-            });
+            // $("#addManageAction").unbind();
+            // $("#addManageAction").click(function() {
+            //     manageActionForm(null, null);
+            // });
             $("#actionsLoader").hide();
             hideLoader();
         }).fail(function(msg) {
@@ -2982,7 +3023,7 @@ $(document).ready(function() {
             manageActionForm(null, null);
             $("#actionsLoader").hide();
         });
-    });
+    });*/
 
     var manageActionForm = function(obj, key) {
         showLoader();
@@ -3394,15 +3435,14 @@ $(document).ready(function() {
         $("#radioLoader").show();
         showLoader();
         $.ajax({
-            type: "POST",
-            url: vUrl,
+            type: "GET",
+            url: vUrl + "radio/get/",
             data: {
-                username: username,
-                ePassword: ePassword,
-                method: "getRadioInfoList"
+                u: username,
+                p: password
             }
         }).done(function(msg) {
-            var jsonData = JSON.parse(msg);
+            var jsonData = msg;
             if (jsonData) {
                 radioInfoListTable = $("#radioSignalTable");
                 radioInfoListTable.empty();
@@ -3411,15 +3451,15 @@ $(document).ready(function() {
                 for (i = 0; i < jsonData.length; i++) {
                     var radioSignal = jsonData[i];
                     consolelog(radioSignal);
-                    if (radioSignal.state != null) {
-                        if ((radioSignal.state == 0) || (radioSignal.state == 1)) {
-                            if (radioSignal.state) {
+                    if (radioSignal.status != null) {
+                        if ((radioSignal.status == -1) || (radioSignal.status == 1)) {
+                            if (radioSignal.status === 1) {
                                 status = "<span class=\"label label-success\">" + t('js.on', null) + "</span>";
                             } else {
                                 status = "<span class=\"label label-danger\">" + t('js.off', null) + "</span>";
                             }
                         } else {
-                            status = "<span class=\"label label-info\">" + radioSignal.state + "</span>";
+                            status = "<span class=\"label label-info\">" + radioSignal.value + "</span>";
                         }
                     } else {
                         status = "";
@@ -3437,19 +3477,19 @@ $(document).ready(function() {
                         description = "";
                     }
 
-                    if (radioSignal.code != null) {
-                        code = String(radioSignal.code);
+                    if (radioSignal.deviceId != null) {
+                        code = String(radioSignal.deviceId);
                     } else {
                         code = "";
                     }
 
-                    if (radioSignal.subcode != null) {
-                        subcode = String(radioSignal.subcode);
+                    if (radioSignal.switchId != null) {
+                        subcode = String(radioSignal.switchId);
                     } else {
                         subcode = "";
                     }
 
-                    radioInfoListTable.append("<tr class=\"left\"><td>" + radioSignal.date + "</td><td>" + radioSignal.protocolLabel + "</td><td>" + code + "</td><td>" + subcode + "</td><td>" + status + "</td><td>" + found + " " + description + "</td><td class=\"center\"><button type=\"button\" class=\"assignToAction btn btn-primary btn-xs\" id=\"assignToAction-" + j + "\">" + t('js.assign.to.action', null) + "</button> <button type=\"button\" class=\"assignToDevice btn btn-primary btn-xs\" id=\"assignToDevice-" + j + "\">" + t('js.assign.to.device', null) + "</button> <button type=\"button\" class=\"radioTest btn btn-primary btn-xs\" id=\"radioTest-" + j + "\">" + t('js.test', null) + "</button></td></tr>");
+                    radioInfoListTable.append("<tr class=\"left\"><td>" + radioSignal.date + "</td><td>" + radioSignal.protocol + "</td><td>" + code + "</td><td>" + subcode + "</td><td>" + status + "</td><td>" + found + " " + description + "</td><td class=\"center\"><button type=\"button\" class=\"assignToAction btn btn-primary btn-xs\" id=\"assignToAction-" + j + "\">" + t('js.assign.to.scenario', null) + "</button> <button type=\"button\" class=\"assignToDevice btn btn-primary btn-xs\" id=\"assignToDevice-" + j + "\">" + t('js.assign.to.device', null) + "</button> <button type=\"button\" class=\"radioTest btn btn-primary btn-xs\" id=\"radioTest-" + j + "\">" + t('js.test', null) + "</button></td></tr>");
                     j++;
                 }
             }
@@ -3465,7 +3505,8 @@ $(document).ready(function() {
                 if (radioSignalData[targetId] != null) {
                     $('#configTabs a[href="#manageActions"]').tab('show');
                     $("#manageActionsItem").click();
-                    manageActionForm(radioSignalData[targetId], null);
+                    renderFormGlobal("scenarios", document.getElementById("scenariostable"), adminFormSchemaList["scenarios"], adminFormSchemaUIList["scenarios"], {"RadioScenariosForm":{"radioScenariosForm":[{"radio":{"module":radioSignalData[targetId].module
+,"protocol":radioSignalData[targetId].protocol,"deviceId":radioSignalData[targetId].deviceId,"switchId":radioSignalData[targetId].switchId},"status":radioSignalData[targetId].status}]}});
                 }
             });
 
@@ -3479,7 +3520,8 @@ $(document).ready(function() {
                 if (radioSignalData[targetId] != null) {
                     $('#configTabs a[href="#manageDevices"]').tab('show');
                     $("#manageDevicesItem").click();
-                    manageDeviceForm(radioSignalData[targetId], null);
+                    renderFormGlobal("devices", document.getElementById("devicestable"), adminFormSchemaList["devices"], adminFormSchemaUIList["devices"], {"radio":[{"module":radioSignalData[targetId].module,"protocol":radioSignalData[targetId].protocol,
+"deviceId":radioSignalData[targetId].deviceId,"switchId":radioSignalData[targetId].switchId}]});
                 }
             });
 
@@ -3493,13 +3535,13 @@ $(document).ready(function() {
                 if (radioSignalData[targetId] != null) {
                     var reqRadioRawData = $.ajax({
                         type: "POST",
-                        url: vUrl,
-                        data: {
-                            username: username,
-                            ePassword: ePassword,
-                            method: "testRadioData",
-                            data: JSON.stringify(radioSignalData[targetId])
-                        }
+                        contentType: "application/json",
+                        url: vUrl + "radio/set/" + radioSignalData[targetId].module + "/" + radioSignalData[targetId].protocol + "/" + radioSignalData[targetId].deviceId + "/" + radioSignalData[targetId].switchId + "/" + radioSignalData[targetId].status + "/",
+                        data: JSON.stringify({
+                            u: username,
+                            p: password,
+                            data: {}
+                        })
                     }).done(function(msg) {
                         toastr.success(t('js.scanner.raw.scan.action.test.success'));
                     }).fail(function(msg) {
@@ -3849,211 +3891,6 @@ $(document).ready(function() {
 
     }
 
-    // Manage ambiances
-    var setAmbiances = function() {
-        consolelog(ambianceData);
-        dataString = JSON.stringify(ambianceData);
-        $("#ambiancesLoader").show();
-        $.ajax({
-            type: "POST",
-            url: vUrl,
-            data: {
-                username: username,
-                ePassword: ePassword,
-                method: "setAmbiances",
-                jsonData: dataString
-            }
-        }).done(function(msg) {
-            consolelog(dataString);
-            $("#manageAmbiancesItem").click();
-
-            consolelog("Success !");
-            window.scrollTo(0, 0);
-        }).fail(function(msg) {
-            setError(msg);
-        });
-    }
-
-    $("#manageAmbiancesItem").click(function() {
-        $("#ambianceTable").show();
-        $("#addAmbianceForm").empty();
-        showLoader();
-        $.ajax({
-            type: "POST",
-            url: vUrl,
-            data: {
-                username: username,
-                ePassword: ePassword,
-                method: "getAmbiances"
-            }
-        }).done(function(msg) {
-            var jsonData = JSON.parse(msg);
-            if (jsonData) {
-                keys = Object.keys(jsonData);
-                ambianceData = jsonData;
-
-                var length = keys.length;
-
-                var data = [];
-                for (var i = 0; i < length; i++) {
-                    var tmp = {};
-                    tmp.id = keys[i];
-                    tmp.description = jsonData[keys[i]].name;
-                    tmp.icon = jsonData[keys[i]].icon;
-                    data.push(tmp);
-                }
-
-                drawSquareAdminInterface(data, $("#ambiancesTable"), "ambiance-set-", "ambiance-del-", "setManageAmbiance", "delManageAmbiance");
-
-                $(".setManageAmbiance").click(function() {
-                    if (event.target.tagName.toLowerCase() === 'span') {
-                        targetId = event.target.parentNode.id.replace("ambiance-set-", "");
-                    } else {
-                        targetId = event.target.id.replace("ambiance-set-", "");
-                    }
-                    consolelog("changed !" + targetId);
-                    consolelog(jsonData[targetId]);
-
-                    manageAmbianceForm(jsonData[targetId], targetId);
-                });
-
-                $(".delManageAmbiance").click(function() {
-                    if (event.target.tagName.toLowerCase() === 'span') {
-                        targetId = event.target.parentNode.id.replace("ambiance-del-", "");
-                    } else {
-                        targetId = event.target.id.replace("ambiance-del-", "");
-                    }
-                    consolelog("changed !" + targetId);
-                    consolelog(jsonData[targetId]);
-
-                    swal(Object.assign({
-                        title: t('js.ambiances.form.confirm', [jsonData[targetId].name]),
-                        type: "warning",
-                        showCancelButton: true,
-                        confirmButtonText: t('js.continue', null),
-                        cancelButtonText: t('js.cancel', null)
-                    }, swalDefaults)).then(function() {
-                        // Confirm
-                        delete ambianceData[targetId];
-                        setAmbiances();
-                        $("#manageAmbiancesItem").click();
-                    }, function(mode) {
-                        // Cancel
-                        if (mode && mode != 'cancel') {
-                            return;
-                        }
-                    });
-                });
-            }
-            $("#addManageAmbiance").unbind();
-            $("#addManageAmbiance").click(function() {
-                manageAmbianceForm(null, null);
-            });
-            $("#ambiancesLoader").hide();
-            hideLoader();
-        }).fail(function(msg) {
-            hideLoader();
-            setError(msg);
-            $("#ambiancesLoader").hide();
-        });
-    });
-
-
-
-    var manageAmbianceForm = function(obj, key) {
-        $("#addAmbianceForm").empty();
-        ambianceTable = $("#ambianceTable");
-        ambianceTable.hide();
-        keyField = 'string';
-        if (key) keyField = 'hidden';
-
-        $("#addAmbianceForm").jsonForm({
-            schema: {
-                key: {
-                    type: 'hidden',
-                    title: t('js.ambiances.form.key', null),
-                    required: true
-                },
-                name: {
-                    type: 'string',
-                    title: t('js.ambiances.form.description', null),
-                    required: true
-                },
-                codes: {
-                    type: 'array',
-                    title: t('js.ambiances.form.devices', null),
-                    uniqueItems: true,
-                    "items": {
-                        "type": "string",
-                        "title": t('js.ambiances.form.devices', null),
-                        "enum": fullDevicesKeys
-                    }
-                },
-                icon: {
-                    type: 'string',
-                    title: t('js.ambiances.form.icon', null),
-                    enum: Object.keys(icons)
-                }
-            },
-            "form": [
-                "key", "name",
-                {
-                    "key": "icon",
-                    "titleMap": iconsLabel(),
-                    "fieldHtmlClass": "selectpicker",
-                    "htmlClass": "iconPicker"
-                },
-                {
-                    "key": "codes",
-                    "type": "checkboxes",
-                    "titleMap": fullDevicesLabels
-                },
-                {
-                    "type": "button",
-                    "title": "<span class=\"glyphicon glyphicon-remove\"></span> " + t('js.cancel', null),
-                    "onClick": function(evt) {
-                        //evt.preventDefault();
-                        $("#ambianceTable").show();
-                        $("#addAmbianceForm").empty();
-                        window.scrollTo(0, 0);
-                    }
-                },
-                {
-                    "type": "button",
-                    "htmlClass": "btn-primary",
-                    "title": "<span class=\"glyphicon glyphicon-floppy-disk\"></span>  " + t('js.save', null),
-                    "onClick": function(evt) {
-                        // evt.target.submit();
-                    }
-                }
-
-            ],
-            "value": obj,
-            onSubmit: function(errors, values) {
-                if (errors) {
-                    setError(t('js.invalid.form.data', null));
-                } else {
-                    dataKey = values.key;
-                    if ((dataKey == null) || (dataKey == '')) {
-                        dataKey = Math.floor(Date.now() / 1000);
-                        values.key = dataKey;
-                    }
-                    ambianceData[dataKey] = values;
-
-                    setAmbiances();
-
-                    toastr.success(t('js.form.success', null));
-                }
-            }
-        });
-        $('.selectpicker').selectpicker({
-            showTick: false,
-            style: "fa",
-            showIcon: false,
-            tickIcon: ''
-        });
-    }
-
     // Manage devices
     var setDevices = function() {
         dataString = JSON.stringify(deviceData);
@@ -4256,246 +4093,6 @@ $(document).ready(function() {
         });
     }
 
-    // Manage alarm
-
-    var setManageAlarm = function(alarmData) {
-        dataString = JSON.stringify(alarmData);
-        consolelog(dataString);
-        $("#alarmLoader").show();
-        $.ajax({
-            type: "POST",
-            url: vUrl,
-            data: {
-                username: username,
-                ePassword: ePassword,
-                method: "setManageAlarm",
-                jsonData: dataString
-            }
-        }).done(function(msg) {
-            consolelog(dataString);
-
-            consolelog("Success !");
-            window.scrollTo(0, 0);
-            $("#alarmLoader").hide();
-        }).fail(function(msg) {
-            setError(msg);
-            $("#alarmLoader").hide();
-        });
-    }
-
-    $("#manageAlarmItem").click(function() {
-        $("#alarmTable").show();
-        $("#addAlarmForm").empty();
-        $("#alarmLoader").show();
-        showLoader();
-        $.ajax({
-            type: "POST",
-            url: vUrl,
-            data: {
-                username: username,
-                ePassword: ePassword,
-                method: "getManageAlarm"
-            }
-        }).done(function(msg) {
-            var jsonData = JSON.parse(msg);
-            if (jsonData) {
-                //keys = Object.keys(jsonData);
-                manageAlarmForm(jsonData, null);
-
-            } else {
-                manageAlarmForm(null, null);
-            }
-            $("#alarmLoader").hide();
-            hideLoader();
-        }).fail(function(msg) {
-            hideLoader();
-            setError(msg);
-            manageAlarmForm(null, null);
-            $("#alarmLoader").hide();
-        });
-    });
-
-
-    var manageAlarmForm = function(obj, key) {
-        consolelog(obj);
-        consolelog(obj.sensors);
-        showLoader();
-        reqPluginList = $.ajax({
-            type: "POST",
-            url: vUrl,
-            data: {
-                username: username,
-                ePassword: ePassword,
-                method: "getSensors"
-            }
-        }).done(function(msg) {
-            var jsonData = JSON.parse(msg, function(key, value) {
-                if (value && (typeof value === 'string') && value.indexOf("function") === 0) {
-                    // we can only pass a function as string in JSON ==> doing a real function
-                    var jsFunc = new Function('return ' + value)();
-                    return jsFunc;
-                }
-
-                return value;
-            });
-
-            var sensorItems = [];
-            var sensorItemsLabels = {};
-            for (var i = 0 ; i < jsonData.length ; i ++) {
-                if (jsonData[i].type == 'PRESENCE-SENSOR') {
-                    sensorItems.push(jsonData[i].identifier);
-                    sensorItemsLabels[jsonData[i].identifier] = jsonData[i].sensorName;
-                }
-            }
-            console.log(sensorItems);
-            console.log(sensorItemsLabels);
-            if (obj.cameraShotSensors == null) {
-                obj.cameraShotSensors = [];
-            }
-
-            hideLoader();
-
-            $("#addAlarmForm").jsonForm({
-                schema: {
-                    status: {
-                        type: 'boolean',
-                        inlinetitle: t('js.status', null),
-                        required: true
-                    },
-                    autoEnableWithUsers: {
-                        type: 'boolean'
-                    },
-                    objects: {
-                        type: 'array',
-                        title: t('js.alarm.form.devices', null),
-                        uniqueItems: true,
-                        "items": {
-                            "type": "string",
-                            "title": t('js.alarm.form.devices.short', null),
-                            "enum": fullDevicesKeys
-                        }
-                    },
-                    triggerOn: {
-                        type: 'array',
-                        title: t('js.alarm.form.triggerred.on', null),
-                        uniqueItems: true,
-                        "items": {
-                            "type": "string",
-                            "title": t('js.alarm.form.triggered.short', null),
-                            "enum": fullDevicesKeys
-                        }
-                    },
-                    triggerOff: {
-                        type: 'array',
-                        title: t('js.alarm.form.triggerred.off', null),
-                        uniqueItems: true,
-                        "items": {
-                            "type": "string",
-                            "title": t('js.alarm.form.triggered.short', null),
-                            "enum": fullDevicesKeys
-                        }
-                    },
-                    warnShotWhenNobodyIsAtHouse: {
-                        type: 'boolean',
-                        default:true
-                    },
-                    sensors: {
-                        type: 'array',
-                        title: t('js.alarm.form.sensors', null),
-                        "items": {
-                            type: "object",
-                            properties: {
-                                sensor: {
-                                    type: 'string',
-                                    uniqueItems: true,
-                                    "enum": sensorItems
-                                },
-                                shotOnlyWhenAlarmIsOn: {
-                                    type: 'boolean',
-                                    default:true
-                                },
-                                sensorTriggerAlarm: {
-                                    type: 'boolean',
-                                    default:true
-                                }
-                            }
-                        }
-                    }
-                },
-                "form": [{
-                        "key": "status",
-                        "htmlClass": "invisible"
-                    },
-                    {
-                        "key": "autoEnableWithUsers",
-                        "inlinetitle": t('js.alarm.form.auto.enable.users', null)
-                    },
-                    {
-                        "key": "objects",
-                        "type": "checkboxes",
-                        "titleMap": fullDevicesLabels
-                    },
-                    {
-                        "key": "warnShotWhenNobodyIsAtHouse",
-                        "inlinetitle": t('js.alarm.form.warn.nobody.in.house', null)
-                    },
-                    {
-                        "key": "sensors",
-                        "type": "array",
-                        "items": {
-                            "type": "fieldset",
-                            "expandable": false,
-                            "items": [{
-                                    "key": "sensors[].sensor",
-                                    "titleMap": sensorItemsLabels
-                                },
-                                {
-                                    "key":"sensors[].shotOnlyWhenAlarmIsOn",
-                                    "inlinetitle":t('js.alarm.form.sensors.enable.on.alarm', null),
-                                },
-                                {
-                                    "key":"sensors[].sensorTriggerAlarm",
-                                    "inlinetitle":t('js.alarm.form.sensors.sensor.trigger.alarm', null),
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        "key": "triggerOn",
-                        "type": "checkboxes",
-                        "titleMap": fullDevicesLabels
-                    },
-                    {
-                        "key": "triggerOff",
-                        "type": "checkboxes",
-                        "titleMap": fullDevicesLabels
-                    },
-                    {
-                        "type": "button",
-                        "htmlClass": "btn-primary",
-                        "title": "<span class=\"glyphicon glyphicon-floppy-disk\"></span>  " + t('js.save', null),
-                        "onClick": function(evt) {
-                            // evt.target.submit();
-                        }
-                    }
-
-                ],
-                "value": obj.alarm,
-                onSubmit: function(errors, values) {
-                    if (errors) {
-                        setError(t('js.invalid.form.data', null));
-                    } else {
-                        setManageAlarm(values);
-                        toastr.success(t('js.form.success', null));
-                    }
-                }
-            });
-        }).fail(function(msg) {
-            displayError(msg);
-            hideLoader();
-        });
-    }
-
     // Manage cameras
     var setCameras = function() {
         consolelog(cameraData);
@@ -4521,244 +4118,7 @@ $(document).ready(function() {
         });
     }
 
-    $("#manageCamerasItem").click(function() {
-        $("#cameraTable").show();
-        $("#addCameraForm").empty();
-        showLoader();
-        $.ajax({
-            type: "POST",
-            url: vUrl,
-            data: {
-                username: username,
-                ePassword: ePassword,
-                method: "getCamerasAdmin"
-            }
-        }).done(function(msg) {
-            var jsonData = JSON.parse(msg);
-            if (jsonData) {
-                keys = Object.keys(jsonData);
 
-                var length = keys.length;
-
-                var data = [];
-                for (var i = 0; i < length; i++) {
-                    var tmp = {};
-                    tmp.id = keys[i];
-                    tmp.description = jsonData[keys[i]].description;
-                    tmp.icon = 'E83F';
-                    data.push(tmp);
-                }
-
-                drawSquareAdminInterface(data, $("#camerasTable"), "camera-set-", "camera-del-", "setManageCamera", "delManageCamera");
-
-                $(".setManageCamera").click(function() {
-                    if (event.target.tagName.toLowerCase() === 'span') {
-                        targetId = event.target.parentNode.id.replace("camera-set-", "");
-                    } else {
-                        targetId = event.target.id.replace("camera-set-", "");
-                    }
-                    consolelog("changed !" + targetId);
-                    consolelog(jsonData[targetId]);
-
-                    manageCameraForm(jsonData[targetId], targetId);
-                });
-
-                $(".delManageCamera").click(function() {
-                    if (event.target.tagName.toLowerCase() === 'span') {
-                        targetId = event.target.parentNode.id.replace("camera-del-", "");
-                    } else {
-                        targetId = event.target.id.replace("camera-del-", "");
-                    }
-                    consolelog("changed !" + targetId);
-                    consolelog(jsonData[targetId]);
-
-                    swal(Object.assign({
-                        title: t('js.cameras.form.confirm', [jsonData[targetId].description]),
-                        type: "warning",
-                        showCancelButton: true,
-                        confirmButtonText: t('js.continue', null),
-                        cancelButtonText: t('js.cancel', null),
-                        showLoaderOnConfirm: true
-                    }, swalDefaults)).then(function() {
-                        // Confirm
-                        $.ajax({
-                            type: "POST",
-                            url: vUrl,
-                            data: {
-                                username: username,
-                                ePassword: ePassword,
-                                method: "delCamera",
-                                name: targetId
-                            }
-                        }).done(function(msg) {
-                            $("#manageCamerasItem").click();
-                        }).fail(function(msg) {
-                            setError(msg);
-                        });
-                    }, function(mode) {
-                        // Cancel
-                        if (mode && mode != 'cancel') {
-                            return;
-                        }
-                    });
-                });
-            }
-            $("#addManageCamera").unbind();
-            $("#addManageCamera").click(function() {
-                manageCameraForm(null, null);
-            });
-            $("#camerasLoader").hide();
-            hideLoader();
-        }).fail(function(msg) {
-            hideLoader();
-            setError(msg);
-            $("#camerasLoader").hide();
-        });
-    });
-
-    var manageCameraSubform = function(obj, key, subform, cameraPluginList) {
-        $("#addCameraForm").empty();
-        cameraTable = $("#cameraTable");
-        cameraTable.hide();
-        keyField = 'string';
-        if (key) keyField = 'hidden';
-
-        cameraPluginSchemaDescriptor = {
-            key: {
-                type: "hidden"
-            },
-            cameraPlugin: {
-                type: "string",
-                title: t('js.cameras.subform.type', null),
-                readonly: true
-            },
-            description: {
-                type: "string",
-                title: t('js.cameras.subform.description', null)
-            },
-            defaultCam: {
-                type: "boolean"
-            }
-        };
-        schemaDescriptor = jQuery.extend(cameraPluginSchemaDescriptor, subform.schema);
-        formDescriptor = [{
-            "key": "key"
-        }, {
-            "key": "cameraPlugin"
-        }, {
-            "key": "description"
-        }, {
-            "key": "defaultCam",
-            "inlinetitle": t('js.cameras.subform.default', null)
-        }];
-        buttonsDescriptor = [{
-            "type": "button",
-            "title": "<span class=\"glyphicon glyphicon-remove\"></span> " + t('js.cancel', null),
-            "onClick": function(evt) {
-                $("#cameraTable").show();
-                $("#addCameraForm").empty();
-                window.scrollTo(0, 0);
-            }
-        }, {
-            "type": "button",
-            "htmlClass": "btn-primary",
-            "title": "<span class=\"glyphicon glyphicon-floppy-disk\"></span> " + t('js.save', null),
-            "onClick": function(evt) { /*evt.target.submit();*/ }
-        }];
-        formDescriptor = formDescriptor.concat(subform.form);
-        formDescriptor = formDescriptor.concat(buttonsDescriptor);
-
-
-        $("#addCameraForm").jsonForm({
-            schema: schemaDescriptor,
-            "form": formDescriptor,
-            "value": obj,
-            onSubmit: function(errors, values) {
-                consolelog(errors);
-                if (errors) {
-                    setError(t('js.invalid.form.data', null));
-                } else {
-                    //dataKey = values.key;
-                    //cameraData[dataKey] = values;
-                    cameraData = values;
-                    setCameras();
-                    toastr.success(t('js.form.success', null));
-                }
-            }
-        });
-    }
-
-    var manageCameraForm = function(obj, key) {
-        $("#addCameraForm").empty();
-        cameraTable = $("#cameraTable");
-        cameraTable.hide();
-        keyField = 'string';
-        if (key) keyField = 'hidden';
-
-        $.ajax({
-            type: "POST",
-            url: vUrl,
-            data: {
-                username: username,
-                ePassword: ePassword,
-                method: "getSupportedCameraList"
-            }
-        }).done(function(msg) {
-            cameras = JSON.parse(msg, function(key, value) {
-                if (value && (typeof value === 'string') && value.indexOf("function") === 0) {
-                    // we can only pass a function as string in JSON ==> doing a real function
-                    var jsFunc = new Function('return ' + value)();
-                    return jsFunc;
-                }
-
-                return value;
-            });
-
-            cameraPluginList = new Array(t('js.cameras.plugins.pick', null));
-            cameraPluginFormList = new Array();
-            cameraPluginFormTitlesList = {};
-            for (var i = 0; i < cameras.length; i++) {
-                cameraPluginList.push(cameras[i].identifier);
-                cameraPluginFormList[cameras[i].identifier] = cameras[i].config;
-                cKey = cameras[i].identifier;
-                cValue = cameras[i].name;
-                cameraPluginFormTitlesList[cKey] = cValue;
-            }
-
-            if (obj != null) {
-                if (obj.cameraPlugin) {
-                    manageCameraSubform(obj, key, cameraPluginFormList[obj.cameraPlugin], cameraPluginList);
-                    return false;
-                }
-            }
-            $("#addCameraForm").empty();
-            $("#addCameraForm").jsonForm({
-                schema: {
-                    cameraPlugin: {
-                        "type": "string",
-                        "title": t('js.cameras.subform.type', null),
-                        "enum": cameraPluginList
-                    }
-                },
-                "form": [{
-                    "key": "cameraPlugin",
-                    "titleMap": cameraPluginFormTitlesList,
-                    "onChange": function(evt) {
-                        if (!obj) {
-                            obj = {
-                                cameraPlugin: null
-                            };
-                        }
-                        obj.cameraPlugin = evt.target.value;
-                        manageCameraSubform(obj, key, cameraPluginFormList[evt.target.value], cameraPluginList);
-                    }
-                }],
-                "value": obj
-            });
-        }).fail(function(msg) {
-            setError(msg);
-        });
-    }
     // Manage config
 
     var setManageConfig = function(configData) {
@@ -5069,6 +4429,250 @@ $(document).ready(function() {
         });
     }
 
+    // Cameras
+
+    $("#manageCamerasItem").click(function() {
+        $("#camerasLoader").show();
+        showLoader();
+        reqPluginList = $.ajax({
+            type: "GET",
+            url: vUrl + "cameras/get/",
+            data: {
+                u: username,
+                p: password
+            }
+        }).done(function(cameras) {
+
+
+
+            var nbLine = 4;
+            var colcount = 0;
+            var camerasContent = '';
+            $("#camerasContent").empty();
+
+            for (var i = 0; i < cameras.length; i++) {
+                if (colcount == 0) {
+                    camerasContent = camerasContent + '<div class="row">';
+                }
+                camerasContent = camerasContent + '<div class="col-md-2 cameraClick sensorClick squareAdmin" id="' + cameras[i].identifier + '" style="cursor:pointer;">';
+                camerasContent = camerasContent + '<div><i class="fa sensorIcon" data-unicode="E83F">&#xE83F</i></div>';
+                camerasContent = camerasContent + '<div class="squareAdminText">' + cameras[i].name + '</div>';
+                camerasContent = camerasContent + '</div>';
+                colcount++;
+                if (colcount == 5) {
+                    camerasContent = camerasContent + '</div>';
+                    colcount = 0;
+                }
+            }
+            if (colcount != 0) {
+                camerasContent = camerasContent + '</div>';
+            }
+            $("#camerasContent").html(camerasContent);
+
+            $("#camerasLoader").hide();
+
+            $(".cameraClick").unbind();
+            $(".cameraClick").click(function(e) {
+                $("#deleteCameraForm").show();
+                $('#cameraModal').modal('show');
+                $('#cameraSelectForm').empty();
+                $('#cameraOtaFlashBtn').empty();
+
+
+                var camera = null;
+                for (var i = 0; i < cameras.length; i++) {
+                    if (parseInt(cameras[i].identifier) === parseInt(e.currentTarget.id)) {
+                        camera = cameras[i];
+                        break;
+                    }
+                }
+
+                $("#deleteCameraForm").unbind();
+                $("#deleteCameraForm").click(function() {
+
+                    swal(Object.assign({
+                        title: t('js.global.cameras.form.confirm', null),
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: t('js.continue', null),
+                        cancelButtonText: t('js.cancel', null),
+                        showLoaderOnConfirm: true
+                    }, swalDefaults)).then(function() {
+                        // Confirm
+                        showLoader();
+                        // Confirm
+                        $.ajax({
+                            type: "DELETE",
+                            url: vUrl + "cameras/del/" + camera.identifier +"/",
+                            data: {
+                                u: username,
+                                p: password
+                            }
+                        }).done(function(data) {
+                            $("#manageCamerasItem").click();
+                            $('#cameraModal').modal('hide');
+                            hideLoader();
+                        }).fail(function(msg) {
+                            setError(msg);
+                        });
+                    }, function(mode) {
+                        // Cancel
+                        if (mode && mode != 'cancel') {
+                            return;
+                        }
+                    });
+                });
+
+                // Display camera form
+                $("#saveCameraForm").unbind();
+                $("#saveCameraForm").click(function() {
+                    $("#react-btn-submit-camera").click();
+                });
+
+                $("#cameraForm").empty();
+
+                var self = this;
+                ReactDOM.render(React.createElement(Form, {schema:camera.form.schema, uiSchema:camera.form.schemaUI, formData:camera.form.data, onSubmit: function(data) {
+                    $.ajax({
+                        type: "POST",
+                        url: vUrl + "cameras/set/" + camera.form.data.id + "/",
+                        contentType: "application/json",
+                        data: JSON.stringify({
+                            u: username,
+                            p: password,
+                            data: data.formData
+                        })
+                    }).done(function(data) {
+                        $("#manageCamerasItem").click();
+                        $('#cameraModal').modal('hide');
+                    }).fail(function(msg) {
+                        $('#cameraModal').modal('hide');
+                        setError(msg);
+                    });
+                }},
+                React.createElement(
+                  "button",
+                  { type: "submit", className:"btn btn-success hidden", id:"react-btn-submit-camera" },
+                  "button.save"
+              )), document.getElementById("cameraForm"));
+            });
+            hideLoader();
+        });
+    });
+
+    $("#addCameras").click(function() {
+        $("#camerasLoader").show();
+        showLoader();
+        reqPluginList = $.ajax({
+            type: "GET",
+            url: vUrl + "cameras/available/get/",
+            data: {
+                u: username,
+                p: password
+            }
+        }).done(function(camerasAvailableData) {
+            $("#camerasLoader").hide();
+            $("#deleteCameraForm").hide();
+
+            if (camerasAvailableData) {
+                var formContent = '<select id="cameraSelector" class="form-control">';
+                formContent = formContent + '<option value="">' + t('js.global.cameras.form.camera.type.default', null) + '</option>';
+
+                for (var i = 0; i < camerasAvailableData.length; i++) {
+                    formContent = formContent + '<option value="' + i + '">' + camerasAvailableData[i].description + '</option>';
+                }
+
+                formContent = formContent + '</select>';
+                $('#cameraSelectForm').empty();
+                $('#cameraForm').empty();
+                $('#cameraSelectForm').append(formContent);
+                $('#cameraModal').modal('show');
+                $("#cameraSelector").unbind();
+                $('#cameraSelector').change(function() {
+                    var key = $('#cameraSelector').val();
+                    if (key == '') return;
+                    var cameraAvailableData = camerasAvailableData[parseInt(key)];
+                    var self = this;
+                    ReactDOM.render(React.createElement(Form, {schema:cameraAvailableData.form.schema, uiSchema:cameraAvailableData.form.schemaUI, formData:{}, onSubmit: function(data) {
+                        $.ajax({
+                            type: "POST",
+                            url: vUrl + "cameras/set/",
+                            contentType: "application/json",
+                            data: JSON.stringify({
+                                u: username,
+                                p: password,
+                                data: data.formData
+                            })
+                        }).done(function(data) {
+                            $("#manageCamerasItem").click();
+                            $('#cameraModal').modal('hide');
+                        }).fail(function(msg) {
+                            $('#cameraModal').modal('hide');
+                            setError(msg);
+                        });
+                    }},
+                    React.createElement(
+                      "button",
+                      { type: "submit", className:"btn btn-success hidden", id:"react-btn-submit-camera" },
+                      "button.save"
+                  )), document.getElementById("cameraForm"));
+
+
+
+
+                    // Display camera form
+                    $("#saveCameraForm").unbind();
+                    $("#saveCameraForm").click(function() {
+                        $("#react-btn-submit-camera").click();
+                    });
+
+                    var plugin = jsonData[key];
+                    consolelog(plugin);
+                    $("#cameraForm").empty();
+                    var pluginIdentifier = plugin.identifier;
+                    var selectedPluginId = parseInt(key);
+                    consolelog("----->");
+                    consolelog(plugin);
+
+                    $("#cameraForm").jsonForm({
+                        schema: plugin.config.schema,
+                        "form": plugin.config.form,
+                        "value": plugin.configValues,
+                        onSubmit: function(errors, values) {
+                            if (errors || (values.cameraLocation == null && values.cameraLocationExisting == null)) {
+                                setError(t('js.invalid.form.data', null));
+                            } else {
+                                if (values.cameraLocation && (values.cameraLocation != '')) values.cameraLocationExisting = values.cameraLocation;
+                                values.cameraLocation = null;
+                                reqPluginSetConfig = $.ajax({
+                                    type: "POST",
+                                    url: vUrl,
+                                    data: {
+                                        username: username,
+                                        ePassword: ePassword,
+                                        method: "setCamera",
+                                        data: JSON.stringify(values),
+                                        pluginIdentifier: pluginIdentifier
+                                    }
+                                }).done(function(msg) {
+                                    jsonData[selectedPluginId].configValues = values;
+                                    $('#cameraModal').modal('hide');
+                                    toastr.success(t('js.form.success', null));
+                                    $("#manageCamerasItem").click();
+                                }).fail(function(msg) {
+                                    displayError(msg);
+                                });
+                            }
+                        }
+                    });
+                });
+            }
+            hideLoader();
+        });
+    });
+
+    // Sensors
+
     $("#manageSensorsItem").click(function() {
         $("#sensorsLoader").show();
         showLoader();
@@ -5115,8 +4719,7 @@ $(document).ready(function() {
                 $("#deleteSensorForm").show();
                 $('#sensorModal').modal('show');
                 $('#sensorSelectForm').empty();
-                $('#sensorOtaFlashBtn').empty();
-
+                $('#saveSensorForm').show();
 
                 var sensor = null;
                 for (var i = 0; i < sensors.length; i++) {
@@ -5239,6 +4842,7 @@ $(document).ready(function() {
                 $('#sensorSelectForm').append(formContent);
                 $('#sensorModal').modal('show');
                 $("#sensorSelector").unbind();
+                $('#saveSensorForm').show();
                 $('#sensorSelector').change(function() {
                     var key = $('#sensorSelector').val();
                     if (key == '') return;
@@ -5255,8 +4859,12 @@ $(document).ready(function() {
                                 data: data.formData
                             })
                         }).done(function(data) {
-                            $("#manageSensorsItem").click();
-                            $('#sensorModal').modal('hide');
+                            if (data.id && sensorAvailableData.iotApp) {
+                                flashSensorSteps(data.id);
+                            } else {
+                                $("#manageSensorsItem").click();
+                                $('#sensorModal').modal('hide');
+                            }
                         }).fail(function(msg) {
                             $('#sensorModal').modal('hide');
                             setError(msg);
@@ -5276,277 +4884,331 @@ $(document).ready(function() {
                     $("#saveSensorForm").click(function() {
                         $("#react-btn-submit-sensor").click();
                     });
+                });
+            }
+            hideLoader();
+        });
+    });
+    // IOTS
+    // -------------------------------
+    // -------------------------------
+    $("#manageIotsItem").click(function() {
+        $("#iotsLoader").show();
+        showLoader();
+        reqPluginList = $.ajax({
+            type: "GET",
+            url: vUrl + "iot/get/",
+            data: {
+                u: username,
+                p: password
+            }
+        }).done(function(iots) {
+            var nbLine = 4;
+            var colcount = 0;
+            var iotsContent = '';
+            $("#iotsContent").empty();
 
-                    var plugin = jsonData[key];
+            for (var i = 0; i < iots.length; i++) {
+                if (colcount == 0) {
+                    iotsContent = iotsContent + '<div class="row">';
+                }
+                iotsContent = iotsContent + '<div class="col-md-2 iotsClick iotsTile" id="' + iots[i].identifier + '" style="">';
+                iotsContent = iotsContent + '<i class="fa iotsIcon" data-unicode="' + iots[i].icon + '">&#x' + iots[i].icon + '</i><br/>';
+                iotsContent = iotsContent + '<span class="label label-success" style="white-space: pre-wrap;">' + iots[i].iotApp + '</span><br/>';
+                iotsContent = iotsContent + '<strong>' + iots[i].name + '</strong>';
+                iotsContent = iotsContent + '</div>';
+                colcount++;
+                if (colcount == 5) {
+                    iotsContent = iotsContent + '</div>';
+                    colcount = 0;
+                }
+            }
+            if (colcount != 0) {
+                iotsContent = iotsContent + '</div>';
+            }
+            $("#iotsContent").html(iotsContent);
+
+            $("#iotsLoader").hide();
+
+            $(".iotsClick").unbind();
+            $(".iotsClick").click(function(e) {
+                $("#deleteIotForm").show();
+                $('#iotsModal').modal('show');
+                $('#iotsSelectForm').empty();
+                $('#iotsOtaFlashBtn').empty();
+                $('#iotsFlash').hide();
+                $('#saveIotsForm').show();
+
+                var iot = null;
+                for (var i = 0; i < iots.length; i++) {
+                    if (parseInt(iots[i].identifier) === parseInt(e.currentTarget.id)) {
+                        iot = iots[i];
+                        break;
+                    }
+                }
+
+                if (iot) {
+                    $('#flashIotsBtn').show()
+                    $('#flashIotsBtn').unbind();
+                    $('#flashIotsBtn').click(function() {
+                        $('#flashIotsBtn').hide();
+                        $("#deleteIotsForm").hide();
+                        flashIotSteps(iot.identifier);
+                    });
+                }
+
+                $("#deleteIotsForm").unbind();
+                $("#deleteIotsForm").click(function() {
+
+                    swal(Object.assign({
+                        title: t('js.delete.confirm', null),
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: t('js.continue', null),
+                        cancelButtonText: t('js.cancel', null),
+                        showLoaderOnConfirm: true
+                    }, swalDefaults)).then(function() {
+                        // Confirm
+                        showLoader();
+                        // Confirm
+                        $.ajax({
+                            type: "DELETE",
+                            url: vUrl + "iot/del/" + iot.identifier +"/",
+                            data: {
+                                u: username,
+                                p: password
+                            }
+                        }).done(function(data) {
+                            $("#manageIotsItem").click();
+                            $('#iotsModal').modal('hide');
+                            hideLoader();
+                        }).fail(function(msg) {
+                            setError(msg);
+                        });
+                    }, function(mode) {
+                        // Cancel
+                        if (mode && mode != 'cancel') {
+                            return;
+                        }
+                    });
+                });
+
+                // Display iot form
+                $("#saveIotsForm").unbind();
+                $("#saveIotsForm").click(function() {
+                    $("#react-btn-submit-iot").click();
+                });
+
+                $("#iotForm").empty();
+
+                var self = this;
+
+                ReactDOM.render(React.createElement(Form, {schema:iot.form.schema, uiSchema:iot.form.schemaUI, formData:iot.form.data, onSubmit: function(data) {
+                    $.ajax({
+                        type: "POST",
+                        url: vUrl + "iot/set/" + iot.form.data.id + "/",
+                        contentType: "application/json",
+                        data: JSON.stringify({
+                            u: username,
+                            p: password,
+                            data: data.formData
+                        })
+                    }).done(function(data) {
+                        $("#manageIotsItem").click();
+                        flashIotSteps(data.id);
+                    }).fail(function(msg) {
+                        $('#iotsModal').modal('hide');
+                        setError(msg);
+                    });
+                }},
+                React.createElement(
+                  "button",
+                  { type: "submit", className:"btn btn-success hidden", id:"react-btn-submit-iot" },
+                  "button.save"
+              )), document.getElementById("iotsForm"));
+            });
+            hideLoader();
+        });
+    });
+
+    flashIotSteps = function(iotIdentifier) {
+        $('#iotsForm').empty();
+        $('#iotsSelectForm').empty();
+        $('#iotsFlash').show();
+        $('#saveIotsForm').hide();
+        $("#iotsFlashBtn").unbind();
+        $("#iotsFlashIndicator").show();
+        $("#iotsFlashRunning").hide();
+        $("#iotsFlashFinish").hide();
+        $("#iotsFlashBtn").click(function() {
+            $("#iotsFlashIndicator").hide();
+            $("#iotsFlashRunning").show();
+            $("#iotsFlashFinish").hide();
+            document.getElementById('iotsFlashRunning').innerHTML = generateAnimation('iotsFlashRunning-left', 'iotsFlashRunning-right', 'F0D0', 'F2DB') + '<br /><br /><br /><br /><div class="center">' + t('flash.flashing') + "</div>";
+            $.ajax({
+                type: "POST",
+                url: vUrl + "iot/flash/" + iotIdentifier + "/",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    u: username,
+                    p: password
+                })
+            }).done(function(result) {
+                $("#iotsFlashRunning").hide();
+                $("#iotsFlashFinish").show();
+                document.getElementById("iotsFlashFinishIcon").innerHTML = '<span class="glyphicon glyphicon-ok-sign iotFlashFinishIconSuccess" id="iotFlashFinishIconSuccess" aria-hidden="true"></span>';
+                document.getElementById("iotsFlashFinishText").innerHTML = t('iot.flash.success');
+                document.getElementById("iotsFlashFinishDetails").innerHTML = '<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#flashResults" aria-expanded="true" aria-controls="flashResults">' +
+                t('js.details') +
+                '</a>' +
+                '</h4>' +
+                '</div>' +
+                '<div id="flashResults" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">' +
+                '<div class="panel-body">' +
+                '<code>' + nl2br(result.details) + '</code>' +
+                '</div>' +
+                '</div>';
+            }).fail(function(msg) {
+                $("#iotsFlashRunning").hide();
+                $("#iotsFlashFinish").show();
+                document.getElementById("iotsFlashFinishIcon").innerHTML = '<span class="glyphicon glyphicon-remove-sign iotFlashFinishIconError" id="iotFlashFinishIconError" aria-hidden="true"></span>';
+                document.getElementById("iotsFlashFinishText").innerHTML = t('iot.flash.error');
+                document.getElementById("iotsFlashFinishDetails").innerHTML = '<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#flashResults" aria-expanded="true" aria-controls="flashResults">' +
+                t('js.details') +
+                '</a>' +
+                '</h4>' +
+                '</div>' +
+                '<div id="flashResults" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">' +
+                '<div class="panel-body">' +
+                '<code>' + nl2br(msg.responseJSON.message) + '</code>' +
+                '</div>' +
+                '</div>' +
+                '<br /><button type="button" class="btn btn-primary" id="iotsFlashRetry">' + t('iot.flash.retry') + '</button>';
+                $("#iotsFlashRetry").unbind();
+                $("#iotsFlashRetry").click(function() {
+                    $("#iotsFlashBtn").click();
+                });
+            });
+        });
+    }
+
+    $("#addIots").click(function() {
+        $("#iotsLoader").show();
+        showLoader();
+        reqPluginList = $.ajax({
+            type: "GET",
+            url: vUrl + "iot/available/get/",
+            data: {
+                u: username,
+                p: password
+            }
+        }).done(function(iotsAvailableData) {
+            $("#iotsLoader").hide();
+            $("#deleteIotForm").hide();
+
+
+            if (iotsAvailableData) {
+                var formContent = '<select id="iotsSelector" class="form-control">';
+                formContent = formContent + '<option value="">' + t('js.global.iots.form.iot.type.default', null) + '</option>';
+
+                for (var i = 0; i < iotsAvailableData.length; i++) {
+                    formContent = formContent + '<option value="' + i + '">' + iotsAvailableData[i].description + '</option>';
+                }
+
+                formContent = formContent + '</select>';
+                $('#iotsSelectForm').empty();
+                $('#iotsForm').empty();
+                $('#iotsSelectForm').append(formContent);
+                $('#iotsModal').modal('show');
+                $("#iotsSelector").unbind();
+                $('#iotsFlash').hide();
+                $('#saveIotsForm').show();
+                $('#flashIotsBtn').hide();
+                $('#iotsSelector').change(function() {
+                    var key = $('#iotsSelector').val();
+                    if (key == '') return;
+                    var iotAvailableData = iotsAvailableData[parseInt(key)];
+
+                    var self = this;
+                    ReactDOM.render(React.createElement(Form, {schema:iotAvailableData.form.schema, uiSchema:iotAvailableData.form.schemaUI, formData:iotAvailableData.form.data, onSubmit: function(data) {
+                        $.ajax({
+                            type: "POST",
+                            url: vUrl + "iot/set/",
+                            contentType: "application/json",
+                            data: JSON.stringify({
+                                u: username,
+                                p: password,
+                                data: data.formData
+                            })
+                        }).done(function(data) {
+                            flashIotSteps(data.id);
+                        }).fail(function(msg) {
+                            $('#iotsModal').modal('hide');
+                            setError(msg);
+                        });
+                    }},
+                    React.createElement(
+                      "button",
+                      { type: "submit", className:"btn btn-success hidden", id:"react-btn-submit-iot" },
+                      "button.save"
+                  )), document.getElementById("iotsForm"));
+
+
+
+
+                    // Display iot form
+                    $("#saveIotsForm").unbind();
+                    $("#saveIotsForm").click(function() {
+                        $("#react-btn-submit-iot").click();
+                    });
+
+                    /*var plugin = jsonData[key];
                     consolelog(plugin);
-                    $("#sensorForm").empty();
+                    $("#iotForm").empty();
                     var pluginIdentifier = plugin.identifier;
                     var selectedPluginId = parseInt(key);
                     consolelog("----->");
                     consolelog(plugin);
 
-                    $("#sensorForm").jsonForm({
+                    $("#iotForm").jsonForm({
                         schema: plugin.config.schema,
                         "form": plugin.config.form,
                         "value": plugin.configValues,
                         onSubmit: function(errors, values) {
-                            if (errors || (values.sensorLocation == null && values.sensorLocationExisting == null)) {
+                            if (errors || (values.iotLocation == null && values.iotLocationExisting == null)) {
                                 setError(t('js.invalid.form.data', null));
                             } else {
-                                if (values.sensorLocation && (values.sensorLocation != '')) values.sensorLocationExisting = values.sensorLocation;
-                                values.sensorLocation = null;
+                                if (values.iotLocation && (values.iotLocation != '')) values.iotLocationExisting = values.iotLocation;
+                                values.iotLocation = null;
                                 reqPluginSetConfig = $.ajax({
                                     type: "POST",
                                     url: vUrl,
                                     data: {
                                         username: username,
                                         ePassword: ePassword,
-                                        method: "setSensor",
+                                        method: "setIot",
                                         data: JSON.stringify(values),
                                         pluginIdentifier: pluginIdentifier
                                     }
                                 }).done(function(msg) {
                                     jsonData[selectedPluginId].configValues = values;
-                                    $('#sensorModal').modal('hide');
+                                    $('#iotModal').modal('hide');
                                     toastr.success(t('js.form.success', null));
-                                    $("#manageSensorsItem").click();
+                                    $("#manageIotsItem").click();
                                 }).fail(function(msg) {
                                     displayError(msg);
                                 });
                             }
                         }
-                    });
+                    });*/
                 });
             }
             hideLoader();
         });
     });
-
-    var iotAppForm = function(iotApp, sensorInfo) {
-        $("#sensorFlashForm").empty();
-        $("#flashIoTBtn").unbind();
-        $("#flashIoTBtn").click(function() {
-            $("#sensorFlashForm").submit();
-        });
-
-        $("#sensorFlashForm").jsonForm({
-            schema: iotApp.form.schema,
-            "form": iotApp.form.form,
-            "value": iotApp.form.values,
-            onSubmit: function(errors, values) {
-                if (errors) {
-                    setError(t('js.invalid.form.data', null));
-                } else {
-                    if (values.sensorLocation && (values.sensorLocation != '')) values.sensorLocationExisting = values.sensorLocation;
-                    values.sensorLocation = null;
-                    var data = {};
-                    data.iotApp = iotApp;
-                    data.dataValues = values;
-                    data.ota = false;
-                    if (sensorInfo != null) data.ota = true;
-
-                    var flashIoT = $.ajax({
-                        type: "POST",
-                        url: vUrl,
-                        data: {
-                            username: username,
-                            ePassword: ePassword,
-                            method: "flashIoT",
-                            data: JSON.stringify(data)
-                        }
-                    }).done(function(msg) {
-                        var data = JSON.parse(msg);
-                        var board = data.board;
-                        var buildToken = data.buildToken;
-
-                        if (data.buildToken) {
-                            $("#iotModuleSelectForm").empty();
-                            $("#sensorFlashForm").empty();
-                            $("#sensorFlashForm").unbind();
-                            $("#flashIoTBtn").hide();
-                            $("#closeIoTBtn").hide();
-
-                            var refreshIoTBuildToken = function() {
-                                consolelog("Refreshing build");
-                                var flashIoT = $.ajax({
-                                    type: "POST",
-                                    url: vUrl,
-                                    data: {
-                                        username: username,
-                                        ePassword: ePassword,
-                                        method: "flashIoTStatus",
-                                        data: msg
-                                    }
-                                }).done(function(msg) {
-                                    var status = JSON.parse(msg);
-                                    var stateHtml = '<table class="table table-condensed">';
-                                    var hasError = false;
-                                    for (i = 0; i < status.steps.length; i++) {
-                                        if (status.steps[i].state == -1) hasError = true;
-                                        var styleClass = 'active';
-                                        if (status.steps[i].state == -1) styleClass = 'danger';
-                                        if (status.steps[i].state == 1) styleClass = 'info';
-                                        if (status.steps[i].state == 2) styleClass = 'success';
-                                        stateHtml = stateHtml + '<tr class="' + styleClass + '">';
-                                        if (status.steps[i].id == "build") {
-                                            stateHtml = stateHtml + '<td><span class="glyphicon glyphicon-wrench" aria-hidden="true"></span></td>';
-                                        } else {
-                                            if (status.steps[i].id == "uploading") {
-                                                stateHtml = stateHtml + '<td><span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span></td>';
-                                            } else {
-                                                stateHtml = stateHtml + '<td>&nbsp;</td>';
-                                            }
-                                        }
-                                        stateHtml = stateHtml + '<td>' + status.steps[i].label + '</td>';
-                                        stateHtml = stateHtml + '<td>' + status.steps[i].status + '</td>';
-                                        stateHtml = stateHtml + '</tr>';
-                                    }
-                                    stateHtml = stateHtml + '</table>';
-
-                                    var title = t('js.global.sensors.form.iot.flashing');
-                                    var additionnalInfo = '<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">' +
-                                        '<div class="panel panel-default">' +
-                                        '<div class="panel-heading" role="tab" id="flashDetailsHeading">' +
-                                        '<h4 class="panel-title">' +
-                                        '<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#flashDetails" aria-expanded="true" aria-controls="flashDetails">' +
-                                        t('js.details') +
-                                        '</a>' +
-                                        '</h4>' +
-                                        '</div>' +
-                                        '<div id="flashDetails" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">' +
-                                        '<div class="panel-body">' +
-                                        '<code>' + nl2br(status.log) + '</code>' +
-                                        '</div>' +
-                                        '</div>' +
-                                        '</div>' +
-                                        '</div>';
-                                    if (status.finished) {
-                                        if (hasError) {
-                                            title = t('js.global.sensors.form.iot.flashing.error');
-                                        } else {
-                                            title = t('js.global.sensors.form.iot.flashing.success');
-                                        }
-                                    }
-
-                                    var loaderFlashing = '<span></span>';
-                                    if (!status.finished && !hasError) {
-                                        loaderFlashing = '<div style="float: left;top: -8px;position: relative"><img src="img/squares.svg" /></div>';
-                                    }
-
-                                    stateHtml = '<h3>' + iotApp.name + '</h3>' + loaderFlashing + '<h4>' + title + '</h4>' + stateHtml + '<br/>' + additionnalInfo;
-
-                                    document.getElementById("flashResults").innerHTML = stateHtml;
-
-                                    if (!status.finished) {
-                                        window.setTimeout(refreshIoTBuildToken, 3000);
-                                    } else {
-                                        $("#closeIoTBtn").show();
-                                    }
-
-                                    if (status.firmwareAvailable) {
-                                        $("#dlFirmwareIoTBtn").show();
-                                        $("#dlFirmwareIoTBtn").unbind();
-                                        var ob = {};
-                                        ob.board = board;
-                                        ob.buildToken = buildToken;
-
-                                        $("#dlFirmwareIoTBtn").click(function() {
-                                            var newWindow = window.open("", "_blank");
-                                            newWindow.location.href = vUrl + '?username=' + encodeURIComponent(username) + '&ePassword=' + ePassword + '&method=getIoTFirmware&data=' + encodeURIComponent(JSON.stringify(ob));
-                                        });
-                                    }
-
-                                }).fail(function(msg) {
-                                    displayError(msg);
-                                    $("#flashIoTBtn").show();
-                                    $("#closeIoTBtn").show();
-                                });
-                            }
-                            refreshIoTBuildToken();
-                        }
-                    }).fail(function(msg) {
-                        displayError(msg);
-                    });
-                }
-            }
-        });
-    }
-
-    var flashSensor = function(sensorInfo) {
-        $("#sensorsLoader").show();
-        $("#flashResults").empty();
-        $("#flashIoTBtn").show();
-        $("#closeIoTBtn").show();
-        $("#flashIoTBtn").unbind();
-        $("#dlFirmwareIoTBtn").hide();
-        showLoader();
-        reqFlashSensor = $.ajax({
-            type: "POST",
-            url: vUrl,
-            data: {
-                username: username,
-                ePassword: ePassword,
-                method: "getIoTApps"
-            }
-        }).done(function(msg) {
-            $("#sensorsLoader").hide();
-
-            // var jsonData = JSON.parse(msg);
-            var jsonData = JSON.parse(msg, function(key, value) {
-                if (value && (typeof value === 'string') && value.indexOf("function") === 0) {
-                    // we can only pass a function as string in JSON ==> doing a real function
-                    var jsFunc = new Function('return ' + value)();
-                    return jsFunc;
-                }
-
-                return value;
-            });
-
-            if (jsonData) {
-                var formContent = '';
-                if (sensorInfo == null) {
-                    formContent = '<select id="iotSelector" class="form-control">';
-                    formContent = formContent + '<option value="-1">' + t('js.global.sensors.form.iot.type.default', null) + '</option>';
-                    for (var i = 0; i < jsonData.length; i++) {
-                        formContent = formContent + '<option value="' + i + '">' + jsonData[i].name + '</option>';
-                    }
-
-                    formContent = formContent + '</select>';
-                }
-
-                $('#iotModuleSelectForm').empty();
-                $('#iotModuleForm').empty();
-                $('#iotModuleSelectForm').append(formContent);
-                $('#sensorFlashModal').modal('show');
-                $("#sensorFlashForm").empty();
-                $("#iotSelector").unbind();
-                $('#iotSelector').change(function() {
-                    var i = $('#iotSelector').val();
-                    if (i != -1) {
-                        var iotApp = jsonData[i];
-                        iotAppForm(iotApp, sensorInfo);
-                    }
-                });
-
-                if (sensorInfo != null) {
-                    var selectedIotApp = sensorInfo.otaParams.iotApp;
-                    for (var i = 0; i < jsonData.length; i++) {
-                        // Update form with new downloaded
-                        if (jsonData[i].identifier == sensorInfo.otaParams.iotApp.identifier) {
-                            selectedIotApp = jsonData[i];
-                        }
-                    }
-                    selectedIotApp.form.values = sensorInfo.otaParams.dataValues;
-                    iotAppForm(selectedIotApp, sensorInfo);
-                }
-            }
-            hideLoader();
-        });
-    }
-
-    $("#flashSensor").click(function(evt) {
-        flashSensor(null);
-    });
+    // END IOTS
+    // -------------------------------
+    // -------------------------------
 
     var scanRawRadioSignalCountdown = function(data, value, nextFunc) {
         document.getElementById("rawScanData").innerHTML = data.replace('PLHOLDER', value);

@@ -5,7 +5,6 @@ cache:
   - ~/.pkg-cache/
 
 before_script:
-  - npm install
   - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
   - mkdir -p ~/.ssh
   - eval $(ssh-agent -s)
@@ -21,6 +20,9 @@ stages:
 test:
   stage: test
   script:
+  - apt-get -qq update
+  - apt-get install -qq -y libudev-dev
+  - npm install
   - npm run --verbose test-ci
   coverage: '/Statements   : \d+\.\d+/'
 
@@ -29,11 +31,17 @@ lint:
   only:
     - master
   script:
+  - apt-get -qq update
+  - apt-get install -qq -y libudev-dev
+  - npm install
   - npm run --verbose lint
 
 build:
   stage: build
   script:
+  - apt-get -qq update
+  - apt-get install -qq -y libudev-dev
+  - npm install
   - npm run --verbose build
   artifacts:
     paths:
@@ -44,7 +52,6 @@ deploy:
   only:
     - master
   script:
-  - npm run build
   - ssh-add <(echo "$STAGING_PRIVATE_KEY")
   - ssh -p22 $STAGING_USER@$STAGING_IP "rm -Rf $STAGING_TMP_FOLDER/hautomation-core-deploy"
   - ssh -p22 $STAGING_USER@$STAGING_IP "mkdir $STAGING_TMP_FOLDER/hautomation-core-deploy"

@@ -176,8 +176,8 @@ class BotEngine {
         const parseSpeech =  new Promise((resolve, reject) => {
             // call the wit.ai api with the created stream
             WitSpeech.extractSpeechIntent(context.translateManager.t("wit.ai.api.key"), stream, content_type,
-            (res, err) => {
-                Logger.err(err);
+            (err, res) => {
+                //Logger.err(err);
                 if (err) return reject(err);
                 resolve(res);
             });
@@ -185,8 +185,8 @@ class BotEngine {
 
         // check in the promise for the completion of call to witai
         parseSpeech.then((data) => {
-            console.log(data);
-            context.textToSpeech(data._text);
+            // console.log(data.entities.greetings[0].value);
+            (data.entities && data.entities.greetings && data.entities.greetings.length > 0)?context.textToSpeech(data.entities.greetings[0].value):context.textToSpeech(data._text);
             self.onMessageReceived("seb", {message:data._text}, ()=>{});
         })
         .catch((err) => {

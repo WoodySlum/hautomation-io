@@ -16,6 +16,22 @@ class Cleaner {
         delete o.class;
         return o;
     }
+
+    /**
+     * Clean a DbObject by removing DbHelper
+     *
+     * @param  {DbObject} dbObject A database object
+     * @returns {Object}          A cleaned object
+     */
+    static cleanDbObject(dbObject) {
+        if (dbObject && dbObject.dbHelper) {
+            const tmpObject = Object.assign({}, dbObject);
+            delete tmpObject.dbHelper;
+
+            return tmpObject;
+        }
+        return dbObject;
+    }
 }
 
 module.exports = {class:Cleaner};

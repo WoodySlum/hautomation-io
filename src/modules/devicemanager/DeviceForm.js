@@ -20,6 +20,7 @@ class DeviceForm extends FormObject.class {
      */
     constructor(id = null, name = null, excludeFromAll = false, visible = true, worksOnlyOnDayNight = 1, icon = {}, radio = [], status = -1) {
         super(id);
+
         /**
          * @Property("name");
          * @Title("device.form.name");
@@ -50,7 +51,7 @@ class DeviceForm extends FormObject.class {
          * @Default(1);
          * @Title("device.form.worksOnlyOnDayNight");
          * @Enum([1, 2, 3]);
-         * @EnumNames(["device.form.worksOnlyOnDayNight.both", "device.form.worksOnlyOnDayNight.day", "device.form.worksOnlyOnDayNightNight"]);
+         * @EnumNames(["device.form.worksOnlyOnDayNight.both", "device.form.worksOnlyOnDayNight.day", "device.form.worksOnlyOnDayNight.night"]);
          */
         this.worksOnlyOnDayNight = worksOnlyOnDayNight;
 

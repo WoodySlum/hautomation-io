@@ -2,7 +2,18 @@
 "use strict";
 const Logger = require("./../../logger/Logger");
 const RadioForm = require("./RadioForm");
+const RadioScenarioForm = require("./RadioScenarioForm");
+const RadioScenariosForm = require("./RadioScenariosForm");
 const PluginsManager = require("./../pluginsmanager/PluginsManager");
+const WebServices = require("./../../services/webservices/WebServices");
+const Authentication = require("./../authentication/Authentication");
+const APIResponse = require("./../../services/webservices/APIResponse");
+const DateUtils = require("./../../utils/DateUtils");
+const sha256 = require("sha256");
+const Cleaner = require("./../../utils/Cleaner");
+
+const ROUTE_GET_BASE_PATH = ":/radio/get/";
+const RADIO_PLUGIN_KEY = "radio";
 
 /**
  * This class manage radio stuff
@@ -15,19 +26,28 @@ class RadioManager {
      * @param  {PluginManager} pluginsManager A plugin manager instance
      * @param  {FormManager} formManager    A form manager
      * @param  {EventEmitter} eventBus    The global event bus
+     * @param  {ScenarioManager} scenarioManager    The scenario manager
+     * @param  {WebServices} webServices Web services instance
+     * @param  {TranslateManager} translateManager Translate manager
      * @returns {RadioManager}                The instance
      */
-    constructor(pluginsManager, formManager, eventBus) {
+    constructor(pluginsManager, formManager, eventBus, scenarioManager, webServices, translateManager) {
         this.pluginsManager = pluginsManager;
         this.formManager = formManager;
+        this.scenarioManager = scenarioManager;
+        this.webServices = webServices;
+        this.translateManager = translateManager;
 
         this.modules = [];
         this.protocols = [];
+        this.registeredElements = {};
 
         const self = this;
         eventBus.on(PluginsManager.EVENT_LOADED, (pluginsManager) => {
             self.pluginsLoaded(pluginsManager, self);
         });
+
+        this.webServices.registerAPI(this, WebServices.GET, ROUTE_GET_BASE_PATH, Authentication.AUTH_ADMIN_LEVEL);
     }
 
     /**
@@ -43,6 +63,34 @@ class RadioManager {
         context.getProtocols();
         context.registerRadioEvents();
         context.formManager.register(RadioForm.class, context.modules, context.protocols);
+        context.formManager.register(RadioScenarioForm.class);
+        context.scenarioManager.register(RadioScenariosForm.class, null, "radio.scenario.form.trigger");
+    }
+
+    /**
+     * Register for radio events
+     *
+     * @param  {Function} cb            A callback triggered when radio information is received. Example : `(radioObj) => {}`
+     * @param  {string} id            An identifier
+     */
+    register(cb, id = null) {
+        const index = sha256(cb.toString() + id);
+        this.registeredElements[index] = cb;
+    }
+
+    /**
+     * Unegister an timer element
+     *
+     * @param  {Function} cb             A callback triggered when radio information is received. Example : `(radioObj) => {}`
+     * @param  {string} id            An identifier
+     */
+    unregister(cb, id = null) {
+        const index = sha256(cb.toString() + id);
+        if (this.registeredElements[index]) {
+            delete this.registeredElements[index];
+        } else {
+            Logger.warn("Element not found");
+        }
     }
 
     /**
@@ -50,7 +98,7 @@ class RadioManager {
      */
     registerRadioEvents() {
         const self = this;
-        this.pluginsManager.getPluginsByCategory("radio").forEach((plugin) => {
+        this.pluginsManager.getPluginsByCategory(RADIO_PLUGIN_KEY).forEach((plugin) => {
             if (plugin.instance) {
                 plugin.instance.register(self);
             }
@@ -62,7 +110,7 @@ class RadioManager {
      */
     unregisterRadioEvents() {
         const self = this;
-        this.pluginsManager.getPluginsByCategory("radio").forEach((plugin) => {
+        this.pluginsManager.getPluginsByCategory(RADIO_PLUGIN_KEY).forEach((plugin) => {
             if (plugin.instance) {
                 plugin.instance.unregister(self);
             }
@@ -76,9 +124,41 @@ class RadioManager {
      * @param  {DbRadio} radioObject A radio object
      */
     onRadioEvent(radioObject) {
+        // Trigger scenarios
+        this.scenarioManager.getScenarios().forEach((scenario) => {
+            if (scenario.RadioScenariosForm) {
+                if (scenario.RadioScenariosForm.radioScenariosForm) {
+                    let shouldExecuteAction = false;
+                    scenario.RadioScenariosForm.radioScenariosForm.forEach((radioScenarioForm) => {
+                        if (radioScenarioForm.radio) {
+                            if (radioScenarioForm.radio.module === radioObject.module
+                                && radioScenarioForm.radio.module === radioObject.module
+                                && radioScenarioForm.radio.protocol === radioObject.protocol
+                                && radioScenarioForm.radio.deviceId === radioObject.deviceId
+                                && radioScenarioForm.radio.switchId === radioObject.switchId
+                                && ((parseFloat(radioScenarioForm.status) === parseFloat(RadioScenarioForm.STATUS_ALL)) || (parseFloat(radioScenarioForm.status) === parseFloat(radioObject.status)))
+                            ) {
+                                shouldExecuteAction = true;
+                            }
+                        }
+                    });
+
+                    if (shouldExecuteAction) {
+                        this.scenarioManager.triggerScenario(scenario);
+                    }
+                }
+            }
+        });
+
+        // Update protocols
         if (this.protocols.indexOf(radioObject.protocol) === -1) {
             this.getProtocols();
         }
+
+        // Dispatch callback
+        Object.keys(this.registeredElements).forEach((registeredKey) => {
+            this.registeredElements[registeredKey](Cleaner.class.cleanDbObject(radioObject));
+        });
     }
 
     /**
@@ -87,7 +167,7 @@ class RadioManager {
     getModules() {
         this.modules = [];
         const self = this;
-        this.pluginsManager.getPluginsByCategory("radio").forEach((plugin) => {
+        this.pluginsManager.getPluginsByCategory(RADIO_PLUGIN_KEY).forEach((plugin) => {
             if (plugin.instance) {
                 self.modules.push(plugin.instance.module);
                 self.formManager.register(RadioForm.class, this.modules, this.protocols);
@@ -101,7 +181,7 @@ class RadioManager {
     getProtocols() {
         this.protocols = [];
         const self = this;
-        this.pluginsManager.getPluginsByCategory("radio").forEach((plugin) => {
+        this.pluginsManager.getPluginsByCategory(RADIO_PLUGIN_KEY).forEach((plugin) => {
             if (plugin.instance) {
                 plugin.instance.getProtocolList((err, res) => {
                     if (!err) {
@@ -130,6 +210,67 @@ class RadioManager {
             return plugin.instance.emit(frequency, protocol, deviceId, switchId, status, previousStatus);
         } else {
             return null;
+        }
+    }
+
+    /**
+     * Get last received radio informations
+     *
+     * @param  {Function} cb               A callback `cb(radioObjects) => {}`
+     * @param  {number}   [nbElements=100] Number of elements
+     */
+    getLastReceivedRadioInformations(cb, nbElements = 100) {
+        const plugins = this.pluginsManager.getPluginsByCategory(RADIO_PLUGIN_KEY);
+        let c = 0;
+        const radioObjects = [];
+        plugins.forEach((plugin) => {
+            plugin.instance.getLastReceivedRadioInformations((err, objects) => {
+                c++;
+                if (!err) {
+                    objects.forEach((obj) => {
+                        radioObjects.push(obj);
+                    });
+                }
+                if (c === plugins.length) {
+                    cb(radioObjects);
+                }
+            }, nbElements);
+        });
+
+        if (plugins.length === 0) {
+            cb(radioObjects);
+        }
+    }
+
+    /**
+     * Process API callback
+     *
+     * @param  {APIRequest} apiRequest An APIRequest
+     * @returns {Promise}  A promise with an APIResponse object
+     */
+    processAPI(apiRequest) {
+        const self = this;
+        // Get form
+        if (apiRequest.route === ROUTE_GET_BASE_PATH) {
+            return new Promise((resolve) => {
+                self.getLastReceivedRadioInformations((objects) => {
+                    const data = [];
+                    objects.forEach((object) => {
+                        data.push({
+                            rawDate: object.timestamp,
+                            date: DateUtils.class.dateFormatted(self.translateManager.t("datetime.format"), DateUtils.class.dateToTimestamp(object.timestamp)),
+                            module: object.module,
+                            protocol: object.protocol,
+                            switchId: object.switchId,
+                            deviceId: object.deviceId,
+                            status: object.status,
+                            value: object.value,
+                            description: null
+                        });
+                    });
+                    resolve(new APIResponse.class(true, data));
+                });
+            });
         }
     }
 }

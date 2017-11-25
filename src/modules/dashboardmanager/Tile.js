@@ -34,7 +34,7 @@ class Tile {
      */
     constructor(themeManager, identifier, type = TILE_INFO_ONE_TEXT, icon = null, subIcon = null, text = null, subText = null, picture = null, pictures = null, status = 0, order = 1, action = null, object = null) {
         this.themeManager = themeManager;
-        this.identifier = identifier;
+        this.identifier = identifier.toString();
         this.type = type;
         this.icon = icon;
         this.subicon = subIcon;

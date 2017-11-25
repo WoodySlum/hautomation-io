@@ -92,7 +92,7 @@ class MessageManager {
      * @param  {string} [picture=null]   The picture
      */
     sendMessage(recipients = "*", message, action = null, link = null, picture = null) {
-
+        Logger.info("Sending message '" + message + "' to " + recipients);
         if (this.pluginsManager) {
             this.pluginsManager.getPluginsByCategory("message-provider").forEach((plugin) => {
                 if (plugin.instance.sendMessage instanceof Function) {
@@ -146,7 +146,7 @@ class MessageManager {
         const request = this.dbHelper.RequestBuilder()
         .select()
         .complexWhere("(recipient " + this.dbHelper.Operators().LIKE + " '" + username + "' OR " + "sender " + this.dbHelper.Operators().LIKE + " '" + username + "')")
-        .where(this.dbHelper.Operators().FIELD_TIMESTAMP, this.dbHelper.Operators().GTE, parseInt(lastTimestamp)===0?1:parseInt(lastTimestamp))
+        .where(this.dbHelper.Operators().FIELD_TIMESTAMP, this.dbHelper.Operators().GT, parseInt(lastTimestamp)===0?1:parseInt(lastTimestamp))
         .order(this.dbHelper.Operators().DESC, this.dbHelper.Operators().FIELD_TIMESTAMP)
         .first(20);
 
@@ -160,7 +160,7 @@ class MessageManager {
                         id:dbObj.id,
                         dt:DateUtils.class.dateFormatted(this.translateManager.t("datetime.format"), DateUtils.class.dateToTimestamp(dbObj.timestamp)),
                         rawDt:dbObj.timestamp,
-                        timestamp:DateUtils.class.dateToUTCTimestamp(dbObj.timestamp),
+                        timestamp:DateUtils.class.dateToTimestamp(dbObj.timestamp),
                         recipient:dbObj.recipient,
                         sender:dbObj.sender,
                         message:dbObj.message,

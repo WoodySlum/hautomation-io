@@ -56,16 +56,17 @@ class FormManager {
      * Add additional fields to a form base
      *
      * @param {Class} formBase The base form
+     * @param {string} title The form title
      * @param {Array} forms    An array of forms
      */
-    addAdditionalFields(formBase, forms) {
-
-        let additionalProperties = {};
+    addAdditionalFields(formBase, title, forms) {
+        const additionalProperties = this.registeredForms[formBase.name].additionalFields;
         forms.forEach((form) => {
-            Annotation(form.toString(), function(AnnotationReader) {
-                additionalProperties = Object.assign(additionalProperties, AnnotationReader.comments.properties);
-
-            });
+            additionalProperties[form.name] = [
+                    {key:"Type", value:"object"},
+                    {key:"Cl", value:form.name},
+                    {key:"Title", value:title}
+            ];
         });
         this.registeredForms[formBase.name].additionalFields = additionalProperties;
     }
@@ -123,12 +124,12 @@ class FormManager {
         // Extend class lookup
         // Classic regex : class A extends B {
         // ;
-        const regex = /(extends)([ ]+)([a-zA-Z\.]*)([ ]*)(\{)/g;
+        const regex = /(extends)([ ]*)([\(]*)([a-zA-Z\.]*)([\)]*)([ ]*)(\{)/g;
         let regexRes = regex.exec(c);
         let parent = null;
 
-        if (regexRes && regexRes.length > 3) {
-            const extendExploded = regexRes[3].trim().split(".");
+        if (regexRes && regexRes.length > 4) {
+            const extendExploded = regexRes[4].trim().split(".");
             if (extendExploded.length > 0) {
                 if (extendExploded[extendExploded.length - 1].toLowerCase() !== "class") {
                     parent = extendExploded[extendExploded.length - 1];
@@ -217,7 +218,6 @@ class FormManager {
         Annotation(c, function(AnnotationReader) {
             const properties = Object.assign(AnnotationReader.comments.properties, additionalFields);
             Object.keys(properties).forEach((prop) => {
-
                 const meta = Convert.class.convertProperties(properties[prop]);
                 if (meta.Type) {
                     const type = meta.Type.toLowerCase();
@@ -273,6 +273,8 @@ class FormManager {
                             } else {
                                 schema.properties[prop].title = self.translateManager.t(meta.Title);
                             }
+                        } else {
+                            schema.properties[prop].title = null;
                         }
 
                         // Required
@@ -392,6 +394,8 @@ class FormManager {
                                 schemaUI[prop]["ui:widget"] = "checkboxes";
                             } else if (display === "textarea") {
                                 schemaUI[prop]["ui:widget"] = "textarea";
+                            } else if (display === "password") {
+                                schemaUI[prop]["ui:widget"] = "password";
                             }
                         }
 

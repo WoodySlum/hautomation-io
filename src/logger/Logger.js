@@ -4,6 +4,7 @@ const stackTrace = require("stack-trace");
 const dateTime = require("node-datetime");
 const columnify = require("columnify");
 const disableLog = parseInt(process.env.NO_LOG);
+let logLevel = 3;
 
 const enableLogLevel = true;
 const enableFileName = true;
@@ -15,6 +16,17 @@ const enableLine = true;
  * @class
  */
 class Logger {
+    /**
+     * Set the log level
+     *
+     * @param {number} [level=3] Log level between 0 and 5
+     */
+    static setLogLevel(level = 3) {
+        if (level) {
+            logLevel = level;
+        }
+    }
+
     /**
      * Log to a file
      *
@@ -93,7 +105,9 @@ class Logger {
             }
             //logLineConfig.config.lineNumber = {maxWidth: 50};
 
-            console.log(columnify([logLine], logLineConfig));
+            if (level <= logLevel) {
+                console.log(columnify([logLine], logLineConfig));
+            }
         }
     }
 

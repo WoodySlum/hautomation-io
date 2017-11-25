@@ -3,10 +3,13 @@ var chai = require("chai");
 var expect = chai.expect;
 var sinon = require("sinon");
 
+var TranslateManager = require("./../../../src/modules/translatemanager/TranslateManager");
 var WebServices = require("./../../../src/services/webservices/WebServices");
 var APIResponse = require("./../../../src/services/webservices/APIResponse");
 var Authentication = require("./../../../src/modules/authentication/Authentication");
-var AuthenticationData = require("./../../../src/modules/authentication/AuthenticationData");
+var AuthenticationData = require("./../../../src/modules/authentication/AuthenticationData")
+
+const translateManager = new TranslateManager.class("en");
 
 class APIResgistrationClassA {
     constructor(apiResponse = null, reject = false, empty = false){this.apiResponse = apiResponse; this.reject = reject; this.empty = empty;}
@@ -48,7 +51,7 @@ describe("WebServices", function() {
      * Constructor tests
      */
     it("constructor should be well played", function() {
-        let w = new WebServices.class(9090, 9091);
+        let w = new WebServices.class(translateManager, 9090, 9091);
         expect(w).to.have.property("port").and.equal(9090);
         expect(w).to.have.property("sslPort").and.equal(9091);
         expect(w).to.have.property("app").and.to.be.not.null;
@@ -60,7 +63,7 @@ describe("WebServices", function() {
      * API Registration tests
      */
      it("should register with wilcard route and method", function() {
-         let w = new WebServices.class(8080);
+         let w = new WebServices.class(translateManager, 8080);
          let obj = new APIResgistrationClassA();
          w.register(obj);
          expect(w.delegates.length).to.be.equal(1);

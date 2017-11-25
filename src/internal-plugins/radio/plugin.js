@@ -131,6 +131,27 @@ function loaded(api) {
         }
 
         /**
+         * Return the list of last radio information received
+         *
+         * @param  {Function} cb A callback function `(err, objects) => {}`
+         * @param  {number}   [nbElements=100] Max number elements
+         */
+        getLastReceivedRadioInformations(cb, nbElements = 100) {
+            const request = this.dbHelper.RequestBuilder()
+            .select()
+            .where("module", this.dbHelper.Operators().EQ, this.module)
+            .order(this.dbHelper.Operators().DESC, this.dbHelper.Operators().FIELD_TIMESTAMP)
+            .first(nbElements);
+            this.dbHelper.getObjects(request, (err, dbRadioObjects) => {
+                if (!err) {
+                    cb(null, dbRadioObjects);
+                } else {
+                    cb(err);
+                }
+            });
+        }
+
+        /**
          * Process API callback
          *
          * @param  {APIRequest} apiRequest An APIRequest

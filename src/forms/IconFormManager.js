@@ -17,11 +17,16 @@ class IconFormManager {
      */
     constructor(formManager) {
         const icons = [];
+        const iconsLabels = [];
         const list = Icons.class.list();
+        const raw = Icons.class.raw();
+
         Object.keys(list).forEach((key) => {
             icons.push(list[key]);
+            iconsLabels.push((key.charAt(0).toUpperCase() + key.slice(1).toLowerCase()).split("_").join(" ").split("-").join(" "));
         });
-        formManager.register(IconForm.class, icons);
+
+        formManager.register(IconForm.class, icons, iconsLabels);
     }
 }
 

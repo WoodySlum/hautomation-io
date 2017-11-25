@@ -1,0 +1,7 @@
+{
+    "sensor.name": "Name",
+    "sensor.dashboard": "Add tile to dashboard",
+    "sensor.statistics": "Show in statistics",
+    "sensor.dashboard.color": "Dashboard color",
+    "sensor.statistics.color": "Statistics color"
+}

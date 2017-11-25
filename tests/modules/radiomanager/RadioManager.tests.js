@@ -10,6 +10,9 @@ const PluginsManager = require("./../../../src/modules/pluginsmanager/PluginsMan
 let radioManager = core.radioManager;
 const formManager = core.formManager;
 const eventBus = core.eventBus;
+const scenarioManager = core.scenarioManager;
+const webServices = core.webServices;
+const translateManager = core.translateManager;
 const pluginsManager = core.pluginsManager;
 const sampleRadioPluginIdentifier = "rflink";
 
@@ -23,12 +26,12 @@ describe("RadioManager", function() {
         sinon.spy(RadioManager.class.prototype, "getProtocols");
         sinon.spy(RadioManager.class.prototype, "registerRadioEvents");
         sinon.spy(core.formManager, "register");
-        radioManager = new RadioManager.class(pluginsManager, formManager, eventBus);
+        radioManager = new RadioManager.class(pluginsManager, formManager, eventBus, scenarioManager, webServices, translateManager);
         radioManager.pluginsLoaded(pluginsManager, radioManager);
         expect(RadioManager.class.prototype.getModules.calledOnce).to.be.true;
         expect(RadioManager.class.prototype.getProtocols.calledOnce).to.be.true;
         expect(RadioManager.class.prototype.registerRadioEvents.calledOnce).to.be.true;
-        expect(core.formManager.register.calledTwice).to.be.true;
+        expect(core.formManager.register.calledThrice).to.be.true;
         RadioManager.class.prototype.getModules.restore();
         RadioManager.class.prototype.getProtocols.restore();
         RadioManager.class.prototype.registerRadioEvents.restore();

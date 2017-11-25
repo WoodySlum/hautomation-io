@@ -7,6 +7,7 @@ const APIResponse = require("./../../services/webservices/APIResponse");
 const Authentication = require("./../authentication/Authentication");
 const DateUtils = require("./../../utils/DateUtils");
 const SensorsForm = require("./SensorsForm");
+const SensorsListForm = require("./SensorsListForm");
 
 const CONF_MANAGER_KEY = "sensors";
 const SENSORS_MANAGER_AVAILABLE_GET = ":/sensors/available/get/";
@@ -78,12 +79,13 @@ class SensorsManager {
      * Called automatically when plugins are loaded. Used in separate methods for testing.
      * Initially, this method wad used in contructor.
      *
-     * @param  {PluginsManager} pluginsManager THe plugins manager instance
+     * @param  {PluginsManager} pluginsManager The plugins manager instance
      * @param  {SensorsManager} context        The context (self, this, etc ...)
      */
     pluginsLoaded(pluginsManager, context) {
         context.pluginsManager = pluginsManager;
         context.initSensors();
+        this.registerSensorsListForm();
     }
 
     /**
@@ -140,11 +142,24 @@ class SensorsManager {
      */
     registerSensorEvent(cb, identifier = "*", type = "*") {
         const id = sha256(cb.toString() + identifier + type);
-        if (!this.delegates[id]) {
-            this.delegates[id] = {identifier:identifier, type:type, cb:cb};
-        } else {
-            throw Error(ERROR_ALREADY_REGISTERED);
-        }
+        this.delegates[id] = {identifier:identifier, type:type, cb:cb};
+    }
+
+    /**
+     * Get sensor by identifier
+     *
+     * @param  {string} identifier An identiifer
+     * @returns {Sensor}            A sensor object
+     */
+    getSensor(identifier) {
+        let sensor = null;
+        this.sensors.forEach((s) => {
+            if (parseInt(s.id) === parseInt(identifier)) {
+                sensor = s;
+            }
+        });
+
+        return sensor;
     }
 
     /**
@@ -166,12 +181,16 @@ class SensorsManager {
     /**
      * Get all sensors
      *
+     * @param  {string} [type=null] Sensor's type or category. If not specified, send back all sensors.
+     *
      * @returns {Object} On object with id:name
      */
-    getAllSensors() {
+    getAllSensors(type = null) {
         const sensors = {};
         this.sensors.forEach((sensor) => {
-            sensors[sensor.id] = sensor.name;
+            if (!type || (sensor.type === type)) {
+                sensors[sensor.id] = sensor.name;
+            }
         });
 
         return sensors;
@@ -235,10 +254,11 @@ class SensorsManager {
                 const sensors = [];
                 self.pluginsManager.getPluginsByCategory("sensor", false).forEach((sensor) => {
                     if (sensor.sensorAPI.form) {
+                        const form = self.formManager.getForm(sensor.sensorAPI.form);
                         sensors.push({
                             identifier: sensor.identifier,
                             description: sensor.description,
-                            form:self.formManager.getForm(sensor.sensorAPI.form)
+                            form: form
                         });
                     }
                 });
@@ -249,11 +269,12 @@ class SensorsManager {
                 const sensors = [];
                 self.sensorsConfiguration.forEach((sensor) => {
                     const sensorPlugin = self.pluginsManager.getPluginByIdentifier(sensor.plugin, false);
+                    const s = self.getSensor(sensor.id);
                     sensors.push({
                         identifier: sensor.id,
                         name: sensor.name,
-                        icon: "E8BC",
-                        category:"TEST",
+                        icon: (s?s.icon:"E8BC"),
+                        category: (s?s.type:"UNKNOWN"),
                         form:Object.assign(self.formManager.getForm(sensorPlugin.sensorAPI.form), {data:sensor})
                     });
                 });
@@ -273,7 +294,7 @@ class SensorsManager {
 
                             self.sensorsConfiguration = self.confManager.setData(CONF_MANAGER_KEY, apiRequest.data, self.sensorsConfiguration, self.comparator);
                             self.initSensors();
-                            resolve(new APIResponse.class(true, {success:true}));
+                            resolve(new APIResponse.class(true, {success:true, id:apiRequest.data.id}));
                         } else {
                             reject(new APIResponse.class(false, {}, 8108, "Unexisting plugin found"));
                         }
@@ -302,7 +323,7 @@ class SensorsManager {
                 return DateUtils.class.roundedTimestamp(timestamp, DateUtils.ROUND_TIMESTAMP_DAY);
             }, "%Y-%m-%d 00:00:00");
         } else if (apiRequest.route === SENSORS_MANAGER_STATISTICS_YEAR) {
-            return this.statisticsWsResponse(DateUtils.class.roundedTimestamp(DateUtils.class.timestamp(), DateUtils.ROUND_TIMESTAMP_MONTH), 12 * 31 * 24 * 60 * 60, 31 * 24 * 60 * 60, this.translateManager.t("sensors.statistics.year.dateformat"), (timestamp) => {
+            return this.statisticsWsResponse(DateUtils.class.timestamp(), 12 * 31 * 24 * 60 * 60, 31 * 24 * 60 * 60, this.translateManager.t("sensors.statistics.year.dateformat"), (timestamp) => {
                 return DateUtils.class.roundedTimestamp(timestamp, DateUtils.ROUND_TIMESTAMP_MONTH);
             }, "%Y-%m-01 00:00:00");
         }
@@ -382,6 +403,40 @@ class SensorsManager {
      */
     comparator(sensorData1, sensorData2) {
         return (sensorData1.id === sensorData2.id);
+    }
+
+    /**
+     * Get sensor configuration. If no parameters are passed, returns the array of all sensor configuration.
+     *
+     * @param  {string} [sensorId=null] The sensor identifier. Can be null.
+     * @returns {Object}                 The sensor configuration, or configurations, or null if nothing found
+     */
+    getSensorConfiguration(sensorId = null) {
+        if (!sensorId) {
+            return this.sensorsConfiguration;
+        } else {
+            let foundConfiguration = null;
+            this.sensorsConfiguration.forEach((sensorConfiguration) => {
+                if (sensorConfiguration.id === sensorId) {
+                    foundConfiguration = sensorConfiguration;
+                }
+            });
+
+            return foundConfiguration;
+        }
+    }
+
+    /**
+     * Register a sensors list form
+     */
+    registerSensorsListForm() {
+        const sensorsName = [];
+        const sensorsId = [];
+        this.sensorsConfiguration.forEach((sensor) => {
+            sensorsName.push(sensor.name);
+            sensorsId.push(sensor.id);
+        });
+        this.formManager.register(SensorsListForm.class, sensorsName, sensorsId);
     }
 }
 

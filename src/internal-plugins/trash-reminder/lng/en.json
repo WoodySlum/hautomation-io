@@ -1,0 +1,10 @@
+{
+    "trash.reminder.configuration.day": "Reminder day",
+    "trash.reminder.configuration.reminders": "Reminders",
+    "trash.reminder.configuration.weekMode": "Week mode",
+    "trash.reminder.configuration.weekMode.all": "Pair and unpair weeks",
+    "trash.reminder.configuration.weekMode.pair": "Pair weeks",
+    "trash.reminder.configuration.weekMode.unpair": "Unpair weeks",
+    "trash.reminder.configuration.name": "Trash name",
+    "trash.reminder.configuration.message": "Take out the %@ trash"
+}

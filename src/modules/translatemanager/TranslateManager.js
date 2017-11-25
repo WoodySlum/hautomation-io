@@ -17,6 +17,8 @@ class TranslateManager {
     constructor(lng) {
         this.lng = lng.toLowerCase();
         this.translations = {};
+        // Logging
+        // this.expected = {};
     }
 
     /**
@@ -46,6 +48,14 @@ class TranslateManager {
      * @returns {string}        A translation
      */
     t(key, ...values) {
+        // Logging
+        /*if (key && key.toString().indexOf(".") !== -1) {
+            this.expected[key] = {
+                key:key,
+                values:values
+            };
+        }*/
+
         if (this.translations[key]) {
             let translation = this.translations[key];
             values.forEach((value) => {
@@ -71,6 +81,12 @@ class TranslateManager {
 
         return translatedElements;
     }
+
+    // Logging
+    /*writeList() {
+        const fs = require("fs");
+        fs.writeFileSync("./data/translations.json", JSON.stringify(this.expected, null, "    "));
+    }*/
 }
 
 module.exports = {class:TranslateManager};

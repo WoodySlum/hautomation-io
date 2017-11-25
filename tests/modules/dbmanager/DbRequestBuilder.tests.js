@@ -32,7 +32,7 @@ describe("DbRequestBuilder", function() {
         let sql = new DbRequestBuilder.class(table, schema)
                     .save(obj2)
                     .request();
-        expect(sql).to.be.equal("UPDATE `foobar` SET foo='foo''bar',bar=200,timestamp=current_timestamp WHERE 1=1 AND id=2;");
+        expect(sql).to.be.equal("UPDATE `foobar` SET id=2,foo='foo''bar',bar=200 WHERE 1=1 AND id=2;");
     });
 
     it("should get existing object", function() {
@@ -95,7 +95,7 @@ describe("DbRequestBuilder", function() {
                     .values(312)
                     .where(DbRequestBuilder.FIELD_ID, DbRequestBuilder.EQ, 2)
                     .request();
-        expect(sql).to.be.equal("UPDATE `foobar` SET bar=312,timestamp=current_timestamp WHERE 1=1 AND id = 2;");
+        expect(sql).to.be.equal("UPDATE `foobar` SET bar=312 WHERE 1=1 AND id = 2;");
     });
 
     it("update some fields should be well played", function() {
@@ -104,7 +104,7 @@ describe("DbRequestBuilder", function() {
                     .values("foo'bar", 312)
                     .where(DbRequestBuilder.FIELD_ID, DbRequestBuilder.EQ, 2)
                     .request();
-        expect(sql).to.be.equal("UPDATE `foobar` SET foo='foo''bar',bar=312,timestamp=current_timestamp WHERE 1=1 AND id = 2;");
+        expect(sql).to.be.equal("UPDATE `foobar` SET foo='foo''bar',bar=312 WHERE 1=1 AND id = 2;");
     });
 
     it("order calls doesn't matter", function() {
@@ -113,7 +113,7 @@ describe("DbRequestBuilder", function() {
                     .values("foo'bar", 312)
                     .update()
                     .request();
-        expect(sql).to.be.equal("UPDATE `foobar` SET foo='foo''bar',bar=312,timestamp=current_timestamp WHERE 1=1 AND id = 2;");
+        expect(sql).to.be.equal("UPDATE `foobar` SET foo='foo''bar',bar=312 WHERE 1=1 AND id = 2;");
     });
 
     it("remove should be well played", function() {
@@ -204,6 +204,22 @@ describe("DbRequestBuilder", function() {
         expect(request.updateList.length).to.be.equal(0);
 
         request.remove.restore();
+    });
+
+    it("should update with a specific timestamp", function() {
+        obj2[DbRequestBuilder.FIELD_TIMESTAMP] = 1511216868;
+        let sql = new DbRequestBuilder.class(table, schema)
+                    .save(obj2)
+                    .request();
+        expect(sql).to.be.equal("UPDATE `foobar` SET id=2,foo='foo''bar',bar=200,timestamp=datetime(1511216868, 'unixepoch'), WHERE 1=1 AND id=2;");
+    });
+
+    it("should save a new object with timestamp", function() {
+        obj1[DbRequestBuilder.FIELD_TIMESTAMP] = 1511216869;
+        let sql = new DbRequestBuilder.class(table, schema)
+                    .save(obj1)
+                    .request();
+        expect(sql).to.be.equal("INSERT INTO `foobar` (foo,bar,timestamp) VALUES ('foo''bar',200,datetime(1511216869, 'unixepoch'));");
     });
 
     after(function () {

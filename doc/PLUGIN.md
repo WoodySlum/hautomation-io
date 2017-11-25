@@ -93,6 +93,16 @@ You'll need to notify core that you need dependency for the plugin that export c
 	};
 
 
+### Retrieve and set plugin instance
+
+Create a plugin instance and share it : 
+
+	api.registerInstance(new OpenWeather(api));
+
+Access to plugin instance :
+
+	const openWeather = api.getPluginInstance("openweather");
+
 ### Trigger regularly task
 
 You can `cron` some tasks by registering through the `TimeEventAPI`.
@@ -703,4 +713,394 @@ Here is a plugin sample for new message provider :
 	    dependencies:["message-provider"]
 	};
 	
+
+### Scenarios
+
+You can add scenarios addon to your plugin using the `scenarioAPI`. This API is composed of 3 concepts :
+
+* The scenario form registration
+	* Refer to form part. You can create subforms.
+* The trigger callback
+	* Called when an scenario is triggered. If you have specific actions to do, the callback will be executed (turn on / off lights, ...)
+* The trigger action
+	* Call this method to trigger actions. All callbacks will be executed.
+
+Sample :
+
+    /* eslint-disable */
+    "use strict";
+
+    function loaded(api) {
+        api.init();
+
+        class ScenarioSampleForm extends api.exported.FormObject.class {
+            constructor(id, text) {
+                super(id);
+                /**
+                 * @Property("text");
+                 * @Type("string");
+                 * @Title("A text field");
+                 */
+                this.text = text;
+            }
+
+            json(data) {
+                return new ScenarioSampleForm(data.id, data.text);
+            }
+        }
+
+
+        /**
+         * This class is a sample plugin
+         * @class
+         */
+        class Sample {
+            constructor(api) {
+                this.api = api;
+                
+                // Register scenario and add a text field on scenario form
+                this.api.scenarioAPI.register(ScenarioSampleForm, (scenario) => {
+                    // Do what you want here
+                    this.api.exported.Logger.info(scenario);
+                    // If the scenario contains the text "demo" display a simple log line
+                    if (scenario.ScenarioSampleForm && scenario.ScenarioSampleForm.text && scenario.ScenarioSampleForm.text === "demo") {
+                        this.api.exported.Logger.info("A scenario has been trigggered with the 'demo' text !")
+                    }
+                }, "a.text.title");
+
+                // Scheduler callback. Will trigger scenario when scheduler timer is reached.
+                this.api.schedulerAPI.register("scenario-test", (data) => {
+                    this.api.scenarioAPI.getScenarios().forEach((scenario) => {
+                        // If the scenario containes the text "demo" trigger the scenario
+                        if (scenario.ScenarioSampleForm && scenario.ScenarioSampleForm.text && scenario.ScenarioSampleForm.text === "demo") {
+                            this.api.scenarioAPI.triggerScenario(scenario);
+                        }
+                    });
+                });
+
+                // Schedule the trigger scenario in a minute
+                this.api.schedulerAPI.schedule("scenario-test", this.api.schedulerAPI.constants().IN_A_MINUTE);
+            }
+        }
+
+        let s = new Sample(api);
+
+    }
+
+    module.exports.attributes = {
+        loadedCallback: loaded,
+        name: "sample-plugin",
+        version: "0.0.0",
+        category: "misc",
+        description: "I'm a sample plugin"
+    };	
+ 
+### Alarm
+
+#### Retrieve status
+
+	api.alarmAPI.alarmStatus(); // Return true or false
+
+#### Enable alarm
+
+	api.alarmAPI.enableAlarm();
+
+#### Disable alarm
+
+	api.alarmAPI.disableAlarm();
+
+### Environment
+
+#### Get home location coordinates
+
+	api.environmentAPI.getCoordinates();
+
+#### Enable day mode
+
+	api.environmentAPI.setDay();
+
+#### Enable night mode
+
+	api.environmentAPI.setNight();
+
+#### Get mode
+
+	api.environmentAPI.isNight(); // Returns true if it's night, false otherwise
+
+### Cameras
+
+#### Create a camera plugin
+
+You can create a plugin which add support to your own camera brand.
+
+Sample code :
+
+	"use strict";
+	/**
+	 * Loaded function
+	 *
+	 * @param  {PluginAPI} api The api
+	 */
+	function loaded(api) {
+	    api.init();
+	
+	    /**
+	     * Sumpple form camera
+	     * @class
+	     */
+	    class SumppleCameraForm extends api.exported.CameraForm {
+	        /**
+	         * Convert JSON data to object
+	         *
+	         * @param  {Object} data Some data
+	         * @returns {SumppleCameraForm}      An instance
+	         */
+	        json(data) {
+	            super.json(data);
+	        }
+	    }
+	
+	    api.cameraAPI.registerForm(SumppleCameraForm);
+	
+	    /**
+	     * Sumpple camera class
+	     * @class
+	     */
+	    class Sumpple extends api.exported.Camera {
+	        /**
+	         * Sumpple camera
+	         *
+	         * @param  {PluginAPI} api                                                           A plugin api
+	         * @param  {number} [id=null]                                                        An id
+	         * @param  {Object} [configuration=null]                                             The configuration for camera
+	         * @returns {Sumpple}                                                                  The instance
+	         */
+	        constructor(api, id, configuration) {
+	            super(api, id, configuration, "cgi-bin/video_snapshot.cgi?user=%username%&pwd=%password%", "cgi-bin/videostream.cgi?user=%username%&pwd=%password%", "live/av0?user=%username%&passwd=%password%");
+	        }
+	
+	    }
+	
+	    api.cameraAPI.registerClass(Sumpple);
+	}
+	
+	module.exports.attributes = {
+	    loadedCallback: loaded,
+	    name: "sumpple",
+	    version: "0.0.0",
+	    category: "camera",
+	    description: "Sumpple plugin",
+	    dependencies:["camera"]
+	};
+	
+In the super call for constructor, you need to specify the following parameters :
+
+		 * @param  {PluginAPI} api                                                           A plugin api
+         * @param  {number} [id=null]                                                        An id
+         * @param  {Object} [configuration=null]                                             The configuration for camera
+         * @param  {string} [snapshotUrl=null]   The snapshot URL template (Parameters : %port%, %ip%, %username%, %password%), without protocol and ip. For example, `cgi-bin/snap.cgi?username=%username%&password=%password%`
+         * @param  {string} [mjpegUrl=null]      The MJPEG URL template (Parameters : %port%, %ip%, %username%, %password%), without protocol and ip. For example, `cgi-bin/videostream.cgi?username=%username%&password=%password%`
+         * @param  {string} [rtspUrl=null]       The RTSP URL template (Parameters : %port%, %ip%, %username%, %password%), without protocol and ip. For example, `cgi-bin/snap.cgi?username=%username%&password=%password%`
+         * @param  {Function} [leftCb=null]        Move left callback
+         * @param  {Function} [rightCb=null]       Move right callback
+         * @param  {Function} [upCb=null]          Move up callback
+         * @param  {Function} [downCb=null]        Move down callback
+
+#### Using camera APIs
+
+Retrieve all cameras :
+	
+	api.camerAPI.getCameras();
+
+Get a static picture for a camera :
+
+	api.camerAPI.getImage(123456789, (err, data, mime) => {
+		if (!err) {
+			// Data is in data !
+		}
+	});
+
+Get an historized static picture for a camera :
+
+	api.camerAPI.getImage(123456789, (err, data, mime) => {
+		if (!err) {
+			// Data is in data !
+		}
+	}, 1504189281);
+
+Record camera stream for 30 seconds :
+
+	api.cameraAPI.record(123456789, (err, generatedFilepath) => {
+		if (!err) {
+			api.exported.Logger.info("File has been dumped on : " + generatedFilepath);
+		}
+	}, 30);
+
+### Radio data
+
+You can easily receive radio data through `radioAPI`.
+
+Register for radio events sample :
+	
+	api.radioAPI.register((radioObject) => {
+		api.exported.Logger.info(radioObject);
+	});
+
+
+### IoTs
+
+### Create an IoT library
+
+Create a plugin class as described above.
+In the directory where the `plugin.js` file is, create a folder for example `myIotLib`. In this folder, you need to create two folders, `lib` and `global_lib`.
+Build tools uses `platform.io` tools to build the library / application.
+
+Your plugin folder should look as this :
+
+	|
+	|-hautomation
+	|-node_modules
+		|-my-plugin
+			|-plugin.js
+			|-myIotLib
+				|-lib
+				|-global_lib
+
+Then in your `plugin.js`, file use the iotAPI to declare your library.
+Please refer to the API documentation (`iotAPI` part).
+
+Sample code :
+
+	"use strict";
+	
+	/**
+	 * Loaded function
+	 *
+	 * @param  {PluginAPI} api The api
+	 */
+	function loaded(api) {
+	    api.init();
+	
+	    /**
+	     * ESP8266 form class
+	     * @class
+	     */
+	    class ESP8266Form extends api.exported.FormObject.class {
+	        /**
+	         * Constructor
+	         *
+	         * @param  {number} [id=null]         Identifier
+	         * @param  {string} [ssid=null]       Wifi SSID
+	         * @param  {string} [passphrase=null] Wifi passphrase
+	         * @returns {ESP8266Form}                   The instance
+	         */
+	        constructor(id = null, ssid = null, passphrase = null) {
+	            super(id);
+	
+	            /**
+	             * @Property("ssid");
+	             * @Title("esp8266.form.wifi.ssid");
+	             * @Type("string");
+	             * @Required(true);
+	             */
+	            this.ssid = ssid;
+	
+	            /**
+	             * @Property("passphrase");
+	             * @Title("esp8266.form.wifi.password");
+	             * @Type("string");
+	             * @Required(true);
+	             * @Display("password");
+	             */
+	            this.passphrase = passphrase;
+	        }
+	
+	        /**
+	         * Convert JSON data to object
+	         *
+	         * @param  {Object} data Some data
+	         * @returns {ESP8266Form}      An instance
+	         */
+	        json(data) {
+	            return new ESP8266Form(data.id, data.ssid, data.passphrase);
+	        }
+	    }
+	
+	    /**
+	     * ESP8266 manager class
+	     * @class
+	     */
+	    class Esp8266 {
+	        /**
+	         * ESP sensors class
+	         *
+	         * @param  {PluginAPI} api                                                           A plugin api
+	         * @returns {EspSensors}                                                       The instance
+	         */
+	        constructor(api) {
+	            this.api = api;
+	            this.api.iotAPI.registerLib("myIotLib", "esp8266", 1, ESP8266Form);
+	        }
+	    }
+	
+	    api.registerInstance(new Esp8266(api));
+	}
+	
+	module.exports.attributes = {
+	    loadedCallback: loaded,
+	    name: "esp8266",
+	    version: "0.0.0",
+	    category: "iot",
+	    description: "ESP8266 base libraries and sensors manager"
+	};
+	 
+### Create an IoT app
+
+As previously described, the procedure is likely similar to an Iot library. Keep the same folder architecture and add a `main.cpp` file into a `src` folder.
+Build tools uses `platform.io` tools to build the library / application.
+
+Your plugin folder should look as this :
+
+	|
+	|-hautomation
+	|-node_modules
+		|-my-plugin
+			|-plugin.js
+			|-myIotApp
+				|-lib
+				|-global_lib
+				|-src
+					|-main.cpp
+
+Note : If your IoT application needs librairies declared in other plugins, you need to indicate the library identifier into :
+
+* The plugin dependencies
+* The dependency array parameter of the `registerApp` method
+
+Sample code :
+
+	"use strict";
+	/**
+	 * Loaded function
+	 *
+	 * @param  {PluginAPI} api The api
+	 */
+	function loaded(api) {
+	    api.init();
+	
+	    const espPlugin = api.getPluginInstance("esp8266");
+	    api.iotAPI.registerApp("app", "esp8266-dht22", "ESP8266 Temperature and humidity sensor", 1, api.iotAPI.constants().PLATFORMS.ESP8266, api.iotAPI.constants().BOARDS.NODEMCU, api.iotAPI.constants().FRAMEWORKS.ARDUINO, ["esp8266"], espPlugin.generateOptions(espPlugin.constants().MODE_SLEEP, 60 * 60));
+	}
+	
+	module.exports.attributes = {
+	    loadedCallback: loaded,
+	    name: "esp-dht22-sensor",
+	    version: "0.0.0",
+	    category: "iot",
+	    description: "ESP Humidity and temperature sensor",
+	    dependencies:["esp8266"]
+	};
+	
+
+
 

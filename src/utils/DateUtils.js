@@ -82,6 +82,17 @@ class DateUtils {
 
         return moment(date).format(format);
     }
+
+    /**
+     * Return the number of seconds elapsed since midnight in UTC format
+     *
+     * @param  {number} timestamp A timestamp in seconds
+     * @returns {number}           A number of seconds elapsed
+     */
+    static secondsElapsedSinceMidnight(timestamp) {
+        const date = new Date(timestamp * 1000);
+        return date.getUTCHours() * 3600 + date.getUTCMinutes() * 60 + date.getUTCMinutes();
+    }
 }
 
 module.exports = {class:DateUtils, ROUND_TIMESTAMP_MINUTE:ROUND_TIMESTAMP_MINUTE, ROUND_TIMESTAMP_HOUR:ROUND_TIMESTAMP_HOUR, ROUND_TIMESTAMP_DAY:ROUND_TIMESTAMP_DAY, ROUND_TIMESTAMP_MONTH:ROUND_TIMESTAMP_MONTH};

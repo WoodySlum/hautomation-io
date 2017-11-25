@@ -28,7 +28,7 @@ class SchedulerAPI {
      * @param  {Function} callback A callback with an object in parameter : `(data) => {}``
      */
     register(id, callback) {
-        PrivateProperties.oprivate(this).register(id, callback);
+        PrivateProperties.oprivate(this).schedulerService.register(id, callback);
     }
 
     /**
@@ -37,7 +37,7 @@ class SchedulerAPI {
      * @param  {string}   id       An identifier (must be unique)
      */
     unregister(id) {
-        PrivateProperties.oprivate(this).unregister(id);
+        PrivateProperties.oprivate(this).schedulerService.unregister(id);
     }
 
     /**
@@ -48,7 +48,16 @@ class SchedulerAPI {
      * @param  {Object} [data={}] A data passed to callback when triggered
      */
     schedule(id, timestamp, data = {}) {
-        PrivateProperties.oprivate(this).schedule(id, timestamp, data);
+        PrivateProperties.oprivate(this).schedulerService.schedule(id, timestamp, data);
+    }
+
+    /**
+     * Cancel a scheduled operation
+     *
+     * @param  {string}   id       An identifier (must be unique)
+     */
+    cancel(id) {
+        PrivateProperties.oprivate(this).schedulerService.cancel(id);
     }
 
     /**

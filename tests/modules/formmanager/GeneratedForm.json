@@ -8,7 +8,8 @@
     ],
     "properties": {
       "id": {
-        "type": "number"
+        "type": "number",
+        "title": null
       },
       "b": {
         "type": "string",

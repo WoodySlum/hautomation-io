@@ -337,11 +337,16 @@ function loaded(api) {
             this.lastObject((err, lastObject) => {
                 if (!err && lastObject.value) {
                     const convertedValue = this.convertValue(lastObject.value);
-                    const tile = this.api.dashboardAPI.Tile("sensor-"+this.id, this.api.dashboardAPI.TileType().TILE_INFO_TWO_TEXT, this.icon, null, this.name, convertedValue.value + convertedValue.unit);
+                    const tile = this.api.dashboardAPI.Tile("sensor-"+this.id, this.api.dashboardAPI.TileType().TILE_INFO_TWO_TEXT, this.icon, null, this.name, convertedValue.value + " " + convertedValue.unit, null, null, null, 800, "statistics");
                     if (this.configuration.dashboardColor) {
                         tile.colors.colorDefault = this.configuration.dashboardColor;
                     }
-                    this.api.dashboardAPI.registerTile(tile);
+
+                    if (this.configuration.dashboard) {
+                        this.api.dashboardAPI.registerTile(tile);
+                    } else {
+                        this.api.dashboardAPI.unregisterTile("sensor-"+this.id);
+                    }
                     if (cb) cb();
                 } else {
                     this.api.dashboardAPI.unregisterTile("sensor-"+this.id);
@@ -356,20 +361,57 @@ function loaded(api) {
          * @param {number} value      A value
          * @param {number} [vcc=null] A voltage level
          * @param  {Function} [cb=null] A callback with an error parameter, called when done. Used for testing only.
+         * @param {number} [timestamp=null] A timestamp
          */
-        setValue(value, vcc = null, cb = null) {
+        setValue(value, vcc = null, cb = null, timestamp = null) {
             const currentObject = new DbSensor(this.dbHelper, value, this.id, vcc);
-            this.api.exported.Logger.info("New value received for sensor " + this.name + "(#" + this.id + "). Value : " + value + ", vcc : " + vcc);
-            currentObject.save((err) => {
-                if (!err) {
-                    this.updateTile();
-                }
-                if (cb) cb(err);
-            });
 
-            // Dispatch
-            const aggregated = this.convertValue(value);
-            this.api.sensorAPI.onNewSensorValue(this.id, this.type, value, this.unit, vcc, aggregated.value, aggregated.unit);
+            // If timestamp provided
+            if (timestamp) {
+                const existing = {};
+                existing[this.dbHelper.Operators().FIELD_TIMESTAMP] = timestamp;
+                const timestampRequest = this.dbHelper.RequestBuilder()
+                                          .select()
+                                          .where("CAST(strftime('%s', timestamp) AS NUMERIC)", this.dbHelper.Operators().EQ, timestamp)
+                                          .where("sensorId", this.dbHelper.Operators().EQ, this.id)
+                                          .first();
+                this.dbHelper.getObjects(timestampRequest, (error, objects) => {
+                    if (objects && objects.length == 1) {
+                        const object = objects[0];
+                        object.value = value;
+
+                        object.save();
+                        this.updateTile();
+                    } else {
+                        if (!error) {
+                            const currentObject = new DbSensor(this.dbHelper, value, this.id, vcc);
+                            currentObject.timestamp = timestamp;
+                            currentObject.save((err) => {
+                                if (!err) {
+                                    this.updateTile();
+                                }
+                                if (cb) cb(err);
+                            });
+                        } else {
+                            if (cb) cb(error);
+                        }
+                    }
+                });
+            } else {
+                // If timestamp not provided
+                this.api.exported.Logger.info("New value received for sensor " + this.name + "(#" + this.id + "). Value : " + value + ", vcc : " + vcc);
+                currentObject.save((err) => {
+                    if (!err) {
+                        this.updateTile();
+                    }
+                    if (cb) cb(err);
+                });
+
+                // Dispatch
+                const aggregated = this.convertValue(value);
+                this.api.sensorAPI.onNewSensorValue(this.id, this.type, value, this.unit, vcc, aggregated.value, aggregated.unit);
+            }
+
         }
 
         /**
@@ -484,6 +526,20 @@ function loaded(api) {
                     }
                 }
             });
+        }
+
+        /**
+         * Returns the linked iot identifier
+         *
+         * @returns {number} Iot identifier
+         */
+        getIotIdentifier() {
+            let identifier = null;
+            if (this.configuration.IotsListForm && this.configuration.IotsListForm.identifier) {
+                identifier = parseInt(this.configuration.IotsListForm.identifier);
+            }
+
+            return identifier;
         }
     }
 

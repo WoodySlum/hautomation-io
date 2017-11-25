@@ -35,6 +35,7 @@ class FormConfiguration {
         this.confKey = this.name + ".conf";
         this.list = list;
         this.additionalFields = [];
+        this.updateCb = null;
 
         // WebServices
         this.formRoute = ":/" + ROUTE_BASE_PATH + "/" + this.name + "/" + ROUTE_BASE_FORM + "/";
@@ -59,17 +60,31 @@ class FormConfiguration {
         } else {
             this.formClass = null;
         }
+
+        this.loadConfig();
+    }
+
+    /**
+     * Set the update callback. Called back when delete or save action is done.
+     *
+     * @param {Function} cb A callback with data as parameter, e.g. `cb(data) => {}`
+     */
+    setUpdateCb(cb) {
+        this.updateCb = cb;
     }
 
     /**
      * Add additional fields
      *
      * @param {Class} form A form
+     * @param {string} title The form title
+     * @param  {...Object} inject Parameters injection on static methods
      */
-    addAdditionalFields(form) {
+    addAdditionalFields(form, title, ...inject) {
         if (this.additionalFields.indexOf(form) === -1 && this.formClass) {
+            this.formManager.register(form, ...inject);
             this.additionalFields.push(form);
-            this.formManager.addAdditionalFields(this.formClass, this.additionalFields);
+            this.formManager.addAdditionalFields(this.formClass, title, [form]);
         }
     }
 
@@ -112,6 +127,13 @@ class FormConfiguration {
     }
 
     /**
+     * Save data
+     */
+    save() {
+        this.saveConfig(this.data);
+    }
+
+    /**
      * List comparator for ConfManager
      *
      * @param  {Object} obj1 An first object
@@ -131,7 +153,6 @@ class FormConfiguration {
     registerForm(formClass, ...inject) {
         this.formClass = formClass;
         this.formManager.register(formClass, ...inject);
-        this.loadConfig();
     }
 
     /**
@@ -156,6 +177,7 @@ class FormConfiguration {
                 });
             } else if (apiRequest.route === this.setRoute) {
                 this.saveConfig(apiRequest.data);
+                if (this.updateCb) this.updateCb(self.data);
                 return new Promise((resolve) => {
                     resolve(new APIResponse.class(true, {success:true}));
                 });
@@ -173,6 +195,7 @@ class FormConfiguration {
                 if (apiRequest.data && apiRequest.data.id) {
                     return new Promise((resolve) => {
                         self.confManager.removeData(self.confKey, new (this.formClass)(apiRequest.data.id), self.data, self.comparator);
+                        if (this.updateCb) this.updateCb(self.data);
                         resolve(new APIResponse.class(true, {success:true}));
                     });
                 } else {
@@ -185,6 +208,23 @@ class FormConfiguration {
             return new Promise((resolve, reject) => {
                 reject(new APIResponse.class(false, {}, 801, "No form defined"));
             });
+        }
+    }
+
+    /**
+     * Returns a copy of the data object
+     *
+     * @returns {Array|Object} A copy of data
+     */
+    getDataCopy() {
+        if (this.data instanceof Array) {
+            const data = [];
+            this.data.forEach((d) => {
+                data.push(Object.assign({}, d));
+            });
+            return data;
+        } else {
+            return Object.assign({}, this.data);
         }
     }
 

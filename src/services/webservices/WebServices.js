@@ -1,5 +1,7 @@
 "use strict";
 const express = require("express");
+const compression = require("compression");
+
 // Internal
 var Logger = require("./../../logger/Logger");
 var Service = require("./../Service");
@@ -25,6 +27,7 @@ const POST = "POST";
 const DELETE = "DELETE";
 const ENDPOINT_API = "/api/";
 const ENDPOINT_UI = "/";
+const ENDPOINT_LNG = "/lng/";
 
 const API_UP_TO_DATE = 304;
 const API_ERROR_HTTP_CODE = 500;
@@ -40,14 +43,17 @@ class WebServices extends Service.class {
     /**
      * Constructor
      *
+     * @param  {TranslateManager} translateManager       The translation manager
      * @param  {int} [port=8080]        The listening HTTP port
      * @param  {int} [sslPort=8443]     The listening HTTPS port
      * @param  {string} [sslKey=null]   The path for SSL key
      * @param  {string} [sslCert=null]  The path for sslCert key
+     * @param  {string} [enableCompression=true]  Enable gzip data compression
      * @returns {WebServices}            The instance
      */
-    constructor(port = 8080, sslPort = 8043, sslKey = null, sslCert = null) {
+    constructor(translateManager, port = 8080, sslPort = 8043, sslKey = null, sslCert = null, enableCompression = true) {
         super("webservices");
+        this.translateManager = translateManager;
         this.port = port;
         this.sslPort = sslPort;
         this.app = express();
@@ -55,6 +61,7 @@ class WebServices extends Service.class {
         this.sslKey = sslKey;
         this.sslCert = sslCert;
         this.fs = fs;
+        this.enableCompression = enableCompression;
     }
 
     /**
@@ -66,27 +73,53 @@ class WebServices extends Service.class {
             let instance = this;
 
             this.app.use(BodyParser.json({limit: "2mb"}));
+
+            // Web UI
+            this.translateManager.addTranslations(__dirname + "/../../../ui");
             this.app.use(BodyParser.urlencoded({ extended: false }));
+            this.app.use(ENDPOINT_LNG, function(req, res){
+                res.json(instance.translateManager.translations);
+            });
             this.app.use(ENDPOINT_UI, express.static(__dirname + "/../../../ui"));
+            if (this.enableCompression) {
+                this.app.use(compression({filter: (req, res) => {
+                    if (req.headers["x-no-compression"]) {
+                        // don't compress responses with this request header
+                        return false;
+                    }
+
+                    // fallback to standard filter function
+                    return compression.filter(req, res);
+                }}));
+            }
 
             // GET Apis
             this.app.get(endpoint + "*/", function(req, res) {
-                let apiRequest = instance.manageResponse(req, endpoint);
-                Logger.verbose(apiRequest);
+                let apiRequest = instance.manageResponse(req, endpoint, res);
+                const logObject = Object.assign({}, apiRequest);
+                delete logObject.res;
+                delete logObject.req;
+                Logger.verbose(logObject);
                 instance.runPromises(apiRequest, instance.buildPromises(apiRequest), res);
             });
 
             // POST Apis
             this.app.post(endpoint + "*/", function(req, res) {
-                let apiRequest = instance.manageResponse(req, endpoint);
-                Logger.verbose(apiRequest);
+                let apiRequest = instance.manageResponse(req, endpoint, res);
+                const logObject = Object.assign({}, apiRequest);
+                delete logObject.res;
+                delete logObject.req;
+                Logger.verbose(logObject);
                 instance.runPromises(apiRequest, instance.buildPromises(apiRequest), res);
             });
 
             // DELETE Apis
             this.app.delete(endpoint + "*/", function(req, res) {
-                let apiRequest = instance.manageResponse(req, endpoint);
-                Logger.verbose(apiRequest);
+                let apiRequest = instance.manageResponse(req, endpoint, res);
+                const logObject = Object.assign({}, apiRequest);
+                delete logObject.res;
+                delete logObject.req;
+                Logger.verbose(logObject);
                 instance.runPromises(apiRequest, instance.buildPromises(apiRequest), res);
             });
 
@@ -225,7 +258,7 @@ class WebServices extends Service.class {
                 return r;
             });
         } else {
-            Logger.warn("Delegate already registered");
+            Logger.warn("Delegate already registered (" + route + ")");
         }
     }
 
@@ -258,11 +291,16 @@ class WebServices extends Service.class {
      *
      * @param  {Request} req        The WS request
      * @param  {string} endpoint    The WS endpoint
+     * @param  {Response} res        The WS response
      * @returns {APIRequest}         An API Request
      */
-    manageResponse(req, endpoint) {
+    manageResponse(req, endpoint, res) {
         let method = req.method;
-        let ip = req.ip;
+        let ip = null;
+        if (req.ip) {
+            const ipSplit = req.ip.split(":");
+            ip = ipSplit[(ipSplit.length - 1)];
+        }
         let route = req.path.replace(endpoint, "");
         let path = route.split("/");
         let action = null;
@@ -301,11 +339,11 @@ class WebServices extends Service.class {
 
         if (method === "POST" && req.headers[CONTENT_TYPE] === HEADER_APPLICATION_JSON && req.body) {
             methodConstant = POST;
+            params = Object.assign(params, req.body);
 
             // If application/json header
             if (req.body.data) {
                 data = req.body[DATA_FIELD];
-                params = Object.assign(params, req.body);
                 delete params[DATA_FIELD];
             } else {
                 Logger.warn("Empty body content");
@@ -314,7 +352,7 @@ class WebServices extends Service.class {
 
         Logger.info(method + " " + req.path + " from " + ip + " " + req.headers[CONTENT_TYPE]);
 
-        return new APIRequest.class(methodConstant, ip, route, path, action, params, data);
+        return new APIRequest.class(methodConstant, ip, route, path, action, params, req, res, data);
     }
 
     /**
@@ -433,19 +471,21 @@ class WebServices extends Service.class {
         });
 
         // Only authentication has been registered, so it's unknown API
-        if (apiResponses.length === 1 && !process.env.TEST) {
+        if (apiResponses.length === 1 && apiResponse.success && !process.env.TEST) {
             apiResponse = new APIResponse.class(false, {}, 1, "Unknown api called");
         }
 
-        Logger.verbose(apiResponse);
         if (apiResponse.success) {
             if (apiResponse.upToDate) {
                 res.status(API_UP_TO_DATE).send();
-            } else {
+            } else if (!apiResponse.contentType || (apiResponse.contentType === APIResponse.JSON_CONTENT_TYPE)) {
                 res.json(apiResponse.response);
+            } else {
+                res.setHeader("Content-Type", apiResponse.contentType);
+                res.end(apiResponse.response, "binary");
             }
         } else {
-            res.status(API_ERROR_HTTP_CODE).json({"code":apiResponse.errorCode,"message":apiResponse.errorMessage});
+            res.status(API_ERROR_HTTP_CODE).json({"code":apiResponse.errorCode,"message":apiResponse.errorMessage, "data":apiResponse.response});
         }
     }
 }
@@ -456,5 +496,6 @@ module.exports = {class:WebServices, CONTENT_TYPE:CONTENT_TYPE,
     API_UP_TO_DATE:API_UP_TO_DATE,
     GET:GET,
     POST:POST,
-    DELETE:DELETE
+    DELETE:DELETE,
+    ENDPOINT_API:ENDPOINT_API
 };

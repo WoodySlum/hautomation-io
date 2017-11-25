@@ -1,6 +1,9 @@
 # Mac
 .DS_Store
 
+# Python build
+*.pyc
+
 # Vim
 *.swp
 
@@ -16,6 +19,10 @@ data/database.db
 
 # Data file
 data/plugins.json
+
+# Camera files
+data/cameras/
+
 
 # Package lock
 package-lock.json
@@ -80,4 +87,3 @@ typings/
 
 # dotenv environment variables file
 .env
-

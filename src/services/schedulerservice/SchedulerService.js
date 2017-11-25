@@ -119,9 +119,36 @@ class SchedulerService extends Service.class {
         }
 
         if (data) {
-            const dbObject = new SchedulerDbObject.class(this.dbHelper, sha256(id), JSON.stringify(data), timestamp);
+            const dbObject = new SchedulerDbObject.class(this.dbHelper, sha256(id), JSON.stringify(data), timestamp, -1);
             dbObject.save();
         }
+    }
+
+    /**
+     * Cancel a scheduled operation
+     *
+     * @param  {string}   id       An identifier (must be unique)
+     */
+    cancel(id) {
+        Logger.info("Cancelling alarm " + id);
+        const request = this.dbHelper.RequestBuilder()
+                    .select()
+                    .where("triggered", this.dbHelper.Operators().EQ, -1)
+                    .where("identifier", this.dbHelper.Operators().LIKE, sha256(id));
+        this.dbHelper.getObjects(request, (err, results) => {
+            if (!err && results) {
+                results.forEach((schedulerDbObject) => {
+                    schedulerDbObject.triggered = 2;
+                    schedulerDbObject.save((err) => {
+                        Logger.err(err.message);
+                    });
+                });
+            }
+
+            if (err) {
+                Logger.err(err.message);
+            }
+        });
     }
 
     /**
@@ -130,13 +157,16 @@ class SchedulerService extends Service.class {
      * @param  {SchedulerService} self The SchedulerService instance
      */
     timeEvent(self) {
-        const request = self.dbHelper.RequestBuilder().select().where("triggerDate", self.dbHelper.Operators().GTE, self.lastTriggered);
+        const request = self.dbHelper.RequestBuilder().select().where("triggered", self.dbHelper.Operators().EQ, -1).where("triggerDate", self.dbHelper.Operators().LTE, self.lastTriggered);
         self.dbHelper.getObjects(request, (err, results) => {
             if (!err && results) {
                 results.forEach((schedulerDbObject) => {
                     if (self.registeredElements[schedulerDbObject.identifier]) {
                         self.registeredElements[schedulerDbObject.identifier](JSON.parse(schedulerDbObject.data));
                     }
+
+                    schedulerDbObject.triggered = 1;
+                    schedulerDbObject.save();
                 });
                 self.lastTriggered = (Date.now() / 1000) | 0;
             }
