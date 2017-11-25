@@ -136,7 +136,10 @@ function loaded(api) {
 
 
                                             if (i%2 === 1) {
-                                                self.setValue(intermediateData, 0, null, timestamp);
+                                                if (intermediateData >= 0) {
+                                                    self.setValue(intermediateData, 0, null, timestamp);
+                                                }
+
                                                 intermediateData = 0;
                                                 timestamp += 3600;
                                             }
