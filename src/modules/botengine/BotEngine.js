@@ -33,7 +33,9 @@ class BotEngine {
 
         // Bot actions
         this.botActions = {};
-        this.voiceDetect();
+        if (!process.env.TEST) {
+            this.voiceDetect();
+        }
 
     }
 
@@ -172,7 +174,9 @@ class BotEngine {
         // check in the promise for the completion of call to witai
         parseSpeech.then((data) => {
             (data.entities && data.entities.greetings && data.entities.greetings.length > 0)?self.textToSpeech(data.entities.greetings[0].value):self.textToSpeech(data._text); // eslint-disable-line no-underscore-dangle
-            self.onMessageReceived("seb", {message:data._text}, ()=>{}); // eslint-disable-line no-underscore-dangle
+            self.onMessageReceived({message:data._text}, () => { // eslint-disable-line no-underscore-dangle
+
+            });
         })
         .catch((err) => {
             Logger.err(err);
@@ -196,21 +200,45 @@ class BotEngine {
 
         client.message(message.message, {})
         .then((data) => {
-            if (data && data.entities) {
+            Logger.info("Received Wit.ai informations : " + JSON.stringify(data));
+            if (data && data.entities && Object.keys(data.entities).length > 0) {
+                let maxEntityConfidence = 0;
+                let maxEntity = null;
+                let maxEntityKey = null;
                 Object.keys(data.entities).forEach((entityKey) => {
                     data.entities[entityKey].forEach((entity) => {
-                        if (this.botActions[entityKey]) {
-                            this.botActions[entityKey](entityKey, entity.value, entity.type, entity.confidence, message.sender, (feedback) => {
-                                self.messageManager.sendMessage([message.sender], feedback);
-                            });
-                        } else {
-                            self.messageManager.sendMessage([message.sender], self.translateManager.t("bot.misunderstand"));
+                        if (entity.confidence > maxEntityConfidence) {
+                            maxEntityConfidence = entity.confidence;
+                            maxEntity = entity;
+                            maxEntityKey = entityKey;
                         }
                     });
                 });
+
+                // Entity found (unique)
+                if (maxEntity && maxEntityKey) {
+                    if (this.botActions[maxEntityKey]) {
+                        // Bot action exists
+                        this.botActions[maxEntityKey](maxEntityKey, maxEntity.value, maxEntity.type, maxEntity.confidence, message.sender, (feedback) => {
+                            self.messageManager.sendMessage([message.sender], feedback);
+                            if (botCb) botCb();
+                        });
+                    } else {
+                        // Else not exist, read the default value
+                        self.messageManager.sendMessage([message.sender], maxEntity.value);
+                        if (botCb) botCb();
+                    }
+
+                } else {
+                    self.messageManager.sendMessage([message.sender], self.translateManager.t("bot.misunderstand"));
+                    if (botCb) botCb();
+                }
+            } else {
+                self.messageManager.sendMessage([message.sender], self.translateManager.t("bot.misunderstand"));
+                if (botCb) botCb();
             }
+
             Logger.warn(JSON.stringify(data));
-            if (botCb) botCb();
         })
         .catch((err) => {
             Logger.err(err.message);

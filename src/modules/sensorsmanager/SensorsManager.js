@@ -8,6 +8,7 @@ const Authentication = require("./../authentication/Authentication");
 const DateUtils = require("./../../utils/DateUtils");
 const SensorsForm = require("./SensorsForm");
 const SensorsListForm = require("./SensorsListForm");
+const StringSimilarity = require("string-similarity");
 
 const CONF_MANAGER_KEY = "sensors";
 const SENSORS_MANAGER_AVAILABLE_GET = ":/sensors/available/get/";
@@ -22,6 +23,9 @@ const SENSORS_MANAGER_STATISTICS_YEAR = ":/sensors/statistics/year/";
 
 const ERROR_ALREADY_REGISTERED = "Already registered";
 const ERROR_NOT_REGISTERED = "Not registered";
+
+const SENSOR_NAME_COMPARE_CONFIDENCE = 0.31;
+
 /**
  * This class allows to manage sensors
  * @class
@@ -37,15 +41,17 @@ class SensorsManager {
      * @param  {ConfManager} confManager    The configuration manager
      * @param  {TranslateManager} translateManager    The translate manager
      * @param  {ThemeManager} themeManager    The theme manager
+     * @param  {BotEngine} botEngine    The bot engine
      * @returns {SensorsManager}                       The instance
      */
-    constructor(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager) {
+    constructor(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager, botEngine) {
         this.pluginsManager = pluginsManager;
         this.webServices = webServices;
         this.formManager = formManager;
         this.confManager = confManager;
         this.translateManager = translateManager;
         this.themeManager = themeManager;
+        this.botEngine = botEngine;
         this.sensors = [];
         this.delegates = {};
 
@@ -73,6 +79,32 @@ class SensorsManager {
         this.webServices.registerAPI(this, WebServices.GET, SENSORS_MANAGER_STATISTICS_DAY, Authentication.AUTH_USAGE_LEVEL);
         this.webServices.registerAPI(this, WebServices.GET, SENSORS_MANAGER_STATISTICS_MONTH, Authentication.AUTH_USAGE_LEVEL);
         this.webServices.registerAPI(this, WebServices.GET, SENSORS_MANAGER_STATISTICS_YEAR, Authentication.AUTH_USAGE_LEVEL);
+
+        this.botEngine.registerBotAction("sensor", (action, value, type, confidence, sender, cb) => {
+            let maxConfidence = 0;
+            let detectedSensor = null;
+            this.sensors.forEach((sensor) => {
+                const stringConfidence = StringSimilarity.compareTwoStrings(sensor.type + " " + sensor.name, value);
+                if (stringConfidence >= SENSOR_NAME_COMPARE_CONFIDENCE && stringConfidence > maxConfidence) {
+                    detectedSensor = sensor;
+                    maxConfidence = stringConfidence;
+                }
+            });
+
+            if (detectedSensor) {
+                Logger.info("Match found ! : " + detectedSensor.name);
+                detectedSensor.lastObject((err, lastObject) => {
+                    if (lastObject && lastObject.value) {
+                        const convertedValue = detectedSensor.convertValue(lastObject.value);
+                        cb(this.translateManager.t("sensor.bot", convertedValue.value, convertedValue.unit, detectedSensor.name));
+                    } else {
+                        cb(this.translateManager.t("sensor.bot.notfound"));
+                    }
+                });
+            } else {
+                cb(this.translateManager.t("sensor.bot.notfound"));
+            }
+        });
     }
 
     /**

@@ -1788,7 +1788,7 @@ $(document).ready(function() {
                         bakeCookie('chat-cache',  JSON.stringify(notifications));
                         generateChatContent();
                         $('#chatLoader').remove();
-                        var u = new fallbackSpeechSynthesisUtterance(notifications[notifications.length - 1].message);
+                        var u = new fallbackSpeechSynthesisUtterance(notifications[0].message);
                         u.lang = lng;
                         u.volume = 1.0;
                         u.rate = 1.0;

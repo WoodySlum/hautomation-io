@@ -17,7 +17,7 @@ const STATUS_OFF = "off";
 const STATUS_INVERT = "invert";
 const ROUTE_ALL_ON = "/devices/allon/";
 const ROUTE_ALL_OFF = "/devices/alloff/";
-const deviceNameCompareConfidence = 0.31;
+const DEVICE_NAME_COMPARE_CONFIDENCE = 0.31;
 
 /**
  * This class allows to manage devices
@@ -71,7 +71,7 @@ class DeviceManager {
             self.formConfiguration.getDataCopy().forEach((device) => {
                 const stringConfidence = StringSimilarity.compareTwoStrings(device.name, value);
                 Logger.info("Confidence " + value + " | " + device.name + ": " + stringConfidence);
-                if (stringConfidence >= deviceNameCompareConfidence && stringConfidence > maxConfidence) {
+                if (stringConfidence >= DEVICE_NAME_COMPARE_CONFIDENCE && stringConfidence > maxConfidence) {
                     detectedDevice = device;
                     maxConfidence = stringConfidence;
                 }
@@ -92,7 +92,7 @@ class DeviceManager {
             self.formConfiguration.getDataCopy().forEach((device) => {
                 const stringConfidence = StringSimilarity.compareTwoStrings(device.name, value);
                 Logger.info("Confidence " + value + " | " + device.name + ": " + stringConfidence);
-                if (stringConfidence >= deviceNameCompareConfidence && stringConfidence > maxConfidence) {
+                if (stringConfidence >= DEVICE_NAME_COMPARE_CONFIDENCE && stringConfidence > maxConfidence) {
                     detectedDevice = device;
                     maxConfidence = stringConfidence;
                 }
