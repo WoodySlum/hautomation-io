@@ -148,6 +148,7 @@ class MessageManager {
         .complexWhere("(recipient " + this.dbHelper.Operators().LIKE + " '" + username + "' OR " + "sender " + this.dbHelper.Operators().LIKE + " '" + username + "')")
         .where(this.dbHelper.Operators().FIELD_TIMESTAMP, this.dbHelper.Operators().GT, parseInt(lastTimestamp)===0?1:parseInt(lastTimestamp))
         .order(this.dbHelper.Operators().DESC, this.dbHelper.Operators().FIELD_TIMESTAMP)
+        .order(this.dbHelper.Operators().DESC, this.dbHelper.Operators().FIELD_ID)
         .first(20);
 
         this.dbHelper.getObjects(request, (error, objects) => {
@@ -186,6 +187,7 @@ class MessageManager {
         .select()
         .complexWhere("(recipient " + this.dbHelper.Operators().LIKE + " '" + username + "' OR " + "sender " + this.dbHelper.Operators().LIKE + " '" + username + "')")
         .order(this.dbHelper.Operators().DESC, this.dbHelper.Operators().FIELD_TIMESTAMP)
+        .order(this.dbHelper.Operators().DESC, this.dbHelper.Operators().FIELD_ID)
         .first(1);
         this.dbHelper.getObjects(request, (error, objects) => {
             if (error) {

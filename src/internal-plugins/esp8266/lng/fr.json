@@ -1,0 +1,4 @@
+{
+    "esp8266.form.wifi.ssid": "Nom du réseau WiFI",
+    "esp8266.form.wifi.password": "Mot de passe WiFI"
+}

@@ -10,12 +10,14 @@ const Tile = require("./../dashboardmanager/Tile");
 const DevicesListForm = require("./DevicesListForm");
 const DevicesListScenarioForm = require("./DevicesListScenarioForm");
 const Icons = require("./../../utils/Icons");
+const StringSimilarity = require("string-similarity");
 
 const STATUS_ON = "on";
 const STATUS_OFF = "off";
 const STATUS_INVERT = "invert";
 const ROUTE_ALL_ON = "/devices/allon/";
 const ROUTE_ALL_OFF = "/devices/alloff/";
+const deviceNameCompareConfidence = 0.31;
 
 /**
  * This class allows to manage devices
@@ -33,9 +35,10 @@ class DeviceManager {
      * @param  {ScenarioManager} scenarioManager    The scenario manager
      * @param  {TranslateManager} translateManager    The translate manager
      * @param  {EnvironmentManager} environmentManager    The environment manager
+     * @param  {BotEngine} botEngine    The bot engine
      * @returns {DeviceManager}              The instance
      */
-    constructor(confManager, formManager, webServices, radioManager, dashboardManager, scenarioManager, translateManager, environmentManager) {
+    constructor(confManager, formManager, webServices, radioManager, dashboardManager, scenarioManager, translateManager, environmentManager, botEngine) {
         this.formConfiguration = new FormConfiguration.class(confManager, formManager, webServices, "devices", true, DeviceForm.class);
         this.radioManager = radioManager;
         this.dashboardManager = dashboardManager;
@@ -43,6 +46,7 @@ class DeviceManager {
         this.formManager = formManager;
         this.translateManager = translateManager;
         this.environmentManager = environmentManager;
+        this.botEngine = botEngine;
 
         webServices.registerAPI(this, WebServices.POST, ":/device/set/[id]/[status*]/", Authentication.AUTH_USAGE_LEVEL);
         webServices.registerAPI(this, WebServices.POST, ":" + ROUTE_ALL_ON, Authentication.AUTH_USAGE_LEVEL);
@@ -60,6 +64,48 @@ class DeviceManager {
         this.scenarioManager.register(DevicesListScenarioForm.class, (scenario) => {
             self.triggerScenario(scenario, self);
         }, "devices.list.scenario.title");
+
+        this.botEngine.registerBotAction("turnon", (action, value, type, confidence, sender, cb) => {
+            let maxConfidence = 0;
+            let detectedDevice = null;
+            self.formConfiguration.getDataCopy().forEach((device) => {
+                const stringConfidence = StringSimilarity.compareTwoStrings(device.name, value);
+                Logger.info("Confidence " + value + " | " + device.name + ": " + stringConfidence);
+                if (stringConfidence >= deviceNameCompareConfidence && stringConfidence > maxConfidence) {
+                    detectedDevice = device;
+                    maxConfidence = stringConfidence;
+                }
+            });
+
+            if (detectedDevice) {
+                Logger.info("Match found ! : " + detectedDevice.name);
+                self.switchDevice(detectedDevice.id, STATUS_ON);
+                cb(this.translateManager.t("devices.bot.turnon", detectedDevice.name));
+            } else {
+                cb(this.translateManager.t("devices.bot.notfound"));
+            }
+        });
+
+        this.botEngine.registerBotAction("turnoff", (action, value, type, confidence, sender, cb) => {
+            let maxConfidence = 0;
+            let detectedDevice = null;
+            self.formConfiguration.getDataCopy().forEach((device) => {
+                const stringConfidence = StringSimilarity.compareTwoStrings(device.name, value);
+                Logger.info("Confidence " + value + " | " + device.name + ": " + stringConfidence);
+                if (stringConfidence >= deviceNameCompareConfidence && stringConfidence > maxConfidence) {
+                    detectedDevice = device;
+                    maxConfidence = stringConfidence;
+                }
+            });
+
+            if (detectedDevice) {
+                Logger.info("Match found ! : " + detectedDevice.name);
+                self.switchDevice(detectedDevice.id, STATUS_OFF);
+                cb(this.translateManager.t("devices.bot.turnoff", detectedDevice.name));
+            } else {
+                cb(this.translateManager.t("devices.bot.notfound"));
+            }
+        });
     }
 
     /**

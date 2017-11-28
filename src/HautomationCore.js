@@ -131,10 +131,10 @@ class HautomationCore {
         this.messageManager = new MessageManager.class(this.pluginsManager, this.eventBus, this.userManager, this.dbManager, this.webServices, this.translateManager, this.dashboardManager);
         // Authentication module
         this.authentication = new Authentication.class(this.webServices, this.userManager, this.environmentManager);
-        // Device manager module
-        this.deviceManager = new DeviceManager.class(this.confManager, this.formManager, this.webServices, this.radioManager, this.dashboardManager, this.scenarioManager, this.translateManager, this.environmentManager);
         // Bot engine
         this.botEngine = new BotEngine.class(this.translateManager, this.messageManager, AppConfiguration.bot);
+        // Device manager module
+        this.deviceManager = new DeviceManager.class(this.confManager, this.formManager, this.webServices, this.radioManager, this.dashboardManager, this.scenarioManager, this.translateManager, this.environmentManager, this.botEngine);
         // IoT manager
         this.iotManager = new IotManager.class(AppConfiguration, this.webServices, this.installationManager, this.formManager, this.environmentManager, this.confManager);
         // Sensors manager module
@@ -154,8 +154,8 @@ class HautomationCore {
 
         const self = this;
         this.eventBus.on(PluginsManager.EVENT_RESTART, () => {
-                         self.restart();
-                         });
+            self.restart();
+        });
 
         // Install dependencies
         if (!process.env.TEST) {
