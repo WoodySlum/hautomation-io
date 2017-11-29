@@ -11,6 +11,7 @@ const APIResponse = require("./../../services/webservices/APIResponse");
 const GeoUtils = require("./../../utils/GeoUtils");
 const UserScenarioForm = require("./UserScenarioForm");
 const sha256 = require("sha256");
+const StringSimilarity = require("string-similarity");
 
 const CONF_KEY = "users";
 const ERROR_USER_NOT_FOUND = "ERROR_USER_NOT_FOUND";
@@ -18,6 +19,8 @@ const ERROR_USER_NOT_FOUND = "ERROR_USER_NOT_FOUND";
 const ROUTE_USER_ZONE = ":/user/zone/set/";
 const ROUTE_USER_LOCATION = ":/user/location/set/";
 const ROUTE_USER_SETTINGS = ":/user/settings/get/";
+
+const USER_COMPARE_CONFIDENCE = 0.31;
 
 /**
 * This class allows to manage users (create, delete, search, ...)
@@ -34,9 +37,10 @@ class UserManager {
     * @param  {AppConfiguration} appConfiguration The app configuration object
     * @param  {ScenarioManager} scenarioManager  The scenario manager
     * @param  {EnvironmentManager} environmentManager  The environment manager
+    * @param  {TranslateManager} translateManager  The translate manager
     * @returns {UserManager} The instance
     */
-    constructor(confManager, formManager, webServices, dashboardManager, appConfiguration, scenarioManager, environmentManager) {
+    constructor(confManager, formManager, webServices, dashboardManager, appConfiguration, scenarioManager, environmentManager, translateManager) {
         this.formConfiguration = new FormConfiguration.class(confManager, formManager, webServices, CONF_KEY, true, UserForm.class);
         this.confManager = confManager;
         this.dashboardManager = dashboardManager;
@@ -44,6 +48,8 @@ class UserManager {
         this.appConfiguration = appConfiguration;
         this.scenarioManager = scenarioManager;
         this.environmentManager = environmentManager;
+        this.botEngine = null;
+        this.translateManager = translateManager;
         this.updateTile();
         this.registeredHomeNotifications = {};
 
@@ -273,6 +279,51 @@ class UserManager {
                     tilesExcluded:[]
                 };
                 resolve(new APIResponse.class(true, settings));
+            });
+        }
+    }
+
+    /**
+     * Register bot actions
+     *
+     * @param  {BotEngine} botEngine The bot engine
+     */
+    registerBotActions(botEngine) {
+        this.botEngine = botEngine;
+        const self = this;
+        if (this.botEngine) {
+            this.botEngine.registerBotAction("whoisathome", (action, value, type, confidence, sender, cb) => {
+                let maxConfidence = 0;
+                let detectedUser = null;
+                const usersAtHome = [];
+                self.formConfiguration.getDataCopy().forEach((user) => {
+                    const stringConfidence = StringSimilarity.compareTwoStrings(user.name, value);
+                    Logger.info("Confidence " + value + " | " + user.name + ": " + stringConfidence);
+                    if (stringConfidence >= USER_COMPARE_CONFIDENCE && stringConfidence > maxConfidence) {
+                        detectedUser = user;
+                        maxConfidence = stringConfidence;
+                    }
+                    if (user.atHome) {
+                        usersAtHome.push(user.name);
+                    }
+                });
+
+                if (detectedUser) {
+                    Logger.info("Match found ! : " + detectedUser.name);
+                    if (detectedUser.atHome) {
+                        cb(this.translateManager.t("user.bot.at.home", detectedUser.name));
+                    } else {
+                        cb(this.translateManager.t("user.bot.not.at.home", detectedUser.name));
+                    }
+                } else if (self.nobodyAtHome()){
+                    cb(this.translateManager.t("user.bot.nobody.at.home"));
+                } else {
+                    if (usersAtHome.length === 1) {
+                        cb(this.translateManager.t("user.bot.who.single.at.home", usersAtHome.concat(", ")));
+                    } else {
+                        cb(this.translateManager.t("user.bot.who.at.home", usersAtHome.concat(", ")));
+                    }
+                }
             });
         }
     }

@@ -36,23 +36,26 @@ class BotEngine {
         if (!process.env.TEST) {
             this.voiceDetect();
         }
-
     }
 
     /**
      * Play the detection sound
      */
     playDetectionSound() {
-        var audio = new audiohub();
-        audio.play(path.resolve("./res/sounds/beep.mp3"));
+        if (!process.env.TEST) {
+            var audio = new audiohub();
+            audio.play(path.resolve("./res/sounds/ding.wav"));
+        }
     }
 
     /**
      * Play the end detection sound
      */
     playEndDetectionSound() {
-        var audio = new audiohub();
-        audio.play(path.resolve("./res/sounds/beep6.mp3"));
+        if (!process.env.TEST) {
+            var audio = new audiohub();
+            audio.play(path.resolve("./res/sounds/dong.wav"));
+        }
     }
 
     /**
@@ -173,9 +176,9 @@ class BotEngine {
 
         // check in the promise for the completion of call to witai
         parseSpeech.then((data) => {
-            (data.entities && data.entities.greetings && data.entities.greetings.length > 0)?self.textToSpeech(data.entities.greetings[0].value):self.textToSpeech(data._text); // eslint-disable-line no-underscore-dangle
-            self.onMessageReceived({message:data._text}, () => { // eslint-disable-line no-underscore-dangle
-
+            //(data.entities && data.entities.greetings && data.entities.greetings.length > 0)?self.textToSpeech(data.entities.greetings[0].value):self.textToSpeech(data._text); // eslint-disable-line no-underscore-dangle
+            self.onMessageReceived({message:data._text}, (feedback) => { // eslint-disable-line no-underscore-dangle
+                self.textToSpeech(feedback);
             });
         })
         .catch((err) => {
@@ -221,28 +224,28 @@ class BotEngine {
                         // Bot action exists
                         this.botActions[maxEntityKey](maxEntityKey, maxEntity.value, maxEntity.type, maxEntity.confidence, message.sender, (feedback) => {
                             self.messageManager.sendMessage([message.sender], feedback);
-                            if (botCb) botCb();
+                            if (botCb) botCb(feedback);
                         });
                     } else {
                         // Else not exist, read the default value
                         self.messageManager.sendMessage([message.sender], maxEntity.value);
-                        if (botCb) botCb();
+                        if (botCb) botCb(maxEntity.value);
                     }
 
                 } else {
                     self.messageManager.sendMessage([message.sender], self.translateManager.t("bot.misunderstand"));
-                    if (botCb) botCb();
+                    if (botCb) botCb(self.translateManager.t("bot.misunderstand"));
                 }
             } else {
                 self.messageManager.sendMessage([message.sender], self.translateManager.t("bot.misunderstand"));
-                if (botCb) botCb();
+                if (botCb) botCb(self.translateManager.t("bot.misunderstand"));
             }
 
             Logger.warn(JSON.stringify(data));
         })
         .catch((err) => {
             Logger.err(err.message);
-            if (botCb) botCb();
+            if (botCb) botCb(self.translateManager.t("bot.misunderstand"));
         });
     }
 
