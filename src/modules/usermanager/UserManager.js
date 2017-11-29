@@ -11,6 +11,7 @@ const APIResponse = require("./../../services/webservices/APIResponse");
 const GeoUtils = require("./../../utils/GeoUtils");
 const UserScenarioForm = require("./UserScenarioForm");
 const sha256 = require("sha256");
+const StringSimilarity = require("string-similarity");
 
 const CONF_KEY = "users";
 const ERROR_USER_NOT_FOUND = "ERROR_USER_NOT_FOUND";
@@ -19,24 +20,27 @@ const ROUTE_USER_ZONE = ":/user/zone/set/";
 const ROUTE_USER_LOCATION = ":/user/location/set/";
 const ROUTE_USER_SETTINGS = ":/user/settings/get/";
 
+const USER_COMPARE_CONFIDENCE = 0.31;
+
 /**
- * This class allows to manage users (create, delete, search, ...)
- * @class
- */
+* This class allows to manage users (create, delete, search, ...)
+* @class
+*/
 class UserManager {
     /**
-     * Constructor
-     *
-     * @param  {ConfManager} confManager A configuration manager needed for persistence
-     * @param  {FormManager} formManager  A form manager
-     * @param  {WebServices} webServices  The web services
-     * @param  {DashboardManager} dashboardManager  The dashboard manager
-     * @param  {AppConfiguration} appConfiguration The app configuration object
-     * @param  {ScenarioManager} scenarioManager  The scenario manager
-     * @param  {EnvironmentManager} environmentManager  The environment manager
-     * @returns {UserManager} The instance
-     */
-    constructor(confManager, formManager, webServices, dashboardManager, appConfiguration, scenarioManager, environmentManager) {
+    * Constructor
+    *
+    * @param  {ConfManager} confManager A configuration manager needed for persistence
+    * @param  {FormManager} formManager  A form manager
+    * @param  {WebServices} webServices  The web services
+    * @param  {DashboardManager} dashboardManager  The dashboard manager
+    * @param  {AppConfiguration} appConfiguration The app configuration object
+    * @param  {ScenarioManager} scenarioManager  The scenario manager
+    * @param  {EnvironmentManager} environmentManager  The environment manager
+    * @param  {TranslateManager} translateManager  The translate manager
+    * @returns {UserManager} The instance
+    */
+    constructor(confManager, formManager, webServices, dashboardManager, appConfiguration, scenarioManager, environmentManager, translateManager) {
         this.formConfiguration = new FormConfiguration.class(confManager, formManager, webServices, CONF_KEY, true, UserForm.class);
         this.confManager = confManager;
         this.dashboardManager = dashboardManager;
@@ -44,6 +48,8 @@ class UserManager {
         this.appConfiguration = appConfiguration;
         this.scenarioManager = scenarioManager;
         this.environmentManager = environmentManager;
+        this.botEngine = null;
+        this.translateManager = translateManager;
         this.updateTile();
         this.registeredHomeNotifications = {};
 
@@ -58,8 +64,8 @@ class UserManager {
     }
 
     /**
-     * Update user tile
-     */
+    * Update user tile
+    */
     updateTile() {
         const pics = [];
         this.getUsers().forEach((user) => {
@@ -85,20 +91,20 @@ class UserManager {
     }
 
     /**
-     * Return a COPY of the user array
-     *
-     * @returns {[User]} An array of Users
-     */
+    * Return a COPY of the user array
+    *
+    * @returns {[User]} An array of Users
+    */
     getUsers() {
         return this.formConfiguration.getDataCopy();
     }
 
     /**
-     * Get a user with username
-     *
-     * @param  {string} username The username
-     * @returns {User}   A user, null if user does not exists
-     */
+    * Get a user with username
+    *
+    * @param  {string} username The username
+    * @returns {User}   A user, null if user does not exists
+    */
     getUser(username) {
         let foundUser = null;
         this.formConfiguration.getDataCopy().forEach((user) => {
@@ -110,10 +116,10 @@ class UserManager {
     }
 
     /**
-     * Get the admin user
-     *
-     * @returns {User} The admin user, null if admin user is disabled
-     */
+    * Get the admin user
+    *
+    * @returns {User} The admin user, null if admin user is disabled
+    */
     getAdminUser() {
         if (this.confManager.appConfiguration.admin.enable) {
             return new UserForm.class(0, this.confManager.appConfiguration.admin.username, this.confManager.appConfiguration.admin.password, Authentication.AUTH_MAX_LEVEL);
@@ -123,10 +129,10 @@ class UserManager {
     }
 
     /**
-     * Check if all users are at home
-     *
-     * @returns {boolean} True if everybody is at home, false otherwise
-     */
+    * Check if all users are at home
+    *
+    * @returns {boolean} True if everybody is at home, false otherwise
+    */
     allUsersAtHome() {
         let allUsersAtHome = true;
         this.formConfiguration.getDataCopy().forEach((user) => {
@@ -139,10 +145,10 @@ class UserManager {
     }
 
     /**
-     * Check if no users are at home
-     *
-     * @returns {boolean} True if nobody is at home, false otherwise
-     */
+    * Check if no users are at home
+    *
+    * @returns {boolean} True if nobody is at home, false otherwise
+    */
     nobodyAtHome() {
         let nobodyAtHome = true;
         this.formConfiguration.getDataCopy().forEach((user) => {
@@ -155,10 +161,10 @@ class UserManager {
     }
 
     /**
-     * Check if a user is at home
-     *
-     * @returns {boolean} True if somebody is at home, false otherwise
-     */
+    * Check if a user is at home
+    *
+    * @returns {boolean} True if somebody is at home, false otherwise
+    */
     somebodyAtHome() {
         let somebodyAtHome = false;
         this.formConfiguration.getDataCopy().forEach((user) => {
@@ -171,11 +177,11 @@ class UserManager {
     }
 
     /**
-     * Set user zone
-     *
-     * @param {string} username The username
-     * @param {boolean} inZone True if user is in zone, false otherwise
-     */
+    * Set user zone
+    *
+    * @param {string} username The username
+    * @param {boolean} inZone True if user is in zone, false otherwise
+    */
     setUserZone(username, inZone) {
         const self = this;
         let u = null;
@@ -228,31 +234,31 @@ class UserManager {
     }
 
     /**
-     * Register for user's home notifications, ie when a user leaves / enter home
-     *
-     * @param  {Function} cb A callback `(user) => {}`
-     */
+    * Register for user's home notifications, ie when a user leaves / enter home
+    *
+    * @param  {Function} cb A callback `(user) => {}`
+    */
     registerHomeNotifications(cb) {
         const key = sha256(cb.toString());
         this.registeredHomeNotifications[key] = cb;
     }
 
     /**
-     * Unregister for user's home notifications, ie when a user leaves / enter home
-     *
-     * @param  {Function} cb A callback `(user) => {}`
-     */
+    * Unregister for user's home notifications, ie when a user leaves / enter home
+    *
+    * @param  {Function} cb A callback `(user) => {}`
+    */
     unregisterHomeNotifications(cb) {
         const key = sha256(cb.toString());
         delete this.registeredHomeNotifications[key];
     }
 
     /**
-     * Process API callback
-     *
-     * @param  {APIRequest} apiRequest An APIRequest
-     * @returns {Promise}  A promise with an APIResponse object
-     */
+    * Process API callback
+    *
+    * @param  {APIRequest} apiRequest An APIRequest
+    * @returns {Promise}  A promise with an APIResponse object
+    */
     processAPI(apiRequest) {
         var self = this;
 
@@ -273,6 +279,51 @@ class UserManager {
                     tilesExcluded:[]
                 };
                 resolve(new APIResponse.class(true, settings));
+            });
+        }
+    }
+
+    /**
+     * Register bot actions
+     *
+     * @param  {BotEngine} botEngine The bot engine
+     */
+    registerBotActions(botEngine) {
+        this.botEngine = botEngine;
+        const self = this;
+        if (this.botEngine) {
+            this.botEngine.registerBotAction("whoisathome", (action, value, type, confidence, sender, cb) => {
+                let maxConfidence = 0;
+                let detectedUser = null;
+                const usersAtHome = [];
+                self.formConfiguration.getDataCopy().forEach((user) => {
+                    const stringConfidence = StringSimilarity.compareTwoStrings(user.name, value);
+                    Logger.info("Confidence " + value + " | " + user.name + ": " + stringConfidence);
+                    if (stringConfidence >= USER_COMPARE_CONFIDENCE && stringConfidence > maxConfidence) {
+                        detectedUser = user;
+                        maxConfidence = stringConfidence;
+                    }
+                    if (user.atHome) {
+                        usersAtHome.push(user.name);
+                    }
+                });
+
+                if (detectedUser) {
+                    Logger.info("Match found ! : " + detectedUser.name);
+                    if (detectedUser.atHome) {
+                        cb(this.translateManager.t("user.bot.at.home", detectedUser.name));
+                    } else {
+                        cb(this.translateManager.t("user.bot.not.at.home", detectedUser.name));
+                    }
+                } else if (self.nobodyAtHome()){
+                    cb(this.translateManager.t("user.bot.nobody.at.home"));
+                } else {
+                    if (usersAtHome.length === 1) {
+                        cb(this.translateManager.t("user.bot.who.single.at.home", usersAtHome.concat(", ")));
+                    } else {
+                        cb(this.translateManager.t("user.bot.who.at.home", usersAtHome.concat(", ")));
+                    }
+                }
             });
         }
     }

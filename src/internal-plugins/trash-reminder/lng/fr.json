@@ -1,0 +1,10 @@
+{
+    "trash.reminder.configuration.day": "Jour du rappel",
+    "trash.reminder.configuration.reminders": "Rappels",
+    "trash.reminder.configuration.weekMode": "Type de semaine",
+    "trash.reminder.configuration.weekMode.all": "Paires et impaires",
+    "trash.reminder.configuration.weekMode.pair": "Paires seulement",
+    "trash.reminder.configuration.weekMode.unpair": "Impaires seulement",
+    "trash.reminder.configuration.name": "Nom de la poubelle",
+    "trash.reminder.configuration.message": "Hello, il faudrait sortir la poubelle %@"
+}

@@ -1,0 +1,13 @@
+{
+    "openweather.rain.forecast.no.rain": "pas de pluie",
+    "openweather.rain.forecast.rain": "%@h pluie",
+    "openweather.rain.forecast.snow": "%@h neige",
+    "openweather.api.key": "OpenWeather API key",
+    "openweather.autoDayNight": "Modifier le cycle jour / nuit automatiquement du système ",
+    "openweather.weatherTile": "Afficher un l'élément 'Météo' sur le tableau de bord",
+    "openweather.rainForecastTileMode": "Mode de prévision météo",
+    "openweather.rainForecastTileMode.none": "Aucun",
+    "openweather.rainForecastTileMode.hours": "Prochaines heures",
+    "openweather.rainForecastTileMode.day": "Prochain jour",
+    "openweather.rainForecastTileMode.days": "Prochains jours"
+}

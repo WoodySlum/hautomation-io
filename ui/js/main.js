@@ -106,7 +106,7 @@ $(document).ready(function() {
 
     var fallbackSpeechSynthesis = window.getSpeechSynthesis();
     var fallbackSpeechSynthesisUtterance = window.getSpeechSynthesisUtterance();
-    var lng = 'en-US';
+    var lng = 'fr-FR';
     var setFocusToChatInputTimer;
     var reqCamera = null;
     var reqList = null;
@@ -1788,11 +1788,14 @@ $(document).ready(function() {
                         bakeCookie('chat-cache',  JSON.stringify(notifications));
                         generateChatContent();
                         $('#chatLoader').remove();
-                        var u = new fallbackSpeechSynthesisUtterance(tmpNotifications[tmpNotifications.length - 1].message);
+                        var u = new fallbackSpeechSynthesisUtterance(notifications[0].message);
                         u.lang = lng;
                         u.volume = 1.0;
                         u.rate = 1.0;
                         fallbackSpeechSynthesis.speak(u);
+                        $("#chatContent").animate({
+                            scrollTop: ($('#chatContent').height() * 1000)
+                        });
                     }).fail(function(msg) {
                         $('#chatLoader').remove();
                         setError(msg);
