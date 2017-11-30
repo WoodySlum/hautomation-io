@@ -70,13 +70,13 @@ class BotEngine {
         let silentCount = 0;
 
         models.add({
-            file: "./res/snowboy/" + this.translateManager.t("bot.pmdl"),
+            file: path.resolve("./res/snowboy/" + this.translateManager.t("bot.pmdl")),
             sensitivity: this.botConfiguration.sensitivity.toString(),
             hotwords : this.translateManager.t("bot.hotword")
         });
 
         const detector = new snowboy.Detector({
-            resource: "./res/snowboy/common.res",
+            resource: path.resolve("./res/snowboy/common.res"),
             models: models,
             audioGain: parseFloat(this.botConfiguration.audioGain)
         });

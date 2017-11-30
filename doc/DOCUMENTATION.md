@@ -291,6 +291,15 @@
     -   [authorized](#authorized)
     -   [username](#username-2)
     -   [level](#level)
+-   [BotEngine](#botengine)
+    -   [playDetectionSound](#playdetectionsound)
+    -   [playEndDetectionSound](#playenddetectionsound)
+    -   [voiceDetect](#voicedetect)
+    -   [textToSpeech](#texttospeech)
+    -   [speechToText](#speechtotext)
+    -   [onMessageReceived](#onmessagereceived-1)
+    -   [registerBotAction](#registerbotaction)
+    -   [unregisterBotAction](#unregisterbotaction)
 -   [CamerasForm](#camerasform)
     -   [cameraId](#cameraid)
     -   [json](#json-29)
@@ -519,7 +528,7 @@
     -   [register](#register-4)
     -   [unregister](#unregister-2)
     -   [sendMessage](#sendmessage-2)
-    -   [onMessageReceived](#onmessagereceived-1)
+    -   [onMessageReceived](#onmessagereceived-2)
     -   [getMessages](#getmessages)
     -   [getLastTimestamp](#getlasttimestamp)
     -   [processAPI](#processapi-10)
@@ -588,7 +597,7 @@
     -   [sendMessage](#sendmessage-3)
     -   [register](#register-8)
     -   [unregister](#unregister-3)
-    -   [onMessageReceived](#onmessagereceived-2)
+    -   [onMessageReceived](#onmessagereceived-3)
     -   [getMessages](#getmessages-1)
 -   [RadioAPI](#radioapi)
     -   [register](#register-9)
@@ -759,6 +768,7 @@
     -   [registerHomeNotifications](#registerhomenotifications-1)
     -   [unregisterHomeNotifications](#unregisterhomenotifications-1)
     -   [processAPI](#processapi-14)
+    -   [registerBotActions](#registerbotactions)
 -   [UserScenarioForm](#userscenarioform)
     -   [mode](#mode)
     -   [json](#json-50)
@@ -3039,6 +3049,70 @@ Username
 
 App access level
 
+## BotEngine
+
+This class manage the Hautomation bot
+
+**Parameters**
+
+-   `translateManager`  
+-   `messageManager`  
+-   `botConfiguration`  
+
+### playDetectionSound
+
+Play the detection sound
+
+### playEndDetectionSound
+
+Play the end detection sound
+
+### voiceDetect
+
+Start vocie detection
+
+### textToSpeech
+
+Speech some text
+
+**Parameters**
+
+-   `text` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A text
+
+### speechToText
+
+Convert an audio file to a text
+
+**Parameters**
+
+-   `stream` **[stream](https://nodejs.org/api/stream.html)** The audio stream
+
+### onMessageReceived
+
+Callback when a new message is received
+
+**Parameters**
+
+-   `message` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A message
+-   `botCb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback that should be called when data processing is done
+
+### registerBotAction
+
+Register a bot action
+
+**Parameters**
+
+-   `actionKey` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The action key
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** The callback to implement : `(action, value, type, confidence, sender, cb) => {cb("Job done !");}`
+
+### unregisterBotAction
+
+Unregister a bot action
+
+**Parameters**
+
+-   `actionKey` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The action key
+
 ## CamerasForm
 
 **Extends FormObject.class**
@@ -4191,6 +4265,7 @@ This class allows to manage devices
 -   `scenarioManager`  
 -   `translateManager`  
 -   `environmentManager`  
+-   `botEngine`  
 
 ### triggerScenario
 
@@ -5032,6 +5107,7 @@ Callback when a message is received, dispatched to registered elements
 
 -   `sender` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The sender's username
 -   `message` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The message received
+-   `botCb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback that should be called when data processing is done (optional, default `null`)
 
 ### getMessages
 
@@ -6605,6 +6681,7 @@ This class allows to manage sensors
 -   `confManager`  
 -   `translateManager`  
 -   `themeManager`  
+-   `botEngine`  
 
 ### pluginsLoaded
 
@@ -6983,6 +7060,7 @@ This class allows to manage users (create, delete, search, ...)
 -   `appConfiguration`  
 -   `scenarioManager`  
 -   `environmentManager`  
+-   `translateManager`  
 
 ### updateTile
 
@@ -7062,6 +7140,14 @@ Process API callback
 -   `apiRequest` **[APIRequest](#apirequest)** An APIRequest
 
 Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with an APIResponse object
+
+### registerBotActions
+
+Register bot actions
+
+**Parameters**
+
+-   `botEngine` **[BotEngine](#botengine)** The bot engine
 
 ## UserScenarioForm
 
