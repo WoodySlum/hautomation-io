@@ -319,9 +319,10 @@ class UserManager {
                     cb(this.translateManager.t("user.bot.nobody.at.home"));
                 } else {
                     if (usersAtHome.length === 1) {
-                        cb(this.translateManager.t("user.bot.who.single.at.home", usersAtHome.concat(", ")));
+                        console.log(usersAtHome);
+                        cb(this.translateManager.t("user.bot.who.single.at.home", usersAtHome.concat()));
                     } else {
-                        cb(this.translateManager.t("user.bot.who.at.home", usersAtHome.concat(", ")));
+                        cb(this.translateManager.t("user.bot.who.at.home", usersAtHome.concat()));
                     }
                 }
             });
