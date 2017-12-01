@@ -45,7 +45,7 @@ class BotEngine {
      */
     playDetectionSound() {
         if (!process.env.TEST) {
-            var audio = new audiohub();
+            var audio = new audiohub({player: "mplayer"});
             audio.play(path.resolve("./res/sounds/dong.wav"));
         }
     }
@@ -55,7 +55,7 @@ class BotEngine {
      */
     playEndDetectionSound() {
         if (!process.env.TEST) {
-            var audio = new audiohub();
+            var audio = new audiohub({player: "mplayer"});
             audio.play(path.resolve("./res/sounds/ding.wav"));
         }
     }
@@ -151,7 +151,7 @@ class BotEngine {
         const ttsTmpFilepath = this.appConfiguration.cachePath + "tts";
         if (!process.env.TEST) {
             gtts.save(ttsTmpFilepath, text, function() {
-                var audio = new audiohub();
+                var audio = new audiohub({player: "mplayer"});
                 audio.play(ttsTmpFilepath);
             });
         }
