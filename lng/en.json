@@ -5,6 +5,7 @@
     "sensors.statistics.year.dateformat": "YYYY-MM",
     "bot.pmdl": "alfred_fr.pmdl",
     "bot.hotword": "alfred",
+    "bot.tts.lng": "en",
     "wit.ai.api.key": "ZJTVGA5WLFLVG5O7R3U7LYHE3SIEBUK4",
     "wit.ai.service.error": "Sorry, a problem prevent from accessing the request.",
     "bot.misunderstand": "Sorry, I did not understand what you're trying to ask.",

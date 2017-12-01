@@ -20,16 +20,18 @@ class BotEngine {
     /**
      * Constructor
      *
+     * @param  {AppConfiguration} appConfiguration The app configuration object
      * @param  {TranslateManager} translateManager The translation manager
      * @param  {MessageManager} messageManager The message manager
      * @param  {Object} botConfiguration The bot configuration
      * @returns {BotEngine} The instance
      */
-    constructor(translateManager, messageManager, botConfiguration) {
+    constructor(appConfiguration, translateManager, messageManager, botConfiguration) {
         this.messageManager = messageManager;
         this.translateManager = translateManager;
         this.messageManager.register(this);
         this.botConfiguration = botConfiguration;
+        this.appConfiguration = appConfiguration;
 
         // Bot actions
         this.botActions = {};
@@ -44,7 +46,7 @@ class BotEngine {
     playDetectionSound() {
         if (!process.env.TEST) {
             var audio = new audiohub();
-            audio.play(path.resolve("./res/sounds/ding.wav"));
+            audio.play(path.resolve("./res/sounds/dong.wav"));
         }
     }
 
@@ -54,7 +56,7 @@ class BotEngine {
     playEndDetectionSound() {
         if (!process.env.TEST) {
             var audio = new audiohub();
-            audio.play(path.resolve("./res/sounds/dong.wav"));
+            audio.play(path.resolve("./res/sounds/ding.wav"));
         }
     }
 
@@ -145,8 +147,14 @@ class BotEngine {
      * @param  {string} text A text
      */
     textToSpeech(text) {
-        const say = require("say");
-        say.speak(text);
+        const gtts = require("node-gtts")(this.translateManager.t("bot.tts.lng"));
+        const ttsTmpFilepath = this.appConfiguration.cachePath + "tts";
+        if (!process.env.TEST) {
+            gtts.save(ttsTmpFilepath, text, function() {
+                var audio = new audiohub();
+                audio.play(ttsTmpFilepath);
+            });
+        }
     }
 
     /**
