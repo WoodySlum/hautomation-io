@@ -3,6 +3,11 @@ const Logger = require("./../../logger/Logger");
 // const sha256 = require("sha256");
 // const DateUtils = require("./../../utils/DateUtils");
 
+const os = require("os");
+const pathl = require("path");
+const callsite = require("callsite");
+const fs = require("fs-extra");
+
 const record = require("node-record-lpcm16");
 const snowboy = require("snowboy");
 const header = require("waveheader");
@@ -24,19 +29,49 @@ class BotEngine {
      * @param  {TranslateManager} translateManager The translation manager
      * @param  {MessageManager} messageManager The message manager
      * @param  {Object} botConfiguration The bot configuration
+     * @param  {InstallationManager} installationManager The installation manager
      * @returns {BotEngine} The instance
      */
-    constructor(appConfiguration, translateManager, messageManager, botConfiguration) {
+    constructor(appConfiguration, translateManager, messageManager, botConfiguration, installationManager) {
         this.messageManager = messageManager;
         this.translateManager = translateManager;
         this.messageManager.register(this);
         this.botConfiguration = botConfiguration;
         this.appConfiguration = appConfiguration;
+        this.installationManager = installationManager;
+
 
         // Bot actions
         this.botActions = {};
         if (!process.env.TEST) {
             this.voiceDetect();
+        }
+
+        if (os.platform() === "linux") {
+            const asoundrcFile = process.env.HOME + "/.asoundrc";
+            if (!fs.existsSync(asoundrcFile)) {
+                const asoundrcContent = fs.readFileSync(pathl.dirname(callsite()[0].getFileName()) + "/linux/asoundrc");
+                fs.writeFile(asoundrcFile, asoundrcContent, (err) => {
+                    if (err) {
+                        Logger.err(err.message);
+                    } else {
+                        Logger.info(".asoundrc file successfully created");
+                    }
+                });
+            }
+        }
+
+        if (botConfiguration && botConfiguration.outputVolume && os.platform() === "linux") {
+            // Increase volume as specified in configuration
+            this.installationManager.executeCommand("amixer sset PCM,0 " + botConfiguration.outputVolume + "%", false, (error, stdout, stderr) => {
+                if (error) {
+                    Logger.err(error.message);
+                }
+
+                if (stderr) {
+                    Logger.err(stderr);
+                }
+            });
         }
     }
 

@@ -18,7 +18,7 @@ module.exports = {install:(installationManager) => {
     installationManager.register("0.0.3", ["arm", "arm64"], "pio platform install https://github.com/platformio/platform-espressif8266.git#feature/stage", true, true);
     installationManager.register("0.0.3", ["arm", "arm64"], "apt-get install -y libudev-dev", true, true); // Usb port detection
     installationManager.register("0.0.3", ["arm", "arm64"], "apt-get update", true, true);
-    installationManager.register("0.0.3", ["arm", "arm64"], "apt-get install -y libasound2-dev python-pyaudio python3-pyaudio sox", true, true); // Bot engine
+    installationManager.register("0.0.3", ["arm", "arm64"], "apt-get install -y alsa-utils libasound2-dev python-pyaudio python3-pyaudio sox", true, true); // Bot engine
     installationManager.register("0.0.3", ["arm", "arm64"], "apt-get install -y mplayer festival festvox-kallpc16k", true, true); // Bot engine
 
     // Global

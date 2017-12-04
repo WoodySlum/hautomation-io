@@ -132,7 +132,7 @@ class HautomationCore {
         // Authentication module
         this.authentication = new Authentication.class(this.webServices, this.userManager, this.environmentManager);
         // Bot engine
-        this.botEngine = new BotEngine.class(AppConfiguration, this.translateManager, this.messageManager, AppConfiguration.bot);
+        this.botEngine = new BotEngine.class(AppConfiguration, this.translateManager, this.messageManager, AppConfiguration.bot, this.installationManager);
         // Avoid cycle of dependencies (bots)
         this.userManager.registerBotActions(this.botEngine);
 
