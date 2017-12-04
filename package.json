@@ -37,7 +37,8 @@
                    "./src/**/*.h",
                    "./src/**/lib/",
                    "./src/**/global_lib/",
-                   "./**/*.py"
+                   "./**/*.py",
+                   "./src/modules/botengine/linux/asoundrc"
                    ]
     },
     "repository": {
