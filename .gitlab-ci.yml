@@ -1,15 +1,8 @@
-image: hypriot/rpi-node:7
+image: woodyslum/hautomation-ci:7
 
 cache:
   paths:
   - ~/.pkg-cache/
-
-before_script:
-  - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
-  - mkdir -p ~/.ssh
-  - eval $(ssh-agent -s)
-  - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-  - apt-get update -y && apt-get install -y libatlas-base-dev
 
 stages:
   - lint
@@ -21,9 +14,7 @@ stages:
 test:
   stage: test
   script:
-  - apt-get -qq update
-  - apt-get install -qq -y libudev-dev
-  - npm install
+  - npm --proxy http://192.168.0.2:6286 --https-proxy http://192.168.0.2:6286 --strict-ssl false install
   - npm run --verbose test-ci
   coverage: '/Statements   : \d+\.\d+/'
 
@@ -32,17 +23,13 @@ lint:
   only:
     - master
   script:
-  - apt-get -qq update
-  - apt-get install -qq -y libudev-dev
-  - npm install
+  - npm --proxy http://192.168.0.2:6286 --https-proxy http://192.168.0.2:6286 --strict-ssl false install
   - npm run --verbose lint
 
 build:
   stage: build
   script:
-  - apt-get -qq update
-  - apt-get install -qq -y libudev-dev
-  - npm install
+  - npm --proxy http://192.168.0.2:6286 --https-proxy http://192.168.0.2:6286 --strict-ssl false install
   - npm run --verbose build
   artifacts:
     paths:
