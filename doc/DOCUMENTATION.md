@@ -3055,9 +3055,11 @@ This class manage the Hautomation bot
 
 **Parameters**
 
+-   `appConfiguration`  
 -   `translateManager`  
 -   `messageManager`  
 -   `botConfiguration`  
+-   `installationManager`  
 
 ### playDetectionSound
 

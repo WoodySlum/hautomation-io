@@ -24,16 +24,16 @@ lint:
   only:
     - master
   script:
-  - set NODE_TLS_REJECT_UNAUTHORIZED=0
+  - export NODE_TLS_REJECT_UNAUTHORIZED="0"
   - npm --proxy http://192.168.0.2:6286 --https-proxy http://192.168.0.2:6286 --strict-ssl false install
   - npm run --verbose lint
 
 build:
   stage: build
   script:
-  - set NODE_TLS_REJECT_UNAUTHORIZED=0
+  - export NODE_TLS_REJECT_UNAUTHORIZED="0"
   - npm --proxy http://192.168.0.2:6286 --https-proxy http://192.168.0.2:6286 --strict-ssl false install
-  - npm run --verbose build
+  - npm run --verbose build-arm
   artifacts:
     paths:
     - build/*
