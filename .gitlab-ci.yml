@@ -1,8 +1,6 @@
 image: woodyslum/hautomation-ci:8
 
 cache:
-  paths:
-  - ~/.pkg-cache/
 
 stages:
   - lint
@@ -16,6 +14,7 @@ test:
   script:
   - export NODE_TLS_REJECT_UNAUTHORIZED=0
   - npm config set strict-ssl false
+  - rm -Rf package-lock.json
   - npm --proxy http://192.168.0.2:6286 --https-proxy http://192.168.0.2:6286 --strict-ssl false install --build-from-source
   - npm run --verbose test-ci
   coverage: '/Statements   : \d+\.\d+/'
@@ -27,6 +26,7 @@ lint:
   script:
   - export NODE_TLS_REJECT_UNAUTHORIZED=0
   - npm config set strict-ssl false
+  - rm -Rf package-lock.json
   - npm --proxy http://192.168.0.2:6286 --https-proxy http://192.168.0.2:6286 --strict-ssl false install --build-from-source
   - npm run --verbose lint
 
@@ -35,6 +35,7 @@ build:
   script:
   - export NODE_TLS_REJECT_UNAUTHORIZED=0
   - npm config set strict-ssl false
+  - rm -Rf package-lock.json
   - npm --proxy http://192.168.0.2:6286 --https-proxy http://192.168.0.2:6286 --strict-ssl false install --build-from-source
   - npm run --verbose build-arm
   artifacts:
