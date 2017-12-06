@@ -25,7 +25,6 @@ lint:
     - master
   script:
   - export NODE_TLS_REJECT_UNAUTHORIZED=0
-  - echo "Node TLS reject status : $NODE_TLS_REJECT_UNAUTHORIZED"
   - npm --proxy http://192.168.0.2:6286 --https-proxy http://192.168.0.2:6286 --strict-ssl false install
   - npm run --verbose lint
 
