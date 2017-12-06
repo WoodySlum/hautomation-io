@@ -1,4 +1,4 @@
-image: woodyslum/hautomation-ci:latest
+image: woodyslum/hautomation-ci:8
 
 cache:
   paths:
