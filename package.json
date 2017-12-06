@@ -26,30 +26,30 @@
     "bin": "HautomationRunner.js",
     "pkg": {
         "scripts": [
-                    "./src/**/*.js"
-                    ],
+            "./src/**/*.js"
+        ],
         "assets": [
-                   "./src/internal-plugins/**/*.js",
-                   "./node_modules/threads/lib/worker.node/slave.js",
-                   "./**/*.json",
-                   "./ui/**/*",
-                   "./src/**/*.c",
-                   "./src/**/*.cpp",
-                   "./src/**/*.h",
-                   "./src/**/lib/",
-                   "./src/**/global_lib/",
-                   "./**/*.py",
-                   "./src/modules/botengine/linux/asoundrc"
-                   ]
+            "./src/internal-plugins/**/*.js",
+            "./node_modules/threads/lib/worker.node/slave.js",
+            "./**/*.json",
+            "./ui/**/*",
+            "./src/**/*.c",
+            "./src/**/*.cpp",
+            "./src/**/*.h",
+            "./src/**/lib/",
+            "./src/**/global_lib/",
+            "./**/*.py",
+            "./src/modules/botengine/linux/asoundrc"
+        ]
     },
     "repository": {
         "type": "git",
         "url": "git@honey.hd.free.fr:hautomation/core-node.git"
     },
     "keywords": [
-                 "hautomation",
-                 "core"
-                 ],
+        "hautomation",
+        "core"
+    ],
     "author": "WoodySlum",
     "license": "ISC",
     "devDependencies": {
@@ -100,7 +100,7 @@
         "underscore": "^1.8",
         "audiohub": "git://github.com/WoodySlum/audiohub#master",
         "snowboy": "^1.2",
-        "string-similarity":"^1.2",
-        "node-gtts":"^2.0"
+        "string-similarity": "^1.2",
+        "node-gtts": "^2.0"
     }
 }
