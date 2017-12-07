@@ -15,7 +15,7 @@ test:
   - export NODE_TLS_REJECT_UNAUTHORIZED=0
   - npm config set strict-ssl false
   - rm -Rf package-lock.json
-  - npm --proxy http://192.168.0.2:6286 --https-proxy http://192.168.0.2:6286 --strict-ssl false install --build-from-source
+  - npm --proxy http://192.168.0.2:6286 --https-proxy http://192.168.0.2:6286 --strict-ssl false install
   - npm run --verbose test-ci
   coverage: '/Statements   : \d+\.\d+/'
 
@@ -27,7 +27,7 @@ lint:
   - export NODE_TLS_REJECT_UNAUTHORIZED=0
   - npm config set strict-ssl false
   - rm -Rf package-lock.json
-  - npm --proxy http://192.168.0.2:6286 --https-proxy http://192.168.0.2:6286 --strict-ssl false install --build-from-source
+  - npm --proxy http://192.168.0.2:6286 --https-proxy http://192.168.0.2:6286 --strict-ssl false install
   - npm run --verbose lint
 
 build:
@@ -36,7 +36,7 @@ build:
   - export NODE_TLS_REJECT_UNAUTHORIZED=0
   - npm config set strict-ssl false
   - rm -Rf package-lock.json
-  - npm --proxy http://192.168.0.2:6286 --https-proxy http://192.168.0.2:6286 --strict-ssl false install --build-from-source
+  - npm --proxy http://192.168.0.2:6286 --https-proxy http://192.168.0.2:6286 --strict-ssl false install
   - npm run --verbose build-arm
   artifacts:
     paths:
