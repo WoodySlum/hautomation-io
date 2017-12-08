@@ -175,6 +175,7 @@
     -   [formatRadioObjectBeforeSending](#formatradioobjectbeforesending)
     -   [onRflinkReceive](#onrflinkreceive)
     -   [onRflinkVersion](#onrflinkversion)
+    -   [onRflinkAck](#onrflinkack)
     -   [onDetectedPortsReceive](#ondetectedportsreceive)
     -   [emit](#emit-1)
     -   [getProtocolList](#getprotocollist-1)
@@ -2154,6 +2155,14 @@ Called when version is retrieved from RFLink
 
 -   `version` **[number](#number)** Version
 -   `revision` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Revision
+
+### onRflinkAck
+
+RFLink acknowledge
+
+**Parameters**
+
+-   `identifier` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The acknowledge identifier
 
 ### onDetectedPortsReceive
 

@@ -38,9 +38,6 @@ var NpmPackage = require("./../package.json");
 const commit = require("../version.json").commit;
 const events = require("events");
 
-// Logger
-Logger.setLogLevel(AppConfiguration.logLevel?AppConfiguration.logLevel:null);
-
 // For testing only
 if (process.env.TEST) {
     AppConfiguration.configurationPath = "/tmp/data/";
@@ -81,6 +78,9 @@ class HautomationCore {
 
         // Load main configuration
         this.configurationLoader();
+
+        // Logger
+        Logger.setLogLevel(AppConfiguration.logLevel?AppConfiguration.logLevel:null);
 
         // Theme manager
         this.themeManager = new ThemeManager.class(AppConfiguration);
