@@ -35,6 +35,7 @@ const BotEngine = require("./modules/botengine/BotEngine");
 const CONFIGURATION_FILE = "data/config.json";
 var AppConfiguration = require("./../data/config.json");
 var NpmPackage = require("./../package.json");
+const version = require("../version.json").version;
 const events = require("events");
 
 // Logger
@@ -62,9 +63,14 @@ class HautomationCore {
      */
     constructor(runnerEventBus) {
 
-        Logger.info("/--------------------\\");
-        Logger.info("| Hautomation v" + NpmPackage.version + " |");
-        Logger.info("\\--------------------/");
+        console.log("        __  __            __                        __  _           ");
+        console.log("       / / / /___ ___  __/ /_____  ____ ___  ____ _/ /_(_)___  ____ ");
+        console.log("      / /_/ / __ `/ / / / __/ __ \\/ __ `__ \\/ __ `/ __/ / __ \\/ __ \\");
+        console.log("     / __  / /_/ / /_/ / /_/ /_/ / / / / / / /_/ / /_/ / /_/ / / / /");
+        console.log("    /_/ /_/\\__,_/\\__,_/\\__/\\____/_/ /_/ /_/\\__,_/\\__/_/\\____/_/ /_/ ");
+        console.log(" ")
+        console.log("    Version : " + version);
+        console.log(" ")
 
         // Create dirs if needed
         fs.ensureDirSync(AppConfiguration.configurationPath);
