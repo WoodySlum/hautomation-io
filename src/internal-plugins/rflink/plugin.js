@@ -79,6 +79,7 @@ function loaded(api) {
             this.api = api;
             this.version = null;
             this.revision = null;
+            this.ack = null;
 
             const RFLinkService = RFLinkServiceClass(api);
             this.service = new RFLinkService(this);
@@ -187,6 +188,17 @@ function loaded(api) {
             this.revision = revision;
 
             api.exported.Logger.info("RFLink version " + version + revision);
+        }
+
+        /**
+         * RFLink acknowledge
+         *
+         * @param  {string} identifier  The acknowledge identifier
+         */
+        onRflinkAck(identifier) {
+            this.ack = identifier;
+
+            api.exported.Logger.verbose("Received acknowledge " + identifier);
         }
 
         /**

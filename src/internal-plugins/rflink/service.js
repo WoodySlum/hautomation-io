@@ -45,13 +45,14 @@ function loaded(api) {
         run(data, send) {
             const TYPE_RADIO = "RADIO";
             const TYPE_VERSION = "VERSION";
+            const TYPE_ACK = "ACK";
             const AUTO_REFRESH_TIMER = 5; // In seconds
 
             let sclient;
             let sp;
             let processData = (telegram) => {
                 var elements = telegram.split(";");
-                if (elements.length >= 3) {
+                if (elements.length > 3) {
                     const rflinkId = elements[0].toLowerCase();
                     const commandId = elements[1].toLowerCase();
                     const protocol = elements[2].toLowerCase();
@@ -132,6 +133,22 @@ function loaded(api) {
                         version: version,
                         revision: revision
                     };
+                } else if (elements.length === 3) {
+                    const rflinkId = elements[0].toLowerCase();
+                    const commandId = elements[1].toLowerCase();
+                    const data = elements[2].toLowerCase();
+                    if (data === "ok") {
+                        let type = TYPE_ACK;
+                        return {
+                            type:type,
+                            rflink_id: rflinkId,
+                            ack_id: commandId
+                        };
+                    } else {
+                        Logger.warn("Unknown telegram");
+                    }
+
+                    return null;
                 } else {
                     Logger.warn("Invalid number of lines in telegram (" + telegram.length + ")");
                     return null;
@@ -183,6 +200,8 @@ function loaded(api) {
                                     send({method:"rflinkData", data:d});
                                 } else if (d.type === TYPE_VERSION) {
                                     send({method:"rflinkVersion", data:d});
+                                }  else if (d.type === TYPE_ACK) {
+                                    send({method:"rflinkAck", data:d});
                                 }
                             }
                         });
@@ -271,6 +290,8 @@ function loaded(api) {
                 self.plugin.onRflinkVersion(data.data.version, data.data.revision);
             } else if (data.method === "detectedPorts") {
                 self.plugin.onDetectedPortsReceive(data.data);
+            } else if (data.method === "rflinkAck") {
+                self.plugin.onRflinkAck(data.data.ack_id);
             }
         }
     }
