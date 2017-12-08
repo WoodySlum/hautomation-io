@@ -19,6 +19,8 @@ data/database.db
 
 # Data file
 data/plugins.json
+data/*.conf.json
+
 
 # Camera files
 data/cameras/

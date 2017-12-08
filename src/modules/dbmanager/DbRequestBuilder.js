@@ -508,7 +508,7 @@ class DbRequestBuilder {
             req += ") VALUES (";
             let i = 0;
             this.valuesList.forEach((value) => {
-                if (this.getMetaForField(this.insertList[i]).type === "timestamp") {
+                if (this.insertList[i] === FIELD_TIMESTAMP && this.getMetaForField(this.insertList[i]).type === "timestamp") {
                     const tsValue = this.getValueEncapsulated(value, this.getMetaForField(this.insertList[i]));
                     req += parseInt(tsValue)?"datetime(" + parseInt(tsValue) + ", 'unixepoch'),":tsValue + ",";
                 } else {
@@ -533,15 +533,10 @@ class DbRequestBuilder {
                         req += FIELD_TIMESTAMP + "=" + this.getValueEncapsulated(DateUtils.class.timestamp(), this.getMetaForField(field)) + ",";
                     } else {
                         const tsValue = this.getValueEncapsulated(this.valuesList[i], this.getMetaForField(field));
-                        req += FIELD_TIMESTAMP + "=" + (parseInt(tsValue)?"datetime(" + parseInt(tsValue) + ", 'unixepoch'),":tsValue) + ",";
+                        req += FIELD_TIMESTAMP + "=" + (parseInt(tsValue)?"datetime(" + parseInt(tsValue) + ", 'unixepoch')":tsValue) + ",";
                     }
                 } else {
-                    if (this.getMetaForField(field).type === "timestamp") {
-                        const tsValue = this.getValueEncapsulated(this.valuesList[i], this.getMetaForField(field));
-                        req += field + "=" + (parseInt(tsValue)?"datetime(" + parseInt(tsValue) + ", 'unixepoch'),":tsValue) + ",";
-                    } else {
-                        req += field + "=" + this.getValueEncapsulated(this.valuesList[i], this.getMetaForField(field)) + ",";
-                    }
+                    req += field + "=" + this.getValueEncapsulated(this.valuesList[i], this.getMetaForField(field)) + ",";
                 }
 
                 i++;

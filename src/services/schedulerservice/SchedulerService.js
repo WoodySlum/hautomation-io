@@ -140,7 +140,9 @@ class SchedulerService extends Service.class {
                 results.forEach((schedulerDbObject) => {
                     schedulerDbObject.triggered = 2;
                     schedulerDbObject.save((err) => {
-                        Logger.err(err.message);
+                        if (err) {
+                            Logger.err(err.message);
+                        }
                     });
                 });
             }
