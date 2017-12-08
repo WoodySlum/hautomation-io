@@ -211,7 +211,7 @@ describe("DbRequestBuilder", function() {
         let sql = new DbRequestBuilder.class(table, schema)
                     .save(obj2)
                     .request();
-        expect(sql).to.be.equal("UPDATE `foobar` SET id=2,foo='foo''bar',bar=200,timestamp=datetime(1511216868, 'unixepoch'), WHERE 1=1 AND id=2;");
+        expect(sql).to.be.equal("UPDATE `foobar` SET id=2,foo='foo''bar',bar=200,timestamp=datetime(1511216868, 'unixepoch') WHERE 1=1 AND id=2;");
     });
 
     it("should save a new object with timestamp", function() {
