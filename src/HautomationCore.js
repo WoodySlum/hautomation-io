@@ -35,7 +35,7 @@ const BotEngine = require("./modules/botengine/BotEngine");
 const CONFIGURATION_FILE = "data/config.json";
 var AppConfiguration = require("./../data/config.json");
 var NpmPackage = require("./../package.json");
-const version = require("../version.json").version;
+const commit = require("../version.json").commit;
 const events = require("events");
 
 // Logger
@@ -63,13 +63,13 @@ class HautomationCore {
      */
     constructor(runnerEventBus) {
 
-        Logger.info("        __  __            __                        __  _           ");
-        Logger.info("       / / / /___ ___  __/ /_____  ____ ___  ____ _/ /_(_)___  ____ ");
-        Logger.info("      / /_/ / __ `/ / / / __/ __ \\/ __ `__ \\/ __ `/ __/ / __ \\/ __ \\");
-        Logger.info("     / __  / /_/ / /_/ / /_/ /_/ / / / / / / /_/ / /_/ / /_/ / / / /");
-        Logger.info("    /_/ /_/\\__,_/\\__,_/\\__/\\____/_/ /_/ /_/\\__,_/\\__/_/\\____/_/ /_/ ");
-        Logger.info(" ");
-        Logger.info("    Version : " + version);
+        Logger.info("░░░░░░░░__  __            __                        __  _           ");
+        Logger.info("░░░░░░░/ / / /___ ___  __/ /_____  ____ ___  ____ _/ /_(_)___  ____ ");
+        Logger.info("░░░░░░/ /_/ / __ `/ / / / __/ __ \\/ __ `__ \\/ __ `/ __/ / __ \\/ __ \\");
+        Logger.info("░░░░░/ __  / /_/ / /_/ / /_/ /_/ / / / / / / /_/ / /_/ / /_/ / / / /");
+        Logger.info("░░░░/_/ /_/\\__,_/\\__,_/\\__/\\____/_/ /_/ /_/\\__,_/\\__/_/\\____/_/ /_/ ");
+        Logger.info("░░░");
+        Logger.info("░                                     Version : " + NpmPackage.version + "-" + commit);
         Logger.info(" ");
 
         // Create dirs if needed
