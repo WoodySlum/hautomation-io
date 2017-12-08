@@ -1,7 +1,5 @@
 image: woodyslum/hautomation-ci:8
 
-cache:
-
 stages:
   - lint
   - test
