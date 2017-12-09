@@ -47,7 +47,7 @@ const MODE_MJPEG = "mjpeg";
 const MODE_RTSP = "rtsp";
 
 const DAILY_DURATION = 24 * 60 * 60;
-const CAMERAS_RETENTION_TIME = 60 * 60 * 24 * 31; // In seconds
+const CAMERAS_RETENTION_TIME = 60 * 60 * 24 * 7; // In seconds
 const CAMERA_FILE_EXTENSION = ".JPG";
 const CAMERA_SEASON_EXTENSION = "-season";
 const CAMERA_DAILY_EXTENSION = "-daily";
