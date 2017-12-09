@@ -824,10 +824,6 @@ class CamerasManager {
                         fs.remove(dailyFilename);
                         fs.move(timelapseFilepath, dailyFilename);
                     }
-
-                    if (error) {
-                        Logger.err(error.message);
-                    }
                 });
             });
         }

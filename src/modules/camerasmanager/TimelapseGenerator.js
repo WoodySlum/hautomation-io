@@ -58,7 +58,7 @@ class TimelapseGenerator {
                     if (error) {
                         Logger.err(stderr);
                         self.status = STATUS_ERROR;
-                        if (cb) cb(self.status, Error(error), null, folder);
+                        if (cb) cb(self.status, Error(error), null);
                     } else {
                         self.status = STATUS_SUCCESS;
                         if (cb) cb(self.status, null, folder + self.token + VIDEO_EXTENSION);
