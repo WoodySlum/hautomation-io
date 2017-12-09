@@ -52,7 +52,7 @@ function loaded(api) {
             let sp;
             let processData = (telegram) => {
                 var elements = telegram.split(";");
-                if (elements.length > 3) {
+                if (elements.length > 4) {
                     const rflinkId = elements[0].toLowerCase();
                     const commandId = elements[1].toLowerCase();
                     const protocol = elements[2].toLowerCase();
@@ -133,7 +133,7 @@ function loaded(api) {
                         version: version,
                         revision: revision
                     };
-                } else if (elements.length === 3) {
+                } else if (elements.length === 4) {
                     const rflinkId = elements[0].toLowerCase();
                     const commandId = elements[1].toLowerCase();
                     const data = elements[2].toLowerCase();
