@@ -28,7 +28,6 @@ const ERROR_DEPENDENCY_NOT_FOUND = "Dependency not found";
 const INTERNAL_PLUGINS = [
     "rflink",
     "radio",
-    "sample",
     "sensor",
     "temperature-sensor",
     "humidity-sensor",
