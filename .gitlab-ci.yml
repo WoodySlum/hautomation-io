@@ -35,12 +35,12 @@ build:
   - npm config set strict-ssl false
   - rm -Rf package-lock.json
   - npm --proxy http://192.168.0.2:6286 --https-proxy http://192.168.0.2:6286 --strict-ssl false install
-  - echo "{\"commit\":\"$CI_COMMIT_SHA\"}" > version.json
+  - echo "{\"commit\":\"${CI_COMMIT_SHA:0:8}\"}" > version.json
   - npm run --verbose build-arm
   artifacts:
     paths:
     - build/*
-
+{CI_COMMIT_SHA: 8}
 deploy:
   stage: deploy
   only:
