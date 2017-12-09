@@ -813,7 +813,9 @@ class CamerasManager {
      * @param  {CamerasManager} context The context (self)
      */
     generateDailyTimeLapses(context) {
-        if (this.enableTimelapse) {
+        Logger.info("Timelapse camera generation requested");
+        if (context.enableTimelapse) {
+            Logger.info("Timelapse enabled");
             context.cameras.forEach((camera) => {
                 const timelapse = new TimelapseGenerator.class(camera, context.installationManager, context.cachePath, context.camerasArchiveFolder, DAILY_DURATION);
                 timelapse.generateTimelapse((status, error, timelapseFilepath) => {
@@ -821,6 +823,10 @@ class CamerasManager {
                         const dailyFilename = context.dailyFilepath(camera, context.camerasArchiveFolder);
                         fs.remove(dailyFilename);
                         fs.move(timelapseFilepath, dailyFilename);
+                    }
+
+                    if (error) {
+                        Logger.err(error.message);
                     }
                 });
             });

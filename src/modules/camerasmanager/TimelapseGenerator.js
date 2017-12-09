@@ -37,7 +37,7 @@ class TimelapseGenerator {
         this.cachePath = cachePath;
         this.cameraArchiveFolder = cameraArchiveFolder;
         this.duration = duration;
-        this.token = sha256(DateUtils.class.timestamp() + "");
+        this.token = sha256(DateUtils.class.timestamp() + "" + camera.id);
         this.status = STATUS_PENDING;
     }
 
@@ -48,28 +48,29 @@ class TimelapseGenerator {
      */
     generateTimelapse(cb) {
         this.status = STATUS_STARTED;
+        const self = this;
         this.prepareFiles((err, pictureList, cacheImages, folder) => {
             if (!err) {
-                this.status = STATUS_RUNNING;
-                this.installationManager.executeCommand("avconv -y -i " + cacheImages + PICTURE_PREFIX + "%5d"+ require("./CamerasManager").CAMERA_FILE_EXTENSION + " -r " + FRAMERATE + " -vcodec libx264 -qscale 1 -aq 1 -s 1024x768 -threads auto " + folder + this.token + VIDEO_EXTENSION, false, (error, stdout, stderr) => {
-                    Logger.info("Timelapse generation done.");
+                self.status = STATUS_RUNNING;
+                self.installationManager.executeCommand("avconv -y -i " + cacheImages + PICTURE_PREFIX + "%5d"+ require("./CamerasManager").CAMERA_FILE_EXTENSION + " -r " + FRAMERATE + " -vcodec libx264 -qscale 1 -aq 1 -s 1024x768 -threads auto " + folder + self.token + VIDEO_EXTENSION, false, (error, stdout, stderr) => {
+                    Logger.info("Timelapse generation done for camera " + self.camera.id);
                     Logger.verbose(stdout);
                     if (error) {
                         Logger.err(stderr);
-                        this.status = STATUS_ERROR;
-                        if (cb) cb(this.status, Error(error));
+                        self.status = STATUS_ERROR;
+                        if (cb) cb(self.status, Error(error), null, folder);
                     } else {
-                        this.status = STATUS_SUCCESS;
-                        if (cb) cb(this.status, null, folder + this.token + VIDEO_EXTENSION);
+                        self.status = STATUS_SUCCESS;
+                        if (cb) cb(self.status, null, folder + self.token + VIDEO_EXTENSION);
                     }
 
                     // Clean
                     fs.remove(cacheImages);
                 });
             } else {
-                this.status = STATUS_ERROR;
+                self.status = STATUS_ERROR;
                 if (cb) {
-                    cb(this.status, err);
+                    cb(self.status, err);
                 }
             }
         });
@@ -96,7 +97,7 @@ class TimelapseGenerator {
     prepareFiles(cb) {
         Logger.info("Generating timelapse for camera " + this.camera.id);
         // Prepare file copy
-        const folder = this.cachePath + DateUtils.class.timestamp() + "/";
+        const folder = this.cachePath + DateUtils.class.timestamp() + Math.round(Math.random() * 1000) + "/";
         const cameraArchiveFolder = this.cameraArchiveFolder + this.camera.id + "/";
         const cacheImages = folder + "snapshots/";
         fs.mkdirsSync(cacheImages);
