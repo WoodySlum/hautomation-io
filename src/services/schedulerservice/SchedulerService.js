@@ -159,7 +159,7 @@ class SchedulerService extends Service.class {
      * @param  {SchedulerService} self The SchedulerService instance
      */
     timeEvent(self) {
-        const request = self.dbHelper.RequestBuilder().select().where("triggered", self.dbHelper.Operators().EQ, -1).where("triggerDate", self.dbHelper.Operators().LTE, self.lastTriggered);
+        const request = self.dbHelper.RequestBuilder().select().where("triggered", self.dbHelper.Operators().EQ, -1).where("triggerDate", self.dbHelper.Operators().LTE, DateUtils.class.timestamp()).where("triggerDate", self.dbHelper.Operators().GT, self.lastTriggered);
         self.dbHelper.getObjects(request, (err, results) => {
             if (!err && results) {
                 results.forEach((schedulerDbObject) => {
