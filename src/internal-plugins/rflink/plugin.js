@@ -1,9 +1,13 @@
 "use strict";
 const RFLinkServiceClass = require("./service.js");
+const SocatServiceClass = require("./socatService.js");
 const request = require("request");
 const parseString = require("xml2js").parseString;
 const fs = require("fs-extra");
 const crypto = require("crypto");
+const sha256 = require("sha256");
+
+const RFLINK_LAN_PORT = 9999;
 
 /**
  * Loaded plugin function
@@ -12,8 +16,11 @@ const crypto = require("crypto");
  */
 function loaded(api) {
     api.init();
-    api.installerAPI.register("0.0.0", ["x32", "x64"], "brew install avrdude", false, false, true);
-    api.installerAPI.register("0.0.0", ["arm", "arm64"], "apt-get install -y avrdude", true, true);
+    api.installerAPI.register("0.0.0", ["x32", "x64"], "brew install avrdude socat", false, false, true);
+    api.installerAPI.register("0.0.0", ["arm", "arm64"], "apt-get install -y avrdude socat", true, true);
+
+    const espPlugin = api.getPluginInstance("esp8266");
+    api.iotAPI.registerApp("app", "rflink-lan", "RFLink LAN", 1, api.iotAPI.constants().PLATFORMS.ESP8266, api.iotAPI.constants().BOARDS.NODEMCU, api.iotAPI.constants().FRAMEWORKS.ARDUINO, ["esp8266"], espPlugin.generateOptions(espPlugin.constants().MODE_ALWAYS_POWERED, 0));
 
     /**
      * This class manage RFLink form configuration
@@ -34,7 +41,7 @@ function loaded(api) {
              * @Type("string");
              * @Title("rflink.settings.port");
              * @Enum("getPorts");
-             * @EnumNames("getPorts");
+             * @EnumNames("getPortsName");
              */
             this.port = port;
         }
@@ -47,6 +54,16 @@ function loaded(api) {
          */
         static getPorts(...inject) {
             return inject[0];
+        }
+
+        /**
+         * Form injection method for ports name
+         *
+         * @param  {...Object} inject The ports name list array
+         * @returns {Array}        An array of ports name
+         */
+        static getPortsName(...inject) {
+            return inject[1];
         }
 
         /**
@@ -80,23 +97,58 @@ function loaded(api) {
             this.version = null;
             this.revision = null;
             this.ack = null;
+            this.socatService = null;
 
             const RFLinkService = RFLinkServiceClass(api);
             this.service = new RFLinkService(this);
             api.servicesManagerAPI.add(this.service);
             if (api.configurationAPI.getConfiguration() && api.configurationAPI.getConfiguration().port) {
-                this.service.port = api.configurationAPI.getConfiguration().port;
+                const port = this.startRFLinkInLanMode(api.configurationAPI.getConfiguration().port);
+                this.service.port = port;
             }
 
             api.configurationAPI.setUpdateCb((data) => {
                 if (data && data.port) {
-                    this.service.port = data.port;
+                    const port = this.startRFLinkInLanMode(data.port);
+                    this.service.port = port;
+                    if (this.socatService) {
+                        this.socatService.start();
+                    }
                     this.service.restart();
                 }
             });
 
             api.timeEventAPI.register(this.upgrade, this, api.timeEventAPI.constants().EVERY_DAYS);
             api.timeEventAPI.register(this.reboot, this, api.timeEventAPI.constants().EVERY_HOURS);
+        }
+
+        /**
+         * Create the socat service for LAN connection
+         * Socat will connect to the TCP socket and mount an endpoint
+         *
+         * @param  {string} confPort The configuration settings, port or iot identifier
+         * @returns {string}          The port, if USB connected the USB endpoint, if LAN the mounted endpoint
+         */
+        startRFLinkInLanMode(confPort) {
+            let port = confPort;
+            const iotId = confPort; // I know  ...
+            if (this.api.iotAPI.getIot(iotId)) {
+                const espPlugin = api.getPluginInstance("esp8266");
+                const ip = espPlugin.getIp(iotId);
+                if (ip) {
+                    if (this.socatService) {
+                        this.api.servicesManagerAPI.remove(this.socatService);
+                    }
+                    const socatPort = this.api.exported.cachePath + "dev/tty"+ sha256(iotId);
+                    const SocatService = SocatServiceClass(api);
+                    const socatService = new SocatService(this, ip, RFLINK_LAN_PORT, socatPort);
+                    this.socatService = socatService;
+                    this.api.servicesManagerAPI.add(this.socatService);
+                    port = socatPort;
+                }
+            }
+
+            return port;
         }
 
         /**
@@ -208,14 +260,21 @@ function loaded(api) {
          */
         onDetectedPortsReceive(data) {
             const ports  = [];
+            const portsTitle  = [];
+
+            this.api.iotAPI.getIots("rflink-lan").forEach((d) => {
+                ports.push(d.id.toString());
+                portsTitle.push("LAN : " + d.name);
+            });
             data.forEach((d) => {
                 if (d.manufacturer && (d.manufacturer.toLowerCase().indexOf("arduino") !== -1)) {
                     ports.push(d.endpoint);
+                    portsTitle.push("USB : " + d.endpoint);
                 }
             });
 
             // Register the rflink form
-            api.configurationAPI.register(RFlinkForm, ports);
+            api.configurationAPI.register(RFlinkForm, ports, portsTitle);
         }
 
        /**
@@ -362,5 +421,5 @@ module.exports.attributes = {
     category: "radio",
     description: "Manage RFLink devices",
     dependencies:["radio"],
-    classes:[]
+    classes:["esp8266"]
 };

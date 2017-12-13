@@ -54,6 +54,7 @@ function loaded(api) {
         }
     }
 
+    const CONF_KEY = "esp8266";
     const WS_SENSOR_SET_ROUTE = ":/esp/sensor/set/";
     const WS_PING_ROUTE = ":/esp/ping/";
     const WS_FIRMWARE_ROUTE = ":/esp/firmware/upgrade/";
@@ -76,6 +77,16 @@ function loaded(api) {
             this.api.webAPI.register(this, this.api.webAPI.constants().POST, WS_SENSOR_SET_ROUTE + "[id]/[type]/[value]/[vcc*]/", this.api.webAPI.Authentication().AUTH_LOCAL_NETWORK_LEVEL);
             this.api.webAPI.register(this, this.api.webAPI.constants().POST, WS_PING_ROUTE + "[id]/", this.api.webAPI.Authentication().AUTH_LOCAL_NETWORK_LEVEL);
             this.api.webAPI.register(this, this.api.webAPI.constants().GET, WS_FIRMWARE_ROUTE + "[id]/", this.api.webAPI.Authentication().AUTH_LOCAL_NETWORK_LEVEL);
+
+            try {
+                this.configurations = this.api.configurationAPI.loadData(Object, CONF_KEY, true);
+            } catch(err) {
+                this.api.exported.Logger.verbose(err.message);
+            }
+
+            if (!this.configurations) {
+                this.configurations = {};
+            }
         }
 
         /**
@@ -117,6 +128,18 @@ function loaded(api) {
         }
 
         /**
+         * Return the IoT ip address
+         *
+         * @param  {string} iotId IoT identifier
+         * @returns {string|null}       The ip address. `null` if no ip found
+         */
+        getIp(iotId) {
+            if (this.configurations[iotId.toString()] && this.configurations[iotId.toString()].ip) {
+                return this.configurations[iotId.toString()].ip;
+            }
+        }
+
+        /**
          * Process API callback
          *
          * @param  {APIRequest} apiRequest An APIRequest
@@ -149,6 +172,13 @@ function loaded(api) {
                 });
             } else if (apiRequest.route.startsWith(WS_PING_ROUTE)) {
                 const iot = this.api.iotAPI.getIot(apiRequest.data.id);
+                if (iot) {
+                    this.configurations[iot.id.toString()] = apiRequest.data;
+                    this.configurations[iot.id.toString()].lastUpdated = this.api.exported.DateUtils.class.timestamp();
+                    this.api.configurationAPI.saveData(this.configurations, CONF_KEY);
+
+                }
+
                 return new Promise((resolve) => {
                     resolve(this.api.webAPI.APIResponse(true, {success:true, version:(errorFirmware[iot.iotApp]?-1:this.api.iotAPI.getVersion(this.api.iotAPI.getIot(apiRequest.data.id).iotApp))}));
                 });

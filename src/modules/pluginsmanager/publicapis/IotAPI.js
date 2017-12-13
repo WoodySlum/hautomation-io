@@ -109,6 +109,16 @@ class IotAPI {
     constants() {
         return PrivateProperties.oprivate(this).iotManager.constants();
     }
+
+    /**
+     * Retrieve IoTs (not application, but configured instance)
+     *
+     * @param  {string} [app=null] An IoT app identifier
+     * @returns {array}    A list of IoT configuration objects
+     */
+    getIots(app = null) {
+        return PrivateProperties.oprivate(this).iotManager.getIots(app);
+    }
 }
 
 module.exports = {class:IotAPI};

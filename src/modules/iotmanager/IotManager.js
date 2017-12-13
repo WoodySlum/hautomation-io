@@ -369,6 +369,24 @@ class IotManager {
     }
 
     /**
+     * Retrieve IoTs (not application, but configured instance)
+     *
+     * @param  {string} [app=null] An IoT app identifier
+     * @returns {Array}    A list of IoT configuration objects
+     */
+    getIots(app = null) {
+        const iots = [];
+
+        this.iots.forEach((iot) => {
+            if (!app || app === iot.iotApp) {
+                iots.push(iot);
+            }
+        });
+
+        return iots;
+    }
+
+    /**
      * Process API callback
      *
      * @param  {APIRequest} apiRequest An APIRequest

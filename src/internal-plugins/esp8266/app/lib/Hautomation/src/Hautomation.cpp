@@ -75,7 +75,7 @@ JsonVariant &Hautomation::getConfig() {
 void Hautomation::connect() {
     if (WiFi.status() != WL_CONNECTED) {
         #ifdef ESP8266
-            WiFi.hostname("DEMO_HAUTOMATION");
+            WiFi.hostname(String(config["iotApp"]) + "-" + String(config["id"]));
         #endif
 
             const char* ssid = config["ESP8266Form"]["ssid"];
@@ -281,7 +281,7 @@ void Hautomation::loop() {
     }
 
     // Ping only when not always powered
-    if (poweredMode == POWER_MODE_ALWAYS && poweredMode == POWER_MODE_SLEEP) {
+    if (poweredMode == POWER_MODE_SLEEP) {
         ping();
     }
 
