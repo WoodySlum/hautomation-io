@@ -178,6 +178,7 @@ function loaded(api) {
                     if (gPort && gPort != "" && status == 0) {
                         setTimeout(() => {
                             this.listen(gPort);
+                            this.plugin.startRFLinkInLanMode();
                         }, AUTO_REFRESH_TIMER * 1000);
                     }
                 };

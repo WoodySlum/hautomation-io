@@ -173,7 +173,7 @@ function loaded(api) {
             } else if (apiRequest.route.startsWith(WS_PING_ROUTE)) {
                 const iot = this.api.iotAPI.getIot(apiRequest.data.id);
                 if (iot) {
-                    this.configurations[iot.id.toString()] = apiRequest.data;
+                    this.configurations[iot.id.toString()] = apiRequest.params;
                     this.configurations[iot.id.toString()].lastUpdated = this.api.exported.DateUtils.class.timestamp();
                     this.api.configurationAPI.saveData(this.configurations, CONF_KEY);
 

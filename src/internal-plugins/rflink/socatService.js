@@ -25,8 +25,7 @@ function loaded(api) {
         constructor(plugin, ip, port, endpoint) {
             //socat pty,link=/Users/smizrahi/dev/ttyV0 tcp:192.168.0.36:9999,forever,interval=10,fork
             fs.ensureFileSync(endpoint);
-            fs.writeFileSync(endpoint, " ");
-            super("rflink-socat", null, api.exported.Service.SERVICE_MODE_EXTERNAL, "socat pty,link=" + endpoint + " tcp:" + ip + ":" + port + ",forever,interval=10,fork");
+            super("rflink-socat", null, api.exported.Service.SERVICE_MODE_EXTERNAL, "socat pty,link=" + endpoint + " tcp:" + ip + ":" + port + ",forever,interval=10");
             this.plugin = plugin;
         }
 

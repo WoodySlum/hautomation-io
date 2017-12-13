@@ -75,7 +75,9 @@ JsonVariant &Hautomation::getConfig() {
 void Hautomation::connect() {
     if (WiFi.status() != WL_CONNECTED) {
         #ifdef ESP8266
-            WiFi.hostname(String(config["iotApp"]) + "-" + String(config["id"]));
+            const char* iotApp = config["iotApp"];
+            const char* id = config["id"];
+            WiFi.hostname(String(iotApp) + "-" + String(id));
         #endif
 
             const char* ssid = config["ESP8266Form"]["ssid"];

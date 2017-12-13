@@ -103,7 +103,7 @@ function loaded(api) {
             this.service = new RFLinkService(this);
             api.servicesManagerAPI.add(this.service);
             if (api.configurationAPI.getConfiguration() && api.configurationAPI.getConfiguration().port) {
-                const port = this.startRFLinkInLanMode(api.configurationAPI.getConfiguration().port);
+                const port = this.startRFLinkInLanMode();
                 this.service.port = port;
             }
 
@@ -126,12 +126,12 @@ function loaded(api) {
          * Create the socat service for LAN connection
          * Socat will connect to the TCP socket and mount an endpoint
          *
-         * @param  {string} confPort The configuration settings, port or iot identifier
+         * @param  {string} [confPort=null] The configuration settings, port or iot identifier
          * @returns {string}          The port, if USB connected the USB endpoint, if LAN the mounted endpoint
          */
-        startRFLinkInLanMode(confPort) {
-            let port = confPort;
-            const iotId = confPort; // I know  ...
+        startRFLinkInLanMode(confPort = null) {
+            let port = confPort?confPort:api.configurationAPI.getConfiguration().port;
+            const iotId = port; // I know  ...
             if (this.api.iotAPI.getIot(iotId)) {
                 const espPlugin = api.getPluginInstance("esp8266");
                 const ip = espPlugin.getIp(iotId);
@@ -139,13 +139,15 @@ function loaded(api) {
                     if (this.socatService) {
                         this.api.servicesManagerAPI.remove(this.socatService);
                     }
-                    const socatPort = this.api.exported.cachePath + "dev/tty"+ sha256(iotId);
+                    const socatPort = this.api.exported.cachePath + "dev/tty"+ sha256(iotId + this.api.exported.DateUtils.class.timestamp());
                     const SocatService = SocatServiceClass(api);
                     const socatService = new SocatService(this, ip, RFLINK_LAN_PORT, socatPort);
+                    const self = this;
                     socatService.setExternalTerminatedCommandCb((service, error) => {
                         if (error) {
                             // Connection has failed, try to auto restart
                             service.restart();
+                            self.service?self.service.restart():null;
                         }
                     });
                     this.socatService = socatService;
@@ -273,10 +275,8 @@ function loaded(api) {
                 portsTitle.push("LAN : " + d.name);
             });
             data.forEach((d) => {
-                if (d.manufacturer && (d.manufacturer.toLowerCase().indexOf("arduino") !== -1)) {
-                    ports.push(d.endpoint);
-                    portsTitle.push("USB : " + d.endpoint);
-                }
+                ports.push(d.endpoint);
+                portsTitle.push("USB : " + d.endpoint);
             });
 
             // Register the rflink form
