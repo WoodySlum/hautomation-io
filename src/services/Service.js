@@ -38,6 +38,7 @@ class Service {
         this.command = command;
         this.pid = -1;
         this.childProcess = null;
+        this.externalTerminatedCommand = null;
     }
 
     /**
@@ -126,14 +127,27 @@ class Service {
      * Start an external command
      */
     startExternal() {
-        if (this.command) {
+        const self = this;
+        if (self.command) {
             Logger.info("Service " + this.name + " command : " + this.command);
             const r = cp.exec(this.command, function callback(error, stdout, stderr){
                 if (error) {
                     if (error.signal !== "SIGKILL" || error.signal !== "SIGTERM" || error.signal !== "SIGINT") {
                         Logger.err(error);
+                        if (self.externalTerminatedCommand) {
+                            self.externalTerminatedCommand(self, error);
+                        }
+                    } else {
+                        if (self.externalTerminatedCommand) {
+                            self.externalTerminatedCommand(self);
+                        }
+                    }
+                } else {
+                    if (self.externalTerminatedCommand) {
+                        self.externalTerminatedCommand(self);
                     }
                 }
+
                 if (stderr) Logger.err(stderr);
             });
             this.pid = r.pid;
@@ -222,6 +236,15 @@ class Service {
      */
     setThreadsManager(threadsManager) {
         this.threadsManager = threadsManager;
+    }
+
+    /**
+     * Set the callback when the external command is terminated
+     *
+     * @param {Function} cb A callback `(service, error)=>{}`
+     */
+    setExternalTerminatedCommandCb(cb) {
+        this.externalTerminatedCommand = cb;
     }
 }
 

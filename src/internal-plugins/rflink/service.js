@@ -185,6 +185,7 @@ function loaded(api) {
                 this.listen = (port) => {
                     if (port) {
                         gPort = port;
+                        Logger.info("Trying to connect RFLink on port " + port);
                         sp = new SerialPort(port, {
                             baudRate: 57600
                         });

@@ -142,6 +142,12 @@ function loaded(api) {
                     const socatPort = this.api.exported.cachePath + "dev/tty"+ sha256(iotId);
                     const SocatService = SocatServiceClass(api);
                     const socatService = new SocatService(this, ip, RFLINK_LAN_PORT, socatPort);
+                    socatService.setExternalTerminatedCommandCb((service, error) => {
+                        if (error) {
+                            // Connection has failed, try to auto restart
+                            service.restart();
+                        }
+                    });
                     this.socatService = socatService;
                     this.api.servicesManagerAPI.add(this.socatService);
                     port = socatPort;
