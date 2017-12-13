@@ -42,6 +42,7 @@
 -   [loaded](#loaded-26)
 -   [loaded](#loaded-27)
 -   [loaded](#loaded-28)
+-   [loaded](#loaded-29)
 -   [CameraForm](#cameraform)
     -   [name](#name)
     -   [name](#name-1)
@@ -82,6 +83,7 @@
 -   [Esp8266](#esp8266)
     -   [constants](#constants)
     -   [generateOptions](#generateoptions)
+    -   [getIp](#getip)
     -   [processAPI](#processapi)
 -   [HumiditySensorForm](#humiditysensorform)
     -   [json](#json-7)
@@ -169,7 +171,9 @@
     -   [port](#port-1)
     -   [json](#json-17)
     -   [getPorts](#getports)
+    -   [getPortsName](#getportsname)
 -   [RFLink](#rflink)
+    -   [startRFLinkInLanMode](#startrflinkinlanmode)
     -   [rflinkStatusToRadioStatus](#rflinkstatustoradiostatus)
     -   [radioStatusToRflinkStatus](#radiostatustorflinkstatus)
     -   [formatRadioObjectBeforeSending](#formatradioobjectbeforesending)
@@ -185,10 +189,7 @@
     -   [start](#start-1)
     -   [run](#run)
     -   [threadCallback](#threadcallback)
--   [xo](#xo)
--   [Sample](#sample)
-    -   [processAPI](#processapi-2)
-    -   [test](#test)
+-   [SocatService](#socatservice)
 -   [DbSensor](#dbsensor)
 -   [sensorId](#sensorid)
 -   [vcc](#vcc)
@@ -226,7 +227,7 @@
     -   [generateGammuReceiveSh](#generategammureceivesh)
     -   [sendSMS](#sendsms)
     -   [sendMessage](#sendmessage-1)
-    -   [processAPI](#processapi-3)
+    -   [processAPI](#processapi-2)
 -   [SMSService](#smsservice)
 -   [SumppleCameraForm](#sumpplecameraform)
     -   [json](#json-21)
@@ -280,7 +281,7 @@
     -   [disableAlarm](#disablealarm)
     -   [triggerAlarm](#triggeralarm)
     -   [stopAlarm](#stopalarm)
-    -   [processAPI](#processapi-4)
+    -   [processAPI](#processapi-3)
 -   [AlarmSensorsForm](#alarmsensorsform)
     -   [sensor](#sensor-1)
     -   [triggerAlarm](#triggeralarm-1)
@@ -318,7 +319,7 @@
     -   [initCamera](#initcamera)
     -   [getAllCameras](#getallcameras)
     -   [registerTile](#registertile-1)
-    -   [processAPI](#processapi-5)
+    -   [processAPI](#processapi-4)
     -   [comparator](#comparator)
     -   [getCameraConfiguration](#getcameraconfiguration)
     -   [registerCamerasListForm](#registercameraslistform)
@@ -352,7 +353,7 @@
     -   [unregisterTile](#unregistertile)
     -   [filterTiles](#filtertiles)
     -   [buildDashboard](#builddashboard)
-    -   [processAPI](#processapi-6)
+    -   [processAPI](#processapi-5)
 -   [Tile](#tile)
     -   [get](#get)
 -   [DbHelper](#dbhelper)
@@ -428,7 +429,7 @@
     -   [registerDeviceTile](#registerdevicetile)
     -   [switchDevice](#switchdevice)
     -   [switchAll](#switchall)
-    -   [processAPI](#processapi-7)
+    -   [processAPI](#processapi-6)
 -   [DevicesListForm](#deviceslistform)
     -   [identifier](#identifier-1)
     -   [status](#status-2)
@@ -468,7 +469,7 @@
     -   [save](#save-2)
     -   [comparator](#comparator-1)
     -   [registerForm](#registerform)
-    -   [processAPI](#processapi-8)
+    -   [processAPI](#processapi-7)
     -   [getDataCopy](#getdatacopy)
     -   [getConfig](#getconfig)
     -   [getForm](#getform)
@@ -510,7 +511,8 @@
     -   [getVersion](#getversion)
     -   [getIotApp](#getiotapp)
     -   [getIot](#getiot)
-    -   [processAPI](#processapi-9)
+    -   [getIots](#getiots)
+    -   [processAPI](#processapi-8)
     -   [comparator](#comparator-2)
 -   [IotsListForm](#iotslistform)
     -   [identifier](#identifier-2)
@@ -532,7 +534,7 @@
     -   [onMessageReceived](#onmessagereceived-2)
     -   [getMessages](#getmessages)
     -   [getLastTimestamp](#getlasttimestamp)
-    -   [processAPI](#processapi-10)
+    -   [processAPI](#processapi-9)
 -   [PluginsAPI](#pluginsapi)
     -   [exportClass](#exportclass)
     -   [init](#init-3)
@@ -551,7 +553,7 @@
     -   [prepareToposortArray](#preparetoposortarray)
     -   [toposort](#toposort)
     -   [topsortedArrayConverter](#topsortedarrayconverter)
-    -   [processAPI](#processapi-11)
+    -   [processAPI](#processapi-10)
 -   [AlarmAPI](#alarmapi)
     -   [alarmStatus](#alarmstatus-1)
     -   [enableAlarm](#enablealarm-1)
@@ -567,6 +569,8 @@
     -   [getConfiguration](#getconfiguration)
     -   [getForm](#getform-2)
     -   [setUpdateCb](#setupdatecb-1)
+    -   [loadData](#loaddata-1)
+    -   [saveData](#savedata-1)
 -   [DashboardAPI](#dashboardapi)
     -   [registerTile](#registertile-4)
     -   [unregisterTile](#unregistertile-1)
@@ -594,6 +598,7 @@
     -   [getIot](#getiot-1)
     -   [build](#build-1)
     -   [constants](#constants-4)
+    -   [getIots](#getiots-1)
 -   [MessageAPI](#messageapi)
     -   [sendMessage](#sendmessage-3)
     -   [register](#register-8)
@@ -625,6 +630,7 @@
     -   [iotAppPowered](#iotapppowered)
 -   [ServicesManagerAPI](#servicesmanagerapi)
     -   [add](#add)
+    -   [remove](#remove-1)
 -   [ThemeAPI](#themeapi)
     -   [getColors](#getcolors)
 -   [TimeEventAPI](#timeeventapi)
@@ -667,7 +673,7 @@
     -   [getProtocols](#getprotocols-1)
     -   [switchDevice](#switchdevice-1)
     -   [getLastReceivedRadioInformations](#getlastreceivedradioinformations-1)
-    -   [processAPI](#processapi-12)
+    -   [processAPI](#processapi-11)
 -   [RadioScenarioForm](#radioscenarioform)
     -   [radioForm](#radioform-1)
     -   [status](#status-3)
@@ -723,7 +729,7 @@
     -   [getAllSensors](#getallsensors)
     -   [onNewSensorValue](#onnewsensorvalue)
     -   [getValue](#getvalue-1)
-    -   [processAPI](#processapi-13)
+    -   [processAPI](#processapi-12)
     -   [statisticsWsResponse](#statisticswsresponse)
     -   [comparator](#comparator-3)
     -   [getSensorConfiguration](#getsensorconfiguration)
@@ -731,7 +737,7 @@
 -   [ServicesManager](#servicesmanager)
     -   [isServiceRegistered](#isserviceregistered)
     -   [add](#add-1)
-    -   [remove](#remove-1)
+    -   [remove](#remove-2)
     -   [start](#start-2)
     -   [stop](#stop-1)
     -   [restart](#restart-2)
@@ -768,7 +774,7 @@
     -   [setUserZone](#setuserzone)
     -   [registerHomeNotifications](#registerhomenotifications-1)
     -   [unregisterHomeNotifications](#unregisterhomenotifications-1)
-    -   [processAPI](#processapi-14)
+    -   [processAPI](#processapi-13)
     -   [registerBotActions](#registerbotactions)
 -   [UserScenarioForm](#userscenarioform)
     -   [mode](#mode)
@@ -801,6 +807,7 @@
     -   [register](#register-17)
     -   [unregister](#unregister-12)
     -   [setThreadsManager](#setthreadsmanager)
+    -   [setExternalTerminatedCommandCb](#setexternalterminatedcommandcb)
 -   [TimeEventService](#timeeventservice)
     -   [start](#start-5)
     -   [stop](#stop-4)
@@ -835,7 +842,7 @@
     -   [start](#start-6)
     -   [stop](#stop-5)
     -   [registerInfos](#registerinfos)
-    -   [processAPI](#processapi-15)
+    -   [processAPI](#processapi-14)
     -   [register](#register-19)
     -   [unregister](#unregister-14)
     -   [registerAPI](#registerapi)
@@ -1086,6 +1093,14 @@ Loaded function
 **Parameters**
 
 -   `api` **PluginAPI** The api
+
+## loaded
+
+Loaded plugin function
+
+**Parameters**
+
+-   `api` **PluginAPI** The core APIs
 
 ## loaded
 
@@ -1476,6 +1491,16 @@ Generate Iot app options
 -   `timer` **int** A timer for mode deep sleep, light sleep or sleep in `seconds`. Can be a constant `api.getPluginInstance("esp8266").constants().EVERY_HOUR`, `api.getPluginInstance("esp8266").constants().EVERY_DAY` or `api.getPluginInstance("esp8266").constants().EVERY_WEEK`
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The options object
+
+### getIp
+
+Return the IoT ip address
+
+**Parameters**
+
+-   `iotId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** IoT identifier
+
+Returns **([string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** The ip address. `null` if no ip found
 
 ### processAPI
 
@@ -2099,6 +2124,16 @@ Form injection method for ports
 
 Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of ports
 
+### getPortsName
+
+Form injection method for ports name
+
+**Parameters**
+
+-   `inject` **...[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The ports name list array
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of ports name
+
 ## RFLink
 
 **Extends api.exported.Radio**
@@ -2108,6 +2143,17 @@ This class manage RFLink
 **Parameters**
 
 -   `api`  
+
+### startRFLinkInLanMode
+
+Create the socat service for LAN connection
+Socat will connect to the TCP socket and mount an endpoint
+
+**Parameters**
+
+-   `confPort` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The configuration settings, port or iot identifier
+
+Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The port, if USB connected the USB endpoint, if LAN the mounted endpoint
 
 ### rflinkStatusToRadioStatus
 
@@ -2243,29 +2289,18 @@ Should be overloaded by service
 
 -   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A data passed as initial value
 
-## xo
+## SocatService
 
-## Sample
+**Extends api.exported.Service.class**
 
-This class is a sample plugin
-
-**Parameters**
-
--   `api`  
-
-### processAPI
-
-Process API callback
+This class conect to RFLink using serial port on a pseicif thread.
 
 **Parameters**
 
--   `apiRequest` **\[type]** An APIRequest
-
-Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with an APIResponse object
-
-### test
-
-Shows a test log
+-   `plugin`  
+-   `ip`  
+-   `port`  
+-   `endpoint`  
 
 ## DbSensor
 
@@ -4979,6 +5014,16 @@ Retrieve an IoT (not application, but configured instance)
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An IoT configuration object
 
+### getIots
+
+Retrieve IoTs (not application, but configured instance)
+
+**Parameters**
+
+-   `app` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An IoT app identifier (optional, default `null`)
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** A list of IoT configuration objects
+
 ### processAPI
 
 Process API callback
@@ -5483,6 +5528,27 @@ Set the update callback. Called back when delete or save action is done.
 
 -   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback with data as parameter, e.g. `cb(data) => {}`
 
+### loadData
+
+Load data manually from file (Array or object)
+
+**Parameters**
+
+-   `classType` **class** The object class. This class MUST implement a json() method to process JSON to Object mapping
+-   `key` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A file store key
+-   `disableClassMapping` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Disable class mapping (optional, default `false`)
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of objects (instance of classType), or an object
+
+### saveData
+
+Save data manually for a specific key. Can throw error.
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A JS object
+-   `key` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A file store key
+
 ## DashboardAPI
 
 Public API for dashboard
@@ -5736,6 +5802,16 @@ Build a firmware for a specific appId
 Get the constants `constants().PLATFORMS`, `constants().BOARDS` and `constants().FRAMEWORKS`
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The constants object
+
+### getIots
+
+Retrieve IoTs (not application, but configured instance)
+
+**Parameters**
+
+-   `app` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An IoT app identifier (optional, default `null`)
+
+Returns **[array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** A list of IoT configuration objects
 
 ## MessageAPI
 
@@ -6005,6 +6081,14 @@ Add a service
 **Parameters**
 
 -   `service` **[Service](#service)** The service
+
+### remove
+
+Remove a service to services pool
+
+**Parameters**
+
+-   `service` **[Service](#service)** A service
 
 ## ThemeAPI
 
@@ -7365,6 +7449,14 @@ Set threads manager
 **Parameters**
 
 -   `threadsManager` **ThreadsManagaer** A threads manager
+
+### setExternalTerminatedCommandCb
+
+Set the callback when the external command is terminated
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback `(service, error)=>{}`
 
 ## TimeEventService
 
