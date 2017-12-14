@@ -48,6 +48,8 @@ class DeviceManager {
         this.environmentManager = environmentManager;
         this.botEngine = botEngine;
 
+        this.radioManager.deviceManager = this; // Set the device manager. used to associate devices to received radio objects
+
         webServices.registerAPI(this, WebServices.POST, ":/device/set/[id]/[status*]/", Authentication.AUTH_USAGE_LEVEL);
         webServices.registerAPI(this, WebServices.POST, ":" + ROUTE_ALL_ON, Authentication.AUTH_USAGE_LEVEL);
         webServices.registerAPI(this, WebServices.POST, ":" + ROUTE_ALL_OFF, Authentication.AUTH_USAGE_LEVEL);
@@ -160,6 +162,15 @@ class DeviceManager {
         // All off tile
         const tileAllOff = new Tile.class(this.dashboardManager.themeManager, "all-off", Tile.TILE_GENERIC_ACTION, Icons.class.list()["_456"], null, this.translateManager.t("device.manager.alloff"), null, null, null, null, 10200, ROUTE_ALL_OFF, null);
         this.dashboardManager.registerTile(tileAllOff);
+    }
+
+    /**
+     * Return the list of devices
+     *
+     * @returns {Array} The list of devices
+     */
+    getDevices() {
+        return this.formConfiguration.getDataCopy();
     }
 
     /**

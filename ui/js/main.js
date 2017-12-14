@@ -3465,8 +3465,18 @@ $(document).ready(function() {
                         status = "";
                     }
 
-                    if (radioSignal.description) {
+                    if (radioSignal.associated && radioSignal.associated.length > 0) {
                         found = "";
+                        for (var l = 0 ; l < radioSignal.associated.length ; l++) {
+                            var associatedItem = radioSignal.associated[l];
+                            if (associatedItem.type == "device") {
+                                found += "<span class=\"label label-warning\">" + associatedItem.name + "</span> ";
+                            } else if (associatedItem.type == "sensor") {
+                                found += "<span class=\"label label-info\">" + associatedItem.name + "</span> ";
+                            } else if (associatedItem.type == "scenario") {
+                                found += "<span class=\"label label-primary\">" + associatedItem.name + "</span> ";
+                            }
+                        }
                     } else {
                         found = "<span class=\"label label-warning\">" + t('js.not.existing', null) + "</span>";
                     }

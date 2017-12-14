@@ -121,8 +121,6 @@ class HautomationCore {
         this.confManager = new ConfManager.class(AppConfiguration, this.eventBus, EVENT_STOP, this.timeEventService);
         // Scenario manager
         this.scenarioManager = new ScenarioManager.class(this.confManager, this.formManager, this.webServices, this.timeEventService, this.schedulerService);
-        // RadioManager. The plugins manager will be set later, when the pluginsLoaded event will be triggered
-        this.radioManager = new RadioManager.class(this.pluginsManager, this.formManager, this.eventBus, this.scenarioManager, this.webServices, this.translateManager);
         // Dashboard manager
         this.dashboardManager = new DashboardManager.class(this.themeManager, this.webServices, this.translateManager, this.confManager);
         // Installation manager
@@ -142,12 +140,14 @@ class HautomationCore {
         // Avoid cycle of dependencies (bots)
         this.userManager.registerBotActions(this.botEngine);
 
-        // Device manager module
-        this.deviceManager = new DeviceManager.class(this.confManager, this.formManager, this.webServices, this.radioManager, this.dashboardManager, this.scenarioManager, this.translateManager, this.environmentManager, this.botEngine);
         // IoT manager
         this.iotManager = new IotManager.class(AppConfiguration, this.webServices, this.installationManager, this.formManager, this.environmentManager, this.confManager);
         // Sensors manager module
         this.sensorsManager = new SensorsManager.class(this.pluginsManager, this.eventBus, this.webServices, this.formManager, this.confManager, this.translateManager, this.themeManager, this.botEngine);
+        // RadioManager. The plugins manager will be set later, when the pluginsLoaded event will be triggered
+        this.radioManager = new RadioManager.class(this.pluginsManager, this.formManager, this.eventBus, this.scenarioManager, this.webServices, this.translateManager, this.sensorsManager);
+        // Device manager module
+        this.deviceManager = new DeviceManager.class(this.confManager, this.formManager, this.webServices, this.radioManager, this.dashboardManager, this.scenarioManager, this.translateManager, this.environmentManager, this.botEngine, this.sensorsManager);
         // Alarm module
         this.alarmManager = new AlarmManager.class(this.confManager, this.formManager, this.webServices, this.dashboardManager, this.userManager, this.sensorsManager, this.translateManager, this.deviceManager, this.messageManager, this.schedulerService, this.camerasManager);
         // Gateway manager module

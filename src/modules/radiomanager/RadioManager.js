@@ -14,6 +14,9 @@ const Cleaner = require("./../../utils/Cleaner");
 
 const ROUTE_GET_BASE_PATH = ":/radio/get/";
 const RADIO_PLUGIN_KEY = "radio";
+const ASSOCIATED_TYPE_DEVICE = "device";
+const ASSOCIATED_TYPE_SCENARIO = "scenario";
+const ASSOCIATED_TYPE_SENSOR = "sensor";
 
 /**
  * This class manage radio stuff
@@ -29,14 +32,17 @@ class RadioManager {
      * @param  {ScenarioManager} scenarioManager    The scenario manager
      * @param  {WebServices} webServices Web services instance
      * @param  {TranslateManager} translateManager Translate manager
+     * @param  {SensorsManager} sensorsManager Sensors manager
      * @returns {RadioManager}                The instance
      */
-    constructor(pluginsManager, formManager, eventBus, scenarioManager, webServices, translateManager) {
+    constructor(pluginsManager, formManager, eventBus, scenarioManager, webServices, translateManager, sensorsManager) {
         this.pluginsManager = pluginsManager;
         this.formManager = formManager;
         this.scenarioManager = scenarioManager;
         this.webServices = webServices;
         this.translateManager = translateManager;
+        this.deviceManager = null;
+        this.sensorsManager = sensorsManager;
 
         this.modules = [];
         this.protocols = [];
@@ -243,6 +249,86 @@ class RadioManager {
     }
 
     /**
+     * Get the associated items for specific radio informations
+     *
+     * @param  {string} module   The radio module
+     * @param  {string} protocol The radio protocol
+     * @param  {string} switchId The radio switch id
+     * @param  {string} deviceId The radio device id
+     * @param  {string} status   The radio status
+     * @return {Array}          An array ob objects containing 3 properties : `type`, `id` and `name`
+     */
+    getAssociatedItems(module, protocol, switchId, deviceId, status) {
+        const associatedItems = [];
+
+        // Device part
+        if (this.deviceManager) {
+            this.deviceManager.getDevices().forEach((device) => {
+                if (device.radio) {
+                    device.radio.forEach((deviceRadio) => {
+                        if (deviceRadio.module === module
+                            && deviceRadio.protocol === protocol
+                            && deviceRadio.deviceId === deviceId
+                            && deviceRadio.switchId === switchId) {
+                                associatedItems.push({
+                                    type:ASSOCIATED_TYPE_DEVICE,
+                                    id:device.id,
+                                    name:device.name
+                                });
+                            }
+                    });
+                }
+            });
+        }
+
+        // Scenario part
+        if (this.scenarioManager) {
+            this.scenarioManager.getScenarios().forEach((scenario) => {
+                if (scenario.RadioScenariosForm && scenario.RadioScenariosForm.radioScenariosForm) {
+                    scenario.RadioScenariosForm.radioScenariosForm.forEach((scenarioRadio) => {
+                        if (scenarioRadio.radio.module === module
+                            && scenarioRadio.radio.protocol === protocol
+                            && scenarioRadio.radio.deviceId === deviceId
+                            && scenarioRadio.radio.switchId === switchId
+                            && scenario.enabled
+                            && ((parseFloat(scenarioRadio.status) === parseFloat(scenarioRadio.STATUS_ALL)) || (parseFloat(scenarioRadio.status) === parseFloat(status)))) {
+                                associatedItems.push({
+                                    type:ASSOCIATED_TYPE_SCENARIO,
+                                    id:scenario.id,
+                                    name:scenario.name
+                                });
+                            }
+                    });
+
+                }
+            });
+        }
+
+        // Sensor part
+        if (this.sensorsManager) {
+            //console.log(this.sensorsManager.getSensorConfiguration());process.exit(0);
+            this.sensorsManager.getSensorConfiguration().forEach((sensor) => {
+                if (sensor.radio) {
+                    sensor.radio.forEach((sensorRadio) => {
+                        if (sensorRadio.module === module
+                            && sensorRadio.protocol === protocol
+                            && sensorRadio.deviceId === deviceId
+                            && sensorRadio.switchId === switchId) {
+                                associatedItems.push({
+                                    type:ASSOCIATED_TYPE_SENSOR,
+                                    id:sensor.id,
+                                    name:sensor.name
+                                });
+                            }
+                    });
+                }
+            });
+        }
+
+        return associatedItems;
+    }
+
+    /**
      * Process API callback
      *
      * @param  {APIRequest} apiRequest An APIRequest
@@ -255,6 +341,8 @@ class RadioManager {
             return new Promise((resolve) => {
                 self.getLastReceivedRadioInformations((objects) => {
                     const data = [];
+
+                    // Devices
                     objects.forEach((object) => {
                         data.push({
                             rawDate: object.timestamp,
@@ -265,7 +353,8 @@ class RadioManager {
                             deviceId: object.deviceId,
                             status: object.status,
                             value: object.value,
-                            description: null
+                            description: null,
+                            associated:self.getAssociatedItems(object.module, object.protocol, object.switchId, object.deviceId, object.status)
                         });
                     });
                     resolve(new APIResponse.class(true, data));
