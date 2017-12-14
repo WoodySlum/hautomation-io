@@ -3,7 +3,6 @@ const events = require("events");
 var core = null;
 const HautomationRunnerConstants = require("./HautomationRunnerConstants");
 
-
 /**
  * The runner class.
  * @class

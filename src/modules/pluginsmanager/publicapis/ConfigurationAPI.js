@@ -85,6 +85,30 @@ class ConfigurationAPI {
         return PrivateProperties.oprivate(this).formConfiguration.updateCb = cb;
     }
 
+    // ConfManager part if needs to manage manually configurations
+
+    /**
+     * Load data manually from file (Array or object)
+     *
+     * @param  {class} classType The object class. This class MUST implement a json() method to process JSON to Object mapping
+     * @param  {string} key A file store key
+     * @param  {boolean} [disableClassMapping=false] Disable class mapping
+     * @returns {Array}      An array of objects (instance of classType), or an object
+     */
+    loadData(classType, key, disableClassMapping = false) {
+        return PrivateProperties.oprivate(this).confManager.loadData(classType, key, disableClassMapping);
+    }
+
+    /**
+     * Save data manually for a specific key. Can throw error.
+     *
+     * @param  {Object} data A JS object
+     * @param  {string} key A file store key
+     */
+    saveData(data, key) {
+        PrivateProperties.oprivate(this).confManager.saveData(data, key);
+    }
+
 }
 
 module.exports = {class:ConfigurationAPI};

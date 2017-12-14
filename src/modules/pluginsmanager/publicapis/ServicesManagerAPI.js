@@ -30,6 +30,30 @@ class ServicesManagerAPI {
         this.services.push(service);
     }
 
+    /**
+     * Remove a service to services pool
+     *
+     * @param {Service} service A service
+     */
+    remove(service) {
+        service.stop();
+        PrivateProperties.oprivate(this).servicesManager.remove(service);
+
+
+        let i = 0;
+        let found = -1;
+        this.services.forEach((s) => {
+            if (s.name === service.name) {
+                found = i;
+            }
+            i++;
+        });
+
+        if (found >= 0) {
+            this.services.splice(found,1);
+        }
+    }
+
 }
 
 module.exports = {class:ServicesManagerAPI};

@@ -17,6 +17,8 @@
     -   [getConfiguration](#getconfiguration)
     -   [getForm](#getform)
     -   [setUpdateCb](#setupdatecb)
+    -   [loadData](#loaddata)
+    -   [saveData](#savedata)
 -   [FormConfiguration](#formconfiguration)
     -   [setUpdateCb](#setupdatecb-1)
     -   [addAdditionalFields](#addadditionalfields)
@@ -103,6 +105,7 @@
     -   [getIot](#getiot)
     -   [build](#build)
     -   [constants](#constants)
+    -   [getIots](#getiots)
 -   [MessageAPI](#messageapi)
     -   [sendMessage](#sendmessage)
     -   [register](#register-3)
@@ -162,6 +165,7 @@
 -   [id](#id)
 -   [ServicesManagerAPI](#servicesmanagerapi)
     -   [add](#add)
+    -   [remove](#remove-1)
 -   [ThemeAPI](#themeapi)
     -   [getColors](#getcolors)
 -   [TimeEventAPI](#timeeventapi)
@@ -244,6 +248,7 @@
     -   [register](#register-12)
     -   [unregister](#unregister-9)
     -   [setThreadsManager](#setthreadsmanager)
+    -   [setExternalTerminatedCommandCb](#setexternalterminatedcommandcb)
 -   [APIRequest](#apirequest)
     -   [method](#method)
     -   [ip](#ip)
@@ -377,6 +382,27 @@ Set the update callback. Called back when delete or save action is done.
 **Parameters**
 
 -   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback with data as parameter, e.g. `cb(data) => {}`
+
+### loadData
+
+Load data manually from file (Array or object)
+
+**Parameters**
+
+-   `classType` **class** The object class. This class MUST implement a json() method to process JSON to Object mapping
+-   `key` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A file store key
+-   `disableClassMapping` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Disable class mapping (optional, default `false`)
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** An array of objects (instance of classType), or an object
+
+### saveData
+
+Save data manually for a specific key. Can throw error.
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A JS object
+-   `key` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A file store key
 
 ## FormConfiguration
 
@@ -1203,6 +1229,16 @@ Get the constants `constants().PLATFORMS`, `constants().BOARDS` and `constants()
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The constants object
 
+### getIots
+
+Retrieve IoTs (not application, but configured instance)
+
+**Parameters**
+
+-   `app` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** An IoT app identifier (optional, default `null`)
+
+Returns **[array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** A list of IoT configuration objects
+
 ## MessageAPI
 
 Public API for messages
@@ -1678,6 +1714,14 @@ Add a service
 **Parameters**
 
 -   `service` **[Service](#service)** The service
+
+### remove
+
+Remove a service to services pool
+
+**Parameters**
+
+-   `service` **[Service](#service)** A service
 
 ## ThemeAPI
 
@@ -2319,6 +2363,14 @@ Set threads manager
 **Parameters**
 
 -   `threadsManager` **ThreadsManagaer** A threads manager
+
+### setExternalTerminatedCommandCb
+
+Set the callback when the external command is terminated
+
+**Parameters**
+
+-   `cb` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** A callback `(service, error)=>{}`
 
 ## APIRequest
 
