@@ -117,7 +117,6 @@ class SensorsManager {
     pluginsLoaded(pluginsManager, context) {
         context.pluginsManager = pluginsManager;
         context.initSensors();
-        this.registerSensorsListForm();
     }
 
     /**
@@ -137,6 +136,7 @@ class SensorsManager {
             names.push(sensor.name);
         });
         this.formManager.register(SensorsForm.class, ids, names);
+        this.registerSensorsListForm();
     }
 
     /**

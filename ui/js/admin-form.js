@@ -209,9 +209,20 @@ function adminFormReady(t) {
         loadTiles(item);
     }
 
-
     adminForm("devices");
+    $("#manageDevicesItem").click(function(e) {
+        adminForm("devices");
+    });
     adminForm("users");
+    $("#manageUsersItem").click(function(e) {
+        adminForm("users");
+    });
     adminForm("scenarios");
+    $("#manageActionsItem").click(function(e) {
+        adminForm("scenarios");
+    });
     adminForm("alarm");
+    $("#manageAlarmItem").click(function(e) {
+        adminForm("alarm");
+    });
 }
