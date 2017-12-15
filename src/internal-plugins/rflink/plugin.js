@@ -8,6 +8,7 @@ const crypto = require("crypto");
 const sha256 = require("sha256");
 
 const RFLINK_LAN_PORT = 9999;
+const RETRY_IN_SECONDS = 3;
 
 /**
  * Loaded plugin function
@@ -32,9 +33,10 @@ function loaded(api) {
          *
          * @param  {number} id The identifier
          * @param  {string} port The port
+         * @param  {number} retry Retry policy
          * @returns {RFlinkForm}        The instance
          */
-        constructor(id, port) {
+        constructor(id, port, retry) {
             super(id);
             /**
              * @Property("port");
@@ -44,6 +46,15 @@ function loaded(api) {
              * @EnumNames("getPortsName");
              */
             this.port = port;
+
+            /**
+             * @Property("retry");
+             * @Type("number");
+             * @Title("rflink.retry.policy");
+             * @Enum([0,1,2,3,4,5,10]);
+             * @EnumNames(["rflink.retry.policy.none", "rflink.retry.1s", "rflink.retry.2s", "rflink.retry.3s", "rflink.retry.4s", "rflink.retry.5s", "rflink.retry.10s"]);
+             */
+            this.retry = retry;
         }
 
         /**
@@ -73,7 +84,7 @@ function loaded(api) {
          * @returns {RFlinkForm}      An instance
          */
         json(data) {
-            return new RFlinkForm(data.id, data.port);
+            return new RFlinkForm(data.id, data.port, data.retry);
         }
     }
 
@@ -297,6 +308,12 @@ function loaded(api) {
         emit(frequency, protocol, deviceId, switchId, status = null, previousStatus = null) {
             const radioObject = super.emit(frequency, protocol, deviceId, switchId, status, previousStatus);
             this.service.send("rflinkSend", this.formatRadioObjectBeforeSending(radioObject));
+            const retry = (api.configurationAPI.getConfiguration() && api.configurationAPI.getConfiguration().retry)? parseInt(api.configurationAPI.getConfiguration().retry) : RETRY_IN_SECONDS;
+            if (retry > 0) {
+                setTimeout((self) => {
+                    self.service.send("rflinkSend", self.formatRadioObjectBeforeSending(radioObject));
+                }, retry * 1000, this);
+            }
             return radioObject;
         }
 

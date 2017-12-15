@@ -1,4 +1,12 @@
 {
     "rflink.update.message": "A new RFLink version has been installed",
-    "rflink.settings.port": "Pick RFLink port"
+    "rflink.settings.port": "Pick RFLink port",
+    "rflink.retry.policy": "Retry policy : Repeat send signal after x seconds. Sometimes the sensors will lock the RFLink and won't be able to transmit / receive anything for few seconds.",
+    "rflink.retry.policy.none": "No retry policy",
+    "rflink.retry.1s": "1 second",
+    "rflink.retry.2s": "2 seconds",
+    "rflink.retry.3s": "3 seconds",
+    "rflink.retry.4s": "4 seconds",
+    "rflink.retry.5s": "5 seconds",
+    "rflink.retry.10s": "10 seconds"
 }
