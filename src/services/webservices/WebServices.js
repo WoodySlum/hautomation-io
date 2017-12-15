@@ -1,6 +1,8 @@
 "use strict";
 const express = require("express");
 const compression = require("compression");
+const minify = require("express-minify");
+const uglifyEs = require("uglify-es");
 
 // Internal
 var Logger = require("./../../logger/Logger");
@@ -13,8 +15,11 @@ var Authentication = require("./../../modules/authentication/Authentication");
 
 // External
 var BodyParser = require("body-parser");
-var fs = require("fs");
+var fs = require("fs-extra");
+var http = require("https");
 var https = require("https");
+http.globalAgent.maxSockets = 20;
+https.globalAgent.maxSockets = 20;
 
 // Constants
 const CONTENT_TYPE = "content-type";
@@ -49,9 +54,10 @@ class WebServices extends Service.class {
      * @param  {string} [sslKey=null]   The path for SSL key
      * @param  {string} [sslCert=null]  The path for sslCert key
      * @param  {string} [enableCompression=true]  Enable gzip data compression
+     * @param  {string} [cachePath=null]  The cache path
      * @returns {WebServices}            The instance
      */
-    constructor(translateManager, port = 8080, sslPort = 8043, sslKey = null, sslCert = null, enableCompression = true) {
+    constructor(translateManager, port = 8080, sslPort = 8043, sslKey = null, sslCert = null, enableCompression = true, cachePath = null) {
         super("webservices");
         this.translateManager = translateManager;
         this.port = port;
@@ -61,6 +67,7 @@ class WebServices extends Service.class {
         this.sslKey = sslKey;
         this.sslCert = sslCert;
         this.fs = fs;
+        this.cachePath = cachePath;
         this.enableCompression = enableCompression;
     }
 
@@ -71,16 +78,17 @@ class WebServices extends Service.class {
         if (this.status != Service.RUNNING) {
             let endpoint = ENDPOINT_API;
             let instance = this;
+            let cachePath = null;
+
+            if (this.cachePath) {
+                cachePath = this.cachePath + "/express/";
+                fs.ensureDirSync(cachePath);
+            }
+
 
             this.app.use(BodyParser.json({limit: "2mb"}));
 
-            // Web UI
-            this.translateManager.addTranslations(__dirname + "/../../../ui");
-            this.app.use(BodyParser.urlencoded({ extended: false }));
-            this.app.use(ENDPOINT_LNG, function(req, res){
-                res.json(instance.translateManager.translations);
-            });
-            this.app.use(ENDPOINT_UI, express.static(__dirname + "/../../../ui"));
+            // Compression
             if (this.enableCompression) {
                 this.app.use(compression({filter: (req, res) => {
                     if (req.headers["x-no-compression"]) {
@@ -92,6 +100,27 @@ class WebServices extends Service.class {
                     return compression.filter(req, res);
                 }}));
             }
+
+            // Minify
+            this.app.use(minify({
+                cache: cachePath?cachePath:false,
+                uglifyJsModule: uglifyEs,
+                errorHandler: (errorInfo) => {
+                    Logger.err(errorInfo);
+                },
+                jsMatch: /javascript/,
+                cssMatch: /css/,
+                jsonMatch: false
+            }));
+
+            // Web UI
+            this.translateManager.addTranslations(__dirname + "/../../../ui");
+
+            this.app.use(BodyParser.urlencoded({ extended: false }));
+            this.app.use(ENDPOINT_LNG, function(req, res){
+                res.json(instance.translateManager.translations);
+            });
+            this.app.use(ENDPOINT_UI, express.static(__dirname + "/../../../ui"));
 
             // GET Apis
             this.app.get(endpoint + "*/", function(req, res) {
