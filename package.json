@@ -101,6 +101,8 @@
         "audiohub": "git://github.com/WoodySlum/audiohub#master",
         "snowboy": "^1.2",
         "string-similarity": "^1.2",
-        "node-gtts": "^2.0"
+        "node-gtts": "^2.0",
+        "express-minify": "^1.0",
+        "uglify-es": "^3.2"
     }
 }

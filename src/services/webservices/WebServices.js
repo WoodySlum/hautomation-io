@@ -1,6 +1,8 @@
 "use strict";
 const express = require("express");
 const compression = require("compression");
+const minify = require("express-minify");
+const uglifyEs = require("uglify-es");
 
 // Internal
 var Logger = require("./../../logger/Logger");
@@ -14,7 +16,10 @@ var Authentication = require("./../../modules/authentication/Authentication");
 // External
 var BodyParser = require("body-parser");
 var fs = require("fs");
+var http = require("https");
 var https = require("https");
+http.globalAgent.maxSockets = 20;
+https.globalAgent.maxSockets = 20;
 
 // Constants
 const CONTENT_TYPE = "content-type";
@@ -74,13 +79,17 @@ class WebServices extends Service.class {
 
             this.app.use(BodyParser.json({limit: "2mb"}));
 
+
+
             // Web UI
             this.translateManager.addTranslations(__dirname + "/../../../ui");
+
             this.app.use(BodyParser.urlencoded({ extended: false }));
             this.app.use(ENDPOINT_LNG, function(req, res){
                 res.json(instance.translateManager.translations);
             });
             this.app.use(ENDPOINT_UI, express.static(__dirname + "/../../../ui"));
+
             if (this.enableCompression) {
                 this.app.use(compression({filter: (req, res) => {
                     if (req.headers["x-no-compression"]) {
@@ -92,6 +101,19 @@ class WebServices extends Service.class {
                     return compression.filter(req, res);
                 }}));
             }
+
+            // Minify
+            this.app.use(minify({
+              cache: false,
+              uglifyJsModule: uglifyEs,
+              errorHandler: (errorInfo, callback) => {
+                  Logger.err(errorInfo);
+                  callback();
+              },
+              jsMatch: /javascript/,
+              cssMatch: /css/,
+              jsonMatch: false
+            }));
 
             // GET Apis
             this.app.get(endpoint + "*/", function(req, res) {
