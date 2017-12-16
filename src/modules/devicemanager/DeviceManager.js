@@ -238,9 +238,14 @@ class DeviceManager {
     switchAll(status) {
         const self = this;
 
+        let delay = 0;
         this.formConfiguration.getDataCopy().forEach((device) => {
             if (!device.excludeFromAll) {
-                self.switchDevice(device.id, status);
+                setTimeout(() => {
+                    self.switchDevice(device.id, status);
+                }, delay);
+
+                delay += 500;
             }
         });
     }
