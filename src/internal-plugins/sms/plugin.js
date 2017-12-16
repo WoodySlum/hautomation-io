@@ -305,7 +305,7 @@ curl -H "Content-Type: application/json" -X POST -k -L --data "{\\"data\\":{\\"f
          */
         sendMessage(recipients = "*", message) {
             this.api.userAPI.getUsers().forEach((user) => {
-                if (recipients === "*" || (recipients instanceof Array && recipients.indexOf(user.username) !== -1)) {
+                if (message && (recipients === "*" || (recipients instanceof Array && recipients.indexOf(user.username) !== -1))) {
                     if (this.gammuConfigFile && user.SMSUserForm && user.SMSUserForm.phoneNumber && user.SMSUserForm.phoneNumber.length > 0) {
                         this.sendSMS(user.SMSUserForm.phoneNumber.split(" ").join(""), message);
                     }
