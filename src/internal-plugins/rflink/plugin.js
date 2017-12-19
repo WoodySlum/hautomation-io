@@ -109,6 +109,7 @@ function loaded(api) {
             this.revision = null;
             this.ack = null;
             this.socatService = null;
+            this.retryList = {};
 
             const RFLinkService = RFLinkServiceClass(api);
             this.service = new RFLinkService(this);
@@ -310,7 +311,14 @@ function loaded(api) {
             this.service.send("rflinkSend", this.formatRadioObjectBeforeSending(radioObject));
             const retry = (api.configurationAPI.getConfiguration() && api.configurationAPI.getConfiguration().retry)? parseInt(api.configurationAPI.getConfiguration().retry) : RETRY_IN_SECONDS;
             if (retry > 0) {
-                setTimeout((self) => {
+
+                const retryHash = sha256(frequency?frequency.toString():"" + protocol?protocol.toString():"" + deviceId?deviceId.toString():"" + switchId?switchId.toString():"");
+                if (this.retryList[retryHash]) {
+                    clearTimeout(this.retryList[retryHash]);
+                }
+
+                this.retryList[retryHash] = setTimeout((self) => {
+                    self.retryList[retryHash] = null;
                     self.service.send("rflinkSend", self.formatRadioObjectBeforeSending(radioObject));
                 }, retry * 1000, this);
             }
