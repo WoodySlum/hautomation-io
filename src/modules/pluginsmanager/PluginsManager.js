@@ -52,7 +52,8 @@ const INTERNAL_PLUGINS = [
     "trash-reminder",
     "sms",
     "electric-sensor",
-    "enedis-linky-electric-sensor"
+    "enedis-linky-electric-sensor",
+    "esp8266-weather-station"
 ];
 
 /**
