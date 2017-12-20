@@ -11,10 +11,9 @@ test:
   stage: test
   script:
   - export NODE_TLS_REJECT_UNAUTHORIZED=0
-  - npm cache clean
   - npm config set strict-ssl false
   - rm -Rf package-lock.json
-  - npm --proxy http://192.168.0.2:6286 --https-proxy http://192.168.0.2:6286 --strict-ssl false install
+  - npm --proxy http://192.168.0.2:6286 --https-proxy http://192.168.0.2:6286 --strict-ssl false --no-cache install
   - npm run --verbose test-ci
   coverage: '/Statements   : \d+\.\d+/'
 
@@ -24,20 +23,18 @@ lint:
     - master
   script:
   - export NODE_TLS_REJECT_UNAUTHORIZED=0
-  - npm cache clean
   - npm config set strict-ssl false
   - rm -Rf package-lock.json
-  - npm --proxy http://192.168.0.2:6286 --https-proxy http://192.168.0.2:6286 --strict-ssl false install
+  - npm --proxy http://192.168.0.2:6286 --https-proxy http://192.168.0.2:6286 --strict-ssl false --no-cache install
   - npm run --verbose lint
 
 build:
   stage: build
   script:
   - export NODE_TLS_REJECT_UNAUTHORIZED=0
-  - npm cache clean
   - npm config set strict-ssl false
   - rm -Rf package-lock.json
-  - npm --proxy http://192.168.0.2:6286 --https-proxy http://192.168.0.2:6286 --strict-ssl false install
+  - npm --proxy http://192.168.0.2:6286 --https-proxy http://192.168.0.2:6286 --strict-ssl false --no-cache install
   - echo "{\"commit\":\"$(echo $CI_COMMIT_SHA | head -c8)\"}" > version.json
   - npm run --verbose build-arm
   artifacts:
