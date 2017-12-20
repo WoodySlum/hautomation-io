@@ -7,7 +7,7 @@
         "registry": "http://honey.hd.free.fr:4873"
     },
     "engines": {
-        "node": ">=6.0"
+        "node": "0.8.x"
     },
     "engineStrict": true,
     "scripts": {
