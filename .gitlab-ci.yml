@@ -11,6 +11,9 @@ test:
   stage: test
   script:
   - export NODE_TLS_REJECT_UNAUTHORIZED=0
+  - npm cache clean
+  - rm -rf ~/.npm
+  - npm update -g
   - npm config set strict-ssl false
   - rm -Rf package-lock.json
   - npm --proxy http://192.168.0.2:6286 --https-proxy http://192.168.0.2:6286 --strict-ssl false install
@@ -23,6 +26,9 @@ lint:
     - master
   script:
   - export NODE_TLS_REJECT_UNAUTHORIZED=0
+  - npm cache clean
+  - rm -rf ~/.npm
+  - npm update -g
   - npm config set strict-ssl false
   - rm -Rf package-lock.json
   - npm --proxy http://192.168.0.2:6286 --https-proxy http://192.168.0.2:6286 --strict-ssl false install
@@ -32,6 +38,9 @@ build:
   stage: build
   script:
   - export NODE_TLS_REJECT_UNAUTHORIZED=0
+  - npm cache clean
+  - rm -rf ~/.npm
+  - npm update -g
   - npm config set strict-ssl false
   - rm -Rf package-lock.json
   - npm --proxy http://192.168.0.2:6286 --https-proxy http://192.168.0.2:6286 --strict-ssl false install
