@@ -22,10 +22,6 @@ JsonVariant config;
 int poweredMode = POWER_MODE_SLEEP;
 int sleepTime = 60;
 
-
-// Measure vcc
-ADC_MODE(ADC_VCC);
-
 Hautomation::Hautomation()
 {
 

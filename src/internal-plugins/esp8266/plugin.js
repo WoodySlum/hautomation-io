@@ -73,7 +73,7 @@ function loaded(api) {
          */
         constructor(api) {
             this.api = api;
-            this.api.iotAPI.registerLib("app", "esp8266", 48, ESP8266Form);
+            this.api.iotAPI.registerLib("app", "esp8266", 49, ESP8266Form);
             this.api.webAPI.register(this, this.api.webAPI.constants().POST, WS_SENSOR_SET_ROUTE + "[id]/[type]/[value]/[vcc*]/", this.api.webAPI.Authentication().AUTH_LOCAL_NETWORK_LEVEL);
             this.api.webAPI.register(this, this.api.webAPI.constants().POST, WS_PING_ROUTE + "[id]/", this.api.webAPI.Authentication().AUTH_LOCAL_NETWORK_LEVEL);
             this.api.webAPI.register(this, this.api.webAPI.constants().GET, WS_FIRMWARE_ROUTE + "[id]/", this.api.webAPI.Authentication().AUTH_LOCAL_NETWORK_LEVEL);
