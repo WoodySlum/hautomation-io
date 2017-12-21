@@ -9,6 +9,7 @@ const sha256 = require("sha256");
 
 const RFLINK_LAN_PORT = 9999;
 const RETRY_IN_SECONDS = 3;
+const SEND_BUFFER_IN_MS = 500;
 
 /**
  * Loaded plugin function
@@ -110,6 +111,7 @@ function loaded(api) {
             this.ack = null;
             this.socatService = null;
             this.retryList = {};
+            this.nextSendingSlotCounter = 0;
 
             const RFLinkService = RFLinkServiceClass(api);
             this.service = new RFLinkService(this);
@@ -308,20 +310,30 @@ function loaded(api) {
         */
         emit(frequency, protocol, deviceId, switchId, status = null, previousStatus = null) {
             const radioObject = super.emit(frequency, protocol, deviceId, switchId, status, previousStatus);
-            this.service.send("rflinkSend", this.formatRadioObjectBeforeSending(radioObject));
-            const retry = (api.configurationAPI.getConfiguration() && api.configurationAPI.getConfiguration().retry)? parseInt(api.configurationAPI.getConfiguration().retry) : RETRY_IN_SECONDS;
-            if (retry > 0) {
 
-                const retryHash = sha256(frequency?frequency.toString():"" + protocol?protocol.toString():"" + deviceId?deviceId.toString():"" + switchId?switchId.toString():"");
-                if (this.retryList[retryHash]) {
-                    clearTimeout(this.retryList[retryHash]);
+            setTimeout((me) => {
+                me.service.send("rflinkSend", me.formatRadioObjectBeforeSending(radioObject));
+
+                // Retry policy
+                const retry = (api.configurationAPI.getConfiguration() && api.configurationAPI.getConfiguration().retry)? parseInt(api.configurationAPI.getConfiguration().retry) : RETRY_IN_SECONDS;
+
+                if (retry > 0) {
+                    const retryHash = sha256(frequency?frequency.toString():"" + protocol?protocol.toString():"" + deviceId?deviceId.toString():"" + switchId?switchId.toString():"");
+                    if (me.retryList[retryHash]) {
+                        clearTimeout(me.retryList[retryHash]);
+                    }
+
+                    me.retryList[retryHash] = setTimeout((self) => {
+                        self.retryList[retryHash] = null;
+                        self.service.send("rflinkSend", self.formatRadioObjectBeforeSending(radioObject));
+                    }, retry * 1000, me);
                 }
 
-                this.retryList[retryHash] = setTimeout((self) => {
-                    self.retryList[retryHash] = null;
-                    self.service.send("rflinkSend", self.formatRadioObjectBeforeSending(radioObject));
-                }, retry * 1000, this);
-            }
+                me.nextSendingSlotCounter--;
+            }, this.nextSendingSlotCounter * SEND_BUFFER_IN_MS, this)
+
+            this.nextSendingSlotCounter++;
+
             return radioObject;
         }
 
