@@ -3,9 +3,6 @@
     "version": "0.0.4",
     "description": "Hautomation core module",
     "main": "HautomationRunner.js",
-    "publishConfig": {
-        "registry": "http://honey.hd.free.fr:4873"
-    },
     "engines": {
         "node": "8.9.1"
     },
