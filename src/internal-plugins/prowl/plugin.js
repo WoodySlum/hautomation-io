@@ -8,7 +8,7 @@ const Prowler = require("prowler");
  */
 function loaded(api) {
     api.init();
-    
+
     /**
      * This class is extended by user form
      * @class
@@ -82,7 +82,7 @@ function loaded(api) {
                             "description": ""
                         });
                     } catch(e) {
-                        api.exported.Logger.err(e.message);
+                        api.exported.Logger.warn(e.message);
                     }
                 }
             });

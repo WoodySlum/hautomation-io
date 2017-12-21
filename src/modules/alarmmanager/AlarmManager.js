@@ -105,7 +105,7 @@ class AlarmManager {
                                         if (!err && generatedFilepath) {
                                             Logger.info("Recording session for alarm path : " + generatedFilepath);
                                         } else {
-                                            Logger.err(err);
+                                            Logger.err(err.message);
                                         }
 
                                     }, RECORDING_TIME);
