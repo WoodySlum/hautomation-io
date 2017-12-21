@@ -1,4 +1,6 @@
 "use strict";
+const path = require("path");
+
 const Logger = require("./../../logger/Logger");
 const WebServices = require("./../../services/webservices/WebServices");
 const Authentication = require("./../authentication/Authentication");
@@ -37,9 +39,10 @@ class AlarmManager {
      * @param  {MessageManager} messageManager  The message manager
      * @param  {SchedulerService} schedulerService  The Scheduler service
      * @param  {CamerasManager} camerasManager  The cameras manager
+     * @param  {BotEngine} botEngine  The bot engine
      * @returns {Alarm} The instance
      */
-    constructor(confManager, formManager, webServices, dashboardManager, userManager, sensorsManager, translateManager, deviceManager, messageManager, schedulerService, camerasManager) {
+    constructor(confManager, formManager, webServices, dashboardManager, userManager, sensorsManager, translateManager, deviceManager, messageManager, schedulerService, camerasManager, botEngine) {
         this.formConfiguration = new FormConfiguration.class(confManager, formManager, webServices, CONF_KEY, false, AlarmForm.class);
         this.confManager = confManager;
         this.webServices = webServices;
@@ -52,9 +55,11 @@ class AlarmManager {
         this.messageManager = messageManager;
         this.schedulerService = schedulerService;
         this.camerasManager = camerasManager;
+        this.botEngine = botEngine;
         this.formManager.register(AlarmSensorsForm.class);
         this.sensorsStatus = {};
         this.alarmTriggered = false;
+        this.armedSoundTimer = null;
 
         const self = this;
         this.userManager.registerHomeNotifications(() => {
@@ -168,6 +173,19 @@ class AlarmManager {
         this.armCancel();
         this.schedulerService.schedule(ARMED_IDENTIFIER, (DateUtils.class.timestamp() + ARMED_TIMER));
         Logger.info("Alarm will be armed at " + (DateUtils.class.timestamp() + ARMED_TIMER));
+
+        this.botEngine.textToSpeech(this.translateManager.t("alarm.armed.speak"));
+
+        this.armedSoundTimer = setInterval((self) => {
+            if (self.formConfiguration.data.enabled && !self.formConfiguration.data.armed) {
+                self.botEngine.playSound(path.resolve("./res/sounds/beep.mp3"));
+            }
+
+            if (self.armedSoundTimer && self.formConfiguration.data.armed) {
+                clearInterval(self.armedSoundTimer);
+                self.botEngine.textToSpeech(self.translateManager.t("alarm.enabled.speak"));
+            }
+        }, 2000, this);
     }
 
     /**
@@ -206,6 +224,7 @@ class AlarmManager {
             this.armCancel();
             this.registerTile();
             this.stopAlarm(); // Stop sirens and ...
+            this.botEngine.textToSpeech(this.translateManager.t("alarm.disabled.speak"));
         } else {
             Logger.info("Alarm already disabled");
         }

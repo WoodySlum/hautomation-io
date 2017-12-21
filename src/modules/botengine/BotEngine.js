@@ -79,19 +79,25 @@ class BotEngine {
      * Play the detection sound
      */
     playDetectionSound() {
-        if (!process.env.TEST) {
-            var audio = new audiohub({player: "mplayer"});
-            audio.play(path.resolve("./res/sounds/dong.wav"));
-        }
+        this.playSound(path.resolve("./res/sounds/dong.wav"));
     }
 
     /**
      * Play the end detection sound
      */
     playEndDetectionSound() {
+        this.playSound(path.resolve("./res/sounds/ding.wav"));
+    }
+
+    /**
+     * Play a sound
+     *
+     * @param  {string} soundPath The sound's file path
+     */
+    playSound(soundPath) {
         if (!process.env.TEST) {
             var audio = new audiohub({player: "mplayer"});
-            audio.play(path.resolve("./res/sounds/ding.wav"));
+            audio.play(soundPath);
         }
     }
 

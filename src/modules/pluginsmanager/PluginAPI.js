@@ -24,7 +24,8 @@ var CameraAPI = require("./publicapis/CameraAPI");
 var RadioAPI = require("./publicapis/RadioAPI");
 var EnvironmentAPI = require("./publicapis/EnvironmentAPI");
 var IotAPI = require("./publicapis/IotAPI");
-var IotForm = require("../iotmanager/IotForm");
+var IotForm = require("./../iotmanager/IotForm");
+var BotEngineAPI = require("./publicapis/BotEngineAPI");
 
 var DateUtils = require("./../../utils/DateUtils");
 var Icons = require("./../../utils/Icons");
@@ -63,9 +64,10 @@ class PluginsAPI {
     //  * @param  {EnvironmentManager} environmentManager The environment manager
     //  * @param  {PluginsManager} pluginsManager The plugins manager
     //  * @param  {IotManager} iotManager The IoT manager
+    //  * @param  {BotEngine} botEngine The IoT manager
     //  * @returns {PluginAPI}                  Insntance
     //  */
-    constructor(previousVersion, p, webServices, appConfiguration, servicesManager, dbManager, translateManager, formManager, confManager, timeEventService, schedulerService, dashboardManager, themeManager, sensorsManager, installationManager, userManager, messageManager, scenarioManager, alarmManager, camerasManager, radioManager, environmentManager, pluginsManager, iotManager) {
+    constructor(previousVersion, p, webServices, appConfiguration, servicesManager, dbManager, translateManager, formManager, confManager, timeEventService, schedulerService, dashboardManager, themeManager, sensorsManager, installationManager, userManager, messageManager, scenarioManager, alarmManager, camerasManager, radioManager, environmentManager, pluginsManager, iotManager, botEngine) {
         PrivateProperties.createPrivateState(this);
         this.previousVersion = previousVersion;
         this.p = p;
@@ -114,6 +116,7 @@ class PluginsAPI {
         this.radioAPI = new RadioAPI.class(radioManager);
         this.environmentAPI = new EnvironmentAPI.class(environmentManager);
         this.iotAPI = new IotAPI.class(iotManager);
+        this.botEngineAPI = new BotEngineAPI.class(botEngine);
         PrivateProperties.oprivate(this).pluginsManager = pluginsManager;
     }
 

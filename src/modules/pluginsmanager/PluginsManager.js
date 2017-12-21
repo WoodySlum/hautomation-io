@@ -87,9 +87,10 @@ class PluginsManager {
      * @param  {Object} appConfiguration The global configuration
      * @param  {EnvironmentManager} environmentManager The environment manager
      * @param  {IotManager} iotManager The IoT manager
+     * @param  {BotEngine} botEngine The bot engine
      * @returns {PluginsManager} The instance
      */
-    constructor(confManager, webServices, servicesManager, dbManager, translateManager, formManager, timeEventService, schedulerService, dashboardManager, eventBus, themeManager, sensorsManager, installationManager, userManager, messageManager, scenarioManager, alarmManager, camerasManager, radioManager, appConfiguration, environmentManager, iotManager) {
+    constructor(confManager, webServices, servicesManager, dbManager, translateManager, formManager, timeEventService, schedulerService, dashboardManager, eventBus, themeManager, sensorsManager, installationManager, userManager, messageManager, scenarioManager, alarmManager, camerasManager, radioManager, appConfiguration, environmentManager, iotManager, botEngine) {
         this.fs = fs;
         this.path = path;
         this.remi = remi;
@@ -115,6 +116,7 @@ class PluginsManager {
         this.appConfiguration = appConfiguration;
         this.environmentManager = environmentManager;
         this.iotManager = iotManager;
+        this.botEngine = botEngine;
 
         this.plugins = [];
         try {
@@ -232,7 +234,8 @@ class PluginsManager {
                 this.radioManager,
                 this.environmentManager,
                 this,
-                this.iotManager
+                this.iotManager,
+                this.botEngine
             );
 
             initializedPlugins.push(pApi);
