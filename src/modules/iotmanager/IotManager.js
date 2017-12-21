@@ -51,6 +51,7 @@ class IotManager {
         this.confManager = confManager;
         this.iotApps = {};
         this.iotLibs = {};
+        this.isBuildingApp = false;
 
         try {
             this.iots = this.confManager.loadData(Object, CONF_MANAGER_KEY, true);
@@ -228,59 +229,69 @@ class IotManager {
      * @param  {Function} cb            A callback `(error, result) => {}` called when firmware / flash is done. The result object contains 2 properties, `firmwarePath` for the firmware, `stdout` for the results
      */
     build(appId, flash = false, config = null, cb) {
-        const tmpDir = this.appConfiguration.cachePath + "iot-flash-" + DateUtils.class.timestamp() + "-" + appId + "/";
-        fs.ensureDirSync(tmpDir);
+        if (!this.isBuildingApp) {
+            this.isBuildingApp = true;
 
-        // Copy dependencies
-        this.iotApps[appId].dependencies.forEach((dependencyId) => {
-            const dependency = this.iotLibs[dependencyId];
-            fs.copySync(dependency.lib, tmpDir + LIB_FOLDER);
-            fs.copySync(dependency.globalLib, tmpDir + GLOBAL_LIB_FOLDER);
-        });
-        // Copy sources
-        fs.copySync(this.iotApps[appId].src, tmpDir + SRC_FOLDER);
-        fs.copySync(this.iotApps[appId].lib, tmpDir + LIB_FOLDER);
-        fs.copySync(this.iotApps[appId].globalLib, tmpDir + GLOBAL_LIB_FOLDER);
+            const tmpDir = this.appConfiguration.cachePath + "iot-flash-" + DateUtils.class.timestamp() + "-" + appId + "/";
+            fs.ensureDirSync(tmpDir);
 
-        // Configuration injection
-        const baseConfiguration = {
-            apiUrl:this.environmentManager.getLocalAPIUrl(),
-            version:this.getVersion(appId),
-            options:this.iotApps[appId].options
-        };
+            // Copy dependencies
+            this.iotApps[appId].dependencies.forEach((dependencyId) => {
+                const dependency = this.iotLibs[dependencyId];
+                fs.copySync(dependency.lib, tmpDir + LIB_FOLDER);
+                fs.copySync(dependency.globalLib, tmpDir + GLOBAL_LIB_FOLDER);
+            });
+            // Copy sources
+            fs.copySync(this.iotApps[appId].src, tmpDir + SRC_FOLDER);
+            fs.copySync(this.iotApps[appId].lib, tmpDir + LIB_FOLDER);
+            fs.copySync(this.iotApps[appId].globalLib, tmpDir + GLOBAL_LIB_FOLDER);
 
-        if (!config) {
-            config = {};
-        }
+            // Configuration injection
+            const baseConfiguration = {
+                apiUrl:this.environmentManager.getLocalAPIUrl(),
+                version:this.getVersion(appId),
+                options:this.iotApps[appId].options
+            };
 
-        // eslint-disable-next-line
-        const jsonConfiguration = JSON.stringify(Object.assign(baseConfiguration, config)).replace(/\"/g, '\\"');
-
-        try {
-            const mainFilePath = tmpDir + SRC_FOLDER + "/" + MAIN_FILE;
-            let mainContent = fs.readFileSync(mainFilePath, {encoding:"utf-8"});
-            if (mainContent) {
-                mainContent = mainContent.replace(CONFIGURATION_PLACEHOLDER, jsonConfiguration);
-                fs.writeFileSync(mainFilePath, mainContent);
+            if (!config) {
+                config = {};
             }
-        } catch(e) {
-            Logger.err(e.message);
-        }
 
-        this.writeDescriptor(tmpDir, appId);
+            // eslint-disable-next-line
+            const jsonConfiguration = JSON.stringify(Object.assign(baseConfiguration, config)).replace(/\"/g, '\\"');
 
-        this.installationManager.executeCommand("cd " + tmpDir + " ;platformio run -e " + this.iotApps[appId].board + (flash?" -t upload":""), false, (error, stdout, stderr) => {
-            if (error) {
-                cb(error);
-            } else {
-                const firmwarePath = tmpDir + ".pioenvs/" + this.iotApps[appId].board + "/firmware.bin";
-                if (fs.existsSync(firmwarePath)) {
-                    cb(null, {firmwarePath:firmwarePath, stdout:stdout});
-                } else {
-                    cb(Error("No build found - " + stderr + stdout));
+            try {
+                const mainFilePath = tmpDir + SRC_FOLDER + "/" + MAIN_FILE;
+                let mainContent = fs.readFileSync(mainFilePath, {encoding:"utf-8"});
+                if (mainContent) {
+                    mainContent = mainContent.replace(CONFIGURATION_PLACEHOLDER, jsonConfiguration);
+                    fs.writeFileSync(mainFilePath, mainContent);
                 }
+            } catch(e) {
+                Logger.err(e.message);
             }
-        });
+
+            this.writeDescriptor(tmpDir, appId);
+            const self = this;
+
+            this.installationManager.executeCommand("cd " + tmpDir + " ;platformio run -e " + this.iotApps[appId].board + (flash?" -t upload":""), false, (error, stdout, stderr) => {
+                if (error) {
+                    self.isBuildingApp = false;
+                    cb(error);
+                } else {
+                    const firmwarePath = tmpDir + ".pioenvs/" + this.iotApps[appId].board + "/firmware.bin";
+                    if (fs.existsSync(firmwarePath)) {
+                        self.isBuildingApp = false;
+                        cb(null, {firmwarePath:firmwarePath, stdout:stdout});
+                    } else {
+                        self.isBuildingApp = false;
+                        cb(Error("No build found - " + stderr + stdout));
+                    }
+                }
+            });
+        } else {
+            cb(Error("Build already running"));
+        }
     }
 
     /**

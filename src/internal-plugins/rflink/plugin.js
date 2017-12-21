@@ -330,7 +330,7 @@ function loaded(api) {
                 }
 
                 me.nextSendingSlotCounter--;
-            }, this.nextSendingSlotCounter * SEND_BUFFER_IN_MS, this)
+            }, this.nextSendingSlotCounter * SEND_BUFFER_IN_MS, this);
 
             this.nextSendingSlotCounter++;
 
