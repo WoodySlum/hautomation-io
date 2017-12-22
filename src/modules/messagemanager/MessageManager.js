@@ -225,7 +225,7 @@ class MessageManager {
             return new Promise((resolve, reject) => {
                 self.getLastTimestamp((err, timestamp) => {
                     self.onMessageReceived(apiRequest.authenticationData.username, apiRequest.data.message, () => {
-                        console.log(err);
+                        Logger.err(err.message);
                         if (err) {
                             resolve(new APIResponse.class(true, []));
                         } else {

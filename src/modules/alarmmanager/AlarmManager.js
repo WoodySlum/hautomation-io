@@ -185,7 +185,7 @@ class AlarmManager {
                 clearInterval(self.armedSoundTimer);
                 self.botEngine.textToSpeech(self.translateManager.t("alarm.enabled.speak"));
             }
-        }, 2000, this);
+        }, 5000, this);
     }
 
     /**
