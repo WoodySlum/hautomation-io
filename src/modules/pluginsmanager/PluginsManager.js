@@ -105,6 +105,7 @@ class PluginsManager {
         this.timeEventService = timeEventService;
         this.schedulerService = schedulerService;
         this.dashboardManager = dashboardManager;
+        this.eventBus = eventBus;
         this.themeManager = themeManager;
         this.sensorsManager = sensorsManager;
         this.installationManager = installationManager;
@@ -128,8 +129,8 @@ class PluginsManager {
 
         this.load();
         // Dispatch event
-        if (eventBus) {
-            eventBus.emit(EVENT_LOADED, this);
+        if (this.eventBus) {
+            this.eventBus.emit(EVENT_LOADED, this);
         }
 
         // Register plugins WS
@@ -236,7 +237,8 @@ class PluginsManager {
                 this.environmentManager,
                 this,
                 this.iotManager,
-                this.botEngine
+                this.botEngine,
+                this.eventBus
             );
 
             initializedPlugins.push(pApi);

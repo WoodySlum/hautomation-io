@@ -1,7 +1,8 @@
 /* eslint-disable */
 "use strict";
 
-const REBOOT_ACTION = "/reboot/";
+const REBOOT_ACTION = "/hard-reboot/";
+const SOFT_REBOOT_ACTION = "/soft-reboot/";
 
 function loaded(api) {
     api.init();
@@ -15,7 +16,8 @@ function loaded(api) {
          */
         constructor(api) {
             this.api = api;
-            this.api.webAPI.register(this, api.webAPI.constants().POST, ":" + REBOOT_ACTION, api.webAPI.constants().AUTH_USAGE_LEVEL);
+            this.api.webAPI.register(this, api.webAPI.constants().POST, ":" + REBOOT_ACTION, api.webAPI.constants().AUTH_ADMIN_LEVEL);
+            this.api.webAPI.register(this, api.webAPI.constants().POST, ":" + SOFT_REBOOT_ACTION, api.webAPI.constants().AUTH_USAGE_LEVEL);
             this.registerTile();
         }
 
@@ -23,9 +25,10 @@ function loaded(api) {
          * Register a reboot tile
          */
         registerTile() {
-            // Register a tile
-            const tile = this.api.dashboardAPI.Tile("reboot-master", this.api.dashboardAPI.TileType().TILE_GENERIC_ACTION, this.api.exported.Icons.class.list()["map-pin"], null, "Reboot", null, null, null, 0, 999999, REBOOT_ACTION);
-            this.api.dashboardAPI.registerTile(tile);
+            const tile1 = this.api.dashboardAPI.Tile("reboot-soft", this.api.dashboardAPI.TileType().TILE_GENERIC_ACTION, this.api.exported.Icons.class.list()["undo"], null, this.api.translateAPI.t("soft.reboot"), null, null, null, 0, 999998, SOFT_REBOOT_ACTION);
+            this.api.dashboardAPI.registerTile(tile1);
+            const tile2 = this.api.dashboardAPI.Tile("reboot-hard", this.api.dashboardAPI.TileType().TILE_GENERIC_ACTION, this.api.exported.Icons.class.list()["retweet"], null, this.api.translateAPI.t("hard.reboot"), null, null, null, 0, 999999, REBOOT_ACTION);
+            this.api.dashboardAPI.registerTile(tile2);
         }
 
         /**
@@ -40,6 +43,15 @@ function loaded(api) {
                 return new Promise((resolve, reject) => {
                     setTimeout((me) => {
                         me.api.installerAPI.executeCommand("sudo shutdown -r now");
+                    }, 1000, self);
+                    resolve(self.api.webAPI.APIResponse(true, {success:true}));
+                });
+            }
+
+            if (apiRequest.route === ":" + SOFT_REBOOT_ACTION) {
+                return new Promise((resolve, reject) => {
+                    setTimeout((me) => {
+                        me.api.coreAPI.dispatchEvent(me.api.exported.HautomationRunnerConstants.RESTART);
                     }, 1000, self);
                     resolve(self.api.webAPI.APIResponse(true, {success:true}));
                 });

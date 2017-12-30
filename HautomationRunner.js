@@ -46,6 +46,12 @@ class HautomationRunner {
     stop(self) {
         if (self.core) {
             self.core.stop();
+            self.runnerEventBus.eventNames().forEach((eventName) => {
+                if (eventName !== HautomationRunnerConstants.RESTART) {
+                    self.runnerEventBus.removeAllListeners(eventName);
+                }
+            });
+
             self.core = null;
         }
     }

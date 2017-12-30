@@ -26,11 +26,13 @@ var EnvironmentAPI = require("./publicapis/EnvironmentAPI");
 var IotAPI = require("./publicapis/IotAPI");
 var IotForm = require("./../iotmanager/IotForm");
 var BotEngineAPI = require("./publicapis/BotEngineAPI");
+var CoreAPI = require("./publicapis/CoreAPI");
 
 var DateUtils = require("./../../utils/DateUtils");
 var Icons = require("./../../utils/Icons");
 var ImageUtils = require("./../../utils/ImageUtils");
 var Cleaner = require("./../../utils/Cleaner");
+var HautomationRunnerConstants = require("./../../../HautomationRunnerConstants");
 
 /**
  * This class is an interface for plugins
@@ -65,9 +67,10 @@ class PluginsAPI {
     //  * @param  {PluginsManager} pluginsManager The plugins manager
     //  * @param  {IotManager} iotManager The IoT manager
     //  * @param  {BotEngine} botEngine The IoT manager
+    //  * @param  {EventEmitter} eventBus The event bus
     //  * @returns {PluginAPI}                  Insntance
     //  */
-    constructor(previousVersion, p, webServices, appConfiguration, servicesManager, dbManager, translateManager, formManager, confManager, timeEventService, schedulerService, dashboardManager, themeManager, sensorsManager, installationManager, userManager, messageManager, scenarioManager, alarmManager, camerasManager, radioManager, environmentManager, pluginsManager, iotManager, botEngine) {
+    constructor(previousVersion, p, webServices, appConfiguration, servicesManager, dbManager, translateManager, formManager, confManager, timeEventService, schedulerService, dashboardManager, themeManager, sensorsManager, installationManager, userManager, messageManager, scenarioManager, alarmManager, camerasManager, radioManager, environmentManager, pluginsManager, iotManager, botEngine, eventBus) {
         PrivateProperties.createPrivateState(this);
         this.previousVersion = previousVersion;
         this.p = p;
@@ -93,7 +96,8 @@ class PluginsAPI {
             {Logger: Logger},
             {Cleaner: Cleaner},
             {cachePath:appConfiguration.cachePath},
-            {IotForm:IotForm.class}
+            {IotForm:IotForm.class},
+            {HautomationRunnerConstants:HautomationRunnerConstants}
         );
 
         // API part
@@ -117,6 +121,7 @@ class PluginsAPI {
         this.environmentAPI = new EnvironmentAPI.class(environmentManager);
         this.iotAPI = new IotAPI.class(iotManager);
         this.botEngineAPI = new BotEngineAPI.class(botEngine);
+        this.coreAPI = new CoreAPI.class(eventBus);
         PrivateProperties.oprivate(this).pluginsManager = pluginsManager;
     }
 

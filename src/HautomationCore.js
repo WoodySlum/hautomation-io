@@ -2,7 +2,6 @@
 const fs = require("fs-extra");
 const path = require("path");
 const Logger = require("./logger/Logger");
-const HautomationRunnerConstants = require("./../HautomationRunnerConstants");
 const ServicesManager = require("./modules/servicesmanager/ServicesManager");
 const ThreadsManager = require("./modules/threadsmanager/ThreadsManager");
 const WebServices = require("./services/webservices/WebServices");
@@ -73,8 +72,9 @@ class HautomationCore {
         fs.ensureDirSync(AppConfiguration.configurationPath);
         fs.ensureDirSync(AppConfiguration.cachePath);
 
-        this.eventBus = new events.EventEmitter();
+
         this.runnerEventBus = runnerEventBus;
+        this.eventBus = this.runnerEventBus?this.runnerEventBus:new events.EventEmitter();
 
         // Load main configuration
         this.configurationLoader();
@@ -161,25 +161,9 @@ class HautomationCore {
         this.servicesManager.add(this.timeEventService);
         this.servicesManager.add(this.schedulerService);
 
-        const self = this;
-        this.eventBus.on(PluginsManager.EVENT_RESTART, () => {
-            self.restart();
-        });
-
         // Install dependencies
         if (!process.env.TEST) {
             CoreInstaller.install(this.installationManager);
-        }
-    }
-
-    /**
-     * Restart core
-     */
-    restart() {
-        if (this.runnerEventBus) {
-            this.runnerEventBus.emit(HautomationRunnerConstants.RESTART, {});
-        } else {
-            Logger.err("Could not restart (no event bus)");
         }
     }
 
