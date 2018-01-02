@@ -4,7 +4,8 @@ const TimeEventService = require("./../../services/timeeventservice/TimeEventSer
 const sha256 = require("sha256");
 const request = require("request");
 const GATEWAY_MODE = 1;
-const GATEWAY_URL = "http://www.hautomation-io.com/api/ping/";
+const GATEWAY_URL = "https://api.hautomation-io.com/ping/";
+// const GATEWAY_URL = "http://api.domain.net:8081/ping/";
 
 /**
  * This class manage gateway communications
