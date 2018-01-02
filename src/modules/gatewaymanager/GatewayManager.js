@@ -4,7 +4,7 @@ const TimeEventService = require("./../../services/timeeventservice/TimeEventSer
 const sha256 = require("sha256");
 const request = require("request");
 const GATEWAY_MODE = 1;
-const GATEWAY_URL = "https://www.hautomation.net/services/";
+const GATEWAY_URL = "http://www.hautomation-io.com/api/ping/";
 
 /**
  * This class manage gateway communications
@@ -16,14 +16,16 @@ class GatewayManager {
      *
      * @param  {EnvironmentManager} environmentManager The environment manager
      * @param  {string} version Hautomation version
+     * @param  {string} hash Hautomation commit hash
      * @param  {TimeEventService} timeEventService Time event service
      * @param  {Object} appConfiguration App configuration
      *
      * @returns {GatewayManager} The instance
      */
-    constructor(environmentManager, version, timeEventService, appConfiguration) {
+    constructor(environmentManager, version, hash, timeEventService, appConfiguration) {
         this.environmentManager = environmentManager;
         this.version = version;
+        this.hash = hash;
         this.timeEventService = timeEventService;
         this.appConfiguration = appConfiguration;
         Logger.info("Hautomation ID : " + this.getHautomationId());
@@ -54,7 +56,7 @@ class GatewayManager {
     transmit() {
         const headers = {
             "User-Agent":       "Hautomation/" + this.version,
-            "Content-Type":     "application/x-www-form-urlencoded"
+            "Content-Type":     "application/json"
         };
 
         // Configure the request
@@ -63,11 +65,11 @@ class GatewayManager {
             port: 443,
             method: "POST",
             headers: headers,
-            form: {
+            json: {
                 hautomationId: this.getHautomationId(),
                 port: (this.appConfiguration.ssl && this.appConfiguration.ssl.port)?this.appConfiguration.ssl.port:this.appConfiguration.port,
-                method: "register",
-                version: 0,
+                version: this.version,
+                hash: this.hash,
                 localIp: this.environmentManager.getLocalIp(),
                 gatewayMode: GATEWAY_MODE
             }

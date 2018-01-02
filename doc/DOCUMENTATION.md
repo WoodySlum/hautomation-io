@@ -9,7 +9,6 @@
     -   [getIconsLabels](#geticonslabels)
 -   [IconFormManager](#iconformmanager)
 -   [HautomationCore](#hautomationcore)
-    -   [restart](#restart)
     -   [start](#start)
     -   [stop](#stop)
     -   [configurationLoader](#configurationloader)
@@ -172,6 +171,9 @@
     -   [constants](#constants-1)
     -   [register](#register-1)
     -   [unregister](#unregister-1)
+-   [constructor](#constructor)
+-   [registerTile](#registertile)
+-   [processAPI](#processapi-2)
 -   [RFlinkForm](#rflinkform)
     -   [port](#port-1)
     -   [retry](#retry)
@@ -233,7 +235,7 @@
     -   [generateGammuReceiveSh](#generategammureceivesh)
     -   [sendSMS](#sendsms)
     -   [sendMessage](#sendmessage-1)
-    -   [processAPI](#processapi-2)
+    -   [processAPI](#processapi-3)
 -   [SMSService](#smsservice)
 -   [SumppleCameraForm](#sumpplecameraform)
     -   [json](#json-22)
@@ -279,7 +281,7 @@
     -   [json](#json-28)
 -   [AlarmManager](#alarmmanager)
     -   [sensorReadyForTriggering](#sensorreadyfortriggering)
-    -   [registerTile](#registertile)
+    -   [registerTile](#registertile-1)
     -   [alarmStatus](#alarmstatus)
     -   [armAlarm](#armalarm)
     -   [armCancel](#armcancel)
@@ -287,7 +289,7 @@
     -   [disableAlarm](#disablealarm)
     -   [triggerAlarm](#triggeralarm)
     -   [stopAlarm](#stopalarm)
-    -   [processAPI](#processapi-3)
+    -   [processAPI](#processapi-4)
 -   [AlarmSensorsForm](#alarmsensorsform)
     -   [sensor](#sensor-1)
     -   [triggerAlarm](#triggeralarm-1)
@@ -302,6 +304,7 @@
 -   [BotEngine](#botengine)
     -   [playDetectionSound](#playdetectionsound)
     -   [playEndDetectionSound](#playenddetectionsound)
+    -   [playSound](#playsound)
     -   [voiceDetect](#voicedetect)
     -   [textToSpeech](#texttospeech)
     -   [speechToText](#speechtotext)
@@ -324,8 +327,8 @@
     -   [initCameras](#initcameras)
     -   [initCamera](#initcamera)
     -   [getAllCameras](#getallcameras)
-    -   [registerTile](#registertile-1)
-    -   [processAPI](#processapi-4)
+    -   [registerTile](#registertile-2)
+    -   [processAPI](#processapi-5)
     -   [comparator](#comparator)
     -   [getCameraConfiguration](#getcameraconfiguration)
     -   [registerCamerasListForm](#registercameraslistform)
@@ -355,11 +358,11 @@
     -   [setData](#setdata)
     -   [removeData](#removedata)
 -   [DashboardManager](#dashboardmanager)
-    -   [registerTile](#registertile-2)
+    -   [registerTile](#registertile-3)
     -   [unregisterTile](#unregistertile)
     -   [filterTiles](#filtertiles)
     -   [buildDashboard](#builddashboard)
-    -   [processAPI](#processapi-5)
+    -   [processAPI](#processapi-6)
 -   [Tile](#tile)
     -   [get](#get)
 -   [DbHelper](#dbhelper)
@@ -436,7 +439,7 @@
     -   [registerDeviceTile](#registerdevicetile)
     -   [switchDevice](#switchdevice)
     -   [switchAll](#switchall)
-    -   [processAPI](#processapi-6)
+    -   [processAPI](#processapi-7)
 -   [DevicesListForm](#deviceslistform)
     -   [identifier](#identifier-1)
     -   [status](#status-2)
@@ -458,7 +461,7 @@
 -   [EnvironmentManager](#environmentmanager)
     -   [registerDayNightNotifications](#registerdaynightnotifications)
     -   [unregisterDayNightNotifications](#unregisterdaynightnotifications)
-    -   [registerTile](#registertile-3)
+    -   [registerTile](#registertile-4)
     -   [getCoordinates](#getcoordinates)
     -   [dispatchDayNightChange](#dispatchdaynightchange)
     -   [setDay](#setday)
@@ -476,7 +479,7 @@
     -   [save](#save-2)
     -   [comparator](#comparator-1)
     -   [registerForm](#registerform)
-    -   [processAPI](#processapi-7)
+    -   [processAPI](#processapi-8)
     -   [getDataCopy](#getdatacopy)
     -   [getConfig](#getconfig)
     -   [getForm](#getform)
@@ -502,7 +505,7 @@
     -   [execute](#execute)
     -   [isAlreadyExecuted](#isalreadyexecuted)
     -   [isValidForArchitecture](#isvalidforarchitecture)
-    -   [restart](#restart-1)
+    -   [restart](#restart)
 -   [IotForm](#iotform)
     -   [iotApp](#iotapp)
     -   [name](#name-5)
@@ -519,7 +522,7 @@
     -   [getIotApp](#getiotapp)
     -   [getIot](#getiot)
     -   [getIots](#getiots)
-    -   [processAPI](#processapi-8)
+    -   [processAPI](#processapi-9)
     -   [comparator](#comparator-2)
 -   [IotsListForm](#iotslistform)
     -   [identifier](#identifier-2)
@@ -541,7 +544,7 @@
     -   [onMessageReceived](#onmessagereceived-2)
     -   [getMessages](#getmessages)
     -   [getLastTimestamp](#getlasttimestamp)
-    -   [processAPI](#processapi-9)
+    -   [processAPI](#processapi-10)
 -   [PluginsAPI](#pluginsapi)
     -   [exportClass](#exportclass)
     -   [init](#init-3)
@@ -560,11 +563,16 @@
     -   [prepareToposortArray](#preparetoposortarray)
     -   [toposort](#toposort)
     -   [topsortedArrayConverter](#topsortedarrayconverter)
-    -   [processAPI](#processapi-10)
+    -   [processAPI](#processapi-11)
 -   [AlarmAPI](#alarmapi)
     -   [alarmStatus](#alarmstatus-1)
     -   [enableAlarm](#enablealarm-1)
     -   [disableAlarm](#disablealarm-1)
+-   [BotEngineAPI](#botengineapi)
+    -   [playSound](#playsound-1)
+    -   [textToSpeech](#texttospeech-1)
+    -   [registerBotAction](#registerbotaction-1)
+    -   [unregisterBotAction](#unregisterbotaction-1)
 -   [CameraAPI](#cameraapi)
     -   [registerForm](#registerform-1)
     -   [registerClass](#registerclass)
@@ -578,8 +586,11 @@
     -   [setUpdateCb](#setupdatecb-1)
     -   [loadData](#loaddata-1)
     -   [saveData](#savedata-1)
+-   [CoreAPI](#coreapi)
+    -   [dispatchEvent](#dispatchevent)
+    -   [registerEvent](#registerevent)
 -   [DashboardAPI](#dashboardapi)
-    -   [registerTile](#registertile-4)
+    -   [registerTile](#registertile-5)
     -   [unregisterTile](#unregistertile-1)
     -   [Tile](#tile-1)
     -   [TileType](#tiletype)
@@ -681,7 +692,7 @@
     -   [switchDevice](#switchdevice-1)
     -   [getLastReceivedRadioInformations](#getlastreceivedradioinformations-1)
     -   [getAssociatedItems](#getassociateditems)
-    -   [processAPI](#processapi-11)
+    -   [processAPI](#processapi-12)
 -   [RadioScenarioForm](#radioscenarioform)
     -   [radioForm](#radioform-1)
     -   [status](#status-3)
@@ -737,7 +748,7 @@
     -   [getAllSensors](#getallsensors)
     -   [onNewSensorValue](#onnewsensorvalue)
     -   [getValue](#getvalue-1)
-    -   [processAPI](#processapi-12)
+    -   [processAPI](#processapi-13)
     -   [statisticsWsResponse](#statisticswsresponse)
     -   [comparator](#comparator-3)
     -   [getSensorConfiguration](#getsensorconfiguration)
@@ -748,7 +759,7 @@
     -   [remove](#remove-2)
     -   [start](#start-2)
     -   [stop](#stop-1)
-    -   [restart](#restart-2)
+    -   [restart](#restart-1)
     -   [getService](#getservice)
 -   [ThemeManager](#thememanager)
     -   [getColors](#getcolors-1)
@@ -782,7 +793,7 @@
     -   [setUserZone](#setuserzone)
     -   [registerHomeNotifications](#registerhomenotifications-1)
     -   [unregisterHomeNotifications](#unregisterhomenotifications-1)
-    -   [processAPI](#processapi-13)
+    -   [processAPI](#processapi-14)
     -   [registerBotActions](#registerbotactions)
 -   [UserScenarioForm](#userscenarioform)
     -   [mode](#mode)
@@ -810,7 +821,7 @@
     -   [startExternal](#startexternal)
     -   [stopExternal](#stopexternal)
     -   [stop](#stop-3)
-    -   [restart](#restart-3)
+    -   [restart](#restart-2)
     -   [status](#status-4)
     -   [register](#register-17)
     -   [unregister](#unregister-12)
@@ -850,7 +861,7 @@
     -   [start](#start-6)
     -   [stop](#stop-5)
     -   [registerInfos](#registerinfos)
-    -   [processAPI](#processapi-14)
+    -   [processAPI](#processapi-15)
     -   [register](#register-19)
     -   [unregister](#unregister-14)
     -   [registerAPI](#registerapi)
@@ -941,10 +952,6 @@ The main class for core.
 **Parameters**
 
 -   `runnerEventBus`  
-
-### restart
-
-Restart core
 
 ### start
 
@@ -2143,6 +2150,30 @@ Unregister an object to radio events
 
 -   `o` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** An object that implements callback
 
+## constructor
+
+Constructor
+
+**Parameters**
+
+-   `api` **PluginAPI** A plugin api
+
+Returns **Reboot** The instance
+
+## registerTile
+
+Register a reboot tile
+
+## processAPI
+
+Process API callback
+
+**Parameters**
+
+-   `apiRequest` **[APIRequest](#apirequest)** An APIRequest
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with an APIResponse object
+
 ## RFlinkForm
 
 **Extends api.exported.FormObject.class**
@@ -3022,6 +3053,7 @@ This class allows to manage alarm (nable, disable, ...)
 -   `messageManager`  
 -   `schedulerService`  
 -   `camerasManager`  
+-   `botEngine`  
 
 ### sensorReadyForTriggering
 
@@ -3167,6 +3199,14 @@ Play the detection sound
 ### playEndDetectionSound
 
 Play the end detection sound
+
+### playSound
+
+Play a sound
+
+**Parameters**
+
+-   `soundPath` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The sound's file path
 
 ### voiceDetect
 
@@ -5285,6 +5325,8 @@ This class is an interface for plugins
 -   `environmentManager`  
 -   `pluginsManager`  
 -   `iotManager`  
+-   `botEngine`  
+-   `eventBus`  
 
 ### exportClass
 
@@ -5363,6 +5405,7 @@ This class manage plugins
 -   `appConfiguration`  
 -   `environmentManager`  
 -   `iotManager`  
+-   `botEngine`  
 
 ### getPluginsFromDirectory
 
@@ -5494,6 +5537,47 @@ Enable alarm
 
 Disable alarm
 
+## BotEngineAPI
+
+Public API for bot engine
+
+**Parameters**
+
+-   `botEngine`  
+
+### playSound
+
+Play a sound
+
+**Parameters**
+
+-   `soundPath` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The sound's file path
+
+### textToSpeech
+
+Speech some text
+
+**Parameters**
+
+-   `text` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** A text
+
+### registerBotAction
+
+Register a bot action
+
+**Parameters**
+
+-   `actionKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The action key
+-   `cb` **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** The callback to implement : `(action, value, type, confidence, sender, cb) => {cb("Job done !");}`
+
+### unregisterBotAction
+
+Unregister a bot action
+
+**Parameters**
+
+-   `actionKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The action key
+
 ## CameraAPI
 
 Public API for camera
@@ -5609,6 +5693,32 @@ Save data manually for a specific key. Can throw error.
 
 -   `data` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** A JS object
 -   `key` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** A file store key
+
+## CoreAPI
+
+Public API for core
+
+**Parameters**
+
+-   `eventBus`  
+
+### dispatchEvent
+
+Dispatch an event through all registered modules
+
+**Parameters**
+
+-   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** An event name
+-   `data` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some data (optional, default `null`)
+
+### registerEvent
+
+Register to a specific event
+
+**Parameters**
+
+-   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The event's name
+-   `cb` **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** A callback \`(data) => {}``
 
 ## DashboardAPI
 

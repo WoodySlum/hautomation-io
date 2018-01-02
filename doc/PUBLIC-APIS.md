@@ -6,6 +6,11 @@
     -   [alarmStatus](#alarmstatus)
     -   [enableAlarm](#enablealarm)
     -   [disableAlarm](#disablealarm)
+-   [BotEngineAPI](#botengineapi)
+    -   [playSound](#playsound)
+    -   [textToSpeech](#texttospeech)
+    -   [registerBotAction](#registerbotaction)
+    -   [unregisterBotAction](#unregisterbotaction)
 -   [CameraAPI](#cameraapi)
     -   [registerForm](#registerform)
     -   [registerClass](#registerclass)
@@ -31,6 +36,9 @@
     -   [getDataCopy](#getdatacopy)
     -   [getConfig](#getconfig)
     -   [getForm](#getform-1)
+-   [CoreAPI](#coreapi)
+    -   [dispatchEvent](#dispatchevent)
+    -   [registerEvent](#registerevent)
 -   [DashboardAPI](#dashboardapi)
     -   [registerTile](#registertile)
     -   [unregisterTile](#unregistertile)
@@ -288,6 +296,47 @@ Enable alarm
 
 Disable alarm
 
+## BotEngineAPI
+
+Public API for bot engine
+
+**Parameters**
+
+-   `botEngine`  
+
+### playSound
+
+Play a sound
+
+**Parameters**
+
+-   `soundPath` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The sound's file path
+
+### textToSpeech
+
+Speech some text
+
+**Parameters**
+
+-   `text` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** A text
+
+### registerBotAction
+
+Register a bot action
+
+**Parameters**
+
+-   `actionKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The action key
+-   `cb` **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** The callback to implement : `(action, value, type, confidence, sender, cb) => {cb("Job done !");}`
+
+### unregisterBotAction
+
+Unregister a bot action
+
+**Parameters**
+
+-   `actionKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The action key
+
 ## CameraAPI
 
 Public API for camera
@@ -499,6 +548,32 @@ Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/G
 Return the form
 
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** A formatted form object
+
+## CoreAPI
+
+Public API for core
+
+**Parameters**
+
+-   `eventBus`  
+
+### dispatchEvent
+
+Dispatch an event through all registered modules
+
+**Parameters**
+
+-   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** An event name
+-   `data` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some data (optional, default `null`)
+
+### registerEvent
+
+Register to a specific event
+
+**Parameters**
+
+-   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The event's name
+-   `cb` **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** A callback \`(data) => {}``
 
 ## DashboardAPI
 
