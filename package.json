@@ -26,7 +26,7 @@
             "./src/**/*.js"
         ],
         "assets": [
-            "./src/internal-plugins/**/*.js",
+            "./node_modules/ngrok/bin/ngrok",
             "./node_modules/threads/lib/worker.node/slave.js",
             "./**/*.json",
             "./ui/**/*",
@@ -101,6 +101,6 @@
         "usb-detection": "^1.4",
         "waveheader": "^0.0",
         "xml2js": "^0.4",
-        "ngrok": "^2.2"
+        "ngrok": "git://github.com/WoodySlum/ngrok.git#master"
     }
 }

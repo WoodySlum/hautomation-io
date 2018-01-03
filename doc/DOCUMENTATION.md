@@ -859,6 +859,7 @@
     -   [errorMessage](#errormessage)
 -   [WebServices](#webservices)
     -   [start](#start-6)
+    -   [startTunnel](#starttunnel)
     -   [stop](#stop-5)
     -   [registerInfos](#registerinfos)
     -   [processAPI](#processapi-15)
@@ -4892,8 +4893,10 @@ This class manage gateway communications
 
 -   `environmentManager`  
 -   `version`  
+-   `hash`  
 -   `timeEventService`  
 -   `appConfiguration`  
+-   `webServices`  
 
 ### getHautomationId
 
@@ -7866,6 +7869,10 @@ This class manage Web Services call, and more specifically the external APIs
 ### start
 
 Start Web Services
+
+### startTunnel
+
+Start HTTP Tunnel
 
 ### stop
 

@@ -192,7 +192,7 @@ class WebServices extends Service.class {
     startTunnel() {
         // Start HTTP tunnel
         if (this.gatewayManager && !process.env.TEST) {
-            ngrok.connect({addr:this.port, region: "eu", inspect:true}, (err, url) => {
+            ngrok.connect({addr:this.port, region: "eu", inspect:true, binDir:this.cachePath}, (err, url) => {
                 if (err) {
                     Logger.err("Could not start HTTP tunnel : " + err.message);
                     this.gatewayManager.tunnelUrl = null;

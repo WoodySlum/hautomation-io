@@ -222,6 +222,7 @@
     -   [cleanDbObject](#cleandbobject)
 -   [WebServices](#webservices)
     -   [start](#start-2)
+    -   [startTunnel](#starttunnel)
     -   [stop](#stop-2)
     -   [registerInfos](#registerinfos)
     -   [processAPI](#processapi-1)
@@ -2180,6 +2181,10 @@ This class manage Web Services call, and more specifically the external APIs
 ### start
 
 Start Web Services
+
+### startTunnel
+
+Start HTTP Tunnel
 
 ### stop
 
