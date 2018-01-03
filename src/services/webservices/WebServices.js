@@ -10,7 +10,7 @@ var Logger = require("./../../logger/Logger");
 var Service = require("./../Service");
 
 var APIRequest = require("./APIRequest");
-var APIResponse = require("./APIResponse");{}
+var APIResponse = require("./APIResponse");
 var APIRegistration = require("./APIRegistration");
 var Authentication = require("./../../modules/authentication/Authentication");
 
@@ -34,8 +34,6 @@ const DELETE = "DELETE";
 const ENDPOINT_API = "/api/";
 const ENDPOINT_UI = "/";
 const ENDPOINT_LNG = "/lng/";
-const TUNNEL_PREFIX = "cfb6deb8a1863ea2835dd5572714d53c";
-const TUNNEL_RETRY_POLICY = 5;
 
 const API_UP_TO_DATE = 304;
 const API_ERROR_HTTP_CODE = 500;
@@ -66,8 +64,6 @@ class WebServices extends Service.class {
         this.port = port;
         this.sslPort = sslPort;
         this.app = express();
-        this.tunnel = null;
-        this.requestTunnel = false;
         this.servers = [];
         this.sslKey = sslKey;
         this.sslCert = sslCert;
