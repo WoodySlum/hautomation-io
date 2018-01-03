@@ -3,14 +3,14 @@ const express = require("express");
 const compression = require("compression");
 const minify = require("express-minify");
 const uglifyEs = require("uglify-es");
-const localtunnel = require("localtunnel");
+const ngrok = require("ngrok");
 
 // Internal
 var Logger = require("./../../logger/Logger");
 var Service = require("./../Service");
 
 var APIRequest = require("./APIRequest");
-var APIResponse = require("./APIResponse");
+var APIResponse = require("./APIResponse");{}
 var APIRegistration = require("./APIRegistration");
 var Authentication = require("./../../modules/authentication/Authentication");
 
@@ -196,31 +196,15 @@ class WebServices extends Service.class {
     startTunnel() {
         // Start HTTP tunnel
         if (this.gatewayManager && !process.env.TEST) {
-            const instance = this;
-            Logger.info("Requesting HTTP tunnel");
-            this.tunnel = localtunnel(this.port, {"subdomain": TUNNEL_PREFIX + this.gatewayManager.getHautomationId()}, function(err, tunnel) {
+            ngrok.connect({addr:this.port, region: "eu", inspect:true}, (err, url) => {
                 if (err) {
                     Logger.err("Could not start HTTP tunnel : " + err.message);
+                    this.gatewayManager.tunnelUrl = null;
                 } else {
-                    Logger.info("HTTP Tunnel start on " + tunnel.url);
+                    Logger.info("HTTP tunnel URL : " + url);
+                    this.gatewayManager.tunnelUrl = url;
                 }
-            });
-
-            this.tunnel.on("close", function() {
-                Logger.info("HTTP tunnel closed");
-            });
-
-            this.tunnel.on("error", function(err) {
-                Logger.err("HTTP tunnel error : " + err.message);
-
-                // Retry tunnel policy
-                if (!this.requestTunnel) {
-                    this.requestTunnel = true;
-                    setTimeout((self) => {
-                        self.startTunnel();
-                        self.requestTunnel = false;
-                    }, TUNNEL_RETRY_POLICY * 1000, instance);
-                }
+                this.gatewayManager.transmit();
             });
         }
     }
@@ -234,9 +218,9 @@ class WebServices extends Service.class {
                 server.close();
             });
 
-            if (this.tunnel) {
-                this.tunnel.close();
-            }
+            // Kill tunnel
+            ngrok.disconnect();
+            ngrok.kill();
 
             this.servers = [];
             super.stop();

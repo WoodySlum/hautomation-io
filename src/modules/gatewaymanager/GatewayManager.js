@@ -32,8 +32,8 @@ class GatewayManager {
         this.appConfiguration = appConfiguration;
         this.webServices = webServices;
         this.webServices.gatewayManager = this;
+        this.tunnelUrl = null;
         Logger.info("Hautomation ID : " + this.getHautomationId());
-        this.transmit();
 
         this.timeEventService.register((self) => {
             self.transmit();
@@ -75,6 +75,7 @@ class GatewayManager {
                 version: this.version,
                 hash: this.hash,
                 localIp: this.environmentManager.getLocalIp(),
+                tunnel: this.tunnelUrl,
                 gatewayMode: GATEWAY_MODE
             }
         };
