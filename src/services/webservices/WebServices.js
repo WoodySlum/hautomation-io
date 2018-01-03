@@ -35,6 +35,7 @@ const ENDPOINT_API = "/api/";
 const ENDPOINT_UI = "/";
 const ENDPOINT_LNG = "/lng/";
 const TUNNEL_PREFIX = "cfb6deb8a1863ea2835dd5572714d53c";
+const TUNNEL_RETRY_POLICY = 5;
 
 const API_UP_TO_DATE = 304;
 const API_ERROR_HTTP_CODE = 500;
@@ -66,6 +67,7 @@ class WebServices extends Service.class {
         this.sslPort = sslPort;
         this.app = express();
         this.tunnel = null;
+        this.requestTunnel = false;
         this.servers = [];
         this.sslKey = sslKey;
         this.sslCert = sslCert;
@@ -176,20 +178,7 @@ class WebServices extends Service.class {
                 Logger.err("HTTP Server can not started");
             }
 
-            // Start HTTP tunnel
-            if (this.gatewayManager) {
-                this.tunnel = localtunnel(this.port, {"subdomain": TUNNEL_PREFIX + this.gatewayManager.getHautomationId()}, function(err, tunnel) {
-                    if (err) {
-                        Logger.err("Could not start HTTP tunnel : " + err.message);
-                    } else {
-                        Logger.info("HTTP Tunnel start on " + tunnel.url);
-                    }
-                });
-
-                this.tunnel.on("close", function() {
-                    Logger.info("HTTP tunnel closed");
-                });
-            }
+            this.startTunnel();
 
             super.start();
 
@@ -198,6 +187,41 @@ class WebServices extends Service.class {
 
         } else {
             Logger.warn("Web services are already running");
+        }
+    }
+
+    /**
+     * Start HTTP Tunnel
+     */
+    startTunnel() {
+        // Start HTTP tunnel
+        if (this.gatewayManager && !process.env.TEST) {
+            const instance = this;
+            Logger.info("Requesting HTTP tunnel");
+            this.tunnel = localtunnel(this.port, {"subdomain": TUNNEL_PREFIX + this.gatewayManager.getHautomationId()}, function(err, tunnel) {
+                if (err) {
+                    Logger.err("Could not start HTTP tunnel : " + err.message);
+                } else {
+                    Logger.info("HTTP Tunnel start on " + tunnel.url);
+                }
+            });
+
+            this.tunnel.on("close", function() {
+                Logger.info("HTTP tunnel closed");
+            });
+
+            this.tunnel.on("error", function(err) {
+                Logger.err("HTTP tunnel error : " + err.message);
+
+                // Retry tunnel policy
+                if (!this.requestTunnel) {
+                    this.requestTunnel = true;
+                    setTimeout((self) => {
+                        self.startTunnel();
+                        self.requestTunnel = false;
+                    }, TUNNEL_RETRY_POLICY * 1000, instance);
+                }
+            });
         }
     }
 
