@@ -129,7 +129,7 @@ $(document).ready(function() {
     var videoCameraMode = false;
     var cameraWallStream;
 
-    $.getJSON("/lng/", function(json) {
+    $.getJSON("lng/", function(json) {
         localization = json;
         Object.keys(uiTranslationRegistration).forEach(function(uiKey) {
             if (document.getElementById(uiTranslationRegistration[uiKey].htmlId)) {

@@ -3,6 +3,7 @@ const express = require("express");
 const compression = require("compression");
 const minify = require("express-minify");
 const uglifyEs = require("uglify-es");
+const localtunnel = require("localtunnel");
 
 // Internal
 var Logger = require("./../../logger/Logger");
@@ -33,6 +34,7 @@ const DELETE = "DELETE";
 const ENDPOINT_API = "/api/";
 const ENDPOINT_UI = "/";
 const ENDPOINT_LNG = "/lng/";
+const TUNNEL_PREFIX = "cfb6deb8a1863ea2835dd5572714d53c";
 
 const API_UP_TO_DATE = 304;
 const API_ERROR_HTTP_CODE = 500;
@@ -63,12 +65,14 @@ class WebServices extends Service.class {
         this.port = port;
         this.sslPort = sslPort;
         this.app = express();
+        this.tunnel = null;
         this.servers = [];
         this.sslKey = sslKey;
         this.sslCert = sslCert;
         this.fs = fs;
         this.cachePath = cachePath;
         this.enableCompression = enableCompression;
+        this.gatewayManager = null;
     }
 
     /**
@@ -172,6 +176,21 @@ class WebServices extends Service.class {
                 Logger.err("HTTP Server can not started");
             }
 
+            // Start HTTP tunnel
+            if (this.gatewayManager) {
+                this.tunnel = localtunnel(this.port, {"subdomain": TUNNEL_PREFIX + this.gatewayManager.getHautomationId()}, function(err, tunnel) {
+                    if (err) {
+                        Logger.err("Could not start HTTP tunnel : " + err.message);
+                    } else {
+                        Logger.info("HTTP Tunnel start on " + tunnel.url);
+                    }
+                });
+
+                this.tunnel.on("close", function() {
+                    Logger.info("HTTP tunnel closed");
+                });
+            }
+
             super.start();
 
             // Register informations for helping
@@ -190,6 +209,11 @@ class WebServices extends Service.class {
             this.servers.forEach((server) => {
                 server.close();
             });
+
+            if (this.tunnel) {
+                this.tunnel.close();
+            }
+
             this.servers = [];
             super.stop();
         } else {

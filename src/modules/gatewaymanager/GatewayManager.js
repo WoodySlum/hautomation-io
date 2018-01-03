@@ -20,15 +20,18 @@ class GatewayManager {
      * @param  {string} hash Hautomation commit hash
      * @param  {TimeEventService} timeEventService Time event service
      * @param  {Object} appConfiguration App configuration
+     * @param  {WebServices} webServices The web services
      *
      * @returns {GatewayManager} The instance
      */
-    constructor(environmentManager, version, hash, timeEventService, appConfiguration) {
+    constructor(environmentManager, version, hash, timeEventService, appConfiguration, webServices) {
         this.environmentManager = environmentManager;
         this.version = version;
         this.hash = hash;
         this.timeEventService = timeEventService;
         this.appConfiguration = appConfiguration;
+        this.webServices = webServices;
+        this.webServices.gatewayManager = this;
         Logger.info("Hautomation ID : " + this.getHautomationId());
         this.transmit();
 

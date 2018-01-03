@@ -100,6 +100,7 @@
         "underscore": "^1.8",
         "usb-detection": "^1.4",
         "waveheader": "^0.0",
-        "xml2js": "^0.4"
+        "xml2js": "^0.4",
+        "localtunnel": "^1"
     }
 }
