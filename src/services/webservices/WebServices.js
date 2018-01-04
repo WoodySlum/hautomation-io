@@ -1,8 +1,6 @@
 "use strict";
 const express = require("express");
 const compression = require("compression");
-const minify = require("express-minify");
-const uglifyEs = require("uglify-es");
 const ngrok = require("ngrok");
 
 // Internal
@@ -32,7 +30,6 @@ const GET = "GET";
 const POST = "POST";
 const DELETE = "DELETE";
 const ENDPOINT_API = "/api/";
-const ENDPOINT_UI = "/";
 const ENDPOINT_LNG = "/lng/";
 
 const API_UP_TO_DATE = 304;
@@ -90,6 +87,22 @@ class WebServices extends Service.class {
 
             this.app.use(BodyParser.json({limit: "2mb"}));
 
+            const allowCrossDomain = function(req, res, next) {
+                res.header('Access-Control-Allow-Origin', '*');
+                res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+                res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+
+                // intercept OPTIONS method
+                if ("OPTIONS" == req.method) {
+                  res.send(200);
+                }
+                else {
+                  next();
+                }
+            };
+
+            this.app.use(allowCrossDomain);
+
             // Compression
             if (this.enableCompression) {
                 this.app.use(compression({filter: (req, res) => {
@@ -103,26 +116,11 @@ class WebServices extends Service.class {
                 }}));
             }
 
-            // Minify
-            this.app.use(minify({
-                cache: cachePath?cachePath:false,
-                uglifyJsModule: uglifyEs,
-                errorHandler: (errorInfo) => {
-                    Logger.err(errorInfo);
-                },
-                jsMatch: /javascript/,
-                cssMatch: /css/,
-                jsonMatch: false
-            }));
-
             // Web UI
-            this.translateManager.addTranslations(__dirname + "/../../../ui");
-
             this.app.use(BodyParser.urlencoded({ extended: false }));
             this.app.use(ENDPOINT_LNG, function(req, res){
                 res.json(instance.translateManager.translations);
             });
-            this.app.use(ENDPOINT_UI, express.static(__dirname + "/../../../ui"));
 
             // GET Apis
             this.app.get(endpoint + "*/", function(req, res) {

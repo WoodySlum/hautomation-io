@@ -71,11 +71,13 @@ class GatewayManager {
             headers: headers,
             json: {
                 hautomationId: this.getHautomationId(),
-                port: (this.appConfiguration.ssl && this.appConfiguration.ssl.port)?this.appConfiguration.ssl.port:this.appConfiguration.port,
+                sslPort: (this.appConfiguration.ssl && this.appConfiguration.ssl.port)?this.appConfiguration.ssl.port:null,
+                port: this.appConfiguration.port,
                 version: this.version,
                 hash: this.hash,
                 localIp: this.environmentManager.getLocalIp(),
                 tunnel: this.tunnelUrl,
+                language:this.appConfiguration.lng,
                 gatewayMode: GATEWAY_MODE
             }
         };
