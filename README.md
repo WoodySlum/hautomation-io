@@ -1,6 +1,6 @@
 # Hautomation Core
 
-![coverage](http://honey.hd.free.fr:81/hautomation/core-node/badges/master/coverage.svg?job=test)  ![build](http://honey.hd.free.fr:81/hautomation/core-node/badges/master/build.svg)
+![coverage](http://gitlab.hautomation-io.com:81/hautomation/core-node/badges/master/coverage.svg?job=test)  ![build](http://gitlab.hautomation-io.com:81/hautomation/core-node/badges/master/build.svg)
 
 ## Environment
 
