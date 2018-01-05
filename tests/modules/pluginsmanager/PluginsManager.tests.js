@@ -2,6 +2,7 @@
 var chai = require("chai");
 var expect = chai.expect;
 var sinon = require("sinon");
+var GlobalMocks = require("./../../GlobalMocks");
 
 var PluginsManager = require("./../../../src/modules/pluginsmanager/PluginsManager");
 var PluginAPI = require("./../../../src/modules/pluginsmanager/PluginAPI");

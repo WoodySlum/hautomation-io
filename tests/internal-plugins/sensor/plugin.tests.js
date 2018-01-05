@@ -2,6 +2,7 @@
 var chai = require("chai");
 var expect = chai.expect;
 var sinon = require("sinon");
+var GlobalMocks = require("./../../GlobalMocks");
 
 const DateUtils = require("../../../src/utils/DateUtils");
 const HautomationCore = require("../../../src/HautomationCore").class;

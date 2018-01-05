@@ -2,6 +2,7 @@
 var chai = require("chai");
 var expect = chai.expect;
 var sinon = require("sinon");
+var GlobalMocks = require("./../GlobalMocks");
 
 const ThreadsManager = require("./../../src/modules/threadsmanager/ThreadsManager")
 const Service = require("./../../src/services/Service");

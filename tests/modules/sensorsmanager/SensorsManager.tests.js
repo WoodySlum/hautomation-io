@@ -2,6 +2,7 @@
 var chai = require("chai");
 var expect = chai.expect;
 var sinon = require("sinon");
+var GlobalMocks = require("./../../GlobalMocks");
 
 const SensorsManager = require("../../../src/modules/sensorsmanager/SensorsManager");
 const PluginsManager = require("../../../src/modules/pluginsmanager/PluginsManager");

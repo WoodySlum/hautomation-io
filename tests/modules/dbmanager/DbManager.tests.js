@@ -3,6 +3,7 @@ var chai = require("chai");
 var expect = chai.expect;
 var sinon = require("sinon");
 var sqlite3 = require("sqlite3");
+var GlobalMocks = require("./../../GlobalMocks");
 
 var DbManager = require("./../../../src/modules/dbmanager/DbManager");
 var DbRequestBuilder = require("./../../../src/modules/dbmanager/DbRequestBuilder");
@@ -25,8 +26,13 @@ describe("DbManager", function() {
     };
 
     before(() => {
+        restoreSetTimeout();
         dbManager = new DbManager.class({db:""}, sqlite3ob);
+    });
 
+    after(() => {
+        mockSetTimeout();
+        dbManager = new DbManager.class({db:""}, sqlite3ob);
     });
 
     it("constructor should have db property", function() {
@@ -38,7 +44,7 @@ describe("DbManager", function() {
     });
 
     it("should test functionally create table", function(done) {
-        dbManager.initSchema(schema, "0.0.0", (err) => {;
+        dbManager.initSchema(schema, "0.0.0", (err) => {
             setTimeout(() => {
                 sqlite3ob.all("PRAGMA table_info(`"+ table + "`);", (err, res) => {
                     expect(err).to.be.null;
@@ -53,7 +59,7 @@ describe("DbManager", function() {
                     expect(res[3]["name"]).to.be.equal("bar");
                     done();
                 });
-            }, 50);
+            }, 500);
         });
     });
 
@@ -77,7 +83,7 @@ describe("DbManager", function() {
                     expect(res[5]["name"]).to.be.equal("barfoo");
                     done();
                 });
-            }, 50);
+            }, 500);
         });
     });
 

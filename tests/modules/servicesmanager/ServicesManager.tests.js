@@ -2,6 +2,7 @@
 var chai = require("chai");
 var expect = chai.expect;
 var sinon = require("sinon");
+var GlobalMocks = require("./../../GlobalMocks");
 
 var ServicesManager = require("./../../../src/modules/servicesmanager/ServicesManager");
 var Service = require("./../../../src/services/Service");

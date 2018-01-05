@@ -3,6 +3,7 @@ var chai = require("chai");
 var expect = chai.expect;
 var sinon = require("sinon");
 var sqlite3 = require("sqlite3");
+var GlobalMocks = require("./../../GlobalMocks");
 
 var DbManager = require("./../../../src/modules/dbmanager/DbManager");
 var DbHelper = require("./../../../src/modules/dbmanager/DbHelper");

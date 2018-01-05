@@ -3,6 +3,7 @@ var chai = require("chai");
 var expect = chai.expect;
 var sinon = require("sinon");
 var moment = require("moment-timezone");
+var GlobalMocks = require("./../GlobalMocks");
 
 const DateUtils = require("./../../src/utils/DateUtils");
 
