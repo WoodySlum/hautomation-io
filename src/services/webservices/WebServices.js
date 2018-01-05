@@ -212,8 +212,10 @@ class WebServices extends Service.class {
             });
 
             // Kill tunnel
-            ngrok.disconnect();
-            ngrok.kill();
+            if (!process.env.TEST) {
+                ngrok.disconnect();
+                ngrok.kill();
+            }
 
             this.servers = [];
             super.stop();
