@@ -208,6 +208,7 @@ void Hautomation::updateFirmware() {
     resetFirmwareUpdate();
     updating = true;
     t_httpUpdate_return ret = ESPhttpUpdate.update(baseUrl() + "esp/firmware/upgrade/" + String(id) + "/");
+    Serial.println("Firmware url :  " + baseUrl() + "esp/firmware/upgrade/" + String(id) + "/");
     switch(ret) {
         case HTTP_UPDATE_FAILED:
             Serial.printf("Firmware flash error (%d): %s",  ESPhttpUpdate.getLastError(), ESPhttpUpdate.getLastErrorString().c_str());

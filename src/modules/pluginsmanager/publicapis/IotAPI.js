@@ -119,6 +119,15 @@ class IotAPI {
     getIots(app = null) {
         return PrivateProperties.oprivate(this).iotManager.getIots(app);
     }
+
+    /**
+     * Get the global build status
+     *
+     * @returns {Boolean} Returns `true` if a build is already running, `false` otherwise
+     */
+    isBuilding() {
+        return PrivateProperties.oprivate(this).iotManager.isBuilding();
+    }
 }
 
 module.exports = {class:IotAPI};

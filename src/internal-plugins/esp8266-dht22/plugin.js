@@ -8,7 +8,7 @@ function loaded(api) {
     api.init();
 
     const espPlugin = api.getPluginInstance("esp8266");
-    api.iotAPI.registerApp("app", "esp8266-dht22", "ESP8266 Temperature and humidity sensor", 2, api.iotAPI.constants().PLATFORMS.ESP8266, api.iotAPI.constants().BOARDS.NODEMCU, api.iotAPI.constants().FRAMEWORKS.ARDUINO, ["esp8266"], espPlugin.generateOptions(espPlugin.constants().MODE_SLEEP, 60 * 60));
+    api.iotAPI.registerApp("app", "esp8266-dht22", "ESP8266 Temperature and humidity sensor", 2, api.iotAPI.constants().PLATFORMS.ESP8266, api.iotAPI.constants().BOARDS.NODEMCU, api.iotAPI.constants().FRAMEWORKS.ARDUINO, ["esp8266"], espPlugin.generateOptions(espPlugin.constants().MODE_DEEP_SLEEP, 60 * 60));
 }
 
 module.exports.attributes = {

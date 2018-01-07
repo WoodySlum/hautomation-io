@@ -501,6 +501,15 @@ class IotManager {
     comparator(iotData1, iotData2) {
         return (iotData1.id === iotData2.id);
     }
+
+    /**
+     * Get the global build status
+     *
+     * @returns {boolean} Returns `true` if a build is already running, `false` otherwise
+     */
+    isBuilding() {
+        return this.isBuildingApp;
+    }
 }
 
 module.exports = {class:IotManager};

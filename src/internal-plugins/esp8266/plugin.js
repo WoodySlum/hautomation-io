@@ -73,10 +73,11 @@ function loaded(api) {
          */
         constructor(api) {
             this.api = api;
-            this.api.iotAPI.registerLib("app", "esp8266", 49, ESP8266Form);
+            this.api.iotAPI.registerLib("app", "esp8266", 57, ESP8266Form);
             this.api.webAPI.register(this, this.api.webAPI.constants().POST, WS_SENSOR_SET_ROUTE + "[id]/[type]/[value]/[vcc*]/", this.api.webAPI.Authentication().AUTH_LOCAL_NETWORK_LEVEL);
             this.api.webAPI.register(this, this.api.webAPI.constants().POST, WS_PING_ROUTE + "[id]/", this.api.webAPI.Authentication().AUTH_LOCAL_NETWORK_LEVEL);
             this.api.webAPI.register(this, this.api.webAPI.constants().GET, WS_FIRMWARE_ROUTE + "[id]/", this.api.webAPI.Authentication().AUTH_LOCAL_NETWORK_LEVEL);
+            this.firmwareFile = {};
 
             try {
                 this.configurations = this.api.configurationAPI.loadData(Object, CONF_KEY, true);
@@ -148,10 +149,10 @@ function loaded(api) {
         processAPI(apiRequest) {
             if (apiRequest.route.startsWith(WS_SENSOR_SET_ROUTE)) {
                 return new Promise((resolve, reject) => {
-                    // console.log(apiRequest.data);
                     if (apiRequest.data.type && apiRequest.data.id && apiRequest.data.value) {
                         const sensors = this.api.sensorAPI.getSensors(apiRequest.data.type);
                         let received = false;
+
                         Object.keys(sensors).forEach((sensorKey) => {
                             const sensor = this.api.sensorAPI.getSensor(sensorKey);
                             if (parseInt(apiRequest.data.id) === sensor.getIotIdentifier()) {
@@ -180,30 +181,46 @@ function loaded(api) {
                 }
 
                 return new Promise((resolve) => {
-                    resolve(this.api.webAPI.APIResponse(true, {success:true, version:(errorFirmware[iot.iotApp]?-1:this.api.iotAPI.getVersion(this.api.iotAPI.getIot(apiRequest.data.id).iotApp))}));
+                    resolve(this.api.webAPI.APIResponse(true, {success:true, version:((this.api.iotAPI.isBuilding() || errorFirmware[iot.iotApp])?-1:this.api.iotAPI.getVersion(this.api.iotAPI.getIot(apiRequest.data.id).iotApp))}));
                 });
             } else if (apiRequest.route.startsWith(WS_FIRMWARE_ROUTE)) {
                 return new Promise((resolve, reject) => {
                     const iot = this.api.iotAPI.getIot(apiRequest.data.id);
-                    if (iot) {
-                        this.api.iotAPI.build(iot.iotApp, false, iot, (error, details) => {
-                            if (error) {
-                                errorFirmware[iot.iotApp] = true;
-                                api.exported.Logger.err("Locked firmware for app " + iot.iotApp + ". Firmware built failed : " + error.message);
-                                reject(this.api.webAPI.APIResponse(false, {}, 1090, "Build firmware failed for id " + apiRequest.data.id));
-                            } else if (details && details.firmwarePath) {
-                                api.exported.Logger.err(details);
-                                api.exported.Logger.info("Firmware built for app " + iot.iotApp);
-                                const md5 = md5File.sync(details.firmwarePath);
-                                apiRequest.res.setHeader("Content-Type", "application/octet-stream");
-                                apiRequest.res.setHeader("x-MD5", md5);
-                                apiRequest.res.download(details.firmwarePath);
-                            } else {
-                                errorFirmware[iot.iotApp] = true;
-                                api.exported.Logger.err("Locked firmware for app " + iot.iotApp + ". Firmware built failed : " + error.message);
-                                reject(this.api.webAPI.APIResponse(false, {}, 1091, "Build firmware failed for id " + apiRequest.data.id));
-                            }
-                        });
+                    if (this.api.iotAPI.isBuilding()) {
+                        reject(this.api.webAPI.APIResponse(false, {}, 1079, "Build is already running"));
+                    } else if (iot) {
+                        // We need to build firmware on first time
+                        if (!this.firmwareFile[apiRequest.data.id]) {
+                            this.api.iotAPI.build(iot.iotApp, false, iot, (error, details) => {
+                                if (error) {
+                                    // Error
+                                    errorFirmware[iot.iotApp] = true;
+                                    api.exported.Logger.err("Locked firmware for app " + iot.iotApp + ". Firmware built failed : " + error.message);
+                                    api.exported.Logger.err("Build firmware failed for id (1090)" + apiRequest.data.id);
+                                    delete this.firmwareFile[apiRequest.data.id];
+                                } else if (details && details.firmwarePath) {
+                                    // Success
+                                    this.firmwareFile[apiRequest.data.id] = details.firmwarePath;
+                                    api.exported.Logger.info(details);
+                                    api.exported.Logger.info("Firmware built for app " + iot.iotApp);
+                                } else {
+                                    // Error : success without generated firmware
+                                    errorFirmware[iot.iotApp] = true;
+                                    api.exported.Logger.err("Locked firmware for app " + iot.iotApp + ". Firmware built failed : " + error.message);
+                                    api.exported.Logger.err("Build firmware failed for id (1091)" + apiRequest.data.id);
+                                    delete this.firmwareFile[apiRequest.data.id];
+                                }
+                            });
+                            reject(this.api.webAPI.APIResponse(false, {}, 1095, "Building firmware"));
+                        } else {
+                            // On second time, download firmware
+                            const md5 = md5File.sync(this.firmwareFile[apiRequest.data.id]);
+                            apiRequest.res.setHeader("Content-Type", "application/octet-stream");
+                            apiRequest.res.setHeader("x-MD5", md5);
+                            apiRequest.res.download(this.firmwareFile[apiRequest.data.id]);
+                            delete this.firmwareFile[apiRequest.data.id];
+                        }
+
                     } else {
                         api.exported.Logger.err("Unknown iot identifier");
                         reject(this.api.webAPI.APIResponse(false, {}, 1089, "Unknown iot identifier " + apiRequest.data.id));
