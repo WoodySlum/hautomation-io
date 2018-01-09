@@ -54,6 +54,23 @@ class ServicesManagerAPI {
         }
     }
 
+    /**
+     * Stop all services
+     */
+    stop() {
+        this.services.forEach((service) => {
+            service.stop();
+        });
+    }
+
+    /**
+     * Start all services
+     */
+    start() {
+        this.services.forEach((service) => {
+            service.start();
+        });
+    }
 }
 
 module.exports = {class:ServicesManagerAPI};

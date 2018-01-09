@@ -8,13 +8,19 @@ class PluginConf {
     /**
      * Constructor
      *
+     * @param  {string} [path] The plugin path
+     * @param  {boolean} [relative] The plugin path
      * @param  {string} [identifier=null] Plugin identifier
      * @param  {string} [version=null] Plugin version
+     * @param  {boolean} [enable=true] `true` if plugin is enable, `false` otherwise
      * @returns {User} The instance
      */
-    constructor(identifier = null, version = null) {
+    constructor(path, relative, identifier = null, version = null, enable = true) {
+        this.path = path;
+        this.relative = relative;
         this.identifier = identifier;
         this.version = version;
+        this.enable = (enable !== null)?enable:true;
     }
 
     /**
@@ -24,7 +30,7 @@ class PluginConf {
      * @returns {User} A User instance
      */
     json(data) {
-        return new PluginConf(data.identifier, data.version);
+        return new PluginConf(data.path, data.relative, data.identifier, data.version, data.enable);
     }
 }
 

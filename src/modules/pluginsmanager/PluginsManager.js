@@ -11,6 +11,7 @@ var PluginConf = require("./PluginConf");
 var Authentication = require("./../authentication/Authentication");
 var WebServices = require("./../../services/webservices/WebServices");
 var APIResponse = require("./../../services/webservices/APIResponse");
+var HautomationRunnerConstants = require("./../../../HautomationRunnerConstants");
 
 const CONF_KEY = "plugins";
 const EVENT_LOADED = "pluginLoaded";
@@ -20,6 +21,8 @@ const EXTERNAL_PLUGIN_PATH = "plugins/node_modules/";
 const PLUGIN_PREFIX = "hautomation-plugin";
 const PLUGIN_MAIN = "plugin.js";
 const ROUTE_WS_GET = ":/plugins/get/";
+const ROUTE_WS_ENABLE_SET_BASE = ":/plugins/enable/";
+const ROUTE_WS_ENABLE_SET = ROUTE_WS_ENABLE_SET_BASE + "[plugin]/[status]/";
 
 const ERROR_MISSING_PROPERTY = "Missing property name, version or description for plugin";
 const ERROR_NOT_A_FUNCTION = "Missing plugin class";
@@ -135,6 +138,7 @@ class PluginsManager {
 
         // Register plugins WS
         this.webServices.registerAPI(this, WebServices.GET, ROUTE_WS_GET, Authentication.AUTH_ADMIN_LEVEL);
+        this.webServices.registerAPI(this, WebServices.POST, ROUTE_WS_ENABLE_SET, Authentication.AUTH_ADMIN_LEVEL);
     }
 
     /**
@@ -188,6 +192,71 @@ class PluginsManager {
 
     }
 
+    /**
+     * Init plugin by doing a require and create a Plugin API object for each registered needed plugins
+     *
+     * @param  {string}  plugin           The plugin
+     * @param  {string}  path             Plugins path
+     * @param  {boolean} [relative=false] True if path is relative, else false
+     * @returns {PluginAPI}             Returns an array of plugins API
+     */
+    initPlugin(plugin, path, relative) {
+        let item = null;
+        if (plugin) {
+            let pluginPath = relative ? path + plugin +"/" + PLUGIN_MAIN : this.path.resolve() + "/" + path + plugin +"/" + PLUGIN_MAIN;
+            Logger.verbose("Loading plugin at path : " + pluginPath);
+            let p = require(pluginPath, "may-exclude");
+
+            // Save configuration meta data
+            const existingPluginConf = this.getPluginConf(p.attributes.name);
+            const pluginConf = new PluginConf.class(path, relative, p.attributes.name, p.attributes.version, existingPluginConf?existingPluginConf.enable:null);
+
+            this.confManager.setData(CONF_KEY, pluginConf, this.pluginsConf, PluginConf.comparator);
+
+            if (!pluginConf || (pluginConf && pluginConf.enable)) {
+                // Send old version for migration
+                let oldVersion = "0.0.0";
+                if (pluginConf && pluginConf.version) {
+                    oldVersion = pluginConf.version;
+                }
+
+                let pApi = new PluginAPI.class(
+                    oldVersion,
+                    p,
+                    this.webServices,
+                    this.appConfiguration,
+                    this.servicesManager,
+                    this.dbManager,
+                    this.translateManager,
+                    this.formManager,
+                    this.confManager,
+                    this.timeEventService,
+                    this.schedulerService,
+                    this.dashboardManager,
+                    this.themeManager,
+                    this.sensorsManager,
+                    this.installationManager,
+                    this.userManager,
+                    this.messageManager,
+                    this.scenarioManager,
+                    this.alarmManager,
+                    this.camerasManager,
+                    this.radioManager,
+                    this.environmentManager,
+                    this,
+                    this.iotManager,
+                    this.botEngine,
+                    this.eventBus
+                );
+
+                item = pApi;
+            } else {
+                Logger.info("Plugin " + pluginConf.identifier + " has been disabled and won't be loaded");
+            }
+        }
+
+        return item;
+    }
 
 
     /**
@@ -201,47 +270,10 @@ class PluginsManager {
     initPlugins(path, plugins, relative = false) {
         let initializedPlugins = [];
         plugins.forEach((plugin) => {
-            let pluginPath = relative ? path + plugin +"/" + PLUGIN_MAIN : this.path.resolve() + "/" + path + plugin +"/" + PLUGIN_MAIN;
-            Logger.verbose("Loading plugin at path : " + pluginPath);
-            let p = require(pluginPath, "may-exclude");
-
-            // Send old version for migration
-            const pluginConf = this.confManager.getData(this.pluginsConf, new PluginConf.class(p.attributes.name), PluginConf.comparator);
-            let oldVersion = "0.0.0";
-            if (pluginConf && pluginConf.version) {
-                oldVersion = pluginConf.version;
+            let pApi = this.initPlugin(plugin, path, relative);
+            if (pApi) {
+                initializedPlugins.push(pApi);
             }
-
-            let pApi = new PluginAPI.class(
-                oldVersion,
-                p,
-                this.webServices,
-                this.appConfiguration,
-                this.servicesManager,
-                this.dbManager,
-                this.translateManager,
-                this.formManager,
-                this.confManager,
-                this.timeEventService,
-                this.schedulerService,
-                this.dashboardManager,
-                this.themeManager,
-                this.sensorsManager,
-                this.installationManager,
-                this.userManager,
-                this.messageManager,
-                this.scenarioManager,
-                this.alarmManager,
-                this.camerasManager,
-                this.radioManager,
-                this.environmentManager,
-                this,
-                this.iotManager,
-                this.botEngine,
-                this.eventBus
-            );
-
-            initializedPlugins.push(pApi);
         });
 
         return initializedPlugins;
@@ -301,9 +333,7 @@ class PluginsManager {
         this.plugins.forEach((plugin) => {
             Logger.verbose("Loading plugin " + plugin.identifier);
             plugin.exportClasses(classes);
-            // Save configuration meta data
-            const pluginConf = new PluginConf.class(plugin.identifier, plugin.version);
-            this.confManager.setData(CONF_KEY, pluginConf, this.pluginsConf, PluginConf.comparator);
+
             // Load
             try {
                 plugin.loaded();
@@ -411,6 +441,24 @@ class PluginsManager {
     }
 
     /**
+     * Returns a plugin configuration
+     *
+     * @param  {string} identifier The plugin identifier
+     * @returns {PluginConf}            The plugin configuration
+     */
+    getPluginConf(identifier) {
+        let item = null;
+        this.pluginsConf.forEach((pluginConf) => {
+            if (identifier === pluginConf.identifier) {
+                item = pluginConf;
+            }
+        });
+
+        return item;
+    }
+
+
+    /**
      * Process API callback
      *
      * @param  {APIRequest} apiRequest An APIRequest
@@ -421,6 +469,8 @@ class PluginsManager {
             const plugins = [];
             this.plugins.forEach((plugin) => {
                 const services = [];
+                const pluginConf = this.getPluginConf(plugin.identifier);
+
                 plugin.servicesManagerAPI.services.forEach((service) => {
                     services.push({name:service.name, status:service.status});
                 });
@@ -432,11 +482,30 @@ class PluginsManager {
                     configurable:plugin.configurationAPI.form?true:false,
                     category:plugin.category,
                     version:plugin.version,
-                    services:services
+                    services:services,
+                    enable:(pluginConf && pluginConf.enable)?true:false
                 });
             });
             return new Promise((resolve) => {
                 resolve(new APIResponse.class(true, plugins));
+            });
+        }  else if (apiRequest.route.startsWith(ROUTE_WS_ENABLE_SET_BASE)) {
+            return new Promise((resolve, reject) => {
+                const existingPluginConf = this.getPluginConf(apiRequest.data.plugin);
+                if (existingPluginConf) {
+                    const status = !!+apiRequest.data.status;
+
+                    if (status != existingPluginConf.enable) {
+                        Logger.info("Plugin status changed");
+                        existingPluginConf.enable = status;
+                        this.confManager.setData(CONF_KEY, existingPluginConf, this.pluginsConf, PluginConf.comparator);
+                        this.eventBus.emit(HautomationRunnerConstants.RESTART);
+                    }
+
+                    resolve(new APIResponse.class(true, {success:true}));
+                } else {
+                    reject(new APIResponse.class(false, null, 9872, "Unexisting plugin"));
+                }
             });
         }
     }
