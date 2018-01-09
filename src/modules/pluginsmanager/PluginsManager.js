@@ -11,6 +11,7 @@ var PluginConf = require("./PluginConf");
 var Authentication = require("./../authentication/Authentication");
 var WebServices = require("./../../services/webservices/WebServices");
 var APIResponse = require("./../../services/webservices/APIResponse");
+var HautomationRunnerConstants = require("./../../../HautomationRunnerConstants");
 
 const CONF_KEY = "plugins";
 const EVENT_LOADED = "pluginLoaded";
@@ -492,72 +493,10 @@ class PluginsManager {
                     const status = !!+apiRequest.data.status;
 
                     if (status != existingPluginConf.enable) {
-                        Logger.info("Status changed !");
+                        Logger.info("Plugin status changed");
                         existingPluginConf.enable = status;
-
-                        if (status) {
-                            // If plugin is enable
-                            let index = -1;
-                            for (let i = 0 ; i < this.plugins.length ; i++) {
-                                if (this.plugins[i].identifier === existingPluginConf.identifier) {
-                                    index = i;
-                                    break;
-                                }
-                            }
-
-                            if (index === -1) {
-                                const plugin = this.initPlugin(existingPluginConf.identifier, existingPluginConf.path, existingPluginConf.relative);
-                                if (plugin) {
-                                    // Consolidate classes
-                                    let classes = {};
-                                    this.plugins.forEach((p) => {
-                                        console.log(JSON.stringify(p.classes));
-                                        p.classes.forEach((c) => {
-
-                                            classes[c.name] = c;
-                                        });
-                                    });
-
-                                    Logger.verbose("Loading plugin " + plugin.identifier);
-                                    plugin.exportClasses(classes);
-                                    console.log(classes);
-
-                                    this.plugins.push(plugin);
-
-                                    // Load
-                                    try {
-                                        plugin.loaded();
-                                    } catch(e) {
-                                        Logger.err("Plugin " + plugin.identifier + " crashed : " + e.message);
-                                        Logger.err(e.stack);
-                                        if (this.appConfiguration && this.appConfiguration.crashOnPluginError) {
-                                            process.exit(1);
-                                        }
-                                    }
-
-                                    this.plugins[index].servicesManagerAPI.start();
-                                }
-
-                            }
-                        } else {
-                            // If plugin is disable
-                            let index = -1;
-                            for (let i = 0 ; i < this.plugins.length ; i++) {
-                                if (this.plugins[i].identifier === existingPluginConf.identifier) {
-                                    index = i;
-                                    break;
-                                }
-                            }
-
-                            if (index > -1) {
-                                this.plugins[index].servicesManagerAPI.stop();
-                                this.plugins.splice(index,1);
-                            } else {
-                                Logger.err("Error, plugin " + existingPluginConf.identifier + " not found in plugin list");
-                            }
-                        }
-
                         this.confManager.setData(CONF_KEY, existingPluginConf, this.pluginsConf, PluginConf.comparator);
+                        this.eventBus.emit(HautomationRunnerConstants.RESTART);
                     }
 
                     resolve(new APIResponse.class(true, {success:true}));
