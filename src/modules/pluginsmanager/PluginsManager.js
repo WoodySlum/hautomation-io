@@ -21,7 +21,7 @@ const EXTERNAL_PLUGIN_PATH = "plugins/node_modules/";
 const PLUGIN_PREFIX = "hautomation-plugin";
 const PLUGIN_MAIN = "plugin.js";
 const ROUTE_WS_GET = ":/plugins/get/";
-const ROUTE_WS_ENABLE_SET_BASE = ":/plugins/enable/"; ;
+const ROUTE_WS_ENABLE_SET_BASE = ":/plugins/enable/";
 const ROUTE_WS_ENABLE_SET = ROUTE_WS_ENABLE_SET_BASE + "[plugin]/[status]/";
 
 const ERROR_MISSING_PROPERTY = "Missing property name, version or description for plugin";
@@ -469,6 +469,8 @@ class PluginsManager {
             const plugins = [];
             this.plugins.forEach((plugin) => {
                 const services = [];
+                const pluginConf = this.getPluginConf(plugin.identifier);
+
                 plugin.servicesManagerAPI.services.forEach((service) => {
                     services.push({name:service.name, status:service.status});
                 });
@@ -480,7 +482,8 @@ class PluginsManager {
                     configurable:plugin.configurationAPI.form?true:false,
                     category:plugin.category,
                     version:plugin.version,
-                    services:services
+                    services:services,
+                    enable:(pluginConf && pluginConf.enable)?true:false
                 });
             });
             return new Promise((resolve) => {
