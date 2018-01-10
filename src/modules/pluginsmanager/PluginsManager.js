@@ -213,46 +213,42 @@ class PluginsManager {
 
             this.confManager.setData(CONF_KEY, pluginConf, this.pluginsConf, PluginConf.comparator);
 
-            if (!pluginConf || (pluginConf && pluginConf.enable)) {
-                // Send old version for migration
-                let oldVersion = "0.0.0";
-                if (pluginConf && pluginConf.version) {
-                    oldVersion = pluginConf.version;
-                }
-
-                let pApi = new PluginAPI.class(
-                    oldVersion,
-                    p,
-                    this.webServices,
-                    this.appConfiguration,
-                    this.servicesManager,
-                    this.dbManager,
-                    this.translateManager,
-                    this.formManager,
-                    this.confManager,
-                    this.timeEventService,
-                    this.schedulerService,
-                    this.dashboardManager,
-                    this.themeManager,
-                    this.sensorsManager,
-                    this.installationManager,
-                    this.userManager,
-                    this.messageManager,
-                    this.scenarioManager,
-                    this.alarmManager,
-                    this.camerasManager,
-                    this.radioManager,
-                    this.environmentManager,
-                    this,
-                    this.iotManager,
-                    this.botEngine,
-                    this.eventBus
-                );
-
-                item = pApi;
-            } else {
-                Logger.info("Plugin " + pluginConf.identifier + " has been disabled and won't be loaded");
+            // Send old version for migration
+            let oldVersion = "0.0.0";
+            if (pluginConf && pluginConf.version) {
+                oldVersion = pluginConf.version;
             }
+
+            let pApi = new PluginAPI.class(
+                oldVersion,
+                p,
+                this.webServices,
+                this.appConfiguration,
+                this.servicesManager,
+                this.dbManager,
+                this.translateManager,
+                this.formManager,
+                this.confManager,
+                this.timeEventService,
+                this.schedulerService,
+                this.dashboardManager,
+                this.themeManager,
+                this.sensorsManager,
+                this.installationManager,
+                this.userManager,
+                this.messageManager,
+                this.scenarioManager,
+                this.alarmManager,
+                this.camerasManager,
+                this.radioManager,
+                this.environmentManager,
+                this,
+                this.iotManager,
+                this.botEngine,
+                this.eventBus
+            );
+
+            item = pApi;
         }
 
         return item;
@@ -334,9 +330,16 @@ class PluginsManager {
             Logger.verbose("Loading plugin " + plugin.identifier);
             plugin.exportClasses(classes);
 
+            const pluginConf = this.getPluginConf(plugin.identifier);
+
             // Load
             try {
-                plugin.loaded();
+                if (!pluginConf || (pluginConf && pluginConf.enable)) {
+                    plugin.loaded();
+                } else {
+                    Logger.info("Plugin " + pluginConf.identifier + " has been disabled and won't be loaded");
+                }
+
                 // Reload exported
                 classes = plugin.exported;
             } catch(e) {
@@ -478,12 +481,11 @@ class PluginsManager {
                 plugins.push({
                     identifier:plugin.identifier,
                     description:plugin.description,
-                    enabled:true,
                     configurable:plugin.configurationAPI.form?true:false,
                     category:plugin.category,
                     version:plugin.version,
                     services:services,
-                    enable:(pluginConf && pluginConf.enable)?true:false
+                    enabled:(pluginConf && pluginConf.enable)?true:false
                 });
             });
             return new Promise((resolve) => {

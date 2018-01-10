@@ -189,16 +189,19 @@ class WebServices extends Service.class {
     startTunnel() {
         // Start HTTP tunnel
         if (this.gatewayManager && !process.env.TEST) {
-            ngrok.connect({addr:this.port, region: "eu", inspect:true, binDir:this.cachePath}, (err, url) => {
-                if (err) {
-                    Logger.err("Could not start HTTP tunnel : " + err.message);
-                    this.gatewayManager.tunnelUrl = null;
-                } else {
-                    Logger.info("HTTP tunnel URL : " + url);
-                    this.gatewayManager.tunnelUrl = url;
-                }
-                this.gatewayManager.transmit();
-            });
+            setTimeout((self) => {
+                ngrok.connect({addr:self.port, region: "eu", inspect:false, binDir:self.cachePath}, (err, url) => {
+                    if (err) {
+                        Logger.err("Could not start HTTP tunnel : " + err.message);
+                        self.gatewayManager.tunnelUrl = null;
+                    } else {
+                        Logger.info("HTTP tunnel URL : " + url);
+                        self.gatewayManager.tunnelUrl = url;
+                    }
+                    self.gatewayManager.transmit();
+                });
+            }, 1000, this);
+
         }
     }
 
