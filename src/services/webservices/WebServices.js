@@ -194,13 +194,16 @@ class WebServices extends Service.class {
                     if (err) {
                         Logger.err("Could not start HTTP tunnel : " + err.message);
                         self.gatewayManager.tunnelUrl = null;
+                        setTimeout((me) => {
+                            me.startTunnel();
+                        }, 30 * 1000, self);
                     } else {
                         Logger.info("HTTP tunnel URL : " + url);
                         self.gatewayManager.tunnelUrl = url;
                     }
                     self.gatewayManager.transmit();
                 });
-            }, 1000, this);
+            }, 0, this);
 
         }
     }
