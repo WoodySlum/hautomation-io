@@ -352,7 +352,7 @@ function loaded(api) {
                         }
                     });
                 }
-                cb(null, baseList);
+                cb(null, baseList.sort((a,b) => a.localeCompare(b)));
             });
         }
 

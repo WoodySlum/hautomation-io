@@ -108,6 +108,8 @@ class DeviceManager {
                 cb(this.translateManager.t("devices.bot.notfound"));
             }
         });
+
+        this.formConfiguration.setSortFunction((a,b) => a.name.localeCompare(b.name));
     }
 
     /**
@@ -140,7 +142,7 @@ class DeviceManager {
     registerDeviceListForm() {
         const devicesName = [];
         const devicesId = [];
-        this.formConfiguration.data.forEach((device) => {
+        this.formConfiguration.data.sort((a,b) => a.name.localeCompare(b.name)).forEach((device) => {
             devicesName.push(device.name);
             devicesId.push(device.id);
         });

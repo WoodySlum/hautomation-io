@@ -61,6 +61,7 @@ class UserManager {
         });
 
         this.scenarioManager.register(UserScenarioForm.class, null, "user.scenario.form.mode.trigger");
+        this.formConfiguration.setSortFunction((a,b) => a.username.localeCompare(b.username));
     }
 
     /**

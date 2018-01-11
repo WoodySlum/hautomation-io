@@ -57,6 +57,7 @@ class ScenarioManager {
             });
         });
 
+        this.formConfiguration.setSortFunction((a,b) => a.name.localeCompare(b.name));
     }
 
     /**
@@ -65,7 +66,7 @@ class ScenarioManager {
     registerScenariosListForm() {
         const scenariosName = [];
         const scenariosId = [];
-        this.formConfiguration.data.forEach((scenario) => {
+        this.formConfiguration.data.sort((a,b) => a.name.localeCompare(b.name)).forEach((scenario) => {
             scenariosName.push(scenario.name);
             scenariosId.push(scenario.id);
         });

@@ -292,6 +292,8 @@ class SensorsManager {
                             description: sensor.description,
                             form: form
                         });
+
+                        sensors.sort((a,b) => a.description.localeCompare(b.description));
                     }
                 });
                 resolve(new APIResponse.class(true, sensors));
@@ -309,6 +311,7 @@ class SensorsManager {
                         category: (s?s.type:"UNKNOWN"),
                         form:Object.assign(self.formManager.getForm(sensorPlugin.sensorAPI.form), {data:sensor})
                     });
+                    sensors.sort((a,b) => a.name.localeCompare(b.name));
                 });
                 resolve(new APIResponse.class(true, sensors));
             });
@@ -464,7 +467,7 @@ class SensorsManager {
     registerSensorsListForm() {
         const sensorsName = [];
         const sensorsId = [];
-        this.sensorsConfiguration.forEach((sensor) => {
+        this.sensorsConfiguration.sort((a,b) => a.name.localeCompare(b.name)).forEach((sensor) => {
             sensorsName.push(sensor.name);
             sensorsId.push(sensor.id);
         });

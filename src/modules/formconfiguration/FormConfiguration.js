@@ -36,6 +36,7 @@ class FormConfiguration {
         this.list = list;
         this.additionalFields = [];
         this.updateCb = null;
+        this.sortFunction = null;
 
         // WebServices
         this.formRoute = ":/" + ROUTE_BASE_PATH + "/" + this.name + "/" + ROUTE_BASE_FORM + "/";
@@ -168,7 +169,7 @@ class FormConfiguration {
             if (apiRequest.route === this.formRoute) {
                 let form = self.getForm();
                 if (this.data) {
-                    form.data = this.data;
+                    form.data = ((this.data instanceof Array) && this.sortFunction)?this.data.sort(this.sortFunction):this.data;
                 } else {
                     form.data = {};
                 }
@@ -184,7 +185,7 @@ class FormConfiguration {
             } else if (apiRequest.route === this.getRoute) {
                 if (this.data) {
                     return new Promise((resolve) => {
-                        resolve(new APIResponse.class(true, this.data));
+                        resolve(new APIResponse.class(true, ((this.data instanceof Array) && this.sortFunction)?this.data.sort(this.sortFunction):this.data));
                     });
                 }  else {
                     return new Promise((resolve, reject) => {
@@ -244,6 +245,15 @@ class FormConfiguration {
      */
     getForm() {
         return this.formManager.getForm(this.formClass);
+    }
+
+    /**
+     * Set the sort function
+     *
+     * @param {Function} f The function
+     */
+    setSortFunction(f) {
+        this.sortFunction = f;
     }
 }
 

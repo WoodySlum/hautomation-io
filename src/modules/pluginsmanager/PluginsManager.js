@@ -489,6 +489,7 @@ class PluginsManager {
                     services:services,
                     enabled:(pluginConf && pluginConf.enable)?true:false
                 });
+                this.plugins.sort((a,b) => a.identifier.localeCompare(b.identifier));
             });
             return new Promise((resolve) => {
                 resolve(new APIResponse.class(true, plugins));

@@ -376,7 +376,7 @@ class CamerasManager {
                         form:Object.assign(self.formManager.getForm(cameraPlugin.cameraAPI.form), {data:camera})
                     });
                 });
-                resolve(new APIResponse.class(true, cameras));
+                resolve(new APIResponse.class(true, cameras.sort((a,b) => a.name.localeCompare(b.name))));
             });
         } else if (apiRequest.route.startsWith(CAMERAS_MANAGER_POST_BASE)) {
             return new Promise((resolve, reject) => {
@@ -416,7 +416,7 @@ class CamerasManager {
             });
         } else if (apiRequest.route === CAMERAS_MANAGER_LIST) {
             return new Promise((resolve) => {
-                resolve(new APIResponse.class(true, self.getCamerasList()));
+                resolve(new APIResponse.class(true, self.getCamerasList().sort((a,b) => a.name.localeCompare(b.name))));
             });
         } else if (apiRequest.route.startsWith(CAMERAS_RETRIEVE_BASE)) {
             const id = parseInt(apiRequest.data.id);

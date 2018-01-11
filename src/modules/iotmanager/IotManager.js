@@ -80,7 +80,7 @@ class IotManager {
     registerIotsListForm() {
         const iotsName = [];
         const iotsId = [];
-        this.iots.forEach((iot) => {
+        this.iots.sort((a,b) => a.name.localeCompare(b.name)).forEach((iot) => {
             iotsName.push(iot.name);
             iotsId.push(iot.id);
         });
@@ -414,6 +414,7 @@ class IotManager {
                         description:this.iotApps[appKey].name,
                         form: Object.assign(self.formManager.getForm(this.iotApps[appKey].form), {data:{iotApp:appKey}})
                     });
+                    iots.sort((a,b) => a.description.localeCompare(b.description));
                 });
                 resolve(new APIResponse.class(true, iots));
             });
@@ -429,6 +430,7 @@ class IotManager {
                         iotApp: iotApp.name,
                         form:Object.assign(self.formManager.getForm(this.iotApps[iot.iotApp].form), {data:iot})
                     });
+                    iots.sort((a,b) => a.name.localeCompare(b.name));
                 });
                 resolve(new APIResponse.class(true, iots));
             });
