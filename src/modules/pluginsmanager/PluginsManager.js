@@ -60,7 +60,8 @@ const INTERNAL_PLUGINS = [
     "esp-pressure-sensor",
     "reboot",
     "rain-time-sensor",
-    "esp-rain-time-sensor"
+    "esp-rain-time-sensor",
+    "generic-throughput-sensor"
 ];
 
 /**
