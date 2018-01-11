@@ -467,6 +467,7 @@ class SensorsManager {
     registerSensorsListForm() {
         const sensorsName = [];
         const sensorsId = [];
+        
         this.sensorsConfiguration.sort((a,b) => a.name.localeCompare(b.name)).forEach((sensor) => {
             sensorsName.push(sensor.name);
             sensorsId.push(sensor.id);

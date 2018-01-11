@@ -89,7 +89,7 @@ describe("SensorsManager", function() {
 
     it("initSensors should call initSensor 2 times", function() {
         const sensorsManager = new SensorsManager.class(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager, botEngine);
-        sensorsManager.sensorsConfiguration = ["foo", "bar"];
+        sensorsManager.sensorsConfiguration = [{id:"foo", name:"foo"}, {id:"bar", name:"bar"}];
         sinon.stub(sensorsManager, "initSensor");
 
         sensorsManager.initSensors();
