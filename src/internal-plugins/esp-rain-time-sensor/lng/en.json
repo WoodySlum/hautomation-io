@@ -1,0 +1,6 @@
+{
+    "esp.rain.time.sensor.it.rains": "It rains",
+    "esp.rain.time.sensor.no.rain": "No rain",
+    "esp.rain.time.sensor.light.rain": "Light rain",
+    "esp.rain.time.sensor.heavy.rain": "Heavy rain"
+}

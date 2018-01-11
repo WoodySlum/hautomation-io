@@ -65,7 +65,7 @@ void transmitSensor() {
 
     hautomation.postSensorValue("TEMPERATURE", avgTemperature);
     hautomation.postSensorValue("HUMIDITY", hDHT);
-    hautomation.postSensorValue("RAIN", rainValue);
+    hautomation.postSensorValue("RAIN-TIME", rainValue);
     hautomation.postSensorValue("ALTITUDE", aBMP);
     hautomation.postSensorValue("PRESSURE", pBMP);
     // hautomation.postSensorValue("PRESSURE", sBMP);

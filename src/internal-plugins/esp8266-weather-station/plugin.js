@@ -1,4 +1,7 @@
 "use strict";
+
+const REFRESH_TIME = 60 * 5;
+
 /**
  * Loaded function
  *
@@ -8,7 +11,24 @@ function loaded(api) {
     api.init();
 
     const espPlugin = api.getPluginInstance("esp8266");
-    api.iotAPI.registerApp("app", "esp8266-weather-station", "ESP8266 Weather station", 1, api.iotAPI.constants().PLATFORMS.ESP8266, api.iotAPI.constants().BOARDS.NODEMCU, api.iotAPI.constants().FRAMEWORKS.ARDUINO, ["esp8266"], espPlugin.generateOptions(espPlugin.constants().MODE_SLEEP, 60 * 60));
+    api.iotAPI.registerApp("app", "esp8266-weather-station", "ESP8266 Weather station", 2, api.iotAPI.constants().PLATFORMS.ESP8266, api.iotAPI.constants().BOARDS.NODEMCU, api.iotAPI.constants().FRAMEWORKS.ARDUINO, ["esp8266"], espPlugin.generateOptions(espPlugin.constants().MODE_SLEEP, REFRESH_TIME));
+
+    /**
+     * This class manage EspWeatherStation
+     * @class
+     */
+    class EspWeatherStation {
+        /**
+         * List of Constants
+         *
+         * @returns {Object} Returns the list of constants
+         */
+        static constants() {
+            return {REFRESH_TIME:REFRESH_TIME};
+        }
+    }
+
+    api.exportClass(EspWeatherStation);
 }
 
 module.exports.attributes = {

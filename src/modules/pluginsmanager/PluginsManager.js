@@ -58,7 +58,9 @@ const INTERNAL_PLUGINS = [
     "enedis-linky-electric-sensor",
     "esp8266-weather-station",
     "esp-pressure-sensor",
-    "reboot"
+    "reboot",
+    "rain-time-sensor",
+    "esp-rain-time-sensor"
 ];
 
 /**
