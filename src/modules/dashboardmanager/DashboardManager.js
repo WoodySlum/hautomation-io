@@ -1,5 +1,6 @@
 "use strict";
 const Logger = require("./../../logger/Logger");
+const BreakException = require("./../../utils/BreakException").BreakException;
 //const Tile = require("./Tile");
 const WebServices = require("./../../services/webservices/WebServices");
 const Authentication = require("./../authentication/Authentication");
@@ -39,10 +40,45 @@ class DashboardManager {
             this.dashboardPreferences = {};
         }
 
-
         this.lastGenerated = DateUtils.class.timestamp();
 
         this.tiles = [];
+    }
+
+    /**
+     * Get readable tiles object (without methods, simple POJO)
+     *
+     * @returns {[Object]} The readable tiles
+     */
+    getReadableTiles() {
+        const tiles = [];
+        this.tiles.forEach((tile) => {
+            tiles.push(tile.get());
+        });
+
+        return tiles;
+    }
+
+    /**
+     * Returns a tile for a specific identifier
+     *
+     * @param  {string} identifier The tile identifier
+     * @returns {Tile}            A tile or `null` if no tile found
+     */
+    getTile(identifier) {
+        let foundTile = null;
+        try {
+            this.tiles.forEach((tile) => {
+                if (tile.identifier === identifier) {
+                    foundTile = tile;
+                    throw BreakException;
+                }
+            });
+        } catch (e) {
+            if (e !== BreakException) throw e;
+        }
+
+        return foundTile;
     }
 
     /**
@@ -51,20 +87,31 @@ class DashboardManager {
      * @param  {Tile} tile A tile object
      */
     registerTile(tile) {
-        this.unregisterTile(tile.identifier);
+        const existingTile = this.getTile(tile.identifier);
+        let shouldRegister = true;
 
-        // Add tile
-        this.tiles.push(tile.get());
+        if (existingTile && (existingTile.hash() === tile.hash())) {
+            shouldRegister = false;
+        }
 
-        // Sort
-        this.tiles.sort((tile1, tile2) => {
-            return tile2.order < tile1.order;
-        });
+        if (shouldRegister) {
+            this.unregisterTile(tile.identifier);
 
-        Logger.verbose("Tile " + tile.identifier + " registered");
+            // Add tile
+            this.tiles.push(tile);
 
-        // Save generation date
-        this.lastGenerated = DateUtils.class.timestamp();
+            // Sort
+            this.tiles.sort((tile1, tile2) => {
+                return tile2.order < tile1.order;
+            });
+
+            Logger.verbose("Tile " + tile.identifier + " registered");
+
+            // Save generation date
+            this.lastGenerated = DateUtils.class.timestamp();
+        } else {
+            Logger.verbose("The tile " + tile.identifier + " can not be registered. The hash is strictly equal to existing one");
+        }
     }
 
     /**
@@ -121,14 +168,14 @@ class DashboardManager {
      * @returns {Object} A dashboard object
      */
     buildDashboard(username, allTiles = true) {
-        this.tiles.sort(function(a, b) {
+        this.getReadableTiles().sort(function(a, b) {
             return parseFloat(a.order) - parseFloat(b.order);
         });
         return {
             timestamp:this.lastGenerated,
             timestampFormatted: DateUtils.class.dateFormatted(this.translateManager.t("datetime.format"), this.lastGenerated),
             excludeTiles:(this.dashboardPreferences[username] && this.dashboardPreferences[username].excludeTiles)?this.dashboardPreferences[username].excludeTiles:[],
-            tiles:this.filterTiles(this.tiles, allTiles?null:username)
+            tiles:this.filterTiles(this.getReadableTiles(), allTiles?null:username)
         };
     }
 

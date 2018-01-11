@@ -1,4 +1,6 @@
 "use strict";
+const sha256 = require("sha256");
+
 const TILE_INFO_ONE_TEXT = "InfoOneText"; // One icon, one text, no action
 const TILE_INFO_TWO_TEXT = "InfoTwoText"; // One icon, two text, no action
 const TILE_INFO_TWO_ICONS = "InfoTwoIcon"; // Two icons, one text, one color, no action
@@ -75,6 +77,24 @@ class Tile {
         const tmpTile = Object.assign({}, this);
         delete tmpTile.themeManager;
         return tmpTile;
+    }
+
+    /**
+     * Get the hash value of the tile
+     *
+     * @returns {string} The object hash
+     */
+    hash() {
+        return sha256((this.identifier?this.identifier.toString():"")
+        + (this.icon?this.icon.toString():"")
+        + (this.subicon?this.subicon.toString():"")
+        + (this.text?this.text.toString():"")
+        + (this.subtext?this.subtext.toString():"")
+        + (this.picture?this.picture.toString():"")
+        + (this.pictures?JSON.stringify(this.pictures):"")
+        + (this.object?JSON.stringify(this.object):"")
+        + (this.status?this.status.toString():"")
+        );
     }
 }
 

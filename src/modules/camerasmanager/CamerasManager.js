@@ -167,6 +167,7 @@ class CamerasManager {
         context.initCameras();
         context.registerCamerasListForm();
         context.registerTile(context);
+
         //this.record(1503653182, (err, s) => {});
     }
 
