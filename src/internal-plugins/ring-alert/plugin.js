@@ -30,7 +30,7 @@ function loaded(api) {
              * @Cl("RadioScenarioForm");
              * @Title("ring.alert.radio.events");
              */
-             this.radioEvents = radioEvents;
+            this.radioEvents = radioEvents;
 
              /**
               * @Property("cameras");
@@ -38,7 +38,7 @@ function loaded(api) {
               * @Cl("CamerasListForm");
               * @Title("ring.alert.cameras");
               */
-              this.cameras = cameras;
+            this.cameras = cameras;
         }
 
         /**
@@ -69,8 +69,19 @@ function loaded(api) {
          */
         constructor(api) {
             this.api = api;
-            var self = this;
-            this.api.radioAPI.register((radioObject) => {
+            this.start();
+            const self = this;
+            this.api.configurationAPI.setUpdateCb(() => {
+                self.start();
+            });
+        }
+
+        /**
+         * Start the listener
+         */
+        start() {
+            const self = this;
+            const radioCb = (radioObject) => {
                 const config = self.api.configurationAPI.getConfiguration();
                 let detected = false;
                 if (config && config.radioEvents && config.radioEvents.length > 0) {
@@ -85,7 +96,7 @@ function loaded(api) {
                     self.api.messageAPI.sendMessage("*", self.api.translateAPI.t("ring.alert.message"));
                     if (config && config.cameras && config.cameras.length > 0) {
                         config.cameras.forEach((cameraId) => {
-                            self.api.cameraAPI.getImage(cameraId.identifier, (err, data, mime) => {
+                            self.api.cameraAPI.getImage(cameraId.identifier, (err, data) => {
                                 if (!err && data) {
                                     self.api.messageAPI.sendMessage("*", null, "cameras", null, data.toString("base64"));
                                 }
@@ -94,7 +105,10 @@ function loaded(api) {
                     }
                 }
 
-            }, "ring-alert");
+            };
+
+            this.api.radioAPI.unregister(radioCb, "ring-alert");
+            this.api.radioAPI.register(radioCb, "ring-alert");
         }
     }
 
