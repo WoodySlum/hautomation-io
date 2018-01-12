@@ -168,14 +168,14 @@ class DashboardManager {
      * @returns {Object} A dashboard object
      */
     buildDashboard(username, allTiles = true) {
-        this.getReadableTiles().sort(function(a, b) {
+        const tiles = this.getReadableTiles().sort(function(a, b) {
             return parseFloat(a.order) - parseFloat(b.order);
         });
         return {
             timestamp:this.lastGenerated,
             timestampFormatted: DateUtils.class.dateFormatted(this.translateManager.t("datetime.format"), this.lastGenerated),
             excludeTiles:(this.dashboardPreferences[username] && this.dashboardPreferences[username].excludeTiles)?this.dashboardPreferences[username].excludeTiles:[],
-            tiles:this.filterTiles(this.getReadableTiles(), allTiles?null:username)
+            tiles:this.filterTiles(tiles, allTiles?null:username)
         };
     }
 
