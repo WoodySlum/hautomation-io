@@ -1,0 +1,12 @@
+{
+    "generic.throughput.size": "Pick a file size for downloading every hours",
+    "generic.throughput.size.512": "512 Kb",
+    "generic.throughput.size.1024": "1 Mb",
+    "generic.throughput.size.2048": "2 Mb",
+    "generic.throughput.size.4096": "4 Mb",
+    "generic.throughput.size.8192": "8 Mb",
+    "generic.throughput.size.16384": "16 Mb",
+    "generic.throughput.size.32768": "32 Mb",
+    "generic.throughput.size.65536": "65 Mb",
+    "generic.throughput.doNotFailOnTimeout": "Don't fail test if test is in timeout"
+}

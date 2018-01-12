@@ -1,0 +1,12 @@
+{
+    "generic.throughput.size": "Sélectionnez une taille de fichier qui sera téléchargée toutes les heures",
+    "generic.throughput.size.512": "512 Ko",
+    "generic.throughput.size.1024": "1 Mo",
+    "generic.throughput.size.2048": "2 Mo",
+    "generic.throughput.size.4096": "4 Mo",
+    "generic.throughput.size.8192": "8 Mo",
+    "generic.throughput.size.16384": "16 Mo",
+    "generic.throughput.size.32768": "32 Mo",
+    "generic.throughput.size.65536": "65 Mo",
+    "generic.throughput.doNotFailOnTimeout": "Ne pas faire échouer le test si le temps pour l'exécuter est insuffisant"
+}
