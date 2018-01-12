@@ -24,9 +24,11 @@ function loaded(api) {
          * @param  {boolean} statistics      True if display on statistics, otherwise false
          * @param  {string} dashboardColor  The dashboard color
          * @param  {string} statisticsColor The statistics color
+         * @param  {string} file The file size
+         * @param  {boolean} doNotFailOnTimeout Fails if the test is in timeout
          * @returns {GenericThroughputSensorForm}                 The instance
          */
-        constructor(id, plugin, name, dashboard, statistics, dashboardColor, statisticsColor, file, failOnTimeout) {
+        constructor(id, plugin, name, dashboard, statistics, dashboardColor, statisticsColor, file, doNotFailOnTimeout) {
             super(id, plugin, name, dashboard, statistics, dashboardColor, statisticsColor);
 
             /**
@@ -75,7 +77,6 @@ function loaded(api) {
          */
         constructor(api, id, configuration) {
             super(api, id, configuration);
-            const self = this;
             this.api.timeEventAPI.register((self) => {
                 if (self.configuration.file) {
                     const dlFile = "http://test-debit.free.fr/" + self.configuration.file + ".rnd";
@@ -101,7 +102,7 @@ function loaded(api) {
                         contentLength += chunk.length;
                     })
                     .on("end", () => {
-                        if (!error || self.configuration.doNotFailOnTimeout) {
+                        if (!error || self.configuration.doNotFailOnTimeout) {
                             const end = Date.now();
                             const elapsed = (end - start) / 1000;
                             const kb = contentLength / 1024;
