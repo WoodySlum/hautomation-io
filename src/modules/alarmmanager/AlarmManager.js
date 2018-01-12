@@ -196,6 +196,9 @@ class AlarmManager {
         this.schedulerService.cancel(ARMED_IDENTIFIER);
         this.formConfiguration.data.armed = false;
         this.formConfiguration.save();
+        if (this.armedSoundTimer) {
+            clearInterval(this.armedSoundTimer);
+        }
     }
 
     /**
