@@ -124,6 +124,27 @@ class RadioManager {
     }
 
     /**
+     * Compare a `RadioScenarioForm` object and a standard received `RadioObject`
+     * 
+     * @param  {RadioScenarioForm} radioFormObject The radio scenario form object
+     * @param  {Object} radioObject     A standard radio object
+     * @returns {boolean}                 `true` if objects matches, `false` otherwise
+     */
+    compareFormObject(radioFormObject, radioObject) {
+        if (radioFormObject.radio.module === radioObject.module
+            && radioFormObject.radio.module === radioObject.module
+            && radioFormObject.radio.protocol === radioObject.protocol
+            && radioFormObject.radio.deviceId === radioObject.deviceId
+            && radioFormObject.radio.switchId === radioObject.switchId
+            && ((parseFloat(radioFormObject.status) === parseFloat(RadioScenarioForm.STATUS_ALL)) || (parseFloat(radioFormObject.status) === parseFloat(radioObject.status)))
+        ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * Callback when radio informations are received
      * When a new radio information is received, refresh protocols list for forms
      *
@@ -137,13 +158,7 @@ class RadioManager {
                     let shouldExecuteAction = false;
                     scenario.RadioScenariosForm.radioScenariosForm.forEach((radioScenarioForm) => {
                         if (radioScenarioForm.radio) {
-                            if (radioScenarioForm.radio.module === radioObject.module
-                                && radioScenarioForm.radio.module === radioObject.module
-                                && radioScenarioForm.radio.protocol === radioObject.protocol
-                                && radioScenarioForm.radio.deviceId === radioObject.deviceId
-                                && radioScenarioForm.radio.switchId === radioObject.switchId
-                                && ((parseFloat(radioScenarioForm.status) === parseFloat(RadioScenarioForm.STATUS_ALL)) || (parseFloat(radioScenarioForm.status) === parseFloat(radioObject.status)))
-                            ) {
+                            if (this.compareFormObject(radioScenarioForm, radioObject)) {
                                 shouldExecuteAction = true;
                             }
                         }

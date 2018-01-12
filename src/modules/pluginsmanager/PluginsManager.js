@@ -61,7 +61,8 @@ const INTERNAL_PLUGINS = [
     "reboot",
     "rain-time-sensor",
     "esp-rain-time-sensor",
-    "generic-throughput-sensor"
+    "generic-throughput-sensor",
+    "ring-alert"
 ];
 
 /**

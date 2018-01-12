@@ -83,7 +83,7 @@
     "user.scenario.form.mode.trigger": "Trigger scenario on users location",
     "devices.list.scenario.turnOnAll": "Turn on all devices",
     "devices.list.scenario.turnOffAll": "Turn off all devices",
-    "devices.list.form.title": "Devices",
+    "devices.list.form.title": "Device",
     "devices.list.form.status": "Status",
     "devices.list.form.status.off": "Off",
     "devices.list.form.status.on": "On",
@@ -106,5 +106,6 @@
     "alarm.form.devices.disable": "Turn off devices when alarm is disabled",
     "iot.form.app": "Application",
     "iot.form.name": "Name",
-    "iots.list.form.title": "Pick an IoT application"
+    "iots.list.form.title": "Pick an IoT application",
+    "cameras.list.form.title":"Camera"
 }

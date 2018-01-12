@@ -39,6 +39,16 @@ class RadioAPI {
         PrivateProperties.oprivate(this).radioManager.unregister(cb, id);
     }
 
+    /**
+     * Compare a `RadioScenarioForm` object and a standard received `RadioObject`
+     *
+     * @param  {RadioScenarioForm} radioFormObject The radio scenario form object
+     * @param  {Object} radioObject     A standard radio object
+     * @returns {boolean}                 `true` if objects matches, `false` otherwise
+     */
+    compareFormObject(radioFormObject, radioObject) {
+        return PrivateProperties.oprivate(this).radioManager.compareFormObject(radioFormObject, radioObject);
+    }
 }
 
 module.exports = {class:RadioAPI};

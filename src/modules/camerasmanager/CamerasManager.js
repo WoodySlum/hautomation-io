@@ -676,7 +676,7 @@ class CamerasManager {
     registerCamerasListForm() {
         const camerasName = [];
         const camerasId = [];
-        this.camerasConfiguration.forEach((camera) => {
+        this.camerasConfiguration.sort((a,b) => a.name.localeCompare(b.name)).forEach((camera) => {
             camerasName.push(camera.name);
             camerasId.push(camera.id);
         });
