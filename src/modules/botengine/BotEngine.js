@@ -293,7 +293,7 @@ class BotEngine {
             Logger.warn(JSON.stringify(data));
         })
         .catch((err) => {
-            Logger.err(err.message);
+            if (err && err.message) Logger.err(err.message);
             if (botCb) botCb(self.translateManager.t("bot.misunderstand"));
         });
     }
