@@ -34,6 +34,7 @@ class GatewayManager {
         this.webServices.gatewayManager = this;
         this.tunnelUrl = null;
         Logger.info("Hautomation ID : " + this.getHautomationId());
+        this.environmentManager.hautomationId = this.getHautomationId();
 
         this.timeEventService.register((self) => {
             self.transmit();

@@ -46,6 +46,7 @@ class EnvironmentManager {
         this.scenarioManager.register(DayNightScenarioForm.class, null, "daynight.scenario.trigger.title");
         this.version = version;
         this.hash = hash;
+        this.hautomaionId = null;
         webServices.registerAPI(this, WebServices.GET, ":" + ROUTE_APP_ENVIRONMENT_INFORMATION, Authentication.AUTH_USAGE_LEVEL);
     }
 
@@ -227,7 +228,7 @@ class EnvironmentManager {
     processAPI(apiRequest) {
         if (apiRequest.route.startsWith( ":" + ROUTE_APP_ENVIRONMENT_INFORMATION)) {
             return new Promise((resolve) => {
-                resolve(new APIResponse.class(true, {version:this.version, hash:this.hash}));
+                resolve(new APIResponse.class(true, {version:this.version, hash:this.hash, hautomationId: this.hautomationId}));
             });
         }
     }
