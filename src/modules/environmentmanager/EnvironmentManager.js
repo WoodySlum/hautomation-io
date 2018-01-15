@@ -8,6 +8,9 @@ const Tile = require("./../dashboardmanager/Tile");
 const Icons = require("./../../utils/Icons");
 const DayNightScenarioForm = require("./DayNightScenarioForm");
 const WebServices = require("./../../services/webservices/WebServices");
+const Authentication = require("./../authentication/Authentication");
+const APIResponse = require("./../../services/webservices/APIResponse");
+const ROUTE_APP_ENVIRONMENT_INFORMATION = "/environment/app/get/";
 
 /**
  * This class allows to manage house environment
@@ -24,10 +27,12 @@ class EnvironmentManager {
      * @param  {DashboardManager} dashboardManager The dashboard manager
      * @param  {TranslateManager} translateManager    The translate manager
      * @param  {ScenarioManager} scenarioManager    The scenario manager
+     * @param  {string} version    The app version
+     * @param  {string} hash    The app hash
      *
      * @returns {EnvironmentManager}              The instance
      */
-    constructor(appConfiguration, confManager, formManager, webServices, dashboardManager, translateManager, scenarioManager) {
+    constructor(appConfiguration, confManager, formManager, webServices, dashboardManager, translateManager, scenarioManager, version, hash) {
         this.appConfiguration = appConfiguration;
         this.formConfiguration = new FormConfiguration.class(confManager, formManager, webServices, "environment", false, EnvironmentForm.class);
         this.dashboardManager = dashboardManager;
@@ -39,6 +44,9 @@ class EnvironmentManager {
         this.registerTile();
         this.formManager.register(DayNightScenarioForm.class);
         this.scenarioManager.register(DayNightScenarioForm.class, null, "daynight.scenario.trigger.title");
+        this.version = version;
+        this.hash = hash;
+        webServices.registerAPI(this, WebServices.GET, ":" + ROUTE_APP_ENVIRONMENT_INFORMATION, Authentication.AUTH_USAGE_LEVEL);
     }
 
     /**
@@ -208,6 +216,20 @@ class EnvironmentManager {
      */
     getLocalAPIUrl() {
         return "http://" + this.getLocalIp() + ":" + this.getLocalPort() + WebServices.ENDPOINT_API;
+    }
+
+    /**
+     * Process API callback
+     *
+     * @param  {APIRequest} apiRequest An APIRequest
+     * @returns {Promise}  A promise with an APIResponse object
+     */
+    processAPI(apiRequest) {
+        if (apiRequest.route.startsWith( ":" + ROUTE_APP_ENVIRONMENT_INFORMATION)) {
+            return new Promise((resolve) => {
+                resolve(new APIResponse.class(true, {version:this.version, hash:this.hash}));
+            });
+        }
     }
 }
 
