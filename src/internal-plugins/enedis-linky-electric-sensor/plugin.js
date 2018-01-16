@@ -13,7 +13,7 @@ function loaded(api) {
     api.installerAPI.register("0.0.0", ["x32", "x64"], "brew install python3 python3-pip", false, false, true);
     api.installerAPI.register("0.0.0", ["x32", "x64"], "pip3 install python-dateutil", false, false, true);
 
-    api.installerAPI.register("0.0.0", ["arm", "arm64"], "apt-get install -y python3 python3-pip", true, true);
+    api.installerAPI.register("0.0.0", ["arm", "arm64"], "apt-get install -y --allow-unauthenticated python3 python3-pip", true, true);
     api.installerAPI.register("0.0.0", ["arm", "arm64"], "pip3 install python-dateutil", true, true);
 
 

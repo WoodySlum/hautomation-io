@@ -21,7 +21,7 @@ const ROUTE_RECEIVE_POST = ":/" + ROUTE_RECEIVE;
  */
 function loaded(api) {
     api.installerAPI.register(["x32", "x64"], "brew install gammu", false, false, true);
-    api.installerAPI.register(["arm", "arm64"], "apt-get install -y gammu gammu-smsd", true, true);
+    api.installerAPI.register(["arm", "arm64"], "apt-get install -y --allow-unauthenticated gammu gammu-smsd", true, true);
     api.init();
 
     /**
