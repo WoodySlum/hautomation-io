@@ -37,6 +37,7 @@ build:
   - npm install
   - echo "{\"commit\":\"$(echo $CI_COMMIT_SHA | head -c8)\"}" > version.json
   - npm run --verbose build-arm
+  - npm run --verbose build-deb
   artifacts:
     paths:
     - build/*

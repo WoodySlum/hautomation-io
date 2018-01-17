@@ -1,0 +1,5 @@
+#!/bin/bash
+systemctl daemon-reload
+systemctl enable hautomation
+systemctl restart hautomation
+echo "Hautomation has been successfully installed ! Open browser and go to https://me.hautomation-io.com/ to start ! (on first installation, start can take some times to install dependencies)"

@@ -10,7 +10,7 @@ In preferences / languages / Javascript, set ECMAScript 6 and save.
 
 ### Requirements
 
-* node 6.1.0 or upper version
+* node 8.9.1 or upper version
 
 ### Installation
 
@@ -28,6 +28,8 @@ In console, type `npm install` and everything should go on.
 * `npm run doc` Generate code documentation
 * `npm run doc-apis` Generate Public APIs documentation
 * `npm run build` Build for current architecture
+* `npm run build-arm` Build for current architecture with a arm binary node modules pick
+* `npm run build-deb` Build the deb from the build folder
 
 ## Global architecture
 
@@ -74,3 +76,12 @@ In console, type `npm install` and everything should go on.
 #### Form manager
 
 [Go to details](src/modules/formmanager/README.md)
+
+## Deployment
+
+Installation for Debian arm :
+
+    wget -qO - https://deb.hautomation-io.com/archive.key | sudo apt-key add -
+    sudo apt-add-repository 'deb https://deb.hautomation-io.com trusty main'
+    sudo apt-get update
+    sudo apt-get install hautomation

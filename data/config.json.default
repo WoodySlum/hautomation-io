@@ -1,0 +1,36 @@
+{
+    "configurationPath":"./data/",
+    "cachePath":"/tmp/hautomation/",
+    "port":8100,
+    "logLevel": 2,
+    "ssl": {
+        "port":8101,
+        "key":"./data/ssl/key.pem",
+        "cert":"./data/ssl/cert.pem"
+    },
+    "compression": true,
+    "admin":{
+        "username":"admin",
+        "password":"admin",
+        "enable":true
+    },
+    "db":"./data/database.db",
+    "cameras" : {
+        "archiveFolder":"./data/cameras/",
+        "history":true,
+        "season":true,
+        "timelapse":true
+    },
+    "lng":"en",
+    "home": {
+        "longitude":1.0,
+        "latitude":1.0,
+        "radius":1500
+    },
+    "crashOnPluginError":false,
+    "bot": {
+        "sensitivity":0.1,
+        "audioGain":1.0,
+        "outputVolume": 90
+    }
+}
