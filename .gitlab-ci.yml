@@ -9,6 +9,8 @@ stages:
 
 test:
   stage: test
+  except:
+  - tags
   script:
   - export NODE_TLS_REJECT_UNAUTHORIZED=0
   - npm config set strict-ssl false
@@ -21,6 +23,8 @@ lint:
   stage: lint
   only:
     - master
+  except:
+  - tags
   script:
   - export NODE_TLS_REJECT_UNAUTHORIZED=0
   - npm config set strict-ssl false
@@ -46,6 +50,8 @@ deploy:
   stage: deploy
   only:
     - master
+  except:
+  - tags
   script:
   - eval `ssh-agent -s`
   - ssh-add <(echo "$STAGING_PRIVATE_KEY")
