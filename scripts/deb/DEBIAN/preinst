@@ -1,0 +1,6 @@
+#!/bin/bash
+if [ -e /var/hautomation/data/config.json ]
+then
+    rm -Rf /tmp/hautomation-config.json
+    cp /var/hautomation/data/config.json /tmp/hautomation-config.json
+fi

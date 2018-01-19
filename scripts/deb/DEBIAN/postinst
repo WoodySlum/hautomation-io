@@ -1,4 +1,11 @@
 #!/bin/bash
+
+if [ -e /tmp/hautomation-config.json ]
+then
+    rm -Rf /var/hautomation/data/config.json
+    mv /tmp/hautomation-config.json /var/hautomation/data/config.json
+fi
+
 systemctl daemon-reload
 systemctl enable hautomation
 systemctl restart hautomation
