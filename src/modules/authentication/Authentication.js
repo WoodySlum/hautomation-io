@@ -8,6 +8,9 @@ var WebServices = require("./../../services/webservices/WebServices");
 const USERNAME = "u";
 const PASSWORD = "p";
 //const TOKEN    = "t";
+const HEADER_USERNAME = "X-HAUTOMATION-USERNAME";
+const HEADER_PASSWORD = "X-HAUTOMATION-PASSWORD";
+// const HEADER_TOKEN = "X-HAUTOMATION-TOKEN";
 const AUTH_NO_LEVEL = 0;
 const AUTH_LOCAL_NETWORK_LEVEL = 5;
 const AUTH_USAGE_LEVEL = 10;
@@ -74,8 +77,9 @@ class Authentication {
     }
 
     processAuthentication(apiRequest, resolve, reject) {
-        let u = apiRequest.params[USERNAME];
-        let p = apiRequest.params[PASSWORD];
+        let u = apiRequest.params[USERNAME]?apiRequest.params[USERNAME]:(apiRequest.req.headers[HEADER_USERNAME.toLowerCase()]?apiRequest.req.headers[HEADER_USERNAME.toLowerCase()]:null);
+        let p = apiRequest.params[PASSWORD]?apiRequest.params[PASSWORD]:(apiRequest.req.headers[HEADER_PASSWORD.toLowerCase()]?apiRequest.req.headers[HEADER_PASSWORD.toLowerCase()]:null);
+
         //let t = apiRequest.params[TOKEN];
         let admin = this.userManager.getAdminUser();
 
