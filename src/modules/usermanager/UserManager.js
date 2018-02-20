@@ -69,14 +69,18 @@ class UserManager {
     */
     updateTile() {
         const pics = [];
+        let foundPics = false;
         this.getUsers().forEach((user) => {
             if (user.picture) {
                 const pic = ImageUtils.class.sanitizeFormConfiguration(user.picture);
                 if (pic) {
                     if (user.atHome) {
+                        foundPics = true;
                         ImageUtils.class.resize(pic, (err, data) => {
                             if (!err) {
                                 pics.push(data);
+                                const uTile = new Tile.class(this.dashboardManager.themeManager, "users", Tile.TILE_PICTURES, Icons.class.list()["group"], null, null, null, null, pics);
+                                this.dashboardManager.registerTile(uTile);
                             } else {
                                 Logger.err(err.message);
                             }
@@ -84,11 +88,12 @@ class UserManager {
                     }
                 }
             }
-
         });
 
-        const tile = new Tile.class(this.dashboardManager.themeManager, "users", Tile.TILE_PICTURES, Icons.class.list()["group"], null, null, null, null, pics);
-        this.dashboardManager.registerTile(tile);
+        if (!foundPics) {
+            const tile = new Tile.class(this.dashboardManager.themeManager, "users", Tile.TILE_PICTURES, Icons.class.list()["group"], null, null, null, null, pics);
+            this.dashboardManager.registerTile(tile);
+        }
     }
 
     /**
