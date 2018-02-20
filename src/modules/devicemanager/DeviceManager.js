@@ -160,10 +160,10 @@ class DeviceManager {
 
         // All on tile
         const tileAllOn = new Tile.class(this.dashboardManager.themeManager, "all-on", Tile.TILE_GENERIC_ACTION, Icons.class.list()["off"], null, this.translateManager.t("device.manager.allon"), null, null, null, null, 10300, ROUTE_ALL_ON, null);
-        this.dashboardManager.registerTile(tileAllOn);
+        this.dashboardManager.registerTile(tileAllOn, 9600);
         // All off tile
         const tileAllOff = new Tile.class(this.dashboardManager.themeManager, "all-off", Tile.TILE_GENERIC_ACTION, Icons.class.list()["_456"], null, this.translateManager.t("device.manager.alloff"), null, null, null, null, 10200, ROUTE_ALL_OFF, null);
-        this.dashboardManager.registerTile(tileAllOff);
+        this.dashboardManager.registerTile(tileAllOff, 9601);
     }
 
     /**
@@ -179,10 +179,12 @@ class DeviceManager {
      * Register a device on dashboard
      *
      * @param  {DeviceForm} device A device
+     * @param  {number} [index=-1] An index
      */
-    registerDeviceTile(device) {
+    registerDeviceTile(device, index = -1) {
         if (device.visible) {
-            const tile = new Tile.class(this.dashboardManager.themeManager, device.id, Tile.TILE_GENERIC_ACTION_STATUS, device.icon.icon, null, device.name, null, null, null, device.status > 0?1:0, 9000 + this.formConfiguration.data.indexOf(device), "/device/set/" + device.id + "/", null);
+            let data = this.formConfiguration.data.sort((a,b) => a.name.localeCompare(b.name));
+            const tile = new Tile.class(this.dashboardManager.themeManager, device.id, Tile.TILE_GENERIC_ACTION_STATUS, device.icon.icon, null, device.name, null, null, null, device.status > 0?1:0, (index === -1)?(9000 + data.indexOf(device)):index, "/device/set/" + device.id + "/", null);
             this.dashboardManager.registerTile(tile);
         }
     }
