@@ -128,7 +128,7 @@ class HautomationCore {
         // Cameras manager module
         this.camerasManager = new CamerasManager.class(this.pluginsManager, this.eventBus, this.webServices, this.formManager, this.confManager, this.translateManager, this.themeManager, this.dashboardManager, this.timeEventService, AppConfiguration.cameras, AppConfiguration.cachePath, this.installationManager);
         // Environment manager
-        this.environmentManager = new EnvironmentManager.class(AppConfiguration, this.confManager, this.formManager, this.webServices, this.dashboardManager, this.translateManager, this.scenarioManager, NpmPackage.version, commit);
+        this.environmentManager = new EnvironmentManager.class(AppConfiguration, this.confManager, this.formManager, this.webServices, this.dashboardManager, this.translateManager, this.scenarioManager, NpmPackage.version, commit, this.installationManager, this.timeEventService);
         // UserManager module
         this.userManager = new UserManager.class(this.confManager, this.formManager, this.webServices, this.dashboardManager, AppConfiguration, this.scenarioManager, this.environmentManager, this.translateManager);
         // Message manager

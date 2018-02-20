@@ -10,6 +10,7 @@ const DayNightScenarioForm = require("./DayNightScenarioForm");
 const WebServices = require("./../../services/webservices/WebServices");
 const Authentication = require("./../authentication/Authentication");
 const APIResponse = require("./../../services/webservices/APIResponse");
+const TimeEventService = require("./../../services/timeeventservice/TimeEventService");
 const ROUTE_APP_ENVIRONMENT_INFORMATION = "/environment/app/get/";
 
 /**
@@ -29,10 +30,12 @@ class EnvironmentManager {
      * @param  {ScenarioManager} scenarioManager    The scenario manager
      * @param  {string} version    The app version
      * @param  {string} hash    The app hash
+     * @param  {InstallationManager} installationManager    The installation manager
+     * @param  {TimeEventService} timeEventService    The time event service
      *
      * @returns {EnvironmentManager}              The instance
      */
-    constructor(appConfiguration, confManager, formManager, webServices, dashboardManager, translateManager, scenarioManager, version, hash) {
+    constructor(appConfiguration, confManager, formManager, webServices, dashboardManager, translateManager, scenarioManager, version, hash, installationManager, timeEventService) {
         this.appConfiguration = appConfiguration;
         this.formConfiguration = new FormConfiguration.class(confManager, formManager, webServices, "environment", false, EnvironmentForm.class);
         this.dashboardManager = dashboardManager;
@@ -47,7 +50,12 @@ class EnvironmentManager {
         this.version = version;
         this.hash = hash;
         this.hautomaionId = null;
+        this.installationManager = installationManager;
+        this.timeEventService = timeEventService;
         webServices.registerAPI(this, WebServices.GET, ":" + ROUTE_APP_ENVIRONMENT_INFORMATION, Authentication.AUTH_USAGE_LEVEL);
+        this.timeEventService.register((self) => {
+            self.updateCore();
+        }, this, TimeEventService.CUSTOM, 3, 30, 0);
     }
 
     /**
@@ -229,6 +237,25 @@ class EnvironmentManager {
         if (apiRequest.route.startsWith( ":" + ROUTE_APP_ENVIRONMENT_INFORMATION)) {
             return new Promise((resolve) => {
                 resolve(new APIResponse.class(true, {version:this.version, hash:this.hash, hautomationId: this.hautomationId}));
+            });
+        }
+    }
+
+
+    /**
+     * Try to update core
+     */
+    updateCore() {
+        // For apt linux
+        if (os.platform() === "linux") {
+            Logger.info("Trying to upgrade core ...");
+            this.installationManager.executeCommand("sudo apt-get update && sudo apt-get install hautomation", false, (error, stdout, stderr) => {
+                if (error) {
+                    Logger.err(error);
+                    Logger.err(stderr);
+                } else {
+                    Logger.info(stdout);
+                }
             });
         }
     }
