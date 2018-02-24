@@ -267,15 +267,15 @@ class WebServices extends Service.class {
                         registered[registeredEl.delegate.constructor.name] = {
                             method: {
                                 [registeredEl.method]:[
-                                    {route:registeredEl.route, parameters:registeredEl.parameters, identifier:registeredEl.identifier}
+                                    {identifier:registeredEl.identifier, route:registeredEl.route, parameters:registeredEl.parameters}
                                 ]
                             }
                         };
                     } else {
                         if (registered[registeredEl.delegate.constructor.name].method[registeredEl.method]) {
-                            registered[registeredEl.delegate.constructor.name].method[registeredEl.method].push({route:registeredEl.route, parameters:registeredEl.parameters, identifier:registeredEl.identifier});
+                            registered[registeredEl.delegate.constructor.name].method[registeredEl.method].push({identifier:registeredEl.identifier, route:registeredEl.route, parameters:registeredEl.parameters});
                         } else {
-                            registered[registeredEl.delegate.constructor.name].method[registeredEl.method] = [{route:registeredEl.route, parameters:registeredEl.parameters, identifier:registeredEl.identifier}];
+                            registered[registeredEl.delegate.constructor.name].method[registeredEl.method] = [{identifier:registeredEl.identifier, route:registeredEl.route, parameters:registeredEl.parameters}];
                         }
                     }
 

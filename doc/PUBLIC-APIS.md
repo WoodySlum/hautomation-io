@@ -151,13 +151,6 @@
 -   [data](#data)
 -   [triggerDate](#triggerdate)
 -   [triggered](#triggered)
--   [DateUtils](#dateutils)
-    -   [timestamp](#timestamp)
-    -   [dateToUTCTimestamp](#datetoutctimestamp)
-    -   [dateToTimestamp](#datetotimestamp)
-    -   [roundedTimestamp](#roundedtimestamp)
-    -   [dateFormatted](#dateformatted)
-    -   [secondsElapsedSinceMidnight](#secondselapsedsincemidnight)
 -   [SensorAPI](#sensorapi)
     -   [registerForm](#registerform-2)
     -   [registerClass](#registerclass-1)
@@ -213,11 +206,30 @@
     -   [APIResponse](#apiresponse)
     -   [constants](#constants-3)
 -   [Authentication](#authentication-1)
+    -   [clearExpiredTokens](#clearexpiredtokens)
+    -   [generateToken](#generatetoken)
+    -   [processAPI](#processapi-1)
     -   [checkLocalIp](#checklocalip)
+    -   [processAuthentication](#processauthentication)
 -   [AuthenticationData](#authenticationdata)
     -   [authorized](#authorized)
     -   [username](#username)
     -   [level](#level)
+-   [DateUtils](#dateutils)
+    -   [timestamp](#timestamp)
+    -   [dateToUTCTimestamp](#datetoutctimestamp)
+    -   [dateToTimestamp](#datetotimestamp)
+    -   [roundedTimestamp](#roundedtimestamp)
+    -   [dateFormatted](#dateformatted)
+    -   [secondsElapsedSinceMidnight](#secondselapsedsincemidnight)
+-   [Logger](#logger)
+    -   [setLogLevel](#setloglevel)
+    -   [log](#log)
+    -   [warn](#warn)
+    -   [err](#err)
+    -   [verbose](#verbose)
+    -   [info](#info)
+    -   [debug](#debug)
 -   [APIResponse](#apiresponse-1)
     -   [success](#success)
     -   [response](#response)
@@ -231,7 +243,8 @@
     -   [startTunnel](#starttunnel)
     -   [stop](#stop-3)
     -   [registerInfos](#registerinfos)
-    -   [processAPI](#processapi-1)
+    -   [getRouteIdentifier](#getrouteidentifier)
+    -   [processAPI](#processapi-2)
     -   [register](#register-11)
     -   [unregister](#unregister-8)
     -   [registerAPI](#registerapi)
@@ -240,14 +253,6 @@
     -   [buildPromises](#buildpromises)
     -   [runPromises](#runpromises)
     -   [sendAPIResponse](#sendapiresponse)
--   [Logger](#logger)
-    -   [setLogLevel](#setloglevel)
-    -   [log](#log)
-    -   [warn](#warn)
-    -   [err](#err)
-    -   [verbose](#verbose)
-    -   [info](#info)
-    -   [debug](#debug)
 -   [Service](#service)
     -   [start](#start-4)
     -   [run](#run)
@@ -280,6 +285,7 @@
     -   [route](#route-1)
     -   [authLevel](#authlevel)
     -   [isEqual](#isequal)
+    -   [getRouteBase](#getroutebase)
 
 ## AlarmAPI
 
@@ -1604,68 +1610,6 @@ Database object and schema for scheduler
 
 ## triggered
 
-## DateUtils
-
-Utility class for dates
-
-### timestamp
-
-Return the current timestamp
-
-Returns **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** The current timestamp
-
-### dateToUTCTimestamp
-
-Convert a string date time zoned to UTC timestamp
-
-**Parameters**
-
--   `date` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The GMT date
-
-Returns **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** The UTC timestamp
-
-### dateToTimestamp
-
-Convert a string date time zoned to timestamp
-
-**Parameters**
-
--   `date` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The GMT date
-
-Returns **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** The GMT timestamp
-
-### roundedTimestamp
-
-Round the timestamp to the mode
-
-**Parameters**
-
--   `timestamp` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** A timestamp
--   `mode` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** The mode (contant : `DateUtils.ROUND_TIMESTAMP_MINUTE`, `DateUtils.ROUND_TIMESTAMP_HOUR`, `DateUtils.ROUND_TIMESTAMP_DAY`, `DateUtils.ROUND_TIMESTAMP_MONTH`)
-
-Returns **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Rounded timestamp
-
-### dateFormatted
-
-Format the current date with parameter
-
-**Parameters**
-
--   `format` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** A format (Y for year, m for month, d for day, H for hour, i for minutes, s for seconds)
--   `timestamp` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** A timestamp. If not provided, use current timestamp. (optional, default `null`)
-
-Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The formatted date
-
-### secondsElapsedSinceMidnight
-
-Return the number of seconds elapsed since midnight in UTC format
-
-**Parameters**
-
--   `timestamp` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** A timestamp in seconds
-
-Returns **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** A number of seconds elapsed
-
 ## SensorAPI
 
 Public API for sensor
@@ -2076,6 +2020,7 @@ Register to a specific web service be notified when a route and/or method is cal
 -   `method` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** A method (\*, WebServices.GET / WebServices.POST) (optional, default `"*"`)
 -   `route` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** A route (\*, :/my/route/) (optional, default `"*"`)
 -   `authLevel` **int** An authentification level (optional, default `Authentication.AUTH_USAGE_LEVEL`)
+-   `tokenExpirationTime` **int** A token expiration time in seconds, for token authentication. 0 for one time token. (optional, default `0`)
 
 ### unregister
 
@@ -2122,6 +2067,32 @@ This class manage authentication for Web Services
 -   `userManager`  
 -   `environmentManager`  
 
+### clearExpiredTokens
+
+Clear expired tokens
+
+### generateToken
+
+Generates a token
+
+**Parameters**
+
+-   `username` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The username
+-   `serviceIdentifier` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The service identifier
+-   `expirationTime` **int** Expiration time (optional, default `0`)
+
+Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The token
+
+### processAPI
+
+Process API callback
+
+**Parameters**
+
+-   `apiRequest` **[APIRequest](#apirequest)** An APIRequest
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with an APIResponse object
+
 ### checkLocalIp
 
 Check if an ip is on the same network
@@ -2131,6 +2102,16 @@ Check if an ip is on the same network
 -   `ipSource` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The source ip
 
 Returns **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` if the ip is on the same network, `false` otherwise
+
+### processAuthentication
+
+Process authentication
+
+**Parameters**
+
+-   `apiRequest` **[APIRequest](#apirequest)** The api request
+-   `resolve` **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** The resolve function
+-   `reject` **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** The reject function
 
 ## AuthenticationData
 
@@ -2153,6 +2134,129 @@ Username
 ### level
 
 App access level
+
+## DateUtils
+
+Utility class for dates
+
+### timestamp
+
+Return the current timestamp
+
+Returns **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** The current timestamp
+
+### dateToUTCTimestamp
+
+Convert a string date time zoned to UTC timestamp
+
+**Parameters**
+
+-   `date` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The GMT date
+
+Returns **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** The UTC timestamp
+
+### dateToTimestamp
+
+Convert a string date time zoned to timestamp
+
+**Parameters**
+
+-   `date` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The GMT date
+
+Returns **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** The GMT timestamp
+
+### roundedTimestamp
+
+Round the timestamp to the mode
+
+**Parameters**
+
+-   `timestamp` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** A timestamp
+-   `mode` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** The mode (contant : `DateUtils.ROUND_TIMESTAMP_MINUTE`, `DateUtils.ROUND_TIMESTAMP_HOUR`, `DateUtils.ROUND_TIMESTAMP_DAY`, `DateUtils.ROUND_TIMESTAMP_MONTH`)
+
+Returns **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Rounded timestamp
+
+### dateFormatted
+
+Format the current date with parameter
+
+**Parameters**
+
+-   `format` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** A format (Y for year, m for month, d for day, H for hour, i for minutes, s for seconds)
+-   `timestamp` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** A timestamp. If not provided, use current timestamp. (optional, default `null`)
+
+Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The formatted date
+
+### secondsElapsedSinceMidnight
+
+Return the number of seconds elapsed since midnight in UTC format
+
+**Parameters**
+
+-   `timestamp` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** A timestamp in seconds
+
+Returns **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** A number of seconds elapsed
+
+## Logger
+
+This class provides static methods to log into a file.
+
+### setLogLevel
+
+Set the log level
+
+**Parameters**
+
+-   `level` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Log level between 0 and 5 (optional, default `3`)
+
+### log
+
+Log to a file
+
+**Parameters**
+
+-   `message` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** A log message
+-   `level` **int** Log level between 0 to 5 (optional, default `3`)
+
+### warn
+
+Log a warning to a file
+
+**Parameters**
+
+-   `message` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** A log message
+
+### err
+
+Log an error to a file
+
+**Parameters**
+
+-   `message` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** A log message
+
+### verbose
+
+Log a verbose message to a file
+
+**Parameters**
+
+-   `message` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** A log message
+
+### info
+
+Log an information to a file
+
+**Parameters**
+
+-   `message` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** A log message
+
+### debug
+
+Log a debug message to a file, with stacktrace
+
+**Parameters**
+
+-   `message` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** A log message
 
 ## APIResponse
 
@@ -2239,6 +2343,16 @@ Stop Web Services
 
 Register and list informations
 
+### getRouteIdentifier
+
+Get the route serviceIdentifier
+
+**Parameters**
+
+-   `route` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** A route
+
+Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The identifier
+
 ### processAPI
 
 Process API callback
@@ -2275,6 +2389,7 @@ Register to a specific API to be notified when a route and/or method is called
 -   `method` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** A method (\*, WebServices.GET / WebServices.POST / WebServices.DELETE) (optional, default `"*"`)
 -   `route` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** A route (\*, :/my/route/) (optional, default `"*"`)
 -   `authLevel` **int** An authentification level (optional, default `Authentication.AUTH_USAGE_LEVEL`)
+-   `tokenExpirationTime` **int** A token expiration time in seconds, for token authentication. 0 for one time token. (optional, default `0`)
 
 ### unregisterAPI
 
@@ -2326,67 +2441,6 @@ Process sending results in JSON to API caller
 
 -   `apiResponses` **\[[APIResponse](#apiresponse)]** The API responses
 -   `res` **[Response](https://developer.mozilla.org/docs/Web/Guide/HTML/HTML5)** The response
-
-## Logger
-
-This class provides static methods to log into a file.
-
-### setLogLevel
-
-Set the log level
-
-**Parameters**
-
--   `level` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Log level between 0 and 5 (optional, default `3`)
-
-### log
-
-Log to a file
-
-**Parameters**
-
--   `message` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** A log message
--   `level` **int** Log level between 0 to 5 (optional, default `3`)
-
-### warn
-
-Log a warning to a file
-
-**Parameters**
-
--   `message` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** A log message
-
-### err
-
-Log an error to a file
-
-**Parameters**
-
--   `message` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** A log message
-
-### verbose
-
-Log a verbose message to a file
-
-**Parameters**
-
--   `message` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** A log message
-
-### info
-
-Log an information to a file
-
-**Parameters**
-
--   `message` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** A log message
-
-### debug
-
-Log a debug message to a file, with stacktrace
-
-**Parameters**
-
--   `message` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** A log message
 
 ## Service
 
@@ -2513,6 +2567,7 @@ This class is a POJO representing an APIRequest item
 -   `req`  
 -   `res`  
 -   `data`   (optional, default `null`)
+-   `apiRegistration`   (optional, default `null`)
 
 ### method
 
@@ -2564,6 +2619,8 @@ This class is a POJO representing an APIRegistration item
 -   `method`   (optional, default `"*"`)
 -   `route`   (optional, default `"*"`)
 -   `authLevel`   (optional, default `Authentication.AUTH_USAGE_LEVEL`)
+-   `identifier`   (optional, default `null`)
+-   `authTokenExpiration`   (optional, default `0`)
 
 ### delegate
 
@@ -2590,3 +2647,9 @@ Check if the parameter equality
 -   `obj` **[APIRegistration](#apiregistration)** An APIRegistration object
 
 Returns **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** true or false
+
+### getRouteBase
+
+Returns the route base string
+
+Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The base route (without parameters)

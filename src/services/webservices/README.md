@@ -28,6 +28,7 @@ Example :
 | method    | Constant | Web Services method, commonly WebServices.GET or WebServices.POST. You can use wilcard `*` for all methods. |
 | route     | String   |  The route you want to register, for example `:/my/route/`. You can use wilcard `*` for all methods.        |
 | authLevel | Int      |  The authentication level needed for the API. `Authentication.AUTH_NO_LEVEL`, `Authentication.AUTH_USAGE_LEVEL` or `Authentication.AUTH_MAX_LEVEL`        |
+| tokenExpirationTime | Int      |  The expiration time in seconds for token authentication. If `0` token will be usable one time only        |
 
 Example :
 
