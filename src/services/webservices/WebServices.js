@@ -240,6 +240,12 @@ class WebServices extends Service.class {
         this.registerAPI(this, GET, INFOS_ENDPOINT, Authentication.AUTH_NO_LEVEL);
     }
 
+    /**
+     * Get the route serviceIdentifier
+     *
+     * @param  {string} route A route
+     * @returns {string}       The identifier
+     */
     getRouteIdentifier(route) {
         return sha256(route).substr(0, 8);
     }
@@ -306,7 +312,7 @@ class WebServices extends Service.class {
      * @param  {string} [method="*"] A method (*, WebServices.GET / WebServices.POST / WebServices.DELETE)
      * @param  {string} [route="*"]  A route (*, :/my/route/)
      * @param  {int} authLevel  An authentification level
-     * @param  {Number} [tokenExpirationTime=0] A token expiration time in seconds, for token authentication. 0 for one time token.
+     * @param  {int} [tokenExpirationTime=0] A token expiration time in seconds, for token authentication. 0 for one time token.
      */
     registerAPI(delegate, method = "*", route = "*", authLevel = Authentication.AUTH_USAGE_LEVEL, tokenExpirationTime = 0) {
         let found = false;
@@ -389,9 +395,6 @@ class WebServices extends Service.class {
                 action = path[0];
                 path.splice(0,1);
             }
-
-            // Base route
-            const baseRouteArray = [];
 
             try {
                 this.delegates.forEach((delegate) => {

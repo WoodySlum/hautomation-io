@@ -30,7 +30,7 @@ class WebAPI {
      * @param  {string} [method="*"] A method (*, WebServices.GET / WebServices.POST)
      * @param  {string} [route="*"]  A route (*, :/my/route/)
      * @param  {int} authLevel  An authentification level
-     * @param  {Number} [tokenExpirationTime=0] A token expiration time in seconds, for token authentication. 0 for one time token.
+     * @param  {int} [tokenExpirationTime=0] A token expiration time in seconds, for token authentication. 0 for one time token.
      *
      */
     register(delegate, method = "*", route = "*", authLevel = Authentication.AUTH_USAGE_LEVEL, tokenExpirationTime = 0) {

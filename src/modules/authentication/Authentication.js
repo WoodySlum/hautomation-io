@@ -50,6 +50,9 @@ class Authentication {
         this.tokens = {};
     }
 
+    /**
+     * Clear expired tokens
+     */
     clearExpiredTokens() {
         const timestamp = DateUtils.class.timestamp();
         Object.keys(this.tokens).forEach((userId) => {
@@ -68,16 +71,30 @@ class Authentication {
         });
     }
 
-    generateToken(userName, serviceIdentifier, expirationTime = 0) {
-        const token = sha256((serviceIdentifier + userName + DateUtils.class.timestamp() + ((Math.random() * 10000000) + 1)).toString()).substr(((Math.random() * 40) + 1), 16);
-        if (!this.tokens[userName]) {
-            this.tokens[userName] = [];
+    /**
+     * Generates a token
+     *
+     * @param  {string} username           The username
+     * @param  {string} serviceIdentifier  The service identifier
+     * @param  {int} [expirationTime=0] Expiration time
+     * @returns {string}                   The token
+     */
+    generateToken(username, serviceIdentifier, expirationTime = 0) {
+        const token = sha256((serviceIdentifier + username + DateUtils.class.timestamp() + ((Math.random() * 10000000) + 1)).toString()).substr(((Math.random() * 40) + 1), 16);
+        if (!this.tokens[username]) {
+            this.tokens[username] = [];
         }
-        this.tokens[userName].push({token:token, expiration:(DateUtils.class.timestamp() + ((expirationTime === 0)?TOKEN_DEFAULT_VALIDITY:expirationTime)), expirationTime: expirationTime, serviceIdentifier: serviceIdentifier});
+        this.tokens[username].push({token:token, expiration:(DateUtils.class.timestamp() + ((expirationTime === 0)?TOKEN_DEFAULT_VALIDITY:expirationTime)), expirationTime: expirationTime, serviceIdentifier: serviceIdentifier});
 
         return token;
     }
 
+    /**
+     * Process API callback
+     *
+     * @param  {APIRequest} apiRequest An APIRequest
+     * @returns {Promise}  A promise with an APIResponse object
+     */
     processAPI(apiRequest) {
         this.clearExpiredTokens();
         let t = this;
@@ -137,6 +154,13 @@ class Authentication {
         return false;
     }
 
+    /**
+     * Process authentication
+     *
+     * @param  {APIRequest} apiRequest The api request
+     * @param  {Function} resolve    The resolve function
+     * @param  {Function} reject     The reject function
+     */
     processAuthentication(apiRequest, resolve, reject) {
         let u = apiRequest.params[USERNAME]?apiRequest.params[USERNAME]:(apiRequest.req.headers[HEADER_USERNAME.toLowerCase()]?apiRequest.req.headers[HEADER_USERNAME.toLowerCase()]:null);
         let p = apiRequest.params[PASSWORD]?apiRequest.params[PASSWORD]:(apiRequest.req.headers[HEADER_PASSWORD.toLowerCase()]?apiRequest.req.headers[HEADER_PASSWORD.toLowerCase()]:null);
@@ -160,10 +184,10 @@ class Authentication {
                 this.tokens[username].forEach((tokenData) => {
                     if ((tokenData.serviceIdentifier === apiRequest.apiRegistration.identifier)
                         && (t === tokenData.token)){
-                            detectedUsername = username;
-                            if (tokenData.expirationTime === 0) {
-                                deletedIndex = i;
-                            }
+                        detectedUsername = username;
+                        if (tokenData.expirationTime === 0) {
+                            deletedIndex = i;
+                        }
                     }
                     i++;
                 });

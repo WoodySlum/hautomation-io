@@ -15,8 +15,8 @@ class APIRegistration {
      * @param  {string} [method="*"] The method (GET, POST, ...)
      * @param  {string} [route="*"] The needed route (:/foo/bar)
      * @param  {int} [authLevel=Authentication.AUTH_USAGE_LEVEL] The authentication level needed to be called
-     * @param {[type]} [identifier=null]  The route identifier
-     * @param {Number} [authTokenExpiration=0] The expiration time for token, in seconds
+     * @param {string} [identifier=null]  The route service identifier
+     * @param {int} [authTokenExpiration=0] The expiration time for token, in seconds
      * @returns {APIRegistration} The instance
      */
     constructor(delegate, method = "*", route = "*", authLevel = Authentication.AUTH_USAGE_LEVEL, identifier = null, authTokenExpiration = 0) {
@@ -82,6 +82,11 @@ class APIRegistration {
         return false;
     }
 
+    /**
+     * Returns the route base string
+     * 
+     * @returns {string} The base route (without parameters)
+     */
     getRouteBase() {
         const routeBase = [];
         this.routeBase.forEach((rbElement) => {
