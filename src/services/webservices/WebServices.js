@@ -2,6 +2,8 @@
 const express = require("express");
 const compression = require("compression");
 const ngrok = require("ngrok");
+const BreakException = require("./../../utils/BreakException").BreakException;
+const sha256 = require("sha256");
 
 // Internal
 var Logger = require("./../../logger/Logger");
@@ -68,6 +70,7 @@ class WebServices extends Service.class {
         this.cachePath = cachePath;
         this.enableCompression = enableCompression;
         this.gatewayManager = null;
+        this.tokenAuthParameters = {};
     }
 
     /**
@@ -126,6 +129,7 @@ class WebServices extends Service.class {
                 const logObject = Object.assign({}, apiRequest);
                 delete logObject.res;
                 delete logObject.req;
+                delete logObject.apiRegistration;
                 Logger.verbose(logObject);
                 instance.runPromises(apiRequest, instance.buildPromises(apiRequest), res);
             });
@@ -237,6 +241,16 @@ class WebServices extends Service.class {
     }
 
     /**
+     * Get the route serviceIdentifier
+     *
+     * @param  {string} route A route
+     * @returns {string}       The identifier
+     */
+    getRouteIdentifier(route) {
+        return sha256(route).substr(0, 8);
+    }
+
+    /**
      * Process API callback
      *
      * @param  {APIRequest} apiRequest An APIRequest
@@ -253,15 +267,15 @@ class WebServices extends Service.class {
                         registered[registeredEl.delegate.constructor.name] = {
                             method: {
                                 [registeredEl.method]:[
-                                    {route:registeredEl.route, parameters:registeredEl.parameters}
+                                    {identifier:registeredEl.identifier, route:registeredEl.route, parameters:registeredEl.parameters}
                                 ]
                             }
                         };
                     } else {
                         if (registered[registeredEl.delegate.constructor.name].method[registeredEl.method]) {
-                            registered[registeredEl.delegate.constructor.name].method[registeredEl.method].push({route:registeredEl.route, parameters:registeredEl.parameters});
+                            registered[registeredEl.delegate.constructor.name].method[registeredEl.method].push({identifier:registeredEl.identifier, route:registeredEl.route, parameters:registeredEl.parameters});
                         } else {
-                            registered[registeredEl.delegate.constructor.name].method[registeredEl.method] = [{route:registeredEl.route, parameters:registeredEl.parameters}];
+                            registered[registeredEl.delegate.constructor.name].method[registeredEl.method] = [{identifier:registeredEl.identifier, route:registeredEl.route, parameters:registeredEl.parameters}];
                         }
                     }
 
@@ -298,10 +312,12 @@ class WebServices extends Service.class {
      * @param  {string} [method="*"] A method (*, WebServices.GET / WebServices.POST / WebServices.DELETE)
      * @param  {string} [route="*"]  A route (*, :/my/route/)
      * @param  {int} authLevel  An authentification level
+     * @param  {int} [tokenExpirationTime=0] A token expiration time in seconds, for token authentication. 0 for one time token.
      */
-    registerAPI(delegate, method = "*", route = "*", authLevel = Authentication.AUTH_USAGE_LEVEL) {
+    registerAPI(delegate, method = "*", route = "*", authLevel = Authentication.AUTH_USAGE_LEVEL, tokenExpirationTime = 0) {
         let found = false;
-        let registration = new APIRegistration.class(delegate, method, route, authLevel);
+        let registration = new APIRegistration.class(delegate, method, route, authLevel, this.getRouteIdentifier(route), tokenExpirationTime);
+
         this.delegates.forEach((d) => {
             if (d.isEqual(registration)) {
                 found = true;
@@ -366,6 +382,7 @@ class WebServices extends Service.class {
         let path = route.split("/");
         let action = null;
         let params = {};
+        let apiRegistration = null;
 
         if (path && path.length > 0) {
             // Last element is /
@@ -378,6 +395,22 @@ class WebServices extends Service.class {
                 action = path[0];
                 path.splice(0,1);
             }
+
+            try {
+                this.delegates.forEach((delegate) => {
+                    const rb = delegate.getRouteBase();
+                    if ((":/" + route).startsWith(rb)) {
+                        apiRegistration = delegate;
+                        throw BreakException;
+                    }
+                });
+            } catch(e) {
+                if (e != BreakException) {
+                    Logger.err(e);
+                }
+            }
+
+
         }
 
         let methodConstant = null;
@@ -412,8 +445,7 @@ class WebServices extends Service.class {
         }
 
         Logger.info(method + " " + req.path + " from " + ip + " " + req.headers[CONTENT_TYPE]);
-
-        return new APIRequest.class(methodConstant, ip, route, path, action, params, req, res, data);
+        return new APIRequest.class(methodConstant, ip, route, path, action, params, req, res, data, apiRegistration);
     }
 
     /**
@@ -426,7 +458,6 @@ class WebServices extends Service.class {
         let promises = [];
 
         this.delegates.forEach((registeredEl) => {
-
             if ((registeredEl.method === "*"
                 || registeredEl.method === apiRequest.method)
                 && (registeredEl.route === "*"

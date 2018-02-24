@@ -445,6 +445,11 @@ describe("WebServices", function() {
         w.runPromises(reqGet, p , res);
     });
 
+    it("should return always same identifier", function() {
+        let w = new WebServices.class(9090);
+        expect(w.getRouteIdentifier(":/token/get/[serviceIdentifier]/")).to.be.equal("92f8c68f");
+    });
+
     after(function () {
 
     });

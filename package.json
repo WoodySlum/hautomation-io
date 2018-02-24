@@ -62,6 +62,7 @@
         "node-pre-gyp": "^0.6",
         "nodemon": "^1.14",
         "pkg": "^4.0",
+        "resolve-options": "^1.1",
         "sinon": "^2.4.1"
     },
     "dependencies": {

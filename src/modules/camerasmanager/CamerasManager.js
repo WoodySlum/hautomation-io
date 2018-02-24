@@ -1,5 +1,4 @@
 "use strict";
-const sha256 = require("sha256");
 const request = require("request");
 const MjpegProxy = require("mjpeg-proxy").MjpegProxy;
 const fs = require("fs-extra");
@@ -26,9 +25,6 @@ const CAMERAS_MANAGER_DEL_BASE = ":/cameras/del";
 const CAMERAS_MANAGER_DEL = CAMERAS_MANAGER_DEL_BASE + "/[id*]/";
 const CAMERAS_MANAGER_TIMELAPSE_DAILY_STREAM_BASE = ":/camera/timelapse/daily/stream/";
 const CAMERAS_MANAGER_TIMELAPSE_DAILY_STREAM = CAMERAS_MANAGER_TIMELAPSE_DAILY_STREAM_BASE + "[id]/";
-const CAMERAS_MANAGER_TIMELAPSE_DAILY_STREAM_BASE_WITH_TOKEN = CAMERAS_MANAGER_TIMELAPSE_DAILY_STREAM_BASE + "token/";
-const CAMERAS_MANAGER_TIMELAPSE_DAILY_STREAM_WITH_TOKEN = CAMERAS_MANAGER_TIMELAPSE_DAILY_STREAM_BASE_WITH_TOKEN + "[token]/[id]/";
-
 const CAMERAS_MANAGER_TIMELAPSE_DAILY_GET_BASE = ":/camera/timelapse/daily/get/";
 const CAMERAS_MANAGER_TIMELAPSE_DAILY_GET = CAMERAS_MANAGER_TIMELAPSE_DAILY_GET_BASE + "[id]/";
 const CAMERAS_MANAGER_TIMELAPSE_GENERATE_POST_BASE = ":/camera/timelapse/set/";
@@ -39,19 +35,12 @@ const CAMERAS_MANAGER_TIMELAPSE_GET_BASE = ":/camera/timelapse/get/";
 const CAMERAS_MANAGER_TIMELAPSE_GET = CAMERAS_MANAGER_TIMELAPSE_GET_BASE + "[token]/";
 const CAMERAS_MANAGER_TIMELAPSE_STREAM_BASE = ":/camera/timelapse/stream/";
 const CAMERAS_MANAGER_TIMELAPSE_STREAM = CAMERAS_MANAGER_TIMELAPSE_STREAM_BASE + "[token]/";
-const CAMERAS_MANAGER_TIMELAPSE_STREAM_BASE_WITH_TOKEN = CAMERAS_MANAGER_TIMELAPSE_STREAM_BASE + "token/";
-const CAMERAS_MANAGER_TIMELAPSE_STREAM_WITH_TOKEN = CAMERAS_MANAGER_TIMELAPSE_STREAM_BASE_WITH_TOKEN + "[authToken]/[token]/";
-
 
 const CAMERAS_MANAGER_LIST = ":/cameras/list/";
 const CAMERAS_RETRIEVE_BASE = ":/camera/get/";
 const CAMERAS_RETRIEVE_GET = CAMERAS_RETRIEVE_BASE + "[mode]/[id]/[base64*]/[timestamp*]/";
-const CAMERAS_RETRIEVE_BASE_WITH_TOKEN = CAMERAS_RETRIEVE_BASE + "token/";
-const CAMERAS_RETRIEVE_GET_WITH_TOKEN = CAMERAS_RETRIEVE_BASE_WITH_TOKEN + "[token]/[mode]/[id]/[base64*]/[timestamp*]/";
 const CAMERAS_MOVE_BASE = ":/camera/move/";
 const CAMERAS_MOVE_SET = CAMERAS_MOVE_BASE + "[id]/[direction]/";
-const CAMERAS_RETRIEVE_GENERATE_TOKEN_BASE = ":/camera/generate-token/";
-const CAMERAS_RETRIEVE_GENERATE_TOKEN = CAMERAS_RETRIEVE_GENERATE_TOKEN_BASE + "[id]/";
 
 const MODE_STATIC = "static";
 const MODE_MJPEG = "mjpeg";
@@ -74,7 +63,6 @@ const ERROR_TIMELAPSE_NOT_GENERATED = "Timelapse not generated";
 const ERROR_UNKNOWN_TIMELAPSE_TOKEN = "Unknown timelapse token";
 const ERROR_UNEXISTING_PICTURE = "Unexisting picture";
 const ERROR_RECORD_ALREADY_RUNNING = "Already recording camera";
-const ERROR_STREAM_INVALID_TOKEN = "Invalid token";
 
 
 /**
@@ -119,7 +107,6 @@ class CamerasManager {
         this.currentTimelapse = null;
         this.currentRecording = {};
         this.generatedTimelapses = {};
-        this.tokens = {};
 
         try {
             this.camerasConfiguration = this.confManager.loadData(Object, CONF_MANAGER_KEY, true);
@@ -142,21 +129,17 @@ class CamerasManager {
         this.webServices.registerAPI(this, WebServices.POST, CAMERAS_MANAGER_POST, Authentication.AUTH_ADMIN_LEVEL);
         this.webServices.registerAPI(this, WebServices.DELETE, CAMERAS_MANAGER_DEL, Authentication.AUTH_ADMIN_LEVEL);
 
-        this.webServices.registerAPI(this, WebServices.GET, CAMERAS_RETRIEVE_GENERATE_TOKEN, Authentication.AUTH_USAGE_LEVEL);
         this.webServices.registerAPI(this, WebServices.GET, CAMERAS_MANAGER_LIST, Authentication.AUTH_USAGE_LEVEL);
         this.webServices.registerAPI(this, WebServices.GET, CAMERAS_RETRIEVE_GET, Authentication.AUTH_USAGE_LEVEL);
-        this.webServices.registerAPI(this, WebServices.GET, CAMERAS_RETRIEVE_GET_WITH_TOKEN, Authentication.AUTH_NO_LEVEL);
         this.webServices.registerAPI(this, WebServices.POST, CAMERAS_MOVE_SET, Authentication.AUTH_USAGE_LEVEL);
 
         // Timelapse
         this.webServices.registerAPI(this, WebServices.GET, CAMERAS_MANAGER_TIMELAPSE_DAILY_STREAM, Authentication.AUTH_USAGE_LEVEL);
-        this.webServices.registerAPI(this, WebServices.GET, CAMERAS_MANAGER_TIMELAPSE_DAILY_STREAM_WITH_TOKEN, Authentication.AUTH_NO_LEVEL);
         this.webServices.registerAPI(this, WebServices.GET, CAMERAS_MANAGER_TIMELAPSE_DAILY_GET, Authentication.AUTH_USAGE_LEVEL);
         this.webServices.registerAPI(this, WebServices.POST, CAMERAS_MANAGER_TIMELAPSE_GENERATE_POST, Authentication.AUTH_USAGE_LEVEL);
         this.webServices.registerAPI(this, WebServices.GET, CAMERAS_MANAGER_TIMELAPSE_STATUS_GET, Authentication.AUTH_USAGE_LEVEL);
         this.webServices.registerAPI(this, WebServices.GET, CAMERAS_MANAGER_TIMELAPSE_GET, Authentication.AUTH_USAGE_LEVEL);
         this.webServices.registerAPI(this, WebServices.GET, CAMERAS_MANAGER_TIMELAPSE_STREAM, Authentication.AUTH_USAGE_LEVEL);
-        this.webServices.registerAPI(this, WebServices.GET, CAMERAS_MANAGER_TIMELAPSE_STREAM_WITH_TOKEN, Authentication.AUTH_NO_LEVEL);
 
         // Register tile refresh :)
         this.timeEventService.register((self) => {
@@ -436,65 +419,45 @@ class CamerasManager {
             return new Promise((resolve) => {
                 resolve(new APIResponse.class(true, self.getCamerasList().sort((a,b) => a.name.localeCompare(b.name))));
             });
-        } else if (apiRequest.route.startsWith(CAMERAS_RETRIEVE_GENERATE_TOKEN_BASE)) {
-            return new Promise((resolve, reject) => {
-                const id = parseInt(apiRequest.data.id);
-                const camera = this.getCamera(id);
-                if (camera) {
-                    this.tokens[id] = sha256((id + DateUtils.class.timestamp() + ((Math.random() * 10000000) + 1)).toString()).substr(((Math.random() * 40) + 1), 16);
-                    resolve(new APIResponse.class(true, {token:this.tokens[id]}));
-                } else {
-                    reject(new APIResponse.class(false, {}, 766, ERROR_UNKNOWN_IDENTIFIER));
-                }
-            });
-        } else if (apiRequest.route.startsWith(CAMERAS_RETRIEVE_BASE) || apiRequest.route.startsWith(CAMERAS_RETRIEVE_BASE_WITH_TOKEN)) {
-
+        } else if (apiRequest.route.startsWith(CAMERAS_RETRIEVE_BASE)) {
             const id = parseInt(apiRequest.data.id);
             const mode = apiRequest.data.mode;
             const base64 = apiRequest.data.base64?(parseInt(apiRequest.data.base64)>0?true:false):false;
-            const token = apiRequest.data.token;
-            const tokenMode = apiRequest.route.startsWith(CAMERAS_RETRIEVE_BASE_WITH_TOKEN);
-
             return new Promise((resolve, reject) => {
-                if (tokenMode && (!token || !this.tokens[id] || token != this.tokens[id])) {
-                    reject(new APIResponse.class(false, {}, 798, ERROR_STREAM_INVALID_TOKEN));
-                } else {
-                    this.tokens[id] = null;
-                    if (mode === MODE_STATIC) {
-                        self.getImage(id, (err, data, contentType) => {
-                            if (err) {
-                                reject(new APIResponse.class(false, {}, 765, err.message));
-                            } else if (base64) {
-                                resolve(new APIResponse.class(true, {data:data.toString("base64")}));
-                            } else {
-                                resolve(new APIResponse.class(true, data, null, null, false, contentType));
-                            }
-                        }, apiRequest.data.timestamp?apiRequest.data.timestamp:null);
-                    } else if (mode === MODE_MJPEG) {
-                        const camera = this.getCamera(id);
-                        if (camera) {
-                            if (camera.mjpegUrl) {
-                                apiRequest.res  = new MjpegProxy(camera.mjpegUrl).proxyRequest(apiRequest.req, apiRequest.res);
-                            } else {
-                                reject(new APIResponse.class(false, {}, 766, ERROR_UNSUPPORTED_MODE));
-                            }
+                if (mode === MODE_STATIC) {
+                    self.getImage(id, (err, data, contentType) => {
+                        if (err) {
+                            reject(new APIResponse.class(false, {}, 765, err.message));
+                        } else if (base64) {
+                            resolve(new APIResponse.class(true, {data:data.toString("base64")}));
                         } else {
-                            reject(new APIResponse.class(false, {}, 766, ERROR_UNKNOWN_IDENTIFIER));
+                            resolve(new APIResponse.class(true, data, null, null, false, contentType));
                         }
-                    } else if (mode === MODE_RTSP) {
-                        const camera = this.getCamera(id);
-                        if (camera) {
-                            if (camera.rtspUrl) {
-                                apiRequest.res  = new MjpegProxy(camera.rtspUrl).proxyRequest(apiRequest.req, apiRequest.res);
-                            } else {
-                                reject(new APIResponse.class(false, {}, 766, ERROR_UNSUPPORTED_MODE));
-                            }
+                    }, apiRequest.data.timestamp?apiRequest.data.timestamp:null);
+                } else if (mode === MODE_MJPEG) {
+                    const camera = this.getCamera(id);
+                    if (camera) {
+                        if (camera.mjpegUrl) {
+                            apiRequest.res  = new MjpegProxy(camera.mjpegUrl).proxyRequest(apiRequest.req, apiRequest.res);
                         } else {
-                            reject(new APIResponse.class(false, {}, 766, ERROR_UNKNOWN_IDENTIFIER));
+                            reject(new APIResponse.class(false, {}, 766, ERROR_UNSUPPORTED_MODE));
                         }
                     } else {
-                        reject(new APIResponse.class(false, {}, 764, ERROR_UNKNOWN_MODE));
+                        reject(new APIResponse.class(false, {}, 766, ERROR_UNKNOWN_IDENTIFIER));
                     }
+                } else if (mode === MODE_RTSP) {
+                    const camera = this.getCamera(id);
+                    if (camera) {
+                        if (camera.rtspUrl) {
+                            apiRequest.res  = new MjpegProxy(camera.rtspUrl).proxyRequest(apiRequest.req, apiRequest.res);
+                        } else {
+                            reject(new APIResponse.class(false, {}, 766, ERROR_UNSUPPORTED_MODE));
+                        }
+                    } else {
+                        reject(new APIResponse.class(false, {}, 766, ERROR_UNKNOWN_IDENTIFIER));
+                    }
+                } else {
+                    reject(new APIResponse.class(false, {}, 764, ERROR_UNKNOWN_MODE));
                 }
             });
         } else if (apiRequest.route.startsWith(CAMERAS_MOVE_BASE)) {
@@ -527,59 +490,50 @@ class CamerasManager {
                     reject(new APIResponse.class(false, {}, 766, ERROR_UNKNOWN_IDENTIFIER));
                 }
             });
-        } else if (apiRequest.route.startsWith(CAMERAS_MANAGER_TIMELAPSE_DAILY_STREAM_BASE) || apiRequest.route.startsWith(CAMERAS_MANAGER_TIMELAPSE_DAILY_STREAM_BASE_WITH_TOKEN)) {
+        } else if (apiRequest.route.startsWith(CAMERAS_MANAGER_TIMELAPSE_DAILY_STREAM_BASE)) {
             return new Promise((resolve, reject) => {
-                const id = parseInt(apiRequest.data.id);
-                const token = apiRequest.data.token;
-                const tokenMode = apiRequest.route.startsWith(CAMERAS_MANAGER_TIMELAPSE_DAILY_STREAM_BASE_WITH_TOKEN);
-
-                if (tokenMode && (!token || !this.tokens[id] || token != this.tokens[id])) {
-                    reject(new APIResponse.class(false, {}, 798, ERROR_STREAM_INVALID_TOKEN));
-                } else {
-                    this.tokens[id] = null;
-                    const camera = this.getCamera(apiRequest.data.id);
-                    if (camera) {
-                        const dailyFilepath = this.dailyFilepath(camera, this.camerasArchiveFolder);
-                        if (fs.existsSync(dailyFilepath)) {
-                            fs.stat(dailyFilepath, (err, stats) => {
-                                if (err) {
-                                    if (err.code === "ENOENT") {
-                                        // 404 Error if file not found
-                                        apiRequest.res.sendStatus(404);
-                                    }
-                                    apiRequest.res.end(err);
+                const camera = this.getCamera(apiRequest.data.id);
+                if (camera) {
+                    const dailyFilepath = this.dailyFilepath(camera, this.camerasArchiveFolder);
+                    if (fs.existsSync(dailyFilepath)) {
+                        fs.stat(dailyFilepath, (err, stats) => {
+                            if (err) {
+                                if (err.code === "ENOENT") {
+                                    // 404 Error if file not found
+                                    apiRequest.res.sendStatus(404);
                                 }
-                                const range = apiRequest.req.headers.range;
-                                if (!range) {
-                                    // 416 Wrong range
-                                    return apiRequest.res.sendStatus(416);
-                                }
-                                const positions = range.replace(/bytes=/, "").split("-");
-                                const start = parseInt(positions[0], 10);
-                                const total = stats.size;
-                                const end = positions[1] ? parseInt(positions[1], 10) : total - 1;
-                                const chunksize = (end - start) + 1;
+                                apiRequest.res.end(err);
+                            }
+                            const range = apiRequest.req.headers.range;
+                            if (!range) {
+                                // 416 Wrong range
+                                return apiRequest.res.sendStatus(416);
+                            }
+                            const positions = range.replace(/bytes=/, "").split("-");
+                            const start = parseInt(positions[0], 10);
+                            const total = stats.size;
+                            const end = positions[1] ? parseInt(positions[1], 10) : total - 1;
+                            const chunksize = (end - start) + 1;
 
-                                apiRequest.res.writeHead(206, {
-                                    "Content-Range": "bytes " + start + "-" + end + "/" + total,
-                                    "Accept-Ranges": "bytes",
-                                    "Content-Length": chunksize,
-                                    "Content-Type": "video/mp4"
-                                });
-
-                                const stream = fs.createReadStream(dailyFilepath, { start: start, end: end })
-                                    .on("open", function() {
-                                        stream.pipe(apiRequest.res);
-                                    }).on("error", function(err) {
-                                        apiRequest.res.end(err);
-                                    });
+                            apiRequest.res.writeHead(206, {
+                                "Content-Range": "bytes " + start + "-" + end + "/" + total,
+                                "Accept-Ranges": "bytes",
+                                "Content-Length": chunksize,
+                                "Content-Type": "video/mp4"
                             });
-                        } else {
-                            reject(new APIResponse.class(false, {}, 770, ERROR_TIMELAPSE_NOT_GENERATED));
-                        }
+
+                            const stream = fs.createReadStream(dailyFilepath, { start: start, end: end })
+                                .on("open", function() {
+                                    stream.pipe(apiRequest.res);
+                                }).on("error", function(err) {
+                                    apiRequest.res.end(err);
+                                });
+                        });
                     } else {
-                        reject(new APIResponse.class(false, {}, 766, ERROR_UNKNOWN_IDENTIFIER));
+                        reject(new APIResponse.class(false, {}, 770, ERROR_TIMELAPSE_NOT_GENERATED));
                     }
+                } else {
+                    reject(new APIResponse.class(false, {}, 766, ERROR_UNKNOWN_IDENTIFIER));
                 }
             });
         } else if (apiRequest.route.startsWith(CAMERAS_MANAGER_TIMELAPSE_DAILY_GET_BASE)) {
@@ -637,56 +591,48 @@ class CamerasManager {
                     reject(new APIResponse.class(false, {}, 774, ERROR_UNKNOWN_TIMELAPSE_TOKEN));
                 }
             });
-        } else if (apiRequest.route.startsWith(CAMERAS_MANAGER_TIMELAPSE_STREAM_BASE) || apiRequest.route.startsWith(CAMERAS_MANAGER_TIMELAPSE_STREAM_BASE_WITH_TOKEN)) {
+        } else if (apiRequest.route.startsWith(CAMERAS_MANAGER_TIMELAPSE_STREAM_BASE)) {
             return new Promise((resolve, reject) => {
-                const id = parseInt(apiRequest.data.id);
-                const token = apiRequest.data.authToken;
-                const tokenMode = apiRequest.route.startsWith(CAMERAS_MANAGER_TIMELAPSE_STREAM_BASE_WITH_TOKEN);
-
-                if (tokenMode && (!token || !this.tokens[id] || token != this.tokens[id])) {
-                    reject(new APIResponse.class(false, {}, 798, ERROR_STREAM_INVALID_TOKEN));
-                } else {
-                    if (this.generatedTimelapses[apiRequest.data.token]) {
-                        if (fs.existsSync(this.generatedTimelapses[apiRequest.data.token].path)) {
-                            fs.stat(this.generatedTimelapses[apiRequest.data.token].path, (err, stats) => {
-                                if (err) {
-                                    if (err.code === "ENOENT") {
-                                        // 404 Error if file not found
-                                        apiRequest.res.sendStatus(404);
-                                    }
-                                    apiRequest.res.end(err);
+                if (this.generatedTimelapses[apiRequest.data.token]) {
+                    if (fs.existsSync(this.generatedTimelapses[apiRequest.data.token].path)) {
+                        fs.stat(this.generatedTimelapses[apiRequest.data.token].path, (err, stats) => {
+                            if (err) {
+                                if (err.code === "ENOENT") {
+                                    // 404 Error if file not found
+                                    apiRequest.res.sendStatus(404);
                                 }
-                                const range = apiRequest.req.headers.range;
-                                if (!range) {
-                                    // 416 Wrong range
-                                    return apiRequest.res.sendStatus(416);
-                                }
-                                const positions = range.replace(/bytes=/, "").split("-");
-                                const start = parseInt(positions[0], 10);
-                                const total = stats.size;
-                                const end = positions[1] ? parseInt(positions[1], 10) : total - 1;
-                                const chunksize = (end - start) + 1;
+                                apiRequest.res.end(err);
+                            }
+                            const range = apiRequest.req.headers.range;
+                            if (!range) {
+                                // 416 Wrong range
+                                return apiRequest.res.sendStatus(416);
+                            }
+                            const positions = range.replace(/bytes=/, "").split("-");
+                            const start = parseInt(positions[0], 10);
+                            const total = stats.size;
+                            const end = positions[1] ? parseInt(positions[1], 10) : total - 1;
+                            const chunksize = (end - start) + 1;
 
-                                apiRequest.res.writeHead(206, {
-                                    "Content-Range": "bytes " + start + "-" + end + "/" + total,
-                                    "Accept-Ranges": "bytes",
-                                    "Content-Length": chunksize,
-                                    "Content-Type": "video/mp4"
-                                });
-
-                                const stream = fs.createReadStream(this.generatedTimelapses[apiRequest.data.token].path, { start: start, end: end })
-                                    .on("open", function() {
-                                        stream.pipe(apiRequest.res);
-                                    }).on("error", function(err) {
-                                        apiRequest.res.end(err);
-                                    });
+                            apiRequest.res.writeHead(206, {
+                                "Content-Range": "bytes " + start + "-" + end + "/" + total,
+                                "Accept-Ranges": "bytes",
+                                "Content-Length": chunksize,
+                                "Content-Type": "video/mp4"
                             });
-                        } else {
-                            reject(new APIResponse.class(false, {}, 770, ERROR_TIMELAPSE_NOT_GENERATED));
-                        }
+
+                            const stream = fs.createReadStream(this.generatedTimelapses[apiRequest.data.token].path, { start: start, end: end })
+                                .on("open", function() {
+                                    stream.pipe(apiRequest.res);
+                                }).on("error", function(err) {
+                                    apiRequest.res.end(err);
+                                });
+                        });
                     } else {
-                        reject(new APIResponse.class(false, {}, 774, ERROR_UNKNOWN_TIMELAPSE_TOKEN));
+                        reject(new APIResponse.class(false, {}, 770, ERROR_TIMELAPSE_NOT_GENERATED));
                     }
+                } else {
+                    reject(new APIResponse.class(false, {}, 774, ERROR_UNKNOWN_TIMELAPSE_TOKEN));
                 }
             });
         }

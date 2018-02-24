@@ -321,7 +321,11 @@
     -   [captureVideo](#capturevideo)
     -   [json](#json-33)
 -   [Authentication](#authentication)
+    -   [clearExpiredTokens](#clearexpiredtokens)
+    -   [generateToken](#generatetoken)
+    -   [processAPI](#processapi-5)
     -   [checkLocalIp](#checklocalip)
+    -   [processAuthentication](#processauthentication)
 -   [AuthenticationData](#authenticationdata)
     -   [authorized](#authorized)
     -   [username](#username-2)
@@ -353,7 +357,7 @@
     -   [initCamera](#initcamera)
     -   [getAllCameras](#getallcameras)
     -   [registerTile](#registertile-2)
-    -   [processAPI](#processapi-5)
+    -   [processAPI](#processapi-6)
     -   [comparator](#comparator)
     -   [getCameraConfiguration](#getcameraconfiguration)
     -   [registerCamerasListForm](#registercameraslistform)
@@ -389,7 +393,7 @@
     -   [unregisterTile](#unregistertile)
     -   [filterTiles](#filtertiles)
     -   [buildDashboard](#builddashboard)
-    -   [processAPI](#processapi-6)
+    -   [processAPI](#processapi-7)
 -   [Tile](#tile)
     -   [get](#get)
     -   [hash](#hash)
@@ -467,7 +471,7 @@
     -   [registerDeviceTile](#registerdevicetile)
     -   [switchDevice](#switchdevice)
     -   [switchAll](#switchall)
-    -   [processAPI](#processapi-7)
+    -   [processAPI](#processapi-8)
 -   [DevicesListForm](#deviceslistform)
     -   [identifier](#identifier-1)
     -   [status](#status-2)
@@ -499,7 +503,8 @@
     -   [getLocalIp](#getlocalip)
     -   [getMacAddress](#getmacaddress)
     -   [getLocalAPIUrl](#getlocalapiurl)
-    -   [processAPI](#processapi-8)
+    -   [processAPI](#processapi-9)
+    -   [updateCore](#updatecore)
 -   [FormConfiguration](#formconfiguration)
     -   [setUpdateCb](#setupdatecb)
     -   [addAdditionalFields](#addadditionalfields)
@@ -508,7 +513,7 @@
     -   [save](#save-2)
     -   [comparator](#comparator-1)
     -   [registerForm](#registerform)
-    -   [processAPI](#processapi-9)
+    -   [processAPI](#processapi-10)
     -   [getDataCopy](#getdatacopy)
     -   [getConfig](#getconfig)
     -   [getForm](#getform)
@@ -552,7 +557,7 @@
     -   [getIotApp](#getiotapp)
     -   [getIot](#getiot)
     -   [getIots](#getiots)
-    -   [processAPI](#processapi-10)
+    -   [processAPI](#processapi-11)
     -   [comparator](#comparator-2)
     -   [isBuilding](#isbuilding)
 -   [IotsListForm](#iotslistform)
@@ -575,7 +580,7 @@
     -   [onMessageReceived](#onmessagereceived-2)
     -   [getMessages](#getmessages)
     -   [getLastTimestamp](#getlasttimestamp)
-    -   [processAPI](#processapi-11)
+    -   [processAPI](#processapi-12)
 -   [PluginsAPI](#pluginsapi)
     -   [exportClass](#exportclass)
     -   [init](#init-3)
@@ -596,7 +601,7 @@
     -   [toposort](#toposort)
     -   [topsortedArrayConverter](#topsortedarrayconverter)
     -   [getPluginConf](#getpluginconf)
-    -   [processAPI](#processapi-12)
+    -   [processAPI](#processapi-13)
 -   [AlarmAPI](#alarmapi)
     -   [alarmStatus](#alarmstatus-1)
     -   [enableAlarm](#enablealarm-1)
@@ -730,7 +735,7 @@
     -   [switchDevice](#switchdevice-1)
     -   [getLastReceivedRadioInformations](#getlastreceivedradioinformations-1)
     -   [getAssociatedItems](#getassociateditems)
-    -   [processAPI](#processapi-13)
+    -   [processAPI](#processapi-14)
 -   [RadioScenarioForm](#radioscenarioform)
     -   [radioForm](#radioform-1)
     -   [status](#status-3)
@@ -786,7 +791,7 @@
     -   [getAllSensors](#getallsensors)
     -   [onNewSensorValue](#onnewsensorvalue)
     -   [getValue](#getvalue-1)
-    -   [processAPI](#processapi-14)
+    -   [processAPI](#processapi-15)
     -   [statisticsWsResponse](#statisticswsresponse)
     -   [comparator](#comparator-3)
     -   [getSensorConfiguration](#getsensorconfiguration)
@@ -831,7 +836,7 @@
     -   [setUserZone](#setuserzone)
     -   [registerHomeNotifications](#registerhomenotifications-1)
     -   [unregisterHomeNotifications](#unregisterhomenotifications-1)
-    -   [processAPI](#processapi-15)
+    -   [processAPI](#processapi-16)
     -   [registerBotActions](#registerbotactions)
 -   [UserScenarioForm](#userscenarioform)
     -   [mode](#mode)
@@ -880,6 +885,7 @@
     -   [route](#route)
     -   [authLevel](#authlevel)
     -   [isEqual](#isequal)
+    -   [getRouteBase](#getroutebase)
 -   [APIRequest](#apirequest)
     -   [method](#method-1)
     -   [ip](#ip-1)
@@ -900,7 +906,8 @@
     -   [startTunnel](#starttunnel)
     -   [stop](#stop-6)
     -   [registerInfos](#registerinfos)
-    -   [processAPI](#processapi-16)
+    -   [getRouteIdentifier](#getrouteidentifier)
+    -   [processAPI](#processapi-17)
     -   [register](#register-19)
     -   [unregister](#unregister-14)
     -   [registerAPI](#registerapi)
@@ -3386,6 +3393,32 @@ This class manage authentication for Web Services
 -   `userManager`  
 -   `environmentManager`  
 
+### clearExpiredTokens
+
+Clear expired tokens
+
+### generateToken
+
+Generates a token
+
+**Parameters**
+
+-   `username` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The username
+-   `serviceIdentifier` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The service identifier
+-   `expirationTime` **int** Expiration time (optional, default `0`)
+
+Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The token
+
+### processAPI
+
+Process API callback
+
+**Parameters**
+
+-   `apiRequest` **[APIRequest](#apirequest)** An APIRequest
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with an APIResponse object
+
 ### checkLocalIp
 
 Check if an ip is on the same network
@@ -3395,6 +3428,16 @@ Check if an ip is on the same network
 -   `ipSource` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The source ip
 
 Returns **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` if the ip is on the same network, `false` otherwise
+
+### processAuthentication
+
+Process authentication
+
+**Parameters**
+
+-   `apiRequest` **[APIRequest](#apirequest)** The api request
+-   `resolve` **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** The resolve function
+-   `reject` **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** The reject function
 
 ## AuthenticationData
 
@@ -4698,6 +4741,7 @@ Register a device on dashboard
 **Parameters**
 
 -   `device` **[DeviceForm](#deviceform)** A device
+-   `index` **[number](#number)** An index (optional, default `-1`)
 
 ### switchDevice
 
@@ -4865,6 +4909,8 @@ This class allows to manage house environment
 -   `scenarioManager`  
 -   `version`  
 -   `hash`  
+-   `installationManager`  
+-   `timeEventService`  
 
 ### registerDayNightNotifications
 
@@ -4945,6 +4991,10 @@ Process API callback
 -   `apiRequest` **[APIRequest](#apirequest)** An APIRequest
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with an APIResponse object
+
+### updateCore
+
+Try to update core
 
 ## FormConfiguration
 
@@ -6750,6 +6800,7 @@ Register to a specific web service be notified when a route and/or method is cal
 -   `method` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** A method (\*, WebServices.GET / WebServices.POST) (optional, default `"*"`)
 -   `route` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** A route (\*, :/my/route/) (optional, default `"*"`)
 -   `authLevel` **int** An authentification level (optional, default `Authentication.AUTH_USAGE_LEVEL`)
+-   `tokenExpirationTime` **int** A token expiration time in seconds, for token authentication. 0 for one time token. (optional, default `0`)
 
 ### unregister
 
@@ -8084,6 +8135,8 @@ This class is a POJO representing an APIRegistration item
 -   `method`   (optional, default `"*"`)
 -   `route`   (optional, default `"*"`)
 -   `authLevel`   (optional, default `Authentication.AUTH_USAGE_LEVEL`)
+-   `identifier`   (optional, default `null`)
+-   `authTokenExpiration`   (optional, default `0`)
 
 ### delegate
 
@@ -8111,6 +8164,12 @@ Check if the parameter equality
 
 Returns **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** true or false
 
+### getRouteBase
+
+Returns the route base string
+
+Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The base route (without parameters)
+
 ## APIRequest
 
 This class is a POJO representing an APIRequest item
@@ -8126,6 +8185,7 @@ This class is a POJO representing an APIRequest item
 -   `req`  
 -   `res`  
 -   `data`   (optional, default `null`)
+-   `apiRegistration`   (optional, default `null`)
 
 ### method
 
@@ -8228,6 +8288,16 @@ Stop Web Services
 
 Register and list informations
 
+### getRouteIdentifier
+
+Get the route serviceIdentifier
+
+**Parameters**
+
+-   `route` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** A route
+
+Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The identifier
+
 ### processAPI
 
 Process API callback
@@ -8264,6 +8334,7 @@ Register to a specific API to be notified when a route and/or method is called
 -   `method` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** A method (\*, WebServices.GET / WebServices.POST / WebServices.DELETE) (optional, default `"*"`)
 -   `route` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** A route (\*, :/my/route/) (optional, default `"*"`)
 -   `authLevel` **int** An authentification level (optional, default `Authentication.AUTH_USAGE_LEVEL`)
+-   `tokenExpirationTime` **int** A token expiration time in seconds, for token authentication. 0 for one time token. (optional, default `0`)
 
 ### unregisterAPI
 
