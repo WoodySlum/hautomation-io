@@ -54,7 +54,7 @@ class EnvironmentManager {
         this.timeEventService = timeEventService;
         webServices.registerAPI(this, WebServices.GET, ":" + ROUTE_APP_ENVIRONMENT_INFORMATION, Authentication.AUTH_USAGE_LEVEL);
         this.timeEventService.register((self) => {
-            // self.updateCore();
+            self.updateCore();
         }, this, TimeEventService.CUSTOM, 3, 30, 0);
     }
 
