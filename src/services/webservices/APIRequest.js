@@ -18,9 +18,10 @@ class APIRequest {
      * @param  {Request} [req]      The request
      * @param  {Response} [res]     The response
      * @param  {Object} [data=null] The object sent
+     * @param  {APIRegistration} [apiRegistration=null] The corresponding API registration
      * @returns {APIRequest}        The instance
      */
-    constructor(method, ip, route, path, action, params, req, res, data = null) {
+    constructor(method, ip, route, path, action, params, req, res, data = null, apiRegistration = null) {
         /**
          * method
          * @type {string}
@@ -67,6 +68,7 @@ class APIRequest {
         this.authenticationData = null;
         this.req = req;
         this.res = res;
+        this.apiRegistration = apiRegistration;
     }
 
     /**

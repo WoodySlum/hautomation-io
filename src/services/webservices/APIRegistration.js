@@ -15,9 +15,11 @@ class APIRegistration {
      * @param  {string} [method="*"] The method (GET, POST, ...)
      * @param  {string} [route="*"] The needed route (:/foo/bar)
      * @param  {int} [authLevel=Authentication.AUTH_USAGE_LEVEL] The authentication level needed to be called
+     * @param {[type]} [identifier=null]  The route identifier
+     * @param {Number} [authTokenExpiration=0] The expiration time for token, in seconds
      * @returns {APIRegistration} The instance
      */
-    constructor(delegate, method = "*", route = "*", authLevel = Authentication.AUTH_USAGE_LEVEL) {
+    constructor(delegate, method = "*", route = "*", authLevel = Authentication.AUTH_USAGE_LEVEL, identifier = null, authTokenExpiration = 0) {
         /**
          * delegate
          * @type {Object}
@@ -43,6 +45,8 @@ class APIRegistration {
 
         this.routeBase = [];
         this.nbParametersOptional = 0;
+        this.identifier = identifier;
+        this.authTokenExpiration = authTokenExpiration;
 
         this.route.split("/").forEach((routeElement) => {
             if (routeElement != ":" && routeElement != "") {
@@ -76,6 +80,17 @@ class APIRegistration {
             return true;
         }
         return false;
+    }
+
+    getRouteBase() {
+        const routeBase = [];
+        this.routeBase.forEach((rbElement) => {
+            if (rbElement.indexOf("[") === -1) {
+                routeBase.push(rbElement);
+            }
+        });
+
+        return ":/" + routeBase.join("/") + "/";
     }
 }
 
