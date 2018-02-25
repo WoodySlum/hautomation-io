@@ -438,7 +438,9 @@ class CamerasManager {
                     const camera = this.getCamera(id);
                     if (camera) {
                         if (camera.mjpegUrl) {
-                            apiRequest.res  = new MjpegProxy(camera.mjpegUrl).proxyRequest(apiRequest.req, apiRequest.res);
+                            if (apiRequest.authenticationData) {
+                                apiRequest.res  = new MjpegProxy(camera.mjpegUrl).proxyRequest(apiRequest.req, apiRequest.res);
+                            }
                         } else {
                             reject(new APIResponse.class(false, {}, 766, ERROR_UNSUPPORTED_MODE));
                         }
@@ -449,7 +451,9 @@ class CamerasManager {
                     const camera = this.getCamera(id);
                     if (camera) {
                         if (camera.rtspUrl) {
-                            apiRequest.res  = new MjpegProxy(camera.rtspUrl).proxyRequest(apiRequest.req, apiRequest.res);
+                            if (apiRequest.authenticationData) {
+                                apiRequest.res  = new MjpegProxy(camera.rtspUrl).proxyRequest(apiRequest.req, apiRequest.res);
+                            }
                         } else {
                             reject(new APIResponse.class(false, {}, 766, ERROR_UNSUPPORTED_MODE));
                         }
