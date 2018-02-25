@@ -203,6 +203,18 @@ class WebServices extends Service.class {
                     } else {
                         Logger.info("HTTP tunnel URL : " + url);
                         self.gatewayManager.tunnelUrl = url;
+
+                        // Auto restart tunnel every 8 hours (expiration)
+                        // New ngrok free account policy
+                        setTimeout((t) => {
+                            Logger.info("Restart HTTP tunnel due to expiration policy");
+                            // if (t.ngrok) {
+                                ngrok.disconnect();
+                                ngrok.kill();
+                            // }
+
+                            t.startTunnel();
+                        }, 20 * 1000, this);
                     }
                     self.gatewayManager.transmit();
                 });
