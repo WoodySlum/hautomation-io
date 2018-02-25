@@ -140,6 +140,7 @@ class WebServices extends Service.class {
                 const logObject = Object.assign({}, apiRequest);
                 delete logObject.res;
                 delete logObject.req;
+                delete logObject.apiRegistration;
                 Logger.verbose(logObject);
                 instance.runPromises(apiRequest, instance.buildPromises(apiRequest), res);
             });
@@ -478,7 +479,7 @@ class WebServices extends Service.class {
                     let p;
                     if (registeredEl.parameters && registeredEl.parameters.length > 0) {
                         // This code part is looking for URL parameters (dynamic) like /endpoint/[parameter]/
-                        Logger.info("Parameters found " + registeredEl.parameters);
+                        Logger.info("Parameters found " + JSON.stringify(registeredEl.parameters));
                         if ((apiRequest.path.length + 1) >= (registeredEl.routeBase.length - registeredEl.nbParametersOptional)) {
                             let baseIndex = registeredEl.routeBase.length - registeredEl.parameters.length -1; // -1 fot action (removed)
                             for (let i = 0 ; i < registeredEl.parameters.length ; i++) {
