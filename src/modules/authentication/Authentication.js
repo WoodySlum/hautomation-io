@@ -121,7 +121,7 @@ class Authentication {
 
                     if (found) {
                         const token = t.generateToken(apiRequest.authenticationData.username, apiRequest.data.serviceIdentifier, expirationTime);
-                        Logger.verbose("New token generate. Token : " + token + " User : " + apiRequest.authenticationData.username + " Serrvice identifier : " + apiRequest.data.serviceIdentifier);
+                        Logger.verbose("New token generate. Token : " + token + " User : " + apiRequest.authenticationData.username + " Service identifier : " + apiRequest.data.serviceIdentifier);
                         resolve(new APIResponse.class(true, {token:token}));
                     } else {
                         reject(new APIResponse.class(false, {}, 4567, "No identifier matched"));
@@ -178,7 +178,7 @@ class Authentication {
         // Check for validity token
         if (t) {
             let deletedIndex = -1;
-            let detectedUsername = null;
+            let detectedUsername = null;console.log(this.tokens);
             Object.keys(this.tokens).forEach((username) => {
                 let i = 0;
                 this.tokens[username].forEach((tokenData) => {

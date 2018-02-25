@@ -154,8 +154,9 @@ class DeviceManager {
      */
     registerDeviceTiles() {
         // Devices tiles
-        this.formConfiguration.data.forEach((device) => {
-            this.registerDeviceTile(device);
+        let data = this.formConfiguration.data.sort((a,b) => a.name.localeCompare(b.name));
+        data.forEach((device) => {
+            this.registerDeviceTile(device, data);
         });
 
         // All on tile
@@ -181,10 +182,10 @@ class DeviceManager {
      * @param  {DeviceForm} device A device
      * @param  {number} [index=-1] An index
      */
-    registerDeviceTile(device, index = -1) {
+    registerDeviceTile(device, data = [], index = -1) {
         if (device.visible) {
-            let data = this.formConfiguration.data.sort((a,b) => a.name.localeCompare(b.name));
-            const tile = new Tile.class(this.dashboardManager.themeManager, device.id, Tile.TILE_GENERIC_ACTION_STATUS, device.icon.icon, null, device.name, null, null, null, device.status > 0?1:0, (index === -1)?(9000 + data.indexOf(device)):index, "/device/set/" + device.id + "/", null);
+            let i = (index === -1)?(9000 + data.indexOf(device)):index;
+            const tile = new Tile.class(this.dashboardManager.themeManager, device.id, Tile.TILE_GENERIC_ACTION_STATUS, device.icon.icon, null, device.name, null, null, null, device.status > 0?1:0, i, "/device/set/" + device.id + "/", null);
             this.dashboardManager.registerTile(tile);
         }
     }
