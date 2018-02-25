@@ -208,13 +208,10 @@ class WebServices extends Service.class {
                         // New ngrok free account policy
                         setTimeout((t) => {
                             Logger.info("Restart HTTP tunnel due to expiration policy");
-                            // if (t.ngrok) {
-                                ngrok.disconnect();
-                                ngrok.kill();
-                            // }
-
+                            ngrok.disconnect();
+                            ngrok.kill();
                             t.startTunnel();
-                        }, 20 * 1000, this);
+                        }, 8 * 60 * 60 * 1000, this);
                     }
                     self.gatewayManager.transmit();
                 });
