@@ -56,8 +56,8 @@ function loaded(api) {
          */
         constructor(api, id, configuration) {
             super(api, id, "THROUGHPUT", configuration, api.exported.Icons.class.list()["_578"], 0);
-            this.unit = "kb/s";
-            this.addUnitAggregation("mb/s", 1024);
+            this.unit = "kBs";
+            this.addUnitAggregation("mB/s", 1024);
         }
     }
 
