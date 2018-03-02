@@ -151,6 +151,7 @@ class WebServices extends Service.class {
                 const logObject = Object.assign({}, apiRequest);
                 delete logObject.res;
                 delete logObject.req;
+                delete logObject.apiRegistration;
                 Logger.verbose(logObject);
                 instance.runPromises(apiRequest, instance.buildPromises(apiRequest), res);
             });

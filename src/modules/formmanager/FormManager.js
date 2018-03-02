@@ -274,7 +274,7 @@ class FormManager {
                                 schema.properties[prop].title = self.translateManager.t(meta.Title);
                             }
                         } else {
-                            schema.properties[prop].title = null;
+                            schema.properties[prop].title = "";
                         }
 
                         // Required
