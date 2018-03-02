@@ -9,7 +9,7 @@
     "properties": {
       "id": {
         "type": "number",
-        "title": null
+        "title": ""
       },
       "b": {
         "type": "string",
