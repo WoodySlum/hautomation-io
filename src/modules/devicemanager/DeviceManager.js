@@ -180,6 +180,7 @@ class DeviceManager {
      * Register a device on dashboard
      *
      * @param  {DeviceForm} device A device
+     * @param  {Array} data Some data
      * @param  {number} [index=-1] An index
      */
     registerDeviceTile(device, data = [], index = -1) {

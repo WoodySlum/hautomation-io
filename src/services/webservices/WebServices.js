@@ -467,7 +467,6 @@ class WebServices extends Service.class {
      */
     buildPromises(apiRequest) {
         let promises = [];
-
         this.delegates.forEach((registeredEl) => {
             if ((registeredEl.method === "*"
                 || registeredEl.method === apiRequest.method)
@@ -484,7 +483,9 @@ class WebServices extends Service.class {
                         if ((apiRequest.path.length + 1) >= (registeredEl.routeBase.length - registeredEl.nbParametersOptional)) {
                             let baseIndex = registeredEl.routeBase.length - registeredEl.parameters.length -1; // -1 fot action (removed)
                             for (let i = 0 ; i < registeredEl.parameters.length ; i++) {
-                                apiRequest.data[registeredEl.parameters[i].name] = apiRequest.path[i+baseIndex]?apiRequest.path[i+baseIndex]:null;
+                                if (!apiRequest.data[registeredEl.parameters[i].name]) {
+                                    apiRequest.data[registeredEl.parameters[i].name] = apiRequest.path[i+baseIndex]?apiRequest.path[i+baseIndex]:null;
+                                }
                             }
                             p = registeredEl.delegate.processAPI(apiRequest);
                         } else {

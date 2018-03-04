@@ -128,7 +128,7 @@ class IotManager {
     constants() {
         return {
             PLATFORMS:{
-                ESP8266:"espressif8266_stage"
+                ESP8266:"https://github.com/platformio/platform-espressif8266.git#feature/stage"
             },
             BOARDS:{
                 NODEMCU:"nodemcuv2"
@@ -422,12 +422,12 @@ class IotManager {
             return new Promise((resolve) => {
                 const iots = [];
                 self.iots.forEach((iot) => {
-                    const iotApp = self.getIotApp(iot.iotApp);
+                    // const iotApp = self.getIotApp(iot.iotApp);
                     iots.push({
                         identifier: iot.id,
                         name: iot.name,
                         icon: "F2DB",
-                        iotApp: iotApp.name,
+                        iotApp: iot.iotApp,
                         form:Object.assign(self.formManager.getForm(this.iotApps[iot.iotApp].form), {data:iot})
                     });
                     iots.sort((a,b) => a.name.localeCompare(b.name));

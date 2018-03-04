@@ -178,7 +178,7 @@ class Authentication {
         // Check for validity token
         if (t) {
             let deletedIndex = -1;
-            let detectedUsername = null;console.log(this.tokens);
+            let detectedUsername = null;
             Object.keys(this.tokens).forEach((username) => {
                 let i = 0;
                 this.tokens[username].forEach((tokenData) => {
