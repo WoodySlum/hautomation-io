@@ -1,1 +1,1 @@
-{"id":1515747810509,"enabled":false,"armed":false,"userLocationTrigger":true,"sensors":[],"devicesOnEnable":[],"devicesOnDisable":[]}
+{"id":1520281563708,"enabled":false,"armed":false,"userLocationTrigger":true,"sensors":[{"sensor":{"identifier":1510930850},"triggerAlarm":true},{"sensor":{"identifier":1515346711},"triggerAlarm":true,"captureVideo":false}],"devicesOnEnable":[{"identifier":1509576083,"status":"on"}],"devicesOnDisable":[]}

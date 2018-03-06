@@ -13,13 +13,15 @@ class PluginConf {
      * @param  {string} [identifier=null] Plugin identifier
      * @param  {string} [version=null] Plugin version
      * @param  {boolean} [enable=true] `true` if plugin is enable, `false` otherwise
-     * @returns {User} The instance
+     * @param  {Array} [dependencies=[]] The dependencies (array of identifiers) list
+     * @returns {PluginConf} The instance
      */
-    constructor(path, relative, identifier = null, version = null, enable = true) {
+    constructor(path, relative, identifier = null, version = null, enable = true, dependencies = []) {
         this.path = path;
         this.relative = relative;
         this.identifier = identifier;
         this.version = version;
+        this.dependencies = dependencies?dependencies:[];
         this.enable = (enable !== null)?enable:true;
     }
 
@@ -27,10 +29,10 @@ class PluginConf {
      * Transform json raw object to instance
      *
      * @param  {Object} data JSON object data
-     * @returns {User} A User instance
+     * @returns {PluginConf} A User instance
      */
     json(data) {
-        return new PluginConf(data.path, data.relative, data.identifier, data.version, data.enable);
+        return new PluginConf(data.path, data.relative, data.identifier, data.version, data.enable, data.dependencies);
     }
 }
 

@@ -213,7 +213,7 @@ class PluginsManager {
 
             // Save configuration meta data
             const existingPluginConf = this.getPluginConf(p.attributes.name);
-            const pluginConf = new PluginConf.class(path, relative, p.attributes.name, p.attributes.version, existingPluginConf?existingPluginConf.enable:null);
+            const pluginConf = new PluginConf.class(path, relative, p.attributes.name, p.attributes.version, existingPluginConf?existingPluginConf.enable:null, p.attributes.dependencies);
 
             this.confManager.setData(CONF_KEY, pluginConf, this.pluginsConf, PluginConf.comparator);
 
@@ -464,6 +464,45 @@ class PluginsManager {
         return item;
     }
 
+    /**
+     * Change plugin status
+     *
+     * @param  {PluginConf} pluginConf The changing plugin conf
+     * @param  {boolean} status     The new status
+     */
+    changePluginStatus(pluginConf, status) {
+        Logger.info("Plugin status changed");
+
+        if (!status) {
+            // Stop all dependent plugins
+            this.plugins.forEach((plugin) => {
+                if (plugin.dependencies.indexOf(pluginConf.identifier) !== -1) {
+                    const dependentPluginConf = this.getPluginConf(plugin.identifier);
+                    Logger.info("Plugin dependency changed " + dependentPluginConf.identifier);
+                    dependentPluginConf.enable = status;
+                    this.pluginsConf = this.confManager.setData(CONF_KEY, dependentPluginConf, this.pluginsConf, PluginConf.comparator);
+                }
+            });
+        } else {
+            // Start dependent plugins
+            if (pluginConf.dependencies && pluginConf.dependencies.length > 0) {
+                pluginConf.dependencies.forEach((dependencyIdentifier) => {
+                    const dependentPluginConf = this.getPluginConf(dependencyIdentifier);
+                    Logger.info("Plugin dependency changed " + dependentPluginConf.identifier);
+                    dependentPluginConf.enable = status;
+                    this.pluginsConf = this.confManager.setData(CONF_KEY, dependentPluginConf, this.pluginsConf, PluginConf.comparator);
+                });
+            }
+        }
+
+
+        Logger.info("Plugin status changed");
+        pluginConf.enable = status;
+        this.pluginsConf = this.confManager.setData(CONF_KEY, pluginConf, this.pluginsConf, PluginConf.comparator);
+
+        this.eventBus.emit(HautomationRunnerConstants.RESTART);
+    }
+
 
     /**
      * Process API callback
@@ -489,6 +528,7 @@ class PluginsManager {
                     category:plugin.category,
                     version:plugin.version,
                     services:services,
+                    dependencies:plugin.dependencies,
                     enabled:(pluginConf && pluginConf.enable)?true:false
                 });
                 this.plugins.sort((a,b) => a.identifier.localeCompare(b.identifier));
@@ -498,15 +538,13 @@ class PluginsManager {
             });
         }  else if (apiRequest.route.startsWith(ROUTE_WS_ENABLE_SET_BASE)) {
             return new Promise((resolve, reject) => {
+
                 const existingPluginConf = this.getPluginConf(apiRequest.data.plugin);
                 if (existingPluginConf) {
                     const status = !!+apiRequest.data.status;
 
                     if (status != existingPluginConf.enable) {
-                        Logger.info("Plugin status changed");
-                        existingPluginConf.enable = status;
-                        this.confManager.setData(CONF_KEY, existingPluginConf, this.pluginsConf, PluginConf.comparator);
-                        this.eventBus.emit(HautomationRunnerConstants.RESTART);
+                        this.changePluginStatus(existingPluginConf, status);
                     }
 
                     resolve(new APIResponse.class(true, {success:true}));

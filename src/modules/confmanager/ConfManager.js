@@ -225,13 +225,14 @@ class ConfManager {
     setData(key, object, datas = null, comparator = null) {
         if (datas) {
             try {
-                this.removeData(key, object, datas, comparator);
+                datas = this.removeData(key, object, datas, comparator);
             } catch (e) {
                 Logger.verbose(e.message);
             }
 
             datas.push(object);
             this.saveData(datas, key);
+
             return datas;
         } else {
             this.saveData(object, key);
