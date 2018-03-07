@@ -227,7 +227,9 @@ class DeviceManager {
                     if (newStatus) {
                         device.status = newStatus;
                         this.formConfiguration.saveConfig(device);
-                        this.registerDeviceTile(device); // Save to dashboard !
+                        // Devices tiles
+                        let data = this.formConfiguration.data.sort((a,b) => a.name.localeCompare(b.name));
+                        this.registerDeviceTile(device, data); // Save to dashboard !
                     }
                 } else {
                     Logger.warn("Turning device " + device.id + " is not authorized due to day / night mode. Device configuration (" + device.worksOnlyOnDayNight + "), Current mode is night (" + this.environmentManager.isNight() + "), Status (" + device.status + "), Compared status (" + Radio.STATUS_ON + ")");
