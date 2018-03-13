@@ -423,15 +423,19 @@ class IotManager {
                 const iots = [];
                 self.iots.forEach((iot) => {
                     // const iotApp = self.getIotApp(iot.iotApp);
-                    iots.push({
-                        identifier: iot.id,
-                        name: iot.name,
-                        icon: "F2DB",
-                        iotApp: iot.iotApp,
-                        form:Object.assign(self.formManager.getForm(this.iotApps[iot.iotApp].form), {data:iot})
-                    });
-                    iots.sort((a,b) => a.name.localeCompare(b.name));
+                    if (this.iotApps[iot.iotApp]) {
+                        iots.push({
+                            identifier: iot.id,
+                            name: iot.name,
+                            icon: "F2DB",
+                            iotApp: iot.iotApp,
+                            form:Object.assign(self.formManager.getForm(this.iotApps[iot.iotApp].form), {data:iot})
+                        });
+                    }
                 });
+
+                iots.sort((a,b) => a.name.localeCompare(b.name));
+                
                 resolve(new APIResponse.class(true, iots));
             });
         } else if (apiRequest.route.startsWith(IOT_MANAGER_POST_BASE)) {

@@ -27,6 +27,7 @@ const ROUTE_WS_ENABLE_SET = ROUTE_WS_ENABLE_SET_BASE + "[plugin]/[status]/";
 const ERROR_MISSING_PROPERTY = "Missing property name, version or description for plugin";
 const ERROR_NOT_A_FUNCTION = "Missing plugin class";
 const ERROR_DEPENDENCY_NOT_FOUND = "Dependency not found";
+const ERROR_DISABLE_CORE_PLUGIN = "Cannot disable core plugin";
 
 const INTERNAL_PLUGINS = [
     "rflink",
@@ -63,6 +64,23 @@ const INTERNAL_PLUGINS = [
     "esp-rain-time-sensor",
     "generic-throughput-sensor",
     "ring-alert"
+];
+
+const CORE_PLUGINS = [
+    "radio",
+    "sensor",
+    "temperature-sensor",
+    "humidity-sensor",
+    "throughput-sensor",
+    "pressure-sensor",
+    "wind-sensor",
+    "message-provider",
+    "camera",
+    "presence-sensor",
+    "radio-presence-sensor",
+    "sms",
+    "electric-sensor",
+    "rain-time-sensor"
 ];
 
 /**
@@ -213,7 +231,7 @@ class PluginsManager {
 
             // Save configuration meta data
             const existingPluginConf = this.getPluginConf(p.attributes.name);
-            const pluginConf = new PluginConf.class(path, relative, p.attributes.name, p.attributes.version, existingPluginConf?existingPluginConf.enable:null, p.attributes.dependencies);
+            const pluginConf = new PluginConf.class(path, relative, p.attributes.name, p.attributes.version, (CORE_PLUGINS.indexOf(p.attributes.name) > -1)?true:(existingPluginConf?existingPluginConf.enable:null), p.attributes.dependencies);
 
             this.confManager.setData(CONF_KEY, pluginConf, this.pluginsConf, PluginConf.comparator);
 
@@ -338,7 +356,7 @@ class PluginsManager {
 
             // Load
             try {
-                if (!pluginConf || (pluginConf && pluginConf.enable)) {
+                if (!pluginConf || (pluginConf && pluginConf.enable) || (CORE_PLUGINS.indexOf(pluginConf.identifier) > -1)) {
                     plugin.loaded();
                 } else {
                     Logger.info("Plugin " + pluginConf.identifier + " has been disabled and won't be loaded");
@@ -392,6 +410,18 @@ class PluginsManager {
 
         return p;
     }
+
+    /**
+     * Is the plugin enabled
+     *
+     * @param  {string}  pluginIdentifier The plugin identifier
+     * @returns {boolean}                  `true` if enabled, `false` otherwise
+     */
+    isEnabled(pluginIdentifier) {
+        const pluginConf = this.getPluginConf(pluginIdentifier);
+        return ((pluginConf && pluginConf.enable) || (CORE_PLUGINS.indexOf(pluginIdentifier) > -1))?true:false;
+    }
+
 
     /*
      * Toposort
@@ -472,35 +502,38 @@ class PluginsManager {
      */
     changePluginStatus(pluginConf, status) {
         Logger.info("Plugin status changed");
-
-        if (!status) {
-            // Stop all dependent plugins
-            this.plugins.forEach((plugin) => {
-                if (plugin.dependencies.indexOf(pluginConf.identifier) !== -1) {
-                    const dependentPluginConf = this.getPluginConf(plugin.identifier);
-                    Logger.info("Plugin dependency changed " + dependentPluginConf.identifier);
-                    dependentPluginConf.enable = status;
-                    this.pluginsConf = this.confManager.setData(CONF_KEY, dependentPluginConf, this.pluginsConf, PluginConf.comparator);
-                }
-            });
-        } else {
-            // Start dependent plugins
-            if (pluginConf.dependencies && pluginConf.dependencies.length > 0) {
-                pluginConf.dependencies.forEach((dependencyIdentifier) => {
-                    const dependentPluginConf = this.getPluginConf(dependencyIdentifier);
-                    Logger.info("Plugin dependency changed " + dependentPluginConf.identifier);
-                    dependentPluginConf.enable = status;
-                    this.pluginsConf = this.confManager.setData(CONF_KEY, dependentPluginConf, this.pluginsConf, PluginConf.comparator);
+        if ((CORE_PLUGINS.indexOf(pluginConf.identifier) === -1)) {
+            if (!status) {
+                // Stop all dependent plugins
+                this.plugins.forEach((plugin) => {
+                    if (plugin.dependencies.indexOf(pluginConf.identifier) !== -1) {
+                        const dependentPluginConf = this.getPluginConf(plugin.identifier);
+                        Logger.info("Plugin dependency changed " + dependentPluginConf.identifier);
+                        dependentPluginConf.enable = status;
+                        this.pluginsConf = this.confManager.setData(CONF_KEY, dependentPluginConf, this.pluginsConf, PluginConf.comparator);
+                    }
                 });
+            } else {
+                // Start dependent plugins
+                if (pluginConf.dependencies && pluginConf.dependencies.length > 0) {
+                    pluginConf.dependencies.forEach((dependencyIdentifier) => {
+                        const dependentPluginConf = this.getPluginConf(dependencyIdentifier);
+                        Logger.info("Plugin dependency changed " + dependentPluginConf.identifier);
+                        dependentPluginConf.enable = status;
+                        this.pluginsConf = this.confManager.setData(CONF_KEY, dependentPluginConf, this.pluginsConf, PluginConf.comparator);
+                    });
+                }
             }
+
+
+            Logger.info("Plugin status changed");
+            pluginConf.enable = status;
+            this.pluginsConf = this.confManager.setData(CONF_KEY, pluginConf, this.pluginsConf, PluginConf.comparator);
+
+            this.eventBus.emit(HautomationRunnerConstants.RESTART);
+        } else {
+            throw Error(ERROR_DISABLE_CORE_PLUGIN);
         }
-
-
-        Logger.info("Plugin status changed");
-        pluginConf.enable = status;
-        this.pluginsConf = this.confManager.setData(CONF_KEY, pluginConf, this.pluginsConf, PluginConf.comparator);
-
-        this.eventBus.emit(HautomationRunnerConstants.RESTART);
     }
 
 
@@ -529,7 +562,8 @@ class PluginsManager {
                     version:plugin.version,
                     services:services,
                     dependencies:plugin.dependencies,
-                    enabled:(pluginConf && pluginConf.enable)?true:false
+                    enabled:(pluginConf && pluginConf.enable)?true:false,
+                    corePlugin:(CORE_PLUGINS.indexOf(plugin.identifier) === -1)
                 });
                 this.plugins.sort((a,b) => a.identifier.localeCompare(b.identifier));
             });
@@ -542,12 +576,21 @@ class PluginsManager {
                 const existingPluginConf = this.getPluginConf(apiRequest.data.plugin);
                 if (existingPluginConf) {
                     const status = !!+apiRequest.data.status;
-
+                    let error = null;
                     if (status != existingPluginConf.enable) {
-                        this.changePluginStatus(existingPluginConf, status);
+                        try {
+                            this.changePluginStatus(existingPluginConf, status);
+                        } catch(e) {
+                            error = e;
+                        }
+
                     }
 
-                    resolve(new APIResponse.class(true, {success:true}));
+                    if (error) {
+                        resolve(new APIResponse.class(false, {}, 2295, error.message));
+                    } else {
+                        resolve(new APIResponse.class(true, {success:true}));
+                    }
                 } else {
                     reject(new APIResponse.class(false, null, 9872, "Unexisting plugin"));
                 }
@@ -556,4 +599,4 @@ class PluginsManager {
     }
 }
 
-module.exports = {class:PluginsManager, ERROR_MISSING_PROPERTY:ERROR_MISSING_PROPERTY, ERROR_NOT_A_FUNCTION:ERROR_NOT_A_FUNCTION, ERROR_DEPENDENCY_NOT_FOUND:ERROR_DEPENDENCY_NOT_FOUND, EVENT_LOADED:EVENT_LOADED};
+module.exports = {class:PluginsManager, ERROR_MISSING_PROPERTY:ERROR_MISSING_PROPERTY, ERROR_NOT_A_FUNCTION:ERROR_NOT_A_FUNCTION, ERROR_DEPENDENCY_NOT_FOUND:ERROR_DEPENDENCY_NOT_FOUND, EVENT_LOADED:EVENT_LOADED, ERROR_DISABLE_CORE_PLUGIN:ERROR_DISABLE_CORE_PLUGIN, CORE_PLUGINS:CORE_PLUGINS};

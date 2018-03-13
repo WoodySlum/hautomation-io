@@ -3,10 +3,11 @@ var chai = require("chai");
 var expect = chai.expect;
 var sinon = require("sinon");
 var GlobalMocks = require("./../../GlobalMocks");
-
+var HautomationRunnerConstants = require("./../../../HautomationRunnerConstants");
 var PluginsManager = require("./../../../src/modules/pluginsmanager/PluginsManager");
 var PluginAPI = require("./../../../src/modules/pluginsmanager/PluginAPI");
 var WebServices = require("./../../../src/services/webservices/WebServices");
+const TEST_PLUGIN = "rflink";
 
 describe("PluginsManager", function() {
     let pluginsManager;
@@ -130,7 +131,7 @@ describe("PluginsManager", function() {
 
     });
 
-    it("should sort plugin identifiers with deopendencies", function() {
+    it("should sort plugin identifiers with dependencies", function() {
         const preparedArray = pluginsManager.prepareToposortArray([pluginA, pluginB, pluginC, pluginD]);
         const sortedArray = pluginsManager.toposort(preparedArray);
         // d, b, a, c
@@ -156,6 +157,41 @@ describe("PluginsManager", function() {
         expect(sortedPlugins[2].identifier).to.be.equal("a");
         expect(sortedPlugins[3] instanceof PluginAPI.class).to.be.true;
         expect(sortedPlugins[3].identifier).to.be.equal("c");
+    });
+
+    it("disable plugin should return correct value (true)", function() {
+        pluginsManager = new PluginsManager.class({}, webServices);
+        pluginsManager.pluginsConf = [
+            {path:"./../../internal-plugins/",relative:true,identifier:TEST_PLUGIN,version:"0.0.0",dependencies:["radio"], enable:true}
+        ];
+        expect(pluginsManager.isEnabled(TEST_PLUGIN)).to.be.true;
+    });
+
+    it("disable plugin should return correct value (false)", function() {
+        pluginsManager = new PluginsManager.class({}, webServices);
+        pluginsManager.pluginsConf = [
+            {path:"./../../internal-plugins/",relative:true,identifier:TEST_PLUGIN,version:"0.0.0",dependencies:["radio"], enable:false}
+        ];
+        expect(pluginsManager.isEnabled(TEST_PLUGIN)).to.be.false;
+    });
+
+    it("disable plugin with method should be well processed", function() {
+
+        pluginsManager = new PluginsManager.class({}, webServices);
+        pluginsManager.pluginsConf = [
+            {path:"./../../internal-plugins/",relative:true,identifier:TEST_PLUGIN,version:"0.0.0",dependencies:["radio"], enable:true}
+        ];
+        pluginsManager.confManager = {setData:(key, object, datas, comparator) => {return datas;}};
+        pluginsManager.eventBus = {emit:(event) => {
+            expect(event).to.be.equal(HautomationRunnerConstants.RESTART);
+        }};
+        sinon.spy(pluginsManager.eventBus, "emit");
+
+        expect(pluginsManager.isEnabled(TEST_PLUGIN)).to.be.true;
+        pluginsManager.changePluginStatus(pluginsManager.pluginsConf[0], false);
+        expect(pluginsManager.isEnabled(TEST_PLUGIN)).to.be.false;
+        expect(pluginsManager.eventBus.emit.calledOnce).to.be.true;
+        pluginsManager.eventBus.emit.restore();
     });
 
     after(function () {

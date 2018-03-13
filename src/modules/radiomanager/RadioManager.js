@@ -125,7 +125,7 @@ class RadioManager {
 
     /**
      * Compare a `RadioScenarioForm` object and a standard received `RadioObject`
-     * 
+     *
      * @param  {RadioScenarioForm} radioFormObject The radio scenario form object
      * @param  {Object} radioObject     A standard radio object
      * @returns {boolean}                 `true` if objects matches, `false` otherwise
@@ -227,6 +227,7 @@ class RadioManager {
      */
     switchDevice(module, protocol, deviceId, switchId, status = null, frequency = null, previousStatus = null) {
         const plugin = this.pluginsManager.getPluginByIdentifier(module);
+        
         if (plugin) {
             return plugin.instance.emit(frequency, protocol, deviceId, switchId, status, previousStatus);
         } else {

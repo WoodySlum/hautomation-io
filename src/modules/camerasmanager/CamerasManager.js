@@ -368,14 +368,16 @@ class CamerasManager {
             return new Promise((resolve) => {
                 const cameras = [];
                 self.camerasConfiguration.forEach((camera) => {
-                    const cameraPlugin = self.pluginsManager.getPluginByIdentifier(camera.plugin, false);
-                    cameras.push({
-                        identifier: camera.id,
-                        name: camera.name,
-                        icon: "E8BC",
-                        category:"TEST",
-                        form:Object.assign(self.formManager.getForm(cameraPlugin.cameraAPI.form), {data:camera})
-                    });
+                    if (self.pluginsManager.isEnabled(camera.plugin)) {
+                        const cameraPlugin = self.pluginsManager.getPluginByIdentifier(camera.plugin, false);
+                        cameras.push({
+                            identifier: camera.id,
+                            name: camera.name,
+                            icon: "E8BC",
+                            category:"TEST",
+                            form:Object.assign(self.formManager.getForm(cameraPlugin.cameraAPI.form), {data:camera})
+                        });
+                    }
                 });
                 resolve(new APIResponse.class(true, cameras.sort((a,b) => a.name.localeCompare(b.name))));
             });

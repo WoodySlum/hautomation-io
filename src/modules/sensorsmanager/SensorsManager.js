@@ -302,15 +302,18 @@ class SensorsManager {
             return new Promise((resolve) => {
                 const sensors = [];
                 self.sensorsConfiguration.forEach((sensor) => {
-                    const sensorPlugin = self.pluginsManager.getPluginByIdentifier(sensor.plugin, false);
-                    const s = self.getSensor(sensor.id);
-                    sensors.push({
-                        identifier: sensor.id,
-                        name: sensor.name,
-                        icon: (s?s.icon:"E8BC"),
-                        category: (s?s.type:"UNKNOWN"),
-                        form:Object.assign(self.formManager.getForm(sensorPlugin.sensorAPI.form), {data:sensor})
-                    });
+                    if (self.pluginsManager.isEnabled(sensor.plugin)) {
+                        const sensorPlugin = self.pluginsManager.getPluginByIdentifier(sensor.plugin, false);
+                        const s = self.getSensor(sensor.id);
+                        sensors.push({
+                            identifier: sensor.id,
+                            name: sensor.name,
+                            icon: (s?s.icon:"E8BC"),
+                            category: (s?s.type:"UNKNOWN"),
+                            form:Object.assign(self.formManager.getForm(sensorPlugin.sensorAPI.form), {data:sensor})
+                        });
+                    }
+
                     sensors.sort((a,b) => a.name.localeCompare(b.name));
                 });
                 resolve(new APIResponse.class(true, sensors));
@@ -319,7 +322,7 @@ class SensorsManager {
             return new Promise((resolve, reject) => {
                 if (apiRequest.data) {
                     if (apiRequest.data.plugin) {
-                        if (self.pluginsManager.getPluginByIdentifier(apiRequest.data.plugin, false)) {
+                        if (self.pluginsManager.getPluginByIdentifier(apiRequest.data.plugin, false) && self.pluginsManager.isEnabled(apiRequest.data.plugin)) {
                             // Set id
                             if (!apiRequest.data.id) {
                                 apiRequest.data.id = DateUtils.class.timestamp();
@@ -467,7 +470,7 @@ class SensorsManager {
     registerSensorsListForm() {
         const sensorsName = [];
         const sensorsId = [];
-        
+
         this.sensorsConfiguration.sort((a,b) => a.name.localeCompare(b.name)).forEach((sensor) => {
             sensorsName.push(sensor.name);
             sensorsId.push(sensor.id);

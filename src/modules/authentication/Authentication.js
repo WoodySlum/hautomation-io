@@ -196,7 +196,7 @@ class Authentication {
             if (detectedUsername) {
                 // Set username to token
                 users.forEach((user) => {
-                    if (detectedUsername === user.username) {
+                    if (detectedUsername.toLowerCase() === user.username.toLowerCase()) {
                         userAuth = user;
                     }
                 });
@@ -211,7 +211,7 @@ class Authentication {
 
         if (!userAuth) {
             users.forEach((user) => {
-                if (u === user.username && p === user.password) {
+                if (u.toLowerCase() === user.username.toLowerCase() && p === user.password) {
                     userAuth = user;
                     return;
                 }

@@ -219,8 +219,10 @@ class DeviceManager {
                     let newStatus = null;
                     device.radio.forEach((radio) => {
                         const radioObject = this.radioManager.switchDevice(radio.module, radio.protocol, radio.deviceId, radio.switchId, status, radio.frequency, device.status);
-                        if (radioObject.status) {
+                        if (radioObject && radioObject.hasOwnProperty("status") && radioObject.status) {
                             newStatus = radioObject.status;
+                        } else {
+                            Logger.warn("Could not change device status. Maybe plugin " + radio.module + " has been disabled");
                         }
                     });
 
