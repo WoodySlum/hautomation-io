@@ -383,7 +383,7 @@ class CamerasManager {
             });
         } else if (apiRequest.route.startsWith(CAMERAS_MANAGER_POST_BASE)) {
             return new Promise((resolve, reject) => {
-                if (apiRequest.data) {
+                if (apiRequest.data && Object.keys(apiRequest.data).length > 1) {
                     if (apiRequest.data.plugin) {
                         if (self.pluginsManager.getPluginByIdentifier(apiRequest.data.plugin, false)) {
                             // Set id

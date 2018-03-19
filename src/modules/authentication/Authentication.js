@@ -211,7 +211,7 @@ class Authentication {
 
         if (!userAuth) {
             users.forEach((user) => {
-                if (u.toLowerCase() === user.username.toLowerCase() && p === user.password) {
+                if (u && user.username && u.toLowerCase() === user.username.toLowerCase() && p === user.password) {
                     userAuth = user;
                     return;
                 }

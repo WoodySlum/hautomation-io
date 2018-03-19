@@ -320,7 +320,7 @@ class SensorsManager {
             });
         } else if (apiRequest.route.startsWith(SENSORS_MANAGER_POST_BASE)) {
             return new Promise((resolve, reject) => {
-                if (apiRequest.data) {
+                if (apiRequest.data && Object.keys(apiRequest.data).length > 1) {
                     if (apiRequest.data.plugin) {
                         if (self.pluginsManager.getPluginByIdentifier(apiRequest.data.plugin, false) && self.pluginsManager.isEnabled(apiRequest.data.plugin)) {
                             // Set id

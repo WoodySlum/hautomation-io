@@ -10,6 +10,8 @@ const ROUTE_BASE_GET = "get";
 const ROUTE_BASE_SET = "set";
 const ROUTE_BASE_DEL = "del";
 
+const ERROR_EMPTY_DATA = "No data request";
+
 /**
  * This class allows to manage form configuration
  * @class
@@ -177,11 +179,18 @@ class FormConfiguration {
                     resolve(new APIResponse.class(true, form));
                 });
             } else if (apiRequest.route === this.setRoute) {
-                this.saveConfig(apiRequest.data);
-                if (this.updateCb) this.updateCb(self.data);
-                return new Promise((resolve) => {
-                    resolve(new APIResponse.class(true, {success:true}));
-                });
+                if (apiRequest.data && Object.keys(apiRequest.data).length > 1) {
+                    this.saveConfig(apiRequest.data);
+                    if (this.updateCb) this.updateCb(self.data);
+                    return new Promise((resolve) => {
+                        resolve(new APIResponse.class(true, {success:true}));
+                    });
+                } else {
+                    if (this.updateCb) this.updateCb(self.data);
+                    return new Promise((resolve, reject) => {
+                        reject(new APIResponse.class(false, {}, 8106, ERROR_EMPTY_DATA));
+                    });
+                }
             } else if (apiRequest.route === this.getRoute) {
                 if (this.data) {
                     return new Promise((resolve) => {
@@ -257,4 +266,4 @@ class FormConfiguration {
     }
 }
 
-module.exports = {class:FormConfiguration};
+module.exports = {class:FormConfiguration, ERROR_EMPTY_DATA:ERROR_EMPTY_DATA};

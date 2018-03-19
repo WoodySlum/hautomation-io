@@ -435,12 +435,12 @@ class IotManager {
                 });
 
                 iots.sort((a,b) => a.name.localeCompare(b.name));
-                
+
                 resolve(new APIResponse.class(true, iots));
             });
         } else if (apiRequest.route.startsWith(IOT_MANAGER_POST_BASE)) {
             return new Promise((resolve, reject) => {
-                if (apiRequest.data) {
+                if (apiRequest.data && Object.keys(apiRequest.data).length > 1) {
                     if (apiRequest.data.iotApp) {
                         if (self.getIotApp(apiRequest.data.iotApp)) {
                             // Set id
