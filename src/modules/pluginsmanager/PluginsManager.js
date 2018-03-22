@@ -563,7 +563,7 @@ class PluginsManager {
                     services:services,
                     dependencies:plugin.dependencies,
                     enabled:(pluginConf && pluginConf.enable)?true:false,
-                    corePlugin:(CORE_PLUGINS.indexOf(plugin.identifier) === -1)
+                    corePlugin:(CORE_PLUGINS.indexOf(plugin.identifier) !== -1)
                 });
                 this.plugins.sort((a,b) => a.identifier.localeCompare(b.identifier));
             });
