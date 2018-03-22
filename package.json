@@ -97,7 +97,7 @@
         "threads": "git://github.com/WoodySlum/threads.js.git#master",
         "toposort": "^1.0",
         "underscore": "^1.8",
-        "usb-detection": "^1.4",
+        "usb-detection": "^2.1",
         "waveheader": "^0.0",
         "xml2js": "^0.4",
         "ngrok": "git://github.com/WoodySlum/ngrok.git#master"
