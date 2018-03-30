@@ -105,7 +105,7 @@ class Authentication {
 
         if (apiRequest.route === LOGIN_ROUTE) {
             promises.push(new Promise(function (resolve) {
-                resolve(new APIResponse.class(true, apiRequest.authenticationData));
+                resolve(new APIResponse.class(true, Object.assign(apiRequest.authenticationData, {defaultConfig:t.environmentManager.isDefaultConfig()})));
             }));
         } else if (apiRequest.route.startsWith(TOKEN_ROUTE_BASE)) {
             promises.push(new Promise(function (resolve, reject) {

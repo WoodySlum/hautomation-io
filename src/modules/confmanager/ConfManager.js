@@ -1,6 +1,6 @@
 "use strict";
 var Logger = require("./../../logger/Logger");
-var fs = require("fs");
+var fs = require("fs-extra");
 var TimeEventService = require("./../../services/timeeventservice/TimeEventService");
 
 const ERROR_EMPTY_FILE    = "ERROR_EMPTY_FILE";

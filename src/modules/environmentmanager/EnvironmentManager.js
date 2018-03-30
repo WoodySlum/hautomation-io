@@ -1,6 +1,7 @@
 "use strict";
 const sha256 = require("sha256");
 const os = require("os");
+const fs = require("fs-extra");
 const Logger = require("./../../logger/Logger");
 const FormConfiguration = require("./../formconfiguration/FormConfiguration");
 const EnvironmentForm = require("./EnvironmentForm");
@@ -11,7 +12,11 @@ const WebServices = require("./../../services/webservices/WebServices");
 const Authentication = require("./../authentication/Authentication");
 const APIResponse = require("./../../services/webservices/APIResponse");
 const TimeEventService = require("./../../services/timeeventservice/TimeEventService");
+const HautomationRunnerConstants = require("./../../../HautomationRunnerConstants");
 const ROUTE_APP_ENVIRONMENT_INFORMATION = "/environment/app/get/";
+const ROUTE_APP_SET_CONFIGURATION = "/environment/conf/set/";
+const ROUTE_APP_GET_CONFIGURATION = "/environment/conf/get/";
+const MAIN_CONFIG_PATH = "./data/config.json";
 
 /**
  * This class allows to manage house environment
@@ -32,16 +37,18 @@ class EnvironmentManager {
      * @param  {string} hash    The app hash
      * @param  {InstallationManager} installationManager    The installation manager
      * @param  {TimeEventService} timeEventService    The time event service
+     * @param  {EventEmitter} eventBus    The global event bus
      *
      * @returns {EnvironmentManager}              The instance
      */
-    constructor(appConfiguration, confManager, formManager, webServices, dashboardManager, translateManager, scenarioManager, version, hash, installationManager, timeEventService) {
+    constructor(appConfiguration, confManager, formManager, webServices, dashboardManager, translateManager, scenarioManager, version, hash, installationManager, timeEventService, eventBus) {
         this.appConfiguration = appConfiguration;
         this.formConfiguration = new FormConfiguration.class(confManager, formManager, webServices, "environment", false, EnvironmentForm.class);
         this.dashboardManager = dashboardManager;
         this.formManager = formManager;
         this.translateManager = translateManager;
         this.scenarioManager = scenarioManager;
+        this.eventBus = eventBus;
         this.formConfiguration.data = this.formConfiguration.data?this.formConfiguration.data:{};
         this.registeredElements = {};
         this.registerTile();
@@ -53,6 +60,9 @@ class EnvironmentManager {
         this.installationManager = installationManager;
         this.timeEventService = timeEventService;
         webServices.registerAPI(this, WebServices.GET, ":" + ROUTE_APP_ENVIRONMENT_INFORMATION, Authentication.AUTH_USAGE_LEVEL);
+        webServices.registerAPI(this, WebServices.POST, ":" + ROUTE_APP_SET_CONFIGURATION, Authentication.AUTH_ADMIN_LEVEL);
+        webServices.registerAPI(this, WebServices.GET, ":" + ROUTE_APP_GET_CONFIGURATION, Authentication.AUTH_ADMIN_LEVEL);
+
         this.timeEventService.register((self) => {
             self.updateCore();
         }, this, TimeEventService.CUSTOM, 3, 30, 0);
@@ -228,6 +238,106 @@ class EnvironmentManager {
     }
 
     /**
+     * Save the main configuration. This method throw an error if something wrong occurs.
+     *
+     * @param  {Object} data The configuration data to be updated
+     */
+    saveMainConfiguration(data) {
+        const mainConfiguration = this.appConfiguration;
+        // Admin part
+        if (data.admin) {
+            if (data.admin.username) {
+                mainConfiguration.admin.username = data.admin.username;
+            }
+
+            if (data.admin.password) {
+                if (data.admin.password.length >= 8) {
+                    mainConfiguration.admin.password = data.admin.password;
+                } else {
+                    throw Error("Admin password is too short (8 characters minimum)");
+                }
+            }
+        }
+
+        // Cameras part
+        if (data.cameras) {
+            mainConfiguration.cameras.history = Boolean(data.cameras.history);
+            mainConfiguration.cameras.season = Boolean(data.cameras.season);
+            mainConfiguration.cameras.timelapse = Boolean(data.cameras.timelapse);
+        }
+
+        // Lng part
+        if (data.lng) {
+            if (data.lng.length === 2) {
+                mainConfiguration.lng = data.lng;
+            } else {
+                throw Error("Invalid language");
+            }
+        }
+
+        // Home part
+        if (data.home) {
+            if (data.home.longitude) {
+                mainConfiguration.home.longitude = parseFloat(data.home.longitude);
+            } else {
+                throw Error("Missing home longitude");
+            }
+
+            if (data.home.latitude) {
+                mainConfiguration.home.latitude = parseFloat(data.home.latitude);
+            } else {
+                throw Error("Missing home latitude");
+            }
+
+            if (data.home.radius) {
+                mainConfiguration.home.radius = parseFloat(data.home.radius);
+            } else {
+                throw Error("Missing home radius");
+            }
+        }
+
+        // Bot part
+        if (data.bot) {
+            if (data.bot.sensitivity) {
+                mainConfiguration.bot.sensitivity = parseFloat(data.bot.sensitivity);
+            } else {
+                throw Error("Missing bot sensitivity");
+            }
+
+            if (data.bot.audioGain) {
+                mainConfiguration.bot.audioGain = parseFloat(data.bot.audioGain);
+            } else {
+                throw Error("Missing bot audio gain");
+            }
+
+            if (data.bot.outputVolume) {
+                mainConfiguration.bot.outputVolume = parseFloat(data.bot.outputVolume);
+            } else {
+                throw Error("Missing bot output volume");
+            }
+        }
+
+        // Debbugging part
+        if (Number.isInteger(data.logLevel)) {
+            mainConfiguration.logLevel = parseInt(data.logLevel);
+        }
+
+        if (typeof data.crashOnPluginError === "boolean") {
+            mainConfiguration.crashOnPluginError = Boolean(data.crashOnPluginError);
+        }
+
+        mainConfiguration.defaultConfig = false;
+
+        Logger.info("Writing main configuration data");
+        fs.writeFileSync(MAIN_CONFIG_PATH, JSON.stringify(mainConfiguration, null, "    "));
+
+        // Restart
+        setTimeout((self) => {
+            self.eventBus.emit(HautomationRunnerConstants.RESTART);
+        }, 1000, this);
+    }
+
+    /**
      * Process API callback
      *
      * @param  {APIRequest} apiRequest An APIRequest
@@ -238,9 +348,21 @@ class EnvironmentManager {
             return new Promise((resolve) => {
                 resolve(new APIResponse.class(true, {version:this.version, hash:this.hash, hautomationId: this.hautomationId}));
             });
+        } else if (apiRequest.route === ":" + ROUTE_APP_SET_CONFIGURATION) {
+            return new Promise((resolve, reject) => {
+                try {
+                    this.saveMainConfiguration(apiRequest.data);
+                    resolve(new APIResponse.class(true, {successs: true}));
+                } catch(e) {
+                    reject(new APIResponse.class(false, {}, 4512, e.message));
+                }
+            });
+        } else if (apiRequest.route === ":" + ROUTE_APP_GET_CONFIGURATION) {
+            return new Promise((resolve) => {
+                resolve(new APIResponse.class(true, this.appConfiguration));
+            });
         }
     }
-
 
     /**
      * Try to update core
@@ -258,6 +380,15 @@ class EnvironmentManager {
                 }
             });
         }
+    }
+
+    /**
+     * Check if this is the default configuration exposed
+     *
+     * @returns {boolean} `true` if this is the default config, `false` otherwise
+     */
+    isDefaultConfig() {
+        return this.appConfiguration.defaultConfig;
     }
 }
 

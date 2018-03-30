@@ -1,4 +1,5 @@
 {
+    "defaultConfig": true,
     "configurationPath":"./data/",
     "cachePath":"/tmp/hautomation/",
     "port":8100,
