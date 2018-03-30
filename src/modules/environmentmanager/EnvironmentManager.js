@@ -298,6 +298,10 @@ class EnvironmentManager {
 
         // Bot part
         if (data.bot) {
+            if (typeof data.bot.enable === "boolean") {
+                mainConfiguration.bot.enable = Boolean(mainConfiguration.bot.enable);
+            }
+
             if (data.bot.sensitivity) {
                 mainConfiguration.bot.sensitivity = parseFloat(data.bot.sensitivity);
             } else {

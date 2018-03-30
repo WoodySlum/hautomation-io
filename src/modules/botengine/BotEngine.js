@@ -43,7 +43,7 @@ class BotEngine {
 
         // Bot actions
         this.botActions = {};
-        if (!process.env.TEST) {
+        if (!process.env.TEST && this.appConfiguration.bot.enable) {
             this.voiceDetect();
         }
 

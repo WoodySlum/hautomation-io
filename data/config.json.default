@@ -30,6 +30,7 @@
     },
     "crashOnPluginError":false,
     "bot": {
+        "enable": true,
         "sensitivity":0.1,
         "audioGain":1.0,
         "outputVolume": 90
