@@ -71,7 +71,7 @@ function loaded(api) {
                     let revision = null;
 
                     // Version
-                    if (elements.length >= 4 && elements[4].startsWith("Nodo RadioFrequencyLink")) {
+                    if ((elements.length > 2 && elements[2].startsWith("Nodo RadioFrequencyLink")) || (elements.length > 3 && elements[3].startsWith("Nodo RadioFrequencyLink")) || (elements.length > 4 && elements[4].startsWith("Nodo RadioFrequencyLink"))) {
                         //20;00;Nodo RadioFrequencyLink - RFLink Gateway V1.1 - R47;
                         const versionFull = elements[4].split("-");
                         if (versionFull.length === 3) {
