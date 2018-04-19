@@ -48,6 +48,7 @@
 -   [loaded](#loaded-33)
 -   [loaded](#loaded-34)
 -   [loaded](#loaded-35)
+-   [loaded](#loaded-36)
 -   [CameraForm](#cameraform)
     -   [name](#name)
     -   [name](#name-1)
@@ -100,13 +101,16 @@
     -   [generateOptions](#generateoptions)
     -   [getIp](#getip)
     -   [processAPI](#processapi)
+-   [GenericCameraForm](#genericcameraform)
+    -   [json](#json-9)
+-   [GenericCamera](#genericcamera)
 -   [GenericThroughputSensorForm](#genericthroughputsensorform)
     -   [file](#file)
     -   [doNotFailOnTimeout](#donotfailontimeout)
-    -   [json](#json-9)
+    -   [json](#json-10)
 -   [GenericThroughputSensor](#genericthroughputsensor)
 -   [HumiditySensorForm](#humiditysensorform)
-    -   [json](#json-10)
+    -   [json](#json-11)
 -   [HumiditySensor](#humiditysensor)
 -   [MessageProvider](#messageprovider)
     -   [onMessageReceived](#onmessagereceived)
@@ -114,16 +118,16 @@
 -   [number](#number)
 -   [myParameter](#myparameter)
 -   [OpenweatherHumiditySensorForm](#openweatherhumiditysensorform)
-    -   [json](#json-11)
+    -   [json](#json-12)
 -   [OpenweatherHumiditySensor](#openweatherhumiditysensor)
 -   [OpenweatherPressureSensorForm](#openweatherpressuresensorform)
-    -   [json](#json-12)
+    -   [json](#json-13)
 -   [OpenweatherPressureSensor](#openweatherpressuresensor)
 -   [OpenweatherTemperatureSensorForm](#openweathertemperaturesensorform)
-    -   [json](#json-13)
+    -   [json](#json-14)
 -   [OpenweatherTemperatureSensor](#openweathertemperaturesensor)
 -   [OpenweatherWindSensorForm](#openweatherwindsensorform)
-    -   [json](#json-14)
+    -   [json](#json-15)
 -   [OpenweatherWindSensor](#openweatherwindsensor)
 -   [OpenWeatherDb](#openweatherdb)
 -   [weatherId](#weatherid)
@@ -142,7 +146,7 @@
     -   [autoDayNight](#autodaynight)
     -   [weatherTile](#weathertile)
     -   [rainForecastTileMode](#rainforecasttilemode)
-    -   [json](#json-15)
+    -   [json](#json-16)
 -   [OpenWeather](#openweather)
     -   [register](#register)
     -   [unregister](#unregister)
@@ -154,19 +158,19 @@
     -   [forecastProcessing](#forecastprocessing)
     -   [registerRainForecastTile](#registerrainforecasttile)
 -   [PresenceSensorForm](#presencesensorform)
-    -   [json](#json-16)
+    -   [json](#json-17)
 -   [PresenceSensor](#presencesensor)
 -   [PressureSensorForm](#pressuresensorform)
-    -   [json](#json-17)
+    -   [json](#json-18)
 -   [PressureSensor](#pressuresensor)
 -   [ProwlForm](#prowlform)
     -   [prowlApiKey](#prowlapikey)
-    -   [json](#json-18)
+    -   [json](#json-19)
 -   [Prowl](#prowl)
     -   [sendMessage](#sendmessage)
 -   [RadioPresenceSensorForm](#radiopresencesensorform)
     -   [radio](#radio)
-    -   [json](#json-19)
+    -   [json](#json-20)
 -   [RadioPresenceSensor](#radiopresencesensor)
 -   [DbRadio](#dbradio)
 -   [module](#module)
@@ -188,7 +192,7 @@
     -   [register](#register-1)
     -   [unregister](#unregister-1)
 -   [RainTimeSensorForm](#raintimesensorform)
-    -   [json](#json-20)
+    -   [json](#json-21)
 -   [RainTimeSensor](#raintimesensor)
 -   [constructor](#constructor)
 -   [registerTile](#registertile)
@@ -196,7 +200,7 @@
 -   [RFlinkForm](#rflinkform)
     -   [port](#port-1)
     -   [retry](#retry)
-    -   [json](#json-21)
+    -   [json](#json-22)
     -   [getPorts](#getports)
     -   [getPortsName](#getportsname)
 -   [RFLink](#rflink)
@@ -220,7 +224,7 @@
 -   [RingAlertForm](#ringalertform)
     -   [radioEvents](#radioevents)
     -   [cameras](#cameras)
-    -   [json](#json-22)
+    -   [json](#json-23)
 -   [RingAlert](#ringalert)
     -   [start](#start-2)
 -   [DbSensor](#dbsensor)
@@ -232,7 +236,7 @@
     -   [statistics](#statistics)
     -   [dashboardColor](#dashboardcolor)
     -   [statisticsColor](#statisticscolor)
-    -   [json](#json-23)
+    -   [json](#json-24)
 -   [Sensor](#sensor)
     -   [init](#init-1)
     -   [addUnitAggregation](#addunitaggregation)
@@ -247,12 +251,12 @@
     -   [constants](#constants-3)
 -   [SMSForm](#smsform)
     -   [port](#port-2)
-    -   [json](#json-24)
+    -   [json](#json-25)
     -   [getPorts](#getports-1)
     -   [getPortsLabels](#getportslabels)
 -   [SMSUserForm](#smsuserform)
     -   [phoneNumber](#phonenumber)
-    -   [json](#json-25)
+    -   [json](#json-26)
 -   [SMS](#sms)
     -   [init](#init-2)
     -   [getAvailableDevices](#getavailabledevices)
@@ -263,28 +267,28 @@
     -   [processAPI](#processapi-3)
 -   [SMSService](#smsservice)
 -   [SumppleCameraForm](#sumpplecameraform)
-    -   [json](#json-26)
+    -   [json](#json-27)
 -   [Sumpple](#sumpple)
 -   [TemperatureSensorForm](#temperaturesensorform)
     -   [unit](#unit)
-    -   [json](#json-27)
+    -   [json](#json-28)
 -   [TemperatureSensor](#temperaturesensor)
     -   [setUnit](#setunit)
 -   [ThroughputSensorForm](#throughputsensorform)
-    -   [json](#json-28)
+    -   [json](#json-29)
 -   [ThroughputSensor](#throughputsensor)
 -   [TrashReminderSubform](#trashremindersubform)
     -   [day](#day)
     -   [weekMode](#weekmode)
     -   [name](#name-3)
-    -   [json](#json-29)
+    -   [json](#json-30)
 -   [TrashReminderForm](#trashreminderform)
     -   [reminders](#reminders)
-    -   [json](#json-30)
+    -   [json](#json-31)
 -   [TrashReminders](#trashreminders)
 -   [WindSensorForm](#windsensorform)
     -   [unit](#unit-1)
-    -   [json](#json-31)
+    -   [json](#json-32)
 -   [WindSensor](#windsensor)
     -   [setUnit](#setunit-1)
 -   [Logger](#logger)
@@ -303,7 +307,7 @@
     -   [sensors](#sensors)
     -   [devicesOnEnable](#devicesonenable)
     -   [devicesOnDisable](#devicesondisable)
-    -   [json](#json-32)
+    -   [json](#json-33)
 -   [AlarmManager](#alarmmanager)
     -   [sensorReadyForTriggering](#sensorreadyfortriggering)
     -   [registerTile](#registertile-1)
@@ -319,7 +323,7 @@
     -   [sensor](#sensor-1)
     -   [triggerAlarm](#triggeralarm-1)
     -   [captureVideo](#capturevideo)
-    -   [json](#json-33)
+    -   [json](#json-34)
 -   [Authentication](#authentication)
     -   [clearExpiredTokens](#clearexpiredtokens)
     -   [generateToken](#generatetoken)
@@ -342,12 +346,12 @@
     -   [unregisterBotAction](#unregisterbotaction)
 -   [CamerasForm](#camerasform)
     -   [cameraId](#cameraid)
-    -   [json](#json-34)
+    -   [json](#json-35)
     -   [getCameraIds](#getcameraids)
     -   [getCameraNames](#getcameranames)
 -   [CamerasListForm](#cameraslistform)
     -   [identifier](#identifier)
-    -   [json](#json-35)
+    -   [json](#json-36)
     -   [getCamerasName](#getcamerasname)
     -   [getCamerasId](#getcamerasid)
 -   [CamerasManager](#camerasmanager)
@@ -462,7 +466,7 @@
     -   [icon](#icon-1)
     -   [radio](#radio-2)
     -   [status](#status-1)
-    -   [json](#json-36)
+    -   [json](#json-37)
 -   [DeviceManager](#devicemanager)
     -   [triggerScenario](#triggerscenario)
     -   [registerDeviceListForm](#registerdevicelistform)
@@ -475,21 +479,21 @@
 -   [DevicesListForm](#deviceslistform)
     -   [identifier](#identifier-1)
     -   [status](#status-2)
-    -   [json](#json-37)
+    -   [json](#json-38)
     -   [getDevicesName](#getdevicesname)
     -   [getDevicesId](#getdevicesid)
 -   [DevicesListScenarioForm](#deviceslistscenarioform)
     -   [turnOnAll](#turnonall)
     -   [turnOffAll](#turnoffall)
     -   [devices](#devices)
-    -   [json](#json-38)
+    -   [json](#json-39)
 -   [DayNightScenarioForm](#daynightscenarioform)
     -   [day](#day-1)
     -   [night](#night)
-    -   [json](#json-39)
+    -   [json](#json-40)
 -   [EnvironmentForm](#environmentform)
     -   [day](#day-2)
-    -   [json](#json-40)
+    -   [json](#json-41)
 -   [EnvironmentManager](#environmentmanager)
     -   [registerDayNightNotifications](#registerdaynightnotifications)
     -   [unregisterDayNightNotifications](#unregisterdaynightnotifications)
@@ -503,8 +507,11 @@
     -   [getLocalIp](#getlocalip)
     -   [getMacAddress](#getmacaddress)
     -   [getLocalAPIUrl](#getlocalapiurl)
+    -   [saveMainConfiguration](#savemainconfiguration)
     -   [processAPI](#processapi-9)
     -   [updateCore](#updatecore)
+    -   [isDefaultConfig](#isdefaultconfig)
+    -   [getHautomationId](#gethautomationid)
 -   [FormConfiguration](#formconfiguration)
     -   [setUpdateCb](#setupdatecb)
     -   [addAdditionalFields](#addadditionalfields)
@@ -529,10 +536,9 @@
     -   [getForm](#getform-1)
     -   [generateForm](#generateform)
 -   [FormObject](#formobject)
-    -   [json](#json-41)
+    -   [json](#json-42)
 -   [id](#id)
 -   [GatewayManager](#gatewaymanager)
-    -   [getHautomationId](#gethautomationid)
     -   [transmit](#transmit)
 -   [InstallationManager](#installationmanager)
     -   [register](#register-3)
@@ -544,7 +550,7 @@
 -   [IotForm](#iotform)
     -   [iotApp](#iotapp)
     -   [name](#name-5)
-    -   [json](#json-42)
+    -   [json](#json-43)
 -   [IotManager](#iotmanager)
     -   [registerIotsListForm](#registeriotslistform)
     -   [registerLib](#registerlib)
@@ -562,7 +568,7 @@
     -   [isBuilding](#isbuilding)
 -   [IotsListForm](#iotslistform)
     -   [identifier](#identifier-2)
-    -   [json](#json-43)
+    -   [json](#json-44)
     -   [getIotsName](#getiotsname)
     -   [getIotsId](#getiotsid)
 -   [DbMessage](#dbmessage)
@@ -587,7 +593,7 @@
     -   [registerInstance](#registerinstance)
     -   [getPluginInstance](#getplugininstance)
 -   [PluginConf](#pluginconf)
-    -   [json](#json-44)
+    -   [json](#json-45)
 -   [PluginsManager](#pluginsmanager)
     -   [getPluginsFromDirectory](#getpluginsfromdirectory)
     -   [checkPluginSanity](#checkpluginsanity)
@@ -597,10 +603,12 @@
     -   [load](#load)
     -   [getPluginsByCategory](#getpluginsbycategory)
     -   [getPluginByIdentifier](#getpluginbyidentifier)
+    -   [isEnabled](#isenabled)
     -   [prepareToposortArray](#preparetoposortarray)
     -   [toposort](#toposort)
     -   [topsortedArrayConverter](#topsortedarrayconverter)
     -   [getPluginConf](#getpluginconf)
+    -   [changePluginStatus](#changepluginstatus)
     -   [processAPI](#processapi-13)
 -   [AlarmAPI](#alarmapi)
     -   [alarmStatus](#alarmstatus-1)
@@ -719,7 +727,7 @@
     -   [protocol](#protocol-1)
     -   [deviceId](#deviceid-1)
     -   [switchId](#switchid-1)
-    -   [json](#json-45)
+    -   [json](#json-46)
     -   [getModules](#getmodules)
     -   [getProtocols](#getprotocols)
 -   [RadioManager](#radiomanager)
@@ -739,17 +747,17 @@
 -   [RadioScenarioForm](#radioscenarioform)
     -   [radioForm](#radioform-1)
     -   [status](#status-3)
-    -   [json](#json-46)
+    -   [json](#json-47)
 -   [RadioScenariosForm](#radioscenariosform)
     -   [radioScenariosForm](#radioscenariosform-1)
-    -   [json](#json-47)
+    -   [json](#json-48)
 -   [ScenarioForm](#scenarioform)
     -   [name](#name-6)
     -   [enabled](#enabled-1)
     -   [icon](#icon-2)
     -   [timeTrigger](#timetrigger)
     -   [subActions](#subactions)
-    -   [json](#json-48)
+    -   [json](#json-49)
 -   [ScenarioManager](#scenariomanager)
     -   [registerScenariosListForm](#registerscenarioslistform)
     -   [generateKey](#generatekey)
@@ -760,25 +768,25 @@
     -   [timeEventScenario](#timeeventscenario)
 -   [ScenariosListForm](#scenarioslistform)
     -   [identifier](#identifier-3)
-    -   [json](#json-49)
+    -   [json](#json-50)
     -   [getScenariosName](#getscenariosname)
     -   [getScenariosId](#getscenariosid)
 -   [ScenarioSubActionForm](#scenariosubactionform)
     -   [scenario](#scenario)
     -   [delay](#delay)
-    -   [json](#json-50)
+    -   [json](#json-51)
 -   [TimeScenarioForm](#timescenarioform)
     -   [day](#day-3)
     -   [time](#time)
-    -   [json](#json-51)
+    -   [json](#json-52)
 -   [SensorsForm](#sensorsform)
     -   [sensorId](#sensorid-1)
-    -   [json](#json-52)
+    -   [json](#json-53)
     -   [getSensorIds](#getsensorids)
     -   [getSensorNames](#getsensornames)
 -   [SensorsListForm](#sensorslistform)
     -   [identifier](#identifier-4)
-    -   [json](#json-53)
+    -   [json](#json-54)
     -   [getSensorsName](#getsensorsname)
     -   [getSensorsId](#getsensorsid)
 -   [SensorsManager](#sensorsmanager)
@@ -824,7 +832,7 @@
     -   [name](#name-7)
     -   [picture](#picture-1)
     -   [atHome](#athome)
-    -   [json](#json-54)
+    -   [json](#json-55)
 -   [UserManager](#usermanager)
     -   [updateTile](#updatetile-3)
     -   [getUsers](#getusers-1)
@@ -840,7 +848,7 @@
     -   [registerBotActions](#registerbotactions)
 -   [UserScenarioForm](#userscenarioform)
     -   [mode](#mode)
-    -   [json](#json-55)
+    -   [json](#json-56)
 -   [SchedulerDbObject](#schedulerdbobject)
 -   [identifier](#identifier-5)
 -   [data](#data)
@@ -1010,6 +1018,14 @@ Stop automation core
 ### configurationLoader
 
 Try to overload configuration
+
+## loaded
+
+Loaded function
+
+**Parameters**
+
+-   `api` **PluginAPI** The api
 
 ## loaded
 
@@ -1705,6 +1721,47 @@ Process API callback
 -   `apiRequest` **[APIRequest](#apirequest)** An APIRequest
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with an APIResponse object
+
+## GenericCameraForm
+
+**Extends api.exported.FormObject.class**
+
+Generic camera form class
+
+**Parameters**
+
+-   `id`  
+-   `plugin`  
+-   `name`  
+-   `snapshotUrl`  
+-   `mjpegUrl`  
+-   `rtspUrl`  
+-   `leftUrl`  
+-   `rightUrl`  
+-   `upUrl`  
+-   `downUrl`  
+
+### json
+
+Convert JSON data to object
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Some data
+
+Returns **[GenericCameraForm](#genericcameraform)** An instance
+
+## GenericCamera
+
+**Extends api.exported.Camera**
+
+Generic camera class
+
+**Parameters**
+
+-   `api`  
+-   `id`  
+-   `configuration`  
 
 ## GenericThroughputSensorForm
 
@@ -4741,6 +4798,7 @@ Register a device on dashboard
 **Parameters**
 
 -   `device` **[DeviceForm](#deviceform)** A device
+-   `data` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)** Some data (optional, default `[]`)
 -   `index` **[number](#number)** An index (optional, default `-1`)
 
 ### switchDevice
@@ -4911,6 +4969,7 @@ This class allows to manage house environment
 -   `hash`  
 -   `installationManager`  
 -   `timeEventService`  
+-   `eventBus`  
 
 ### registerDayNightNotifications
 
@@ -4982,6 +5041,14 @@ Get the local API Url
 
 Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The local API url (e.g. : <http://192.168.2.34:8100/api/>)
 
+### saveMainConfiguration
+
+Save the main configuration. This method throw an error if something wrong occurs.
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** The configuration data to be updated
+
 ### processAPI
 
 Process API callback
@@ -4995,6 +5062,18 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 ### updateCore
 
 Try to update core
+
+### isDefaultConfig
+
+Check if this is the default configuration exposed
+
+Returns **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` if this is the default config, `false` otherwise
+
+### getHautomationId
+
+Returns the hautomation ID
+
+Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Hautomation identifier
 
 ## FormConfiguration
 
@@ -5226,12 +5305,6 @@ This class manage gateway communications
 -   `timeEventService`  
 -   `appConfiguration`  
 -   `webServices`  
-
-### getHautomationId
-
-Returns the hautomation ID
-
-Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Hautomation identifier
 
 ### transmit
 
@@ -5707,6 +5780,7 @@ This class is a Plugin POJO
 -   `identifier`   (optional, default `null`)
 -   `version`   (optional, default `null`)
 -   `enable`   (optional, default `true`)
+-   `dependencies`   (optional, default `[]`)
 
 ### json
 
@@ -5716,7 +5790,7 @@ Transform json raw object to instance
 
 -   `data` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** JSON object data
 
-Returns **User** A User instance
+Returns **[PluginConf](#pluginconf)** A User instance
 
 ## PluginsManager
 
@@ -5827,6 +5901,16 @@ Get a plugin with identifier
 
 Returns **PluginAPI** A plugin
 
+### isEnabled
+
+Is the plugin enabled
+
+**Parameters**
+
+-   `pluginIdentifier` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The plugin identifier
+
+Returns **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` if enabled, `false` otherwise
+
 ### prepareToposortArray
 
 Return a table prepared for toposort, with dependencies
@@ -5867,6 +5951,15 @@ Returns a plugin configuration
 -   `identifier` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The plugin identifier
 
 Returns **[PluginConf](#pluginconf)** The plugin configuration
+
+### changePluginStatus
+
+Change plugin status
+
+**Parameters**
+
+-   `pluginConf` **[PluginConf](#pluginconf)** The changing plugin conf
+-   `status` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** The new status
 
 ### processAPI
 

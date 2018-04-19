@@ -56,7 +56,6 @@ class EnvironmentManager {
         this.scenarioManager.register(DayNightScenarioForm.class, null, "daynight.scenario.trigger.title");
         this.version = version;
         this.hash = hash;
-        this.hautomaionId = null;
         this.installationManager = installationManager;
         this.timeEventService = timeEventService;
         webServices.registerAPI(this, WebServices.GET, ":" + ROUTE_APP_ENVIRONMENT_INFORMATION, Authentication.AUTH_USAGE_LEVEL);
@@ -350,7 +349,7 @@ class EnvironmentManager {
     processAPI(apiRequest) {
         if (apiRequest.route.startsWith( ":" + ROUTE_APP_ENVIRONMENT_INFORMATION)) {
             return new Promise((resolve) => {
-                resolve(new APIResponse.class(true, {version:this.version, hash:this.hash, hautomationId: this.hautomationId}));
+                resolve(new APIResponse.class(true, {version:this.version, hash:this.hash, hautomationId: this.getHautomationId()}));
             });
         } else if (apiRequest.route === ":" + ROUTE_APP_SET_CONFIGURATION) {
             return new Promise((resolve, reject) => {
@@ -393,6 +392,20 @@ class EnvironmentManager {
      */
     isDefaultConfig() {
         return this.appConfiguration.defaultConfig;
+    }
+
+    /**
+     * Returns the hautomation ID
+     *
+     * @returns {string} Hautomation identifier
+     */
+    getHautomationId() {
+        const macAddress = this.getMacAddress();
+        if (macAddress) {
+            return sha256(macAddress).substr(0,4);
+        }
+
+        return macAddress;
     }
 }
 

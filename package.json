@@ -11,7 +11,7 @@
         "dev": "nodemon --config .nodemon.json  HautomationRunner.js",
         "start": "node HautomationRunner.js",
         "pre-test": "rm -Rf /tmp/data && mkdir /tmp/data && cp -f ./data/config.json /tmp/data",
-        "test": "npm run pre-test && env TEST=1 NO_LOG=1 mocha --timeout 600000 --reporter progress $(find tests -name '*.tests.js')",
+        "test": "npm run pre-test && env TEST=1 NO_LOG=1 mocha --timeout 600000 --reporter spec $(find tests -name '*.tests.js')",
         "test-ci": "npm run pre-test && env TEST=1 NO_LOG=1 istanbul cover _mocha -- --timeout 600000 --reporter mocha-junit-reporter $(find tests -name '*.tests.js')",
         "coverage": "npm run pre-test && env TEST=1 NO_LOG=1 istanbul cover _mocha -- --timeout 600000 $(find tests -name '*.tests.js')",
         "lint": "eslint ./src/ --ext .js",

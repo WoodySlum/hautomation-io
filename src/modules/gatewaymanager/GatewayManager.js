@@ -1,7 +1,6 @@
 "use strict";
 const Logger = require("./../../logger/Logger");
 const TimeEventService = require("./../../services/timeeventservice/TimeEventService");
-const sha256 = require("sha256");
 const request = require("request");
 const GATEWAY_MODE = 1;
 const GATEWAY_URL = "https://api.hautomation-io.com/ping/";
@@ -33,26 +32,11 @@ class GatewayManager {
         this.webServices = webServices;
         this.webServices.gatewayManager = this;
         this.tunnelUrl = null;
-        Logger.info("Hautomation ID : " + this.getHautomationId());
-        this.environmentManager.hautomationId = this.getHautomationId();
+        Logger.info("Hautomation ID : " + this.environmentManager.getHautomationId());
 
         this.timeEventService.register((self) => {
             self.transmit();
         }, this, TimeEventService.EVERY_DAYS);
-    }
-
-    /**
-     * Returns the hautomation ID
-     *
-     * @returns {string} Hautomation identifier
-     */
-    getHautomationId() {
-        const macAddress = this.environmentManager.getMacAddress();
-        if (macAddress) {
-            return sha256(macAddress).substr(0,4);
-        }
-
-        return macAddress;
     }
 
     /**
@@ -71,7 +55,7 @@ class GatewayManager {
             method: "POST",
             headers: headers,
             json: {
-                hautomationId: this.getHautomationId(),
+                hautomationId: this.environmentManager.getHautomationId(),
                 sslPort: (this.appConfiguration.ssl && this.appConfiguration.ssl.port)?this.appConfiguration.ssl.port:null,
                 port: this.appConfiguration.port,
                 version: this.version,
