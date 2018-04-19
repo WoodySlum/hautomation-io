@@ -27,6 +27,10 @@ const CAMERAS_MANAGER_TIMELAPSE_DAILY_STREAM_BASE = ":/camera/timelapse/daily/st
 const CAMERAS_MANAGER_TIMELAPSE_DAILY_STREAM = CAMERAS_MANAGER_TIMELAPSE_DAILY_STREAM_BASE + "[id]/";
 const CAMERAS_MANAGER_TIMELAPSE_DAILY_GET_BASE = ":/camera/timelapse/daily/get/";
 const CAMERAS_MANAGER_TIMELAPSE_DAILY_GET = CAMERAS_MANAGER_TIMELAPSE_DAILY_GET_BASE + "[id]/";
+const CAMERAS_MANAGER_TIMELAPSE_SEASON_STREAM_BASE = ":/camera/timelapse/season/stream/";
+const CAMERAS_MANAGER_TIMELAPSE_SEASON_STREAM = CAMERAS_MANAGER_TIMELAPSE_SEASON_STREAM_BASE + "[id]/";
+const CAMERAS_MANAGER_TIMELAPSE_SEASON_GET_BASE = ":/camera/timelapse/season/get/";
+const CAMERAS_MANAGER_TIMELAPSE_SEASON_GET = CAMERAS_MANAGER_TIMELAPSE_SEASON_GET_BASE + "[id]/";
 const CAMERAS_MANAGER_TIMELAPSE_GENERATE_POST_BASE = ":/camera/timelapse/set/";
 const CAMERAS_MANAGER_TIMELAPSE_GENERATE_POST = CAMERAS_MANAGER_TIMELAPSE_GENERATE_POST_BASE + "[id]/[duration]/";
 const CAMERAS_MANAGER_TIMELAPSE_STATUS_GET_BASE = ":/camera/timelapse/status/get/";
@@ -47,6 +51,7 @@ const MODE_MJPEG = "mjpeg";
 const MODE_RTSP = "rtsp";
 
 const DAILY_DURATION = 24 * 60 * 60;
+const SEASON_DURATION = 12 * 30 * 24 * 60 * 60;
 const CAMERAS_RETENTION_TIME = 60 * 60 * 24 * 7; // In seconds
 const CAMERA_FILE_EXTENSION = ".JPG";
 const CAMERA_SEASON_EXTENSION = "-season";
@@ -140,6 +145,9 @@ class CamerasManager {
         this.webServices.registerAPI(this, WebServices.GET, CAMERAS_MANAGER_TIMELAPSE_STATUS_GET, Authentication.AUTH_USAGE_LEVEL);
         this.webServices.registerAPI(this, WebServices.GET, CAMERAS_MANAGER_TIMELAPSE_GET, Authentication.AUTH_USAGE_LEVEL);
         this.webServices.registerAPI(this, WebServices.GET, CAMERAS_MANAGER_TIMELAPSE_STREAM, Authentication.AUTH_USAGE_LEVEL, 30 * 60);
+        // Season
+        this.webServices.registerAPI(this, WebServices.GET, CAMERAS_MANAGER_TIMELAPSE_SEASON_STREAM, Authentication.AUTH_USAGE_LEVEL, 30 * 60);
+        this.webServices.registerAPI(this, WebServices.GET, CAMERAS_MANAGER_TIMELAPSE_SEASON_GET, Authentication.AUTH_USAGE_LEVEL);
 
         // Register tile refresh :)
         this.timeEventService.register((self) => {
@@ -153,6 +161,15 @@ class CamerasManager {
         this.timeEventService.register((self) => {
             self.generateDailyTimeLapses(self);
         }, this, TimeEventService.EVERY_DAYS);
+
+        this.timeEventService.register((self) => {
+            self.generateSeasonTimeLapses(self);
+        }, this, TimeEventService.EVERY_DAYS);
+
+        // setTimeout((self) => {
+        //     this.generateSeasonTimeLapses(this);
+        // }, 5000, this);
+
     }
 
     /**
@@ -496,51 +513,13 @@ class CamerasManager {
                     reject(new APIResponse.class(false, {}, 766, ERROR_UNKNOWN_IDENTIFIER));
                 }
             });
+        } else if (apiRequest.route.startsWith(CAMERAS_MANAGER_TIMELAPSE_SEASON_STREAM_BASE)) {
+            return new Promise((resolve, reject) => {
+                self.stream(apiRequest, this.seasonFilepath, reject);
+            });
         } else if (apiRequest.route.startsWith(CAMERAS_MANAGER_TIMELAPSE_DAILY_STREAM_BASE)) {
             return new Promise((resolve, reject) => {
-                const camera = this.getCamera(apiRequest.data.id);
-                if (camera) {
-                    const dailyFilepath = this.dailyFilepath(camera, this.camerasArchiveFolder);
-                    if (fs.existsSync(dailyFilepath)) {
-                        fs.stat(dailyFilepath, (err, stats) => {
-                            if (err) {
-                                if (err.code === "ENOENT") {
-                                    // 404 Error if file not found
-                                    apiRequest.res.sendStatus(404);
-                                }
-                                apiRequest.res.end(err);
-                            }
-                            const range = apiRequest.req.headers.range;
-                            if (!range) {
-                                // 416 Wrong range
-                                return apiRequest.res.sendStatus(416);
-                            }
-                            const positions = range.replace(/bytes=/, "").split("-");
-                            const start = parseInt(positions[0], 10);
-                            const total = stats.size;
-                            const end = positions[1] ? parseInt(positions[1], 10) : total - 1;
-                            const chunksize = (end - start) + 1;
-
-                            apiRequest.res.writeHead(206, {
-                                "Content-Range": "bytes " + start + "-" + end + "/" + total,
-                                "Accept-Ranges": "bytes",
-                                "Content-Length": chunksize,
-                                "Content-Type": "video/mp4"
-                            });
-
-                            const stream = fs.createReadStream(dailyFilepath, { start: start, end: end })
-                                .on("open", function() {
-                                    stream.pipe(apiRequest.res);
-                                }).on("error", function(err) {
-                                    apiRequest.res.end(err);
-                                });
-                        });
-                    } else {
-                        reject(new APIResponse.class(false, {}, 770, ERROR_TIMELAPSE_NOT_GENERATED));
-                    }
-                } else {
-                    reject(new APIResponse.class(false, {}, 766, ERROR_UNKNOWN_IDENTIFIER));
-                }
+                self.stream(apiRequest, this.dailyFilepath, reject);
             });
         } else if (apiRequest.route.startsWith(CAMERAS_MANAGER_TIMELAPSE_DAILY_GET_BASE)) {
             return new Promise((resolve, reject) => {
@@ -551,6 +530,23 @@ class CamerasManager {
                         apiRequest.res.setHeader("Content-disposition", "attachment; filename=daily-" + camera.id + TimelapseGenerator.VIDEO_EXTENSION);
                         apiRequest.res.setHeader("Content-type", "video/mp4");
                         const filestream = fs.createReadStream(dailyFilepath);
+                        filestream.pipe(apiRequest.res);
+                    } else {
+                        reject(new APIResponse.class(false, {}, 770, ERROR_TIMELAPSE_NOT_GENERATED));
+                    }
+                } else {
+                    reject(new APIResponse.class(false, {}, 766, ERROR_UNKNOWN_IDENTIFIER));
+                }
+            });
+        } else if (apiRequest.route.startsWith(CAMERAS_MANAGER_TIMELAPSE_SEASON_GET_BASE)) {
+            return new Promise((resolve, reject) => {
+                const camera = this.getCamera(apiRequest.data.id);
+                if (camera) {
+                    const seasonFilepath = this.seasonFilepath(camera, this.camerasArchiveFolder);
+                    if (fs.existsSync(seasonFilepath)) {
+                        apiRequest.res.setHeader("Content-disposition", "attachment; filename=season-" + camera.id + TimelapseGenerator.VIDEO_EXTENSION);
+                        apiRequest.res.setHeader("Content-type", "video/mp4");
+                        const filestream = fs.createReadStream(seasonFilepath);
                         filestream.pipe(apiRequest.res);
                     } else {
                         reject(new APIResponse.class(false, {}, 770, ERROR_TIMELAPSE_NOT_GENERATED));
@@ -641,6 +637,59 @@ class CamerasManager {
                     reject(new APIResponse.class(false, {}, 774, ERROR_UNKNOWN_TIMELAPSE_TOKEN));
                 }
             });
+        }
+    }
+
+    /**
+     * Method called to stream video through APIRequest
+     *
+     * @param  {APIRequest} apiRequest An APIRequest
+     * @param  {Function} filePathMethod The filepath method
+     * @param  {Function} reject         The reject function
+     */
+    stream(apiRequest, filePathMethod, reject) {
+        const camera = this.getCamera(apiRequest.data.id);
+        if (camera) {
+            const streamFilepath = filePathMethod(camera, this.camerasArchiveFolder);
+            if (fs.existsSync(streamFilepath)) {
+                fs.stat(streamFilepath, (err, stats) => {
+                    if (err) {
+                        if (err.code === "ENOENT") {
+                            // 404 Error if file not found
+                            apiRequest.res.sendStatus(404);
+                        }
+                        apiRequest.res.end(err);
+                    }
+                    const range = apiRequest.req.headers.range;
+                    if (!range) {
+                        // 416 Wrong range
+                        return apiRequest.res.sendStatus(416);
+                    }
+                    const positions = range.replace(/bytes=/, "").split("-");
+                    const start = parseInt(positions[0], 10);
+                    const total = stats.size;
+                    const end = positions[1] ? parseInt(positions[1], 10) : total - 1;
+                    const chunksize = (end - start) + 1;
+
+                    apiRequest.res.writeHead(206, {
+                        "Content-Range": "bytes " + start + "-" + end + "/" + total,
+                        "Accept-Ranges": "bytes",
+                        "Content-Length": chunksize,
+                        "Content-Type": "video/mp4"
+                    });
+
+                    const stream = fs.createReadStream(streamFilepath, { start: start, end: end })
+                        .on("open", function() {
+                            stream.pipe(apiRequest.res);
+                        }).on("error", function(err) {
+                            apiRequest.res.end(err);
+                        });
+                });
+            } else {
+                reject(new APIResponse.class(false, {}, 770, ERROR_TIMELAPSE_NOT_GENERATED));
+            }
+        } else {
+            reject(new APIResponse.class(false, {}, 766, ERROR_UNKNOWN_IDENTIFIER));
         }
     }
 
@@ -815,6 +864,17 @@ class CamerasManager {
     }
 
     /**
+     * Get the season timelapse file path
+     *
+     * @param  {Camera} camera               A camera
+     * @param  {string} camerasArchiveFolder Camera archive folder
+     * @returns {string}                      The path
+     */
+    seasonFilepath(camera, camerasArchiveFolder) {
+        return camerasArchiveFolder + camera.id + CAMERA_SEASON_EXTENSION + TimelapseGenerator.VIDEO_EXTENSION;
+    }
+
+    /**
      * Generate a daily timelapse
      *
      * @param  {CamerasManager} context The context (self)
@@ -830,6 +890,29 @@ class CamerasManager {
                         const dailyFilename = context.dailyFilepath(camera, context.camerasArchiveFolder);
                         fs.remove(dailyFilename);
                         fs.move(timelapseFilepath, dailyFilename);
+                    }
+                });
+            });
+        }
+    }
+
+    /**
+     * Generate a season timelapse
+     *
+     * @param  {CamerasManager} context The context (self)
+     */
+    generateSeasonTimeLapses(context) {
+        Logger.info("Timelapse season camera generation requested");
+        if (context.enableSeason) {
+            Logger.info("Timelapse enabled");
+            context.cameras.forEach((camera) => {
+                const cameraArchiveFolderSeason = context.camerasArchiveFolder + camera.id + CAMERA_SEASON_EXTENSION + "/";
+                const timelapse = new TimelapseGenerator.class(camera, context.installationManager, context.cachePath, cameraArchiveFolderSeason, SEASON_DURATION, false);
+                timelapse.generateTimelapse((status, error, timelapseFilepath) => {
+                    if (!error && timelapseFilepath) {
+                        const seasonFilename = context.seasonFilepath(camera, context.camerasArchiveFolder);
+                        fs.remove(seasonFilename);
+                        fs.move(timelapseFilepath, seasonFilename);
                     }
                 });
             });

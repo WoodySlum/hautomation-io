@@ -29,15 +29,17 @@ class TimelapseGenerator {
      * @param  {string} cachePath           The cache path
      * @param  {string} cameraArchiveFolder The camera archive path
      * @param  {number} [duration=24 * 60 * 60] The duration in seconds
+     * @param  {boolean} [suffixCameraId=true] Add camera identifier suffix to folder
      * @returns {TimelapseGenerator}                     The instance
      */
-    constructor(camera, installationManager, cachePath, cameraArchiveFolder, duration = 24 * 60 * 60) {
+    constructor(camera, installationManager, cachePath, cameraArchiveFolder, duration = 24 * 60 * 60, suffixCameraId = true) {
         this.camera = camera;
         this.installationManager = installationManager;
         this.cachePath = cachePath;
         this.cameraArchiveFolder = cameraArchiveFolder;
         this.duration = duration;
         this.token = sha256(DateUtils.class.timestamp() + "" + camera.id);
+        this.suffixCameraId = suffixCameraId;
         this.status = STATUS_PENDING;
     }
 
@@ -98,7 +100,7 @@ class TimelapseGenerator {
         Logger.info("Generating timelapse for camera " + this.camera.id);
         // Prepare file copy
         const folder = this.cachePath + DateUtils.class.timestamp() + Math.round(Math.random() * 1000) + "/";
-        const cameraArchiveFolder = this.cameraArchiveFolder + this.camera.id + "/";
+        const cameraArchiveFolder = this.cameraArchiveFolder + (this.suffixCameraId?this.camera.id:"") + "/";
         const cacheImages = folder + "snapshots/";
         fs.mkdirsSync(cacheImages);
         const beginTimestamp = DateUtils.class.timestamp() - this.duration;
@@ -113,7 +115,7 @@ class TimelapseGenerator {
                     }
                 });
 
-                Logger.info("Time lapse with " + pictureList.length + " pictures");
+                Logger.info("Timelapse with " + pictureList.length + " pictures");
 
                 if (pictureList.length / FRAMERATE >= MIN_DURATION) {
                     let i = 0;

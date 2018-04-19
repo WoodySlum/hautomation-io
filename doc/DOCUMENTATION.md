@@ -362,6 +362,7 @@
     -   [getAllCameras](#getallcameras)
     -   [registerTile](#registertile-2)
     -   [processAPI](#processapi-6)
+    -   [stream](#stream)
     -   [comparator](#comparator)
     -   [getCameraConfiguration](#getcameraconfiguration)
     -   [registerCamerasListForm](#registercameraslistform)
@@ -371,7 +372,9 @@
     -   [getImage](#getimage)
     -   [timelapseStatus](#timelapsestatus)
     -   [dailyFilepath](#dailyfilepath)
+    -   [seasonFilepath](#seasonfilepath)
     -   [generateDailyTimeLapses](#generatedailytimelapses)
+    -   [generateSeasonTimeLapses](#generateseasontimelapses)
     -   [generateTimelapse](#generatetimelapse)
     -   [record](#record)
 -   [TimelapseGenerator](#timelapsegenerator)
@@ -3751,6 +3754,16 @@ Process API callback
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A promise with an APIResponse object
 
+### stream
+
+Method called to stream video through APIRequest
+
+**Parameters**
+
+-   `apiRequest` **[APIRequest](#apirequest)** An APIRequest
+-   `filePathMethod` **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** The filepath method
+-   `reject` **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** The reject function
+
 ### comparator
 
 Compare camera data
@@ -3829,9 +3842,28 @@ Get the daily timelapse file path
 
 Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The path
 
+### seasonFilepath
+
+Get the season timelapse file path
+
+**Parameters**
+
+-   `camera` **[Camera](#camera)** A camera
+-   `camerasArchiveFolder` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Camera archive folder
+
+Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The path
+
 ### generateDailyTimeLapses
 
 Generate a daily timelapse
+
+**Parameters**
+
+-   `context` **[CamerasManager](#camerasmanager)** The context (self)
+
+### generateSeasonTimeLapses
+
+Generate a season timelapse
 
 **Parameters**
 
@@ -3867,6 +3899,7 @@ This class allows to generate timelapse
 -   `cachePath`  
 -   `cameraArchiveFolder`  
 -   `duration`   (optional, default `24*60*60`)
+-   `suffixCameraId`   (optional, default `true`)
 
 ### generateTimelapse
 
