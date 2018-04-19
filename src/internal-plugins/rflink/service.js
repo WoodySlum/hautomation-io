@@ -71,9 +71,9 @@ function loaded(api) {
                     let revision = null;
 
                     // Version
-                    if (elements.length >= 3 && elements[2].startsWith("Nodo RadioFrequencyLink")) {
+                    if (elements.length >= 4 && elements[4].startsWith("Nodo RadioFrequencyLink")) {
                         //20;00;Nodo RadioFrequencyLink - RFLink Gateway V1.1 - R47;
-                        const versionFull = elements[2].split("-");
+                        const versionFull = elements[4].split("-");
                         if (versionFull.length === 3) {
                             revision = versionFull[2].trim();
                             version = 0;
@@ -278,6 +278,11 @@ function loaded(api) {
             // 20;00;Nodo RadioFrequencyLink - RFLink Gateway V1.1 - R46;
             // 20;01;Blyss;ID=6968;SWITCH=C4;CMD=ON;
             // 20;02;Blyss;ID=6968;SWITCH=C4;CMD=OFF;
+            // 20;00;Nodo 20;00;Nodo RadioFrequencyLink - RFLink Gateway V1.1 - R48;
+            // setTimeout(() => {
+            // setTimeout(() => {
+            //     send({method:"rflinkVersion", data:processData("20;00;Nodo 20;00;Nodo RadioFrequencyLink - RFLink Gateway V1.1 - R48;")});
+            // }, 4000);
         }
 
         /**
