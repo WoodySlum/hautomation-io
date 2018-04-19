@@ -165,11 +165,6 @@ class CamerasManager {
         this.timeEventService.register((self) => {
             self.generateSeasonTimeLapses(self);
         }, this, TimeEventService.EVERY_DAYS);
-
-        // setTimeout((self) => {
-        //     this.generateSeasonTimeLapses(this);
-        // }, 5000, this);
-
     }
 
     /**
