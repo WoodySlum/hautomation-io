@@ -52,11 +52,28 @@ function loaded(api) {
             let sp;
             let processData = (telegram) => {
                 var elements = telegram.split(";");
-                if (elements.length > 4) {
+                let version = null;
+                let revision = null;
+                let type = null;
+                
+                // Version
+                if ((elements.length > 2 && elements[2].startsWith("Nodo RadioFrequencyLink")) || (elements.length > 3 && elements[3].startsWith("Nodo RadioFrequencyLink")) || (elements.length > 4 && elements[4].startsWith("Nodo RadioFrequencyLink"))) {
+                    //20;00;Nodo RadioFrequencyLink - RFLink Gateway V1.1 - R47;
+                    const versionFull = elements[4].split("-");
+                    if (versionFull.length === 3) {
+                        revision = versionFull[2].trim();
+                        version = 0;
+                        const mainVersionFull = versionFull[1].split(" V");
+                        if (mainVersionFull.length === 2) {
+                            version = parseFloat(mainVersionFull[1].trim());
+                        }
+                        type = TYPE_VERSION;
+                    }
+                } else if (elements.length > 4) {
                     const rflinkId = elements[0].toLowerCase();
                     const commandId = elements[1].toLowerCase();
                     const protocol = elements[2].toLowerCase();
-                    let type = TYPE_RADIO;
+                    type = TYPE_RADIO;
 
                     if (protocol.indexOf("=") !== -1) {
                         return null;
@@ -67,23 +84,6 @@ function loaded(api) {
                     let sensor = null;
                     let status = null;
                     let value = null;
-                    let version = null;
-                    let revision = null;
-
-                    // Version
-                    if ((elements.length > 2 && elements[2].startsWith("Nodo RadioFrequencyLink")) || (elements.length > 3 && elements[3].startsWith("Nodo RadioFrequencyLink")) || (elements.length > 4 && elements[4].startsWith("Nodo RadioFrequencyLink"))) {
-                        //20;00;Nodo RadioFrequencyLink - RFLink Gateway V1.1 - R47;
-                        const versionFull = elements[4].split("-");
-                        if (versionFull.length === 3) {
-                            revision = versionFull[2].trim();
-                            version = 0;
-                            const mainVersionFull = versionFull[1].split(" V");
-                            if (mainVersionFull.length === 2) {
-                                version = parseFloat(mainVersionFull[1].trim());
-                            }
-                            type = TYPE_VERSION;
-                        }
-                    }
 
                     if (elements.length >= 4) {
                         if (elements[3].indexOf("ID=") !== -1) {
