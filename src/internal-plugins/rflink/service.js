@@ -55,11 +55,20 @@ function loaded(api) {
                 let version = null;
                 let revision = null;
                 let type = null;
-                
+                const rflinkId = elements[0].toLowerCase();
+
                 // Version
                 if ((elements.length > 2 && elements[2].startsWith("Nodo RadioFrequencyLink")) || (elements.length > 3 && elements[3].startsWith("Nodo RadioFrequencyLink")) || (elements.length > 4 && elements[4].startsWith("Nodo RadioFrequencyLink"))) {
                     //20;00;Nodo RadioFrequencyLink - RFLink Gateway V1.1 - R47;
-                    const versionFull = elements[4].split("-");
+                    let versionFull = "";
+                    if (elements.length === 3) {
+                        versionFull = elements[1].split("-");
+                    } else if (elements.length === 4) {
+                        versionFull = elements[2].split("-");
+                    } else if (elements.length === 5) {
+                        versionFull = elements[3].split("-");
+                    }
+
                     if (versionFull.length === 3) {
                         revision = versionFull[2].trim();
                         version = 0;
@@ -69,8 +78,15 @@ function loaded(api) {
                         }
                         type = TYPE_VERSION;
                     }
+
+                    return {
+                        type:type,
+                        timestamp: Math.floor((Date.now() / 1000) | 0),
+                        raw: telegram,
+                        version: version,
+                        revision: revision
+                    };
                 } else if (elements.length > 4) {
-                    const rflinkId = elements[0].toLowerCase();
                     const commandId = elements[1].toLowerCase();
                     const protocol = elements[2].toLowerCase();
                     type = TYPE_RADIO;
@@ -160,6 +176,7 @@ function loaded(api) {
                 const Readline = SerialPort.parsers.Readline;
                 var gPort = null;
                 var status = 0;
+                
                 if (!process.env.TEST) {
                     const usbDetect = require("usb-detection");
                     usbDetect.startMonitoring();
