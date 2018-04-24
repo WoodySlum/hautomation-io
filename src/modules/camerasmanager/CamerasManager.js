@@ -51,7 +51,7 @@ const MODE_MJPEG = "mjpeg";
 const MODE_RTSP = "rtsp";
 
 const DAILY_DURATION = 24 * 60 * 60;
-const SEASON_DURATION = 12 * 30 * 24 * 60 * 60;
+const SEASON_DURATION = 100 * 12 * 30 * 24 * 60 * 60;
 const CAMERAS_RETENTION_TIME = 60 * 60 * 24 * 7; // In seconds
 const CAMERA_FILE_EXTENSION = ".JPG";
 const CAMERA_SEASON_EXTENSION = "-season";
@@ -181,6 +181,7 @@ class CamerasManager {
         context.registerTile(context);
 
         //this.record(1503653182, (err, s) => {});
+        //
     }
 
     /**
@@ -247,9 +248,7 @@ class CamerasManager {
                         const hour = parseInt(DateUtils.class.dateFormatted("HH", timestamp));
 
                         if (parseInt(hour) === 12 && parseInt(minute) === 0) {
-                            const day = parseInt(DateUtils.class.dateFormatted("DD", timestamp));
-                            const month = parseInt(DateUtils.class.dateFormatted("MM", timestamp));
-                            const dailyTimestamp = minute * 60 + hour * 60 * 60 + day * 24 * 60 * 60 + month * 31 * 24 * 60 * 60;
+                            const dailyTimestamp = DateUtils.class.roundedTimestamp(DateUtils.class.timestamp(), DateUtils.ROUND_TIMESTAMP_DAY);
                             // Save camera
                             context.getImage(camera.id, (err, data) => {
                                 if (!err) {
