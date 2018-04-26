@@ -78,8 +78,9 @@
         "is-running": "^2.1.0",
         "md5-file": "^3.2",
         "mjpeg-proxy": "^0.2",
-        "moment": "^2.20.1",
+        "moment": "^2.20",
         "moment-timezone": "^0.5",
+        "ngrok": "^3.0",
         "node-datetime": "^1.0.1",
         "node-gtts": "^2.0",
         "node-record-lpcm16": "^0.3",
@@ -91,7 +92,7 @@
         "serialport": "^5.0",
         "sha256": "^0.2",
         "snowboy": "^1.2",
-        "sqlite3": "^3.1.8",
+        "sqlite3": "^3.1",
         "stack-trace": "^0.0",
         "string-similarity": "^1.2",
         "threads": "git://github.com/WoodySlum/threads.js.git#master",
@@ -99,7 +100,6 @@
         "underscore": "^1.8",
         "usb-detection": "^2.1",
         "waveheader": "^0.0",
-        "xml2js": "^0.4",
-        "ngrok": "git://github.com/WoodySlum/ngrok.git#master"
+        "xml2js": "^0.4"
     }
 }

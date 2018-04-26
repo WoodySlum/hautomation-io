@@ -194,27 +194,40 @@ class WebServices extends Service.class {
     startTunnel() {
         // Start HTTP tunnel
         if (this.gatewayManager && !process.env.TEST) {
-            setTimeout((self) => {
-                ngrok.connect({addr:self.port, region: "eu", inspect:false, binDir:self.cachePath}, (err, url) => {
-                    if (err) {
-                        Logger.err("Could not start HTTP tunnel : " + err.message);
-                        self.gatewayManager.tunnelUrl = null;
-                        setTimeout((me) => {
-                            me.startTunnel();
-                        }, 30 * 1000, self);
-                    } else {
-                        Logger.info("HTTP tunnel URL : " + url);
-                        self.gatewayManager.tunnelUrl = url;
+            setTimeout(async (self) => {
+                // For pkg, copy binary outside container
+                const platform = require("os").platform();
+                const binExtension = "ngrok" + (platform === "win32" ? ".exe" : "");
+                const ngrokBin = self.cachePath + binExtension;
 
-                        // Auto restart tunnel every 8 hours (expiration)
-                        // New ngrok free account policy
-                        setTimeout((t) => {
-                            Logger.info("Restart HTTP tunnel due to expiration policy");
-                            ngrok.disconnect();
-                            ngrok.kill();
-                            t.startTunnel();
-                        }, 8 * 60 * 60 * 1000, this);
-                    }
+                if (!fs.existsSync(ngrokBin)) {
+                    Logger.info("Copy ngrok bin");
+                    var binContent = fs.readFileSync(__dirname + "/../../../node_modules/ngrok/bin/" + binExtension);
+                    fs.writeFileSync(ngrokBin, binContent);
+                    fs.chmodSync(self.cachePath + binExtension, "0777");
+                    binContent = null; // Clear variable
+                }
+
+                ngrok.connect({addr: self.port, protocol:"http", region: "eu", inspect:false, host_header:"preserve", binPath: def => self.cachePath}).then((url) => {
+                    Logger.info("HTTP tunnel URL : " + url);
+                    self.gatewayManager.tunnelUrl = url;
+
+                    // Auto restart tunnel every 6 hours (expiration)
+                    // New ngrok free account policy
+                    setTimeout((t) => {
+                        Logger.info("Restart HTTP tunnel due to expiration policy");
+                        ngrok.disconnect();
+                        ngrok.kill();
+                        t.startTunnel();
+                    }, 6 * 60 * 60 * 1000, this);
+                    self.gatewayManager.transmit();
+                }).catch((err) => {
+                    Logger.err("Could not start HTTP tunnel : " + err.msg + " - " + err.error_code + " / " + err.status_code);
+                    Logger.err(err);
+                    self.gatewayManager.tunnelUrl = null;
+                    setTimeout((me) => {
+                        me.startTunnel();
+                    }, 30 * 1000, self);
                     self.gatewayManager.transmit();
                 });
             }, 0, this);
