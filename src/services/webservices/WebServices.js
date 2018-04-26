@@ -208,7 +208,7 @@ class WebServices extends Service.class {
                     binContent = null; // Clear variable
                 }
 
-                ngrok.connect({addr: self.port, protocol:"http", region: "eu", inspect:false, host_header:"preserve", binPath: def => self.cachePath}).then((url) => {
+                ngrok.connect({addr: self.port, protocol:"http", region: "eu", inspect:false, host_header:"preserve", binPath: () => self.cachePath}).then((url) => {
                     Logger.info("HTTP tunnel URL : " + url);
                     self.gatewayManager.tunnelUrl = url;
 
