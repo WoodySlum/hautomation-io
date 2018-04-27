@@ -160,11 +160,8 @@ class CamerasManager {
 
         this.timeEventService.register((self) => {
             self.generateDailyTimeLapses(self);
-        }, this, TimeEventService.CUSTOM, "*", 0, 0);
-
-        this.timeEventService.register((self) => {
             self.generateSeasonTimeLapses(self);
-        }, this, TimeEventService.CUSTOM, "*", 0, 0);
+        }, this, TimeEventService.CUSTOM, "*", 35, 0);
     }
 
     /**
@@ -879,13 +876,8 @@ class CamerasManager {
             Logger.info("Timelapse enabled");
             context.cameras.forEach((camera) => {
                 const timelapse = new TimelapseGenerator.class(camera, context.installationManager, context.cachePath, context.camerasArchiveFolder, DAILY_DURATION);
-                timelapse.generateTimelapse((status, error, timelapseFilepath) => {
-                    if (!error && timelapseFilepath) {
-                        const dailyFilename = context.dailyFilepath(camera, context.camerasArchiveFolder);
-                        fs.remove(dailyFilename);
-                        fs.move(timelapseFilepath, dailyFilename);
-                    }
-                });
+                const dailyFilename = context.dailyFilepath(camera, context.camerasArchiveFolder);
+                context.processAutotimelapse(timelapse, dailyFilename);
             });
         }
     }
@@ -902,14 +894,36 @@ class CamerasManager {
             context.cameras.forEach((camera) => {
                 const cameraArchiveFolderSeason = context.camerasArchiveFolder + camera.id + CAMERA_SEASON_EXTENSION + "/";
                 const timelapse = new TimelapseGenerator.class(camera, context.installationManager, context.cachePath, cameraArchiveFolderSeason, SEASON_DURATION, false);
-                timelapse.generateTimelapse((status, error, timelapseFilepath) => {
-                    if (!error && timelapseFilepath) {
-                        const seasonFilename = context.seasonFilepath(camera, context.camerasArchiveFolder);
-                        fs.remove(seasonFilename);
-                        fs.move(timelapseFilepath, seasonFilename);
-                    }
-                });
+                const seasonFilename = context.seasonFilepath(camera, context.camerasArchiveFolder);
+                context.processAutotimelapse(timelapse, seasonFilename);
             });
+        }
+    }
+
+    /**
+     * Generates an auto timelapse compilation with the queue
+     * 
+     * @param  {TimelapseGenerator} timelapse A time lapse generator instance
+     * @param  {string} filename  The file name of the destination file
+     */
+    processAutotimelapse(timelapse, filename) {
+        if (!this.currentTimelapse) {
+            this.currentTimelapse = timelapse;
+            timelapse.generateTimelapse((status, error, timelapseFilepath) => {
+                if (!error && timelapseFilepath) {
+                    fs.remove(filename);
+                    fs.move(timelapseFilepath, filename);
+                }
+                this.currentTimelapse = null;
+                if (this.timelapseQueue.length > 0) {
+                    const nextTimeLapse = this.timelapseQueue.pop();
+                    Logger.warn("Generating next timelapse queue. Generating " + nextTimeLapse.filename);
+                    this.processAutotimelapse(nextTimeLapse.timelapse, nextTimeLapse.filename);
+                }
+            });
+        }  else {
+            Logger.warn("Timelapse " + filename + " already running. Adding to queue.");
+            this.timelapseQueue.push({timelapse: timelapse, filename: filename});
         }
     }
 
