@@ -161,7 +161,7 @@ class CamerasManager {
         this.timeEventService.register((self) => {
             self.generateDailyTimeLapses(self);
             self.generateSeasonTimeLapses(self);
-        }, this, TimeEventService.CUSTOM, "*", 35, 0);
+        }, this, TimeEventService.EVERY_DAYS);
     }
 
     /**
@@ -902,7 +902,7 @@ class CamerasManager {
 
     /**
      * Generates an auto timelapse compilation with the queue
-     * 
+     *
      * @param  {TimelapseGenerator} timelapse A time lapse generator instance
      * @param  {string} filename  The file name of the destination file
      */
