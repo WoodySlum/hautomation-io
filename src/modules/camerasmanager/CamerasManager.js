@@ -63,7 +63,6 @@ const ERROR_UNKNOWN_IDENTIFIER = "Unknown camera identifier";
 const ERROR_NO_URL_DEFINED = "No url defined";
 const ERROR_UNKNOWN_MODE = "Unknown mode";
 const ERROR_UNSUPPORTED_MODE = "Unsupported mode";
-const ERROR_TIMELAPSE_ALREADY_RUNNING = "TimeLapse already running";
 const ERROR_TIMELAPSE_NOT_GENERATED = "Timelapse not generated";
 const ERROR_UNKNOWN_TIMELAPSE_TOKEN = "Unknown timelapse token";
 const ERROR_UNEXISTING_PICTURE = "Unexisting picture";
@@ -110,6 +109,7 @@ class CamerasManager {
         this.cameras = [];
         this.delegates = {};
         this.currentTimelapse = null;
+        this.timelapseQueue = [];
         this.currentRecording = {};
         this.generatedTimelapses = {};
 
@@ -160,11 +160,11 @@ class CamerasManager {
 
         this.timeEventService.register((self) => {
             self.generateDailyTimeLapses(self);
-        }, this, TimeEventService.EVERY_DAYS);
+        }, this, TimeEventService.CUSTOM, "*", 0, 0);
 
         this.timeEventService.register((self) => {
             self.generateSeasonTimeLapses(self);
-        }, this, TimeEventService.EVERY_DAYS);
+        }, this, TimeEventService.CUSTOM, "*", 0, 0);
     }
 
     /**
@@ -928,6 +928,7 @@ class CamerasManager {
                     status:this.currentTimelapse.status,
                     path:null
                 };
+
                 this.currentTimelapse.generateTimelapse((status, error, timelapseFilepath) => {
                     this.generatedTimelapses[this.currentTimelapse.token] = {
                         status:status,
@@ -935,12 +936,19 @@ class CamerasManager {
                     };
 
                     this.currentTimelapse = null;
+
+                    if (this.timelapseQueue.length > 0) {
+                        const nextTimeLapse = this.timelapseQueue.pop();
+                        Logger.warn("Generating next timelapse queue. Generating " + nextTimeLapse.id);
+                        this.generateTimelapse(nextTimeLapse.id, nextTimeLapse.duration);
+                    }
                 });
             } else {
                 throw Error(ERROR_UNKNOWN_IDENTIFIER);
             }
         } else {
-            throw Error(ERROR_TIMELAPSE_ALREADY_RUNNING);
+            Logger.warn("Timelapse " + id + " already running. Adding to queue.");
+            this.timelapseQueue.push({id:id, duration:duration});
         }
     }
 
@@ -1000,4 +1008,4 @@ class CamerasManager {
     }
 }
 
-module.exports = {class:CamerasManager, ERROR_ALREADY_REGISTERED:ERROR_ALREADY_REGISTERED, ERROR_NOT_REGISTERED:ERROR_NOT_REGISTERED, ERROR_TIMELAPSE_ALREADY_RUNNING:ERROR_TIMELAPSE_ALREADY_RUNNING, CAMERA_FILE_EXTENSION:CAMERA_FILE_EXTENSION, ERROR_TIMELAPSE_NOT_GENERATED:ERROR_TIMELAPSE_NOT_GENERATED};
+module.exports = {class:CamerasManager, ERROR_ALREADY_REGISTERED:ERROR_ALREADY_REGISTERED, ERROR_NOT_REGISTERED:ERROR_NOT_REGISTERED, CAMERA_FILE_EXTENSION:CAMERA_FILE_EXTENSION, ERROR_TIMELAPSE_NOT_GENERATED:ERROR_TIMELAPSE_NOT_GENERATED};
