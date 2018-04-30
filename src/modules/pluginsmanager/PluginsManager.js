@@ -17,8 +17,8 @@ const CONF_KEY = "plugins";
 const EVENT_LOADED = "pluginLoaded";
 
 const INTERNAL_PLUGIN_PATH = "./../../internal-plugins/";
-const EXTERNAL_PLUGIN_PATH = "plugins/node_modules/";
-const PLUGIN_PREFIX = "hautomation-plugin";
+const EXTERNAL_PLUGIN_PATH = "plugins/";
+const PLUGIN_PREFIX = "";
 const PLUGIN_MAIN = "plugin.js";
 const ROUTE_WS_GET = ":/plugins/get/";
 const ROUTE_WS_ENABLE_SET_BASE = ":/plugins/enable/";

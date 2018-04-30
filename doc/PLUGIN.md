@@ -14,7 +14,7 @@ Tree structure :
 
 	|
 	|-hautomation
-	|-node_modules
+	|-plugins
 		|-my-plugin
 			|-plugin.js
 			|-lng
