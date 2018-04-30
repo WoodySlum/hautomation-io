@@ -95,7 +95,7 @@ You'll need to notify core that you need dependency for the plugin that export c
 
 ### Retrieve and set plugin instance
 
-Create a plugin instance and share it : 
+Create a plugin instance and share it :
 
 	api.registerInstance(new OpenWeather(api));
 
@@ -116,7 +116,10 @@ To register, use this as follow :
     api.timeEventAPI.register(repeat, this, api.timeEventAPI.constants().EVERY_SECONDS);
 
 The `repeat` function will be called every seconds.
-You can use the following constants : `EVERY_SECONDS`, `EVERY_MINUTES`, `EVERY_HOURS`, `EVERY_DAYS` or `CUSTOM`
+You can use the following constants : `EVERY_SECONDS`, `EVERY_MINUTES`, `EVERY_HOURS`, `EVERY_DAYS` or `CUSTOM`.
+
+Please note that using `EVERY_HOURS` will trigger the event on a random second.
+Please note that using `EVERY_DAYS` will trigger the event on a random minute, and the hour between 0 and 4.
 
 The context (second parameter, `this` in the example above) is used when using a class function. You'll not able to use `this` inside `repeat` function because of changing scope. The context is passed through the callback parameter.
 
@@ -544,7 +547,7 @@ The `installerAPI` can be used to do that. All you need is to to register the co
 When all commands will be done, the core will restart automatically.
 
 Here is an example :
-	
+
 	api.installerAPI.register(["arm"], "sleep 2; echo \"Hello !\"");
 
 ### Users
@@ -590,7 +593,7 @@ The `messageAPI` can be used to send messages / receive messages.
 
 	function loaded(api) {
 	    api.init();
-		
+
 		class Sample() {
 			constructor(api) {
 				api.messageAPI.register(this);
@@ -611,7 +614,7 @@ Here is a plugin sample for new message provider :
 
 	"use strict";
 	const Prowler = require("prowler");
-	
+
 	/**
 	 * Loaded function
 	 *
@@ -632,7 +635,7 @@ Here is a plugin sample for new message provider :
 	         */
 	        constructor(id, prowlApiKey) {
 	            super(id);
-	
+
 	            /**
 	             * @Property("prowlApiKey");
 	             * @Title("prowl.api.key.title");
@@ -640,7 +643,7 @@ Here is a plugin sample for new message provider :
 	             */
 	            this.prowlApiKey = prowlApiKey;
 	        }
-	
+
 	        /**
 	         * Convert JSON data to object
 	         *
@@ -651,9 +654,9 @@ Here is a plugin sample for new message provider :
 	            return new ProwlForm(data.id, data.prowlApiKey);
 	        }
 	    }
-	
+
 	    api.userAPI.addAdditionalFields(ProwlForm);
-	
+
 	    /**
 	     * Prowl plugin class
 	     * @class
@@ -669,7 +672,7 @@ Here is a plugin sample for new message provider :
 	            super(api);
 	            this.api = api;
 	        }
-	
+
 	        /**
 	         * Send a message to all plugins.
 	         *
@@ -700,10 +703,10 @@ Here is a plugin sample for new message provider :
 	            });
 	        }
 	    }
-	
+
 	    api.instance = new Prowl(api);
 	}
-	
+
 	module.exports.attributes = {
 	    loadedCallback: loaded,
 	    name: "prowl",
@@ -712,7 +715,7 @@ Here is a plugin sample for new message provider :
 	    description: "Prowl message sending",
 	    dependencies:["message-provider"]
 	};
-	
+
 
 ### Scenarios
 
@@ -757,7 +760,7 @@ Sample :
         class Sample {
             constructor(api) {
                 this.api = api;
-                
+
                 // Register scenario and add a text field on scenario form
                 this.api.scenarioAPI.register(ScenarioSampleForm, (scenario) => {
                     // Do what you want here
@@ -793,8 +796,8 @@ Sample :
         version: "0.0.0",
         category: "misc",
         description: "I'm a sample plugin"
-    };	
- 
+    };
+
 ### Alarm
 
 #### Retrieve status
@@ -843,7 +846,7 @@ Sample code :
 	 */
 	function loaded(api) {
 	    api.init();
-	
+
 	    /**
 	     * Sumpple form camera
 	     * @class
@@ -859,9 +862,9 @@ Sample code :
 	            super.json(data);
 	        }
 	    }
-	
+
 	    api.cameraAPI.registerForm(SumppleCameraForm);
-	
+
 	    /**
 	     * Sumpple camera class
 	     * @class
@@ -878,12 +881,12 @@ Sample code :
 	        constructor(api, id, configuration) {
 	            super(api, id, configuration, "cgi-bin/video_snapshot.cgi?user=%username%&pwd=%password%", "cgi-bin/videostream.cgi?user=%username%&pwd=%password%", "live/av0?user=%username%&passwd=%password%");
 	        }
-	
+
 	    }
-	
+
 	    api.cameraAPI.registerClass(Sumpple);
 	}
-	
+
 	module.exports.attributes = {
 	    loadedCallback: loaded,
 	    name: "sumpple",
@@ -892,7 +895,7 @@ Sample code :
 	    description: "Sumpple plugin",
 	    dependencies:["camera"]
 	};
-	
+
 In the super call for constructor, you need to specify the following parameters :
 
 		 * @param  {PluginAPI} api                                                           A plugin api
@@ -909,7 +912,7 @@ In the super call for constructor, you need to specify the following parameters 
 #### Using camera APIs
 
 Retrieve all cameras :
-	
+
 	api.camerAPI.getCameras();
 
 Get a static picture for a camera :
@@ -941,7 +944,7 @@ Record camera stream for 30 seconds :
 You can easily receive radio data through `radioAPI`.
 
 Register for radio events sample :
-	
+
 	api.radioAPI.register((radioObject) => {
 		api.exported.Logger.info(radioObject);
 	});
@@ -972,7 +975,7 @@ Please refer to the API documentation (`iotAPI` part).
 Sample code :
 
 	"use strict";
-	
+
 	/**
 	 * Loaded function
 	 *
@@ -980,7 +983,7 @@ Sample code :
 	 */
 	function loaded(api) {
 	    api.init();
-	
+
 	    /**
 	     * ESP8266 form class
 	     * @class
@@ -996,7 +999,7 @@ Sample code :
 	         */
 	        constructor(id = null, ssid = null, passphrase = null) {
 	            super(id);
-	
+
 	            /**
 	             * @Property("ssid");
 	             * @Title("esp8266.form.wifi.ssid");
@@ -1004,7 +1007,7 @@ Sample code :
 	             * @Required(true);
 	             */
 	            this.ssid = ssid;
-	
+
 	            /**
 	             * @Property("passphrase");
 	             * @Title("esp8266.form.wifi.password");
@@ -1014,7 +1017,7 @@ Sample code :
 	             */
 	            this.passphrase = passphrase;
 	        }
-	
+
 	        /**
 	         * Convert JSON data to object
 	         *
@@ -1025,7 +1028,7 @@ Sample code :
 	            return new ESP8266Form(data.id, data.ssid, data.passphrase);
 	        }
 	    }
-	
+
 	    /**
 	     * ESP8266 manager class
 	     * @class
@@ -1042,10 +1045,10 @@ Sample code :
 	            this.api.iotAPI.registerLib("myIotLib", "esp8266", 1, ESP8266Form);
 	        }
 	    }
-	
+
 	    api.registerInstance(new Esp8266(api));
 	}
-	
+
 	module.exports.attributes = {
 	    loadedCallback: loaded,
 	    name: "esp8266",
@@ -1053,7 +1056,7 @@ Sample code :
 	    category: "iot",
 	    description: "ESP8266 base libraries and sensors manager"
 	};
-	 
+
 ### Create an IoT app
 
 As previously described, the procedure is likely similar to an Iot library. Keep the same folder architecture and add a `main.cpp` file into a `src` folder.
@@ -1087,11 +1090,11 @@ Sample code :
 	 */
 	function loaded(api) {
 	    api.init();
-	
+
 	    const espPlugin = api.getPluginInstance("esp8266");
 	    api.iotAPI.registerApp("app", "esp8266-dht22", "ESP8266 Temperature and humidity sensor", 1, api.iotAPI.constants().PLATFORMS.ESP8266, api.iotAPI.constants().BOARDS.NODEMCU, api.iotAPI.constants().FRAMEWORKS.ARDUINO, ["esp8266"], espPlugin.generateOptions(espPlugin.constants().MODE_SLEEP, 60 * 60));
 	}
-	
+
 	module.exports.attributes = {
 	    loadedCallback: loaded,
 	    name: "esp-dht22-sensor",
@@ -1100,7 +1103,3 @@ Sample code :
 	    description: "ESP Humidity and temperature sensor",
 	    dependencies:["esp8266"]
 	};
-	
-
-
-

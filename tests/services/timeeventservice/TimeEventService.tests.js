@@ -47,7 +47,8 @@ describe("TimeEventService", function() {
     it("should convert correctly constant EVERY_HOURS", function() {
         const input = {mode : TimeEventService.EVERY_HOURS};
         const output = timeEventService.convertMode(input);
-        expect(output.second).to.be.equal(0);
+        expect(output.second).is.above(-1);
+        expect(output.second).is.below(61);
         expect(output.minute).to.be.equal(0);
         expect(output.hour).to.be.equal("*");
     });
@@ -56,8 +57,10 @@ describe("TimeEventService", function() {
         const input = {mode : TimeEventService.EVERY_DAYS};
         const output = timeEventService.convertMode(input);
         expect(output.second).to.be.equal(0);
-        expect(output.minute).to.be.equal(0);
-        expect(output.hour).to.be.equal(0);
+        expect(output.minute).is.above(0);
+        expect(output.minute).is.below(61);
+        expect(output.hour).is.above(-1);
+        expect(output.hour).is.below(5);
     });
 
     it("should convert correctly constant CUSTOM", function() {
