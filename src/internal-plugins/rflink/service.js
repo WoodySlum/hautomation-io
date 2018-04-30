@@ -176,7 +176,7 @@ function loaded(api) {
                 const Readline = SerialPort.parsers.Readline;
                 var gPort = null;
                 var status = 0;
-                
+
                 if (!process.env.TEST) {
                     const usbDetect = require("usb-detection");
                     usbDetect.startMonitoring();
@@ -298,8 +298,8 @@ function loaded(api) {
             // 20;00;Nodo 20;00;Nodo RadioFrequencyLink - RFLink Gateway V1.1 - R48;
             // setTimeout(() => {
             // setTimeout(() => {
-            //     send({method:"rflinkVersion", data:processData("20;00;Nodo 20;00;Nodo RadioFrequencyLink - RFLink Gateway V1.1 - R48;")});
-            // }, 4000);
+            //     send({method:"rflinkVersion", data:processData("20;00;Nodo 20;Nodo RadioFrequencyLink - RFLink Gateway V1.1 - R46;")});
+            // }, 2000);
         }
 
         /**

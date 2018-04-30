@@ -379,19 +379,29 @@ function loaded(api) {
             }
 
             if (context.version && context.revision && context.api.configurationAPI.getConfiguration() && context.api.configurationAPI.getConfiguration().port) {
-                request("http://www.nemcon.nl/blog2/fw/update.jsp?ver=" + context.version + "&rel=" + context.revision.toLowerCase().replace("r", ""), function(error, response, body) {
+                const currentRevision = context.revision.toLowerCase().replace("r", "");
+                request("http://www.nemcon.nl/blog2/fw/update.jsp?ver=" + context.version + "&rel=" + currentRevision, function(error, response, body) {
                     if (!error && body) {
                         parseString(body, function (err, result) {
                             if (!err) {
                                 if (result.Result) {
                                     if (result.Result.Value && result.Result.Value.length === 1) {
-                                        const updateAvailable = parseInt(result.Result.Value[0]);
+                                        let updateAvailable = parseInt(result.Result.Value[0]);
+                                        // Fix #44 - RFLink updates every days
+                                        const firmwareUrl = (result.Result && result.Result.Url && result.Result.Url.length > 0)?result.Result.Url[0]:"";
+                                        const regex = /(.*)\/([0-9]*)\/(.*)/gm;
+                                        const urlVersion =  regex.exec(firmwareUrl);
+
+                                        if (urlVersion && urlVersion.length > 2 && parseInt(urlVersion[2]) === parseInt(currentRevision)) {
+                                            Logger.info("RFLink update double check done");
+                                            updateAvailable = 0;
+                                        }
+
                                         if (updateAvailable === 0) {
                                             context.api.exported.Logger.info("No update available");
                                         } else {
                                             context.api.exported.Logger.info("Update available");
                                             if (result.Result.Url && result.Result.Url.length === 1 && result.Result.MD5 && result.Result.MD5.length === 1) {
-                                                const firmwareUrl = result.Result.Url[0];
                                                 const firmwareHash = result.Result.MD5[0];
                                                 context.api.exported.Logger.info("URL firmware : " + firmwareUrl);
                                                 context.api.exported.Logger.info("MD5 hash firmware : " + firmwareHash);
