@@ -393,7 +393,7 @@ function loaded(api) {
                                         const urlVersion =  regex.exec(firmwareUrl);
 
                                         if (urlVersion && urlVersion.length > 2 && parseInt(urlVersion[2]) === parseInt(currentRevision)) {
-                                            Logger.info("RFLink update double check done");
+                                            context.api.exported.Logger.info("RFLink update double check done");
                                             updateAvailable = 0;
                                         }
 
