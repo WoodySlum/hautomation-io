@@ -1103,3 +1103,47 @@ Sample code :
 	    description: "ESP Humidity and temperature sensor",
 	    dependencies:["esp8266"]
 	};
+
+### Bots actions
+
+You can create bot actions, using voice or chat requests. The intent should be created in Wit.ai first.
+
+An `intent` is an expected action detected by the IA engine. The value is the dynamic object you need some times. Let's illustrate with a simple example : *"Turn on the bedroom's light"*.
+
+In this example, the intent *turnOn* with the value *bedroom's light* will be provided to the callback.
+
+To create new intents and improve model, create a [Wit.ai](href "https://wit.ai") account with your Github dev account, and open the model :
+
+- English : [https://wit.ai/WoodySlum/Hautomation_EN](href "https://wit.ai/WoodySlum/Hautomation_EN")
+- French : [https://wit.ai/WoodySlum/Hautomation_FR](href "https://wit.ai/WoodySlum/Hautomation_FR")
+- ...
+
+Read [documentation](href "https://wit.ai/docs/recipes") to learn how Wit.ai works.
+
+You can use `api.botEngineAPI.stringSimilarity().compareTwoStrings(string1, string2)` to compare the value with your database and evaluate if the result matches, using  *Dice's Coefficient* algorightm. Check [this library](href "https://www.npmjs.com/package/string-similarity") for further informations.
+
+In your plugin, use `BotEngineAPI` to register a new action.
+
+Sample code :
+
+
+	"use strict";
+
+	function loaded(api) {
+	    api.init();
+
+		class Sample() {
+			constructor(api) {
+				api.botEngineAPI.registerBotAction("example-intent", (action, value, type, confidence, sender, cb) => {
+					const stringConfidence = api.botEngineAPI.stringSimilarity().compareTwoStrings("a value", value);
+	                if (stringConfidence >= 0.31) {
+						cb("I understand what you're saying !");
+					}
+				});
+			}
+
+		}
+
+	}
+
+

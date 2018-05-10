@@ -11,7 +11,6 @@ const APIResponse = require("./../../services/webservices/APIResponse");
 const GeoUtils = require("./../../utils/GeoUtils");
 const UserScenarioForm = require("./UserScenarioForm");
 const sha256 = require("sha256");
-const StringSimilarity = require("string-similarity");
 
 const CONF_KEY = "users";
 const ERROR_USER_NOT_FOUND = "ERROR_USER_NOT_FOUND";
@@ -303,7 +302,7 @@ class UserManager {
                 let detectedUser = null;
                 const usersAtHome = [];
                 self.formConfiguration.getDataCopy().forEach((user) => {
-                    const stringConfidence = StringSimilarity.compareTwoStrings(user.name, value);
+                    const stringConfidence = this.botEngine.stringSimilarity().compareTwoStrings(user.name, value);
                     Logger.info("Confidence " + value + " | " + user.name + ": " + stringConfidence);
                     if (stringConfidence >= USER_COMPARE_CONFIDENCE && stringConfidence > maxConfidence) {
                         detectedUser = user;

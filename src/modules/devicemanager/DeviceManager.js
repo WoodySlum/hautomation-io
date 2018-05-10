@@ -10,7 +10,6 @@ const Tile = require("./../dashboardmanager/Tile");
 const DevicesListForm = require("./DevicesListForm");
 const DevicesListScenarioForm = require("./DevicesListScenarioForm");
 const Icons = require("./../../utils/Icons");
-const StringSimilarity = require("string-similarity");
 
 const STATUS_ON = "on";
 const STATUS_OFF = "off";
@@ -71,7 +70,7 @@ class DeviceManager {
             let maxConfidence = 0;
             let detectedDevice = null;
             self.formConfiguration.getDataCopy().forEach((device) => {
-                const stringConfidence = StringSimilarity.compareTwoStrings(device.name, value);
+                const stringConfidence = this.botEngine.stringSimilarity().compareTwoStrings(device.name, value);
                 Logger.info("Confidence " + value + " | " + device.name + ": " + stringConfidence);
                 if (stringConfidence >= DEVICE_NAME_COMPARE_CONFIDENCE && stringConfidence > maxConfidence) {
                     detectedDevice = device;
@@ -92,7 +91,7 @@ class DeviceManager {
             let maxConfidence = 0;
             let detectedDevice = null;
             self.formConfiguration.getDataCopy().forEach((device) => {
-                const stringConfidence = StringSimilarity.compareTwoStrings(device.name, value);
+                const stringConfidence = this.botEngine.stringSimilarity().compareTwoStrings(device.name, value);
                 Logger.info("Confidence " + value + " | " + device.name + ": " + stringConfidence);
                 if (stringConfidence >= DEVICE_NAME_COMPARE_CONFIDENCE && stringConfidence > maxConfidence) {
                     detectedDevice = device;

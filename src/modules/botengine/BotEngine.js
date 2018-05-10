@@ -16,6 +16,7 @@ const WitSpeech = require("node-witai-speech");
 const {Wit} = require("node-wit");
 const audiohub = require("audiohub");
 const path = require("path");
+const StringSimilarity = require("string-similarity");
 
 /**
  * This class manage the Hautomation bot
@@ -317,6 +318,14 @@ class BotEngine {
         delete this.botActions[actionKey];
     }
 
+    /**
+     * Return library to compare strings
+     *
+     * @returns {StringSimilarity} The string similarity library
+     */
+    stringSimilarity() {
+        return StringSimilarity;
+    }
 }
 
 module.exports = {class:BotEngine};

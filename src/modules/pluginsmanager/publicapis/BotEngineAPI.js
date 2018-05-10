@@ -55,6 +55,15 @@ class BotEngineAPI {
     unregisterBotAction(actionKey) {
         PrivateProperties.oprivate(this).botEngine.unregisterBotAction(actionKey);
     }
+
+    /**
+     * Return library to compare strings
+     *
+     * @returns {StringSimilarity} The string similarity library
+     */
+    stringSimilarity() {
+        return PrivateProperties.oprivate(this).botEngine.stringSimilarity();
+    }
 }
 
 module.exports = {class:BotEngineAPI};

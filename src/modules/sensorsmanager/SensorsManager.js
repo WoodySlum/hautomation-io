@@ -9,7 +9,6 @@ const DateUtils = require("./../../utils/DateUtils");
 const TimeEventService = require("./../../services/timeeventservice/TimeEventService");
 const SensorsForm = require("./SensorsForm");
 const SensorsListForm = require("./SensorsListForm");
-const StringSimilarity = require("string-similarity");
 
 const CONF_MANAGER_KEY = "sensors";
 const SENSORS_MANAGER_AVAILABLE_GET = ":/sensors/available/get/";
@@ -92,7 +91,7 @@ class SensorsManager {
             let maxConfidence = 0;
             let detectedSensor = null;
             this.sensors.forEach((sensor) => {
-                const stringConfidence = StringSimilarity.compareTwoStrings(sensor.type + " " + sensor.name, value);
+                const stringConfidence = this.botEngine.stringSimilarity().compareTwoStrings(sensor.type + " " + sensor.name, value);
                 if (stringConfidence >= SENSOR_NAME_COMPARE_CONFIDENCE && stringConfidence > maxConfidence) {
                     detectedSensor = sensor;
                     maxConfidence = stringConfidence;
