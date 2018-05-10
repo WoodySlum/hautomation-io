@@ -6,6 +6,7 @@ const WebServices = require("./../../services/webservices/WebServices");
 const APIResponse = require("./../../services/webservices/APIResponse");
 const Authentication = require("./../authentication/Authentication");
 const DateUtils = require("./../../utils/DateUtils");
+const TimeEventService = require("./../../services/timeeventservice/TimeEventService");
 const SensorsForm = require("./SensorsForm");
 const SensorsListForm = require("./SensorsListForm");
 const StringSimilarity = require("string-similarity");
@@ -23,6 +24,10 @@ const SENSORS_MANAGER_STATISTICS_YEAR = ":/sensors/statistics/year/";
 
 const ERROR_ALREADY_REGISTERED = "Already registered";
 const ERROR_NOT_REGISTERED = "Not registered";
+
+const DAILY = "daily";
+const MONTHLY = "monthly";
+const YEARLY = "yearly";
 
 const SENSOR_NAME_COMPARE_CONFIDENCE = 0.31;
 
@@ -42,9 +47,10 @@ class SensorsManager {
      * @param  {TranslateManager} translateManager    The translate manager
      * @param  {ThemeManager} themeManager    The theme manager
      * @param  {BotEngine} botEngine    The bot engine
+     * @param  {TimeEventService} timeEventService    The time event service
      * @returns {SensorsManager}                       The instance
      */
-    constructor(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager, botEngine) {
+    constructor(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager, botEngine, timeEventService) {
         this.pluginsManager = pluginsManager;
         this.webServices = webServices;
         this.formManager = formManager;
@@ -52,8 +58,10 @@ class SensorsManager {
         this.translateManager = translateManager;
         this.themeManager = themeManager;
         this.botEngine = botEngine;
+        this.timeEventService = timeEventService;
         this.sensors = [];
         this.delegates = {};
+        this.statisticsCache = {};
 
         try {
             this.sensorsConfiguration = this.confManager.loadData(Object, CONF_MANAGER_KEY, true);
@@ -105,6 +113,19 @@ class SensorsManager {
                 cb(this.translateManager.t("sensor.bot.notfound"));
             }
         });
+
+        // Consolidate statistics in cache every hours
+        this.timeEventService.register((self) => {
+            Logger.verbose("Consolidating statistics ...");
+            self.statisticsCache[DAILY] = self.statisticsWsResponse(DateUtils.class.timestamp(), 24 * 60 * 60, 60 * 60, self.translateManager.t("sensors.statistics.day.dateformat"));
+            self.statisticsCache[MONTHLY] = self.statisticsWsResponse(DateUtils.class.timestamp(), 31 * 24 * 60 * 60, 24 * 60 * 60, self.translateManager.t("sensors.statistics.month.dateformat"), (timestamp) => {
+                return DateUtils.class.roundedTimestamp(timestamp, DateUtils.ROUND_TIMESTAMP_DAY);
+            }, "%Y-%m-%d 00:00:00");
+            self.statisticsCache[YEARLY] = this.statisticsWsResponse(DateUtils.class.timestamp(), 12 * 31 * 24 * 60 * 60, 31 * 24 * 60 * 60, self.translateManager.t("sensors.statistics.year.dateformat"), (timestamp) => {
+                return DateUtils.class.roundedTimestamp(timestamp, DateUtils.ROUND_TIMESTAMP_MONTH);
+            }, "%Y-%m-01 00:00:00");
+            Logger.verbose("Consolidating statistics ... Done.");
+        }, this, TimeEventService.EVERY_HOURS);
     }
 
     /**
@@ -355,15 +376,30 @@ class SensorsManager {
                 }
             });
         } else if (apiRequest.route === SENSORS_MANAGER_STATISTICS_DAY) {
-            return this.statisticsWsResponse(DateUtils.class.timestamp(), 24 * 60 * 60, 60 * 60, this.translateManager.t("sensors.statistics.day.dateformat"));
+            if (!this.statisticsCache[DAILY]) {
+                Logger.info("Missing daily statistics cache, generating data");
+                this.statisticsCache[DAILY] = this.statisticsWsResponse(DateUtils.class.timestamp(), 24 * 60 * 60, 60 * 60, this.translateManager.t("sensors.statistics.day.dateformat"));
+            }
+
+            return this.statisticsCache[DAILY];
         } else if (apiRequest.route === SENSORS_MANAGER_STATISTICS_MONTH) {
-            return this.statisticsWsResponse(DateUtils.class.timestamp(), 31 * 24 * 60 * 60, 24 * 60 * 60, this.translateManager.t("sensors.statistics.month.dateformat"), (timestamp) => {
-                return DateUtils.class.roundedTimestamp(timestamp, DateUtils.ROUND_TIMESTAMP_DAY);
-            }, "%Y-%m-%d 00:00:00");
+            if (!this.statisticsCache[MONTHLY]) {
+                Logger.info("Missing monthly statistics cache, generating data");
+                this.statisticsCache[MONTHLY] = this.statisticsWsResponse(DateUtils.class.timestamp(), 31 * 24 * 60 * 60, 24 * 60 * 60, this.translateManager.t("sensors.statistics.month.dateformat"), (timestamp) => {
+                    return DateUtils.class.roundedTimestamp(timestamp, DateUtils.ROUND_TIMESTAMP_DAY);
+                }, "%Y-%m-%d 00:00:00");
+            }
+
+            return this.statisticsCache[MONTHLY];
         } else if (apiRequest.route === SENSORS_MANAGER_STATISTICS_YEAR) {
-            return this.statisticsWsResponse(DateUtils.class.timestamp(), 12 * 31 * 24 * 60 * 60, 31 * 24 * 60 * 60, this.translateManager.t("sensors.statistics.year.dateformat"), (timestamp) => {
-                return DateUtils.class.roundedTimestamp(timestamp, DateUtils.ROUND_TIMESTAMP_MONTH);
-            }, "%Y-%m-01 00:00:00");
+            if (!this.statisticsCache[YEARLY]) {
+                Logger.info("Missing yearly statistics cache, generating data");
+                this.statisticsCache[YEARLY] = this.statisticsWsResponse(DateUtils.class.timestamp(), 12 * 31 * 24 * 60 * 60, 31 * 24 * 60 * 60, this.translateManager.t("sensors.statistics.year.dateformat"), (timestamp) => {
+                    return DateUtils.class.roundedTimestamp(timestamp, DateUtils.ROUND_TIMESTAMP_MONTH);
+                }, "%Y-%m-01 00:00:00");
+            }
+
+            return this.statisticsCache[YEARLY];
         }
     }
 
