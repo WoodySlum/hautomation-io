@@ -1,5 +1,9 @@
 "use strict";
 const Logger = require("./../../logger/Logger");
+const Tile = require("./../dashboardmanager/Tile");
+const WebServices = require("./../../services/webservices/WebServices");
+const APIResponse = require("./../../services/webservices/APIResponse");
+const Authentication = require("./../authentication/Authentication");
 // const sha256 = require("sha256");
 // const DateUtils = require("./../../utils/DateUtils");
 
@@ -18,6 +22,9 @@ const audiohub = require("audiohub");
 const path = require("path");
 const StringSimilarity = require("string-similarity");
 
+const ROUTE_BOT_VOCAL = "/bot/vocal/";
+const ERROR_MIC_IS_NOT_DEFINED = "Could not execute action : mic is not defined";
+
 /**
  * This class manage the Hautomation bot
  * @class
@@ -31,20 +38,28 @@ class BotEngine {
      * @param  {MessageManager} messageManager The message manager
      * @param  {Object} botConfiguration The bot configuration
      * @param  {InstallationManager} installationManager The installation manager
+     * @param  {DashboardManager} dashboardManager The dashboard manager
+     * @param  {ThemeManager} themeManager The theme manager
+     * @param  {WebServices} webServices The web services
      * @returns {BotEngine} The instance
      */
-    constructor(appConfiguration, translateManager, messageManager, botConfiguration, installationManager) {
+    constructor(appConfiguration, translateManager, messageManager, botConfiguration, installationManager, dashboardManager, themeManager, webServices) {
         this.messageManager = messageManager;
         this.translateManager = translateManager;
         this.messageManager.register(this);
         this.botConfiguration = botConfiguration;
         this.appConfiguration = appConfiguration;
         this.installationManager = installationManager;
-
+        this.dashboardManager = dashboardManager;
+        this.themeManager = themeManager;
+        this.webServices = webServices;
+        this.mic = null;
+        this.enableVocalCommands = false;
 
         // Bot actions
         this.botActions = {};
         if (!process.env.TEST && this.appConfiguration.bot.enable) {
+            this.enableVocalCommands = true;
             this.voiceDetect();
         }
 
@@ -74,6 +89,8 @@ class BotEngine {
                 }
             });
         }
+
+        webServices.registerAPI(this, WebServices.POST, ":" + ROUTE_BOT_VOCAL + "[status*]/", Authentication.AUTH_USAGE_LEVEL);
     }
 
     /**
@@ -110,7 +127,7 @@ class BotEngine {
         const self = this;
         let gBuffer = null;
         let recording = false;
-        let maxSilence = 2;
+        let maxSilence = 4;
         let silentCount = 0;
 
         models.add({
@@ -119,13 +136,13 @@ class BotEngine {
             hotwords : this.translateManager.t("bot.hotword")
         });
 
-        const detector = new snowboy.Detector({
+        this.detector = new snowboy.Detector({
             resource: path.resolve("./res/snowboy/common.res"),
             models: models,
             audioGain: parseFloat(this.botConfiguration.audioGain)
         });
 
-        detector.on("silence", function () {
+        this.detector.on("silence", function () {
             if (recording) {
                 silentCount++;
             }
@@ -152,7 +169,7 @@ class BotEngine {
             }
         });
 
-        detector.on("sound", function (buffer) {
+        this.detector.on("sound", function (buffer) {
             if (recording) {
                 if (gBuffer) {
                     gBuffer = Buffer.concat([gBuffer, buffer]);
@@ -163,11 +180,12 @@ class BotEngine {
             silentCount = 0;
         });
 
-        detector.on("error", function () {
+        this.detector.on("error", function (err) {
             Logger.err("An error has occured while snowboy is listening");
+            Logger.err(err.message);
         });
 
-        detector.on("hotword", function (index, hotword) {
+        this.detector.on("hotword", function (index, hotword) {
             if (!recording) {
                 Logger.info("Hotword detected : " + hotword);
                 self.playDetectionSound();
@@ -175,12 +193,21 @@ class BotEngine {
             }
         });
 
-        const mic = record.start({
+        this.mic = record.start({
             threshold: 0,
             verbose: false
         });
 
-        mic.pipe(detector);
+        this.mic.pipe(this.detector);
+        this.registerTile();
+    }
+
+    /**
+     * Register dashboard's tile to enable / disable voice recognition
+     */
+    registerTile() {
+        const tile = new Tile.class(this.themeManager, "voice-command", Tile.TILE_GENERIC_ACTION_STATUS, this.enableVocalCommands?"F130":"F131", null, this.translateManager.t("bot.mic.dashboard"), null, null, null, this.enableVocalCommands, 10500, ROUTE_BOT_VOCAL);
+        this.dashboardManager.registerTile(tile);
     }
 
     /**
@@ -325,6 +352,54 @@ class BotEngine {
      */
     stringSimilarity() {
         return StringSimilarity;
+    }
+
+    /**
+     * Enable or disable voice commands. Can throw an error.
+     *
+     * @param  {boolean} enable `true` to enable voice command, `false` otherwise. If null, switch status automatically.
+     */
+    switchVocalCommands(enable) {
+        if (enable === null || typeof enable === "undefined") {
+            this.enableVocalCommands = !this.enableVocalCommands;
+        } else {
+            this.enableVocalCommands = enable;
+        }
+
+        if (this.enableVocalCommands && this.mic) {
+            Logger.info("Voice command enabled");
+            this.voiceDetect();
+        } else if (!this.enableVocalCommands && this.mic) {
+            Logger.info("Voice command disabled");
+            this.mic.pause();
+            record.stop();
+
+        } else {
+            Logger.err(ERROR_MIC_IS_NOT_DEFINED);
+            throw Error(ERROR_MIC_IS_NOT_DEFINED);
+        }
+
+        this.registerTile();
+    }
+
+    /**
+     * Process API callback
+     *
+     * @param  {APIRequest} apiRequest An APIRequest
+     * @returns {Promise}  A promise with an APIResponse object
+     */
+    processAPI(apiRequest) {
+        const self = this;
+        if (apiRequest.route.startsWith( ":" + ROUTE_BOT_VOCAL)) {
+            return new Promise((resolve, reject) => {
+                try {
+                    self.switchVocalCommands();
+                    resolve(new APIResponse.class(true, {success:true}));
+                } catch(e) {
+                    reject(new APIResponse.class(false, {}, 6528, ERROR_MIC_IS_NOT_DEFINED));
+                }
+            });
+        }
     }
 }
 

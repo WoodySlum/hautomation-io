@@ -64,6 +64,15 @@ class BotEngineAPI {
     stringSimilarity() {
         return PrivateProperties.oprivate(this).botEngine.stringSimilarity();
     }
+
+    /**
+     * Enable or disable voice commands. Can throw an error.
+     *
+     * @param  {boolean} enable `true` to enable voice command, `false` otherwise. If null, switch status automatically.
+     */
+    switchVocalCommands(enable) {
+        PrivateProperties.oprivate(this).botEngine.switchVocalCommands(enable);
+    }
 }
 
 module.exports = {class:BotEngineAPI};
