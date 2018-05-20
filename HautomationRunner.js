@@ -2,6 +2,8 @@ var HautomationCore = require("./src/HautomationCore");
 const events = require("events");
 var core = null;
 const HautomationRunnerConstants = require("./HautomationRunnerConstants");
+const os = require("os");
+const childProcess = require("child_process");
 
 /**
  * The runner class.
@@ -62,8 +64,13 @@ class HautomationRunner {
      * @param  {HautomationRunner} self The instance
      */
     restart(self) {
-        self.stop(self);
-        self.start(self);
+        if (os.platform() === "linux") {
+            // If environment is linux, restart service
+            childProcess.execSync("service hautomation restart", {encoding:"utf-8"});
+        } else {
+            self.stop(self);
+            self.start(self);
+        }
     }
 }
 
