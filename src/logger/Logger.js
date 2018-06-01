@@ -22,7 +22,7 @@ class Logger {
      * @param {number} [level=3] Log level between 0 and 5
      */
     static setLogLevel(level = 3) {
-        if (level) {
+        if (level != null && typeof level != "undefined") {
             logLevel = level;
         }
     }

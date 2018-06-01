@@ -80,7 +80,7 @@ class HautomationCore {
         this.configurationLoader();
 
         // Logger
-        Logger.setLogLevel(AppConfiguration.logLevel?AppConfiguration.logLevel:null);
+        Logger.setLogLevel((AppConfiguration.logLevel != null && typeof AppConfiguration.logLevel != "undefined")?AppConfiguration.logLevel:null);
 
         // Theme manager
         this.themeManager = new ThemeManager.class(AppConfiguration);
