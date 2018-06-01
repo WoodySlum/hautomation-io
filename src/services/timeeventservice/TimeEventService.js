@@ -160,13 +160,13 @@ class TimeEventService extends Service.class {
             obj.hour = "*";
             break;
         case EVERY_HOURS:
-            obj.second = Math.floor(Math.random() * 60) + 0; // Sleek seconds for day processing
+            obj.second = Math.floor(Math.random() * 59) + 0; // Sleek seconds for day processing
             obj.minute = 0;
             obj.hour = "*";
             break;
         case EVERY_DAYS:
             obj.second = 0;
-            obj.minute = Math.floor(Math.random() * 60) + 1; // Sleek minutes for day processing
+            obj.minute = Math.floor(Math.random() * 58) + 1; // Sleek minutes for day processing
             obj.hour = Math.floor(Math.random() * 5) + 0; // Sleek hours for day processing
             break;
         }
