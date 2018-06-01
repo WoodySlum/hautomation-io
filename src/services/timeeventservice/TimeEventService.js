@@ -3,6 +3,7 @@
 var Logger = require("./../../logger/Logger");
 var Service = require("./../Service");
 const sha256 = require("sha256");
+const stackTrace = require("stack-trace");
 
 const EVERY_SECONDS = 0;
 const EVERY_MINUTES = 1;
@@ -58,7 +59,10 @@ class TimeEventService extends Service.class {
      * @returns {string}                 A SHA256 hash key
      */
     hash(cb, mode, hour = null, minute = null, second = null) {
-        return sha256(cb.toString() + mode + hour + minute + second);
+        const fullStack = stackTrace.get();
+        const stack = fullStack[3];
+        const filenamesConstant = (fullStack.length > 3) ? fullStack[3].getFileName() + fullStack[2].getFileName() : "";
+        return sha256(cb.toString() + filenamesConstant + mode + hour + minute + second);
     }
 
     /**
