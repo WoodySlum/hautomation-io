@@ -60,7 +60,6 @@ class TimeEventService extends Service.class {
      */
     hash(cb, mode, hour = null, minute = null, second = null) {
         const fullStack = stackTrace.get();
-        const stack = fullStack[3];
         const filenamesConstant = (fullStack.length > 3) ? fullStack[3].getFileName() + fullStack[2].getFileName() : "";
         return sha256(cb.toString() + filenamesConstant + mode + hour + minute + second);
     }
