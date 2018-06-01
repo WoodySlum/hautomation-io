@@ -133,7 +133,6 @@ function loaded(api) {
             });
 
             api.timeEventAPI.register(this.upgrade, this, api.timeEventAPI.constants().EVERY_DAYS);
-            api.timeEventAPI.register(this.reboot, this, api.timeEventAPI.constants().EVERY_HOURS);
         }
 
         /**
