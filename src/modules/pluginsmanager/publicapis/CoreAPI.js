@@ -11,11 +11,13 @@ class CoreAPI {
     //  * Constructor
     //  *
     //  * @param  {EventEmitter} eventBus Core event bus
+    //  * @param  {Object} appConfiguration Tha global configuration object
     //  * @returns {CoreAPI}             The instance
     //  */
-    constructor(eventBus) {
+    constructor(eventBus, appConfiguration) {
         PrivateProperties.createPrivateState(this);
         PrivateProperties.oprivate(this).eventBus = eventBus;
+        PrivateProperties.oprivate(this).cachePath = appConfiguration.cachePath;
     }
     /* eslint-enable */
 
@@ -43,6 +45,15 @@ class CoreAPI {
         if (PrivateProperties.oprivate(this).eventBus) {
             PrivateProperties.oprivate(this).eventBus.on(name, cb);
         }
+    }
+
+    /**
+     * Get the cache path
+     *
+     * @return {string} A cache path
+     */
+    cachePath() {
+        return PrivateProperties.oprivate(this).cachePath;
     }
 
 }

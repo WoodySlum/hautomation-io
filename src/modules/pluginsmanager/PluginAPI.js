@@ -27,6 +27,7 @@ var IotAPI = require("./publicapis/IotAPI");
 var IotForm = require("./../iotmanager/IotForm");
 var BotEngineAPI = require("./publicapis/BotEngineAPI");
 var CoreAPI = require("./publicapis/CoreAPI");
+var DeviceAPI = require("./publicapis/DeviceAPI");
 
 var DateUtils = require("./../../utils/DateUtils");
 var Icons = require("./../../utils/Icons");
@@ -68,9 +69,10 @@ class PluginsAPI {
     //  * @param  {IotManager} iotManager The IoT manager
     //  * @param  {BotEngine} botEngine The IoT manager
     //  * @param  {EventEmitter} eventBus The event bus
+    //  * @param  {DeviceManager} deviceManager The device manager
     //  * @returns {PluginAPI}                  Insntance
     //  */
-    constructor(previousVersion, p, webServices, appConfiguration, servicesManager, dbManager, translateManager, formManager, confManager, timeEventService, schedulerService, dashboardManager, themeManager, sensorsManager, installationManager, userManager, messageManager, scenarioManager, alarmManager, camerasManager, radioManager, environmentManager, pluginsManager, iotManager, botEngine, eventBus) {
+    constructor(previousVersion, p, webServices, appConfiguration, servicesManager, dbManager, translateManager, formManager, confManager, timeEventService, schedulerService, dashboardManager, themeManager, sensorsManager, installationManager, userManager, messageManager, scenarioManager, alarmManager, camerasManager, radioManager, environmentManager, pluginsManager, iotManager, botEngine, eventBus, deviceManager) {
         PrivateProperties.createPrivateState(this);
         this.previousVersion = previousVersion;
         this.p = p;
@@ -110,7 +112,7 @@ class PluginsAPI {
         this.schedulerAPI = new SchedulerAPI.class(schedulerService);
         this.dashboardAPI = new DashboardAPI.class(dashboardManager);
         this.sensorAPI = new SensorAPI.class(formManager, this, sensorsManager);
-        this.themeManager = new ThemeAPI.class(themeManager);
+        this.themeAPI = new ThemeAPI.class(themeManager);
         this.installerAPI = new InstallerAPI.class(installationManager, this.version);
         this.userAPI = new UserAPI.class(userManager);
         this.messageAPI = new MessageAPI.class(messageManager);
@@ -121,7 +123,8 @@ class PluginsAPI {
         this.environmentAPI = new EnvironmentAPI.class(environmentManager);
         this.iotAPI = new IotAPI.class(iotManager);
         this.botEngineAPI = new BotEngineAPI.class(botEngine);
-        this.coreAPI = new CoreAPI.class(eventBus);
+        this.coreAPI = new CoreAPI.class(eventBus, appConfiguration);
+        this.deviceAPI = new DeviceAPI.class(deviceManager);
         PrivateProperties.oprivate(this).pluginsManager = pluginsManager;
     }
 

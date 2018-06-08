@@ -176,6 +176,22 @@ class DeviceManager {
     }
 
     /**
+     * Return a status of a device
+     *
+     * @returns {boolean} Status of the device
+     */
+    getDeviceStatus(id) {
+        let foundDevice = null;
+        this.getDevices().forEach((device) => {
+            if (device.id === id) {
+                foundDevice = device;
+            }
+        });
+
+        return foundDevice.status;
+    }
+
+    /**
      * Register a device on dashboard
      *
      * @param  {DeviceForm} device A device

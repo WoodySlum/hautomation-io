@@ -79,6 +79,24 @@ class EnvironmentAPI {
     getLocalAPIUrl() {
         return PrivateProperties.oprivate(this).environmentManager.getLocalAPIUrl();
     }
+
+    /**
+     * Returns the hautomation ID
+     *
+     * @returns {string} Hautomation identifier
+     */
+    getHautomationId() {
+        return PrivateProperties.oprivate(this).environmentManager.getHautomationId();
+    }
+
+    /**
+     * Returns the full hautomation ID
+     *
+     * @returns {string} Hautomation full identifier
+     */
+    getFullHautomationId() {
+        return PrivateProperties.oprivate(this).environmentManager.getFullHautomationId();
+    }
 }
 
 module.exports = {class:EnvironmentAPI};

@@ -49,6 +49,7 @@ class Tile {
         this.action = action;
         this.object = object;
         this.colors = {};
+        this.themeColors = themeManager.getColors();
         if (this.type === TILE_INFO_ONE_TEXT || this.type === TILE_INFO_TWO_TEXT || this.type === TILE_INFO_TWO_ICONS || this.type === TILE_PICTURES) {
             this.colors.colorDefault = themeManager.getColors().secondaryColor;
             this.colors.colorContent = themeManager.getColors().clearColor;

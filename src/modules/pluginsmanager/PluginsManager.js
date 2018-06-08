@@ -63,7 +63,8 @@ const INTERNAL_PLUGINS = [
     "rain-time-sensor",
     "esp-rain-time-sensor",
     "generic-throughput-sensor",
-    "ring-alert"
+    "ring-alert",
+    "homebridge"
 ];
 
 const CORE_PLUGINS = [
@@ -114,9 +115,10 @@ class PluginsManager {
      * @param  {EnvironmentManager} environmentManager The environment manager
      * @param  {IotManager} iotManager The IoT manager
      * @param  {BotEngine} botEngine The bot engine
+     * @param  {DeviceManager} devoceManager The device manager
      * @returns {PluginsManager} The instance
      */
-    constructor(confManager, webServices, servicesManager, dbManager, translateManager, formManager, timeEventService, schedulerService, dashboardManager, eventBus, themeManager, sensorsManager, installationManager, userManager, messageManager, scenarioManager, alarmManager, camerasManager, radioManager, appConfiguration, environmentManager, iotManager, botEngine) {
+    constructor(confManager, webServices, servicesManager, dbManager, translateManager, formManager, timeEventService, schedulerService, dashboardManager, eventBus, themeManager, sensorsManager, installationManager, userManager, messageManager, scenarioManager, alarmManager, camerasManager, radioManager, appConfiguration, environmentManager, iotManager, botEngine, deviceManager) {
         this.fs = fs;
         this.path = path;
         this.remi = remi;
@@ -144,6 +146,7 @@ class PluginsManager {
         this.environmentManager = environmentManager;
         this.iotManager = iotManager;
         this.botEngine = botEngine;
+        this.deviceManager = deviceManager;
 
         this.plugins = [];
         try {
@@ -267,7 +270,8 @@ class PluginsManager {
                 this,
                 this.iotManager,
                 this.botEngine,
-                this.eventBus
+                this.eventBus,
+                this.deviceManager
             );
 
             item = pApi;

@@ -407,6 +407,20 @@ class EnvironmentManager {
 
         return macAddress;
     }
+
+    /**
+     * Returns the full hautomation ID
+     *
+     * @returns {string} Hautomation full identifier
+     */
+    getFullHautomationId() {
+        const macAddress = this.getMacAddress();
+        if (macAddress) {
+            return sha256(macAddress);
+        }
+
+        return macAddress;
+    }
 }
 
 module.exports = {class:EnvironmentManager};
