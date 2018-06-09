@@ -308,7 +308,6 @@ function loaded(api) {
             } else {
                 lastObjectRequest = this.dbHelper.RequestBuilder()
                                                         .select()
-                                                        .selectOp(this.dbHelper.Operators().MIN, "vcc")
                                                         .where("sensorId", this.dbHelper.Operators().EQ, this.id)
                                                         .order(this.dbHelper.Operators().DESC, this.dbHelper.Operators().FIELD_TIMESTAMP)
                                                         .first();

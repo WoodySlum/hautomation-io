@@ -72,7 +72,7 @@ function loaded(api) {
             this.sensors = [];
             const temperatureSensors = this.api.sensorAPI.getSensors("TEMPERATURE");
             Object.keys(temperatureSensors).forEach((sensorKey) => {
-                this.devices.push({
+                this.sensors.push({
                     accessory: "Hautomation temperature sensor",
                     identifier: sensorKey,
                     name: temperatureSensors[sensorKey],
@@ -82,7 +82,7 @@ function loaded(api) {
 
             const humiditySensors = this.api.sensorAPI.getSensors("HUMIDITY");
             Object.keys(humiditySensors).forEach((sensorKey) => {
-                this.devices.push({
+                this.sensors.push({
                     accessory: "Hautomation humidity sensor",
                     identifier: sensorKey,
                     name: humiditySensors[sensorKey],
