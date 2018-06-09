@@ -504,7 +504,9 @@ class WebServices extends Service.class {
                                 p = registeredEl.delegate.processAPI(apiRequest);
                             } catch(e) {
                                 Logger.err(e.message);
-                                reject(new APIResponse.class(false, {}, 7298, "Oops something wrong occurred"));
+                                p = new Promise((resolve, reject) => {
+                                    reject(new APIResponse.class(false, {}, 7298, "Oops something wrong occurred"));
+                                });
                             }
                         } else {
                             p = new Promise((resolve, reject) => {

@@ -660,7 +660,7 @@ class CamerasManager {
                                 //return apiRequest.res.sendStatus(416);
                                 range = "bytes=0-";
                             }
-                            const positions = range.replace(/bytes=/, "").split("-")
+                            const positions = range.replace(/bytes=/, "").split("-");
                             const start = parseInt(positions[0], 10);
                             const total = stats.size;
                             const end = positions[1] ? parseInt(positions[1], 10) : total - 1;

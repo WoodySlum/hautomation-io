@@ -243,8 +243,8 @@ describe("Sensor", function() {
             db2.save((error) => {
                 sensor.lastObject((err, res) => {
                     expect(error).to.be.null;
-                    expect(res.value).to.be.equal(20.3);
-                    expect(res.vcc).to.be.equal(11);
+                    expect(res.value).to.be.equal(32);
+                    expect(res.vcc).to.be.equal(23);
                     done();
                 });
             });
