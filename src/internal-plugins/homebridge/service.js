@@ -71,16 +71,20 @@ function loaded(api) {
                     api.dashboardAPI.registerTile(tile);
                 }
             });
+
+
+
         }
 
         /**
          * Stop the service
          */
         stop() {
-            super.stop();
-
             const tile = api.dashboardAPI.Tile("homebridge", api.dashboardAPI.TileType().TILE_PICTURE_TEXT);
             api.dashboardAPI.unregisterTile(tile);
+            api.exported.Logger.info("Stopping homebridge server");
+            this.server._teardown();
+            super.stop();
         }
 
         /**
@@ -108,7 +112,6 @@ function loaded(api) {
             };
             Server.prototype._printPin = (pin) => {
                 api.exported.Logger.info("Homebridge pin : " + pin);
-                process.exit(0);
             };
             Server.prototype._printSetupInfo = () => {};
         }
