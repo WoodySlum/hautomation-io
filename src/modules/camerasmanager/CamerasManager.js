@@ -506,11 +506,11 @@ class CamerasManager {
             });
         } else if (apiRequest.route.startsWith(CAMERAS_MANAGER_TIMELAPSE_SEASON_STREAM_BASE)) {
             return new Promise((resolve, reject) => {
-                self.stream(apiRequest, this.seasonFilepath, reject);
+                self.stream(apiRequest, self.seasonFilepath, reject);
             });
         } else if (apiRequest.route.startsWith(CAMERAS_MANAGER_TIMELAPSE_DAILY_STREAM_BASE)) {
             return new Promise((resolve, reject) => {
-                self.stream(apiRequest, this.dailyFilepath, reject);
+                self.stream(apiRequest, self.dailyFilepath, reject);
             });
         } else if (apiRequest.route.startsWith(CAMERAS_MANAGER_TIMELAPSE_DAILY_GET_BASE)) {
             return new Promise((resolve, reject) => {
@@ -644,37 +644,46 @@ class CamerasManager {
             const streamFilepath = filePathMethod(camera, this.camerasArchiveFolder);
             if (fs.existsSync(streamFilepath)) {
                 fs.stat(streamFilepath, (err, stats) => {
+                    // console.log(apiRequest.req);
+                    // console.log(apiRequest.req.headers);
                     if (err) {
                         if (err.code === "ENOENT") {
                             // 404 Error if file not found
                             apiRequest.res.sendStatus(404);
                         }
                         apiRequest.res.end(err);
-                    }
-                    const range = apiRequest.req.headers.range;
-                    if (!range) {
-                        // 416 Wrong range
-                        return apiRequest.res.sendStatus(416);
-                    }
-                    const positions = range.replace(/bytes=/, "").split("-");
-                    const start = parseInt(positions[0], 10);
-                    const total = stats.size;
-                    const end = positions[1] ? parseInt(positions[1], 10) : total - 1;
-                    const chunksize = (end - start) + 1;
+                    } else {
+                        try {
+                            let range = apiRequest.req.headers.range;
+                            if (!range) {
+                                // 416 Wrong range
+                                //return apiRequest.res.sendStatus(416);
+                                range = "bytes=0-";
+                            }
+                            const positions = range.replace(/bytes=/, "").split("-")
+                            const start = parseInt(positions[0], 10);
+                            const total = stats.size;
+                            const end = positions[1] ? parseInt(positions[1], 10) : total - 1;
+                            const chunksize = (end - start) + 1;
 
-                    apiRequest.res.writeHead(206, {
-                        "Content-Range": "bytes " + start + "-" + end + "/" + total,
-                        "Accept-Ranges": "bytes",
-                        "Content-Length": chunksize,
-                        "Content-Type": "video/mp4"
-                    });
+                            apiRequest.res.writeHead(206, {
+                                "Content-Range": "bytes " + start + "-" + end + "/" + total,
+                                "Accept-Ranges": "bytes",
+                                "Content-Length": chunksize,
+                                "Content-Type": "video/mp4"
+                            });
 
-                    const stream = fs.createReadStream(streamFilepath, { start: start, end: end })
-                        .on("open", function() {
-                            stream.pipe(apiRequest.res);
-                        }).on("error", function(err) {
-                            apiRequest.res.end(err);
-                        });
+                            const stream = fs.createReadStream(streamFilepath, { start: start, end: end })
+                                .on("open", function() {
+                                    stream.pipe(apiRequest.res);
+                                }).on("error", function(err) {
+                                    apiRequest.res.end(err);
+                                });
+                        } catch(e) {
+                            Logger.err(e.message);
+                        }
+
+                    }
                 });
             } else {
                 reject(new APIResponse.class(false, {}, 770, ERROR_TIMELAPSE_NOT_GENERATED));

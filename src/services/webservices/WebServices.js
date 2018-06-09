@@ -208,7 +208,7 @@ class WebServices extends Service.class {
                     binContent = null; // Clear variable
                 }
 
-                ngrok.connect({addr: self.port, protocol:"http", region: "eu", inspect:false, host_header:"preserve", binPath: () => self.cachePath}).then((url) => {
+                ngrok.connect({addr: self.port, protocol:"http", region: "eu", inspect:false, binPath: () => self.cachePath}).then((url) => {
                     Logger.info("HTTP tunnel URL : " + url);
                     self.gatewayManager.tunnelUrl = url;
 
@@ -500,7 +500,12 @@ class WebServices extends Service.class {
                                     apiRequest.data[registeredEl.parameters[i].name] = apiRequest.path[i+baseIndex]?apiRequest.path[i+baseIndex]:null;
                                 }
                             }
-                            p = registeredEl.delegate.processAPI(apiRequest);
+                            try {
+                                p = registeredEl.delegate.processAPI(apiRequest);
+                            } catch(e) {
+                                Logger.err(e.message);
+                                reject(new APIResponse.class(false, {}, 7298, "Oops something wrong occurred"));
+                            }
                         } else {
                             p = new Promise((resolve, reject) => {
                                 let parameters = [];
