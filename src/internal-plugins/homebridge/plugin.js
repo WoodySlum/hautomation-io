@@ -1,7 +1,4 @@
 "use strict";
-const fs = require("fs-extra");
-const platform = require("os").platform();
-const homebridge = require("homebridge");
 const HomebridgeServiceClass = require("./service.js");
 
 /**
@@ -11,8 +8,17 @@ const HomebridgeServiceClass = require("./service.js");
  */
 function loaded(api) {
     const HomebridgeService = HomebridgeServiceClass(api);
-
+    /**
+     * Class for Homebridge
+     * @class
+     */
     class Homebridge {
+        /**
+         * Constructor
+         *
+         * @param  {PluginAPI} api                                                           A plugin api
+         * @returns {Homebridge}                                                       The instance
+         */
         constructor(api) {
             this.api = api;
             this.devices = [];
@@ -22,6 +28,9 @@ function loaded(api) {
 
         }
 
+        /**
+         * Generate lights config
+         */
         generateHapDevices() {
             this.api.deviceAPI.getDevices().forEach((device) => {
                 if (device.visible) {

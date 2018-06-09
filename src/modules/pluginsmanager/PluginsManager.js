@@ -115,7 +115,7 @@ class PluginsManager {
      * @param  {EnvironmentManager} environmentManager The environment manager
      * @param  {IotManager} iotManager The IoT manager
      * @param  {BotEngine} botEngine The bot engine
-     * @param  {DeviceManager} devoceManager The device manager
+     * @param  {DeviceManager} deviceManager The device manager
      * @returns {PluginsManager} The instance
      */
     constructor(confManager, webServices, servicesManager, dbManager, translateManager, formManager, timeEventService, schedulerService, dashboardManager, eventBus, themeManager, sensorsManager, installationManager, userManager, messageManager, scenarioManager, alarmManager, camerasManager, radioManager, appConfiguration, environmentManager, iotManager, botEngine, deviceManager) {

@@ -50,7 +50,7 @@ class CoreAPI {
     /**
      * Get the cache path
      *
-     * @return {string} A cache path
+     * @returns {string} A cache path
      */
     cachePath() {
         return PrivateProperties.oprivate(this).cachePath;

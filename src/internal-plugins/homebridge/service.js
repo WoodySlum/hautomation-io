@@ -1,9 +1,7 @@
 "use strict";
-
+/* eslint no-underscore-dangle: 0 */
 const hap = require("hap-nodejs");
-const sha256 = require("sha256");
 const QRCode = require("qrcode");
-const version = require("./../../../node_modules/homebridge/lib/version");
 const Server = require("./../../../node_modules/homebridge/lib/server").Server;
 const Plugin = require("./../../../node_modules/homebridge/lib/plugin").Plugin;
 const User = require("./../../../node_modules/homebridge/lib/user").User;
@@ -16,10 +14,17 @@ const port = 51826;
  */
 function loaded(api) {
     /**
-     * This class start the homebridge service
+     * This class starts the homebridge service
      * @class
      */
     class HomebridgeService extends api.exported.Service.class {
+        /**
+         * The homebridge service
+         *
+         * @param {Homebridge} plugin  An homebridge plugin
+         * @param {Array} devices A list of hap devices
+         * @returns {HomebridgeService} The instance
+         */
         constructor(plugin, devices) {
             super("homebridge");
             this.plugin = plugin;
@@ -30,7 +35,6 @@ function loaded(api) {
             const uname = hid.substr(0,2) + ":" + hid.substr(2,2)  + ":" + hid.substr(4,2)  + ":" + hid.substr(6,2) + ":" + hid.substr(8,2) + ":" + hid.substr(10,2);
 
             this.server = new Server(insecureAccess);
-            const username =
             this.server._config = {
                 bridge: {
                     name: "Hautomation",
@@ -43,10 +47,18 @@ function loaded(api) {
             hap.init(User.persistPath());
         }
 
+        /**
+         * Generates a random number
+         *
+         * @returns {string} A random number
+         */
         randomNumber() {
             return Math.floor(Math.random()*9+1).toString();
         }
 
+        /**
+         * Start the service
+         */
         start() {
             super.start();
             this.server.run();
@@ -59,6 +71,9 @@ function loaded(api) {
             });
         }
 
+        /**
+         * Stop the service
+         */
         stop() {
             super.stop();
 
@@ -66,6 +81,9 @@ function loaded(api) {
             api.dashboardAPI.unregisterTile(tile);
         }
 
+        /**
+         * Get the pin code
+         */
         getPin() {
             return (this.server ? this.server._config.bridge.pin : null);
         }

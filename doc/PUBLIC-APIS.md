@@ -1276,7 +1276,7 @@ Return a status of a device
 
 **Parameters**
 
--   `id`  
+-   `id` **[number][351]** A device identifier
 
 Returns **[boolean][347]** Status of the device
 
@@ -1325,7 +1325,7 @@ Return a status of a device
 
 **Parameters**
 
--   `id`  
+-   `id` **[number][351]** A device identifier
 
 Returns **[boolean][347]** Status of the device
 

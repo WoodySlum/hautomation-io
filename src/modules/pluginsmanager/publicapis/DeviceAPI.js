@@ -52,6 +52,7 @@ class DeviceAPI {
     /**
      * Return a status of a device
      *
+     * @param  {number} id            A device identifier
      * @returns {boolean} Status of the device
      */
     getDeviceStatus(id) {
