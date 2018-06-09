@@ -62,6 +62,7 @@
         "node-pre-gyp": "^0.6",
         "nodemon": "^1.17",
         "pkg": "^4.3",
+        "remove-console-logs": "^0.1",
         "resolve-options": "^1.1",
         "sinon": "^2.4"
     },

@@ -23,8 +23,10 @@ function loaded(api) {
             this.api = api;
             this.devices = [];
             this.generateHapDevices();
-            this.service = new HomebridgeService(api, this.devices);
-            api.servicesManagerAPI.add(this.service);
+            if (!process.env.TEST) {
+                this.service = new HomebridgeService(api, this.devices);
+                api.servicesManagerAPI.add(this.service);
+            }
 
         }
 

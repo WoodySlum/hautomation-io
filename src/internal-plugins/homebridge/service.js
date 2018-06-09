@@ -5,6 +5,7 @@ const QRCode = require("qrcode");
 const Server = require("./../../../node_modules/homebridge/lib/server").Server;
 const Plugin = require("./../../../node_modules/homebridge/lib/plugin").Plugin;
 const User = require("./../../../node_modules/homebridge/lib/user").User;
+const log = require("./../../../node_modules/homebridge/lib/logger");
 const port = 51826;
 
 /**
@@ -29,6 +30,7 @@ function loaded(api) {
             super("homebridge");
             this.plugin = plugin;
             var insecureAccess = false;
+            this.removeLogs();
 
             Plugin.addPluginPath(__dirname + "/homebridge-plugins/homebridge-hautomation-lights");
             const hid = api.environmentAPI.getFullHautomationId();
@@ -86,6 +88,29 @@ function loaded(api) {
          */
         getPin() {
             return (this.server ? this.server._config.bridge.pin : null);
+        }
+
+        /**
+         * Remove logs
+         */
+        removeLogs() {
+            log.Logger.prototype.log = (level, msg, ...params) => {
+                msg = "Homebridge - " + msg;
+                if (level === "debug") {
+                    api.exported.Logger.debug(msg, params);
+                } else if (level === "warn") {
+                    api.exported.Logger.warn(msg, params);
+                } else if (level === "error") {
+                    api.exported.Logger.error(msg, params);
+                } else {
+                    api.exported.Logger.info(msg, params);
+                }
+            };
+            Server.prototype._printPin = (pin) => {
+                api.exported.Logger.info("Homebridge pin : " + pin);
+                process.exit(0);
+            };
+            Server.prototype._printSetupInfo = () => {};
         }
 
     }

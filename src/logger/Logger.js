@@ -32,8 +32,9 @@ class Logger {
      *
      * @param  {string} message   A log message
      * @param  {int} [level=3] Log level between 0 to 5
+     * @param  {[string]} params    Some parameters
      */
-    static log(message, level = 3) {
+    static log(message, level = 3, ...params) {
         if (disableLog != 1) {
             if (message instanceof Object) {
                 message = JSON.stringify(message);
@@ -106,7 +107,7 @@ class Logger {
             //logLineConfig.config.lineNumber = {maxWidth: 50};
 
             if (level <= logLevel) {
-                console.log(columnify([logLine], logLineConfig));
+                console.log(columnify([logLine], logLineConfig), ...params);
             }
         }
     }
@@ -115,45 +116,50 @@ class Logger {
      * Log a warning to a file
      *
      * @param  {string} message   A log message
+     * @param  {[string]} params    Some parameters
      */
-    static warn(message) {
-        this.log(message, 2);
+    static warn(message, ...params) {
+        this.log(message, 2, ...params);
     }
 
     /**
      * Log an error to a file
      *
      * @param  {string} message   A log message
+     * @param  {[string]} params    Some parameters
      */
-    static err(message) {
-        this.log(message, 1);
+    static err(message, ...params) {
+        this.log(message, 1, ...params);
     }
 
     /**
      * Log a verbose message to a file
      *
      * @param  {string} message   A log message
+     * @param  {[string]} params    Some parameters
      */
-    static verbose(message) {
-        this.log(message, 4);
+    static verbose(message, ...params) {
+        this.log(message, 4, ...params);
     }
 
     /**
      * Log an information to a file
      *
      * @param  {string} message   A log message
+     * @param  {[string]} params    Some parameters
      */
-    static info(message) {
-        this.log(message, 3);
+    static info(message, ...params) {
+        this.log(message, 3, ...params);
     }
 
     /**
      * Log a debug message to a file, with stacktrace
      *
      * @param  {string} message   A log message
+     * @param  {[string]} params    Some parameters
      */
-    static debug(message) {
-        this.log(message, 5);
+    static debug(message, ...params) {
+        this.log(message, 5, ...params);
     }
 }
 
