@@ -1,7 +1,6 @@
 "use strict";
 const sha256 = require("sha256");
 const Logger = require("./../../logger/Logger");
-const PluginsManager = require("./../pluginsmanager/PluginsManager");
 const WebServices = require("./../../services/webservices/WebServices");
 const APIResponse = require("./../../services/webservices/APIResponse");
 const Authentication = require("./../authentication/Authentication");
@@ -29,6 +28,7 @@ const MONTHLY = "monthly";
 const YEARLY = "yearly";
 
 const SENSOR_NAME_COMPARE_CONFIDENCE = 0.31;
+const EVENT_SENSORS_READY = "event-sensors-ready";
 
 /**
  * This class allows to manage sensors
@@ -61,6 +61,7 @@ class SensorsManager {
         this.sensors = [];
         this.delegates = {};
         this.statisticsCache = {};
+        this.eventBus = eventBus;
 
         try {
             this.sensorsConfiguration = this.confManager.loadData(Object, CONF_MANAGER_KEY, true);
@@ -73,7 +74,7 @@ class SensorsManager {
         }
 
         const self = this;
-        eventBus.on(PluginsManager.EVENT_LOADED, (pluginsManager) => {
+        self.eventBus.on(require("./../pluginsmanager/PluginsManager").EVENT_LOADED, (pluginsManager) => {
             self.pluginsLoaded(pluginsManager, self);
         });
 
@@ -170,6 +171,8 @@ class SensorsManager {
         });
         this.formManager.register(SensorsForm.class, ids, names);
         this.registerSensorsListForm();
+
+        this.eventBus.emit(EVENT_SENSORS_READY);
     }
 
     /**
@@ -527,4 +530,4 @@ class SensorsManager {
     }
 }
 
-module.exports = {class:SensorsManager, ERROR_ALREADY_REGISTERED:ERROR_ALREADY_REGISTERED, ERROR_NOT_REGISTERED:ERROR_NOT_REGISTERED};
+module.exports = {class:SensorsManager, ERROR_ALREADY_REGISTERED:ERROR_ALREADY_REGISTERED, ERROR_NOT_REGISTERED:ERROR_NOT_REGISTERED, EVENT_SENSORS_READY:EVENT_SENSORS_READY};

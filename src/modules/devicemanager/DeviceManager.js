@@ -17,6 +17,7 @@ const STATUS_INVERT = "invert";
 const ROUTE_ALL_ON = "/devices/allon/";
 const ROUTE_ALL_OFF = "/devices/alloff/";
 const DEVICE_NAME_COMPARE_CONFIDENCE = 0.31;
+const EVENT_UPDATE_CONFIG_DEVICES = "update-config-devices";
 
 /**
  * This class allows to manage devices
@@ -35,9 +36,11 @@ class DeviceManager {
      * @param  {TranslateManager} translateManager    The translate manager
      * @param  {EnvironmentManager} environmentManager    The environment manager
      * @param  {BotEngine} botEngine    The bot engine
+     * @param  {SensorsManager} sensorsManager    The sensrsManager
+     * @param  {EventEmitter} eventBus    The global event bus
      * @returns {DeviceManager}              The instance
      */
-    constructor(confManager, formManager, webServices, radioManager, dashboardManager, scenarioManager, translateManager, environmentManager, botEngine) {
+    constructor(confManager, formManager, webServices, radioManager, dashboardManager, scenarioManager, translateManager, environmentManager, botEngine, sensorsManager, eventBus) {
         this.formConfiguration = new FormConfiguration.class(confManager, formManager, webServices, "devices", true, DeviceForm.class);
         this.radioManager = radioManager;
         this.dashboardManager = dashboardManager;
@@ -46,6 +49,8 @@ class DeviceManager {
         this.translateManager = translateManager;
         this.environmentManager = environmentManager;
         this.botEngine = botEngine;
+        this.sensorsManager = sensorsManager;
+        this.eventBus = eventBus;
 
         this.radioManager.deviceManager = this; // Set the device manager. used to associate devices to received radio objects
 
@@ -56,9 +61,10 @@ class DeviceManager {
         this.registerDeviceListForm();
 
         // Register to form configuration callback
-        this.formConfiguration.setUpdateCb(() => {
+        this.formConfiguration.setUpdateCb((obj) => {
             this.registerDeviceTiles();
             this.registerDeviceListForm();
+            this.eventBus.emit(EVENT_UPDATE_CONFIG_DEVICES, obj);
         });
 
         const self = this;
@@ -298,4 +304,4 @@ class DeviceManager {
     }
 }
 
-module.exports = {class:DeviceManager, STATUS_ON:STATUS_ON, STATUS_OFF:STATUS_OFF, STATUS_INVERT:STATUS_INVERT};
+module.exports = {class:DeviceManager, STATUS_ON:STATUS_ON, STATUS_OFF:STATUS_OFF, STATUS_INVERT:STATUS_INVERT, EVENT_UPDATE_CONFIG_DEVICES:EVENT_UPDATE_CONFIG_DEVICES};

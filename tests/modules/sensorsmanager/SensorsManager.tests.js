@@ -11,7 +11,7 @@ const formManager = {register:()=>{}};
 const translateManager = {};
 const themeManager = {};
 const confManager = {loadData:()=>{}};
-const eventBus = {on:()=>{}};
+const eventBus = {on:()=>{}, emit:()=>{}};
 const webServices = {registerAPI:()=>{}};
 const botEngine = {registerBotAction:()=>{}};
 const timeEventService = {register:()=>{}};

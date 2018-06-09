@@ -1,6 +1,8 @@
 "use strict";
 const PrivateProperties = require("./../PrivateProperties");
 const IotsListForm = require("./../../iotmanager/IotsListForm");
+const Cleaner = require("./../../../utils/Cleaner");
+const SensorsManager = require("./../../sensorsmanager/SensorsManager");
 
 /**
  * Public API for sensor
@@ -131,6 +133,15 @@ class SensorAPI {
      */
     iotAppPowered() {
         this.iotRef = true;
+    }
+
+    /**
+     * Expose a list of constants (status)
+     *
+     * @returns {Object} Constants
+     */
+    constants() {
+        return Cleaner.class.exportConstants(SensorsManager);
     }
 }
 
