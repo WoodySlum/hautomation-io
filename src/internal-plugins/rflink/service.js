@@ -178,7 +178,7 @@ function loaded(api) {
                 var status = 0;
 
                 if (!process.env.TEST) {
-                    const usbDetect = require("usb-detection");
+                    /*const usbDetect = require("usb-detection");
                     usbDetect.startMonitoring();
                     usbDetect.on("change", () => {
                         Logger.info("USB status changed");
@@ -189,7 +189,7 @@ function loaded(api) {
                             self.getPorts();
                         }, 2000, this);
 
-                    });
+                    });*/
                 }
 
                 var autoConnect = () => {
