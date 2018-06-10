@@ -49,12 +49,14 @@ function loaded(api) {
             const hid = api.environmentAPI.getFullHautomationId();
             const uname = hid.substr(0,2) + ":" + hid.substr(2,2)  + ":" + hid.substr(4,2)  + ":" + hid.substr(6,2) + ":" + hid.substr(8,2) + ":" + hid.substr(10,2);
             const platforms = [];
+            const pin = "021-92-278";
             if (api.configurationAPI.getConfiguration().alexaUsername && api.configurationAPI.getConfiguration().alexaPassword) {
                 platforms.push({
                     platform: "Alexa",
                     name: "Alexa",
                     username: api.configurationAPI.getConfiguration().alexaUsername,
-                    password: api.configurationAPI.getConfiguration().alexaPassword
+                    password: api.configurationAPI.getConfiguration().alexaPassword,
+                    pin: pin
                 });
             }
 
@@ -65,7 +67,7 @@ function loaded(api) {
                         name: "Hautomation",
                         username: uname.toUpperCase(),
                         port: port,
-                        pin: this.randomNumber() + this.randomNumber() + this.randomNumber() + "-" + this.randomNumber() + this.randomNumber() + "-" + this.randomNumber() + this.randomNumber() + this.randomNumber()
+                        pin: pin
                     },
                     accessories: devices.concat(sensors),
                     platforms:platforms
