@@ -644,8 +644,6 @@ class CamerasManager {
             const streamFilepath = filePathMethod(camera, this.camerasArchiveFolder);
             if (fs.existsSync(streamFilepath)) {
                 fs.stat(streamFilepath, (err, stats) => {
-                    // console.log(apiRequest.req);
-                    // console.log(apiRequest.req.headers);
                     if (err) {
                         if (err.code === "ENOENT") {
                             // 404 Error if file not found

@@ -48,6 +48,15 @@ function loaded(api) {
             Plugin.addPluginPath(__dirname + "/homebridge-plugins/homebridge-hautomation-humidity");
             const hid = api.environmentAPI.getFullHautomationId();
             const uname = hid.substr(0,2) + ":" + hid.substr(2,2)  + ":" + hid.substr(4,2)  + ":" + hid.substr(6,2) + ":" + hid.substr(8,2) + ":" + hid.substr(10,2);
+            const platforms = [];
+            if (api.configurationAPI.getConfiguration().alexaUsername && api.configurationAPI.getConfiguration().alexaPassword) {
+                platforms.push({
+                    platform: "Alexa",
+                    name: "Alexa",
+                    username: api.configurationAPI.getConfiguration().alexaUsername,
+                    password: api.configurationAPI.getConfiguration().alexaPassword
+                });
+            }
 
             try {
                 this.server = new Server(insecureAccess);
@@ -58,8 +67,10 @@ function loaded(api) {
                         port: port,
                         pin: this.randomNumber() + this.randomNumber() + this.randomNumber() + "-" + this.randomNumber() + this.randomNumber() + "-" + this.randomNumber() + this.randomNumber() + this.randomNumber()
                     },
-                    accessories: devices.concat(sensors)
+                    accessories: devices.concat(sensors),
+                    platforms:platforms
                 };
+                api.exported.Logger.verbose(JSON.stringify(this.server._config));
                 hap.init(User.persistPath());
             } catch(e) {
                 api.exported.Logger.err(e.message);
@@ -84,13 +95,15 @@ function loaded(api) {
                 if (self.server) {
                     try {
                         self.server.run();
-                        QRCode.toDataURL(self.server._bridge.setupURI(), { errorCorrectionLevel: "L", color:{light:api.themeAPI.getColors().clearColor + "FF", dark:api.themeAPI.getColors().tertiaryColor +"FF"}, margin:18}, (err, data) => {
-                            if (!err && data) {
-                                const tile = api.dashboardAPI.Tile("homebridge", api.dashboardAPI.TileType().TILE_PICTURE_TEXT, null, null, "Homekit", null, data.split(",")[1], null, null, 99999999);
-                                tile.colors.colorContent = api.themeAPI.getColors().tertiaryColor;
-                                api.dashboardAPI.registerTile(tile);
-                            }
-                        });
+                        if (typeof api.configurationAPI.getConfiguration().displayHomekitTile === "undefined" || api.configurationAPI.getConfiguration().displayHomekitTile) {
+                            QRCode.toDataURL(self.server._bridge.setupURI(), { errorCorrectionLevel: "L", color:{light:api.themeAPI.getColors().clearColor + "FF", dark:api.themeAPI.getColors().tertiaryColor +"FF"}, margin:18}, (err, data) => {
+                                if (!err && data) {
+                                    const tile = api.dashboardAPI.Tile("homebridge", api.dashboardAPI.TileType().TILE_PICTURE_TEXT, null, null, "Homekit", null, data.split(",")[1], null, null, 99999999);
+                                    tile.colors.colorContent = api.themeAPI.getColors().tertiaryColor;
+                                    api.dashboardAPI.registerTile(tile);
+                                }
+                            });
+                        }
                     } catch(e) {
                         api.exported.Logger.err(e.message);
                     }
@@ -103,8 +116,7 @@ function loaded(api) {
          * Stop the service
          */
         stop() {
-            const tile = api.dashboardAPI.Tile("homebridge", api.dashboardAPI.TileType().TILE_PICTURE_TEXT);
-            api.dashboardAPI.unregisterTile(tile);
+            api.dashboardAPI.unregisterTile("homebridge");
             api.exported.Logger.info("Stopping homebridge server");
             if (this.server) {
                 this.server._teardown();

@@ -1,0 +1,5 @@
+{
+    "homebridge.alexa.username":"Alexa username (register on https://homebridge.cloudwatch.net/)",
+    "homebridge.alexa.password":"Alexa password",
+    "homebridge.tile.qr": "Display dashboard's tile with HomeKit QR code"
+}

@@ -7,6 +7,60 @@ const HomebridgeServiceClass = require("./service.js");
  * @param  {PluginAPI} api The core APIs
  */
 function loaded(api) {
+    /**
+    * This class is used for Homebridge form
+    * @class
+    */
+    class HomebridgeForm extends api.exported.FormObject.class {
+        /**
+        * Constructor
+        *
+        * @param  {number} id           Identifier
+        * @param  {string} alexaUsername       The Alexa username
+        * @param  {string} alexaPassword       The Alexa password
+        * @param  {boolean} displayHomekitTile       The tile value
+        * @returns {HomebridgeForm}              The instance
+        */
+        constructor(id, alexaUsername, alexaPassword, displayHomekitTile = true) {
+            super(id);
+
+            /**
+            * @Property("alexaUsername");
+            * @Type("string");
+            * @Title("homebridge.alexa.username");
+            */
+            this.alexaUsername = alexaUsername;
+
+            /**
+            * @Property("alexaPassword");
+            * @Type("string");
+            * @Display("password");
+            * @Title("homebridge.alexa.password");
+            */
+            this.alexaPassword = alexaPassword;
+
+            /**
+            * @Property("displayHomekitTile");
+            * @Type("boolean");
+            * @Default(true);
+            * @Title("homebridge.tile.qr");
+            */
+            this.displayHomekitTile = displayHomekitTile;
+        }
+
+        /**
+        * Convert json data
+        *
+        * @param  {Object} data Some key / value data
+        * @returns {HomebridgeForm}      A form object
+        */
+        json(data) {
+            return new HomebridgeForm(data.id, data.alexaUsername, data.alexaPassword, data.displayHomekitTile);
+        }
+    }
+
+    api.configurationAPI.register(HomebridgeForm);
+
     const HomebridgeService = HomebridgeServiceClass(api);
     /**
      * Class for Homebridge
@@ -37,10 +91,15 @@ function loaded(api) {
                     this.service.start();
                 });
 
-
                 api.coreAPI.registerEvent(api.sensorAPI.constants().EVENT_SENSORS_READY, () => {
                     this.service.stop();
                     this.generateHapSensors();
+                    this.service.init(this.devices, this.sensors);
+                    this.service.start();
+                });
+
+                api.configurationAPI.setUpdateCb(() => {
+                    this.service.stop();
                     this.service.init(this.devices, this.sensors);
                     this.service.start();
                 });
@@ -102,6 +161,6 @@ module.exports.attributes = {
     version: "0.0.0",
     category: "bridge",
     description: "Manage through Apple's Siri and HomeKit",
-    dependencies:["sensor", "temperature-sensor", "humidity-sensor", "openweather-temperature-sensor", "esp-temperature-sensor"],
+    dependencies:[],
     classes:[]
 };
