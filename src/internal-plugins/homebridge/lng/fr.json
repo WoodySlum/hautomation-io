@@ -1,5 +1,6 @@
 {
     "homebridge.alexa.username":"Nom d'utilisateur Alexa (créer un compte sur https://homebridge.cloudwatch.net/)",
     "homebridge.alexa.password":"Mot de passe Alexa",
-    "homebridge.tile.qr": "Afficher le QR code Homekit sur l'écran d'acceuil"
+    "homebridge.tile.qr": "Afficher le QR code Homekit sur l'écran d'acceuil",
+    "homebridge.clear.cache": "Supprime les données Homekit. Vous devrez associer encore le système avec l'application Maison."
 }

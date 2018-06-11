@@ -2,6 +2,8 @@
 /* eslint no-underscore-dangle: 0 */
 const hap = require("hap-nodejs");
 const QRCode = require("qrcode");
+const fs = require("fs-extra");
+const sha256 = require("sha256");
 const Server = require("./../../../node_modules/homebridge/lib/server").Server;
 const Plugin = require("./../../../node_modules/homebridge/lib/plugin").Plugin;
 const User = require("./../../../node_modules/homebridge/lib/user").User;
@@ -42,20 +44,25 @@ function loaded(api) {
          * @param {Array} sensors A list of hap sensors
          */
         init(devices, sensors) {
-            const insecureAccess = false;
+            const insecureAccess = true;
             Plugin.addPluginPath(__dirname + "/homebridge-plugins/homebridge-hautomation-lights");
             Plugin.addPluginPath(__dirname + "/homebridge-plugins/homebridge-hautomation-temperature");
             Plugin.addPluginPath(__dirname + "/homebridge-plugins/homebridge-hautomation-humidity");
-            const hid = api.environmentAPI.getFullHautomationId();
-            const uname = hid.substr(0,2) + ":" + hid.substr(2,2)  + ":" + hid.substr(4,2)  + ":" + hid.substr(6,2) + ":" + hid.substr(8,2) + ":" + hid.substr(10,2);
+            const conf = api.configurationAPI.getConfiguration() ? api.configurationAPI.getConfiguration() : {};
+            if (!conf.homebridgeIdentifier) {
+                const hid = api.environmentAPI.getFullHautomationId();
+                conf.homebridgeIdentifier = hid.substr(0,2) + ":" + hid.substr(2,2)  + ":" + hid.substr(4,2)  + ":" + sha256(Math.floor(Math.random() * 100000000).toString()).substr(0,2) + ":" + sha256(Math.floor(Math.random() * 100000000).toString()).substr(0,2) + ":" + sha256(Math.floor(Math.random() * 100000000).toString()).substr(0,2);
+                api.configurationAPI.saveData(conf);
+            }
+
             const platforms = [];
             const pin = "021-92-278";
-            if (api.configurationAPI.getConfiguration().alexaUsername && api.configurationAPI.getConfiguration().alexaPassword) {
+            if (conf.alexaUsername && conf.alexaPassword) {
                 platforms.push({
                     platform: "Alexa",
                     name: "Alexa",
-                    username: api.configurationAPI.getConfiguration().alexaUsername,
-                    password: api.configurationAPI.getConfiguration().alexaPassword,
+                    username: conf.alexaUsername,
+                    password: conf.alexaPassword,
                     pin: pin
                 });
             }
@@ -65,7 +72,7 @@ function loaded(api) {
                 this.server._config = {
                     bridge: {
                         name: "Hautomation",
-                        username: uname.toUpperCase(),
+                        username: conf.homebridgeIdentifier.toUpperCase(),
                         port: port,
                         pin: pin
                     },
@@ -74,6 +81,19 @@ function loaded(api) {
                 };
                 api.exported.Logger.verbose(JSON.stringify(this.server._config));
                 hap.init(User.persistPath());
+            } catch(e) {
+                api.exported.Logger.err(e.message);
+            }
+        }
+
+        /**
+         * Clear homebridge cache
+         */
+        clearCache() {
+            try {
+                const path = User.persistPath();
+                api.exported.Logger.info("Clear homebridge cache at path : " + path);
+                fs.removeSync(path);
             } catch(e) {
                 api.exported.Logger.err(e.message);
             }

@@ -19,9 +19,11 @@ function loaded(api) {
         * @param  {string} alexaUsername       The Alexa username
         * @param  {string} alexaPassword       The Alexa password
         * @param  {boolean} displayHomekitTile       The tile value
+        * @param  {boolean} clearHomebridgeCache       Clear cache
+        * @param  {string}  homebridgeIdentifier       The homebridge identifier - auto filled
         * @returns {HomebridgeForm}              The instance
         */
-        constructor(id, alexaUsername, alexaPassword, displayHomekitTile = true) {
+        constructor(id, alexaUsername, alexaPassword, displayHomekitTile = true, clearHomebridgeCache = false, homebridgeIdentifier = null) {
             super(id);
 
             /**
@@ -46,6 +48,21 @@ function loaded(api) {
             * @Title("homebridge.tile.qr");
             */
             this.displayHomekitTile = displayHomekitTile;
+
+            /**
+            * @Property("clearHomebridgeCache");
+            * @Type("boolean");
+            * @Default(false);
+            * @Title("homebridge.clear.cache");
+            */
+            this.clearHomebridgeCache = clearHomebridgeCache;
+
+            /**
+            * @Property("homebridgeIdentifier");
+            * @Type("string");
+            * @Hidden(true);
+            */
+            this.homebridgeIdentifier = homebridgeIdentifier;
         }
 
         /**
@@ -55,7 +72,7 @@ function loaded(api) {
         * @returns {HomebridgeForm}      A form object
         */
         json(data) {
-            return new HomebridgeForm(data.id, data.alexaUsername, data.alexaPassword, data.displayHomekitTile);
+            return new HomebridgeForm(data.id, data.alexaUsername, data.alexaPassword, data.displayHomekitTile, data.clearHomebridgeCache, data.homebridgeIdentifier);
         }
     }
 
@@ -98,8 +115,14 @@ function loaded(api) {
                     this.service.start();
                 });
 
-                api.configurationAPI.setUpdateCb(() => {
+                api.configurationAPI.setUpdateCb((conf) => {
                     this.service.stop();
+                    if (conf.clearHomebridgeCache) {
+                        this.service.clearCache();
+                        conf.clearHomebridgeCache = false;
+                        conf.homebridgeIdentifier = null;
+                        api.configurationAPI.saveData(conf);
+                    }
                     this.service.init(this.devices, this.sensors);
                     this.service.start();
                 });
