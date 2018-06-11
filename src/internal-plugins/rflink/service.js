@@ -194,10 +194,12 @@ function loaded(api) {
 
                 var autoConnect = () => {
                     if (gPort && gPort != "" && status == 0) {
-                        setTimeout(() => {
-                            this.listen(gPort);
-                            this.plugin.startRFLinkInLanMode();
-                        }, AUTO_REFRESH_TIMER * 1000);
+                        setTimeout((self) => {
+                            if (self.plugin) {
+                                self.listen(gPort);
+                                self.plugin.startRFLinkInLanMode();
+                            }
+                        }, AUTO_REFRESH_TIMER * 1000, self);
                     }
                 };
 
