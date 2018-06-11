@@ -64,7 +64,7 @@ class BotEngine {
         }
 
         if (os.platform() === "linux") {
-            const asoundrcFile = process.env.HOME + "/.asoundrc";
+            const asoundrcFile = os.homedir() + "/.asoundrc";
             if (!fs.existsSync(asoundrcFile)) {
                 const asoundrcContent = fs.readFileSync(pathl.dirname(callsite()[0].getFileName()) + "/linux/asoundrc");
                 fs.writeFile(asoundrcFile, asoundrcContent, (err) => {
