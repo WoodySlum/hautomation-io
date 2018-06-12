@@ -260,9 +260,9 @@ class EnvironmentManager {
 
         // Cameras part
         if (data.cameras) {
-            mainConfiguration.cameras.history = Boolean(data.cameras.history);
-            mainConfiguration.cameras.season = Boolean(data.cameras.season);
-            mainConfiguration.cameras.timelapse = Boolean(data.cameras.timelapse);
+            mainConfiguration.cameras.history = data.cameras.history;
+            mainConfiguration.cameras.season = data.cameras.season;
+            mainConfiguration.cameras.timelapse = data.cameras.timelapse;
         }
 
         // Lng part
@@ -298,7 +298,7 @@ class EnvironmentManager {
         // Bot part
         if (data.bot) {
             if (typeof data.bot.enable === "boolean") {
-                mainConfiguration.bot.enable = Boolean(mainConfiguration.bot.enable);
+                mainConfiguration.bot.enable = data.bot.enable;
             }
 
             if (data.bot.sensitivity) {
@@ -337,7 +337,7 @@ class EnvironmentManager {
         // Restart
         setTimeout((self) => {
             self.eventBus.emit(HautomationRunnerConstants.RESTART);
-        }, 1000, this);
+        }, 2000, this);
     }
 
     /**
