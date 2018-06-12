@@ -64,7 +64,7 @@ class EnvironmentManager {
 
         this.timeEventService.register((self) => {
             self.updateCore();
-        }, this, TimeEventService.DAILY);
+        }, this, TimeEventService.EVERY_HOURS);
     }
 
     /**
