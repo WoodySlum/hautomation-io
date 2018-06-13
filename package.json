@@ -8,8 +8,21 @@
     },
     "engineStrict": true,
     "nyc": {
-        "exclude": ["**/*Form.js", "**/forms/*", "**/logger/*", "**/internal-plugins/*-sensor/*", "**/modules/pluginsmanager/publicapis/*", "**/modules/camerasmanager/*", "**/internal-plugins/rflink/*", "**/internal-plugins/openweather/*", "**/internal-plugins/esp*", "**/internal-plugins/trash-reminder*", "**/internal-plugins/sms*", "**/internal-plugins/homebridge/*"],
-        "ignore-class-method":"stringify",
+        "exclude": [
+            "**/*Form.js",
+            "**/forms/*",
+            "**/logger/*",
+            "**/internal-plugins/*-sensor/*",
+            "**/modules/pluginsmanager/publicapis/*",
+            "**/modules/camerasmanager/*",
+            "**/internal-plugins/rflink/*",
+            "**/internal-plugins/openweather/*",
+            "**/internal-plugins/esp*",
+            "**/internal-plugins/trash-reminder*",
+            "**/internal-plugins/sms*",
+            "**/internal-plugins/homebridge/*"
+        ],
+        "ignore-class-method": "stringify",
         "check-coverage": true,
         "per-file": true,
         "cache": true,
@@ -22,8 +35,7 @@
         "reporter": [
             "text-summary"
         ]
-    }
-  ,
+    },
     "scripts": {
         "dev": "nodemon --config .nodemon.json  HautomationRunner.js",
         "start": "node HautomationRunner.js",
@@ -72,7 +84,6 @@
         "eslint-plugin-jsdoc": "^3.7.1",
         "eslint-plugin-mocha": "^4.12",
         "eslint-plugin-require-jsdoc": "^1.0",
-        "istanbul": "^1.0.0-alpha.2",
         "mocha": "^5.2",
         "mocha-junit-reporter": "^1.17",
         "node-pre-gyp": "^0.6",
