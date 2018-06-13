@@ -39,14 +39,16 @@ describe("ThreadsManager", function() {
         expect(Object.keys(threadsManager.threads).length).to.be.equal(0);
     });
 
-    it("stringify should transform class method to classic function", () => {
-        let c = new Foo();
-        expect(threadsManager.stringifyFunc(c.bar)).to.be.equals(expectedStringifyClass);
-    });
+    if (!process.env.COV) { // Can't be covered due to mangling of symbols
+        it("stringify should transform class method to classic function", () => {
+            let c = new Foo();
+            expect(threadsManager.stringifyFunc(c.bar)).to.be.equals(expectedStringifyClass);
+        });
 
-    it("stringify should transform a standard method to classic function", () => {
-        expect(threadsManager.stringifyFunc(bar)).to.be.equals(expectedStringifyFunc);
-    });
+        it("stringify should transform a standard method to classic function", () => {
+            expect(threadsManager.stringifyFunc(bar)).to.be.equals(expectedStringifyFunc);
+        });
+    }
 
     it("send with unknown identifier should raise error", () => {
         try {

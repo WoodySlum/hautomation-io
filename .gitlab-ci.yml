@@ -20,7 +20,8 @@ test:
   - npm config set strict-ssl false
   - rm -Rf package-lock.json
   - npm install
-  - npm run --verbose test-ci
+  - npm run --verbose test
+  - npm run --verbose cov
   coverage: '/Statements   : \d+\.\d+/'
 
 lint:

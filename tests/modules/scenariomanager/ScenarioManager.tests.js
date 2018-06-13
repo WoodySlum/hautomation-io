@@ -58,19 +58,20 @@ describe("ScenarioManager", function() {
         core.schedulerService.register.restore();
     });
 
-    it("register should really save locally the registration object", function() {
-        scenarioManager = new ScenarioManager.class(confManager, formManager, webServices, timeEventService, schedulerService);
-        sinon.spy(core.formManager, "register");
-        const cb = (scenario) => {
+    if (!process.env.COV) { // Can't be covered due to mangling of symbols
+        it("register should really save locally the registration object", function() {
+            scenarioManager = new ScenarioManager.class(confManager, formManager, webServices, timeEventService, schedulerService);
+            sinon.spy(core.formManager, "register");
+            const cb = (scenario) => {};
+            scenarioManager.register(ScenarioSampleForm, cb, "test.title");
+            expect(core.formManager.register.calledOnce).to.be.true;
+            expect(Object.keys(scenarioManager.registered).length).to.be.equal(1);
 
-        };
-        scenarioManager.register(ScenarioSampleForm, cb, "test.title");
-        expect(core.formManager.register.calledOnce).to.be.true;
-        expect(Object.keys(scenarioManager.registered).length).to.be.equal(1);
-        expect (scenarioManager.registered["277ab8e05feec964402c3b8025730802caa627a0a16fe3714fc894b51c83990b"].triggerCb).to.be.equal(cb);
-        expect (scenarioManager.registered["277ab8e05feec964402c3b8025730802caa627a0a16fe3714fc894b51c83990b"].formPart).to.be.equal(ScenarioSampleForm);
-        core.formManager.register.restore();
-    });
+            expect(scenarioManager.registered["d59f48f2260287b1a07ae164228aaf15442db90591f9eaaf90f2063fdf482e46"].triggerCb).to.be.equal(cb);
+            expect(scenarioManager.registered["d59f48f2260287b1a07ae164228aaf15442db90591f9eaaf90f2063fdf482e46"].formPart).to.be.equal(ScenarioSampleForm);
+            core.formManager.register.restore();
+        });
+    }
 
     it("unregister should remove object", function() {
         scenarioManager = new ScenarioManager.class(confManager, formManager, webServices, timeEventService, schedulerService);
