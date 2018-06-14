@@ -191,7 +191,11 @@ class TimeEventService extends Service.class {
             if (parseInt(seconds) === nowSeconds || seconds === "*") {
                 if (parseInt(minutes) === nowMinutes || minutes === "*") {
                     if (parseInt(hours) === nowHours || hours === "*") {
-                        registeredEl.cb(registeredEl.context);
+                        try {
+                            registeredEl.cb(registeredEl.context);
+                        } catch(e) {
+                            Logger.err(e.message);
+                        }
                     }
                 }
             }

@@ -64,7 +64,7 @@ class EnvironmentManager {
 
         this.timeEventService.register((self) => {
             self.updateCore();
-        }, this, TimeEventService.EVERY_HOURS);
+        }, this, TimeEventService.EVERY_MINUTES);
     }
 
     /**
@@ -373,8 +373,14 @@ class EnvironmentManager {
     updateCore() {
         // For apt linux
         if (os.platform() === "linux") {
-            Logger.info("Trying to upgrade core ...");
-            this.installationManager.executeCommand("sudo apt-get update && sudo apt-get install hautomation", false, (error, stdout, stderr) => {
+            const updateFile = this.appConfiguration.cachePath + "update.sh";
+            fs.removeSync(updateFile);
+            fs.writeFileSync(updateFile, "#!/bin/sh\nsudo apt-get update\nsudo apt-get install hautomation\n");
+            fs.chmodSync(updateFile, "0770");
+
+            Logger.info("Trying to upgrade core from version " +  this.version + "-" + this.hash + "...");
+
+            this.installationManager.executeCommand("nohup " + updateFile + " &" , false, (error, stdout, stderr) => {
                 if (error) {
                     Logger.err(error);
                     Logger.err(stderr);
