@@ -380,7 +380,7 @@ class EnvironmentManager {
 
             Logger.info("Trying to upgrade core from version " +  this.version + "-" + this.hash + "...");
 
-            this.installationManager.executeCommand("nohup " + updateFile + " &" , false, (error, stdout, stderr) => {
+            this.installationManager.executeCommand("at now +1 minutes -f " + updateFile , false, (error, stdout, stderr) => {
                 if (error) {
                     Logger.err(error);
                     Logger.err(stderr);

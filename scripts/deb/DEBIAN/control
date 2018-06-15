@@ -3,7 +3,7 @@ Version: {VERSION}
 Section: base
 Priority: optional
 Architecture: armhf
-Depends: libatlas-base-dev, sudo
+Depends: libatlas-base-dev, sudo, at
 Maintainer: WoodySlum <woodyslum@hautomation-io.com>
 Description: Home Automation for everyone
 Homepage: https://www.hautomation-io.com

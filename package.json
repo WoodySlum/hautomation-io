@@ -1,6 +1,6 @@
 {
     "name": "hautomation-core",
-    "version": "0.0.23",
+    "version": "0.0.24",
     "description": "Hautomation core module",
     "main": "HautomationRunner.js",
     "engines": {
@@ -101,6 +101,7 @@
         "callsite": "^1.0",
         "columnify": "^1.5",
         "compression": "^1.7",
+        "exec-extra": "^2.4.0",
         "express": "^4.16",
         "fs-extra": "^4.0",
         "gm": "^1.23.1",
