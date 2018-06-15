@@ -10,8 +10,8 @@ systemctl daemon-reload
 systemctl enable hautomation
 systemctl restart hautomation
 echo ""
-echo "\033[32mHautomation has been successfully installed !\033[0m"
+echo "Hautomation has been successfully installed !"
 echo ""
-echo "\033[4mHow to use ?\033[0m"
-echo "Open a web browser on your computer and go to \033[36mhttps://me.hautomation-io.com/\033[0m to start, with the username \033[33madmin\033[0m and password \033[33madmin\033[0m ! (on first installation, start can take some times to install dependencies, wait for some minutes if it dosen't works)"
+echo "How to use ?"
+echo "Open a web browser on your computer and go to https://me.hautomation-io.com/ to start, with the username 'admin' and password 'admin' ! (on first installation, start can take some times to install dependencies, wait for some minutes if it dosen't works)"
 echo ""
