@@ -45,6 +45,7 @@ if (process.env.TEST) {
 
 const EVENT_STOP = "stop";
 const EVENT_RESTART = "restart";
+const EVENT_READY = "ready";
 
 /**
  * The main class for core.
@@ -129,6 +130,8 @@ class HautomationCore {
         this.camerasManager = new CamerasManager.class(this.pluginsManager, this.eventBus, this.webServices, this.formManager, this.confManager, this.translateManager, this.themeManager, this.dashboardManager, this.timeEventService, AppConfiguration.cameras, AppConfiguration.cachePath, this.installationManager);
         // Environment manager
         this.environmentManager = new EnvironmentManager.class(AppConfiguration, this.confManager, this.formManager, this.webServices, this.dashboardManager, this.translateManager, this.scenarioManager, NpmPackage.version, commit, this.installationManager, this.timeEventService, this.eventBus);
+        // Gateway manager module
+        this.gatewayManager = new GatewayManager.class(this.environmentManager, NpmPackage.version, commit, this.timeEventService, AppConfiguration, this.webServices, this.eventBus, EVENT_READY);
         // UserManager module
         this.userManager = new UserManager.class(this.confManager, this.formManager, this.webServices, this.dashboardManager, AppConfiguration, this.scenarioManager, this.environmentManager, this.translateManager);
         // Message manager
@@ -150,8 +153,6 @@ class HautomationCore {
         this.deviceManager = new DeviceManager.class(this.confManager, this.formManager, this.webServices, this.radioManager, this.dashboardManager, this.scenarioManager, this.translateManager, this.environmentManager, this.botEngine, this.sensorsManager, this.eventBus);
         // Alarm module
         this.alarmManager = new AlarmManager.class(this.confManager, this.formManager, this.webServices, this.dashboardManager, this.userManager, this.sensorsManager, this.translateManager, this.deviceManager, this.messageManager, this.schedulerService, this.camerasManager, this.botEngine);
-        // Gateway manager module
-        this.gatewayManager = new GatewayManager.class(this.environmentManager, NpmPackage.version, commit, this.timeEventService, AppConfiguration, this.webServices);
 
         // Plugins manager module
         this.pluginsManager = new PluginsManager.class(this.confManager, this.webServices, this.servicesManager, this.dbManager, this.translateManager, this.formManager, this.timeEventService, this.schedulerService, this.dashboardManager, this.eventBus, this.themeManager, this.sensorsManager, this.installationManager, this.userManager, this.messageManager, this.scenarioManager, this.alarmManager, this.camerasManager, this.radioManager, AppConfiguration, this.environmentManager, this.iotManager, this.botEngine, this.deviceManager);
@@ -180,6 +181,9 @@ class HautomationCore {
 
         // Install dependencies
         this.installationManager.execute();
+        if (this.eventBus) {
+            this.eventBus.emit(EVENT_READY, {});
+        }
     }
 
     /**
@@ -215,4 +219,4 @@ class HautomationCore {
     }
 }
 
-module.exports = {class:HautomationCore, EVENT_STOP:EVENT_STOP, EVENT_RESTART:EVENT_RESTART};
+module.exports = {class:HautomationCore, EVENT_STOP:EVENT_STOP, EVENT_RESTART:EVENT_RESTART, EVENT_READY:EVENT_READY};
