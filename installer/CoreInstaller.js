@@ -14,7 +14,7 @@ module.exports = {install:(installationManager) => {
     installationManager.register("0.0.3", ["arm", "arm64"], "apt-get update", true, true);
     installationManager.register("0.0.3", ["arm", "arm64"], "apt-get install -y --allow-unauthenticated imagemagick graphicsmagick", true, true);
     installationManager.register("0.0.3", ["arm", "arm64"], "apt-get install -y --allow-unauthenticated libav-tools", true, true);
-    installationManager.register("0.0.3", ["arm", "arm64"], "apt-get install python-pip python3-pip && pip install -U platformio", true, true);
+    installationManager.register("0.0.3", ["arm", "arm64"], "apt-get install -y --allow-unauthenticated python-pip python3-pip && pip install -U platformio", true, true);
     installationManager.register("0.0.3", ["arm", "arm64"], "pio platform install https://github.com/platformio/platform-espressif8266.git#feature/stage", true, true);
     installationManager.register("0.0.3", ["arm", "arm64"], "apt-get install -y --allow-unauthenticated libudev-dev", true, true); // Usb port detection
     installationManager.register("0.0.3", ["arm", "arm64"], "apt-get update", true, true);
