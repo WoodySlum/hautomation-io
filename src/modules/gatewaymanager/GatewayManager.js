@@ -43,22 +43,26 @@ class GatewayManager {
         this.bootTimestamp = DateUtils.class.timestamp();
         this.bootMode = BOOT_MODE_BOOTING;
         Logger.info("Hautomation ID : " + this.environmentManager.getHautomationId());
-        this.transmit(true);
 
-        this.timeEventService.register((self) => {
-            self.transmit();
-        }, this, TimeEventService.EVERY_DAYS);
+        if (!process.env.TEST) {
+            this.transmit(true);
 
-        const self = this;
+            this.timeEventService.register((self) => {
+                self.transmit();
+            }, this, TimeEventService.EVERY_DAYS);
 
-        this.eventBus.on(readyEvent, () => {
-            self.bootMode = BOOT_MODE_READY;
-            self.transmit();
-        });
+            const self = this;
+
+            this.eventBus.on(readyEvent, () => {
+                self.bootMode = BOOT_MODE_READY;
+                self.transmit();
+            });
+        }
     }
 
     /**
      * Transmit informations to gateway
+     *
      * @param  {boolean} [sync=false] `true` if call should be synchronous
      */
     transmit(sync = false) {
@@ -89,7 +93,7 @@ class GatewayManager {
         };
 
         if (sync) {
-            const req = SyncRequest("POST", GATEWAY_URL, options);
+            SyncRequest("POST", GATEWAY_URL, options);
             Logger.info("Registration to gateway OK");
         } else {
             // Start the request
