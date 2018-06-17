@@ -2,6 +2,7 @@
 const Logger = require("./../../logger/Logger");
 const TimeEventService = require("./../../services/timeeventservice/TimeEventService");
 const request = require("request");
+const SyncRequest = require("sync-request");
 const DateUtils = require("./../../utils/DateUtils");
 
 const GATEWAY_MODE = 1;
@@ -42,6 +43,7 @@ class GatewayManager {
         this.bootTimestamp = DateUtils.class.timestamp();
         this.bootMode = BOOT_MODE_BOOTING;
         Logger.info("Hautomation ID : " + this.environmentManager.getHautomationId());
+        this.transmit(true);
 
         this.timeEventService.register((self) => {
             self.transmit();
@@ -57,8 +59,9 @@ class GatewayManager {
 
     /**
      * Transmit informations to gateway
+     * @param  {boolean} [sync=false] `true` if call should be synchronous
      */
-    transmit() {
+    transmit(sync = false) {
         const headers = {
             "User-Agent":       "Hautomation/" + this.version,
             "Content-Type":     "application/json"
@@ -85,15 +88,21 @@ class GatewayManager {
             }
         };
 
-        // Start the request
-        request(options, function (error, response) {
-            if (!error && response.statusCode == 200) {
-                Logger.info("Registration to gateway OK");
-            }
-            if (error) {
-                Logger.err(error.message);
-            }
-        });
+        if (sync) {
+            const req = SyncRequest("POST", GATEWAY_URL, options);
+            Logger.info("Registration to gateway OK");
+        } else {
+            // Start the request
+            request(options, function (error, response) {
+                if (!error && response.statusCode == 200) {
+                    Logger.info("Registration to gateway OK");
+                }
+                if (error) {
+                    Logger.err(error.message);
+                }
+            });
+        }
+
     }
 }
 
