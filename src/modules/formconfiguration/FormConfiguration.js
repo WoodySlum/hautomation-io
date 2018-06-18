@@ -179,7 +179,7 @@ class FormConfiguration {
                     resolve(new APIResponse.class(true, form));
                 });
             } else if (apiRequest.route === this.setRoute) {
-                if (apiRequest.data && Object.keys(apiRequest.data).length > 1) {
+                if (apiRequest.data && Object.keys(apiRequest.data).length > 0) {
                     this.saveConfig(apiRequest.data);
                     if (this.updateCb) this.updateCb(self.data);
                     return new Promise((resolve) => {

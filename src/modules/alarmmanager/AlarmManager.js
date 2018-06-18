@@ -61,6 +61,10 @@ class AlarmManager {
         this.alarmTriggered = false;
         this.armedSoundTimer = null;
 
+        if (!this.formConfiguration.data) {
+            this.formConfiguration.data = {};
+        }
+
         const self = this;
         this.userManager.registerHomeNotifications(() => {
             if (self.formConfiguration.data && self.formConfiguration.data.userLocationTrigger) {
