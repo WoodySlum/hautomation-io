@@ -4,6 +4,7 @@ const TimeEventService = require("./../../services/timeeventservice/TimeEventSer
 const request = require("request");
 const SyncRequest = require("sync-request");
 const DateUtils = require("./../../utils/DateUtils");
+const HautomationRunnerConstants = require("./../../../HautomationRunnerConstants");
 
 const GATEWAY_MODE = 1;
 const GATEWAY_URL = "https://api.hautomation-io.com/ping/";
@@ -56,6 +57,12 @@ class GatewayManager {
             this.eventBus.on(readyEvent, () => {
                 self.bootMode = BOOT_MODE_READY;
                 self.transmit();
+            });
+
+            this.eventBus.on(HautomationRunnerConstants.RESTART, () => {
+                self.bootMode = BOOT_MODE_BOOTING;
+                self.transmit();
+                self.restart(self);
             });
         }
     }
