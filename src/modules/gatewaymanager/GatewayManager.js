@@ -46,7 +46,7 @@ class GatewayManager {
         Logger.info("Hautomation ID : " + this.environmentManager.getHautomationId());
 
         if (!process.env.TEST) {
-            this.transmit(true);
+            this.transmit();
 
             this.timeEventService.register((self) => {
                 self.transmit();
