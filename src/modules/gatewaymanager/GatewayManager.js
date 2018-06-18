@@ -2,7 +2,6 @@
 const Logger = require("./../../logger/Logger");
 const TimeEventService = require("./../../services/timeeventservice/TimeEventService");
 const request = require("request");
-const SyncRequest = require("sync-request");
 const DateUtils = require("./../../utils/DateUtils");
 const HautomationRunnerConstants = require("./../../../HautomationRunnerConstants");
 
@@ -99,21 +98,15 @@ class GatewayManager {
             }
         };
 
-        if (sync) {
-            SyncRequest("POST", GATEWAY_URL, options);
-            Logger.info("Registration to gateway OK");
-        } else {
-            // Start the request
-            request(options, function (error, response) {
-                if (!error && response.statusCode == 200) {
-                    Logger.info("Registration to gateway OK");
-                }
-                if (error) {
-                    Logger.err(error.message);
-                }
-            });
-        }
-
+        // Start the request
+        request(options, function (error, response) {
+            if (!error && response.statusCode == 200) {
+                Logger.info("Registration to gateway OK");
+            }
+            if (error) {
+                Logger.err(error.message);
+            }
+        });
     }
 }
 

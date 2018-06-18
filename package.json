@@ -128,7 +128,6 @@
         "sqlite3": "^3.1",
         "stack-trace": "^0.0",
         "string-similarity": "^1.2",
-        "sync-request": "^6.0",
         "threads": "git://github.com/WoodySlum/threads.js.git#master",
         "toposort": "^1.0",
         "underscore": "^1.9.1",
