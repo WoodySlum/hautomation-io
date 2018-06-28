@@ -2,7 +2,6 @@
 const XMLHttpRequest = require("xmlhttprequest-ssl").XMLHttpRequest;
 const Logger = require("./../../logger/Logger");
 const TimeEventService = require("./../../services/timeeventservice/TimeEventService");
-const request = require("request");
 const DateUtils = require("./../../utils/DateUtils");
 const HautomationRunnerConstants = require("./../../../HautomationRunnerConstants");
 
@@ -46,63 +45,83 @@ class GatewayManager {
         this.bootMode = BOOT_MODE_BOOTING;
         Logger.info("Hautomation ID : " + this.environmentManager.getHautomationId());
 
-        if (!process.env.TEST) {
-            this.transmit(false);
+        this.transmit(false);
 
-            this.timeEventService.register((self) => {
-                self.transmit();
-            }, this, TimeEventService.EVERY_DAYS);
+        this.timeEventService.register((self) => {
+            self.transmit();
+        }, this, TimeEventService.EVERY_DAYS);
 
-            const self = this;
+        const self = this;
 
-            this.eventBus.on(readyEvent, () => {
-                self.bootMode = BOOT_MODE_READY;
-                self.transmit();
-            });
+        this.eventBus.on(readyEvent, () => {
+            self.bootMode = BOOT_MODE_READY;
+            self.transmit();
+        });
 
-            this.eventBus.on(HautomationRunnerConstants.RESTART, () => {
-                self.bootMode = BOOT_MODE_BOOTING;
-                self.transmit(false);
-                self.restart(self);
-            });
-        }
+        this.eventBus.on(HautomationRunnerConstants.RESTART, () => {
+            self.bootMode = BOOT_MODE_BOOTING;
+            self.transmit(false);
+            self.restart(self);
+        });
     }
 
     /**
      * Transmit informations to gateway
-     */
-    /**
-     * Transmit informations to gateway
      *
-     * @param  {Boolean} [asyncr=true] `true` if request should be asynchronously done, `false` otherwise (must be specified)
+     * @param  {boolean} [asyncr=true] `true` if request should be asynchronously done, `false` otherwise (must be specified)
      */
     transmit(asyncr = true) {
-        const xhr = new XMLHttpRequest();
-        const self = this;
-        let running = true;
-        Logger.info("Transmitting informations to gateway ...");
+        if (!process.env.TEST) {
+            const xhr = new XMLHttpRequest();
+            let running = true;
+            Logger.info("Transmitting informations to gateway ...");
 
-        const bootInfos = {
-            hautomationId: this.environmentManager.getHautomationId(),
-            sslPort: (this.appConfiguration.ssl && this.appConfiguration.ssl.port)?this.appConfiguration.ssl.port:null,
-            port: this.appConfiguration.port,
-            version: this.version,
-            hash: this.hash,
-            localIp: this.environmentManager.getLocalIp(),
-            tunnel: this.tunnelUrl,
-            language:this.appConfiguration.lng,
-            bootDate:this.bootTimestamp,
-            bootMode:(this.tunnelUrl ? this.bootMode : BOOT_MODE_BOOTING),
-            gatewayMode: GATEWAY_MODE
-        };
-        Logger.verbose(bootInfos);
+            const bootInfos = {
+                hautomationId: this.environmentManager.getHautomationId(),
+                sslPort: (this.appConfiguration.ssl && this.appConfiguration.ssl.port)?this.appConfiguration.ssl.port:null,
+                port: this.appConfiguration.port,
+                version: this.version,
+                hash: this.hash,
+                localIp: this.environmentManager.getLocalIp(),
+                tunnel: this.tunnelUrl,
+                language:this.appConfiguration.lng,
+                bootDate:this.bootTimestamp,
+                bootMode:(this.tunnelUrl ? this.bootMode : BOOT_MODE_BOOTING),
+                gatewayMode: GATEWAY_MODE
+            };
+            Logger.verbose(bootInfos);
 
-        xhr.open("POST", GATEWAY_URL, asyncr);
-        xhr.setRequestHeader("User-Agent", "Hautomation/" + this.version);
-        xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.open("POST", GATEWAY_URL, asyncr);
+            xhr.setRequestHeader("User-Agent", "Hautomation/" + this.version);
+            xhr.setRequestHeader("Content-Type", "application/json");
 
-        if (asyncr) {
-            xhr.onload = (err) => {
+            if (asyncr) {
+                xhr.onload = () => {
+                    if (parseInt(xhr.readyState) === 4) {
+                        running = false;
+                        if (parseInt(xhr.status) === 200) {
+                            Logger.info("Registration to gateway OK (" + bootInfos.bootMode + ")");
+                        } else {
+                            Logger.err(xhr.statusText);
+                        }
+                    }
+                };
+            }
+
+            xhr.onerror = (err) => {
+                running = false;
+                Logger.err(err.message);
+            };
+
+            setTimeout(() => {
+                if (running) {
+                    xhr.abort();
+                }
+            }, GATEWAY_TIMEOUT);
+
+            xhr.send(JSON.stringify(bootInfos));
+
+            if (!asyncr) {
                 if (parseInt(xhr.readyState) === 4) {
                     running = false;
                     if (parseInt(xhr.status) === 200) {
@@ -110,30 +129,6 @@ class GatewayManager {
                     } else {
                         Logger.err(xhr.statusText);
                     }
-                }
-            };
-        }
-
-        xhr.onerror = (err) => {
-            running = false;
-            Logger.err(err.message);
-        };
-
-        setTimeout(() => {
-            if (running) {
-                xhr.abort();
-            }
-        }, GATEWAY_TIMEOUT);
-
-        xhr.send(JSON.stringify(bootInfos));
-
-        if (!asyncr) {
-            if (parseInt(xhr.readyState) === 4) {
-                running = false;
-                if (parseInt(xhr.status) === 200) {
-                    Logger.info("Registration to gateway OK (" + bootInfos.bootMode + ")");
-                } else {
-                    Logger.err(xhr.statusText);
                 }
             }
         }
