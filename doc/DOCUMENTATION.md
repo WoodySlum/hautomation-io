@@ -1809,14 +1809,20 @@ Generic camera form class
 
 **Parameters**
 
--   `id`  
--   `plugin`  
--   `name`  
--   `ip`  
--   `port`  
--   `username`  
--   `password`  
--   `snapshotUrl`  
+-   `id` **[number][1005]** The identifier
+-   `plugin` **[string][1006]** The plugin's name
+-   `name` **[string][1006]** The name
+-   `ip` **[string][1006]** The ip address
+-   `port` **[number][1005]** The port
+-   `username` **[string][1006]** The username
+-   `password` **[string][1006]** The password
+-   `snapshotUrl` **[string][1006]** The snapshot url
+-   `mjpegUrl` **[string][1006]** The mjpeg url
+-   `rtspUrl` **[string][1006]** The rtsp url
+-   `leftUrl` **[string][1006]** The left url
+-   `rightUrl` **[string][1006]** The right url
+-   `upUrl` **[string][1006]** The up url
+-   `downUrl` **[string][1006]** The down url
 
 ### snapshotUrl
 

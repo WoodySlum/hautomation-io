@@ -61,8 +61,8 @@
             "./src/**/*.c",
             "./src/**/*.cpp",
             "./src/**/*.h",
-            "./src/**/lib/",
-            "./src/**/global_lib/",
+            "./src/**/lib/*",
+            "./src/**/global_lib/*",
             "./**/*.py",
             "./src/modules/botengine/linux/asoundrc"
         ]
