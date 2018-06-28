@@ -1,7 +1,7 @@
 {
     "camera.name": "Nom",
     "camera.default": "Caméra par défaut",
-    "camera.form.ip": "Adresse IP",
+    "camera.form.ip": "Adresse IP (ou nom de domaine)",
     "camera.form.port": "Port",
     "camera.form.username": "Nom d'utilisateur",
     "camera.form.password": "Mot de passe"

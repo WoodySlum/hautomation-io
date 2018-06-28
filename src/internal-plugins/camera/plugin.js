@@ -52,7 +52,6 @@ function loaded(api) {
              * @Title("camera.form.ip");
              * @Type("string");
              * @Required(true);
-             * @Regexp("[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}");
              */
             this.ip = ip;
 
