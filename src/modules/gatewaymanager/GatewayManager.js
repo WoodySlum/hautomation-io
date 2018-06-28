@@ -68,10 +68,8 @@ class GatewayManager {
 
     /**
      * Transmit informations to gateway
-     *
-     * @param  {boolean} [sync=false] `true` if call should be synchronous
      */
-    transmit(sync = false) {
+    transmit() {
         const headers = {
             "User-Agent":       "Hautomation/" + this.version,
             "Content-Type":     "application/json"

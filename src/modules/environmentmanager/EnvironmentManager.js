@@ -2,6 +2,7 @@
 const sha256 = require("sha256");
 const os = require("os");
 const fs = require("fs-extra");
+const timezone = require("node-google-timezone");
 const Logger = require("./../../logger/Logger");
 const FormConfiguration = require("./../formconfiguration/FormConfiguration");
 const EnvironmentForm = require("./EnvironmentForm");
@@ -65,6 +66,44 @@ class EnvironmentManager {
         this.timeEventService.register((self) => {
             self.updateCore();
         }, this, TimeEventService.EVERY_DAYS);
+
+        // Set timezone
+        if (!process.env.TEST) {
+            this.setTimezone(this.appConfiguration);
+        }
+    }
+
+    /**
+     * Set timezone
+     *
+     * @param {Object} appConfiguration An app configuration
+     */
+    setTimezone(appConfiguration) {
+        // Set synchronously timezone
+        if (appConfiguration && appConfiguration.home && appConfiguration.home.timezone) {
+            Logger.info("No time zone API can be called. Applying previous : " + appConfiguration.home.timezone);
+            process.env.TZ = appConfiguration.home.timezone;
+        }
+
+        if (appConfiguration && appConfiguration.home && appConfiguration.home.longitude && appConfiguration.home.latitude) {
+            timezone.data(appConfiguration.home.latitude, appConfiguration.home.longitude, 0, (err, tz) => {
+                if (!err && tz && tz.raw_response && tz.raw_response.timeZoneId) {
+                    Logger.info("Writing main configuration data");
+                    appConfiguration.home.timezone = tz.raw_response.timeZoneId;
+                    Logger.info("Time zone detected : " + appConfiguration.home.timezone);
+                    process.env.TZ = appConfiguration.home.timezone;
+                    fs.writeFileSync(MAIN_CONFIG_PATH, JSON.stringify(appConfiguration, null, "    "));
+                } else if (appConfiguration.home.timezone) {
+                    if (err) {
+                        Logger.err(err.message);
+                    }
+                    Logger.info("No time zone API response. Applying previous : " + appConfiguration.home.timezone);
+                    process.env.TZ = appConfiguration.home.timezone;
+                }
+            });
+        } else {
+            Logger.err("Could not set timezone. Empty home location params");
+        }
     }
 
     /**
