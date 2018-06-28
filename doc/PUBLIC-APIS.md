@@ -585,7 +585,6 @@ Load data manually from file (Array or object)
 **Parameters**
 
 -   `classType` **class** The object class. This class MUST implement a json() method to process JSON to Object mapping
--   `key` **[string][405]** A file store key
 -   `disableClassMapping` **[boolean][404]** Disable class mapping (optional, default `false`)
 
 Returns **[Array][409]** An array of objects (instance of classType), or an object
@@ -597,7 +596,6 @@ Save data manually for a specific key. Can throw error.
 **Parameters**
 
 -   `data` **[Object][407]** A JS object
--   `key` **[string][405]** A file store key
 
 ## FormConfiguration
 
