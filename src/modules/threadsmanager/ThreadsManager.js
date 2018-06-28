@@ -85,8 +85,9 @@ class ThreadsManager {
             }
         })
         .on("error", function(error) {
-            Logger.err("Error in thread");
+            Logger.err("Error in thread " + identifier);
             Logger.err(error.message);
+            Logger.err(error.stack);
         })
         .on("done", () => {
 

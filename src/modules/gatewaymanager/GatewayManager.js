@@ -1,4 +1,5 @@
 "use strict";
+const XMLHttpRequest = require("xmlhttprequest-ssl").XMLHttpRequest;
 const Logger = require("./../../logger/Logger");
 const TimeEventService = require("./../../services/timeeventservice/TimeEventService");
 const request = require("request");
@@ -7,6 +8,7 @@ const HautomationRunnerConstants = require("./../../../HautomationRunnerConstant
 
 const GATEWAY_MODE = 1;
 const GATEWAY_URL = "https://api.hautomation-io.com/ping/";
+const GATEWAY_TIMEOUT = 5000;
 // const GATEWAY_URL = "http://api.domain.net:8081/ping/";
 const BOOT_MODE_BOOTING = "BOOTING";
 const BOOT_MODE_READY = "READY";
@@ -45,7 +47,7 @@ class GatewayManager {
         Logger.info("Hautomation ID : " + this.environmentManager.getHautomationId());
 
         if (!process.env.TEST) {
-            this.transmit();
+            this.transmit(false);
 
             this.timeEventService.register((self) => {
                 self.transmit();
@@ -60,7 +62,7 @@ class GatewayManager {
 
             this.eventBus.on(HautomationRunnerConstants.RESTART, () => {
                 self.bootMode = BOOT_MODE_BOOTING;
-                self.transmit();
+                self.transmit(false);
                 self.restart(self);
             });
         }
@@ -69,42 +71,72 @@ class GatewayManager {
     /**
      * Transmit informations to gateway
      */
-    transmit() {
-        const headers = {
-            "User-Agent":       "Hautomation/" + this.version,
-            "Content-Type":     "application/json"
+    /**
+     * Transmit informations to gateway
+     *
+     * @param  {Boolean} [asyncr=true] `true` if request should be asynchronously done, `false` otherwise (must be specified)
+     */
+    transmit(asyncr = true) {
+        const xhr = new XMLHttpRequest();
+        const self = this;
+        let running = true;
+        Logger.info("Transmitting informations to gateway ...");
+
+        const bootInfos = {
+            hautomationId: this.environmentManager.getHautomationId(),
+            sslPort: (this.appConfiguration.ssl && this.appConfiguration.ssl.port)?this.appConfiguration.ssl.port:null,
+            port: this.appConfiguration.port,
+            version: this.version,
+            hash: this.hash,
+            localIp: this.environmentManager.getLocalIp(),
+            tunnel: this.tunnelUrl,
+            language:this.appConfiguration.lng,
+            bootDate:this.bootTimestamp,
+            bootMode:(this.tunnelUrl ? this.bootMode : BOOT_MODE_BOOTING),
+            gatewayMode: GATEWAY_MODE
+        };
+        Logger.verbose(bootInfos);
+
+        xhr.open("POST", GATEWAY_URL, asyncr);
+        xhr.setRequestHeader("User-Agent", "Hautomation/" + this.version);
+        xhr.setRequestHeader("Content-Type", "application/json");
+
+        if (asyncr) {
+            xhr.onload = (err) => {
+                if (parseInt(xhr.readyState) === 4) {
+                    running = false;
+                    if (parseInt(xhr.status) === 200) {
+                        Logger.info("Registration to gateway OK (" + bootInfos.bootMode + ")");
+                    } else {
+                        Logger.err(xhr.statusText);
+                    }
+                }
+            };
+        }
+
+        xhr.onerror = (err) => {
+            running = false;
+            Logger.err(err.message);
         };
 
-        // Configure the request
-        const options = {
-            url: GATEWAY_URL,
-            port: 443,
-            method: "POST",
-            headers: headers,
-            json: {
-                hautomationId: this.environmentManager.getHautomationId(),
-                sslPort: (this.appConfiguration.ssl && this.appConfiguration.ssl.port)?this.appConfiguration.ssl.port:null,
-                port: this.appConfiguration.port,
-                version: this.version,
-                hash: this.hash,
-                localIp: this.environmentManager.getLocalIp(),
-                tunnel: this.tunnelUrl,
-                language:this.appConfiguration.lng,
-                bootDate:this.bootTimestamp,
-                bootMode:this.bootMode,
-                gatewayMode: GATEWAY_MODE
+        setTimeout(() => {
+            if (running) {
+                xhr.abort();
             }
-        };
+        }, GATEWAY_TIMEOUT);
 
-        // Start the request
-        request(options, function (error, response) {
-            if (!error && response.statusCode == 200) {
-                Logger.info("Registration to gateway OK");
+        xhr.send(JSON.stringify(bootInfos));
+
+        if (!asyncr) {
+            if (parseInt(xhr.readyState) === 4) {
+                running = false;
+                if (parseInt(xhr.status) === 200) {
+                    Logger.info("Registration to gateway OK (" + bootInfos.bootMode + ")");
+                } else {
+                    Logger.err(xhr.statusText);
+                }
             }
-            if (error) {
-                Logger.err(error.message);
-            }
-        });
+        }
     }
 }
 

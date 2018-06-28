@@ -79,10 +79,10 @@ function loaded(api) {
                     accessories: devices.concat(sensors),
                     platforms:platforms
                 };
-                api.exported.Logger.verbose(JSON.stringify(this.server._config));
                 hap.init(User.persistPath());
             } catch(e) {
                 api.exported.Logger.err(e.message);
+                api.exported.Logger.err(e.stack);
             }
         }
 

@@ -58,7 +58,8 @@ class Service {
                 throw Error("Service " + this.name + " already started");
             }
         } catch(e) {
-            Logger.err(e);
+            Logger.err(e.message);
+            Logger.verbose(e.stack);
         }
     }
 

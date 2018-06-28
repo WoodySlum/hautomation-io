@@ -1,7 +1,5 @@
 "use strict";
 
-var self = null;
-
 /**
  * Loaded plugin function
  *
@@ -9,6 +7,8 @@ var self = null;
  */
 function loaded(api) {
     var Logger;
+    var self = null;
+
     /**
      * This class conect to RFLink using serial port on a pseicif thread.
      * @class
@@ -199,7 +199,7 @@ function loaded(api) {
                                 self.listen(gPort);
                                 self.plugin.startRFLinkInLanMode();
                             }
-                        }, AUTO_REFRESH_TIMER * 1000, self);
+                        }, AUTO_REFRESH_TIMER * 1000, this);
                     }
                 };
 
