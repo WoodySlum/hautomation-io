@@ -7,6 +7,7 @@ const HautomationRunnerConstants = require("./../../../HautomationRunnerConstant
 
 const GATEWAY_MODE = 1;
 const GATEWAY_URL = "https://api.hautomation-io.com/ping/";
+const UI_URL = "https://me.hautomation-io.com/";
 const GATEWAY_TIMEOUT = 5000;
 // const GATEWAY_URL = "http://api.domain.net:8081/ping/";
 const BOOT_MODE_BOOTING = "BOOTING";
@@ -43,7 +44,10 @@ class GatewayManager {
         this.tunnelUrl = null;
         this.bootTimestamp = DateUtils.class.timestamp();
         this.bootMode = BOOT_MODE_BOOTING;
-        Logger.info("Hautomation ID : " + this.environmentManager.getHautomationId());
+        Logger.info("+-----------------------+");
+        Logger.info("| Hautomation ID : " + this.environmentManager.getHautomationId() + " |");
+        Logger.info("+-----------------------+");
+        Logger.info("Your access : " + UI_URL + this.environmentManager.getHautomationId() + "/");
 
         this.transmit(false);
 
