@@ -746,7 +746,6 @@ class CamerasManager {
         this.cameras.forEach((camera) => {
             cameras.push({id:camera.id, name:camera.name, mjpeg:camera.mjpegSupport(), rtsp:camera.rtspSupport(), move:camera.moveSupport()});
         });
-
         return cameras;
     }
 

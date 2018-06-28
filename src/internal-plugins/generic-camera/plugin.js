@@ -11,29 +11,83 @@ function loaded(api) {
      * Generic camera form class
      * @class
      */
-    class GenericCameraForm extends api.exported.FormObject.class {
+    class GenericCameraForm extends api.exported.CameraForm {
         /**
-         * Camera form
+         * Generic camera form
          *
-         * @param  {number} id              An identifier
-         * @param  {string} plugin          A plugin
-         * @param  {string} name            Camera's name
-         * @param {string} snapshotUrl The snapshot URL (jpeg)
-         * @param {string} mjpegUrl    The MJPEG stream URL
-         * @param {string} rtspUrl     The RTSP stream URL
-         * @param {string} leftUrl     The move left camera URL
-         * @param {string} rightUrl    The move right camera URL
-         * @param {string} upUrl       The move up camera URL
-         * @param {string} downUrl     The move down camera URL
-         *
-         * @returns {GenericCameraForm}                 The instance
+         * @param {number} id          The identifier
+         * @param {string} plugin      The plugin's name
+         * @param {string} name        The name
+         * @param {string} ip          The ip address
+         * @param {number} port        The port
+         * @param {string} username    The username
+         * @param {string} password    The password
+         * @param {string} snapshotUrl The snapshot url
+         * @param {string} mjpegUrl    The mjpeg url
+         * @param {string} rtspUrl     The rtsp url
+         * @param {string} leftUrl     The left url
+         * @param {string} rightUrl    The right url
+         * @param {string} upUrl       The up url
+         * @param {string} downUrl     The down url
          */
-        constructor(id, plugin, name, snapshotUrl, mjpegUrl, rtspUrl, leftUrl, rightUrl, upUrl, downUrl) {
-            super(id);
+        constructor(id, plugin, name, ip, port, username, password, snapshotUrl, mjpegUrl, rtspUrl, leftUrl, rightUrl, upUrl, downUrl) {
+            super(id, plugin, name, ip, port, username, password);
 
-            this.plugin = plugin;
+            /**
+             * @Property("snapshotUrl");
+             * @Title("camera.generic.snapshot.url");
+             * @Type("string");
+             * @Required(true);
+             */
+            this.snapshotUrl = snapshotUrl;
 
+            /**
+             * @Property("mjpegUrl");
+             * @Title("camera.generic.mjpeg.url");
+             * @Type("string");
+             * @Required(false);
+             */
+            this.mjpegUrl = mjpegUrl;
 
+            /**
+             * @Property("rtspUrl");
+             * @Title("camera.generic.rtsp.url");
+             * @Type("string");
+             * @Required(false);
+             */
+            this.rtspUrl = rtspUrl;
+
+            /**
+             * @Property("leftUrl");
+             * @Title("camera.generic.left.url");
+             * @Type("string");
+             * @Required(false);
+             */
+            this.leftUrl = leftUrl;
+
+            /**
+             * @Property("rightUrl");
+             * @Title("camera.generic.right.url");
+             * @Type("string");
+             * @Required(false);
+             */
+            this.rightUrl = rightUrl;
+
+            /**
+             * @Property("upUrl");
+             * @Title("camera.generic.up.url");
+             * @Type("string");
+             * @Required(false);
+             */
+            this.upUrl = upUrl;
+
+            /**
+             * @Property("downUrl");
+             * @Title("camera.generic.down.url");
+             * @Type("string");
+             * @Required(false);
+             */
+            this.downUrl = downUrl;
         }
 
         /**
@@ -43,7 +97,7 @@ function loaded(api) {
          * @returns {GenericCameraForm}      An instance
          */
         json(data) {
-            super.json(data);
+            return new GenericCameraForm(data.id, data.plugin, data.name, data.ip, data.port, data.username, data.password, data.snapshotUrl, data.mjpegUrl, data.rtspUrl, data.leftUrl, data.rightUrl, data.upUrl, data.down);
         }
     }
 
@@ -63,12 +117,11 @@ function loaded(api) {
          * @returns {GenericCamera}                                                                  The instance
          */
         constructor(api, id, configuration) {
-            super(api, id, configuration, "cgi-bin/video_snapshot.cgi?user=%username%&pwd=%password%", "cgi-bin/videostream.cgi?user=%username%&pwd=%password%", "live/av0?user=%username%&passwd=%password%");
+            super(api, id, configuration, configuration.snapshotUrl, configuration.mjpegUrl, configuration.rtspUrl, configuration.leftUrl, configuration.leftUrl);
         }
-
     }
 
-    // api.cameraAPI.registerClass(GenericCamera);
+    api.cameraAPI.registerClass(GenericCamera);
 }
 
 module.exports.attributes = {

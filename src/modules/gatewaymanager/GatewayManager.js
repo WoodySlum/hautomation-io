@@ -49,7 +49,7 @@ class GatewayManager {
         Logger.info("+-----------------------+");
         Logger.info("Your access : " + UI_URL + this.environmentManager.getHautomationId() + "/");
 
-        this.transmit(false);
+        this.transmit();
 
         this.timeEventService.register((self) => {
             self.transmit();
@@ -64,7 +64,7 @@ class GatewayManager {
 
         this.eventBus.on(HautomationRunnerConstants.RESTART, () => {
             self.bootMode = BOOT_MODE_BOOTING;
-            self.transmit(false);
+            self.transmit();
             self.restart(self);
         });
     }

@@ -1,4 +1,6 @@
 "use strict";
+const request = require("request");
+
 /**
  * Loaded function
  *
@@ -111,18 +113,26 @@ function loaded(api) {
          * @param  {string} [snapshotUrl=null]   The snapshot URL template (Parameters : %port%, %ip%, %username%, %password%), without protocol and ip. For example, `cgi-bin/snap.cgi?username=%username%&password=%password%`
          * @param  {string} [mjpegUrl=null]      The MJPEG URL template (Parameters : %port%, %ip%, %username%, %password%), without protocol and ip. For example, `cgi-bin/videostream.cgi?username=%username%&password=%password%`
          * @param  {string} [rtspUrl=null]       The RTSP URL template (Parameters : %port%, %ip%, %username%, %password%), without protocol and ip. For example, `cgi-bin/snap.cgi?username=%username%&password=%password%`
+         * @param {[type]} [leftUrl=null]       The left URL template  (Parameters : %port%, %ip%, %username%, %password%), without protocol and ip. For example, `cgi-bin/move.cgi?username=%username%&password=%password%`
+         * @param {[type]} [rightUrl=null]      The right URL template  (Parameters : %port%, %ip%, %username%, %password%), without protocol and ip. For example, `cgi-bin/move.cgi?username=%username%&password=%password%`
+         * @param {[type]} [upUrl=null]         The up URL template  (Parameters : %port%, %ip%, %username%, %password%), without protocol and ip. For example, `cgi-bin/move.cgi?username=%username%&password=%password%`
+         * @param {[type]} [downUrl=null]       The down URL template  (Parameters : %port%, %ip%, %username%, %password%), without protocol and ip. For example, `cgi-bin/move.cgi?username=%username%&password=%password%`
          * @param  {Function} [leftCb=null]        Move left callback
          * @param  {Function} [rightCb=null]       Move right callback
          * @param  {Function} [upCb=null]          Move up callback
          * @param  {Function} [downCb=null]        Move down callback
          * @returns {Camera}                      The instance
          */
-        constructor(api, id = null, configuration = null, snapshotUrl = null, mjpegUrl = null, rtspUrl = null, leftCb = null, rightCb = null, upCb = null, downCb = null) {
+        constructor(api, id = null, configuration = null, snapshotUrl = null, mjpegUrl = null, rtspUrl = null, leftUrl = null, rightUrl = null, upUrl = null, downUrl = null, leftCb = null, rightCb = null, upCb = null, downCb = null) {
             this.api = api;
             this.id = id;
             this.configuration = configuration;
             this.name = this.configuration.name;
             this.default = this.configuration.default;
+            this.leftUrl = this.generateUrlFromTemplate(leftUrl);
+            this.rightUrl = this.generateUrlFromTemplate(rightUrl);
+            this.upUrl = this.generateUrlFromTemplate(upUrl);
+            this.downUrl = this.generateUrlFromTemplate(downUrl);
             this.leftCb = leftCb;
             this.rightCb = rightCb;
             this.upCb = upCb;
@@ -163,7 +173,7 @@ function loaded(api) {
          * @returns {boolean} true if supported, false otherwise
          */
         moveSupport() {
-            return (this.leftCb|this.rightCb|this.upCb|this.downCb)?true:false;
+            return (this.leftUrl|this.rightUrl|this.upUrl|this.downUrl)?true:false;
         }
 
         /**
@@ -197,8 +207,16 @@ function loaded(api) {
          * Move left camera
          */
         moveLeft() {
-            if (this.leftCb) {
-                this.leftCb();
+            if (this.leftUrl) {
+                request(this.leftUrl, (err) => {
+                    if (this.leftCb) {
+                        this.leftCb(err);
+                    }
+                });
+            } else {
+                if (this.leftCb) {
+                    this.leftCb(Error("No left camera url define"));
+                }
             }
         }
 
@@ -206,8 +224,16 @@ function loaded(api) {
          * Move right camera
          */
         moveRight() {
-            if (this.rightCb) {
-                this.rightCb();
+            if (this.rightUrl) {
+                request(this.rightUrl, (err) => {
+                    if (this.rightCb) {
+                        this.rightCb(err);
+                    }
+                });
+            } else {
+                if (this.rightCb) {
+                    this.rightCb(Error("No right camera url define"));
+                }
             }
         }
 
@@ -215,8 +241,16 @@ function loaded(api) {
          * Move up camera
          */
         moveUp() {
-            if (this.upCb) {
-                this.upCb();
+            if (this.upUrl) {
+                request(this.upUrl, (err) => {
+                    if (this.upCb) {
+                        this.upCb(err);
+                    }
+                });
+            } else {
+                if (this.upCb) {
+                    this.upCb(Error("No up camera url define"));
+                }
             }
         }
 
@@ -224,8 +258,16 @@ function loaded(api) {
          * Move down camera
          */
         moveDown() {
-            if (this.downCb) {
-                this.downCb();
+            if (this.downUrl) {
+                request(this.downUrl, (err) => {
+                    if (this.downCb) {
+                        this.downCb(err);
+                    }
+                });
+            } else {
+                if (this.downCb) {
+                    this.downCb(Error("No down camera url define"));
+                }
             }
         }
     }

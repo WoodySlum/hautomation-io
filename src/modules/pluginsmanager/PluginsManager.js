@@ -64,7 +64,8 @@ const INTERNAL_PLUGINS = [
     "esp-rain-time-sensor",
     "generic-throughput-sensor",
     "ring-alert",
-    "homebridge"
+    "homebridge",
+    "generic-camera"
 ];
 
 const CORE_PLUGINS = [
