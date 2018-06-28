@@ -1,0 +1,9 @@
+{
+    "camera.generic.snapshot.url": "The snapshot camera URL without ip and port (e.g. : /capture.cgi). You can use variables (%username%, %password%)",
+    "camera.generic.mjpeg.url": "The MJPEG stream URL without ip and port (e.g. : /video.cgi). You can use variables (%username%, %password%)",
+    "camera.generic.rtsp.url": "The RTSP stream URL without ip and port (e.g. : /video.cgi). You can use variables (%username%, %password%)",
+    "camera.generic.left.url": "The move left URL without ip and port (e.g. : /left.cgi). You can use variables (%username%, %password%)",
+    "camera.generic.right.url": "The move right URL without ip and port (e.g. : /right.cgi). You can use variables (%username%, %password%)",
+    "camera.generic.up.url": "The move up URL without ip and port (e.g. : /up.cgi). You can use variables (%username%, %password%)",
+    "camera.generic.down.url": "The move down URL without ip and port (e.g. : /down.cgi). You can use variables (%username%, %password%)"
+}
