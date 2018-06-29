@@ -65,7 +65,10 @@ const INTERNAL_PLUGINS = [
     "generic-throughput-sensor",
     "ring-alert",
     "homebridge",
-    "generic-camera"
+    "generic-camera",
+    "tl-mr6400-fairuse-sensor",
+    "fairuse-sensor",
+    "tplink-tl-mr6400"
 ];
 
 const CORE_PLUGINS = [
@@ -82,7 +85,8 @@ const CORE_PLUGINS = [
     "radio-presence-sensor",
     "sms",
     "electric-sensor",
-    "rain-time-sensor"
+    "rain-time-sensor",
+    "fairuse-sensor"
 ];
 
 /**
