@@ -44,10 +44,10 @@ class GatewayManager {
         this.tunnelUrl = null;
         this.bootTimestamp = DateUtils.class.timestamp();
         this.bootMode = BOOT_MODE_BOOTING;
-        Logger.info("+-----------------------+");
-        Logger.info("| Hautomation ID : " + this.environmentManager.getHautomationId() + " |");
-        Logger.info("+-----------------------+");
-        Logger.info("Your access : " + UI_URL + this.environmentManager.getHautomationId() + "/");
+        Logger.flog("+-----------------------+");
+        Logger.flog("| Hautomation ID : " + this.environmentManager.getHautomationId() + " |");
+        Logger.flog("+-----------------------+");
+        Logger.flog("Your access : " + UI_URL + this.environmentManager.getHautomationId() + "/");
 
         this.transmit();
 

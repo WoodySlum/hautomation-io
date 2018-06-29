@@ -54,6 +54,8 @@ class Logger {
             if (enableLogLevel) {
                 switch(level) {
                 case 0:
+                    logLine.level = "\x1b[46m\x1b[30m[FORCED]\x1b[0m";
+                    break;
                 case 1:
                     logLine.level = "\x1b[41m\x1b[37m[ERROR]\x1b[0m";
                     break;
@@ -110,6 +112,16 @@ class Logger {
                 console.log(columnify([logLine], logLineConfig), ...params);
             }
         }
+    }
+
+    /**
+     * Log a log to a file
+     *
+     * @param  {string} message   A log message
+     * @param  {[string]} params    Some parameters
+     */
+    static flog(message, ...params) {
+        this.log(message, 0, ...params);
     }
 
     /**
