@@ -4,5 +4,6 @@
     "camera.form.ip": "Adresse IP (ou nom de domaine)",
     "camera.form.port": "Port",
     "camera.form.username": "Nom d'utilisateur",
-    "camera.form.password": "Mot de passe"
+    "camera.form.password": "Mot de passe",
+    "camera.form.archive": "Archiver les images (concerne l'historique et les timelapse)"
 }

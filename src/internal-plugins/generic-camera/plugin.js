@@ -22,6 +22,7 @@ function loaded(api) {
          * @param {number} port        The port
          * @param {string} username    The username
          * @param {string} password    The password
+         * @param {boolean} archive          Archive pictures
          * @param {string} snapshotUrl The snapshot url
          * @param {string} mjpegUrl    The mjpeg url
          * @param {string} rtspUrl     The rtsp url
@@ -30,8 +31,8 @@ function loaded(api) {
          * @param {string} upUrl       The up url
          * @param {string} downUrl     The down url
          */
-        constructor(id, plugin, name, ip, port, username, password, snapshotUrl, mjpegUrl, rtspUrl, leftUrl, rightUrl, upUrl, downUrl) {
-            super(id, plugin, name, ip, port, username, password);
+        constructor(id, plugin, name, ip, port, username, password, archive, snapshotUrl, mjpegUrl, rtspUrl, leftUrl, rightUrl, upUrl, downUrl) {
+            super(id, plugin, name, ip, port, username, password, archive);
 
             /**
              * @Property("snapshotUrl");
@@ -97,7 +98,7 @@ function loaded(api) {
          * @returns {GenericCameraForm}      An instance
          */
         json(data) {
-            return new GenericCameraForm(data.id, data.plugin, data.name, data.ip, data.port, data.username, data.password, data.snapshotUrl, data.mjpegUrl, data.rtspUrl, data.leftUrl, data.rightUrl, data.upUrl, data.down);
+            return new GenericCameraForm(data.id, data.plugin, data.name, data.ip, data.port, data.username, data.password, data.archive, data.snapshotUrl, data.mjpegUrl, data.rtspUrl, data.leftUrl, data.rightUrl, data.upUrl, data.down);
         }
     }
 

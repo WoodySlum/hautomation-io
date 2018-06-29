@@ -24,9 +24,10 @@ function loaded(api) {
          * @param  {string} port              Camera's port
          * @param  {string} username          Camera's username
          * @param  {string} password          Camera's password
+         * @param  {boolean} archive          Archive pictures
          * @returns {CameraForm}                 The instance
          */
-        constructor(id, plugin, name, ip, port, username, password) {
+        constructor(id, plugin, name, ip, port, username, password, archive = true) {
             super(id);
 
             this.plugin = plugin;
@@ -82,6 +83,14 @@ function loaded(api) {
              * @Display("password");
              */
             this.password = password;
+
+            /**
+             * @Property("archive");
+             * @Title("camera.form.archive");
+             * @Type("boolean");
+             * @Default(true);
+             */
+            this.archive = archive;
         }
 
         /**
@@ -91,7 +100,7 @@ function loaded(api) {
          * @returns {CameraForm}      An instance
          */
         json(data) {
-            return new CameraForm(data.id, data.plugin, data.name, data.ip, data.port, data.username, data.password);
+            return new CameraForm(data.id, data.plugin, data.name, data.ip, data.port, data.username, data.password, data.archive);
         }
     }
 
@@ -139,6 +148,7 @@ function loaded(api) {
             this.snapshotUrl = this.generateUrlFromTemplate(snapshotUrl);
             this.mjpegUrl = this.generateUrlFromTemplate(mjpegUrl);
             this.rtspUrl = this.generateUrlFromTemplate(rtspUrl);
+            this.archive = (this.configuration.archive ? true : false);
         }
 
         /**

@@ -191,7 +191,7 @@ class CamerasManager {
         if (context.camerasArchiveFolder) {
             context.cameras.forEach((camera) => {
                 // All time
-                if (this.enableHistory) {
+                if (this.enableHistory && camera.archive) {
                     const cameraArchiveFolder = context.camerasArchiveFolder + camera.id + "/";
                     try {
                         fs.accessSync(cameraArchiveFolder);
