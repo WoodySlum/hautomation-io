@@ -128,7 +128,7 @@ function loaded(api) {
         getApiInformations() {
             const conf = this.api.configurationAPI.getConfiguration();
             const self = this;
-            if (conf.ip && conf.username && conf.password) {
+            if (conf && conf.ip && conf.username && conf.password) {
                 api.exported.Logger.info("Retrieving router infos");
                 const jar = request.jar();
                 const auth = "Basic "+ Buffer.from(conf.username + ":" + crypto.createHash("md5").update(conf.password).digest("hex")).toString("base64");
