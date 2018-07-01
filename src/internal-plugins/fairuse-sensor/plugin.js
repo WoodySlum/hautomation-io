@@ -55,11 +55,11 @@ function loaded(api) {
          * @returns {FairuseSensor}                                                       The instance
          */
         constructor(api, id, configuration) {
-            super(api, id, "FAIRUSE", configuration, api.exported.Icons.class.list()["globe-1"], 0);
+            super(api, id, "FAIRUSE", configuration, api.exported.Icons.class.list()["cloud_download"], 0);
             this.unit = "kB";
-            this.addUnitAggregation("mB", 1024);
-            this.addUnitAggregation("gB", 1048576);
-            this.addUnitAggregation("tB", 1073741824);
+            this.addUnitAggregation("MB", 1024);
+            this.addUnitAggregation("GB", 1048576);
+            this.addUnitAggregation("TB", 1073741824);
         }
     }
 
