@@ -1,5 +1,7 @@
 {
     "tlmr6400.ip": "Adresse IP du routeur",
     "tlmr6400.username": "Nom d'utilisateur",
-    "tlmr6400.password": "Mot de passe"
+    "tlmr6400.password": "Mot de passe",
+    "tlmr6400.techno.tile": "Afficher la technologie sur l'écran d'accueil (2G, 3G, 4G)",
+    "tlmr6400.router.title": "Routeur"
 }

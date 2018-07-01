@@ -24,9 +24,10 @@ function loaded(api) {
          * @param  {string} ip       The ip address
          * @param  {string} username The username
          * @param  {string} password The password
+         * @param  {boolean} technoTile The technology tile
          * @returns {TlMr6400Form}              The instance
          */
-        constructor(id, ip, username, password) {
+        constructor(id, ip, username, password, technoTile) {
             super(id);
 
             /**
@@ -51,6 +52,13 @@ function loaded(api) {
              * @Display("password");
              */
             this.password = password;
+
+            /**
+             * @Property("technoTile");
+             * @Type("boolean");
+             * @Title("tlmr6400.techno.tile");
+             */
+            this.technoTile = technoTile;
         }
 
         /**
@@ -60,7 +68,7 @@ function loaded(api) {
          * @returns {TlMr6400Form}      A form object
          */
         json(data) {
-            return new TlMr6400Form(data.id, data.ip, data.username, data.password);
+            return new TlMr6400Form(data.id, data.ip, data.username, data.password, data.technoTile);
         }
     }
 
@@ -165,8 +173,27 @@ function loaded(api) {
                                         Object.keys(self.registeredElements).forEach((registeredKey) => {
                                             self.registeredElements[registeredKey](self.apiInfos);
                                         });
+
+                                        // Show tile
+                                        if (self.apiInfos.wan.signalStrength && self.apiInfos.wan.networkType) {
+                                            let networkType = "-";
+                                            if (self.apiInfos.wan.networkType >= 3) {
+                                                networkType = "4G";
+                                            } else if (self.apiInfos.wan.networkType === 2) {
+                                                networkType = "3G";
+                                            } else if (self.apiInfos.wan.networkType === 1) {
+                                                networkType = "2G";
+                                            }
+
+                                            if (conf.technoTile) {
+                                                const tile = api.dashboardAPI.Tile("tl-mr6400-network", api.dashboardAPI.TileType().TILE_INFO_TWO_TEXT, api.exported.Icons.class.list()["signal"], null, api.translateAPI.t("tlmr6400.router.title"), networkType + " [" + parseInt(self.apiInfos.wan.signalStrength / 4 * 100) + "%]");
+                                                api.dashboardAPI.registerTile(tile);
+                                            } else {
+                                                api.dashboardAPI.unregisterTile("tl-mr6400-network");
+                                            }
+                                        }
                                     } catch(e) {
-                                        api.exported.Logger.err(e.messsage);
+                                        api.exported.Logger.err(e.message);
                                     }
                                 } else {
                                     api.exported.Logger.err(errorApi.messsage);
