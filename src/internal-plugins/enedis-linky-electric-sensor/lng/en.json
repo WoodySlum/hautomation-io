@@ -1,4 +1,5 @@
 {
     "enedis.username": "Enedis account username",
-    "enedis.password": "Enedis account password"
+    "enedis.password": "Enedis account password",
+    "enedis.accept.term.of.use": "Enedis : You need to accept term of use"
 }

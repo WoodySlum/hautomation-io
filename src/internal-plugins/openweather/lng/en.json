@@ -1,5 +1,5 @@
 {
-    "openweather.rain.forecast.no.rain": "No rain",
+    "openweather.rain.forecast.no.rain": "No rain forecast",
     "openweather.rain.forecast.rain": "%@h raining",
     "openweather.rain.forecast.snow": "%@h snowing",
     "openweather.api.key": "Open weather API key",

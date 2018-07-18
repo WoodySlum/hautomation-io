@@ -105,6 +105,7 @@ function loaded(api) {
             this.aggregationMode = api.exported.Sensor.constants().AGGREGATION_MODE_SUM;
             this.chartType = api.exported.Sensor.constants().CHART_TYPE_BAR;
             const dir = api.exported.cachePath + "linky/";
+            this.acceptTermOfUseAlertSent = false;
 
             try {
                 fs.removeSync(dir);
@@ -118,12 +119,17 @@ function loaded(api) {
 
                 api.timeEventAPI.register((self) => {
                     if (configuration && configuration.username && configuration.password) {
-                        self.api.installerAPI.executeCommand("python3 " + dir + "linky_start.py --username '" + configuration.username + "' --password '" + configuration.password + "'", false, (error, stdout) => {
+                        self.api.installerAPI.executeCommand("python " + dir + "linky_start.py --username '" + configuration.username + "' --password '" + configuration.password + "'", false, (error, stdout) => {
                             if (error) {
                                 self.api.exported.Logger.err(error.message);
+                                if (!self.acceptTermOfUseAlertSent && error.message.indexOf("You need to accept the latest Terms of Use")) {
+                                    self.api.messageAPI.sendMessage("*", self.api.translateAPI.t("enedis.accept.term.of.use"));
+                                    self.acceptTermOfUseAlertSent = true;
+                                }
                             } else {
                                 try {
                                     const data = JSON.parse(stdout);
+                                    self.acceptTermOfUseAlertSent = false;
                                     if (data && data.graphe.data && data.graphe.periode.dateDebut) {
                                         const dateParts = data.graphe.periode.dateDebut.split("/");
                                         let timestamp = self.api.exported.DateUtils.class.dateToTimestamp(dateParts[2] + "-" + dateParts[1] + "-" + dateParts[0] +"T00:00:00");
@@ -157,7 +163,7 @@ function loaded(api) {
                         });
                     }
 
-                }, this, api.timeEventAPI.constants().EVERY_HOURS);
+                }, this, api.timeEventAPI.constants().EVERY_MINUTES);
             } catch(e) {
                 api.exported.Logger.err(e.message);
             }
