@@ -163,7 +163,7 @@ function loaded(api) {
                         });
                     }
 
-                }, this, api.timeEventAPI.constants().EVERY_MINUTES);
+                }, this, api.timeEventAPI.constants().EVERY_HOURS);
             } catch(e) {
                 api.exported.Logger.err(e.message);
             }
