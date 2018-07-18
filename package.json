@@ -21,7 +21,8 @@
             "**/internal-plugins/trash-reminder*",
             "**/internal-plugins/sms*",
             "**/internal-plugins/homebridge/*",
-            "**/internal-plugins/tplink-tl-mr6400/*"
+            "**/internal-plugins/tplink-tl-mr6400/*",
+            "**/modules/logmanager/*"
         ],
         "ignore-class-method": "stringify",
         "check-coverage": true,

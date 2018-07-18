@@ -401,6 +401,9 @@ class WebServices extends Service.class {
         if (req.ip) {
             const ipSplit = req.ip.split(":");
             ip = ipSplit[(ipSplit.length - 1)];
+            if (ip === "1") {
+                ip = "127.0.0.1";
+            }
         }
         let route = req.path.replace(endpoint, "");
         let path = route.split("/");
@@ -468,7 +471,7 @@ class WebServices extends Service.class {
             }
         }
 
-        Logger.info(method + " " + req.path + " from " + ip + " " + req.headers[CONTENT_TYPE]);
+        Logger.info(method + " " + req.path + " from " + ip + " " + ((req.headers && req.headers[CONTENT_TYPE]) ? req.headers[CONTENT_TYPE] : ""));
         return new APIRequest.class(methodConstant, ip, route, path, action, params, req, res, data, apiRegistration);
     }
 

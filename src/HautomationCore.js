@@ -30,6 +30,7 @@ const EnvironmentManager = require("./modules/environmentmanager/EnvironmentMana
 const IotManager = require("./modules/iotmanager/IotManager");
 const GatewayManager = require("./modules/gatewaymanager/GatewayManager");
 const BotEngine = require("./modules/botengine/BotEngine");
+const LogManager = require("./modules/logmanager/LogManager");
 
 const CONFIGURATION_FILE = "data/config.json";
 var AppConfiguration = require("./../data/config.json");
@@ -106,6 +107,8 @@ class HautomationCore {
         this.timeEventService = new TimeEventService.class();
 
         // Init modules
+        // Logs
+        this.logManager = new LogManager.class(this.webServices);
 
         // Db manager
         this.dbManager = new DbManager.class(AppConfiguration);

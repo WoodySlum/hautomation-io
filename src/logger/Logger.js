@@ -10,6 +10,9 @@ const enableLogLevel = true;
 const enableFileName = true;
 const enableFunction = true;
 const enableLine = true;
+const MAX_LOG_HISTORY_SIZE = 500;
+const logHistory = [];
+
 
 /**
  * This class provides static methods to log into a file.
@@ -109,9 +112,36 @@ class Logger {
             //logLineConfig.config.lineNumber = {maxWidth: 50};
 
             if (level <= logLevel) {
-                console.log(columnify([logLine], logLineConfig), ...params);
+                const log = columnify([logLine], logLineConfig);
+                logHistory.unshift({
+                    date: Date.now(),
+                    stringDate:logLine.date,
+                    level:level,
+                    stringLevel: this.removeColors(logLine.level),
+                    message:message,
+                    filename: logLine.fileName ? this.removeColors(logLine.fileName) : null,
+                    function: logLine.function ? this.removeColors(logLine.function) : null,
+                    line: logLine.lineNumber ? this.removeColors(logLine.lineNumber).replace("l.", "") : null
+                });
+                if (logHistory.length > MAX_LOG_HISTORY_SIZE) {
+                    logHistory.splice(-1, 1);
+                }
+
+                console.log(log, ...params);
             }
         }
+    }
+
+    /**
+     * Remove console colors from a string
+     * 
+     * @param  {string} entry A text entry
+     *
+     * @returns {string}       Output string without colors
+     */
+    static removeColors(entry) {
+        const regex = /\[[0-9]+m/gm;
+        return entry.replace(regex, "");
     }
 
     /**
@@ -172,6 +202,15 @@ class Logger {
      */
     static debug(message, ...params) {
         this.log(message, 5, ...params);
+    }
+
+    /**
+     * Get the log history
+     *
+     * @returns {Array} An array of logs
+     */
+    static getHistory() {
+        return logHistory;
     }
 }
 
