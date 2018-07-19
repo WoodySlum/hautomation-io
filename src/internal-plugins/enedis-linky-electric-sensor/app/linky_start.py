@@ -51,7 +51,7 @@ def main():
                         help="Enedis username")
     parser.add_argument("-password", "--password", type=str, default="",
                         help="Enedis password")
-    parser.add_argument("-startDate", "--startDate", type=str, default=dtostr(datetime.date.today() - relativedelta(days=1)),
+    parser.add_argument("-startDate", "--startDate", type=str, default=dtostr(datetime.date.today() - relativedelta(days=2)),
                         help="Start date")
     parser.add_argument("-endDate", "--endDate", type=str, default=dtostr(datetime.date.today()),
                         help="End date")

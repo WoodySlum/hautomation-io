@@ -92,6 +92,7 @@ class InstallationManager {
                     Logger.verbose("Execution results of : " + c);
                     if (error) {
                         Logger.err(error.message);
+
                     }
 
                     if (stdout) {

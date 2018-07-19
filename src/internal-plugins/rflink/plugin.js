@@ -18,8 +18,8 @@ const SEND_BUFFER_IN_MS = 500;
  */
 function loaded(api) {
     api.init();
-    api.installerAPI.register("0.0.0", ["x32", "x64"], "brew install avrdude socat", false, false, true);
-    api.installerAPI.register("0.0.0", ["arm", "arm64"], "apt-get install -y --allow-unauthenticated avrdude socat", true, true);
+    api.installerAPI.register(["x32", "x64"], "brew install avrdude socat", false, true, true);
+    api.installerAPI.register(["arm", "arm64"], "apt-get install -y --allow-unauthenticated avrdude socat", true, true);
 
     const espPlugin = api.getPluginInstance("esp8266");
     api.iotAPI.registerApp("app", "rflink-lan", "RFLink LAN", 1, api.iotAPI.constants().PLATFORMS.ESP8266, api.iotAPI.constants().BOARDS.NODEMCU, api.iotAPI.constants().FRAMEWORKS.ARDUINO, ["esp8266"], espPlugin.generateOptions(espPlugin.constants().MODE_ALWAYS_POWERED, 0));

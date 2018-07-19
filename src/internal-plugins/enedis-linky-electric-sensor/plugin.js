@@ -10,11 +10,11 @@ const fs = require("fs-extra");
  */
 function loaded(api) {
     api.init();
-    api.installerAPI.register("0.0.0", ["x32", "x64"], "brew install python3 python3-pip", false, false, true);
-    api.installerAPI.register("0.0.0", ["x32", "x64"], "pip3 install python-dateutil", false, false, true);
+    api.installerAPI.register(["x32", "x64"], "brew install python", false, true, true);
+    api.installerAPI.register(["x32", "x64"], "pip install python-dateutil html", false, true, true);
 
-    api.installerAPI.register("0.0.0", ["arm", "arm64"], "apt-get install -y --allow-unauthenticated python3 python3-pip", true, true);
-    api.installerAPI.register("0.0.0", ["arm", "arm64"], "pip3 install python-dateutil", true, true);
+    api.installerAPI.register(["arm", "arm64"], "apt-get install -y --allow-unauthenticated python3 python3-pip", true, true);
+    api.installerAPI.register(["arm", "arm64"], "pip3 install python-dateutil html", true, true);
 
 
     /**
@@ -122,7 +122,7 @@ function loaded(api) {
                         self.api.installerAPI.executeCommand("python " + dir + "linky_start.py --username '" + configuration.username + "' --password '" + configuration.password + "'", false, (error, stdout) => {
                             if (error) {
                                 self.api.exported.Logger.err(error.message);
-                                if (!self.acceptTermOfUseAlertSent && error.message.indexOf("You need to accept the latest Terms of Use")) {
+                                if (!self.acceptTermOfUseAlertSent && error.message.indexOf("You need to accept the latest Terms of Use") > 0) {
                                     self.api.messageAPI.sendMessage("*", self.api.translateAPI.t("enedis.accept.term.of.use"));
                                     self.acceptTermOfUseAlertSent = true;
                                 }
@@ -203,7 +203,7 @@ function loaded(api) {
 module.exports.attributes = {
     loadedCallback: loaded,
     name: "enedis-linky-electric-sensor",
-    version: "0.0.0",
+    version: "0.0.1",
     category: "sensor",
     description: "Enedis Linky electric sensor",
     dependencies:["electric-sensor"]
