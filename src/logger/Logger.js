@@ -82,8 +82,12 @@ class Logger {
             if (enableFileName) {
                 if (stack && stack.getFileName()) {
                     const explodedFileName = stack.getFileName().split("/");
-                    logLine.fileName = "\x1b[35m" + explodedFileName[(explodedFileName.length - 1)].replace(".js", "") + "\x1b[0m";
-
+                    const filename = explodedFileName[(explodedFileName.length - 1)].replace(".js", "");
+                    if (stack.getFileName().indexOf("plugins") > 0) {
+                        logLine.fileName = "\x1b[35m" + explodedFileName[(explodedFileName.length - 2)].replace(".js", "") + "/" + explodedFileName[(explodedFileName.length - 1)].replace(".js", "") + "\x1b[0m";
+                    } else {
+                        logLine.fileName = "\x1b[35m" + explodedFileName[(explodedFileName.length - 1)].replace(".js", "") + "\x1b[0m";
+                    }
                 } else {
                     logLine.fileName = "\x1b[35mProcess\x1b[0m";
                 }
@@ -134,7 +138,7 @@ class Logger {
 
     /**
      * Remove console colors from a string
-     * 
+     *
      * @param  {string} entry A text entry
      *
      * @returns {string}       Output string without colors

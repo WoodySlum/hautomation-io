@@ -100,7 +100,7 @@ function loaded(api) {
             // Save weather every hour and dispatch
             api.timeEventAPI.register((self) => {
                 self.getApiInformations();
-            }, this, api.timeEventAPI.constants().EVERY_HOURS);
+            }, this, api.timeEventAPI.constants().EVERY_MINUTES);
 
         }
 
@@ -203,7 +203,7 @@ function loaded(api) {
                             api.exported.Logger.err("No url matched");
                         }
                     } else {
-                        api.exported.Logger.err(error.messsage);
+                        api.exported.Logger.err(error);
                     }
                 });
             }
