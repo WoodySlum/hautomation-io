@@ -108,7 +108,7 @@ function loaded(api) {
             this.acceptTermOfUseAlertSent = false;
 
             try {
-                fs.removeSync(dir);
+                /*fs.removeSync(dir);
                 fs.ensureDirSync(dir);
 
                 const linkyStartScript = fs.readFileSync(pathl.dirname(callsite()[0].getFileName()) + "/app/linky_start.py");
@@ -163,7 +163,7 @@ function loaded(api) {
                         });
                     }
 
-                }, this, api.timeEventAPI.constants().EVERY_HOURS);
+                }, this, api.timeEventAPI.constants().EVERY_HOURS);*/
             } catch(e) {
                 api.exported.Logger.err(e.message);
             }

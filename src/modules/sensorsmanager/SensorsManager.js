@@ -115,7 +115,7 @@ class SensorsManager {
         });
 
         // Consolidate statistics in cache every hours
-        /*this.timeEventService.register((self) => {
+        this.timeEventService.register((self) => {
             Logger.verbose("Consolidating daily statistics ...");
             setTimeout(() => {
                 self.statisticsCache[DAILY] = self.statisticsWsResponse(DateUtils.class.timestamp(), 24 * 60 * 60, 60 * 60, self.translateManager.t("sensors.statistics.day.dateformat"));
@@ -141,7 +141,7 @@ class SensorsManager {
                 }, "%Y-%m-01 00:00:00");
                 Logger.verbose("Consolidating yearly statistics ... Done.");
             }, 0);
-        }, this, TimeEventService.CUSTOM, 7, 18, 30);*/
+        }, this, TimeEventService.CUSTOM, 7, 18, 30);
     }
 
     /**
