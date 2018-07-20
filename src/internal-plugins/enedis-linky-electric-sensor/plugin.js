@@ -179,7 +179,7 @@ function loaded(api) {
             const previousMidnightTimestamp = (midnightTimestamp - (24 * 60 * 60));
             this.getStatistics(previousMidnightTimestamp, midnightTimestamp, (24 * 60 * 60), (err, results) => {
                 if (!err && results.values && results.values[previousMidnightTimestamp] && results.unit) {
-                    const tile = this.api.dashboardAPI.Tile("sensor-"+this.id, this.api.dashboardAPI.TileType().TILE_INFO_TWO_TEXT, this.icon, null, this.name, results.values[previousMidnightTimestamp] + " " + results.unit, null, null, null, 800, "statistics");
+                    const tile = this.api.dashboardAPI.Tile("sensor-" + this.id, this.api.dashboardAPI.TileType().TILE_INFO_TWO_TEXT, this.icon, null, this.name, results.values[previousMidnightTimestamp] + " " + results.unit, null, null, null, 800, "statistics");
                     if (this.configuration.dashboardColor) {
                         tile.colors.colorDefault = this.configuration.dashboardColor;
                     }
