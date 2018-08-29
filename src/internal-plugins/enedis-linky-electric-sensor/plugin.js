@@ -14,7 +14,7 @@ function loaded(api) {
     api.installerAPI.register(["x32", "x64"], "pip install python-dateutil html", false, true, true);
 
     api.installerAPI.register(["arm", "arm64"], "apt-get install -y --allow-unauthenticated python3 python3-pip", true, true);
-    api.installerAPI.register(["arm", "arm64"], "pip3 install python-dateutil html", true, true);
+    api.installerAPI.register(["arm", "arm64"], "pip3 install python-dateutil", true, true);
 
 
     /**
