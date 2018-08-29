@@ -113,6 +113,8 @@ function loaded(api) {
             this.socatService = null;
             this.retryList = {};
             this.nextSendingSlotCounter = 0;
+            this.isFlashing = false;
+            this.connected = false;
 
             const RFLinkService = RFLinkServiceClass(api);
             this.service = new RFLinkService(this);
@@ -138,7 +140,7 @@ function loaded(api) {
                 // Fix #49
                 // First installation flash
                 setTimeout((self) => {
-                    if (api.configurationAPI.getConfiguration() && api.configurationAPI.getConfiguration().port && self.version === null) {
+                    if (api.configurationAPI.getConfiguration() && api.configurationAPI.getConfiguration().port && !self.connected) {
                         api.timeEventAPI.register(self.flashFirstInstallation, self, api.timeEventAPI.constants().EVERY_MINUTES);
                     }
                 }, 60 * 1000, this);
@@ -155,7 +157,7 @@ function loaded(api) {
          * @param  {RFLink} [context=null] THe context (instance)
          */
         flashFirstInstallation(context = null) {
-            if (api.configurationAPI.getConfiguration() && api.configurationAPI.getConfiguration().port && context.version === null) {
+            if (api.configurationAPI.getConfiguration() && api.configurationAPI.getConfiguration().port && !context.connected && !context.isFlashing) {
                 api.exported.Logger.info("RFLink seems to be not flashed, trying to install it ...");
                 context.service.stop();
                 api.exported.Logger.info("Service has been stopped");
@@ -169,6 +171,7 @@ function loaded(api) {
                             if (!firmwareHash || md5 === firmwareHash) {
                                 context.api.exported.Logger.info("MD5 firmware matched. Continue.");
                                 const command = "avrdude -v -p atmega2560 -c stk500 -P " + context.api.configurationAPI.getConfiguration().port + " -b 115200 -D -U flash:w:" + fwFilePath + ":i";
+                                context.isFlashing = true;
                                 context.api.installerAPI.executeCommand(command, false, (error, stdout, stderr) => {
                                     if (!error) {
                                         context.api.exported.Logger.info("Firmware successfully installed");
@@ -180,6 +183,7 @@ function loaded(api) {
                                         context.api.exported.Logger.err(error.message);
                                         context.api.exported.Logger.err(stderr);
                                     }
+                                    context.isFlashing = false;
                                 });
                             } else {
                                 context.api.exported.Logger.err("Checksum are differents ! Cannot continue");
@@ -520,6 +524,7 @@ function loaded(api) {
                                                                         context.reboot(context);
                                                                         context.service.stop();
                                                                         const command = "avrdude -v -p atmega2560 -c stk500 -P " + context.api.configurationAPI.getConfiguration().port + " -b 115200 -D -U flash:w:" + fwFilePath + ":i";
+                                                                        context.isFlashing = true;
                                                                         context.api.installerAPI.executeCommand(command, false, (error, stdout, stderr) => {
                                                                             if (!error) {
                                                                                 context.api.exported.Logger.info("Firmware successfully updated");
@@ -530,6 +535,7 @@ function loaded(api) {
                                                                                 context.api.exported.Logger.err(error.message);
                                                                                 context.api.exported.Logger.err(stderr);
                                                                             }
+                                                                            context.isFlashing = false;
                                                                             context.service.start();
                                                                         });
                                                                     } else {
@@ -561,6 +567,20 @@ function loaded(api) {
             } else {
                 context.api.exported.Logger.err("Invalid parameters");
             }
+        }
+
+        /**
+         * Callback when rflink is connected
+         */
+        onConnected() {
+            this.connected = true;
+        }
+
+        /**
+         * Callback when rflink is disconnected
+         */
+        onDisconnected() {
+            this.connected = false;
         }
     }
 

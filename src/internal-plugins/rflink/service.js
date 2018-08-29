@@ -230,6 +230,7 @@ function loaded(api) {
 
                         sp.on("open", function() {
                             Logger.info("RFLink connected, ready to receive data");
+                            send({method:"connected", data:{}});
                             // Request version
                             sp.write("10;VERSION\r\n");
                             status = 1;
@@ -237,6 +238,7 @@ function loaded(api) {
 
                         sp.on("close", function() {
                             Logger.info("RFLink connection closed");
+                            send({method:"disconnected", data:{}});
                             status = 0;
                             autoConnect();
                         });
@@ -319,6 +321,10 @@ function loaded(api) {
                 self.plugin.onDetectedPortsReceive(data.data);
             } else if (data.method === "rflinkAck") {
                 self.plugin.onRflinkAck(data.data.ack_id);
+            } else if (data.method === "connected") {
+                self.plugin.onConnected();
+            } else if (data.method === "disconnected") {
+                self.plugin.onDisconnected();
             }
         }
     }
