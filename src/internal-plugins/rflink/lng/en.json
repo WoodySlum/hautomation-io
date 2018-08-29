@@ -8,5 +8,7 @@
     "rflink.retry.3s": "3 seconds",
     "rflink.retry.4s": "4 seconds",
     "rflink.retry.5s": "5 seconds",
-    "rflink.retry.10s": "10 seconds"
+    "rflink.retry.10s": "10 seconds",
+    "rflink.installation.downloading": "RFLink is not recognized, maybe due to first installation. Trying to flash firmware. A successfull message will be sent once done.",
+    "rflink.installation.success": "RFLink is now ready."
 }

@@ -6,6 +6,7 @@ const parseString = require("xml2js").parseString;
 const fs = require("fs-extra");
 const crypto = require("crypto");
 const sha256 = require("sha256");
+const BASE_RFLINK_UPDATE_URL = "http://www.nemcon.nl/blog2/fw/update.jsp";
 
 const RFLINK_LAN_PORT = 9999;
 const RETRY_IN_SECONDS = 3;
@@ -133,6 +134,107 @@ function loaded(api) {
             });
 
             api.timeEventAPI.register(this.upgrade, this, api.timeEventAPI.constants().EVERY_DAYS);
+            if (!process.env.TEST) {
+                // Fix #49
+                // First installation flash
+                setTimeout((self) => {
+                    if (api.configurationAPI.getConfiguration() && api.configurationAPI.getConfiguration().port && self.version === null) {
+                        api.timeEventAPI.register(self.flashFirstInstallation, self, api.timeEventAPI.constants().EVERY_MINUTES);
+                    }
+                }, 60 * 1000, this);
+            }
+        }
+
+        /**
+         * Fix #49
+         * On first installation, RFLink is not yet flashed and can't be used / updated.
+         * We need to flash it the first time.
+         * After 60 seconds, if we don't received RFLink version and a port is set through configuration, we try to download and update
+         * last RFLink firmware. If it fails, the installation will give a try every minutes.
+         *
+         * @param  {RFLink} [context=null] THe context (instance)
+         */
+        flashFirstInstallation(context = null) {
+            if (api.configurationAPI.getConfiguration() && api.configurationAPI.getConfiguration().port && context.version === null) {
+                api.exported.Logger.info("RFLink seems to be not flashed, trying to install it ...");
+                context.service.stop();
+                api.exported.Logger.info("Service has been stopped");
+                api.exported.Logger.info("Downloading firmware ...");
+                const fwFilePath = context.api.exported.cachePath + "rflink_base.bin";
+
+                const flashingFunc = (firmwareHash) => {
+                    fs.readFile(fwFilePath, function (hashErr, hashData) {
+                        if (!hashErr) {
+                            const md5 = crypto.createHash("md5").update(hashData, "utf8").digest("hex");
+                            if (!firmwareHash || md5 === firmwareHash) {
+                                context.api.exported.Logger.info("MD5 firmware matched. Continue.");
+                                const command = "avrdude -v -p atmega2560 -c stk500 -P " + context.api.configurationAPI.getConfiguration().port + " -b 115200 -D -U flash:w:" + fwFilePath + ":i";
+                                context.api.installerAPI.executeCommand(command, false, (error, stdout, stderr) => {
+                                    if (!error) {
+                                        context.api.exported.Logger.info("Firmware successfully installed");
+                                        context.api.messageAPI.sendMessage("*", context.api.translateAPI.t("rflink.installation.success"));
+                                        context.api.exported.Logger.verbose(stdout);
+                                        context.service.start();
+                                    } else {
+                                        context.api.exported.Logger.err("Firmware insallation error");
+                                        context.api.exported.Logger.err(error.message);
+                                        context.api.exported.Logger.err(stderr);
+                                    }
+                                });
+                            } else {
+                                context.api.exported.Logger.err("Checksum are differents ! Cannot continue");
+                            }
+                        }
+                    });
+                };
+
+                if (!fs.existsSync(fwFilePath)) {
+                    request(BASE_RFLINK_UPDATE_URL + "?ver=0&rel=0", function(error, response, body) {
+                        if (!error && body) {
+                            parseString(body, function (err, result) {
+                                if (!err) {
+                                    if (result.Result) {
+                                        if (result.Result.Value && result.Result.Value.length === 1) {
+                                            context.api.exported.Logger.info("Downloading last RFLink firmware ...");
+                                            context.api.messageAPI.sendMessage("*", context.api.translateAPI.t("rflink.installation.downloading"));
+                                            if (result.Result.Url && result.Result.Url.length === 1 && result.Result.MD5 && result.Result.MD5.length === 1) {
+                                                const firmwareHash = result.Result.MD5[0];
+                                                const firmwareUrl = (result.Result && result.Result.Url && result.Result.Url.length > 0)?result.Result.Url[0]:"";
+
+                                                context.api.exported.Logger.info("URL firmware : " + firmwareUrl);
+                                                context.api.exported.Logger.info("MD5 hash firmware : " + firmwareHash);
+                                                request(firmwareUrl, function(fwError, fwResponse, fwBody) {
+                                                    if (!fwError) {
+                                                        context.api.exported.Logger.info("Firmware downloaded successfully");
+                                                        fs.writeFile(fwFilePath, fwBody, (fileFwErr) => {
+                                                            if (!fileFwErr) {
+                                                                flashingFunc(firmwareHash);
+                                                            } else {
+                                                                context.api.exported.Logger.err("Could not write firmware");
+                                                            }
+                                                        });
+                                                    } else {
+                                                        context.api.exported.Logger.err("Error while downloading firmware");
+                                                    }
+                                                });
+                                            } else {
+                                                context.api.exported.Logger.err("Unexpected RFLink results insalled data");
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    context.api.exported.Logger.err(err.message);
+                                }
+                            });
+                        } else {
+                            context.api.exported.Logger.err(error.message);
+                        }
+                    });
+                } else {
+                    // Firmware already downloaded, trying to flash it
+                    flashingFunc(null);
+                }
+            }
         }
 
         /**
@@ -379,7 +481,7 @@ function loaded(api) {
 
             if (context.version && context.revision && context.api.configurationAPI.getConfiguration() && context.api.configurationAPI.getConfiguration().port) {
                 const currentRevision = context.revision.toLowerCase().replace("r", "");
-                request("http://www.nemcon.nl/blog2/fw/update.jsp?ver=" + context.version + "&rel=" + currentRevision, function(error, response, body) {
+                request(BASE_RFLINK_UPDATE_URL + "?ver=" + context.version + "&rel=" + currentRevision, function(error, response, body) {
                     if (!error && body) {
                         parseString(body, function (err, result) {
                             if (!err) {
@@ -414,7 +516,7 @@ function loaded(api) {
                                                                 fs.readFile(fwFilePath, function (hashErr, hashData) {
                                                                     const md5 = crypto.createHash("md5").update(hashData, "utf8").digest("hex");
                                                                     if (md5 === firmwareHash) {
-                                                                        context.api.exported.Logger.info("MD5 firmware match. Continue.");
+                                                                        context.api.exported.Logger.info("MD5 firmware matched. Continue.");
                                                                         context.reboot(context);
                                                                         context.service.stop();
                                                                         const command = "avrdude -v -p atmega2560 -c stk500 -P " + context.api.configurationAPI.getConfiguration().port + " -b 115200 -D -U flash:w:" + fwFilePath + ":i";
