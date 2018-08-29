@@ -60,14 +60,24 @@ class InstallationManager {
     executeCommand(command, wait = true, cb = null) {
         Logger.info("Executing command => " + command);
         if (!wait) {
-            childProcess.exec(command, {}, (error, stdout, stderr) => {
+            if (!process.env.TEST) {
+                childProcess.exec(command, {}, (error, stdout, stderr) => {
+                    if (cb) {
+                        cb(error, stdout, stderr);
+                    }
+                });
+            } else {
                 if (cb) {
-                    cb(error, stdout, stderr);
+                    cb(null, null, null);
                 }
-            });
+            }
             return null;
         } else {
-            return childProcess.execSync(command, {encoding:"utf-8"});
+            if (!process.env.TEST) {
+                return childProcess.execSync(command, {encoding:"utf-8"});
+            } else {
+                return null;
+            }
         }
     }
 

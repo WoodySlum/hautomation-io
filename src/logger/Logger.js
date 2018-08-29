@@ -82,7 +82,6 @@ class Logger {
             if (enableFileName) {
                 if (stack && stack.getFileName()) {
                     const explodedFileName = stack.getFileName().split("/");
-                    const filename = explodedFileName[(explodedFileName.length - 1)].replace(".js", "");
                     if (stack.getFileName().indexOf("plugins") > 0) {
                         logLine.fileName = "\x1b[35m" + explodedFileName[(explodedFileName.length - 2)].replace(".js", "") + "/" + explodedFileName[(explodedFileName.length - 1)].replace(".js", "") + "\x1b[0m";
                     } else {
