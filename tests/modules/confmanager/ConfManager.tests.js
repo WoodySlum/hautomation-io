@@ -89,7 +89,7 @@ describe("ConfManager", function() {
              confManager.readFile("foo");
              expect(false).to.be.true; // This should not happened because an exception is thrown
          } catch(e) {
-             expect(e.message).to.be.equal(ConfManager.ERROR_INVALID_JSON);
+             expect(e.message).to.be.equal(ConfManager.ERROR_EMPTY_FILE);
          }
     });
 
@@ -125,7 +125,7 @@ describe("ConfManager", function() {
             expect(false).to.be.true; // This should not happened because an exception is thrown
         }
 
-         expect(confManager.fs.writeFile.withArgs("/foo/bar/foo.json", "{\"foo\":\"bar\"}", sinon.match.any).calledOnce).to.be.true;
+         expect(confManager.fs.writeFile.withArgs("/foo/bar/foo.json", sinon.match.any, sinon.match.any).calledOnce).to.be.true;
          confManager.fs.writeFile.restore();
     });
 

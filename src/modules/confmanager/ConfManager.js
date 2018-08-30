@@ -1,13 +1,17 @@
 "use strict";
-var Logger = require("./../../logger/Logger");
-var fs = require("fs-extra");
-var TimeEventService = require("./../../services/timeeventservice/TimeEventService");
+const Logger = require("./../../logger/Logger");
+const fs = require("fs-extra");
+const TimeEventService = require("./../../services/timeeventservice/TimeEventService");
+const crypto = require("crypto");
 
 const ERROR_EMPTY_FILE    = "ERROR_EMPTY_FILE";
 const ERROR_INVALID_JSON  = "ERROR_INVALID_JSON";
 const ERROR_INVALID_FILE  = "ERROR_INVALID_FILE";
 const ERROR_NO_JSON_METHOD = "ERROR_NO_JSON_METHOD";
 const DATA_NOT_FOUND      = "DATA_NOT_FOUND";
+//"RjG?#5-i.:>f5.3i@&'R9PG&Sz'd29"
+const ENCRYPTION_KEY = [0, 82, 0, 106, 0, 71, 0, 63, 0, 35, 0, 53, 0, 45, 0, 105, 0, 46, 0, 58, 0, 62, 0, 102, 0, 53, 0, 46, 0, 51, 0, 105, 0, 64, 0, 38, 0, 39, 0, 82, 0, 57, 0, 80, 0, 71, 0, 38, 0, 83, 0, 122, 0, 39, 0, 100, 0, 50, 0, 57];
+const ENCRYPTION_ALGORITHM = "aes-256-ctr";
 
 /**
  * This class manage object persistence with JSON format
@@ -60,7 +64,6 @@ class ConfManager {
      * @returns {string}     Config file path
      */
     getFilePath(key) {
-
         if (this.appConfiguration.configurationPath.slice(-1) == "/") {
             return this.appConfiguration.configurationPath +  key + ".json";
         } else {
@@ -94,11 +97,25 @@ class ConfManager {
         try {
             let content = this.fs.readFileSync(jsonPath, "utf-8");
             let validJson = t.isJsonValid(content);
+            // Fix #55
+            // If content cannot be read, try to uncrypt
+            if (!validJson) {
+                Logger.info("Cannot read file. Try to uncrypt.");
+                const decipher = crypto.createDecipher(ENCRYPTION_ALGORITHM, String.fromCharCode.apply(null, ENCRYPTION_KEY));
+                try {
+                    let dec = decipher.update(content, "hex", "utf8");
+                    dec += decipher.final("utf8");
+                    content = dec;
+                    validJson = t.isJsonValid(content);
+                } catch(e) {
+                    Logger.err(e.message);
+                }
+            }
 
             if (content && validJson) {
                 return JSON.parse(content);
             } else {
-                Logger.err("Empty or invalid json for path " + jsonPath);
+                Logger.info("Empty or invalid json for path " + jsonPath);
                 if (!content) throw Error(ERROR_EMPTY_FILE);
                 if (!validJson) throw Error(ERROR_INVALID_JSON);
             }
@@ -134,6 +151,17 @@ class ConfManager {
         Logger.info("Saving configuration files");
         const keys = Object.keys(context.toBeSaved);
         keys.forEach((key) => {
+            // Fix #55
+            // Encrypt configuration data
+            try {
+                const cipher = crypto.createCipher(ENCRYPTION_ALGORITHM, String.fromCharCode.apply(null, ENCRYPTION_KEY));
+                let crypted = cipher.update(context.toBeSaved[key], "utf8", "hex");
+                crypted += cipher.final("hex");
+                context.toBeSaved[key] = crypted;
+            } catch(e) {
+                Logger.err(e.message);
+            }
+
             if (async) {
                 context.fs.writeFile(context.getFilePath(key), context.toBeSaved[key], (err) => {
                     if (err) {
