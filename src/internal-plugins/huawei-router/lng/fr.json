@@ -1,0 +1,7 @@
+{
+    "huawei.router.ip": "Adresse IP du routeur",
+    "huawei.router.username": "Nom d'utilisateur",
+    "huawei.router.password": "Mot de passe",
+    "huawei.router.techno.tile": "Afficher la technologie sur l'écran d'accueil (2G, 3G, 4G)",
+    "huawei.router.router.title": "Routeur"
+}

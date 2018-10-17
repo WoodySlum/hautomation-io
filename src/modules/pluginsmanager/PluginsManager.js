@@ -68,7 +68,9 @@ const INTERNAL_PLUGINS = [
     "generic-camera",
     "tl-mr6400-fairuse-sensor",
     "fairuse-sensor",
-    "tplink-tl-mr6400"
+    "tplink-tl-mr6400",
+    "huawei-router",
+    "huawei-fairuse-sensor"
 ];
 
 const CORE_PLUGINS = [

@@ -1,4 +1,5 @@
 "use strict";
+require("dialog-router-api");
 const fs = require("fs-extra");
 const path = require("path");
 const Logger = require("./logger/Logger");
