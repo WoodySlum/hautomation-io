@@ -99,7 +99,11 @@ function loaded(api) {
 
             // Save weather every hour and dispatch
             api.timeEventAPI.register((self) => {
-                self.getApiInformations();
+                const d = new Date();
+                const m = d.getMinutes();
+                if ((m % 15) === 0) {
+                    self.getApiInformations();
+                }
             }, this, api.timeEventAPI.constants().EVERY_MINUTES);
 
         }
