@@ -1,6 +1,6 @@
 {
     "name": "hautomation-core",
-    "version": "0.0.34",
+    "version": "0.0.35",
     "description": "Hautomation core module",
     "main": "HautomationRunner.js",
     "engines": {
@@ -109,7 +109,7 @@
         "fs-extra": "^4.0",
         "gm": "^1.23.1",
         "homebridge": "^0.4.45",
-        "homebridge-alexa": "git://github.com/WoodySlum/homebridge-alexa.git#master",
+        "homebridge-alexa": "^0.1",
         "is-running": "^2.1",
         "md5-file": "^3.2",
         "mjpeg-proxy": "^0.2",
