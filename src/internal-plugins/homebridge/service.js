@@ -68,7 +68,7 @@ function loaded(api) {
             }
 
             try {
-                this.server = new Server(insecureAccess);
+                this.server = new Server({insecureAccess:insecureAccess});
                 this.server._config = {
                     bridge: {
                         name: "Hautomation",
