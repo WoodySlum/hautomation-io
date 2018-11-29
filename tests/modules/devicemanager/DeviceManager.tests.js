@@ -22,7 +22,7 @@ const devices = [
       "icon":{
          "icon":59398
       },
-      "radio":[
+      "RadioForm":[
          {
             "module":sampleRadioPluginIdentifier,
             "protocol":"protocol1",

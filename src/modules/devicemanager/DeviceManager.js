@@ -6,7 +6,6 @@ const WebServices = require("./../../services/webservices/WebServices");
 const Authentication = require("./../authentication/Authentication");
 const APIResponse = require("./../../services/webservices/APIResponse");
 const Radio = require("./../../internal-plugins/radio/plugin");
-var RadioForm = require('../radiomanager/RadioForm');
 const Tile = require("./../dashboardmanager/Tile");
 const DevicesListForm = require("./DevicesListForm");
 const DevicesListScenarioForm = require("./DevicesListScenarioForm");
@@ -54,15 +53,6 @@ class DeviceManager {
         this.eventBus = eventBus;
 
         this.radioManager.deviceManager = this; // Set the device manager. used to associate devices to received radio objects
-
-        /**
-         * @Property("radio");
-         * @Type("objects");
-         * @Cl("RadioForm");
-         * @Title("device.form.radio");
-         */
-        // this.radio = radio;//RadioForm
-        this.formConfiguration.addAdditionalFields(RadioForm.class, "device.form.radio", true);
 
         webServices.registerAPI(this, WebServices.POST, ":/device/set/[id]/[status*]/", Authentication.AUTH_USAGE_LEVEL);
         webServices.registerAPI(this, WebServices.POST, ":" + ROUTE_ALL_ON, Authentication.AUTH_USAGE_LEVEL);
@@ -125,6 +115,21 @@ class DeviceManager {
         });
 
         this.formConfiguration.setSortFunction((a,b) => a.name.localeCompare(b.name));
+
+        // Fix #56 - Refactor devices and radio
+        // The radio manager will add the good form
+        this.radioManager.registerDeviceManagerForm(this);
+    }
+
+    /**
+     * Add a form device part
+     *
+     * @param {Form}  form           A form
+     * @param {string}  title          A title
+     * @param {boolean} [isList=false] `true` if this is a list of subforms, `false` otherwise
+     */
+    addForm(form, title, isList = false) {
+        this.formConfiguration.addAdditionalFields(form, title, isList);
     }
 
     /**

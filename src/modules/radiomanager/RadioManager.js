@@ -56,6 +56,10 @@ class RadioManager {
         this.webServices.registerAPI(this, WebServices.GET, ROUTE_GET_BASE_PATH, Authentication.AUTH_ADMIN_LEVEL);
     }
 
+    registerDeviceManagerForm(deviceManager) {
+        deviceManager.addForm(RadioForm.class, "device.form.radio", true);
+    }
+
     /**
      * Called automatically when plugins are loaded. Used in separate methods for testing.
      * Initially, this method wad used in contructor.

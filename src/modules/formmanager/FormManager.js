@@ -57,8 +57,8 @@ class FormManager {
      *
      * @param {Class} formBase The base form
      * @param {string} title The form title
-     * @param {boolean} isList `true` if this is a list of objects, otherwise `false`
      * @param {Array} forms    An array of forms
+     * @param {boolean} [isList=false] `true` if this is a list of objects, otherwise `false`
      */
     addAdditionalFields(formBase, title, forms, isList = false) {
         const additionalProperties = this.registeredForms[formBase.name].additionalFields;
@@ -427,7 +427,7 @@ class FormManager {
 
                         let foundDependencyWithSameCriteria = false;
                         schema.dependencies[meta.DependencyField].oneOf.forEach((propertiesBlock) => {
-                            const key = propertiesBlock.properties[meta.DependencyField].enum.join(',').toLowerCase();
+                            const key = propertiesBlock.properties[meta.DependencyField].enum.join(",").toLowerCase();
                             if (meta.DependencyValues.toLowerCase() === key) {
                                 foundDependencyWithSameCriteria = true;
                                 propertiesBlock.properties[prop] = schemaPropertiesProp;
