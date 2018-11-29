@@ -14,6 +14,7 @@ const Icons = require("./../../utils/Icons");
 const STATUS_ON = "on";
 const STATUS_OFF = "off";
 const STATUS_INVERT = "invert";
+const STATUS_DIMMER = "dimmer";
 const ROUTE_ALL_ON = "/devices/allon/";
 const ROUTE_ALL_OFF = "/devices/alloff/";
 const DEVICE_NAME_COMPARE_CONFIDENCE = 0.31;
@@ -233,8 +234,10 @@ class DeviceManager {
      *
      * @param  {number} id            A device identifier
      * @param  {string} [status=null] A status  (`on`, `off` or radio status)
+     * @param  {int} [brightness=0] Brightness (between 0 and 1)
+     * @param  {string} [color=#FFFFFF] Brightness (hex color)
      */
-    switchDevice(id, status = null) {
+    switchDevice(id, status = null, brightness = 0, color = "#FFFFFF") {
         if (status && status.toLowerCase() === STATUS_ON) {
             status = Radio.STATUS_ON;
         } else if (status && status.toLowerCase() === STATUS_OFF) {
@@ -244,7 +247,6 @@ class DeviceManager {
         }
 
         this.formConfiguration.getDataCopy().forEach((device) => {
-
             if (parseInt(device.id) === parseInt(id)) {
                 // Check for day and night mode
                 if (device.RadioForm && (
@@ -319,4 +321,4 @@ class DeviceManager {
     }
 }
 
-module.exports = {class:DeviceManager, STATUS_ON:STATUS_ON, STATUS_OFF:STATUS_OFF, STATUS_INVERT:STATUS_INVERT, EVENT_UPDATE_CONFIG_DEVICES:EVENT_UPDATE_CONFIG_DEVICES};
+module.exports = {class:DeviceManager, STATUS_ON:STATUS_ON, STATUS_OFF:STATUS_OFF, STATUS_INVERT:STATUS_INVERT, STATUS_DIMMER:STATUS_DIMMER, EVENT_UPDATE_CONFIG_DEVICES:EVENT_UPDATE_CONFIG_DEVICES};

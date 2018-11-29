@@ -55,12 +55,12 @@ function loaded(api) {
          */
         constructor(api) {
             super(api);
-            this.api = api
+            this.api = api;
 
             api.configurationAPI.setUpdateCb((data) => {
-                if (data && data.port) {
-
-                }
+                // if (data && data.port) {
+                //
+                // }
             });
 
         }
