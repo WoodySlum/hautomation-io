@@ -227,7 +227,7 @@ class RadioManager {
      */
     switchDevice(module, protocol, deviceId, switchId, status = null, frequency = null, previousStatus = null) {
         const plugin = this.pluginsManager.getPluginByIdentifier(module);
-        
+
         if (plugin) {
             return plugin.instance.emit(frequency, protocol, deviceId, switchId, status, previousStatus);
         } else {

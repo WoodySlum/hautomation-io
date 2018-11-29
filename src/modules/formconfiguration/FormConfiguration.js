@@ -81,13 +81,14 @@ class FormConfiguration {
      *
      * @param {Class} form A form
      * @param {string} title The form title
+     * @param {boolean} isList `true` if this is a list of objects, otherwise `false`
      * @param  {...Object} inject Parameters injection on static methods
      */
-    addAdditionalFields(form, title, ...inject) {
+    addAdditionalFields(form, title, isList, ...inject) {
         if (this.additionalFields.indexOf(form) === -1 && this.formClass) {
             this.formManager.register(form, ...inject);
             this.additionalFields.push(form);
-            this.formManager.addAdditionalFields(this.formClass, title, [form]);
+            this.formManager.addAdditionalFields(this.formClass, title, [form], isList);
         }
     }
 

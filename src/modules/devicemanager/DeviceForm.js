@@ -64,14 +64,6 @@ class DeviceForm extends FormObject.class {
         this.icon = icon;
 
         /**
-         * @Property("radio");
-         * @Type("objects");
-         * @Cl("RadioForm");
-         * @Title("device.form.radio");
-         */
-        this.radio = radio;
-
-        /**
          * @Property("status");
          * @Type("number");
          * @Hidden(true);
