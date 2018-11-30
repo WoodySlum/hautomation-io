@@ -10,10 +10,10 @@ function loaded(api) {
     api.init();
 
     /**
-     * This class manage Philips Hue form configuration
+     * This class manage Philips Hue device form configuration
      * @class
      */
-    class HueForm extends api.exported.FormObject.class {
+    class HueDeviceForm extends api.exported.FormObject.class {
         /**
          * Constructor
          *
@@ -22,31 +22,36 @@ function loaded(api) {
          * @param  {number} retry Retry policy
          * @returns {RFlinkForm}        The instance
          */
-        constructor(id) {
+        constructor(id, test) {
             super(id);
 
-
+            /**
+             * @Property("test");
+             * @Type("string");
+             * @Title("test");
+             */
+            this.test = test;
         }
 
         /**
-         * Convert a json object to RFLinkForm object
+         * Convert a json object to HueForm object
          *
          * @param  {Object} data Some data
          * @returns {RFlinkForm}      An instance
          */
         json(data) {
-            return new HueForm(data.id);
+            return new HueDeviceForm(data.id, data.test);
         }
     }
 
-    // Register the rflink form
-    api.configurationAPI.register(HueForm, []);
+    // Register the hue device form
+    api.configurationAPI.register(HueDeviceForm, []);
 
     /**
      * This class manage Philips Hue lights
      * @class
      */
-    class Hue extends api.exported.Radio {
+    class Hue {
         /**
          * Constructor
          *
@@ -54,8 +59,14 @@ function loaded(api) {
          * @returns {Hue}        The instance
          */
         constructor(api) {
-            super(api);
             this.api = api;
+
+            // Configure device
+            api.deviceAPI.addForm("hue", HueDeviceForm, null, false);
+            api.deviceAPI.registerSwitchDevice("hue", (device, formData, deviceStatus) => {
+                return deviceStatus;
+            });
+
 
             api.configurationAPI.setUpdateCb((data) => {
                 // if (data && data.port) {
@@ -78,7 +89,7 @@ module.exports.attributes = {
     loadedCallback: loaded,
     name: "hue",
     version: "0.0.0",
-    category: "radio",
+    category: "device",
     description: "Add Philips Hue support",
-    dependencies:["radio"]
+    dependencies:[]
 };

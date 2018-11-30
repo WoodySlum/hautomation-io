@@ -17,6 +17,7 @@ const RADIO_PLUGIN_KEY = "radio";
 const ASSOCIATED_TYPE_DEVICE = "device";
 const ASSOCIATED_TYPE_SCENARIO = "scenario";
 const ASSOCIATED_TYPE_SENSOR = "sensor";
+const DEVICE_MODULE_KEY = "radio";
 
 /**
  * This class manage radio stuff
@@ -56,8 +57,26 @@ class RadioManager {
         this.webServices.registerAPI(this, WebServices.GET, ROUTE_GET_BASE_PATH, Authentication.AUTH_ADMIN_LEVEL);
     }
 
+    /**
+     * Register device manager
+     *
+     * @param  {DeviceManager} deviceManager The device manager
+     */
     registerDeviceManagerForm(deviceManager) {
-        deviceManager.addForm(RadioForm.class, "device.form.radio", true);
+        const self = this;
+        deviceManager.addForm(DEVICE_MODULE_KEY, RadioForm.class, "device.form.radio", true);
+        deviceManager.registerSwitchDevice(DEVICE_MODULE_KEY, (device, data, deviceStatus) => {
+            data.forEach((radio) => {
+                const radioObject = self.switchDevice(radio.module, radio.protocol, radio.deviceId, radio.switchId, deviceStatus.status, radio.frequency, device.status);
+                if (radioObject && radioObject.hasOwnProperty("status") && radioObject.status) {
+                    deviceStatus.setStatus(radioObject.status);
+                } else {
+                    Logger.warn("Could not change device status. Maybe plugin " + radio.module + " has been disabled");
+                }
+            });
+
+            return deviceStatus;
+        });
     }
 
     /**

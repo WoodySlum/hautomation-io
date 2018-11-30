@@ -5,14 +5,16 @@ const FormConfiguration = require("./../formconfiguration/FormConfiguration");
 const WebServices = require("./../../services/webservices/WebServices");
 const Authentication = require("./../authentication/Authentication");
 const APIResponse = require("./../../services/webservices/APIResponse");
-const Radio = require("./../../internal-plugins/radio/plugin");
 const Tile = require("./../dashboardmanager/Tile");
 const DevicesListForm = require("./DevicesListForm");
 const DevicesListScenarioForm = require("./DevicesListScenarioForm");
 const Icons = require("./../../utils/Icons");
+const DeviceStatus = require("./DeviceStatus");
 
 const STATUS_ON = "on";
 const STATUS_OFF = "off";
+const INT_STATUS_ON = 1;
+const INT_STATUS_OFF = -1;
 const STATUS_INVERT = "invert";
 const STATUS_DIMMER = "dimmer";
 const ROUTE_ALL_ON = "/devices/allon/";
@@ -52,10 +54,11 @@ class DeviceManager {
         this.botEngine = botEngine;
         this.sensorsManager = sensorsManager;
         this.eventBus = eventBus;
+        this.switchDeviceModules = {};
 
         this.radioManager.deviceManager = this; // Set the device manager. used to associate devices to received radio objects
 
-        webServices.registerAPI(this, WebServices.POST, ":/device/set/[id]/[status*]/", Authentication.AUTH_USAGE_LEVEL);
+        webServices.registerAPI(this, WebServices.POST, ":/device/set/[id]/[status*]/[brightness*]/[color*]/", Authentication.AUTH_USAGE_LEVEL);
         webServices.registerAPI(this, WebServices.POST, ":" + ROUTE_ALL_ON, Authentication.AUTH_USAGE_LEVEL);
         webServices.registerAPI(this, WebServices.POST, ":" + ROUTE_ALL_OFF, Authentication.AUTH_USAGE_LEVEL);
         this.registerDeviceTiles();
@@ -118,19 +121,36 @@ class DeviceManager {
         this.formConfiguration.setSortFunction((a,b) => a.name.localeCompare(b.name));
 
         // Fix #56 - Refactor devices and radio
-        // The radio manager will add the good form
+        // The radio manager will add the good radio form instead of adding statically
         this.radioManager.registerDeviceManagerForm(this);
     }
 
     /**
      * Add a form device part
      *
+     * @param {string}  key          A key
      * @param {Form}  form           A form
      * @param {string}  title          A title
      * @param {boolean} [isList=false] `true` if this is a list of subforms, `false` otherwise
      */
-    addForm(form, title, isList = false) {
+    addForm(key, form, title, isList = false) {
+        this.switchDeviceModules[key] = {};
+        this.switchDeviceModules[key].formName = form.prototype.constructor.name;
         this.formConfiguration.addAdditionalFields(form, title, isList);
+    }
+
+    /**
+     * Register a switch device function
+     * The method `addForm` should be called before
+     *
+     * @param  {string}   key A key, the same as set in `addForm`
+     * @param  {Function} cb  The callback when a device switches `switch(device, formData, deviceStatus) => {}`. Please note that this callback can return a DeviceStatus object to save state. You can modify and return the status as parameter.
+     */
+    registerSwitchDevice(key, cb) {
+        if (!this.switchDeviceModules[key]) {
+            throw Error("You must call addForm before calling registerSwitchDevice. A form must be added in order to identify which callback should be processed.");
+        }
+        this.switchDeviceModules[key].switch = cb;
     }
 
     /**
@@ -224,24 +244,24 @@ class DeviceManager {
     registerDeviceTile(device, data = [], index = -1) {
         if (device.visible) {
             let i = (index === -1)?(9000 + data.indexOf(device)):index;
-            const tile = new Tile.class(this.dashboardManager.themeManager, device.id, Tile.TILE_GENERIC_ACTION_STATUS, device.icon.icon, null, device.name, null, null, null, device.status > 0?1:0, i, "/device/set/" + device.id + "/", null);
+            const tile = new Tile.class(this.dashboardManager.themeManager, device.id, Tile.TILE_DEVICE, device.icon.icon, null, device.name, null, null, null, device.status > 0?1:0, i, "/device/set/" + device.id + "/", new DeviceStatus.class(device.status, device.brightness, device.color).tileFormat());
             this.dashboardManager.registerTile(tile);
         }
     }
 
     /**
-     * Switch a device radio status
+     * Switch a device status
      *
      * @param  {number} id            A device identifier
-     * @param  {string} [status=null] A status  (`on`, `off` or radio status)
+     * @param  {string} [status=null] A status  (`on`, `off` or int status)
      * @param  {int} [brightness=0] Brightness (between 0 and 1)
-     * @param  {string} [color=#FFFFFF] Brightness (hex color)
+     * @param  {string} [color=FFFFFF] Brightness (hex color)
      */
-    switchDevice(id, status = null, brightness = 0, color = "#FFFFFF") {
+    switchDevice(id, status = null, brightness = 0, color = "FFFFFF") {
         if (status && status.toLowerCase() === STATUS_ON) {
-            status = Radio.STATUS_ON;
+            status = INT_STATUS_ON;
         } else if (status && status.toLowerCase() === STATUS_OFF) {
-            status = Radio.STATUS_OFF;
+            status = INT_STATUS_OFF;
         } else if (status && status.toLowerCase() === STATUS_INVERT) {
             status = null;
         }
@@ -249,31 +269,31 @@ class DeviceManager {
         this.formConfiguration.getDataCopy().forEach((device) => {
             if (parseInt(device.id) === parseInt(id)) {
                 // Check for day and night mode
-                if (device.RadioForm && (
-                    !device.worksOnlyOnDayNight
+                if (!device.worksOnlyOnDayNight
                     || (device.worksOnlyOnDayNight === 1)
                     || (device.worksOnlyOnDayNight === 2 && !this.environmentManager.isNight())
                     || (device.worksOnlyOnDayNight === 3 && this.environmentManager.isNight())
-                    || device.status === Radio.STATUS_ON)) {
-                    let newStatus = null;
-                    device.RadioForm.forEach((radio) => {
-                        const radioObject = this.radioManager.switchDevice(radio.module, radio.protocol, radio.deviceId, radio.switchId, status, radio.frequency, device.status);
-                        if (radioObject && radioObject.hasOwnProperty("status") && radioObject.status) {
-                            newStatus = radioObject.status;
-                        } else {
-                            Logger.warn("Could not change device status. Maybe plugin " + radio.module + " has been disabled");
+                    || device.status === INT_STATUS_ON) {
+
+                    let newDeviceStatus = null;
+                    Object.keys(this.switchDeviceModules).forEach((switchDeviceModuleKey) => {
+                        const switchDeviceModule = this.switchDeviceModules[switchDeviceModuleKey];
+                        if (device[switchDeviceModule.formName]) {
+                            newDeviceStatus = switchDeviceModule.switch(device, device[switchDeviceModule.formName], new DeviceStatus.class(status, brightness, color));
                         }
                     });
 
-                    if (newStatus) {
-                        device.status = newStatus;
+                    if (newDeviceStatus) {
+                        device.status = newDeviceStatus.status;
+                        device.brightness = newDeviceStatus.brightness;
+                        device.color = newDeviceStatus.color;
                         this.formConfiguration.saveConfig(device);
                         // Devices tiles
                         let data = this.formConfiguration.data.sort((a,b) => a.name.localeCompare(b.name));
                         this.registerDeviceTile(device, data); // Save to dashboard !
                     }
                 } else {
-                    Logger.warn("Turning device " + device.id + " is not authorized due to day / night mode. Device configuration (" + device.worksOnlyOnDayNight + "), Current mode is night (" + this.environmentManager.isNight() + "), Status (" + device.status + "), Compared status (" + Radio.STATUS_ON + ")");
+                    Logger.warn("Turning device " + device.id + " is not authorized due to day / night mode. Device configuration (" + device.worksOnlyOnDayNight + "), Current mode is night (" + this.environmentManager.isNight() + "), Status (" + device.status + "), Compared status (" + INT_STATUS_ON + ")");
                 }
             }
         });
@@ -304,7 +324,7 @@ class DeviceManager {
         const self = this;
         if (apiRequest.route.startsWith( ":/device/set/")) {
             return new Promise((resolve) => {
-                self.switchDevice(apiRequest.data.id, apiRequest.data.status);
+                self.switchDevice(apiRequest.data.id, apiRequest.data.status, apiRequest.data.brightness, apiRequest.data.color);
                 resolve(new APIResponse.class(true, {success:true}));
             });
         } else if (apiRequest.route ===  ":" + ROUTE_ALL_ON) {
@@ -321,4 +341,4 @@ class DeviceManager {
     }
 }
 
-module.exports = {class:DeviceManager, STATUS_ON:STATUS_ON, STATUS_OFF:STATUS_OFF, STATUS_INVERT:STATUS_INVERT, STATUS_DIMMER:STATUS_DIMMER, EVENT_UPDATE_CONFIG_DEVICES:EVENT_UPDATE_CONFIG_DEVICES};
+module.exports = {class:DeviceManager, STATUS_ON:STATUS_ON, INT_STATUS_ON:INT_STATUS_ON, INT_STATUS_OFF:INT_STATUS_OFF, STATUS_OFF:STATUS_OFF, STATUS_INVERT:STATUS_INVERT, STATUS_DIMMER:STATUS_DIMMER, EVENT_UPDATE_CONFIG_DEVICES:EVENT_UPDATE_CONFIG_DEVICES};

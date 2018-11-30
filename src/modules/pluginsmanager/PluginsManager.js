@@ -71,7 +71,7 @@ const INTERNAL_PLUGINS = [
     "tplink-tl-mr6400",
     "huawei-router",
     "huawei-fairuse-sensor",
-    // "hue"
+    "hue"
 ];
 
 const CORE_PLUGINS = [
