@@ -20,26 +20,11 @@ function loaded(api) {
          * Constructor
          *
          * @param  {number} id The identifier
-         * @param  {string} host The host
-         * @param  {number} port The port
          * @param  {string} username The usernam
          * @returns {HueForm}        The instance
          */
-        constructor(id, host, port, username) {
+        constructor(id, username) {
             super(id);
-            /**
-             * @Property("host");
-             * @Type("string");
-             * @Title("hue.settings.host");
-             */
-            this.host = host;
-
-            /**
-             * @Property("port");
-             * @Type("number");
-             * @Title("hue.settings.port");
-             */
-            this.port = port;
 
             /**
              * @Property("username");
@@ -57,7 +42,7 @@ function loaded(api) {
          * @returns {HueForm}      An instance
          */
         json(data) {
-            return new HueForm(data.id, data.host, data.port, data.username);
+            return new HueForm(data.id, data.username);
         }
     }
 
@@ -138,7 +123,25 @@ function loaded(api) {
 
             this.initClient();
 
-            api.configurationAPI.setUpdateCb(() => {
+            api.configurationAPI.setUpdateCb((data) => {
+                if (!data.username || data.username.length === 0) {
+                    const user = new this.client.users.User;
+
+                    // Optionally configure a device type / agent on the user
+                    user.deviceType = "hautomation"; // Default is 'huejay'
+
+                    this.client.users.create(user)
+                    .then(user => {
+                        data.username = user.username;
+                        api.exported.Logger.info("Hue new user created - username : " + user.username);
+                    }).catch(error => {
+                        if (error instanceof huejay.Error && error.type === 101) {
+                            api.exported.Logger.info("Link button not pressed. Try again...");
+                        }
+                    });
+
+                    api.configurationAPI.saveData(data);
+                }
                 this.initClient();
             });
 
@@ -255,14 +258,24 @@ function loaded(api) {
          */
         initClient() {
             const data = this.api.configurationAPI.getConfiguration();
-            if (data && data.host && data.port && data.username) {
-                this.client = new huejay.Client({
-                    host:     data.host,
-                    port:     data.port,
-                    timeout:  15000,
-                    username: data.username
+
+            if (data && data.username) {
+                huejay.discover()
+                .then(bridges => {
+                    for (let bridge of bridges) {
+                        this.client = new huejay.Client({
+                            host:     bridge.ip,
+                            username: data.username
+                        });
+                        api.exported.Logger.info("Found bridge with IP " + bridge.ip);
+                    }
+
+                    if (this.client) {
+                        this.updateLights();
+                    }
+                }).catch(error => {
+                    api.exported.Logger.err("An error occurred : " + error.message);
                 });
-                this.updateLights();
             }
         }
 

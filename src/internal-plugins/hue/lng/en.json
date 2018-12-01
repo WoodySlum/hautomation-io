@@ -1,14 +1,3 @@
 {
-    "rflink.update.message": "A new RFLink version has been installed",
-    "rflink.settings.port": "Pick RFLink port",
-    "rflink.retry.policy": "Retry policy : Repeat send signal after x seconds. Sometimes the sensors will lock the RFLink and won't be able to transmit / receive anything for few seconds.",
-    "rflink.retry.policy.none": "No retry policy",
-    "rflink.retry.1s": "1 second",
-    "rflink.retry.2s": "2 seconds",
-    "rflink.retry.3s": "3 seconds",
-    "rflink.retry.4s": "4 seconds",
-    "rflink.retry.5s": "5 seconds",
-    "rflink.retry.10s": "10 seconds",
-    "rflink.installation.downloading": "RFLink is not recognized, maybe due to first installation. Trying to flash firmware. A successfull message will be sent once done.",
-    "rflink.installation.success": "RFLink is now ready."
+    "hue.settings.username": "Nomd'utilisateur Hue. La première fois, cliquez sur le bouton de lien du boitier Philips Hue avant de cliquer sur le bouton Sauvegarder. Ce champ se remplira automatiquement"
 }

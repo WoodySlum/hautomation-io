@@ -1,14 +1,3 @@
 {
-    "rflink.update.message": "Une nouvelle version du RFLink a été installée",
-    "rflink.settings.port": "Sélectionnez le port du périphérique RFLink",
-    "rflink.retry.policy": "Politique de réessai : Répéter le signal d'envoi après x secondes. Certains capteurs émettent pendant plusieurs secondes et empêchent le RFLink de recevoir / émettre des données.",
-    "rflink.retry.policy.none": "Aucune politique de réessai",
-    "rflink.retry.1s": "1 seconde",
-    "rflink.retry.2s": "2 secondes",
-    "rflink.retry.3s": "3 secondes",
-    "rflink.retry.4s": "4 secondes",
-    "rflink.retry.5s": "5 secondes",
-    "rflink.retry.10s": "10 secondes",
-    "rflink.installation.downloading": "Le module RFLink n'est pas reconnu, peut être parce que c'est une première installation. Le microprogramme va maintenant essayer de s'installer. Un message sera envoyé lorsque l'opération aura été réalisée avec succès.",
-    "rflink.installation.success": "Le module RFLink est maintenant prêt"
+    "hue.settings.username": "Hue Username. On first usage, leave empty and press on the link button before clicking on save button. This field will be automatically field"
 }

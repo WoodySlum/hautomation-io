@@ -10,7 +10,7 @@ module.exports = function(homebridge) {
 
 function HautomationAccessory(log, config) {
   this.log = log;
- 
+
   this.service = new Service.Lightbulb(this.name);
   this.coreApi = config.coreApi;
   this.identifier = config.identifier;
