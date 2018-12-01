@@ -138,6 +138,7 @@ class DeviceManager {
      * @param {boolean} [isList=false] `true` if this is a list of subforms, `false` otherwise
      */
     addForm(key, form, title, isList = false) {
+        delete this.switchDeviceModules[key];
         this.switchDeviceModules[key] = {};
         this.switchDeviceModules[key].formName = form.prototype.constructor.name;
         this.formManager.addAdditionalFields(DeviceForm.class, title, [form], isList);
@@ -293,16 +294,25 @@ class DeviceManager {
                         device.status = newDeviceStatus.getStatus();
                         device.brightness = newDeviceStatus.getBrightness();
                         device.color = newDeviceStatus.getColor();
-                        this.formConfiguration.saveConfig(device);
-                        // Devices tiles
-                        let data = this.formConfiguration.data.sort((a,b) => a.name.localeCompare(b.name));
-                        this.registerDeviceTile(device, data); // Save to dashboard !
+                        this.saveDevice(device);
                     }
                 } else {
                     Logger.warn("Turning device " + device.id + " is not authorized due to day / night mode. Device configuration (" + device.worksOnlyOnDayNight + "), Current mode is night (" + this.environmentManager.isNight() + "), Status (" + device.status + "), Compared status (" + INT_STATUS_ON + ")");
                 }
             }
         });
+    }
+
+    /**
+     * Save device
+     *
+     * @param  {Object} device A device
+     */
+    saveDevice(device) {
+        this.formConfiguration.saveConfig(device);
+        // Devices tiles
+        let data = this.formConfiguration.data.sort((a,b) => a.name.localeCompare(b.name));
+        this.registerDeviceTile(device, data); // Save to dashboard !
     }
 
     /**

@@ -124,9 +124,9 @@ describe("DeviceManager", function() {
     });
 
     it("switchDevice should invert status with specific value", function(done) {
-        devices[0].status = 0.2;
+        devices[0].status = 1;
         sinon.stub(deviceManager.formConfiguration, "saveConfig").callsFake((data) => {
-            expect(data.status).to.be.equal(-0.2);
+            expect(data.status).to.be.equal(-1);
             done();
         });
         deviceManager.switchDevice(1981);

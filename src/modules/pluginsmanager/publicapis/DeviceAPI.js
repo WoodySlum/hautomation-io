@@ -84,6 +84,15 @@ class DeviceAPI {
     registerSwitchDevice(key, cb, type) {
         PrivateProperties.oprivate(this).deviceManager.registerSwitchDevice(key, cb, type);
     }
+
+    /**
+     * Save a device
+     *
+     * @param  {Object} device A device
+     */
+    saveDevice(device) {
+        PrivateProperties.oprivate(this).deviceManager.saveDevice(device);
+    }
 }
 
 module.exports = {class:DeviceAPI};

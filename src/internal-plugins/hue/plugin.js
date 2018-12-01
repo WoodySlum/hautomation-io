@@ -1,5 +1,7 @@
 "use strict";
 const huejay = require("huejay");
+const colorutil = require("color-util");
+const colorRound = 1000;
 
 /**
  * Loaded plugin function
@@ -71,11 +73,10 @@ function loaded(api) {
          * Constructor
          *
          * @param  {number} id The identifier
-         * @param  {string} port The port
-         * @param  {number} retry Retry policy
-         * @returns {RFlinkForm}        The instance
+         * @param  {number} device THe device
+         * @returns {HueDeviceForm}        The instance
          */
-        constructor(id, test) {
+        constructor(id, device) {
             super(id);
 
             /**
@@ -137,11 +138,21 @@ function loaded(api) {
 
             this.initClient();
 
-            api.configurationAPI.setUpdateCb((data) => {
+            api.configurationAPI.setUpdateCb(() => {
                 this.initClient();
             });
+
+            api.timeEventAPI.register((self) => {
+                api.exported.Logger.verbose("Synchronizing Philips Hue lights");
+                self.updateLights(self);
+            }, this, api.timeEventAPI.constants().EVERY_MINUTES);
         }
 
+        /**
+         * Get lights hue IDs
+         *
+         * @returns {[number]} List of ids
+         */
         getHueId() {
             const ids = [];
             this.hueDevices.forEach((hueDevice) => {
@@ -150,6 +161,11 @@ function loaded(api) {
             return ids;
         }
 
+        /**
+         * Get lights hue names
+         *
+         * @returns {[string]} List of names
+         */
         getHueName() {
             const names = [];
             this.hueDevices.forEach((hueDevice) => {
@@ -158,50 +174,103 @@ function loaded(api) {
             return names;
         }
 
+        /**
+         * Update local devices status from Hue APIs
+         *
+         * @param  {Hue} [context=null] The context (`this`)
+         */
+        updateLocalState(context = null) {
+            if (!context) {
+                context = this;
+            }
+
+            context.hueDevices.forEach((hueDevice) => {
+                context.api.deviceAPI.getDevices().forEach((device) => {
+                    if (device.HueDeviceForm && device.HueDeviceForm.device === hueDevice.attributes.attributes.id) {
+                        const state = hueDevice.state.attributes;
+                        const status = state.on ? context.api.deviceAPI.constants().INT_STATUS_ON : context.api.deviceAPI.constants().INT_STATUS_OFF;
+                        const brightness = parseFloat(Math.round(state.bri / 254 * 10) / 10);
+                        const color = colorutil.rgb.to.hex(colorutil.hsv.to.rgb({h: (Math.round((state.hue / 65534) * colorRound) / colorRound), s: (Math.round((state.sat / 254) * colorRound) / colorRound), v: 1, a: 1})).toUpperCase().replace("#", "");
+
+                        device.status = status;
+                        device.brightness = brightness;
+                        device.color = color;
+
+                        if (status != device.status || brightness != device.brightness || color != device.color) {
+                            context.deviceAPI.saveDevice(device);
+                        }
+                    }
+                });
+            });
+        }
+
+        /**
+         * Retrieve lights from APIs
+         *
+         * @param  {Hue} [context=null] The context (`this`)
+         */
+        updateLights(context = null) {
+            if (!context) {
+                context = this;
+            }
+
+            context.retrieveLights(() => {
+                context.updateLocalState(context);
+                context.api.deviceAPI.addForm("hue", HueDeviceForm, null, false, context.getHueId(), context.getHueName());
+                // Switch device status
+                context.api.deviceAPI.registerSwitchDevice("hue", (device, formData, deviceStatus) => {
+                    context.client.lights.getById(parseInt(formData.device))
+                    .then(light => {
+                        light.name = device.name;
+                        let brightness = device.brightness ? (device.brightness * 254) : 254;
+
+                        if (device.status === context.api.deviceAPI.constants().INT_STATUS_ON) {
+                            light.on = true;
+                            light.brightness = brightness;
+                        } else {
+                            light.on = false;
+                            light.brightness = 0;
+                        }
+
+                        light.hue        = Math.round(parseInt(colorutil.rgb.to.hsv(colorutil.hex.to.rgb("#" + device.color)).h * 65534) * colorRound) / colorRound;
+                        light.saturation = Math.round(parseInt(colorutil.rgb.to.hsv(colorutil.hex.to.rgb("#" + device.color)).s * 254) * colorRound) / colorRound;
+
+                        return context.client.lights.save(light);
+                    })
+                    .then(light => {
+                        context.api.Logger.info.log("Updated hue light " + light.id);
+                    })
+                    .catch(error => {
+                        context.api.Logger.err("Something went wrong when trying to change Hue");
+                        context.api.Logger.err(error.stack);
+                    });
+
+                    return deviceStatus;
+                }, context.api.deviceAPI.constants().DEVICE_TYPE_LIGHT_DIMMABLE_COLOR);
+            });
+        }
+
+        /**
+         * Init Hue client
+         */
         initClient() {
             const data = this.api.configurationAPI.getConfiguration();
-            const self = this;
-            if (data && data.host && data.port && data .username) {
-                self.client = new huejay.Client({
-                  host:     data.host,
-                  port:     data.port,
-                  timeout:  15000,
-                  username: data.username
+            if (data && data.host && data.port && data.username) {
+                this.client = new huejay.Client({
+                    host:     data.host,
+                    port:     data.port,
+                    timeout:  15000,
+                    username: data.username
                 });
-                self.retrieveLights(() => {
-                    api.deviceAPI.addForm("hue", HueDeviceForm, null, false, self.getHueId(), self.getHueName());
-                    // Configure device
-                    api.deviceAPI.registerSwitchDevice("hue", (device, formData, deviceStatus) => {
-                        this.client.lights.getById(parseInt(formData.device))
-                          .then(light => {
-                            light.name = device.name;
-                            let brightness = device.brightness ? (device.brightness * 254) : 254;
-
-                            if (device.status === api.deviceAPI.constants().INT_STATUS_ON) {
-                                light.brightness = brightness;
-                            } else {
-                                light.brightness = 0;
-                            }
-
-                            light.hue        = 65534;
-                            light.saturation = 254;
-
-                            return this.client.lights.save(light);
-                          })
-                          .then(light => {
-                            console.log(`Updated light [${light.id}]`);
-                          })
-                          .catch(error => {
-                            console.log('Something went wrong');
-                            console.log(error.stack);
-                          });
-
-                        return deviceStatus;
-                    }, api.deviceAPI.constants().DEVICE_TYPE_LIGHT_DIMMABLE_COLOR);
-                });
+                this.updateLights();
             }
         }
 
+        /**
+         * Retrieve all lights
+         *
+         * @param  {Function} cb A callback when retrieve is done
+         */
         retrieveLights(cb) {
             this.client.lights.getAll()
               .then(lights => {

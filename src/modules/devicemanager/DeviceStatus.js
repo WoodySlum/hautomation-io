@@ -40,7 +40,7 @@ class DeviceStatus {
      * @returns {string} Color
      */
     getColor() {
-        return this.color ? this.color : null;
+        return this.color ? this.color.toUpperCase().replace("#", "") : null;
     }
 
     /**

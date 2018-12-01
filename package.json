@@ -101,6 +101,7 @@
         "audiohub": "git://github.com/WoodySlum/audiohub.git#master",
         "body-parser": "^1.18",
         "callsite": "^1.0",
+        "color-util": "^2.2.1",
         "columnify": "^1.5",
         "compression": "^1.7.3",
         "dialog-router-api": "git://github.com/WoodySlum/dialog-router-api.git#master",
