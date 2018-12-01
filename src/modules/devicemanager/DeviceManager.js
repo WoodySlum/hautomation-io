@@ -144,7 +144,7 @@ class DeviceManager {
      * The method `addForm` should be called before
      *
      * @param  {string}   key A key, the same as set in `addForm`
-     * @param  {Function} cb  The callback when a device switches `switch(device, formData, deviceStatus) => {}`. Please note that this callback can return a DeviceStatus object to save state. You can modify and return the status as parameter.
+     * @param  {Function} cb  The callback when a device switches `(device, formData, deviceStatus) => {}`. Please note that this callback can return a DeviceStatus object to save state. You can modify and return the status as parameter.
      */
     registerSwitchDevice(key, cb) {
         if (!this.switchDeviceModules[key]) {

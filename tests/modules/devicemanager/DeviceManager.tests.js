@@ -3,6 +3,7 @@ var chai = require("chai");
 var expect = chai.expect;
 var sinon = require("sinon");
 var GlobalMocks = require("./../../GlobalMocks");
+var FormObject = require("../../../src/modules/formmanager/FormObject");
 
 const HautomationCore = require("./../../../src/HautomationCore").class;
 
@@ -39,6 +40,44 @@ const devices = [
       "status":1
    }
 ];
+
+const devicesWithBrightnessColor = [
+  {
+     "id":2018,
+     "name":"BarFoo",
+     "excludeFromAll":null,
+     "visible":true,
+     "worksOnlyOnDayNight":null,
+     "icon":{
+        "icon":59398
+     },
+     "TestDeviceForm":{
+         "test":"FooBar"
+     },
+     "status":1
+  }
+];
+
+class TestDeviceForm extends FormObject.class {
+    constructor(id, test) {
+        super(id);
+
+        /**
+         * @Property("test");
+         * @Type("string");
+         * @Title("test");
+         */
+        this.test = test;
+    }
+
+    json(data) {
+        return new TestDeviceForm(data.id, data.test);
+    }
+}
+
+const switchCallback = (device, formData, deviceStatus) => {
+    return deviceStatus;
+};
 
 describe("DeviceManager", function() {
     before(() => {
@@ -181,6 +220,42 @@ describe("DeviceManager", function() {
         expect(radioManager.switchDevice.calledTwice).to.be.true;
         expect(devices[0].status).to.be.equal(1);
         radioManager.switchDevice.restore();
+    });
+
+    it("registerSwitchDevice should throw exception due to addForm not previously called", function() {
+        try {
+            deviceManager.registerSwitchDevice("foo", switchCallback);
+            expect(false).to.be.true;
+        } catch(e) {
+            expect(true).to.be.true;
+        }
+    });
+
+    it("addForm should set correctly stuff", function() {
+        core.formManager.register(TestDeviceForm);
+        sinon.spy(core.formManager, "addAdditionalFields");
+        deviceManager.addForm("foo", TestDeviceForm);
+        expect(core.formManager.addAdditionalFields.calledOnce).to.be.true;
+        expect(deviceManager.switchDeviceModules.foo).to.be.not.null;
+        expect(deviceManager.switchDeviceModules.foo.formName).to.be.equals("TestDeviceForm");
+        core.formManager.addAdditionalFields.restore();
+    });
+
+    it("registerSwitchDevice should set correctly stuff", function() {
+        deviceManager.registerSwitchDevice("foo", switchCallback);
+        expect(deviceManager.switchDeviceModules.foo.switch).to.be.equal(switchCallback);
+    });
+
+    it("switchDevice should change color and brightness", function() {
+        deviceManager.formConfiguration.data = devicesWithBrightnessColor;
+        sinon.spy(deviceManager.switchDeviceModules.foo, "switch");
+        deviceManager.switchDevice(2018, "Off", 0.5, "FEFEFE");
+        expect(deviceManager.switchDeviceModules.foo.switch.calledOnce).to.be.true;
+        expect(deviceManager.formConfiguration.data[0].id).to.be.equal(2018);
+        expect(deviceManager.formConfiguration.data[0].status).to.be.equal(-1);
+        expect(deviceManager.formConfiguration.data[0].brightness).to.be.equal(0.5);
+        expect(deviceManager.formConfiguration.data[0].color).to.be.equal("FEFEFE");
+        deviceManager.switchDeviceModules.foo.switch.restore();
     });
 
     after(() => {

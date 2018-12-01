@@ -66,8 +66,10 @@ class DeviceAPI {
      * @param {Form}  form           A form
      * @param {string}  title          A title
      * @param {boolean} [isList=false] `true` if this is a list of subforms, `false` otherwise
+     * @param  {...Object} inject    The injected objects
      */
-    addForm(key, form, title, isList = false) {
+    addForm(key, form, title, isList = false, ...inject) {
+        PrivateProperties.oprivate(this).deviceManager.formManager.register(form, ...inject);
         PrivateProperties.oprivate(this).deviceManager.addForm(key, form, title, isList);
     }
 
@@ -76,7 +78,7 @@ class DeviceAPI {
      * The method `addForm` should be called before
      *
      * @param  {string}   key A key, the same as set in `addForm`
-     * @param  {Function} cb  The callback when a device switches `switch(device, formData, deviceStatus) => {}`. Please note that this callback can return a DeviceStatus object to save state. You can modify and return the status as parameter.
+     * @param  {Function} cb  The callback when a device switches `(device, formData, deviceStatus) => {}`. Please note that this callback can return a DeviceStatus object to save state. You can modify and return the status as parameter.
      */
     registerSwitchDevice(key, cb) {
         PrivateProperties.oprivate(this).deviceManager.registerSwitchDevice(key, cb);

@@ -44,9 +44,6 @@ function loaded(api) {
         }
     }
 
-    // Register the hue device form
-    api.configurationAPI.register(HueDeviceForm, []);
-
     /**
      * This class manage Philips Hue lights
      * @class
