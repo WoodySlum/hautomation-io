@@ -204,7 +204,7 @@ function loaded(api) {
                                 }
                             });
                         } else {
-                            api.exported.Logger.err("No url matched");
+                            api.exported.Logger.warn("No url matched");
                         }
                     } else {
                         api.exported.Logger.err(error);

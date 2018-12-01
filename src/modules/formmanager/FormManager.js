@@ -78,7 +78,6 @@ class FormManager {
      * @param  {Class} cl A class
      */
     sanitize(cl) {
-        //console.log(cl.name);
         // Check if json method is implemented
         const methods = Object.getOwnPropertyNames(cl.prototype);
         if (methods.indexOf("json") == -1) {

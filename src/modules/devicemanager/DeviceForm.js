@@ -71,6 +71,7 @@ class DeviceForm extends FormObject.class {
          * @Hidden(true);
          * @Default(-1);
          * @Title("device.form.status");
+         * @Required(false);
          */
         this.status = status;
 
@@ -80,6 +81,7 @@ class DeviceForm extends FormObject.class {
          * @Hidden(true);
          * @Default(1);
          * @Title("device.form.brightness");
+         * @Required(false);
          */
         this.brightness = brightness;
 
@@ -89,6 +91,7 @@ class DeviceForm extends FormObject.class {
          * @Hidden(true);
          * @Default("FFFFFF");
          * @Title("device.form.color");
+         * @Required(false);
          */
         this.color = color;
     }

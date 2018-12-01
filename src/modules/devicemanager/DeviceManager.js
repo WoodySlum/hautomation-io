@@ -140,7 +140,7 @@ class DeviceManager {
     addForm(key, form, title, isList = false) {
         this.switchDeviceModules[key] = {};
         this.switchDeviceModules[key].formName = form.prototype.constructor.name;
-        this.formConfiguration.addAdditionalFields(form, title, isList);
+        this.formManager.addAdditionalFields(DeviceForm.class, title, [form], isList);
     }
 
     /**
@@ -290,9 +290,9 @@ class DeviceManager {
                     });
 
                     if (newDeviceStatus) {
-                        device.status = newDeviceStatus.status;
-                        device.brightness = newDeviceStatus.brightness;
-                        device.color = newDeviceStatus.color;
+                        device.status = newDeviceStatus.getStatus();
+                        device.brightness = newDeviceStatus.getBrightness();
+                        device.color = newDeviceStatus.getColor();
                         this.formConfiguration.saveConfig(device);
                         // Devices tiles
                         let data = this.formConfiguration.data.sort((a,b) => a.name.localeCompare(b.name));

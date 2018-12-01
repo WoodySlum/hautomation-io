@@ -110,6 +110,7 @@
         "gm": "^1.23.1",
         "homebridge": "^0.4",
         "homebridge-alexa": "^0.1",
+        "huejay": "^1.8.5",
         "is-running": "^2.1",
         "md5-file": "^3.2",
         "mjpeg-proxy": "^0.2",

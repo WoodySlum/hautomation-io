@@ -17,6 +17,33 @@ class DeviceStatus {
     }
 
     /**
+     * Get status
+     *
+     * @returns {number} Status
+     */
+    getStatus() {
+        return parseInt(this.status);
+    }
+
+    /**
+     * Get Brightness
+     *
+     * @returns {number} Brightness
+     */
+    getBrightness() {
+        return this.brightness ? parseFloat(this.brightness) : null;
+    }
+
+    /**
+     * Get color
+     *
+     * @returns {string} Color
+     */
+    getColor() {
+        return this.color ? this.color : null;
+    }
+
+    /**
      * Set status
      *
      * @param {int} status The status

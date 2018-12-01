@@ -100,7 +100,7 @@ class ConfManager {
             // Fix #55
             // If content cannot be read, try to uncrypt
             if (!validJson) {
-                Logger.info("Cannot read file. Try to uncrypt.");
+                Logger.info("Cannot read file " + jsonPath + ". Try to uncrypt.");
                 const decipher = crypto.createDecipher(ENCRYPTION_ALGORITHM, String.fromCharCode.apply(null, ENCRYPTION_KEY));
                 try {
                     let dec = decipher.update(content, "hex", "utf8");
