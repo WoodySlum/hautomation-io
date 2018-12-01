@@ -11,12 +11,16 @@ const DevicesListScenarioForm = require("./DevicesListScenarioForm");
 const Icons = require("./../../utils/Icons");
 const DeviceStatus = require("./DeviceStatus");
 
+const DEVICE_TYPE_LIGHT = "light";
+const DEVICE_TYPE_LIGHT_DIMMABLE = "light-dimmable";
+const DEVICE_TYPE_LIGHT_DIMMABLE_COLOR = "light-dimmable-color";
+const DEVICE_TYPE_SHUTTER = "shutter";
+
 const STATUS_ON = "on";
 const STATUS_OFF = "off";
 const INT_STATUS_ON = 1;
 const INT_STATUS_OFF = -1;
 const STATUS_INVERT = "invert";
-const STATUS_DIMMER = "dimmer";
 const ROUTE_ALL_ON = "/devices/allon/";
 const ROUTE_ALL_OFF = "/devices/alloff/";
 const DEVICE_NAME_COMPARE_CONFIDENCE = 0.31;
@@ -145,11 +149,13 @@ class DeviceManager {
      *
      * @param  {string}   key A key, the same as set in `addForm`
      * @param  {Function} cb  The callback when a device switches `(device, formData, deviceStatus) => {}`. Please note that this callback can return a DeviceStatus object to save state. You can modify and return the status as parameter.
+     * @param  {string} [type=DEVICE_TYPE_LIGHT]  The device type, constant can be `DEVICE_TYPE_LIGHT`, `DEVICE_TYPE_LIGHT_DIMMABLE`, `DEVICE_TYPE_LIGHT_DIMMABLE_COLOR`, `DEVICE_TYPE_SHUTTER`
      */
-    registerSwitchDevice(key, cb) {
+    registerSwitchDevice(key, cb, type = DEVICE_TYPE_LIGHT) {
         if (!this.switchDeviceModules[key]) {
             throw Error("You must call addForm before calling registerSwitchDevice. A form must be added in order to identify which callback should be processed.");
         }
+        this.switchDeviceModules[key].type = type;
         this.switchDeviceModules[key].switch = cb;
     }
 
@@ -341,4 +347,4 @@ class DeviceManager {
     }
 }
 
-module.exports = {class:DeviceManager, STATUS_ON:STATUS_ON, INT_STATUS_ON:INT_STATUS_ON, INT_STATUS_OFF:INT_STATUS_OFF, STATUS_OFF:STATUS_OFF, STATUS_INVERT:STATUS_INVERT, STATUS_DIMMER:STATUS_DIMMER, EVENT_UPDATE_CONFIG_DEVICES:EVENT_UPDATE_CONFIG_DEVICES};
+module.exports = {class:DeviceManager, STATUS_ON:STATUS_ON, INT_STATUS_ON:INT_STATUS_ON, INT_STATUS_OFF:INT_STATUS_OFF, STATUS_OFF:STATUS_OFF, STATUS_INVERT:STATUS_INVERT, EVENT_UPDATE_CONFIG_DEVICES:EVENT_UPDATE_CONFIG_DEVICES, DEVICE_TYPE_LIGHT:DEVICE_TYPE_LIGHT, DEVICE_TYPE_LIGHT_DIMMABLE: DEVICE_TYPE_LIGHT_DIMMABLE, DEVICE_TYPE_LIGHT_DIMMABLE_COLOR:DEVICE_TYPE_LIGHT_DIMMABLE_COLOR, DEVICE_TYPE_SHUTTER:DEVICE_TYPE_SHUTTER};

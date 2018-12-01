@@ -4,6 +4,7 @@ var expect = chai.expect;
 var sinon = require("sinon");
 var GlobalMocks = require("./../../GlobalMocks");
 var FormObject = require("../../../src/modules/formmanager/FormObject");
+var DeviceManager = require("../../../src/modules/devicemanager/DeviceManager");
 
 const HautomationCore = require("./../../../src/HautomationCore").class;
 
@@ -242,8 +243,9 @@ describe("DeviceManager", function() {
     });
 
     it("registerSwitchDevice should set correctly stuff", function() {
-        deviceManager.registerSwitchDevice("foo", switchCallback);
+        deviceManager.registerSwitchDevice("foo", switchCallback, DeviceManager.DEVICE_TYPE_LIGHT_DIMMABLE_COLOR);
         expect(deviceManager.switchDeviceModules.foo.switch).to.be.equal(switchCallback);
+        expect(deviceManager.switchDeviceModules.foo.type).to.be.equal(DeviceManager.DEVICE_TYPE_LIGHT_DIMMABLE_COLOR);
     });
 
     it("switchDevice should change color and brightness", function() {

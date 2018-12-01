@@ -62,7 +62,7 @@ function loaded(api) {
             api.deviceAPI.addForm("hue", HueDeviceForm, null, false);
             api.deviceAPI.registerSwitchDevice("hue", (device, formData, deviceStatus) => {
                 return deviceStatus;
-            });
+            }, api.deviceAPI.constants().DEVICE_TYPE_LIGHT_DIMMABLE_COLOR);
 
 
             api.configurationAPI.setUpdateCb((data) => {
