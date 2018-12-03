@@ -256,44 +256,46 @@ function loaded(api) {
                 // Switch device status
                 context.api.deviceAPI.registerSwitchDevice("hue", (device, formData, deviceStatus) => {
                     formData.forEach((hueDevice) => {
-                        context.client.lights.getById(parseInt(hueDevice.device))
-                        .then(light => {
-                            light.name = device.name;
+                        if (context.client.lights) {
+                            context.client.lights.getById(parseInt(hueDevice.device))
+                            .then(light => {
+                                light.name = device.name;
 
-                            // Default values if not set
-                            if (!device.color) {
-                                device.color = "FFFFFF";
-                            }
-
-                            if (!device.brightness) {
-                                device.brightness = 1;
-                            }
-
-                            let brightness = parseInt(device.brightness ? (device.brightness * 254) : 254);
-                            if (device.status === context.api.deviceAPI.constants().INT_STATUS_ON) {
-                                light.on = true;
-                                light.brightness = brightness;
-
-                                if (light.state.attributes.hasOwnProperty("hue") && device.color) {
-                                    light.hue = Math.round(parseInt(colorutil.rgb.to.hsv(colorutil.hex.to.rgb("#" + device.color)).h * 65534) * colorRound) / colorRound;
+                                // Default values if not set
+                                if (!device.color) {
+                                    device.color = "FFFFFF";
                                 }
 
-                                if (light.state.attributes.hasOwnProperty("sat") && device.color) {
-                                    light.saturation = Math.round(parseInt(colorutil.rgb.to.hsv(colorutil.hex.to.rgb("#" + device.color)).s * 254) * colorRound) / colorRound;
+                                if (!device.brightness) {
+                                    device.brightness = 1;
                                 }
-                            } else {
-                                light.on = false;
-                            }
 
-                            return context.client.lights.save(light);
-                        })
-                        .then(light => {
-                            context.api.exported.Logger.info("Updated hue light " + light.id);
-                        })
-                        .catch(error => {
-                            context.api.exported.Logger.err("Something went wrong when trying to change Hue");
-                            context.api.exported.Logger.err(error.stack);
-                        });
+                                let brightness = parseInt(device.brightness ? (device.brightness * 254) : 254);
+                                if (device.status === context.api.deviceAPI.constants().INT_STATUS_ON) {
+                                    light.on = true;
+                                    light.brightness = brightness;
+
+                                    if (light.state.attributes.hasOwnProperty("hue") && device.color) {
+                                        light.hue = Math.round(parseInt(colorutil.rgb.to.hsv(colorutil.hex.to.rgb("#" + device.color)).h * 65534) * colorRound) / colorRound;
+                                    }
+
+                                    if (light.state.attributes.hasOwnProperty("sat") && device.color) {
+                                        light.saturation = Math.round(parseInt(colorutil.rgb.to.hsv(colorutil.hex.to.rgb("#" + device.color)).s * 254) * colorRound) / colorRound;
+                                    }
+                                } else {
+                                    light.on = false;
+                                }
+
+                                return context.client.lights.save(light);
+                            })
+                            .then(light => {
+                                context.api.exported.Logger.info("Updated hue light " + light.id);
+                            })
+                            .catch(error => {
+                                context.api.exported.Logger.err("Something went wrong when trying to change Hue");
+                                context.api.exported.Logger.err(error.stack);
+                            });
+                        }
                     });
 
                     return deviceStatus;
