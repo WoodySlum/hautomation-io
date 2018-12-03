@@ -70,9 +70,10 @@ class PluginsAPI {
     //  * @param  {BotEngine} botEngine The IoT manager
     //  * @param  {EventEmitter} eventBus The event bus
     //  * @param  {DeviceManager} deviceManager The device manager
+    //  * @param  {string} CORE_EVENT_READY The core event ready identifier
     //  * @returns {PluginAPI}                  Insntance
     //  */
-    constructor(previousVersion, p, webServices, appConfiguration, servicesManager, dbManager, translateManager, formManager, confManager, timeEventService, schedulerService, dashboardManager, themeManager, sensorsManager, installationManager, userManager, messageManager, scenarioManager, alarmManager, camerasManager, radioManager, environmentManager, pluginsManager, iotManager, botEngine, eventBus, deviceManager) {
+    constructor(previousVersion, p, webServices, appConfiguration, servicesManager, dbManager, translateManager, formManager, confManager, timeEventService, schedulerService, dashboardManager, themeManager, sensorsManager, installationManager, userManager, messageManager, scenarioManager, alarmManager, camerasManager, radioManager, environmentManager, pluginsManager, iotManager, botEngine, eventBus, deviceManager, CORE_EVENT_READY) {
         PrivateProperties.createPrivateState(this);
         this.previousVersion = previousVersion;
         this.p = p;
@@ -86,6 +87,7 @@ class PluginsAPI {
         this.dependencies = (Array.isArray(this.p.attributes.dependencies))?this.p.attributes.dependencies.slice():[];
         this.exported = {};
         this.instance = null;
+        this.CORE_EVENT_READY = CORE_EVENT_READY;
 
         // Export classes
         this.exported = Object.assign(this.exported,
@@ -185,6 +187,15 @@ class PluginsAPI {
      */
     getPluginInstance(identifier) {
         return PrivateProperties.oprivate(this).pluginsManager.getPluginByIdentifier(identifier, true)?PrivateProperties.oprivate(this).pluginsManager.getPluginByIdentifier(identifier, true).instance:null;
+    }
+
+    /**
+     * Expose a list of constants
+     *
+     * @returns {Object} Constants
+     */
+    constants() {
+        return {CORE_EVENT_READY:this.CORE_EVENT_READY};
     }
 }
 

@@ -1,0 +1,5 @@
+{
+    "hue.form.title":"Philips Hue",
+    "hue.settings.ip": "Bridge IP address. Leave empty for auto-detect",
+    "hue.settings.username": "Hue Username. On first usage, leave empty and press on the link button before clicking on save button. This field will be automatically field"
+}

@@ -9,6 +9,7 @@ const TILE_PICTURE_TEXT = "PictureText"; // Background image with a text
 const TILE_PICTURES = "PicturesIcon"; // Multiple pictures with an icon
 const TILE_GENERIC_ACTION = "GenericAction"; // Extended from ActionOneIcon (action auto mapping on)
 const TILE_GENERIC_ACTION_STATUS = "GenericActionWithStatus"; // One icon, one action, one color, and a status (red / green btn)
+const TILE_DEVICE = "Device"; // One icon, one text, device subinfo items
 
 
 /**
@@ -58,7 +59,7 @@ class Tile {
             this.colors.colorContent = themeManager.getColors().clearColor;
         } else if (this.type === TILE_PICTURE_TEXT) {
             this.colors.colorContent = themeManager.getColors().clearColor;
-        } else if (this.type === TILE_GENERIC_ACTION_STATUS) {
+        } else if (this.type === TILE_GENERIC_ACTION_STATUS || this.type === TILE_DEVICE) {
             this.colors.colorDefault = themeManager.getColors().primaryColor;
             this.colors.colorContent = themeManager.getColors().clearColor;
             this.colors.colorOn = themeManager.getColors().onColor;
@@ -107,5 +108,6 @@ module.exports = {class:Tile,
     TILE_PICTURE_TEXT:TILE_PICTURE_TEXT,
     TILE_PICTURES:TILE_PICTURES,
     TILE_GENERIC_ACTION:TILE_GENERIC_ACTION,
-    TILE_GENERIC_ACTION_STATUS:TILE_GENERIC_ACTION_STATUS
+    TILE_GENERIC_ACTION_STATUS:TILE_GENERIC_ACTION_STATUS,
+    TILE_DEVICE:TILE_DEVICE
 };

@@ -16,9 +16,11 @@ class DeviceForm extends FormObject.class {
      * @param  {IconForm} [icon=null]                An icon
      * @param  {RadioForm} [radio=null]               A radio informations
      * @param  {number} [status=null]              A status
+     * @param {number}  [brightness=1]          The brightness for dimmable
+     * @param {string}  [color="FFFFFF"]       The device color
      * @returns {DeviceForm}                            The instance
      */
-    constructor(id = null, name = null, excludeFromAll = false, visible = true, worksOnlyOnDayNight = 1, icon = {}, radio = [], status = -1) {
+    constructor(id = null, name = null, excludeFromAll = false, visible = true, worksOnlyOnDayNight = 1, icon = {}, radio = [], status = -1, brightness = 1, color = "FFFFFF") {
         super(id);
 
         /**
@@ -64,21 +66,34 @@ class DeviceForm extends FormObject.class {
         this.icon = icon;
 
         /**
-         * @Property("radio");
-         * @Type("objects");
-         * @Cl("RadioForm");
-         * @Title("device.form.radio");
-         */
-        this.radio = radio;
-
-        /**
          * @Property("status");
          * @Type("number");
          * @Hidden(true);
          * @Default(-1);
          * @Title("device.form.status");
+         * @Required(false);
          */
         this.status = status;
+
+        /**
+         * @Property("brightness");
+         * @Type("number");
+         * @Hidden(true);
+         * @Default(1);
+         * @Title("device.form.brightness");
+         * @Required(false);
+         */
+        this.brightness = brightness;
+
+        /**
+         * @Property("color");
+         * @Type("string");
+         * @Hidden(true);
+         * @Default("FFFFFF");
+         * @Title("device.form.color");
+         * @Required(false);
+         */
+        this.color = color;
     }
 
     /**
@@ -88,7 +103,7 @@ class DeviceForm extends FormObject.class {
      * @returns {DeviceForm}      A form object
      */
     json(data) {
-        return new DeviceForm(data.id, data.name, data.excludeFromAll, data.visible, data.worksOnlyOnDayNight, data.icon, data.radio, data.status);
+        return new DeviceForm(data.id, data.name, data.excludeFromAll, data.visible, data.worksOnlyOnDayNight, data.icon, data.radio, data.status, data.brightness, data.color);
     }
 }
 

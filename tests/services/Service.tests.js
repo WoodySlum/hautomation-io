@@ -66,7 +66,7 @@ describe("Service", function() {
         service.start.restore();
     });
 
-    it("start threaded shoud be well processed", () => {
+    it("start threaded should be well processed", () => {
         const threadsManager = new ThreadsManager.class();
         const runStub = sinon.stub(threadsManager, "run").callsFake(() => {});
 
@@ -86,7 +86,7 @@ describe("Service", function() {
         threadsManager.getPid.restore();
     });
 
-    it("start threaded shoud throw exception", () => {
+    it("start threaded should throw exception", () => {
         const service = new Service.class("foo", null, Service.SERVICE_MODE_THREADED);
 
         try {
@@ -97,7 +97,7 @@ describe("Service", function() {
         }
     });
 
-    it("stop threaded shoud be well processed", () => {
+    it("stop threaded should be well processed", () => {
         const threadsManager = new ThreadsManager.class();
         const runStub = sinon.stub(threadsManager, "run").callsFake(() => {});
         const runPid = sinon.stub(threadsManager, "getPid").callsFake(() => {});
@@ -119,7 +119,7 @@ describe("Service", function() {
         threadsManager.kill.restore();
     });
 
-    it("start external shoud be well processed", () => {
+    it("start external should be well processed", () => {
 
         const service = new Service.class("foo", null, Service.SERVICE_MODE_EXTERNAL, "ls -al");
 
@@ -134,7 +134,7 @@ describe("Service", function() {
         service.startExternal.restore();
     });
 
-    it("start external shoud throw exception when empty command is provided", () => {
+    it("start external should throw exception when empty command is provided", () => {
         const service = new Service.class("foo", null, Service.SERVICE_MODE_EXTERNAL);
 
         try {
@@ -145,7 +145,7 @@ describe("Service", function() {
         }
     });
 
-    it("stop external shoud be well processed", () => {
+    it("stop external should be well processed", () => {
 
         const service = new Service.class("foo", null, Service.SERVICE_MODE_EXTERNAL, "ls -al");
 

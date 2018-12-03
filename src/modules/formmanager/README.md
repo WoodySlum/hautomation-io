@@ -445,3 +445,27 @@ Example :
     formManager.register(Foo);
     formManager.register(Bar);
     formManager.getForm(Bar);
+
+### Hide fields depending on other field value
+
+class Foo extends api.exported.FormObject.class {
+    constructor(id, bar) {
+        super(id);
+        /**
+         * @Property("bar");
+         * @Type("string");
+         * @Title("my.translate.key");
+         * @Enum(["foo", "bar"]);
+         * @EnumNames(["foo.translate.key", "bar.translate.key"]);
+         * @Unique(true);
+         */
+        this.bar = bar;
+
+        /**
+         * @Property("dependingField");
+         * @Type("string");
+         * @DependencyField("bar");
+         * @DependencyValues("foo");
+         */
+    }
+}

@@ -70,7 +70,8 @@ const INTERNAL_PLUGINS = [
     "fairuse-sensor",
     "tplink-tl-mr6400",
     "huawei-router",
-    "huawei-fairuse-sensor"
+    "huawei-fairuse-sensor",
+    "hue"
 ];
 
 const CORE_PLUGINS = [
@@ -123,9 +124,10 @@ class PluginsManager {
      * @param  {IotManager} iotManager The IoT manager
      * @param  {BotEngine} botEngine The bot engine
      * @param  {DeviceManager} deviceManager The device manager
+     * @param  {string} CORE_EVENT_READY The core event ready identifier
      * @returns {PluginsManager} The instance
      */
-    constructor(confManager, webServices, servicesManager, dbManager, translateManager, formManager, timeEventService, schedulerService, dashboardManager, eventBus, themeManager, sensorsManager, installationManager, userManager, messageManager, scenarioManager, alarmManager, camerasManager, radioManager, appConfiguration, environmentManager, iotManager, botEngine, deviceManager) {
+    constructor(confManager, webServices, servicesManager, dbManager, translateManager, formManager, timeEventService, schedulerService, dashboardManager, eventBus, themeManager, sensorsManager, installationManager, userManager, messageManager, scenarioManager, alarmManager, camerasManager, radioManager, appConfiguration, environmentManager, iotManager, botEngine, deviceManager, CORE_EVENT_READY) {
         this.fs = fs;
         this.path = path;
         this.remi = remi;
@@ -154,6 +156,7 @@ class PluginsManager {
         this.iotManager = iotManager;
         this.botEngine = botEngine;
         this.deviceManager = deviceManager;
+        this.CORE_EVENT_READY = CORE_EVENT_READY;
 
         this.plugins = [];
         try {
@@ -278,7 +281,8 @@ class PluginsManager {
                 this.iotManager,
                 this.botEngine,
                 this.eventBus,
-                this.deviceManager
+                this.deviceManager,
+                this.CORE_EVENT_READY
             );
 
             item = pApi;

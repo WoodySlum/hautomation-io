@@ -58,12 +58,13 @@ class FormManager {
      * @param {Class} formBase The base form
      * @param {string} title The form title
      * @param {Array} forms    An array of forms
+     * @param {boolean} [isList=false] `true` if this is a list of objects, otherwise `false`
      */
-    addAdditionalFields(formBase, title, forms) {
+    addAdditionalFields(formBase, title, forms, isList = false) {
         const additionalProperties = this.registeredForms[formBase.name].additionalFields;
         forms.forEach((form) => {
             additionalProperties[form.name] = [
-                    {key:"Type", value:"object"},
+                    {key:"Type", value:(isList ? "objects" : "object")},
                     {key:"Cl", value:form.name},
                     {key:"Title", value:title}
             ];
@@ -77,7 +78,6 @@ class FormManager {
      * @param  {Class} cl A class
      */
     sanitize(cl) {
-        //console.log(cl.name);
         // Check if json method is implemented
         const methods = Object.getOwnPropertyNames(cl.prototype);
         if (methods.indexOf("json") == -1) {
@@ -223,45 +223,46 @@ class FormManager {
                     const type = meta.Type.toLowerCase();
                     let exist = false;
                     // Type and create properties
-                    schema.properties[prop] = {};
+                    let schemaPropertiesProp = {};
+
                     schemaUI[prop] = {};
                     if (type === "string") {
-                        schema.properties[prop].type = "string";
+                        schemaPropertiesProp.type = "string";
                         exist = true;
                     } else if (type === "integer") {
-                        schema.properties[prop].type = "integer";
+                        schemaPropertiesProp.type = "integer";
                         exist = true;
                     } else if (type === "number" || type === "double" || type === "float") {
-                        schema.properties[prop].type = "number";
+                        schemaPropertiesProp.type = "number";
                         exist = true;
                     } else if (type === "boolean" || type === "bool") {
-                        schema.properties[prop].type = "boolean";
+                        schemaPropertiesProp.type = "boolean";
                         exist = true;
                     } else if (type === "datetime") {
-                        schema.properties[prop].type = "string";
-                        schema.properties[prop].format = "date-time";
+                        schemaPropertiesProp.type = "string";
+                        schemaPropertiesProp.format = "date-time";
                         exist = true;
                     } else if (type === "date") {
-                        schema.properties[prop].type = "string";
-                        schema.properties[prop].format = "date";
+                        schemaPropertiesProp.type = "string";
+                        schemaPropertiesProp.format = "date";
                         exist = true;
                     } else if (type === "objects" && meta.Cl) {
-                        schema.properties[prop].type = "array";
+                        schemaPropertiesProp.type = "array";
                         const subForm =  self.generateForm(self.registeredForms[meta.Cl].class, self.registeredForms[meta.Cl].additionalFields, self.initSchema(), self.initSchemaUI(), ...self.registeredForms[meta.Cl].inject);
-                        schema.properties[prop].items = subForm.schema;
+                        schemaPropertiesProp.items = subForm.schema;
                         schemaUI[prop].items = subForm.schemaUI;
 
                         exist = true;
                     } else if (type === "object" && meta.Cl) {
                         const subForm =  self.generateForm(self.registeredForms[meta.Cl].class, self.registeredForms[meta.Cl].additionalFields, self.initSchema(), self.initSchemaUI(), ...self.registeredForms[meta.Cl].inject);
-                        schema.properties[prop] = subForm.schema;
-                        schema.properties[prop].type = "object";
+                        schemaPropertiesProp = subForm.schema;
+                        schemaPropertiesProp.type = "object";
                         schemaUI[prop] = subForm.schemaUI;
 
                         exist = true;
                     } else if (type === "file") {
-                        schema.properties[prop].type = "string";
-                        schema.properties[prop].format = "data-url";
+                        schemaPropertiesProp.type = "string";
+                        schemaPropertiesProp.format = "data-url";
                         exist = true;
                     }
 
@@ -269,12 +270,12 @@ class FormManager {
                         // Title
                         if (meta.Title) {
                             if (cl[meta.Title] instanceof Function) {
-                                schema.properties[prop].title = cl[meta.Title](...inject);
+                                schemaPropertiesProp.title = cl[meta.Title](...inject);
                             } else {
-                                schema.properties[prop].title = self.translateManager.t(meta.Title);
+                                schemaPropertiesProp.title = self.translateManager.t(meta.Title);
                             }
                         } else {
-                            schema.properties[prop].title = "";
+                            schemaPropertiesProp.title = "";
                         }
 
                         // Required
@@ -285,16 +286,16 @@ class FormManager {
                         // Default
                         if (meta.Default) {
                             if (cl[meta.Default] instanceof Function) {
-                                schema.properties[prop].default = cl[meta.Default](...inject);
+                                schemaPropertiesProp.default = cl[meta.Default](...inject);
                             } else {
-                                schema.properties[prop].default = self.translateManager.t(meta.Default);
+                                schemaPropertiesProp.default = self.translateManager.t(meta.Default);
                             }
                         }
                         if (meta.Value) {
                             if (cl[meta.Value] instanceof Function) {
-                                schema.properties[prop].default = cl[meta.Value](...inject);
+                                schemaPropertiesProp.default = cl[meta.Value](...inject);
                             } else {
-                                schema.properties[prop].default = self.translateManager.t(meta.Value);
+                                schemaPropertiesProp.default = self.translateManager.t(meta.Value);
                             }
                         }
 
@@ -302,20 +303,20 @@ class FormManager {
                         if (meta.Range) {
                             if (meta.Range instanceof Array) {
                                 if (meta.Range.length > 1) {
-                                    schema.properties[prop].minimum = meta.Range[0];
-                                    schema.properties[prop].maximum = meta.Range[1];
+                                    schemaPropertiesProp.minimum = meta.Range[0];
+                                    schemaPropertiesProp.maximum = meta.Range[1];
                                 }
                                 if (meta.Range.length > 2) {
-                                    schema.properties[prop].multipleOf = meta.Range[2];
+                                    schemaPropertiesProp.multipleOf = meta.Range[2];
                                 }
                             } else {
                                 const rangeResults = cl[meta.Enum](...inject);
                                 if (rangeResults.length > 1) {
-                                    schema.properties[prop].minimum = rangeResults[0];
-                                    schema.properties[prop].maximum = rangeResults[1];
+                                    schemaPropertiesProp.minimum = rangeResults[0];
+                                    schemaPropertiesProp.maximum = rangeResults[1];
                                 }
                                 if (meta.Range.length > 2) {
-                                    schema.properties[prop].multipleOf = rangeResults[2];
+                                    schemaPropertiesProp.multipleOf = rangeResults[2];
                                 }
                             }
                         }
@@ -323,42 +324,42 @@ class FormManager {
                         // Enum
                         if (meta.Enum) {
                             if (meta.Enum instanceof Array) {
-                                schema.properties[prop].enum = meta.Enum;
+                                schemaPropertiesProp.enum = meta.Enum;
                             } else {
-                                schema.properties[prop].enum = cl[meta.Enum](...inject);
+                                schemaPropertiesProp.enum = cl[meta.Enum](...inject);
                             }
                         }
 
                         // Enum names
                         if (meta.EnumNames) {
                             if (meta.EnumNames instanceof Array) {
-                                schema.properties[prop].enumNames = self.translateManager.translateArray(meta.EnumNames);
+                                schemaPropertiesProp.enumNames = self.translateManager.translateArray(meta.EnumNames);
                             } else {
-                                schema.properties[prop].enumNames = self.translateManager.translateArray(cl[meta.EnumNames](...inject));
+                                schemaPropertiesProp.enumNames = self.translateManager.translateArray(cl[meta.EnumNames](...inject));
                             }
                         }
 
                         // Validation
                         if (meta.Minlength) {
-                            schema.properties[prop].minLength = meta.Minlength;
+                            schemaPropertiesProp.minLength = meta.Minlength;
                         }
                         if (meta.Maxlength) {
-                            schema.properties[prop].maxLength = meta.Maxlength;
+                            schemaPropertiesProp.maxLength = meta.Maxlength;
                         }
                         if (meta.Minitems) {
-                            schema.properties[prop].minItems = meta.Minitems;
+                            schemaPropertiesProp.minItems = meta.Minitems;
                         }
                         if (meta.Maxitems) {
-                            schema.properties[prop].maxItems = meta.Maxitems;
+                            schemaPropertiesProp.maxItems = meta.Maxitems;
                         }
                         if (meta.Regexp) {
-                            schema.properties[prop].pattern = meta.Regexp;
+                            schemaPropertiesProp.pattern = meta.Regexp;
                         }
                         if (meta.Validate) {
-                            schema.properties[prop].pattern = meta.Validate;
+                            schemaPropertiesProp.pattern = meta.Validate;
                         }
                         if (meta.Pattern) {
-                            schema.properties[prop].pattern = meta.Pattern;
+                            schemaPropertiesProp.pattern = meta.Pattern;
                         }
 
 
@@ -372,23 +373,23 @@ class FormManager {
                             } else if (display === "hidden") {
                                 schemaUI[prop]["ui:widget"] = "hidden";
                             } else if (display === "checkbox") {
-                                schema.properties[prop]["items"] = {};
-                                schema.properties[prop].items.type = schema.properties[prop].type;
-                                schema.properties[prop].type = "array";
+                                schemaPropertiesProp["items"] = {};
+                                schemaPropertiesProp.items.type = schemaPropertiesProp.type;
+                                schemaPropertiesProp.type = "array";
 
-                                if (schema.properties[prop].enum) {
-                                    schema.properties[prop].items.enum = schema.properties[prop].enum;
-                                    delete schema.properties[prop].enum;
+                                if (schemaPropertiesProp.enum) {
+                                    schemaPropertiesProp.items.enum = schemaPropertiesProp.enum;
+                                    delete schemaPropertiesProp.enum;
                                 }
-                                if (schema.properties[prop].enumNames) {
-                                    schema.properties[prop].items.enumNames = schema.properties[prop].enumNames;
-                                    delete schema.properties[prop].enumNames;
+                                if (schemaPropertiesProp.enumNames) {
+                                    schemaPropertiesProp.items.enumNames = schemaPropertiesProp.enumNames;
+                                    delete schemaPropertiesProp.enumNames;
                                 }
 
                                 if (meta.Unique) {
-                                    schema.properties[prop].uniqueItems = true;
+                                    schemaPropertiesProp.uniqueItems = true;
                                 } else {
-                                    schema.properties[prop].uniqueItems = false;
+                                    schemaPropertiesProp.uniqueItems = false;
                                 }
 
                                 schemaUI[prop]["ui:widget"] = "checkboxes";
@@ -413,6 +414,34 @@ class FormManager {
                         if (meta.Disabled && (meta.Disabled === true)) {
                             schemaUI[prop]["ui:disabled"] = true;
                         }
+                    }
+
+                    if (meta.DependencyField && meta.DependencyValues) {
+                        if (!schema.dependencies) {
+                            schema.dependencies = {};
+                        }
+                        if (!schema.dependencies[meta.DependencyField]) {
+                            schema.dependencies[meta.DependencyField] = {oneOf:[]};
+                        }
+
+                        let foundDependencyWithSameCriteria = false;
+                        schema.dependencies[meta.DependencyField].oneOf.forEach((propertiesBlock) => {
+                            const key = propertiesBlock.properties[meta.DependencyField].enum.join(",").toLowerCase();
+                            if (meta.DependencyValues.toLowerCase() === key) {
+                                foundDependencyWithSameCriteria = true;
+                                propertiesBlock.properties[prop] = schemaPropertiesProp;
+                            }
+                        });
+                        if (!foundDependencyWithSameCriteria) {
+                            const dependencyForm = {};
+                            dependencyForm[meta.DependencyField] = {enum:meta.DependencyValues.split(",")};
+                            dependencyForm[prop] = schemaPropertiesProp;
+                            schema.dependencies[meta.DependencyField].oneOf.push({
+                                properties: dependencyForm
+                            });
+                        }
+                    } else {
+                        schema.properties[prop] = schemaPropertiesProp;
                     }
                 }
             });

@@ -3,6 +3,8 @@ var chai = require("chai");
 var expect = chai.expect;
 var sinon = require("sinon");
 var GlobalMocks = require("./../../GlobalMocks");
+var FormObject = require("../../../src/modules/formmanager/FormObject");
+var DeviceManager = require("../../../src/modules/devicemanager/DeviceManager");
 
 const HautomationCore = require("./../../../src/HautomationCore").class;
 
@@ -22,7 +24,7 @@ const devices = [
       "icon":{
          "icon":59398
       },
-      "radio":[
+      "RadioForm":[
          {
             "module":sampleRadioPluginIdentifier,
             "protocol":"protocol1",
@@ -39,6 +41,44 @@ const devices = [
       "status":1
    }
 ];
+
+const devicesWithBrightnessColor = [
+  {
+     "id":2018,
+     "name":"BarFoo",
+     "excludeFromAll":null,
+     "visible":true,
+     "worksOnlyOnDayNight":null,
+     "icon":{
+        "icon":59398
+     },
+     "TestDeviceForm":{
+         "test":"FooBar"
+     },
+     "status":1
+  }
+];
+
+class TestDeviceForm extends FormObject.class {
+    constructor(id, test) {
+        super(id);
+
+        /**
+         * @Property("test");
+         * @Type("string");
+         * @Title("test");
+         */
+        this.test = test;
+    }
+
+    json(data) {
+        return new TestDeviceForm(data.id, data.test);
+    }
+}
+
+const switchCallback = (device, formData, deviceStatus) => {
+    return deviceStatus;
+};
 
 describe("DeviceManager", function() {
     before(() => {
@@ -84,9 +124,9 @@ describe("DeviceManager", function() {
     });
 
     it("switchDevice should invert status with specific value", function(done) {
-        devices[0].status = 0.2;
+        devices[0].status = 1;
         sinon.stub(deviceManager.formConfiguration, "saveConfig").callsFake((data) => {
-            expect(data.status).to.be.equal(-0.2);
+            expect(data.status).to.be.equal(-1);
             done();
         });
         deviceManager.switchDevice(1981);
@@ -182,6 +222,49 @@ describe("DeviceManager", function() {
         expect(devices[0].status).to.be.equal(1);
         radioManager.switchDevice.restore();
     });
+
+    it("registerSwitchDevice should throw exception due to addForm not previously called", function() {
+        try {
+            deviceManager.registerSwitchDevice("foo", switchCallback);
+            expect(false).to.be.true;
+        } catch(e) {
+            expect(true).to.be.true;
+        }
+    });
+
+    it("addForm should set correctly stuff", function() {
+        core.formManager.register(TestDeviceForm);
+        sinon.spy(core.formManager, "addAdditionalFields");
+        deviceManager.addForm("foo", TestDeviceForm);
+        expect(core.formManager.addAdditionalFields.calledOnce).to.be.true;
+        expect(deviceManager.switchDeviceModules.foo).to.be.not.null;
+        expect(deviceManager.switchDeviceModules.foo.formName).to.be.equals("TestDeviceForm");
+        core.formManager.addAdditionalFields.restore();
+    });
+
+    it("registerSwitchDevice should set correctly stuff", function() {
+        deviceManager.registerSwitchDevice("foo", switchCallback, DeviceManager.DEVICE_TYPE_LIGHT_DIMMABLE_COLOR);
+        expect(deviceManager.switchDeviceModules.foo.switch).to.be.equal(switchCallback);
+        expect(deviceManager.switchDeviceModules.foo.type).to.be.equal(DeviceManager.DEVICE_TYPE_LIGHT_DIMMABLE_COLOR);
+    });
+
+    it("switchDevice should change color and brightness", function() {
+        deviceManager.formConfiguration.data = devicesWithBrightnessColor;
+        sinon.spy(deviceManager.switchDeviceModules.foo, "switch");
+        deviceManager.switchDevice(2018, "Off", 0.5, "FEFEFE");
+        expect(deviceManager.switchDeviceModules.foo.switch.calledOnce).to.be.true;
+        expect(deviceManager.formConfiguration.data[0].id).to.be.equal(2018);
+        expect(deviceManager.formConfiguration.data[0].status).to.be.equal(-1);
+        expect(deviceManager.formConfiguration.data[0].brightness).to.be.equal(0.5);
+        expect(deviceManager.formConfiguration.data[0].color).to.be.equal("FEFEFE");
+        deviceManager.switchDeviceModules.foo.switch.restore();
+    });
+
+    it("getSupportedModes should send correct value", function() {
+        expect(deviceManager.getDeviceTypes(devices[0]).length).to.be.equal(1);
+        expect(deviceManager.getDeviceTypes(devices[0])[0]).to.be.equal(DeviceManager.DEVICE_TYPE_LIGHT);
+    });
+
 
     after(() => {
         radioPlugin.instance.service.send.restore();
