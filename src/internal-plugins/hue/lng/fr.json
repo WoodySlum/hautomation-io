@@ -1,5 +1,6 @@
 {
     "hue.form.title":"Philips Hue",
     "hue.settings.ip": "Adresse IP du pont Hue. Laissez ce champ vide pour qu'il soit détecté automatiquement",
-    "hue.settings.username": "Nom d'utilisateur Hue. La première fois, cliquez sur le bouton de lien du boitier Philips Hue avant de cliquer sur le bouton Sauvegarder. Ce champ se remplira automatiquement"
+    "hue.settings.username": "Nom d'utilisateur Hue. La première fois, cliquez sur le bouton de lien du boitier Philips Hue avant de cliquer sur le bouton Sauvegarder. Ce champ se remplira automatiquement",
+    "hue.device.device": "Sélectionnez un périphérique Philips Hue"
 }
