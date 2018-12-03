@@ -255,7 +255,6 @@ function loaded(api) {
                 context.api.deviceAPI.addForm("hue", HueDeviceForm, "hue.form.title", true, context.getHueId(), context.getHueName());
                 // Switch device status
                 context.api.deviceAPI.registerSwitchDevice("hue", (device, formData, deviceStatus) => {
-                    console.log(formData);
                     formData.forEach((hueDevice) => {
                         context.client.lights.getById(parseInt(hueDevice.device))
                         .then(light => {
