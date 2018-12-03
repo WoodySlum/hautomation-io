@@ -260,6 +260,12 @@ describe("DeviceManager", function() {
         deviceManager.switchDeviceModules.foo.switch.restore();
     });
 
+    it("getSupportedModes should send correct value", function() {
+        expect(deviceManager.getDeviceTypes(devices[0]).length).to.be.equal(1);
+        expect(deviceManager.getDeviceTypes(devices[0])[0]).to.be.equal(DeviceManager.DEVICE_TYPE_LIGHT);
+    });
+
+
     after(() => {
         radioPlugin.instance.service.send.restore();
     });

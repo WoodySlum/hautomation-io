@@ -108,7 +108,7 @@ function loaded(api) {
                     this.service.start();
                 });
 
-                api.coreAPI.registerEvent(api.sensorAPI.constants().EVENT_SENSORS_READY, () => {
+                api.coreAPI.registerEvent(api.constants().CORE_EVENT_READY, () => {
                     this.service.stop();
                     this.generateHapSensors();
                     this.service.init(this.devices, this.sensors);
@@ -141,7 +141,8 @@ function loaded(api) {
                         identifier: device.id,
                         name: device.name,
                         coreApi:api,
-                        status: device.status
+                        status: device.status,
+                        device: device
                     });
                 }
             });

@@ -1,3 +1,5 @@
 {
-    "hue.settings.username": "Hue Username. On first usage, leave empty and press on the link button before clicking on save button. This field will be automatically field"
+    "hue.form.title":"Philips Hue",
+    "hue.settings.ip": "Adresse IP du pont Hue. Laissez ce champ vide pour qu'il soit détecté automatiquement",
+    "hue.settings.username": "Nom d'utilisateur Hue. La première fois, cliquez sur le bouton de lien du boitier Philips Hue avant de cliquer sur le bouton Sauvegarder. Ce champ se remplira automatiquement"
 }

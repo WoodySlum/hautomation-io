@@ -6,11 +6,13 @@ class DeviceStatus {
     /**
      * constructor
      *
+     * @param {[string]} deviceTypes Supported mode for device
      * @param {int} status     The status
      * @param {int} brightness The brightness
      * @param {string} color      The color
      */
-    constructor(status, brightness, color) {
+    constructor(deviceTypes, status, brightness, color) {
+        this.deviceTypes = deviceTypes;
         this.status = status;
         this.brightness = brightness;
         this.color = color;
@@ -77,6 +79,7 @@ class DeviceStatus {
      */
     tileFormat() {
         return {
+            deviceTypes: this.deviceTypes,
             status: this.status,
             brightness: this.brightness,
             color: this.color

@@ -93,6 +93,35 @@ class DeviceAPI {
     saveDevice(device) {
         PrivateProperties.oprivate(this).deviceManager.saveDevice(device);
     }
+
+    /**
+     * Returns the supported modes for a specific device (e.g. light, dimmable, color, ...)
+     *
+     * @param  {Object} device A device
+     * @returns {[string]}        The list of supported modes
+     */
+    getDeviceTypes(device) {
+        return PrivateProperties.oprivate(this).deviceManager.getDeviceTypes(device);
+    }
+
+    /**
+     * Returns a device from an identifier
+     *
+     * @param  {string} id An identifier
+     * @returns {Object}    A device
+     */
+    getDeviceById(id) {
+        return PrivateProperties.oprivate(this).deviceManager.getDeviceById(id);
+    }
+
+    /**
+     * Switch device with a device object
+     *
+     * @param  {Object} device A device
+     */
+    switchDeviceWithDevice(device) {
+        PrivateProperties.oprivate(this).deviceManager.switchDeviceWithDevice(device);
+    }
 }
 
 module.exports = {class:DeviceAPI};

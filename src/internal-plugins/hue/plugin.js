@@ -20,11 +20,19 @@ function loaded(api) {
          * Constructor
          *
          * @param  {number} id The identifier
-         * @param  {string} username The usernam
+         * @param  {string} ip The bridge ip
+         * @param  {string} username The username
          * @returns {HueForm}        The instance
          */
-        constructor(id, username) {
+        constructor(id, ip, username) {
             super(id);
+
+            /**
+             * @Property("ip");
+             * @Type("string");
+             * @Title("hue.settings.ip");
+             */
+            this.ip = ip;
 
             /**
              * @Property("username");
@@ -42,7 +50,7 @@ function loaded(api) {
          * @returns {HueForm}      An instance
          */
         json(data) {
-            return new HueForm(data.id, data.username);
+            return new HueForm(data.id, data.ip, data.username);
         }
     }
 
@@ -125,24 +133,49 @@ function loaded(api) {
 
             api.configurationAPI.setUpdateCb((data) => {
                 if (!data.username || data.username.length === 0) {
-                    const user = new this.client.users.User;
-
-                    // Optionally configure a device type / agent on the user
-                    user.deviceType = "hautomation"; // Default is 'huejay'
-
-                    this.client.users.create(user)
-                    .then(user => {
-                        data.username = user.username;
-                        api.exported.Logger.info("Hue new user created - username : " + user.username);
-                    }).catch(error => {
-                        if (error instanceof huejay.Error && error.type === 101) {
-                            api.exported.Logger.info("Link button not pressed. Try again...");
+                    huejay.discover()
+                    .then(bridges => {
+                        if (data.ip && data.ip.length > 0) {
+                            this.client = new huejay.Client({
+                                host:     data.ip,
+                                username: data.username
+                            });
+                        } else {
+                            for (let bridge of bridges) {
+                                this.client = new huejay.Client({
+                                    host:     bridge.ip,
+                                    username: data.username
+                                });
+                                api.exported.Logger.info("Found bridge with IP " + bridge.ip);
+                            }
                         }
-                    });
 
-                    api.configurationAPI.saveData(data);
+                        if (this.client) {
+                            const user = new this.client.users.User;
+
+                            // Optionally configure a device type / agent on the user
+                            user.deviceType = "hautomation"; // Default is 'huejay'
+
+                            this.client.users.create(user)
+                            .then(user => {
+                                data.username = user.username;
+                                api.exported.Logger.info("Hue new user created - username : " + user.username);
+                                api.configurationAPI.saveData(data);
+                                this.initClient();
+                            }).catch(error => {
+                                if (error instanceof huejay.Error && error.type === 101) {
+                                    api.exported.Logger.info("Link button not pressed. Try again...");
+                                }
+                            });
+                        } else {
+                            api.exported.Logger.err("Bridge not found");
+                        }
+                    }).catch(error => {
+                        api.exported.Logger.err(error.message);
+                    });
+                } else {
+                    this.initClient();
                 }
-                this.initClient();
             });
 
             api.timeEventAPI.register((self) => {
@@ -195,12 +228,12 @@ function loaded(api) {
                         const brightness = parseFloat(Math.round(state.bri / 254 * 10) / 10);
                         const color = colorutil.rgb.to.hex(colorutil.hsv.to.rgb({h: (Math.round((state.hue / 65534) * colorRound) / colorRound), s: (Math.round((state.sat / 254) * colorRound) / colorRound), v: 1, a: 1})).toUpperCase().replace("#", "");
 
-                        device.status = status;
-                        device.brightness = brightness;
-                        device.color = color;
-
                         if (status != device.status || brightness != device.brightness || color != device.color) {
-                            context.deviceAPI.saveDevice(device);
+                            device.status = status;
+                            device.brightness = brightness;
+                            device.color = color;
+
+                            context.api.deviceAPI.saveDevice(device);
                         }
                     }
                 });
@@ -219,33 +252,49 @@ function loaded(api) {
 
             context.retrieveLights(() => {
                 context.updateLocalState(context);
-                context.api.deviceAPI.addForm("hue", HueDeviceForm, null, false, context.getHueId(), context.getHueName());
+                context.api.deviceAPI.addForm("hue", HueDeviceForm, "hue.form.title", true, context.getHueId(), context.getHueName());
                 // Switch device status
                 context.api.deviceAPI.registerSwitchDevice("hue", (device, formData, deviceStatus) => {
-                    context.client.lights.getById(parseInt(formData.device))
-                    .then(light => {
-                        light.name = device.name;
-                        let brightness = device.brightness ? (device.brightness * 254) : 254;
+                    console.log(formData);
+                    formData.forEach((hueDevice) => {
+                        context.client.lights.getById(parseInt(hueDevice.device))
+                        .then(light => {
+                            light.name = device.name;
 
-                        if (device.status === context.api.deviceAPI.constants().INT_STATUS_ON) {
-                            light.on = true;
-                            light.brightness = brightness;
-                        } else {
-                            light.on = false;
-                            light.brightness = 0;
-                        }
+                            // Default values if not set
+                            if (!device.color) {
+                                device.color = "FFFFFF";
+                            }
 
-                        light.hue        = Math.round(parseInt(colorutil.rgb.to.hsv(colorutil.hex.to.rgb("#" + device.color)).h * 65534) * colorRound) / colorRound;
-                        light.saturation = Math.round(parseInt(colorutil.rgb.to.hsv(colorutil.hex.to.rgb("#" + device.color)).s * 254) * colorRound) / colorRound;
+                            if (!device.brightness) {
+                                device.brightness = 1;
+                            }
 
-                        return context.client.lights.save(light);
-                    })
-                    .then(light => {
-                        context.api.Logger.info.log("Updated hue light " + light.id);
-                    })
-                    .catch(error => {
-                        context.api.Logger.err("Something went wrong when trying to change Hue");
-                        context.api.Logger.err(error.stack);
+                            let brightness = parseInt(device.brightness ? (device.brightness * 254) : 254);
+                            if (device.status === context.api.deviceAPI.constants().INT_STATUS_ON) {
+                                light.on = true;
+                                light.brightness = brightness;
+
+                                if (light.state.attributes.hasOwnProperty("hue") && device.color) {
+                                    light.hue = Math.round(parseInt(colorutil.rgb.to.hsv(colorutil.hex.to.rgb("#" + device.color)).h * 65534) * colorRound) / colorRound;
+                                }
+
+                                if (light.state.attributes.hasOwnProperty("sat") && device.color) {
+                                    light.saturation = Math.round(parseInt(colorutil.rgb.to.hsv(colorutil.hex.to.rgb("#" + device.color)).s * 254) * colorRound) / colorRound;
+                                }
+                            } else {
+                                light.on = false;
+                            }
+
+                            return context.client.lights.save(light);
+                        })
+                        .then(light => {
+                            context.api.exported.Logger.info("Updated hue light " + light.id);
+                        })
+                        .catch(error => {
+                            context.api.exported.Logger.err("Something went wrong when trying to change Hue");
+                            context.api.exported.Logger.err(error.stack);
+                        });
                     });
 
                     return deviceStatus;
@@ -262,12 +311,19 @@ function loaded(api) {
             if (data && data.username) {
                 huejay.discover()
                 .then(bridges => {
-                    for (let bridge of bridges) {
+                    if (data.ip && data.ip.length > 0) {
                         this.client = new huejay.Client({
-                            host:     bridge.ip,
+                            host:     data.ip,
                             username: data.username
                         });
-                        api.exported.Logger.info("Found bridge with IP " + bridge.ip);
+                    } else {
+                        for (let bridge of bridges) {
+                            this.client = new huejay.Client({
+                                host:     bridge.ip,
+                                username: data.username
+                            });
+                            api.exported.Logger.info("Found bridge with IP " + bridge.ip);
+                        }
                     }
 
                     if (this.client) {

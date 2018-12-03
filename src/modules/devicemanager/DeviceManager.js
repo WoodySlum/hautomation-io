@@ -65,6 +65,7 @@ class DeviceManager {
         webServices.registerAPI(this, WebServices.POST, ":/device/set/[id]/[status*]/[brightness*]/[color*]/", Authentication.AUTH_USAGE_LEVEL);
         webServices.registerAPI(this, WebServices.POST, ":" + ROUTE_ALL_ON, Authentication.AUTH_USAGE_LEVEL);
         webServices.registerAPI(this, WebServices.POST, ":" + ROUTE_ALL_OFF, Authentication.AUTH_USAGE_LEVEL);
+
         this.registerDeviceTiles();
         this.registerDeviceListForm();
 
@@ -158,6 +159,9 @@ class DeviceManager {
         }
         this.switchDeviceModules[key].type = type;
         this.switchDeviceModules[key].switch = cb;
+
+        // Update tiles for device types
+        this.registerDeviceTiles();
     }
 
     /**
@@ -251,9 +255,46 @@ class DeviceManager {
     registerDeviceTile(device, data = [], index = -1) {
         if (device.visible) {
             let i = (index === -1)?(9000 + data.indexOf(device)):index;
-            const tile = new Tile.class(this.dashboardManager.themeManager, device.id, Tile.TILE_DEVICE, device.icon.icon, null, device.name, null, null, null, device.status > 0?1:0, i, "/device/set/" + device.id + "/", new DeviceStatus.class(device.status, device.brightness, device.color).tileFormat());
+            const tile = new Tile.class(this.dashboardManager.themeManager, device.id, Tile.TILE_DEVICE, device.icon.icon, null, device.name, null, null, null, device.status > 0?1:0, i, "/device/set/" + device.id + "/", new DeviceStatus.class(this.getDeviceTypes(device), device.status, device.brightness, device.color).tileFormat());
             this.dashboardManager.registerTile(tile);
         }
+    }
+
+    /**
+     * Returns the supported modes for a specific device (e.g. light, dimmable, color, ...)
+     *
+     * @param  {Object} device A device
+     * @returns {[string]}        The list of supported modes
+     */
+    getDeviceTypes(device) {
+        const modes = [];
+        Object.keys(this.switchDeviceModules).forEach((switchDeviceModuleKey) => {
+            const switchDeviceModule = this.switchDeviceModules[switchDeviceModuleKey];
+            if (device && device[switchDeviceModule.formName]) {
+                if (modes.indexOf(switchDeviceModule.type) == -1) {
+                    modes.push(switchDeviceModule.type);
+                }
+            }
+        });
+
+        return modes;
+    }
+
+    /**
+     * Returns a device from an identifier
+     *
+     * @param  {string} id An identifier
+     * @returns {Object}    A device
+     */
+    getDeviceById(id) {
+        let found = null;
+        this.getDevices().forEach((device) => {
+            if (device.id == id) {
+                found = device;
+            }
+        });
+
+        return found;
     }
 
     /**
@@ -265,12 +306,14 @@ class DeviceManager {
      * @param  {string} [color=FFFFFF] Brightness (hex color)
      */
     switchDevice(id, status = null, brightness = 0, color = "FFFFFF") {
-        if (status && status.toLowerCase() === STATUS_ON) {
-            status = INT_STATUS_ON;
-        } else if (status && status.toLowerCase() === STATUS_OFF) {
-            status = INT_STATUS_OFF;
-        } else if (status && status.toLowerCase() === STATUS_INVERT) {
-            status = null;
+        if (typeof status === "string") {
+            if (status && status.toLowerCase() === STATUS_ON) {
+                status = INT_STATUS_ON;
+            } else if (status && status.toLowerCase() === STATUS_OFF) {
+                status = INT_STATUS_OFF;
+            } else if (status && status.toLowerCase() === STATUS_INVERT) {
+                status = null;
+            }
         }
 
         this.formConfiguration.getDataCopy().forEach((device) => {
@@ -286,7 +329,7 @@ class DeviceManager {
                     Object.keys(this.switchDeviceModules).forEach((switchDeviceModuleKey) => {
                         const switchDeviceModule = this.switchDeviceModules[switchDeviceModuleKey];
                         if (device[switchDeviceModule.formName]) {
-                            newDeviceStatus = switchDeviceModule.switch(device, device[switchDeviceModule.formName], new DeviceStatus.class(status, brightness, color));
+                            newDeviceStatus = switchDeviceModule.switch(device, device[switchDeviceModule.formName], new DeviceStatus.class(this.getDeviceTypes(device), status, brightness, color));
                         }
                     });
 
@@ -304,14 +347,25 @@ class DeviceManager {
     }
 
     /**
+     * Switch device with a device object
+     *
+     * @param  {Object} device A device
+     */
+    switchDeviceWithDevice(device) {
+        this.switchDevice(device.id, device.status, device.brightness, device.color);
+    }
+
+    /**
      * Save device
      *
      * @param  {Object} device A device
      */
     saveDevice(device) {
         this.formConfiguration.saveConfig(device);
+
         // Devices tiles
         let data = this.formConfiguration.data.sort((a,b) => a.name.localeCompare(b.name));
+
         this.registerDeviceTile(device, data); // Save to dashboard !
     }
 
