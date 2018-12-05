@@ -1,4 +1,8 @@
 "use strict";
+
+const MIN_VALUE = -50;
+const MAX_VALUE = 50;
+
 /**
  * Loaded function
  *
@@ -83,6 +87,22 @@ function loaded(api) {
                 this.unitConverter = (value) => {
                     return value * (9/5) + 32;
                 };
+            }
+        }
+
+        /**
+         * Set a value and store in database
+         *
+         * @param {number} value      A value
+         * @param {number} [vcc=null] A voltage level
+         * @param  {Function} [cb=null] A callback with an error parameter, called when done. Used for testing only.
+         * @param {number} [timestamp=null] A timestamp
+         */
+        setValue(value, vcc = null, cb = null, timestamp = null) {
+            if (value > MIN_VALUE && value < MAX_VALUE) {
+                super.setValue(value, vcc, cb, timestamp);
+            } else {
+                api.exported.Logger.err("Invalid value for temperature : ", value);
             }
         }
     }
