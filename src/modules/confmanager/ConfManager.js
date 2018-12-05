@@ -12,6 +12,7 @@ const DATA_NOT_FOUND      = "DATA_NOT_FOUND";
 //"RjG?#5-i.:>f5.3i@&'R9PG&Sz'd29"
 const ENCRYPTION_KEY = [0, 82, 0, 106, 0, 71, 0, 63, 0, 35, 0, 53, 0, 45, 0, 105, 0, 46, 0, 58, 0, 62, 0, 102, 0, 53, 0, 46, 0, 51, 0, 105, 0, 64, 0, 38, 0, 39, 0, 82, 0, 57, 0, 80, 0, 71, 0, 38, 0, 83, 0, 122, 0, 39, 0, 100, 0, 50, 0, 57];
 const ENCRYPTION_ALGORITHM = "aes-256-ctr";
+const CONF_FILE_EXTENSION = ".json";
 
 /**
  * This class manage object persistence with JSON format
@@ -65,9 +66,9 @@ class ConfManager {
      */
     getFilePath(key) {
         if (this.appConfiguration.configurationPath.slice(-1) == "/") {
-            return this.appConfiguration.configurationPath +  key + ".json";
+            return this.appConfiguration.configurationPath +  key + CONF_FILE_EXTENSION;
         } else {
-            return this.appConfiguration.configurationPath +  "/" + key + ".json";
+            return this.appConfiguration.configurationPath +  "/" + key + CONF_FILE_EXTENSION;
         }
     }
 
@@ -148,6 +149,10 @@ class ConfManager {
      * @param  {boolean} [async=true] True if save asynchronously, false otherwise
      */
     writeDataToDisk(context, async = true) {
+        if (!context) {
+            context = this;
+        }
+
         Logger.info("Saving configuration files");
         const keys = Object.keys(context.toBeSaved);
         keys.forEach((key) => {
@@ -298,4 +303,4 @@ class ConfManager {
 
 module.exports = {class:ConfManager,
     ERROR_EMPTY_FILE:ERROR_EMPTY_FILE, ERROR_INVALID_JSON:ERROR_INVALID_JSON, ERROR_INVALID_FILE:ERROR_INVALID_FILE,ERROR_NO_JSON_METHOD:ERROR_NO_JSON_METHOD,
-    DATA_NOT_FOUND:DATA_NOT_FOUND};
+    DATA_NOT_FOUND:DATA_NOT_FOUND, CONF_FILE_EXTENSION:CONF_FILE_EXTENSION};

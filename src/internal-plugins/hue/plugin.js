@@ -346,6 +346,8 @@ function loaded(api) {
               .then(lights => {
                   this.hueDevices = lights;
                   cb(lights);
+              }).catch((err) => {
+                  api.exported.Logger.err(err.message);
               });
         }
     }

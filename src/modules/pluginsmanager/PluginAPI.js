@@ -1,39 +1,40 @@
 "use strict";
 
 const PrivateProperties = require("./PrivateProperties");
-var WebAPI = require("./publicapis/WebAPI");
-var ServicesManagerAPI = require("./publicapis/ServicesManagerAPI");
-var DatabaseAPI = require("./publicapis/DatabaseAPI");
-var TranslateAPI = require("./publicapis/TranslateAPI");
-var ConfigurationAPI = require("./publicapis/ConfigurationAPI");
-var Service = require("./../../services/Service");
-var DbObject = require("./../dbmanager/DbObject");
-var Logger = require("./../../logger/Logger");
-var FormObject = require("./../formmanager/FormObject");
-var TimeEventAPI = require("./publicapis/TimeEventAPI");
-var SchedulerAPI = require("./publicapis/SchedulerAPI");
-var DashboardAPI = require("./publicapis/DashboardAPI");
-var SensorAPI = require("./publicapis/SensorAPI");
-var ThemeAPI = require("./publicapis/ThemeAPI");
-var InstallerAPI = require("./publicapis/InstallerAPI");
-var UserAPI = require("./publicapis/UserAPI");
-var MessageAPI = require("./publicapis/MessageAPI");
-var ScenarioAPI = require("./publicapis/ScenarioAPI");
-var AlarmAPI = require("./publicapis/AlarmAPI");
-var CameraAPI = require("./publicapis/CameraAPI");
-var RadioAPI = require("./publicapis/RadioAPI");
-var EnvironmentAPI = require("./publicapis/EnvironmentAPI");
-var IotAPI = require("./publicapis/IotAPI");
-var IotForm = require("./../iotmanager/IotForm");
-var BotEngineAPI = require("./publicapis/BotEngineAPI");
-var CoreAPI = require("./publicapis/CoreAPI");
-var DeviceAPI = require("./publicapis/DeviceAPI");
+const WebAPI = require("./publicapis/WebAPI");
+const ServicesManagerAPI = require("./publicapis/ServicesManagerAPI");
+const DatabaseAPI = require("./publicapis/DatabaseAPI");
+const TranslateAPI = require("./publicapis/TranslateAPI");
+const ConfigurationAPI = require("./publicapis/ConfigurationAPI");
+const Service = require("./../../services/Service");
+const DbObject = require("./../dbmanager/DbObject");
+const Logger = require("./../../logger/Logger");
+const FormObject = require("./../formmanager/FormObject");
+const TimeEventAPI = require("./publicapis/TimeEventAPI");
+const SchedulerAPI = require("./publicapis/SchedulerAPI");
+const DashboardAPI = require("./publicapis/DashboardAPI");
+const SensorAPI = require("./publicapis/SensorAPI");
+const ThemeAPI = require("./publicapis/ThemeAPI");
+const InstallerAPI = require("./publicapis/InstallerAPI");
+const UserAPI = require("./publicapis/UserAPI");
+const MessageAPI = require("./publicapis/MessageAPI");
+const ScenarioAPI = require("./publicapis/ScenarioAPI");
+const AlarmAPI = require("./publicapis/AlarmAPI");
+const CameraAPI = require("./publicapis/CameraAPI");
+const RadioAPI = require("./publicapis/RadioAPI");
+const EnvironmentAPI = require("./publicapis/EnvironmentAPI");
+const IotAPI = require("./publicapis/IotAPI");
+const IotForm = require("./../iotmanager/IotForm");
+const BotEngineAPI = require("./publicapis/BotEngineAPI");
+const CoreAPI = require("./publicapis/CoreAPI");
+const DeviceAPI = require("./publicapis/DeviceAPI");
+const BackupAPI = require("./publicapis/BackupAPI");
 
-var DateUtils = require("./../../utils/DateUtils");
-var Icons = require("./../../utils/Icons");
-var ImageUtils = require("./../../utils/ImageUtils");
-var Cleaner = require("./../../utils/Cleaner");
-var HautomationRunnerConstants = require("./../../../HautomationRunnerConstants");
+const DateUtils = require("./../../utils/DateUtils");
+const Icons = require("./../../utils/Icons");
+const ImageUtils = require("./../../utils/ImageUtils");
+const Cleaner = require("./../../utils/Cleaner");
+const HautomationRunnerConstants = require("./../../../HautomationRunnerConstants");
 
 /**
  * This class is an interface for plugins
@@ -70,10 +71,11 @@ class PluginsAPI {
     //  * @param  {BotEngine} botEngine The IoT manager
     //  * @param  {EventEmitter} eventBus The event bus
     //  * @param  {DeviceManager} deviceManager The device manager
+    //  * @param  {BackupManager} backupManager The backup manager
     //  * @param  {string} CORE_EVENT_READY The core event ready identifier
-    //  * @returns {PluginAPI}                  Insntance
+    //  * @returns {PluginAPI}                  Instance
     //  */
-    constructor(previousVersion, p, webServices, appConfiguration, servicesManager, dbManager, translateManager, formManager, confManager, timeEventService, schedulerService, dashboardManager, themeManager, sensorsManager, installationManager, userManager, messageManager, scenarioManager, alarmManager, camerasManager, radioManager, environmentManager, pluginsManager, iotManager, botEngine, eventBus, deviceManager, CORE_EVENT_READY) {
+    constructor(previousVersion, p, webServices, appConfiguration, servicesManager, dbManager, translateManager, formManager, confManager, timeEventService, schedulerService, dashboardManager, themeManager, sensorsManager, installationManager, userManager, messageManager, scenarioManager, alarmManager, camerasManager, radioManager, environmentManager, pluginsManager, iotManager, botEngine, eventBus, deviceManager, backupManager, CORE_EVENT_READY) {
         PrivateProperties.createPrivateState(this);
         this.previousVersion = previousVersion;
         this.p = p;
@@ -127,6 +129,7 @@ class PluginsAPI {
         this.botEngineAPI = new BotEngineAPI.class(botEngine);
         this.coreAPI = new CoreAPI.class(eventBus, appConfiguration);
         this.deviceAPI = new DeviceAPI.class(deviceManager);
+        this.backupAPI = new BackupAPI.class(backupManager);
         PrivateProperties.oprivate(this).pluginsManager = pluginsManager;
     }
 

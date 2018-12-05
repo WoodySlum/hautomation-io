@@ -32,6 +32,7 @@ const IotManager = require("./modules/iotmanager/IotManager");
 const GatewayManager = require("./modules/gatewaymanager/GatewayManager");
 const BotEngine = require("./modules/botengine/BotEngine");
 const LogManager = require("./modules/logmanager/LogManager");
+const BackupManager = require("./modules/backupmanager/BackupManager");
 
 const CONFIGURATION_FILE = "data/config.json";
 var AppConfiguration = require("./../data/config.json");
@@ -157,9 +158,11 @@ class HautomationCore {
         this.deviceManager = new DeviceManager.class(this.confManager, this.formManager, this.webServices, this.radioManager, this.dashboardManager, this.scenarioManager, this.translateManager, this.environmentManager, this.botEngine, this.sensorsManager, this.eventBus);
         // Alarm module
         this.alarmManager = new AlarmManager.class(this.confManager, this.formManager, this.webServices, this.dashboardManager, this.userManager, this.sensorsManager, this.translateManager, this.deviceManager, this.messageManager, this.schedulerService, this.camerasManager, this.botEngine);
+        // Backup manager
+        this.backupManager = new BackupManager.class(AppConfiguration, this.confManager, this.eventBus);
 
         // Plugins manager module
-        this.pluginsManager = new PluginsManager.class(this.confManager, this.webServices, this.servicesManager, this.dbManager, this.translateManager, this.formManager, this.timeEventService, this.schedulerService, this.dashboardManager, this.eventBus, this.themeManager, this.sensorsManager, this.installationManager, this.userManager, this.messageManager, this.scenarioManager, this.alarmManager, this.camerasManager, this.radioManager, AppConfiguration, this.environmentManager, this.iotManager, this.botEngine, this.deviceManager, EVENT_READY);
+        this.pluginsManager = new PluginsManager.class(this.confManager, this.webServices, this.servicesManager, this.dbManager, this.translateManager, this.formManager, this.timeEventService, this.schedulerService, this.dashboardManager, this.eventBus, this.themeManager, this.sensorsManager, this.installationManager, this.userManager, this.messageManager, this.scenarioManager, this.alarmManager, this.camerasManager, this.radioManager, AppConfiguration, this.environmentManager, this.iotManager, this.botEngine, this.deviceManager, this.backupManager, EVENT_READY);
 
         // Add services to manager
         this.servicesManager.add(this.webServices);

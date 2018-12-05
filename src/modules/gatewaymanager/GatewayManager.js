@@ -65,7 +65,6 @@ class GatewayManager {
         this.eventBus.on(HautomationRunnerConstants.RESTART, () => {
             self.bootMode = BOOT_MODE_BOOTING;
             self.transmit();
-            self.restart(self);
         });
     }
 
