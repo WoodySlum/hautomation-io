@@ -2,7 +2,7 @@
     "dropbox.access.token": "Dropbox access token. Veuillez en créer un à l'adresse : https://www.dropbox.com/developers/apps",
     "dropbox.manual.actions": "Actions manuelles",
     "dropbox.manual.actions.none": "Aucune",
-    "dropbox.manual.actions.backup": "Réaliser une sauvegarde automatiquement",
+    "dropbox.manual.actions.backup": "Réaliser une sauvegarde immédiatement",
     "dropbox.manual.actions.restore": "Restaurer une sauvegarde Dropbox",
     "dropbox.restore.confirm": "Confirmer la restauration",
     "dropbox.save.configuration": "Sauvegarder les fichiers de configuration",
