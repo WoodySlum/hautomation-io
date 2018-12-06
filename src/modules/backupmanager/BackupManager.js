@@ -108,6 +108,7 @@ class BackupManager {
                 Logger.info("Writing file descriptor");
                 fs.writeFileSync(backupDirPath + DESCRIPTOR, JSON.stringify(descriptor));
                 Logger.info("File descriptor written");
+                Logger.info("Compressing backup ...");
                 zipdir(backupDirPath, { saveTo: backupFilePath }, (err) => {
                     Logger.info("Zip file created");
                     const backupFileStats = fs.statSync(backupFilePath);

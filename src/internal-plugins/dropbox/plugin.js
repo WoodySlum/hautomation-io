@@ -202,6 +202,7 @@ function loaded(api) {
                         dbx.filesDelete({ path: "/" + BACKUP_FILE_NAME })
                         .then((response) => {
                             context.api.exported.Logger.info(response);
+                            context.api.exported.Logger.info("Backup uploaded to Dropbox successfully");
                             context.uploadDropbox(context, dbx, backupFilePath, BACKUP_FILE_NAME);
                         })
                         .catch((err) => {
