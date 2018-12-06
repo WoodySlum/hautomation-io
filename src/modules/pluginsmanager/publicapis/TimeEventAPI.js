@@ -30,22 +30,24 @@ class TimeEventAPI {
      * @param  {string}   [hour=null]   The hour value. `*` for all
      * @param  {string}   [minute=null] The minute value. `*` for all
      * @param  {string}   [second=null] The second value. `*` for all
+     * @param  {string}   [key=null] A register key (optional)
      */
-    register(cb, context, mode, hour = null, minute = null, second = null) {
-        PrivateProperties.oprivate(this).timeEventService.register(cb, context, mode, hour, minute, second);
+    register(cb, context, mode, hour = null, minute = null, second = null, key = null) {
+        PrivateProperties.oprivate(this).timeEventService.register(cb, context, mode, hour, minute, second, key);
     }
 
     /**
      * Unegister an timer element
      *
-     * @param  {Function} cb            A callback triggered when conditions are reached
+     * @param  {Function} cb            A callback triggered when conditions are reached (context will be set back as parameter). Example : `(self) => {}`
      * @param  {int}   mode          Mode (enum) : `EVERY_SECONDS`, `EVERY_MINUTES`, `EVERY_HOURS`, `EVERY_DAYS` or `CUSTOM`
      * @param  {string}   [hour=null]   The hour value. `*` for all
      * @param  {string}   [minute=null] The minute value. `*` for all
      * @param  {string}   [second=null] The second value. `*` for all
+     * @param  {string}   [key=null] A register key (optional)
      */
-    unregister(cb, mode, hour = null, minute = null, second = null) {
-        PrivateProperties.oprivate(this).timeEventService.unregister(cb, mode, hour, minute, second);
+    unregister(cb, mode, hour = null, minute = null, second = null, key = null) {
+        PrivateProperties.oprivate(this).timeEventService.unregister(cb, mode, hour, minute, second, key);
     }
 
     /**

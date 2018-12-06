@@ -49,6 +49,15 @@ class BackupAPI {
     restore(backupFilePath, cb) {
         PrivateProperties.oprivate(this).backupManager.restore(backupFilePath, cb);
     }
+
+    /**
+     * Clean a backup file
+     *
+     * @param  {string} backupFilePath Backup file path
+     */
+    cleanBackupFile(backupFilePath) {
+        PrivateProperties.oprivate(this).backupManager.cleanBackupFile(backupFilePath);
+    }
 }
 
 module.exports = {class:BackupAPI};

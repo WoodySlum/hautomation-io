@@ -352,7 +352,6 @@ function loaded(api) {
         }
     }
 
-    // Instantiate. Parent will store instanciation.
     new Hue(api);
 }
 

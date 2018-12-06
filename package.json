@@ -23,7 +23,10 @@
             "**/internal-plugins/homebridge/*",
             "**/internal-plugins/tplink-tl-mr6400/*",
             "**/modules/logmanager/*",
-            "**/modules/backupmanager/*"
+            "**/modules/backupmanager/*",
+            "**/internal-plugins/huawei*",
+            "**/internal-plugins/hue/*",
+            "**/internal-plugins/dropbox/*"
         ],
         "ignore-class-method": "stringify",
         "check-coverage": true,
@@ -106,6 +109,7 @@
         "columnify": "^1.5",
         "compression": "^1.7",
         "dialog-router-api": "git://github.com/WoodySlum/dialog-router-api.git#master",
+        "dropbox": "^4.0",
         "exec-extra": "^2.4.1",
         "express": "^4.16",
         "extract-zip": "^1.6",
@@ -116,6 +120,7 @@
         "homebridge-alexa": "^0.1",
         "huejay": "^1.8",
         "is-running": "^2.1",
+        "isomorphic-fetch": "^2.2",
         "md5-file": "^3.2",
         "mjpeg-proxy": "^0.2",
         "moment": "^2.22",

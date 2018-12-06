@@ -1,0 +1,16 @@
+{
+    "dropbox.access.token": "Dropbox access token. Please register a new account token on https://www.dropbox.com/developers/apps",
+    "dropbox.manual.actions": "Manual actions",
+    "dropbox.manual.actions.none": "None",
+    "dropbox.manual.actions.backup": "Do a manual backup immediatly",
+    "dropbox.manual.actions.restore": "Restore Dropbox backup",
+    "dropbox.restore.confirm": "Confirm restore backup",
+    "dropbox.save.configuration": "Backup configuration files",
+    "dropbox.save.database": "Backup database file",
+    "dropbox.save.camera.history": "Backup camera history files (increase significantly backup size)",
+    "dropbox.auto.backup": "Automatically backup system",
+    "dropbox.auto.backup.none": "Disable",
+    "dropbox.auto.backup.every.day": "Every day",
+    "dropbox.auto.backup.every.week": "Every week",
+    "dropbox.auto.backup.every.month": "Every month"
+}

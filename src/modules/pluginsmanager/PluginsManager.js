@@ -71,7 +71,8 @@ const INTERNAL_PLUGINS = [
     "tplink-tl-mr6400",
     "huawei-router",
     "huawei-fairuse-sensor",
-    "hue"
+    "hue",
+    "dropbox"
 ];
 
 const CORE_PLUGINS = [
@@ -564,6 +565,7 @@ class PluginsManager {
     processAPI(apiRequest) {
         if (apiRequest.route === ROUTE_WS_GET) {
             const plugins = [];
+
             this.plugins.forEach((plugin) => {
                 const services = [];
                 const pluginConf = this.getPluginConf(plugin.identifier);
@@ -583,7 +585,7 @@ class PluginsManager {
                     enabled:(pluginConf && pluginConf.enable)?true:false,
                     corePlugin:(CORE_PLUGINS.indexOf(plugin.identifier) !== -1)
                 });
-                this.plugins.sort((a,b) => a.identifier.localeCompare(b.identifier));
+                // this.plugins.sort(function (a,b) => a.identifier.localeCompare(b.identifier));
             });
             return new Promise((resolve) => {
                 resolve(new APIResponse.class(true, plugins));

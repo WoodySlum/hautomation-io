@@ -32,6 +32,7 @@ class BackupManager {
         this.appConfiguration = appConfiguration;
         this.confManager = confManager;
         this.eventBus = eventBus;
+        this.backupFiles = [];
     }
 
     /**
@@ -118,6 +119,7 @@ class BackupManager {
                         if (err) {
                             cb(err);
                         } else {
+                            this.backupFiles.push(backupFilePath);
                             cb(null, backupFilePath);
                         }
                     }
@@ -256,6 +258,19 @@ class BackupManager {
             if (cb) {
                 cb(Error("Unexisting backup file. Can't restore"));
             }
+        }
+    }
+
+    /**
+     * Clean a backup file
+     *
+     * @param  {string} backupFilePath Backup file path
+     */
+    cleanBackupFile(backupFilePath) {
+        if (this.backupFiles.indexOf(backupFilePath) > -1 && fs.existsSync(backupFilePath)) {
+            fs.removeSync(backupFilePath);
+        } else {
+            throw Error("Could not delete file " + backupFilePath);
         }
     }
 }
