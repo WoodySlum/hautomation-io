@@ -236,6 +236,7 @@ function loaded(api) {
                 if (err) {
                     context.api.exported.Logger.err(err.message);
                 } else {
+                    context.api.exported.Logger.info("Uploading backup ...");
                     dbx.filesUpload({path: "/" + fileName, contents: contents})
                     .then((response) => {
                         context.api.exported.Logger.verbose(response);
