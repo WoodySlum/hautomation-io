@@ -126,7 +126,7 @@ class FormConfiguration {
                 this.data = this.confManager.setData(this.confKey, data, this.data, this.comparator);
             }
         } else {
-            this.data = this.confManager.setData(this.confKey, new (this.formClass)().json(data));
+            this.data = this.confManager.setData(this.confKey, this.formClass ? new (this.formClass)().json(data) : JSON.stringify(data));
         }
     }
 
