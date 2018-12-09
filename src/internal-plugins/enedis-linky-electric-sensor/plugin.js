@@ -2,6 +2,7 @@
 const pathl = require("path");
 const callsite = require("callsite");
 const fs = require("fs-extra");
+const linky = require("@bokub/linky");
 
 /**
  * Loaded function
@@ -10,11 +11,6 @@ const fs = require("fs-extra");
  */
 function loaded(api) {
     api.init();
-    api.installerAPI.register(["x32", "x64"], "brew install python", false, true, true);
-    api.installerAPI.register(["x32", "x64"], "pip install python-dateutil html", false, true, true);
-
-    api.installerAPI.register(["arm", "arm64"], "apt-get install -y --allow-unauthenticated python3 python3-pip", true, true);
-    api.installerAPI.register(["arm", "arm64"], "pip3 install python-dateutil", true, true);
 
 
     /**
@@ -108,6 +104,30 @@ function loaded(api) {
             this.acceptTermOfUseAlertSent = false;
 
             try {
+                if (configuration && configuration.username && configuration.password) {
+
+                    linky.login(configuration.username, configuration.password).then((session) => {
+                        session.getHourlyData({
+                            user:configuration.username,
+                            password:configuration.password
+                        })
+                        .then((d) => {
+                            console.log(d);
+                            process.exit(0);
+                        })
+                        .catch((e) => {
+                            console.log("HEYss");
+                            console.log(e);
+                            process.exit(0);
+                        });
+                    })
+                    .catch((e) => {
+                        console.log("HEY");
+                        console.log(e);
+                        process.exit(0);
+                    });
+                }
+
                 /*fs.removeSync(dir);
                 fs.ensureDirSync(dir);
 
