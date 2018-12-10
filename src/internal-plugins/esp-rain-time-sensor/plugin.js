@@ -75,9 +75,9 @@ function loaded(api) {
         updateTile(cb = null) {
             if (this.lastSensorValue && this.lastSensorTimestamp && this.lastSensorTimestamp > (this.api.exported.DateUtils.class.timestamp() - 60 * 60)) {
                 let label = "n/a";
-                if (this.lastSensorValue < 50) {
+                if (this.lastSensorValue < 120) {
                     label = this.api.translateAPI.t("esp.rain.time.sensor.no.rain");
-                } else if (this.lastSensorValue < 500) {
+                } else if (this.lastSensorValue < 800) {
                     label = this.api.translateAPI.t("esp.rain.time.sensor.light.rain");
                 } else {
                     label = this.api.translateAPI.t("esp.rain.time.sensor.heavy.rain");
