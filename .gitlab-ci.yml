@@ -56,10 +56,10 @@ deploy:
   script:
   - eval `ssh-agent -s`
   - ssh-add <(echo "$STAGING_PRIVATE_KEY" | base64 --decode)
-  - ssh -p$STAGING_SSH_PORT $STAGING_USER@$STAGING_IP "rm -Rf $STAGING_TMP_FOLDER/hautomation-core-deploy"
-  - ssh -p$STAGING_SSH_PORT $STAGING_USER@$STAGING_IP "mkdir $STAGING_TMP_FOLDER/hautomation-core-deploy"
-  - scp -P$STAGING_SSH_PORT -r build/* pi@$STAGING_IP:$STAGING_TMP_FOLDER/hautomation-core-deploy/
-  - ssh -p$STAGING_SSH_PORT $STAGING_USER@$STAGING_IP "cd $STAGING_TMP_FOLDER/hautomation-core-deploy/scripts && sh install.sh $STAGING_USER $STAGING_GROUP $STAGING_INSTALLATION_FOLDER"
+  - ssh -oStrictHostKeyChecking=no -p$STAGING_SSH_PORT $STAGING_USER@$STAGING_IP "rm -Rf $STAGING_TMP_FOLDER/hautomation-core-deploy"
+  - ssh -oStrictHostKeyChecking=no -p$STAGING_SSH_PORT $STAGING_USER@$STAGING_IP "mkdir $STAGING_TMP_FOLDER/hautomation-core-deploy"
+  - scp -oStrictHostKeyChecking=no -P$STAGING_SSH_PORT -r build/* pi@$STAGING_IP:$STAGING_TMP_FOLDER/hautomation-core-deploy/
+  - ssh -oStrictHostKeyChecking=no -p$STAGING_SSH_PORT $STAGING_USER@$STAGING_IP "cd $STAGING_TMP_FOLDER/hautomation-core-deploy/scripts && sh install.sh $STAGING_USER $STAGING_GROUP $STAGING_INSTALLATION_FOLDER"
   environment:
     name: staging
     url: $STAGING_URL
