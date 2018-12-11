@@ -364,6 +364,7 @@ function loaded(api) {
          */
         setValue(value, vcc = null, cb = null, timestamp = null) {
             const currentObject = new DbSensor(this.dbHelper, value, this.id, vcc);
+            this.api.exported.Logger.info("New value received for sensor " + this.name + "(#" + this.id + "). Value : " + value + ", vcc : " + vcc);
 
             // If timestamp provided
             if (timestamp) {
@@ -385,7 +386,9 @@ function loaded(api) {
                         if (!error) {
                             const currentObject = new DbSensor(this.dbHelper, value, this.id, vcc);
                             currentObject.timestamp = timestamp;
+
                             currentObject.save((err) => {
+                                process.exit(0);
                                 if (!err) {
                                     this.updateTile();
                                 }
@@ -398,7 +401,6 @@ function loaded(api) {
                 });
             } else {
                 // If timestamp not provided
-                this.api.exported.Logger.info("New value received for sensor " + this.name + "(#" + this.id + "). Value : " + value + ", vcc : " + vcc);
                 currentObject.save((err) => {
                     if (!err) {
                         this.updateTile();

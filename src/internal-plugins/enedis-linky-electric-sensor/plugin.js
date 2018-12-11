@@ -104,6 +104,7 @@ function loaded(api) {
             this.acceptTermOfUseAlertSent = false;
 
             try {
+                const self = this;
                 if (configuration && configuration.username && configuration.password) {
 
                     linky.login(configuration.username, configuration.password).then((session) => {
@@ -111,9 +112,28 @@ function loaded(api) {
                             user:configuration.username,
                             password:configuration.password
                         })
-                        .then((d) => {
-                            console.log(d);
-                            process.exit(0);
+                        .then((data) => {
+                            if (data && data.length > 0 && data[0] && data[0].date) {
+                                self.api.exported.Logger.info("Updating Linky data");
+                                // Every 30 minutes, so aaggregate to hour
+                                let i = 0;
+                                let intermediateData = 0;
+                                let timestamp = this.api.exported.DateUtils.class.dateToTimestamp(data[0].date);
+                                data.forEach((data) => {
+                                    intermediateData += data.value*1000;
+
+                                    if (i%2 === 1) {
+                                        if (intermediateData >= 0) {
+                                            self.setValue(intermediateData, 0, null, timestamp);
+                                        }
+
+                                        intermediateData = 0;
+                                        timestamp += 3600;
+                                    }
+
+                                    i++;
+                                });
+                            }
                         })
                         .catch((e) => {
                             console.log("HEYss");
