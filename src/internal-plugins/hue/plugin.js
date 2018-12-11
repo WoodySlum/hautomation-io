@@ -224,14 +224,11 @@ function loaded(api) {
                 context.api.deviceAPI.getDevices().forEach((device) => {
                     if (device.HueDeviceForm && device.HueDeviceForm.length > 0) {
                         device.HueDeviceForm.forEach((subd) => {
-                            console.log(subd);
                             if ( subd.device.toString() === hueDevice.attributes.attributes.id.toString()) {
                                 const state = hueDevice.state.attributes;
                                 const status = state.on ? context.api.deviceAPI.constants().INT_STATUS_ON : context.api.deviceAPI.constants().INT_STATUS_OFF;
                                 const brightness = parseFloat(Math.round(state.bri / 254 * 10) / 10);
                                 const color = colorutil.rgb.to.hex(colorutil.hsv.to.rgb({h: (Math.round((state.hue / 65534) * colorRound) / colorRound), s: (Math.round((state.sat / 254) * colorRound) / colorRound), v: 1, a: 1})).toUpperCase().replace("#", "");
-                                console.log(device.status);
-                                console.log(status);
                                 if (status != device.status || brightness != device.brightness || color != device.color) {
                                     device.status = status;
                                     device.brightness = brightness;
@@ -244,7 +241,6 @@ function loaded(api) {
                     }
                 });
             });
-            // process.exit(0);
         }
 
         /**
