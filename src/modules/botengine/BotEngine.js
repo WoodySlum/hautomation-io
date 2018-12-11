@@ -13,7 +13,7 @@ const callsite = require("callsite");
 const fs = require("fs-extra");
 
 const record = require("node-record-lpcm16");
-const snowboy = require("snowboy");
+// const snowboy = require("snowboy");
 const header = require("waveheader");
 const stream = require("stream");
 const WitSpeech = require("node-witai-speech");
@@ -123,7 +123,7 @@ class BotEngine {
      * Start vocie detection
      */
     voiceDetect() {
-        const models = new snowboy.Models();
+        /*const models = new snowboy.Models();
         const self = this;
         let gBuffer = null;
         let recording = false;
@@ -198,7 +198,7 @@ class BotEngine {
             verbose: false
         });
 
-        this.mic.pipe(this.detector);
+        this.mic.pipe(this.detector);*/
         this.registerTile();
     }
 

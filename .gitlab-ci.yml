@@ -1,4 +1,4 @@
-image: woodyslum/hautomation-ci:8
+image: woodyslum/hautomation-ci:10.14-1
 
 stages:
   - lint
@@ -7,9 +7,6 @@ stages:
   - build
   - deploy
 
-cache:
-  paths:
-    - node_modules/
 
 test:
   stage: test

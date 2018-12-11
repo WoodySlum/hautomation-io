@@ -4,7 +4,7 @@
     "description": "Hautomation core module",
     "main": "HautomationRunner.js",
     "engines": {
-        "node": "8.9.1"
+        "node": "10.14.1"
     },
     "engineStrict": true,
     "nyc": {
@@ -92,15 +92,18 @@
         "eslint-plugin-require-jsdoc": "^1.0",
         "mocha": "^5.2",
         "mocha-junit-reporter": "^1.18.0",
-        "node-pre-gyp": "^0.6",
-        "nodemon": "^1.18.5",
+        "node-pre-gyp": "latest",
+        "nodemon": "^1.18.7",
         "nyc": "^12.0",
-        "pkg": "^4.3.4",
+        "pkg": "^4.3",
         "remove-console-logs": "^0.1",
         "resolve-options": "^1.1",
-        "sinon": "^2.4"
+        "sinon": "^2.4",
+        "nan": "^2.11"
     },
     "dependencies": {
+        "node-gyp": "latest",
+        "@bokub/linky": "latest",
         "annotation": "git+https://github.com/WoodySlum/node-annotation.git#master",
         "audiohub": "git://github.com/WoodySlum/audiohub.git#master",
         "body-parser": "^1.18",
@@ -136,16 +139,15 @@
         "qrcode": "^1.3",
         "remi": "^2.0",
         "remi-runner": "^1.1",
-        "serialport": "^5.0",
+        "serialport": "^7.1",
         "sha256": "^0.2",
-        "snowboy": "^1.3",
-        "sqlite3": "^3.1",
+        "sqlite3": "^4.0",
         "stack-trace": "^0.0",
         "string-similarity": "^1.2",
         "threads": "git://github.com/WoodySlum/threads.js.git#master",
         "toposort": "^1.0",
         "underscore": "^1.9",
-        "usb-detection": "^2.1",
+        "usb-detection": "^4.1",
         "waveheader": "^0.0",
         "xml2js": "^0.4",
         "xmlhttprequest-ssl": "^1.5",

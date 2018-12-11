@@ -1,7 +1,5 @@
 "use strict";
-const pathl = require("path");
-const callsite = require("callsite");
-const fs = require("fs-extra");
+const linky = require("@bokub/linky");
 
 /**
  * Loaded function
@@ -10,11 +8,6 @@ const fs = require("fs-extra");
  */
 function loaded(api) {
     api.init();
-    api.installerAPI.register(["x32", "x64"], "brew install python", false, true, true);
-    api.installerAPI.register(["x32", "x64"], "pip install python-dateutil html", false, true, true);
-
-    api.installerAPI.register(["arm", "arm64"], "apt-get install -y --allow-unauthenticated python3 python3-pip", true, true);
-    api.installerAPI.register(["arm", "arm64"], "pip3 install python-dateutil", true, true);
 
 
     /**
@@ -75,24 +68,6 @@ function loaded(api) {
      */
     class LinkySensor extends api.exported.ElectricSensor {
         /**
-         * Sensor class (should be extended)
-         *
-         * @param  {PluginAPI} api                                                           A plugin api
-         * @param  {number} [id=null]                                                        An id
-         * @param  {string} [type="UNKNOWN"]                                                 A plugin type
-         * @param  {Object} [configuration=null]                                             The configuration for sensor
-         * @param  {string} [icon=null]                                                      An icon
-         * @param  {number} [round=0]                                                        Round value (number of digits after comma)
-         * @param  {string} [unit=null]                                                      Base unit
-         * @param  {int} [aggregationMode=AGGREGATION_MODE_AVG]                           Aggregation mode
-         * @param  {number} [dashboardGranularity=DEFAULT_DASHBOARD_AGGREGATION_GRANULARITY] Dashboard granularity in seconds. Default is one hour.
-         * @param  {string} [chartType=CHART_TYPE_LINE]                                      Chart display type (bar or line)
-         * @param  {Function} [cb=null] A callback with an error in parameter, called when database is initialized : `(err) => {}`
-         * @returns {Sensor}                                                                  The instance
-         */
-
-
-        /**
          * Enedis Linky sensor class (should be extended)
          *
          * @param  {PluginAPI} api                                                           A plugin api
@@ -104,68 +79,67 @@ function loaded(api) {
             super(api, id, configuration, null);
             this.aggregationMode = api.exported.Sensor.constants().AGGREGATION_MODE_SUM;
             this.chartType = api.exported.Sensor.constants().CHART_TYPE_BAR;
-            const dir = api.exported.cachePath + "linky/";
-            this.acceptTermOfUseAlertSent = false;
 
-            try {
-                /*fs.removeSync(dir);
-                fs.ensureDirSync(dir);
+            api.timeEventAPI.register((self) => {
+                self.updateData(self);
+            }, this, api.timeEventAPI.constants().EVERY_HOURS);
 
-                const linkyStartScript = fs.readFileSync(pathl.dirname(callsite()[0].getFileName()) + "/app/linky_start.py");
-                const linkyScript = fs.readFileSync(pathl.dirname(callsite()[0].getFileName())+ "/app/linky.py");
+            this.updateData();
+        }
 
-                fs.writeFileSync(dir + "linky_start.py", linkyStartScript);
-                fs.writeFileSync(dir + "linky.py", linkyScript);
+        /**
+         * Retrieve data and store into database
+         *
+         * @param  {LinkySensor} context A context
+         */
+        updateData(context) {
+            if (!context) {
+                context = this;
+            }
 
-                api.timeEventAPI.register((self) => {
+            const configuration = context.configuration;
+            if (configuration && configuration.username && configuration.password) {
+                try {
                     if (configuration && configuration.username && configuration.password) {
-                        self.api.installerAPI.executeCommand("python " + dir + "linky_start.py --username '" + configuration.username + "' --password '" + configuration.password + "'", false, (error, stdout) => {
-                            if (error) {
-                                self.api.exported.Logger.err(error.message);
-                                if (!self.acceptTermOfUseAlertSent && error.message.indexOf("You need to accept the latest Terms of Use") > 0) {
-                                    self.api.messageAPI.sendMessage("*", self.api.translateAPI.t("enedis.accept.term.of.use"));
-                                    self.acceptTermOfUseAlertSent = true;
-                                }
-                            } else {
-                                try {
-                                    const data = JSON.parse(stdout);
-                                    self.acceptTermOfUseAlertSent = false;
-                                    if (data && data.graphe.data && data.graphe.periode.dateDebut) {
-                                        const dateParts = data.graphe.periode.dateDebut.split("/");
-                                        let timestamp = self.api.exported.DateUtils.class.dateToTimestamp(dateParts[2] + "-" + dateParts[1] + "-" + dateParts[0] +"T00:00:00");
+                        linky.login(configuration.username, configuration.password).then((session) => {
+                            session.getHourlyData({
+                                user:configuration.username,
+                                password:configuration.password
+                            })
+                            .then((data) => {
+                                if (data && data.length > 0 && data[0] && data[0].date) {
+                                    context.api.exported.Logger.info("Updating Linky data");
+                                    // Every 30 minutes, so aaggregate to hour
+                                    let i = 0;
+                                    let intermediateData = 0;
+                                    let timestamp = this.api.exported.DateUtils.class.dateToTimestamp(data[0].date);
+                                    data.forEach((data) => {
+                                        intermediateData += data.value*1000;
 
-                                        // Every 30 minutes, so aaggregate to hour
-                                        let i = 0;
-                                        let intermediateData = 0;
-                                        data.graphe.data.forEach((data) => {
-                                            intermediateData += data.valeur*1000;
-
-
-                                            if (i%2 === 1) {
-                                                if (intermediateData >= 0) {
-                                                    self.setValue(intermediateData, 0, null, timestamp);
-                                                }
-
-                                                intermediateData = 0;
-                                                timestamp += 3600;
+                                        if (i%2 === 1) {
+                                            if (intermediateData >= 0) {
+                                                context.setValue(intermediateData, 0, null, timestamp);
                                             }
 
-                                            i++;
-                                        });
-                                    }
-                                } catch(e) {
-                                    self.api.exported.Logger.err("Could not parse enedis data retrieved");
-                                    self.api.exported.Logger.err(e.message);
-                                    self.api.exported.Logger.err(stdout);
-                                }
+                                            intermediateData = 0;
+                                            timestamp += 3600;
+                                        }
 
-                            }
+                                        i++;
+                                    });
+                                }
+                            })
+                            .catch((e) => {
+                                context.api.exported.Logger.err(e.message);
+                            });
+                        })
+                        .catch((e) => {
+                            context.api.exported.Logger.err(e.message);
                         });
                     }
-
-                }, this, api.timeEventAPI.constants().EVERY_HOURS);*/
-            } catch(e) {
-                api.exported.Logger.err(e.message);
+                } catch(e) {
+                    context.api.exported.Logger.err(e.message);
+                }
             }
         }
 
