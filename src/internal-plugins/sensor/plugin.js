@@ -388,7 +388,6 @@ function loaded(api) {
                             currentObject.timestamp = timestamp;
 
                             currentObject.save((err) => {
-                                process.exit(0);
                                 if (!err) {
                                     this.updateTile();
                                 }
