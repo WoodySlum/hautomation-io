@@ -37,7 +37,7 @@ class DeviceStatus {
      * @returns {number} Brightness
      */
     getBrightness() {
-        return this.brightness ? parseFloat(this.brightness) : null;
+        return this.brightness ? parseFloat(this.brightness) : 0;
     }
 
     /**
@@ -46,7 +46,7 @@ class DeviceStatus {
      * @returns {string} Color
      */
     getColor() {
-        return this.color ? this.color.toUpperCase().replace("#", "") : null;
+        return this.color ? this.color.toUpperCase().replace("#", "") : "FFFFFF";
     }
 
     /**
@@ -55,7 +55,7 @@ class DeviceStatus {
      * @returns {number} Color temperature
      */
     getColorTemperature() {
-        return this.colorTemperature ? parseFloat(this.colorTemperature) : null;
+        return this.colorTemperature ? parseFloat(this.colorTemperature) : 0;
     }
 
     /**
