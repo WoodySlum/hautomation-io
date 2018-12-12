@@ -11,9 +11,11 @@ class DevicesListForm extends FormObject.class {
      * @param  {number} [id=null]                  An identifier
      * @param  {number} [identifier=null] The device identifier
      * @param  {string} [status=null]     The status
+     * @param {number} [brightness=1]    Brightness
+     * @param {string} [color="FFFFFF"]  Color
      * @returns {DevicesListForm}                            The instance
      */
-    constructor(id = null, identifier = null, status = null) {
+    constructor(id = null, identifier = null, status = null, brightness = 1, color = "FFFFFF") {
         super(id);
 
         /**
@@ -33,6 +35,22 @@ class DevicesListForm extends FormObject.class {
          * @EnumNames(["devices.list.form.status.off", "devices.list.form.status.on", "devices.list.form.status.invert"]);
          */
         this.status = status;
+
+        /**
+         * @Property("brightness");
+         * @Type("number");
+         * @Title("devices.list.form.brightness");
+         * @Range([0, 1, 0.1]);
+         */
+        this.color = brightness;
+
+        /**
+         * @Property("color");
+         * @Type("string");
+         * @Title("devices.list.form.color");
+         * @Display("color");
+         */
+        this.color = color;
     }
 
     /**
@@ -62,7 +80,7 @@ class DevicesListForm extends FormObject.class {
      * @returns {DevicesListForm}      A form object
      */
     json(data) {
-        return new DevicesListForm(data.id, data.identifier, data.status);
+        return new DevicesListForm(data.id, data.identifier, data.status, data.brightness, data.color);
     }
 }
 

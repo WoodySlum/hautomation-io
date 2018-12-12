@@ -89,6 +89,8 @@
     "devices.list.form.status.off": "Off",
     "devices.list.form.status.on": "On",
     "devices.list.form.status.invert": "Invert status",
+    "devices.list.form.brightness": "Brightness",
+    "devices.list.form.color": "Color",
     "devices.list.scenario.devices": "Devices",
     "devices.list.scenario.title": "Devices global",
     "radio.scenario.form.status": "Status",

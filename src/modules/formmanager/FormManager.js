@@ -319,6 +319,7 @@ class FormManager {
                                     schemaPropertiesProp.multipleOf = rangeResults[2];
                                 }
                             }
+                            schemaUI[prop]["ui:widget"] = "range";
                         }
 
                         // Enum

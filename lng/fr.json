@@ -87,6 +87,8 @@
     "devices.list.form.status.off": "Off",
     "devices.list.form.status.on": "On",
     "devices.list.form.status.invert": "Inverser le statut",
+    "devices.list.form.brightness": "Luminosité",
+    "devices.list.form.color": "Couleur",
     "devices.list.scenario.devices": "Périphériques",
     "devices.list.scenario.title": "Périphériques",
     "radio.scenario.form.status": "Statut",

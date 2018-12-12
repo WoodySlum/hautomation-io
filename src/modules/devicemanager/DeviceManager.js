@@ -182,7 +182,7 @@ class DeviceManager {
 
             if (scenario.DevicesListScenarioForm.devices && scenario.DevicesListScenarioForm.devices.length > 0) {
                 scenario.DevicesListScenarioForm.devices.forEach((scenarioDevice) => {
-                    context.switchDevice(scenarioDevice.identifier, scenarioDevice.status);
+                    context.switchDevice(scenarioDevice.identifier, scenarioDevice.status, scenarioDevice.brightness, scenarioDevice.color);
                 });
             }
         }
@@ -306,6 +306,7 @@ class DeviceManager {
      * @param  {string} [color=FFFFFF] Brightness (hex color)
      */
     switchDevice(id, status = null, brightness = 0, color = "FFFFFF") {
+        color = color.replace("#", ""); // Remove sharp
         if (typeof status === "string") {
             if (status && status.toLowerCase() === STATUS_ON) {
                 status = INT_STATUS_ON;
