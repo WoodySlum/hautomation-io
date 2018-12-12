@@ -1,5 +1,6 @@
 var HautomationCore = require("./src/HautomationCore");
 const events = require("events");
+
 var core = null;
 const HautomationRunnerConstants = require("./HautomationRunnerConstants");
 const os = require("os");

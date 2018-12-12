@@ -30,6 +30,28 @@ const ITEM_CHANGE_STATUS = "status";
 const ITEM_CHANGE_BRIGHTNESS = "brightness";
 const ITEM_CHANGE_COLOR = "color";
 const ITEM_CHANGE_COLOR_TEMP = "color-temperature";
+const DEVICE_COLORS = [
+    "FFFFFF",
+    "EEEEEE",
+    "f44336",
+    "e91e63",
+    "9c27b0",
+    "673ab7",
+    "3f51b5",
+    "2196f3",
+    "03a9f4",
+    "00bcd4",
+    "009688",
+    "4caf50",
+    "8bc34a",
+    "cddc39",
+    "ffeb3b",
+    "ffc107",
+    "ff9800",
+    "ff5722",
+    "795548",
+    "607d8b",
+];
 
 /**
  * This class allows to manage devices
@@ -260,7 +282,12 @@ class DeviceManager {
     registerDeviceTile(device, data = [], index = -1) {
         if (device.visible) {
             let i = (index === -1)?(9000 + data.indexOf(device)):index;
-            const tile = new Tile.class(this.dashboardManager.themeManager, device.id, Tile.TILE_DEVICE, device.icon.icon, null, device.name, null, null, null, device.status > 0?1:0, i, "/device/set/" + device.id + "/", new DeviceStatus.class(this.getDeviceTypes(device), device.status, device.brightness, device.color, device.colorTemperature).tileFormat());
+            const deviceStatus = new DeviceStatus.class(this.getDeviceTypes(device), device.status, device.brightness, device.color, device.colorTemperature);
+            let deviceInfos = deviceStatus.tileFormat();
+            if (deviceStatus.deviceTypes.indexOf(DEVICE_TYPE_LIGHT_DIMMABLE_COLOR) > -1) {
+                deviceInfos = Object.assign(deviceInfos, {colors:DEVICE_COLORS});
+            }
+            const tile = new Tile.class(this.dashboardManager.themeManager, device.id, Tile.TILE_DEVICE, device.icon.icon, null, device.name, null, null, null, device.status > 0?1:0, i, "/device/set/" + device.id + "/", deviceInfos);
             this.dashboardManager.registerTile(tile);
         }
     }
@@ -276,7 +303,7 @@ class DeviceManager {
         Object.keys(this.switchDeviceModules).forEach((switchDeviceModuleKey) => {
             const switchDeviceModule = this.switchDeviceModules[switchDeviceModuleKey];
             if (device && device[switchDeviceModule.formName]) {
-                if (modes.indexOf(switchDeviceModule.type) == -1) {
+                if (modes.indexOf(switchDeviceModule.type) === -1) {
                     modes.push(switchDeviceModule.type);
                 }
             }
@@ -341,7 +368,7 @@ class DeviceManager {
                             if (device.status != status) {
                                 changes.push(ITEM_CHANGE_STATUS);
                             }
-                            
+
                             if (device.brightness != brightness) {
                                 changes.push(ITEM_CHANGE_BRIGHTNESS);
                             }

@@ -1,5 +1,6 @@
 "use strict";
 require("dialog-router-api");
+const MAX_EVENT_BUS_LISTENER = 500;
 const fs = require("fs-extra");
 const path = require("path");
 const Logger = require("./logger/Logger");
@@ -79,6 +80,7 @@ class HautomationCore {
 
         this.runnerEventBus = runnerEventBus;
         this.eventBus = this.runnerEventBus?this.runnerEventBus:new events.EventEmitter();
+        this.eventBus.setMaxListeners(MAX_EVENT_BUS_LISTENER);
 
         // Load main configuration
         this.configurationLoader();
