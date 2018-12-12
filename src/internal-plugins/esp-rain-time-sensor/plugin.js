@@ -1,5 +1,6 @@
 "use strict";
 const MIN_VALUE_FOR_RAIN = 120;
+const MIN_VALUE_FOR_HEAVY_RAIN = 800;
 
 /**
  * Loaded function
@@ -79,7 +80,7 @@ function loaded(api) {
                 let label = "n/a";
                 if (this.lastSensorValue < MIN_VALUE_FOR_RAIN) {
                     label = this.api.translateAPI.t("esp.rain.time.sensor.no.rain");
-                } else if (this.lastSensorValue < 800) {
+                } else if (this.lastSensorValue < MIN_VALUE_FOR_HEAVY_RAIN) {
                     label = this.api.translateAPI.t("esp.rain.time.sensor.light.rain");
                 } else {
                     label = this.api.translateAPI.t("esp.rain.time.sensor.heavy.rain");
