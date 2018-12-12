@@ -6,8 +6,8 @@ const DateUtils = require("./../../utils/DateUtils");
 const HautomationRunnerConstants = require("./../../../HautomationRunnerConstants");
 
 const GATEWAY_MODE = 1;
-// const GATEWAY_URL = "https://api.hautomation-io.com/ping/";
-const GATEWAY_URL = "http://api.domain.net:8081/ping/";
+const GATEWAY_URL = "https://api.hautomation-io.com/ping/";
+// const GATEWAY_URL = "http://api.domain.net:8081/ping/";
 const UI_URL = "https://me.hautomation-io.com/";
 const GATEWAY_TIMEOUT = 5000;
 const BOOT_MODE_BOOTING = "BOOTING";
