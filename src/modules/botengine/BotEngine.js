@@ -14,8 +14,8 @@ const fs = require("fs-extra");
 
 const record = require("node-record-lpcm16");
 // const snowboy = require("snowboy");
-const header = require("waveheader");
-const stream = require("stream");
+// const header = require("waveheader");
+// const stream = require("stream");
 const WitSpeech = require("node-witai-speech");
 const {Wit} = require("node-wit");
 const audiohub = require("audiohub");

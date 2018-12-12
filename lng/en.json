@@ -91,6 +91,7 @@
     "devices.list.form.status.invert": "Invert status",
     "devices.list.form.brightness": "Brightness",
     "devices.list.form.color": "Color",
+    "devices.list.form.color.temperature": "Temperature (cold <--> hot)",
     "devices.list.scenario.devices": "Devices",
     "devices.list.scenario.title": "Devices global",
     "radio.scenario.form.status": "Status",

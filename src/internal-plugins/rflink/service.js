@@ -278,7 +278,11 @@ function loaded(api) {
 
             this.rflinkSend = (data) => {
                 Logger.info("RFLink sending data : " + data);
-                sp.write(data + "\r\n");
+                if (sp && sp.write) {
+                    sp.write(data + "\r\n");
+                } else {
+                    Logger.err("Could not send RFLink data - serialport is not responding");
+                }
             };
 
             // Logger.warn(JSON.stringify(processData("20;01;Blyss;ID=6968;SWITCH=C4;CMD=ON;")));

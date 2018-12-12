@@ -59,6 +59,42 @@ const devicesWithBrightnessColor = [
   }
 ];
 
+const devicesWithColorTemperature = [
+  {
+     "id":2018,
+     "name":"BarFoo",
+     "excludeFromAll":null,
+     "visible":true,
+     "worksOnlyOnDayNight":null,
+     "icon":{
+        "icon":59398
+     },
+     "TestDeviceForm":{
+         "test":"FooBar"
+     },
+     "status":1,
+     "colorTemperature": 0.8
+  }
+];
+
+const devicesWithChanges = [
+  {
+     "id":2018,
+     "name":"BarFoo",
+     "excludeFromAll":null,
+     "visible":true,
+     "worksOnlyOnDayNight":null,
+     "icon":{
+        "icon":59398
+     },
+     "TestDeviceForm":{
+         "test":"FooBar"
+     },
+     "status":1,
+     "colorTemperature": 0.8
+  }
+];
+
 class TestDeviceForm extends FormObject.class {
     constructor(id, test) {
         super(id);
@@ -258,6 +294,29 @@ describe("DeviceManager", function() {
         expect(deviceManager.formConfiguration.data[0].brightness).to.be.equal(0.5);
         expect(deviceManager.formConfiguration.data[0].color).to.be.equal("FEFEFE");
         deviceManager.switchDeviceModules.foo.switch.restore();
+    });
+
+    it("switchDevice should change color temperature only", function() {
+        deviceManager.formConfiguration.data = devicesWithColorTemperature;
+        sinon.spy(deviceManager.switchDeviceModules.foo, "switch");
+        deviceManager.switchDevice(2018, "On", 0.5, "FEFEFE", 0.23);
+        expect(deviceManager.switchDeviceModules.foo.switch.calledOnce).to.be.true;
+        expect(deviceManager.formConfiguration.data[0].id).to.be.equal(2018);
+        expect(deviceManager.formConfiguration.data[0].status).to.be.equal(1);
+        expect(deviceManager.formConfiguration.data[0].colorTemperature).to.be.equal(0.23);
+        deviceManager.switchDeviceModules.foo.switch.restore();
+    });
+
+    it("switchDevice should whant changed", function(done) {
+        deviceManager.formConfiguration.data = devicesWithChanges;
+        deviceManager.registerSwitchDevice("foo", (device, formData, deviceStatus) => {
+            expect(deviceStatus.changes.indexOf(DeviceManager.ITEM_CHANGE_STATUS) > -1).to.be.true;
+            expect(deviceStatus.changes.indexOf(DeviceManager.ITEM_CHANGE_BRIGHTNESS) > -1).to.be.true;
+            expect(deviceStatus.changes.indexOf(DeviceManager.ITEM_CHANGE_COLOR) > -1).to.be.true;
+            expect(deviceStatus.changes.indexOf(DeviceManager.ITEM_CHANGE_COLOR_TEMP) > -1).to.be.true;
+            done();
+        }, DeviceManager.DEVICE_TYPE_LIGHT_DIMMABLE_COLOR);
+        deviceManager.switchDevice(2018, "Off", 0.5, "FF0000", 0.23);
     });
 
     it("getSupportedModes should send correct value", function() {

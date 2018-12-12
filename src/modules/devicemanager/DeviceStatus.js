@@ -4,18 +4,22 @@
  */
 class DeviceStatus {
     /**
-     * constructor
+     * Constructor
      *
      * @param {[string]} deviceTypes Supported mode for device
      * @param {int} status     The status
      * @param {int} brightness The brightness
      * @param {string} color      The color
+     * @param {int} colorTemperature The color temperature
+     * @param {[string]} changes Changes
      */
-    constructor(deviceTypes, status, brightness, color) {
+    constructor(deviceTypes, status, brightness, color, colorTemperature, changes = []) {
         this.deviceTypes = deviceTypes;
         this.status = status;
         this.brightness = brightness;
         this.color = color;
+        this.colorTemperature = colorTemperature;
+        this.changes = changes;
     }
 
     /**
@@ -46,6 +50,15 @@ class DeviceStatus {
     }
 
     /**
+     * Get color temperature
+     *
+     * @returns {number} Color temperature
+     */
+    getColorTemperature() {
+        return this.colorTemperature ? parseFloat(this.colorTemperature) : null;
+    }
+
+    /**
      * Set status
      *
      * @param {int} status The status
@@ -60,7 +73,7 @@ class DeviceStatus {
      * @param {int} brightness The brightness (value between 0 and 1)
      */
     setBrightness(brightness) {
-        this.brightness = brightness;
+        this.brightness = parseFloat(brightness);
     }
 
     /**
@@ -73,6 +86,15 @@ class DeviceStatus {
     }
 
     /**
+     * Set color temperature
+     *
+     * @param {number} colorTemperature The color temperature
+     */
+    setColorTemperature(colorTemperature) {
+        this.colorTemperature = parseFloat(colorTemperature);
+    }
+
+    /**
      * Generates a standard object format for tile
      *
      * @returns {Object} Standard object
@@ -82,7 +104,8 @@ class DeviceStatus {
             deviceTypes: this.deviceTypes,
             status: this.status,
             brightness: this.brightness,
-            color: this.color
+            color: this.color,
+            colorTemperature: this.colorTemperature
         };
     }
 }

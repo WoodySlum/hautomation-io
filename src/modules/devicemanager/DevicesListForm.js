@@ -13,9 +13,10 @@ class DevicesListForm extends FormObject.class {
      * @param  {string} [status=null]     The status
      * @param {number} [brightness=1]    Brightness
      * @param {string} [color="FFFFFF"]  Color
+     * @param {string} [colorTemperature=0]  Color temperature
      * @returns {DevicesListForm}                            The instance
      */
-    constructor(id = null, identifier = null, status = null, brightness = 1, color = "FFFFFF") {
+    constructor(id = null, identifier = null, status = null, brightness = 1, color = "FFFFFF", colorTemperature = 0) {
         super(id);
 
         /**
@@ -42,7 +43,7 @@ class DevicesListForm extends FormObject.class {
          * @Title("devices.list.form.brightness");
          * @Range([0, 1, 0.1]);
          */
-        this.color = brightness;
+        this.brightness = brightness;
 
         /**
          * @Property("color");
@@ -51,6 +52,14 @@ class DevicesListForm extends FormObject.class {
          * @Display("color");
          */
         this.color = color;
+
+        /**
+         * @Property("colorTemperature");
+         * @Type("number");
+         * @Title("devices.list.form.color.temperature");
+         * @Range([0, 1, 0.05]);
+         */
+        this.colorTemperature = colorTemperature;
     }
 
     /**
@@ -80,7 +89,7 @@ class DevicesListForm extends FormObject.class {
      * @returns {DevicesListForm}      A form object
      */
     json(data) {
-        return new DevicesListForm(data.id, data.identifier, data.status, data.brightness, data.color);
+        return new DevicesListForm(data.id, data.identifier, data.status, data.brightness, data.color, data.colorTemperature);
     }
 }
 

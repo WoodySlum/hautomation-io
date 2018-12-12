@@ -26,6 +26,11 @@ const ROUTE_ALL_OFF = "/devices/alloff/";
 const DEVICE_NAME_COMPARE_CONFIDENCE = 0.31;
 const EVENT_UPDATE_CONFIG_DEVICES = "update-config-devices";
 
+const ITEM_CHANGE_STATUS = "status";
+const ITEM_CHANGE_BRIGHTNESS = "brightness";
+const ITEM_CHANGE_COLOR = "color";
+const ITEM_CHANGE_COLOR_TEMP = "color-temperature";
+
 /**
  * This class allows to manage devices
  * @class
@@ -62,7 +67,7 @@ class DeviceManager {
 
         this.radioManager.deviceManager = this; // Set the device manager. used to associate devices to received radio objects
 
-        webServices.registerAPI(this, WebServices.POST, ":/device/set/[id]/[status*]/[brightness*]/[color*]/", Authentication.AUTH_USAGE_LEVEL);
+        webServices.registerAPI(this, WebServices.POST, ":/device/set/[id]/[status*]/[brightness*]/[color*]/[colorTemperature*]/", Authentication.AUTH_USAGE_LEVEL);
         webServices.registerAPI(this, WebServices.POST, ":" + ROUTE_ALL_ON, Authentication.AUTH_USAGE_LEVEL);
         webServices.registerAPI(this, WebServices.POST, ":" + ROUTE_ALL_OFF, Authentication.AUTH_USAGE_LEVEL);
 
@@ -255,7 +260,7 @@ class DeviceManager {
     registerDeviceTile(device, data = [], index = -1) {
         if (device.visible) {
             let i = (index === -1)?(9000 + data.indexOf(device)):index;
-            const tile = new Tile.class(this.dashboardManager.themeManager, device.id, Tile.TILE_DEVICE, device.icon.icon, null, device.name, null, null, null, device.status > 0?1:0, i, "/device/set/" + device.id + "/", new DeviceStatus.class(this.getDeviceTypes(device), device.status, device.brightness, device.color).tileFormat());
+            const tile = new Tile.class(this.dashboardManager.themeManager, device.id, Tile.TILE_DEVICE, device.icon.icon, null, device.name, null, null, null, device.status > 0?1:0, i, "/device/set/" + device.id + "/", new DeviceStatus.class(this.getDeviceTypes(device), device.status, device.brightness, device.color, device.colorTemperature).tileFormat());
             this.dashboardManager.registerTile(tile);
         }
     }
@@ -303,10 +308,11 @@ class DeviceManager {
      * @param  {number} id            A device identifier
      * @param  {string} [status=null] A status  (`on`, `off` or int status)
      * @param  {int} [brightness=0] Brightness (between 0 and 1)
-     * @param  {string} [color=FFFFFF] Brightness (hex color)
+     * @param  {string} [color=FFFFFF] Color (hex color)
+     * @param  {int} [colorTemperature=0] Color temperature (between 0 and 1)
      */
-    switchDevice(id, status = null, brightness = 0, color = "FFFFFF") {
-        color = color.replace("#", ""); // Remove sharp
+    switchDevice(id, status = null, brightness = 0, color = "FFFFFF", colorTemperature = 0) {
+        color = color ? color.replace("#", "") : color; // Remove sharp
         if (typeof status === "string") {
             if (status && status.toLowerCase() === STATUS_ON) {
                 status = INT_STATUS_ON;
@@ -330,7 +336,23 @@ class DeviceManager {
                     Object.keys(this.switchDeviceModules).forEach((switchDeviceModuleKey) => {
                         const switchDeviceModule = this.switchDeviceModules[switchDeviceModuleKey];
                         if (device[switchDeviceModule.formName]) {
-                            newDeviceStatus = switchDeviceModule.switch(device, device[switchDeviceModule.formName], new DeviceStatus.class(this.getDeviceTypes(device), status, brightness, color));
+                            // Detect what changed
+                            const changes = [];
+                            if (device.status != status) {
+                                changes.push(ITEM_CHANGE_STATUS);
+                            }
+                            
+                            if (device.brightness != brightness) {
+                                changes.push(ITEM_CHANGE_BRIGHTNESS);
+                            }
+                            if (device.color != color) {
+                                changes.push(ITEM_CHANGE_COLOR);
+                            }
+                            if (device.colorTemperature != colorTemperature) {
+                                changes.push(ITEM_CHANGE_COLOR_TEMP);
+                            }
+
+                            newDeviceStatus = switchDeviceModule.switch(device, device[switchDeviceModule.formName], new DeviceStatus.class(this.getDeviceTypes(device), status, brightness, color, colorTemperature, changes));
                         }
                     });
 
@@ -338,6 +360,7 @@ class DeviceManager {
                         device.status = newDeviceStatus.getStatus();
                         device.brightness = newDeviceStatus.getBrightness();
                         device.color = newDeviceStatus.getColor();
+                        device.colorTemperature = newDeviceStatus.getColorTemperature();
                         this.saveDevice(device);
                     }
                 } else {
@@ -395,7 +418,7 @@ class DeviceManager {
         const self = this;
         if (apiRequest.route.startsWith( ":/device/set/")) {
             return new Promise((resolve) => {
-                self.switchDevice(apiRequest.data.id, apiRequest.data.status, apiRequest.data.brightness, apiRequest.data.color);
+                self.switchDevice(apiRequest.data.id, apiRequest.data.status, apiRequest.data.brightness, apiRequest.data.color, apiRequest.data.colorTemperature);
                 resolve(new APIResponse.class(true, {success:true}));
             });
         } else if (apiRequest.route ===  ":" + ROUTE_ALL_ON) {
@@ -412,4 +435,4 @@ class DeviceManager {
     }
 }
 
-module.exports = {class:DeviceManager, STATUS_ON:STATUS_ON, INT_STATUS_ON:INT_STATUS_ON, INT_STATUS_OFF:INT_STATUS_OFF, STATUS_OFF:STATUS_OFF, STATUS_INVERT:STATUS_INVERT, EVENT_UPDATE_CONFIG_DEVICES:EVENT_UPDATE_CONFIG_DEVICES, DEVICE_TYPE_LIGHT:DEVICE_TYPE_LIGHT, DEVICE_TYPE_LIGHT_DIMMABLE: DEVICE_TYPE_LIGHT_DIMMABLE, DEVICE_TYPE_LIGHT_DIMMABLE_COLOR:DEVICE_TYPE_LIGHT_DIMMABLE_COLOR, DEVICE_TYPE_SHUTTER:DEVICE_TYPE_SHUTTER};
+module.exports = {class:DeviceManager, STATUS_ON:STATUS_ON, INT_STATUS_ON:INT_STATUS_ON, INT_STATUS_OFF:INT_STATUS_OFF, STATUS_OFF:STATUS_OFF, STATUS_INVERT:STATUS_INVERT, EVENT_UPDATE_CONFIG_DEVICES:EVENT_UPDATE_CONFIG_DEVICES, DEVICE_TYPE_LIGHT:DEVICE_TYPE_LIGHT, DEVICE_TYPE_LIGHT_DIMMABLE: DEVICE_TYPE_LIGHT_DIMMABLE, DEVICE_TYPE_LIGHT_DIMMABLE_COLOR:DEVICE_TYPE_LIGHT_DIMMABLE_COLOR, DEVICE_TYPE_SHUTTER:DEVICE_TYPE_SHUTTER, ITEM_CHANGE_STATUS:ITEM_CHANGE_STATUS, ITEM_CHANGE_BRIGHTNESS:ITEM_CHANGE_BRIGHTNESS, ITEM_CHANGE_COLOR:ITEM_CHANGE_COLOR, ITEM_CHANGE_COLOR_TEMP: ITEM_CHANGE_COLOR_TEMP};

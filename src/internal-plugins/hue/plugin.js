@@ -229,10 +229,12 @@ function loaded(api) {
                                 const status = state.on ? context.api.deviceAPI.constants().INT_STATUS_ON : context.api.deviceAPI.constants().INT_STATUS_OFF;
                                 const brightness = parseFloat(Math.round(state.bri / 254 * 10) / 10);
                                 const color = colorutil.rgb.to.hex(colorutil.hsv.to.rgb({h: (Math.round((state.hue / 65534) * colorRound) / colorRound), s: (Math.round((state.sat / 254) * colorRound) / colorRound), v: 1, a: 1})).toUpperCase().replace("#", "");
-                                if (status != device.status || brightness != device.brightness || color != device.color) {
+                                const colorTemperature = parseFloat(Math.round(((state.ct - 153) / 500) * 100) / 100);
+                                if (status != device.status || brightness != device.brightness || color != device.color || colorTemperature != device.colorTemperature) {
                                     device.status = status;
                                     device.brightness = brightness;
                                     device.color = color;
+                                    device.colorTemperature = colorTemperature;
 
                                     context.api.deviceAPI.saveDevice(device);
                                 }
@@ -273,17 +275,27 @@ function loaded(api) {
                                     device.brightness = 1;
                                 }
 
-                                let brightness = parseInt(device.brightness ? (device.brightness * 254) : 254);
+                                if (!device.colorTemperature) {
+                                    device.colorTemperature = 0;
+                                }
+
+                                let brightness = parseInt(device.brightness > -1 ? (device.brightness * 254) : 254);
                                 if (device.status === context.api.deviceAPI.constants().INT_STATUS_ON) {
                                     light.on = true;
-                                    light.brightness = brightness;
+                                    if (deviceStatus.changes.indexOf(context.api.deviceAPI.constants().ITEM_CHANGE_BRIGHTNESS) >= 0) {
+                                        light.brightness = brightness;
+                                    }
 
-                                    if (light.state.attributes.hasOwnProperty("hue") && device.color) {
+                                    if (light.state.attributes.hasOwnProperty("hue") && device.color && deviceStatus.changes.indexOf(context.api.deviceAPI.constants().ITEM_CHANGE_COLOR) >= 0) {
                                         light.hue = Math.round(parseInt(colorutil.rgb.to.hsv(colorutil.hex.to.rgb("#" + device.color)).h * 65534) * colorRound) / colorRound;
                                     }
 
-                                    if (light.state.attributes.hasOwnProperty("sat") && device.color) {
+                                    if (light.state.attributes.hasOwnProperty("sat") && device.color && deviceStatus.changes.indexOf(context.api.deviceAPI.constants().ITEM_CHANGE_COLOR) >= 0) {
                                         light.saturation = Math.round(parseInt(colorutil.rgb.to.hsv(colorutil.hex.to.rgb("#" + device.color)).s * 254) * colorRound) / colorRound;
+                                    }
+
+                                    if (light.state.attributes.hasOwnProperty("ct") && device.colorTemperature && deviceStatus.changes.indexOf(context.api.deviceAPI.constants().ITEM_CHANGE_COLOR_TEMP) >= 0) {
+                                        light.colorTemp = parseInt(device.colorTemperature > -1 ? (device.colorTemperature * 347) : 347) + 153;
                                     }
                                 } else {
                                     light.on = false;

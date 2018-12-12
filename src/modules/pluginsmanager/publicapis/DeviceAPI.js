@@ -31,13 +31,16 @@ class DeviceAPI {
     }
 
     /**
-     * Switch a device radio status
+     * Switch a device status
      *
      * @param  {number} id            A device identifier
-     * @param  {string} [status=null] A status  (`on`, `off` or radio status)
+     * @param  {string} [status=null] A status  (`on`, `off` or int status)
+     * @param  {int} [brightness=0] Brightness (between 0 and 1)
+     * @param  {string} [color=FFFFFF] Color (hex color)
+     * @param  {int} [colorTemperature=0] Color temperature (between 0 and 1)
      */
-    switchDevice(id, status = null) {
-        PrivateProperties.oprivate(this).deviceManager.switchDevice(id, status);
+    switchDevice(id, status = null, brightness = 0, color = "FFFFFF", colorTemperature = 0) {
+        PrivateProperties.oprivate(this).deviceManager.switchDevice(id, status, brightness, color, colorTemperature);
     }
 
     /**
