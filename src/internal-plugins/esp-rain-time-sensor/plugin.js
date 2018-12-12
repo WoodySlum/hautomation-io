@@ -1,4 +1,6 @@
 "use strict";
+const MIN_VALUE_FOR_RAIN = 120;
+
 /**
  * Loaded function
  *
@@ -58,7 +60,7 @@ function loaded(api) {
             this.lastSensorValue = value;
             this.lastSensorTimestamp = this.api.exported.DateUtils.class.timestamp();
 
-            if (value > 15) {
+            if (value >= MIN_VALUE_FOR_RAIN) {
                 // it rains
                 super.setValue(this.api.exported.EspWeatherStation.constants().REFRESH_TIME, vcc, cb, timestamp);
             } else {
@@ -75,7 +77,7 @@ function loaded(api) {
         updateTile(cb = null) {
             if (this.lastSensorValue && this.lastSensorTimestamp && this.lastSensorTimestamp > (this.api.exported.DateUtils.class.timestamp() - 60 * 60)) {
                 let label = "n/a";
-                if (this.lastSensorValue < 120) {
+                if (this.lastSensorValue < MIN_VALUE_FOR_RAIN) {
                     label = this.api.translateAPI.t("esp.rain.time.sensor.no.rain");
                 } else if (this.lastSensorValue < 800) {
                     label = this.api.translateAPI.t("esp.rain.time.sensor.light.rain");
