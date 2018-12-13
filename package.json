@@ -104,7 +104,7 @@
     "dependencies": {
         "node-gyp": "latest",
         "@bokub/linky": "latest",
-        "annotation": "git+https://github.com/WoodySlum/node-annotation.git#master",
+        "annotation": "git://github.com/WoodySlum/node-annotation.git#master",
         "audiohub": "git://github.com/WoodySlum/audiohub.git#master",
         "body-parser": "^1.18",
         "callsite": "^1.0",
@@ -141,7 +141,7 @@
         "remi-runner": "^1.1",
         "serialport": "^7.1",
         "sha256": "^0.2",
-        "sqlite3": "^4.0",
+        "sqlite3": "git://github.com/WoodySlum/node-sqlite3.git#master",
         "stack-trace": "^0.0",
         "string-similarity": "^1.2",
         "threads": "git://github.com/WoodySlum/threads.js.git#master",
