@@ -298,7 +298,7 @@ describe("Sensor", function() {
         });
     });
 
-    it("setValue should dispatch value", function() {
+    it("setValue should dispatch value", function(done) {
         let sensor = new Sensor(plugin, 30, "FOOBAR", {});
         sensor.unit = "foo";
         sensor.round = 2;
@@ -306,9 +306,11 @@ describe("Sensor", function() {
         sensor.aggregationMode = Sensor.constants().AGGREGATION_MODE_MAX;
         sinon.spy(sensor, "updateTile");
         sinon.spy(plugin.sensorAPI, "onNewSensorValue");
-        sensor.setValue(67, 10, (err) => {});
-        expect(plugin.sensorAPI.onNewSensorValue.calledOnce).to.be.true;
-        plugin.sensorAPI.onNewSensorValue.restore();
+        sensor.setValue(67, 10, (err) => {
+            expect(plugin.sensorAPI.onNewSensorValue.calledOnce).to.be.true;
+            plugin.sensorAPI.onNewSensorValue.restore();
+            done();
+        });
     });
 
     it("roundTimestamp should round to lower timestamp", function() {
@@ -324,11 +326,11 @@ describe("Sensor", function() {
         sensor.id = "foofoofoofoofoo";
         sensor.aggregationMode = Sensor.constants().AGGREGATION_MODE_AVG;
         const val1  = new plugin.exported.DbSensor(sensor.dbHelper, 32.8, "foofoofoofoofoo", 23);
-        val1.timestamp = "'2017-07-13 00:05:24'";
+        val1.timestamp = "2017-07-13 00:05:24";
         const val2  = new plugin.exported.DbSensor(sensor.dbHelper, 22.3, "foofoofoofoofoo", 23);
-        val2.timestamp = "'2017-07-13 00:17:43'";
+        val2.timestamp = "2017-07-13 00:17:43";
         const val3  = new plugin.exported.DbSensor(sensor.dbHelper, 17, "foofoofoofoofoo", 23);
-        val3.timestamp = "'2017-07-13 07:22:04'";
+        val3.timestamp = "2017-07-13 07:22:04";
 
         val1.save((error) => {
             val2.save((error) => {
@@ -337,8 +339,8 @@ describe("Sensor", function() {
                         expect(err).to.be.null;
                         expect(results.unit).to.be.equal("foo");
                         expect(Object.keys(results.values).length).to.be.equal(25);
-                        expect(results.values["1499904000"]).to.be.equal(27.55);
-                        expect(results.values["1499929200"]).to.be.equal(17);
+                        expect(results.values["1499896800"]).to.be.equal(27.55);
+                        expect(results.values["1499922000"]).to.be.equal(17);
                         expect(Object.keys(results.values)[0]).to.be.equal('1499896800');
                         expect(Object.keys(results.values)[24]).to.be.equal('1499983200');
                         done();
@@ -357,11 +359,11 @@ describe("Sensor", function() {
         sensor.addUnitAggregation("bar", 20);
 
         const val1  = new plugin.exported.DbSensor(sensor.dbHelper, 18.945, "foofoofoofoofoofoo", 23);
-        val1.timestamp = "'2017-07-07 00:05:24'";
+        val1.timestamp = "2017-07-07 02:05:24";
         const val2  = new plugin.exported.DbSensor(sensor.dbHelper, 17.312, "foofoofoofoofoofoo", 23);
-        val2.timestamp = "'2017-07-07 00:17:43'";
+        val2.timestamp = "2017-07-07 02:17:43";
         const val3  = new plugin.exported.DbSensor(sensor.dbHelper, 17, "foofoofoofoofoofoo", 23);
-        val3.timestamp = "'2017-07-13 07:22:04'";
+        val3.timestamp = "2017-07-13 07:22:04";
 
         val1.save((error) => {
             val2.save((error) => {
@@ -392,7 +394,7 @@ describe("Sensor", function() {
         const val1  = new plugin.exported.DbSensor(sensor.dbHelper, 18.945, "foofoofoofoofoofoofoo", 23);
         val1.timestamp = "'2017-03-03 03:05:24'";
         const val2  = new plugin.exported.DbSensor(sensor.dbHelper, 17.312, "foofoofoofoofoofoofoo", 23);
-        val2.timestamp = "'2017-03-12 22:17:43'";
+        val2.timestamp = "'2017-03-12 20:17:43'";
         const val3  = new plugin.exported.DbSensor(sensor.dbHelper, 17, "foofoofoofoofoofoofoo", 23);
         val3.timestamp = "'2017-05-13 07:22:04'";
 
@@ -430,6 +432,24 @@ describe("Sensor", function() {
                 expect(DateUtils.class.dateToTimestamp(res.timestamp)).to.be.equal(1511215200);
                 done();
             });
+        }, 1511216691);
+    });
+
+    it("setValue should add on hour aggregation", function(done) {
+        let sensor = new Sensor(plugin, 3020, "FOOBARBARBAR", {});
+        sensor.unit = "foo";
+        sensor.round = 2;
+        sensor.aggregationMode = Sensor.constants().AGGREGATION_MODE_SUM;
+        sensor.setValue(128, 20, (err) => {
+            sensor.setValue(22, 19, (err2) => {
+                expect(err).to.be.null;
+                expect(err2).to.be.null;
+                sensor.lastObject((err, res) => {
+                    expect(res.value).to.be.equal(150);
+                    expect(DateUtils.class.dateToTimestamp(res.timestamp)).to.be.equal(1511215200);
+                    done();
+                });
+            }, 1511216710);
         }, 1511216691);
     });
 

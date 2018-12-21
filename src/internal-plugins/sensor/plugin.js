@@ -363,75 +363,75 @@ function loaded(api) {
          * @param {number} [timestamp=null] A timestamp
          */
         setValue(value, vcc = null, cb = null, timestamp = null) {
-            const currentObject = new DbSensor(this.dbHelper, value, this.id, vcc);
             this.api.exported.Logger.info("New value received for sensor " + this.name + "(#" + this.id + "). Value : " + value + ", vcc : " + vcc);
 
             // If timestamp provided
             if (timestamp) {
                 timestamp = this.api.exported.DateUtils.class.roundedTimestamp(timestamp, this.api.exported.DateUtils.ROUND_TIMESTAMP_HOUR);
-                const existing = {};
-                existing[this.dbHelper.Operators().FIELD_TIMESTAMP] = timestamp;
-                const timestampRequest = this.dbHelper.RequestBuilder()
-                                          .select()
-                                          .where("CAST(strftime('%s', timestamp) AS NUMERIC)", this.dbHelper.Operators().EQ, timestamp)
-                                          .where("sensorId", this.dbHelper.Operators().EQ, this.id)
-                                          .first();
-                this.dbHelper.getObjects(timestampRequest, (error, objects) => {
-                    if (objects && objects.length == 1) {
-                        const object = objects[0];
-
-                        switch(this.aggregationMode) {
-                        case AGGREGATION_MODE_AVG:
-                            object.value = value;
-                            break;
-                        case AGGREGATION_MODE_SUM:
-                            object.value = object.value + value;
-                            break;
-                        case AGGREGATION_MODE_MAX:
-                            if (value > object.value) {
-                                object.value = value;
-                            }
-                            break;
-                        case AGGREGATION_MODE_MIN:
-                            if (value < object.value) {
-                                object.value = value;
-                            }
-                            break;
-                        }
-
-                        object.save();
-                        this.updateTile();
-                    } else {
-                        if (!error) {
-                            const currentObject = new DbSensor(this.dbHelper, value, this.id, vcc);
-                            currentObject.timestamp = timestamp;
-
-                            currentObject.save((err) => {
-                                if (!err) {
-                                    this.updateTile();
-                                }
-                                if (cb) cb(err);
-                            });
-                        } else {
-                            if (cb) cb(error);
-                        }
-                    }
-                });
             } else {
-                // If timestamp not provided
-                currentObject.timestamp = this.api.exported.DateUtils.class.roundedTimestamp(this.api.exported.DateUtils.class.timestamp(), this.api.exported.DateUtils.ROUND_TIMESTAMP_HOUR);
-                currentObject.save((err) => {
-                    if (!err) {
-                        this.updateTile();
-                    }
-                    if (cb) cb(err);
-                });
-
-                // Dispatch
-                const aggregated = this.convertValue(value);
-                this.api.sensorAPI.onNewSensorValue(this.id, this.type, value, this.unit, vcc, aggregated.value, aggregated.unit);
+                timestamp = this.api.exported.DateUtils.class.roundedTimestamp(this.api.exported.DateUtils.class.timestamp(), this.api.exported.DateUtils.ROUND_TIMESTAMP_HOUR);
             }
 
+            const existing = {};
+            existing[this.dbHelper.Operators().FIELD_TIMESTAMP] = timestamp;
+            const timestampRequest = this.dbHelper.RequestBuilder()
+                                      .select()
+                                      .where("CAST(strftime('%s', timestamp) AS NUMERIC)", this.dbHelper.Operators().EQ, timestamp)
+                                      .where("sensorId", this.dbHelper.Operators().EQ, this.id)
+                                      .first();
+            this.dbHelper.getObjects(timestampRequest, (error, objects) => {
+                if (objects && objects.length == 1) {
+                    const object = objects[0];
+
+                    switch(this.aggregationMode) {
+                    case AGGREGATION_MODE_AVG:
+                        object.value = value;
+                        break;
+                    case AGGREGATION_MODE_SUM:
+                        object.value = object.value + value;
+                        break;
+                    case AGGREGATION_MODE_MAX:
+                        if (value > object.value) {
+                            object.value = value;
+                        }
+                        break;
+                    case AGGREGATION_MODE_MIN:
+                        if (value < object.value) {
+                            object.value = value;
+                        }
+                        break;
+                    }
+
+                    object.save();
+                    this.updateTile();
+
+                    // Dispatch
+                    const aggregated = this.convertValue(object.value);
+                    this.api.sensorAPI.onNewSensorValue(this.id, this.type, object.value, this.unit, vcc, aggregated.value, aggregated.unit);
+                    if (cb) cb(null);
+                } else {
+                    if (!error) {
+                        const currentObject = new DbSensor(this.dbHelper, value, this.id, vcc);
+                        currentObject.timestamp = timestamp;
+
+                        currentObject.save((err) => {
+                            if (!err) {
+                                this.updateTile();
+
+                                // Dispatch
+                                const aggregated = this.convertValue(currentObject.value);
+                                this.api.sensorAPI.onNewSensorValue(this.id, this.type, currentObject.value, this.unit, vcc, aggregated.value, aggregated.unit);
+
+                                if (cb) cb(null);
+                            } else {
+                                if (cb) cb(err);
+                            }
+                        });
+                    } else {
+                        if (cb) cb(error);
+                    }
+                }
+            });
         }
 
         /**

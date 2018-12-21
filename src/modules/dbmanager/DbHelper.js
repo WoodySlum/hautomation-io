@@ -2,6 +2,7 @@
 
 const DbObject =  require("./DbObject");
 const PrivateProperties = require("./../pluginsmanager/PrivateProperties");
+const DateUtils = require("./../../utils/DateUtils");
 
 /**
  * Public API for database manager
@@ -88,6 +89,10 @@ class DbHelper {
 
         if (!object[this.Operators().FIELD_TIMESTAMP]) {
             delete object[this.Operators().FIELD_TIMESTAMP];
+        } else {
+            if (typeof object[this.Operators().FIELD_TIMESTAMP] == "string") {
+                object[this.Operators().FIELD_TIMESTAMP] = DateUtils.class.dateToUTCTimestamp(object[this.Operators().FIELD_TIMESTAMP].replace(/"/g,"").replace(/'/g,""));
+            }
         }
 
         PrivateProperties.oprivate(this).dbManager.saveObject(this.table, this.schema, object, cb);
