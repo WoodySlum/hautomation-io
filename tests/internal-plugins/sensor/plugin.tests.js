@@ -427,7 +427,7 @@ describe("Sensor", function() {
             expect(err).to.be.null;
             sensor.lastObject((err, res) => {
                 expect(res.value).to.be.equal(128);
-                expect(DateUtils.class.dateToTimestamp(res.timestamp)).to.be.equal(1511216691);
+                expect(DateUtils.class.dateToTimestamp(res.timestamp)).to.be.equal(1511215200);
                 done();
             });
         }, 1511216691);
