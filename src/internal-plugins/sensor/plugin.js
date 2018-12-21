@@ -401,6 +401,7 @@ function loaded(api) {
                 });
             } else {
                 // If timestamp not provided
+                currentObject.timestamp = this.api.exported.DateUtils.class.roundedTimestamp(this.api.exported.DateUtils.class.timestamp(), this.api.exported.DateUtils.ROUND_TIMESTAMP_HOUR);
                 currentObject.save((err) => {
                     if (!err) {
                         this.updateTile();
