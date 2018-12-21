@@ -800,7 +800,7 @@ class CamerasManager {
                             if (err) {
                                 cb(err);
                             } else {
-                                cb(null, new Buffer(data, "binary"), "image/jpeg");
+                                cb(null, new Buffer.from(data, "binary"), "image/jpeg");
                             }
                         });
                     } else {
@@ -816,7 +816,7 @@ class CamerasManager {
                                 cb(error);
                             } else {
                                 Logger.info("Camera picture " + id + " done !");
-                                cb(null, new Buffer(body, "binary"), response.headers["content-type"]);
+                                cb(null, new Buffer.from(body, "binary"), response.headers["content-type"]);
                             }
                         });
                     } else {

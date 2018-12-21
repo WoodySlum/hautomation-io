@@ -368,6 +368,7 @@ function loaded(api) {
 
             // If timestamp provided
             if (timestamp) {
+                timestamp = this.api.exported.DateUtils.class.roundedTimestamp(timestamp, this.api.exported.DateUtils.ROUND_TIMESTAMP_HOUR);
                 const existing = {};
                 existing[this.dbHelper.Operators().FIELD_TIMESTAMP] = timestamp;
                 const timestampRequest = this.dbHelper.RequestBuilder()

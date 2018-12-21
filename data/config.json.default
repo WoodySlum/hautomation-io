@@ -26,7 +26,7 @@
     "home": {
         "longitude":1.0,
         "latitude":1.0,
-        "radius":1500
+        "radius":500
     },
     "crashOnPluginError":false,
     "bot": {
