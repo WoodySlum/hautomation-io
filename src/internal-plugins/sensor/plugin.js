@@ -379,7 +379,25 @@ function loaded(api) {
                 this.dbHelper.getObjects(timestampRequest, (error, objects) => {
                     if (objects && objects.length == 1) {
                         const object = objects[0];
-                        object.value = value;
+
+                        switch(this.aggregationMode) {
+                        case AGGREGATION_MODE_AVG:
+                            object.value = value;
+                            break;
+                        case AGGREGATION_MODE_SUM:
+                            object.value = object.value + value;
+                            break;
+                        case AGGREGATION_MODE_MAX:
+                            if (value > object.value) {
+                                object.value = value;
+                            }
+                            break;
+                        case AGGREGATION_MODE_MIN:
+                            if (value < object.value) {
+                                object.value = value;
+                            }
+                            break;
+                        }
 
                         object.save();
                         this.updateTile();
