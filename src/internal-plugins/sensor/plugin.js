@@ -330,8 +330,8 @@ function loaded(api) {
         /**
          * Update tile and register to dashboard
          *
-         * @param  {number} [value=null] A value. If not provided, take the last inserted in database
          * @param  {Function} [cb=null] A callback without parameters when done. Used for testing only.
+         * @param  {number} [value=null] A value. If not provided, take the last inserted in database
          */
         updateTile(cb = null, value = null) {
             this.lastObject((err, lastObject) => {

@@ -55,9 +55,8 @@ function loaded(api) {
          * @param {number} value      A value
          * @param {number} [vcc=null] A voltage level
          * @param  {Function} [cb=null] A callback with an error parameter, called when done. Used for testing only.
-         * @param {number} [timestamp=null] A timestamp
          */
-        setValue(value, vcc = null, cb = null, timestamp = null) {
+        setValue(value, vcc = null, cb = null) {
             this.lastSensorValue = value;
             this.lastSensorTimestamp = this.api.exported.DateUtils.class.timestamp();
 
@@ -73,10 +72,9 @@ function loaded(api) {
         /**
          * Update tile and register to dashboard
          *
-         * @param  {number} [value=null] A value. If not provided, take the last inserted in database
          * @param  {Function} [cb=null] A callback without parameters when done. Used for testing only.
          */
-        updateTile(cb = null, value = null) {
+        updateTile(cb = null) {
             if (this.lastSensorValue && this.lastSensorTimestamp && this.lastSensorTimestamp > (this.api.exported.DateUtils.class.timestamp() - 60 * 60)) {
                 let label = "n/a";
                 if (this.lastSensorValue < MIN_VALUE_FOR_RAIN) {
