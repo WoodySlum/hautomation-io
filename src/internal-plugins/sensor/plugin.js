@@ -330,12 +330,13 @@ function loaded(api) {
         /**
          * Update tile and register to dashboard
          *
+         * @param  {number} [value=null] A value. If not provided, take the last inserted in database
          * @param  {Function} [cb=null] A callback without parameters when done. Used for testing only.
          */
-        updateTile(cb = null) {
+        updateTile(cb = null, value = null) {
             this.lastObject((err, lastObject) => {
                 if (!err && lastObject.value) {
-                    const convertedValue = this.convertValue(lastObject.value);
+                    const convertedValue = value ? this.convertValue(value) : this.convertValue(lastObject.value);
                     const tile = this.api.dashboardAPI.Tile("sensor-"+this.id, this.api.dashboardAPI.TileType().TILE_INFO_TWO_TEXT, this.icon, null, this.name, convertedValue.value + " " + convertedValue.unit, null, null, null, 800, "statistics");
                     if (this.configuration.dashboardColor) {
                         tile.colors.colorDefault = this.configuration.dashboardColor;
@@ -382,6 +383,7 @@ function loaded(api) {
             this.dbHelper.getObjects(timestampRequest, (error, objects) => {
                 if (objects && objects.length == 1) {
                     const object = objects[0];
+                    object[this.dbHelper.Operators().FIELD_TIMESTAMP] = timestamp;
 
                     switch(this.aggregationMode) {
                     case AGGREGATION_MODE_AVG:
@@ -403,7 +405,7 @@ function loaded(api) {
                     }
 
                     object.save();
-                    this.updateTile();
+                    this.updateTile(null, value);
 
                     // Dispatch
                     const aggregated = this.convertValue(object.value);
@@ -416,7 +418,7 @@ function loaded(api) {
 
                         currentObject.save((err) => {
                             if (!err) {
-                                this.updateTile();
+                                this.updateTile(null, value);
 
                                 // Dispatch
                                 const aggregated = this.convertValue(currentObject.value);

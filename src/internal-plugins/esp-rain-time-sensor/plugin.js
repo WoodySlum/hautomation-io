@@ -63,19 +63,20 @@ function loaded(api) {
 
             if (value >= MIN_VALUE_FOR_RAIN) {
                 // it rains
-                super.setValue(this.api.exported.EspWeatherStation.constants().REFRESH_TIME, vcc, cb, timestamp);
+                super.setValue(this.api.exported.EspWeatherStation.constants().REFRESH_TIME, vcc, cb, this.lastSensorTimestamp);
             } else {
                 // no rains detected
-                super.setValue(0, vcc, cb, timestamp);
+                super.setValue(0, vcc, cb, this.lastSensorTimestamp);
             }
         }
 
         /**
          * Update tile and register to dashboard
          *
+         * @param  {number} [value=null] A value. If not provided, take the last inserted in database
          * @param  {Function} [cb=null] A callback without parameters when done. Used for testing only.
          */
-        updateTile(cb = null) {
+        updateTile(cb = null, value = null) {
             if (this.lastSensorValue && this.lastSensorTimestamp && this.lastSensorTimestamp > (this.api.exported.DateUtils.class.timestamp() - 60 * 60)) {
                 let label = "n/a";
                 if (this.lastSensorValue < MIN_VALUE_FOR_RAIN) {
