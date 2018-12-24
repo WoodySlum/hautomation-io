@@ -564,7 +564,7 @@ class PluginsManager {
      */
     processAPI(apiRequest) {
         if (apiRequest.route === ROUTE_WS_GET) {
-            const plugins = [];
+            let plugins = [];
 
             this.plugins.forEach((plugin) => {
                 const services = [];
@@ -585,7 +585,9 @@ class PluginsManager {
                     enabled:(pluginConf && pluginConf.enable)?true:false,
                     corePlugin:(CORE_PLUGINS.indexOf(plugin.identifier) !== -1)
                 });
-                // this.plugins.sort(function (a,b) => a.identifier.localeCompare(b.identifier));
+                plugins = plugins.sort(function (a,b) {
+                    return a.identifier.localeCompare(b.identifier);
+                });
             });
             return new Promise((resolve) => {
                 resolve(new APIResponse.class(true, plugins));
