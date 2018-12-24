@@ -169,7 +169,20 @@ class DashboardManager {
      */
     buildDashboard(username, allTiles = true) {
         const tiles = this.getReadableTiles().sort(function(a, b) {
-            return parseFloat(a.order) - parseFloat(b.order);
+            if (parseFloat(a.order) > parseFloat(b.order)) {
+                return 1;
+            } else if (parseFloat(a.order) < parseFloat(b.order)) {
+                return -1;
+            }
+
+            // Fix #67 - Sort on tiles and other stiff works strangely
+            if (a.identifier < b.identifier) {
+                return -1;
+            } else if (a.identifier > b.identifier) {
+                return 1
+            } else {
+                return 0;
+            }
         });
         return {
             timestamp:this.lastGenerated,
