@@ -175,6 +175,7 @@ class DashboardManager {
                 return -1;
             }
 
+            // Fix #67 - Sort on tiles and other stiff works strangely
             if (a.identifier < b.identifier) {
                 return -1;
             } else if (a.identifier > b.identifier) {
