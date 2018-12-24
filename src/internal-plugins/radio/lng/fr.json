@@ -1,0 +1,7 @@
+{
+    "radio.config.autoCleanMode": "Supprimer automatiquement les anciennes données radio",
+    "radio.config.clean.every.month": "Données de plus d'un mois",
+    "radio.config.clean.every.three.month": "Données de plus de 3 mois",
+    "radio.config.clean.every.year": "Données de plus d'un an",
+    "radio.config.clean.no": "Ne rien supprimer"
+}

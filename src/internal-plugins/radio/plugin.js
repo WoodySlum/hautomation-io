@@ -81,6 +81,106 @@ function loaded(api) {
         }
     }
 
+   /**
+    * This class is used for radio configuration form
+    * @class
+    */
+    class RadioConfigForm extends api.exported.FormObject.class {
+       /**
+        * Constructor
+        *
+        * @param  {number} id           Identifier
+        * @param  {number} autoCleanMode       Auto clean
+        * @returns {RadioConfigForm}              The instance
+        */
+        constructor(id, autoCleanMode = 1) {
+            super(id);
+           /**
+            * @Property("autoCleanMode");
+            * @Type("number");
+            * @Title("radio.config.autoCleanMode");
+            * @Default(1);
+            * @Enum([0, 1, 2, 3]);
+            * @EnumNames(["radio.config.clean.every.month", "radio.config.clean.every.three.month", "radio.config.clean.every.year", "radio.config.clean.no"]);
+            */
+            this.autoCleanMode = autoCleanMode;
+        }
+
+       /**
+        * Convert json data
+        *
+        * @param  {Object} data Some key / value data
+        * @returns {RadioConfigForm}      A form object
+        */
+        json(data) {
+            return new RadioConfigForm(data.id, data.autoCleanMode);
+        }
+    }
+
+    api.configurationAPI.register(RadioConfigForm);
+
+   /**
+    * This class is a radio master class, executing generic radio actions
+    * @class
+    */
+    class RadioMaster {
+       /**
+        * Constructor
+        *
+        * @param  {PluginAPI} api The core APIs
+        * @returns {RadioMaster}        The instance
+        */
+        constructor(api) {
+            this.api = api;
+            this.api.databaseAPI.register(DbRadio);
+            this.dbHelper = this.api.databaseAPI.dbHelper(DbRadio);
+            this.api.timeEventAPI.register((self) => {
+                self.cleanRadioData(self);
+            }, this, this.api.timeEventAPI.constants().EVERY_DAYS);
+        }
+
+       /**
+        * Clean radio data
+        *
+        * @param  {RadioMaster} [context=null] The instance
+        */
+        cleanRadioData(context = null) {
+            if (!context) {
+                context = this;
+            }
+            const configuration = context.api.configurationAPI.getConfiguration();
+            let autoCleanMode = 1;
+            if (configuration) {
+                autoCleanMode = parseInt(configuration.autoCleanMode);
+            }
+
+            if (autoCleanMode < 3) { // Not autoclean disabled selected
+                let cleanTimestamp = context.api.exported.DateUtils.class.timestamp();
+                if (autoCleanMode === 0) {
+                    cleanTimestamp -= 30 * 60 * 60 * 24;
+                } else if (autoCleanMode === 1) {
+                    cleanTimestamp -= 3 * 30 * 60 * 60 * 24;
+                } else if (autoCleanMode === 2) {
+                    cleanTimestamp -= 12 * 30 * 60 * 60 * 24;
+                }
+
+                context.api.exported.Logger.info("Removing old radio data from " + cleanTimestamp);
+
+                const requestBuilder = context.dbHelper.RequestBuilder().where(context.dbHelper.Operators().FIELD_TIMESTAMP, context.dbHelper.Operators().LT, cleanTimestamp);
+                context.dbHelper.delObjects(requestBuilder, (error) => {
+                    if (error) {
+                        context.api.exported.Logger.err(error.message);
+                    } else {
+                        context.api.exported.Logger.info("Radio data successfully cleaned");
+                    }
+                    process.exit(0);
+                });
+            }
+        }
+    }
+
+    new RadioMaster(api);
+
     /**
      * This class shoud be extended by radio modules
      * @class
