@@ -179,7 +179,7 @@ class DashboardManager {
             if (a.identifier < b.identifier) {
                 return -1;
             } else if (a.identifier > b.identifier) {
-                return 1
+                return 1;
             } else {
                 return 0;
             }
