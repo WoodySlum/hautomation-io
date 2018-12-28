@@ -112,7 +112,7 @@ function loaded(api) {
                                     // Every 30 minutes, so aaggregate to hour
                                     let i = 0;
                                     let intermediateData = 0;
-                                    let timestamp = this.api.exported.DateUtils.class.dateToTimestamp(data[0].date);
+                                    let timestamp = this.api.exported.DateUtils.class.dateToTimestamp(data[0].date) - 3600;
                                     data.forEach((data) => {
                                         intermediateData += data.value*1000;
 
