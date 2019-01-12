@@ -26,7 +26,8 @@
             "**/modules/backupmanager/*",
             "**/internal-plugins/huawei*",
             "**/internal-plugins/hue/*",
-            "**/internal-plugins/dropbox/*"
+            "**/internal-plugins/dropbox/*",
+            "**/internal-plugins/tuya-device/*"
         ],
         "ignore-class-method": "stringify",
         "check-coverage": true,
@@ -102,7 +103,6 @@
         "nan": "^2.11"
     },
     "dependencies": {
-        "node-gyp": "latest",
         "@bokub/linky": "latest",
         "annotation": "git://github.com/WoodySlum/node-annotation.git#master",
         "audiohub": "git://github.com/WoodySlum/audiohub.git#master",
@@ -132,6 +132,7 @@
         "node-datetime": "^1.0",
         "node-google-timezone": "^0.1",
         "node-gtts": "^2.0",
+        "node-gyp": "latest",
         "node-record-lpcm16": "^0.3",
         "node-wit": "^4.3",
         "node-witai-speech": "^1.0",
@@ -146,6 +147,7 @@
         "string-similarity": "^1.2",
         "threads": "git://github.com/WoodySlum/threads.js.git#master",
         "toposort": "^1.0",
+        "tuyapi": "github:codetheweb/tuyapi",
         "underscore": "^1.9",
         "usb-detection": "^4.1",
         "waveheader": "^0.0",

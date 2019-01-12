@@ -95,7 +95,11 @@ class Service {
      * @param  {Object} [data=null] A data
      */
     send(event, data = null) {
-        this.threadsManager.send(this.name, event, data);
+        try {
+            this.threadsManager.send(this.name, event, data);
+        } catch(e) {
+            Logger.err(e.message);
+        }
     }
 
     /**

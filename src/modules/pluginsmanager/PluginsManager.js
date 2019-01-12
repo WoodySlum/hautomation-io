@@ -72,7 +72,8 @@ const INTERNAL_PLUGINS = [
     "huawei-router",
     "huawei-fairuse-sensor",
     "hue",
-    "dropbox"
+    "dropbox",
+    "tuya-device"
 ];
 
 const CORE_PLUGINS = [

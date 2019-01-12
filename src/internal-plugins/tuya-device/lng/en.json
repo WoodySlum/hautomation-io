@@ -1,0 +1,6 @@
+{
+    "tuya.form.title":"Tuya WiFI devices",
+    "tuya.device.id": "Identifier (read https://bit.ly/2HcpuJl)",
+    "tuya.device.key": "Key",
+    "tuya.device.ip": "Ip address"
+}
