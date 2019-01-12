@@ -47,7 +47,7 @@
         "dev": "nodemon --config .nodemon.json  HautomationRunner.js",
         "start": "node HautomationRunner.js",
         "pre-test": "rm -Rf /tmp/data && mkdir /tmp/data && cp -f ./data/config.json /tmp/data",
-        "test": "npm run pre-test && env TEST=1 NO_LOG=1 mocha --exit --reporter spec $(find tests -name '*.tests.js')",
+        "test": "npm run pre-test && env TEST=1 NO_LOG=1 mocha --timeout 10000 --exit --reporter spec $(find tests -name '*.tests.js')",
         "cov": "env COV=1 TEST=1 NO_LOG=1 nyc npm run test",
         "lint": "eslint ./src/ --ext .js",
         "doc": "documentation build ./src/** -f md -o ./doc/DOCUMENTATION.md && documentation build ./src/modules/pluginsmanager/publicapis/** -f md -o ./doc/PUBLIC-APIS.md",
