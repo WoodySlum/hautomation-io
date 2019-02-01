@@ -1,6 +1,10 @@
 "use strict";
 
+const fs = require("fs-extra");
+
 const LOCK_TIME = 5 * 60;
+const MAX_HISTORY_LINES = 100000;
+const TMP_FILE_PREFIX = "radio-presence-sensor-notification-sent-";
 
 /**
  * Loaded function
@@ -26,9 +30,10 @@ function loaded(api) {
          * @param  {string} dashboardColor  The dashboard color
          * @param  {string} statisticsColor The statistics color
          * @param  {Array} radio The radio objects
+         * @param  {boolean} alertOnBatteryLow Alert when battery is low
          * @returns {RadioPresenceSensorForm}                 The instance
          */
-        constructor(id, plugin, name, dashboard, statistics, dashboardColor, statisticsColor, radio) {
+        constructor(id, plugin, name, dashboard, statistics, dashboardColor, statisticsColor, radio, alertOnBatteryLow = false) {
             super(id, plugin, name, dashboard, statistics, dashboardColor, statisticsColor);
 
              /**
@@ -39,6 +44,15 @@ function loaded(api) {
               * @Default([]);
               */
             this.radio = radio;
+
+             /**
+              * @Property("alertOnBatteryLow");
+              * @Type("boolean");
+              * @Cl("RadioForm");
+              * @Title("radio.presence.sensor.alert.on.battery.low");
+              * @Default(true);
+              */
+            this.alertOnBatteryLow = alertOnBatteryLow;
         }
 
         /**
@@ -87,6 +101,52 @@ function loaded(api) {
                     });
                 }
             }, id);
+        }
+
+        /**
+         * Needs to be call when sensor is ready
+         */
+        init() {
+            super.init();
+            this.registerBatteryAlert(this.api, this.configuration);
+        }
+
+        /**
+         * Register alert battery
+         *
+         * @param  {PluginAPI} api                                                           A plugin api
+         * @param  {Object} [configuration=null]                                             The configuration for sensor
+         */
+        registerBatteryAlert(api, configuration) {
+            const mode = api.timeEventAPI.constants().EVERY_DAYS;
+            api.timeEventAPI.unregister({}, mode, null, null, null, TMP_FILE_PREFIX + configuration.id);
+            api.timeEventAPI.register(() => {
+                if (configuration.alertOnBatteryLow === true) {
+                    const sensorRadioConfigurations = configuration.radio;
+                    api.radioAPI.getLastReceivedRadioInformations((radioObjects) => {
+                        let found = false;
+                        for (let i = 0 ; i < radioObjects.length ; i++) {
+                            for (let j = 0 ; j < sensorRadioConfigurations.length ; j++) {
+                                if (sensorRadioConfigurations[j].module.toLowerCase() === radioObjects[i].module.toLowerCase()
+                                    && sensorRadioConfigurations[j].protocol.toLowerCase() === radioObjects[i].protocol.toLowerCase()
+                                    && sensorRadioConfigurations[j].deviceId.toLowerCase() === radioObjects[i].deviceId.toLowerCase()
+                                    && sensorRadioConfigurations[j].switchId.toLowerCase() === radioObjects[i].switchId.toLowerCase()) {
+                                    found = true;
+                                }
+                            }
+                        }
+
+                        if (!found) {
+                            const fileName = api.coreAPI.cachePath() + TMP_FILE_PREFIX + configuration.id;
+                            if (!fs.existsSync(fileName)) {
+                                fs.writeFileSync(fileName, "");
+                                api.exported.Logger.info(api.translateAPI.t("radio.presence.sensor.alert.on.battery.low.message", configuration.name));
+                                api.messageAPI.sendMessage("*", api.translateAPI.t("radio.presence.sensor.alert.on.battery.low.message", configuration.name));
+                            }
+                        }
+                    }, MAX_HISTORY_LINES);
+                }
+            }, this, mode, null, null, null, TMP_FILE_PREFIX + configuration.id);
         }
     }
 

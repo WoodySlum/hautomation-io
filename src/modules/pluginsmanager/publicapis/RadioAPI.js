@@ -49,6 +49,16 @@ class RadioAPI {
     compareFormObject(radioFormObject, radioObject) {
         return PrivateProperties.oprivate(this).radioManager.compareFormObject(radioFormObject, radioObject);
     }
+
+    /**
+     * Get last received radio informations
+     *
+     * @param  {Function} cb               A callback `cb(radioObjects) => {}`
+     * @param  {number}   [nbElements=100] Number of elements
+     */
+    getLastReceivedRadioInformations(cb, nbElements = 100) {
+        PrivateProperties.oprivate(this).radioManager.getLastReceivedRadioInformations(cb, nbElements);
+    }
 }
 
 module.exports = {class:RadioAPI};
