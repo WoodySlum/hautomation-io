@@ -3,7 +3,7 @@
 const fs = require("fs-extra");
 
 const LOCK_TIME = 5 * 60;
-const MAX_HISTORY_LINES = 100000;
+const MAX_BATTERY_HISTORY_TIME = 30 * 24 * 60 * 60;
 const TMP_FILE_PREFIX = "radio-presence-sensor-notification-sent-";
 
 /**
@@ -108,7 +108,7 @@ function loaded(api) {
          */
         init() {
             super.init();
-            this.registerBatteryAlert(this.api, this.configuration);
+            this.registerBatteryAlert(this.api, this.configuration, this.dbHelper);
         }
 
         /**
@@ -116,35 +116,36 @@ function loaded(api) {
          *
          * @param  {PluginAPI} api                                                           A plugin api
          * @param  {Object} [configuration=null]                                             The configuration for sensor
+         * @param  {DbHelper} dbHelper      A database helper object
          */
-        registerBatteryAlert(api, configuration) {
+        registerBatteryAlert(api, configuration, dbHelper) {
             const mode = api.timeEventAPI.constants().EVERY_DAYS;
             api.timeEventAPI.unregister({}, mode, null, null, null, TMP_FILE_PREFIX + configuration.id);
             api.timeEventAPI.register(() => {
                 if (configuration.alertOnBatteryLow === true) {
-                    const sensorRadioConfigurations = configuration.radio;
-                    api.radioAPI.getLastReceivedRadioInformations((radioObjects) => {
-                        let found = false;
-                        for (let i = 0 ; i < radioObjects.length ; i++) {
-                            for (let j = 0 ; j < sensorRadioConfigurations.length ; j++) {
-                                if (sensorRadioConfigurations[j].module.toLowerCase() === radioObjects[i].module.toLowerCase()
-                                    && sensorRadioConfigurations[j].protocol.toLowerCase() === radioObjects[i].protocol.toLowerCase()
-                                    && sensorRadioConfigurations[j].deviceId.toLowerCase() === radioObjects[i].deviceId.toLowerCase()
-                                    && sensorRadioConfigurations[j].switchId.toLowerCase() === radioObjects[i].switchId.toLowerCase()) {
-                                    found = true;
+                    const request = dbHelper.RequestBuilder()
+                    .selectOp(dbHelper.Operators().COUNT, dbHelper.Operators().FIELD_ID)
+                    .where("sensorId", dbHelper.Operators().EQ, configuration.id)
+                    .where(dbHelper.Operators().FIELD_TIMESTAMP, dbHelper.Operators().GTE, (api.exported.DateUtils.class.timestamp() - MAX_BATTERY_HISTORY_TIME));
+                    dbHelper.getObjects(request, (error, objects) => {
+                        if (!error && objects) {
+                            const resultsCount = objects[0][dbHelper.Operators().FIELD_ID];
+                            const fileName = api.coreAPI.cachePath() + TMP_FILE_PREFIX + configuration.id;
+                            if (resultsCount === 0) {
+                                if (!fs.existsSync(fileName)) {
+                                    fs.writeFileSync(fileName, "");
+                                    api.exported.Logger.info(api.translateAPI.t("radio.presence.sensor.alert.on.battery.low.message", configuration.name));
+                                    api.messageAPI.sendMessage("*", api.translateAPI.t("radio.presence.sensor.alert.on.battery.low.message", configuration.name));
+                                }
+                            } else {
+                                if (fs.existsSync(fileName)) {
+                                    fs.unlinkSync(fileName);
                                 }
                             }
+                        } else {
+                            api.exported.Logger.err(error.message);
                         }
-
-                        if (!found) {
-                            const fileName = api.coreAPI.cachePath() + TMP_FILE_PREFIX + configuration.id;
-                            if (!fs.existsSync(fileName)) {
-                                fs.writeFileSync(fileName, "");
-                                api.exported.Logger.info(api.translateAPI.t("radio.presence.sensor.alert.on.battery.low.message", configuration.name));
-                                api.messageAPI.sendMessage("*", api.translateAPI.t("radio.presence.sensor.alert.on.battery.low.message", configuration.name));
-                            }
-                        }
-                    }, MAX_HISTORY_LINES);
+                    });
                 }
             }, this, mode, null, null, null, TMP_FILE_PREFIX + configuration.id);
         }
