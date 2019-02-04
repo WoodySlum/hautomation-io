@@ -119,7 +119,7 @@ function loaded(api) {
          * @param  {DbHelper} dbHelper      A database helper object
          */
         registerBatteryAlert(api, configuration, dbHelper) {
-            const mode = api.timeEventAPI.constants().EVERY_DAYS;
+            const mode = api.timeEventAPI.constants().EVERY_HOURS;
             api.timeEventAPI.unregister({}, mode, null, null, null, TMP_FILE_PREFIX + configuration.id);
             api.timeEventAPI.register(() => {
                 if (configuration.alertOnBatteryLow === true) {
@@ -140,6 +140,7 @@ function loaded(api) {
                             } else {
                                 if (fs.existsSync(fileName)) {
                                     fs.unlinkSync(fileName);
+                                    api.messageAPI.sendMessage("*", api.translateAPI.t("radio.presence.sensor.alert.on.battery.ok", configuration.name));
                                 }
                             }
                         } else {
