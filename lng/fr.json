@@ -109,5 +109,6 @@
     "iot.form.app": "Application",
     "iot.form.name": "Nom",
     "iots.list.form.title": "Sélectionnez une application objet connecté (OC)",
-    "cameras.list.form.title":"Caméra"
+    "cameras.list.form.title":"Caméra",
+    "core.update.available": "Une nouvelle version %@ d'Hautomation est disponible. Mise à jour automatique."
 }

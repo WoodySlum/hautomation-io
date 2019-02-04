@@ -6397,6 +6397,7 @@ This class allows to manage house environment
 -   `installationManager` **[InstallationManager][1220]** The installation manager
 -   `timeEventService` **[TimeEventService][1226]** The time event service
 -   `eventBus` **EventEmitter** The global event bus
+-   `messageManager` **[MessageManager][1214]** The message manager
 
 ### setTimezone
 

@@ -111,5 +111,6 @@
     "iot.form.app": "Application",
     "iot.form.name": "Name",
     "iots.list.form.title": "Pick an IoT application",
-    "cameras.list.form.title":"Camera"
+    "cameras.list.form.title":"Camera",
+    "core.update.available": "A new Hautomation version %@ is available. Updating."
 }
