@@ -202,226 +202,227 @@
     -   [register][198]
     -   [unregister][199]
     -   [compareFormObject][200]
--   [ScenarioAPI][201]
-    -   [register][202]
-    -   [unregister][203]
-    -   [triggerScenario][204]
-    -   [getScenarios][205]
--   [SchedulerAPI][206]
-    -   [register][207]
-    -   [unregister][208]
-    -   [schedule][209]
-    -   [cancel][210]
-    -   [constants][211]
--   [SchedulerService][212]
-    -   [start][213]
-    -   [stop][214]
-    -   [register][215]
-    -   [unregister][216]
-    -   [schedule][217]
-    -   [cancel][218]
-    -   [timeEvent][219]
--   [SchedulerDbObject][220]
--   [identifier][221]
--   [data][222]
--   [triggerDate][223]
--   [triggered][224]
--   [SensorAPI][225]
-    -   [registerForm][226]
-    -   [registerClass][227]
-    -   [registerSensorEvent][228]
-    -   [unregisterSensorEvent][229]
-    -   [getSensors][230]
-    -   [getValue][231]
-    -   [getSensor][232]
-    -   [iotAppPowered][233]
-    -   [constants][234]
--   [IotsListForm][235]
-    -   [identifier][236]
-    -   [json][237]
-    -   [getIotsName][238]
-    -   [getIotsId][239]
--   [FormObject][240]
-    -   [json][241]
--   [id][242]
--   [SensorsManager][243]
-    -   [pluginsLoaded][244]
-    -   [initSensors][245]
-    -   [initSensor][246]
-    -   [registerSensorEvent][247]
-    -   [getSensor][248]
-    -   [unregisterSensorEvent][249]
-    -   [getAllSensors][250]
-    -   [onNewSensorValue][251]
-    -   [getValue][252]
-    -   [processAPI][253]
-    -   [statisticsWsResponse][254]
-    -   [comparator][255]
-    -   [getSensorConfiguration][256]
-    -   [registerSensorsListForm][257]
--   [SensorsForm][258]
-    -   [sensorId][259]
-    -   [json][260]
-    -   [getSensorIds][261]
-    -   [getSensorNames][262]
--   [SensorsListForm][263]
-    -   [identifier][264]
-    -   [json][265]
-    -   [getSensorsName][266]
-    -   [getSensorsId][267]
--   [PluginsManager][268]
-    -   [getPluginsFromDirectory][269]
-    -   [checkPluginSanity][270]
-    -   [initPlugin][271]
-    -   [initPlugins][272]
-    -   [registerPlugins][273]
-    -   [load][274]
-    -   [getPluginsByCategory][275]
-    -   [getPluginByIdentifier][276]
-    -   [isEnabled][277]
-    -   [prepareToposortArray][278]
-    -   [toposort][279]
-    -   [topsortedArrayConverter][280]
-    -   [getPluginConf][281]
-    -   [changePluginStatus][282]
-    -   [processAPI][283]
--   [PluginsAPI][284]
-    -   [exportClass][285]
-    -   [init][286]
-    -   [registerInstance][287]
-    -   [getPluginInstance][288]
-    -   [constants][289]
--   [IotForm][290]
-    -   [iotApp][291]
-    -   [name][292]
-    -   [json][293]
--   [ImageUtils][294]
-    -   [sanitizeFormConfiguration][295]
-    -   [resize][296]
-    -   [blur][297]
--   [PluginConf][298]
-    -   [json][299]
--   [ServicesManagerAPI][300]
-    -   [add][301]
-    -   [remove][302]
-    -   [stop][303]
-    -   [start][304]
--   [ThemeAPI][305]
-    -   [getColors][306]
--   [TimeEventAPI][307]
-    -   [register][308]
-    -   [unregister][309]
-    -   [constants][310]
--   [TimeEventService][311]
-    -   [start][312]
-    -   [stop][313]
-    -   [hash][314]
-    -   [elementForHash][315]
-    -   [register][316]
-    -   [unregister][317]
-    -   [convertMode][318]
-    -   [timeEvent][319]
--   [TranslateAPI][320]
-    -   [load][321]
-    -   [t][322]
--   [UserAPI][323]
-    -   [addAdditionalFields][324]
-    -   [getUsers][325]
-    -   [allUsersAtHome][326]
-    -   [nobodyAtHome][327]
-    -   [somebodyAtHome][328]
-    -   [registerHomeNotifications][329]
-    -   [unregisterHomeNotifications][330]
--   [WebAPI][331]
-    -   [register][332]
-    -   [unregister][333]
-    -   [Authentication][334]
-    -   [APIResponse][335]
-    -   [constants][336]
--   [Authentication][337]
-    -   [clearExpiredTokens][338]
-    -   [generateToken][339]
-    -   [processAPI][340]
-    -   [checkLocalIp][341]
-    -   [processAuthentication][342]
--   [AuthenticationData][343]
-    -   [authorized][344]
-    -   [username][345]
-    -   [level][346]
--   [DateUtils][347]
-    -   [timestamp][348]
-    -   [dateToUTCTimestamp][349]
-    -   [dateToTimestamp][350]
-    -   [roundedTimestamp][351]
-    -   [dateFormatted][352]
-    -   [secondsElapsedSinceMidnight][353]
--   [Logger][354]
-    -   [setLogLevel][355]
-    -   [log][356]
-    -   [removeColors][357]
-    -   [flog][358]
-    -   [warn][359]
-    -   [err][360]
-    -   [verbose][361]
-    -   [info][362]
-    -   [debug][363]
-    -   [getHistory][364]
--   [APIResponse][365]
-    -   [success][366]
-    -   [response][367]
-    -   [errorCode][368]
-    -   [errorMessage][369]
--   [Cleaner][370]
-    -   [exportConstants][371]
-    -   [cleanDbObject][372]
--   [WebServices][373]
-    -   [start][374]
-    -   [startTunnel][375]
-    -   [stop][376]
-    -   [registerInfos][377]
-    -   [getRouteIdentifier][378]
-    -   [processAPI][379]
-    -   [register][380]
-    -   [unregister][381]
-    -   [registerAPI][382]
-    -   [unregisterAPI][383]
-    -   [manageResponse][384]
-    -   [buildPromises][385]
-    -   [runPromises][386]
-    -   [sendAPIResponse][387]
--   [Service][388]
-    -   [start][389]
-    -   [run][390]
-    -   [threadCallback][391]
-    -   [send][392]
-    -   [startThreaded][393]
-    -   [stopThreaded][394]
-    -   [startExternal][395]
-    -   [stopExternal][396]
-    -   [stop][397]
-    -   [restart][398]
-    -   [status][399]
-    -   [register][400]
-    -   [unregister][401]
-    -   [setThreadsManager][402]
-    -   [setExternalTerminatedCommandCb][403]
--   [APIRequest][404]
-    -   [method][405]
-    -   [ip][406]
-    -   [route][407]
-    -   [path][408]
-    -   [action][409]
-    -   [params][410]
-    -   [data][411]
-    -   [authenticationData][412]
-    -   [addAuthenticationData][413]
--   [APIRegistration][414]
-    -   [delegate][415]
-    -   [method][416]
-    -   [route][417]
-    -   [authLevel][418]
-    -   [isEqual][419]
-    -   [getRouteBase][420]
+    -   [getLastReceivedRadioInformations][201]
+-   [ScenarioAPI][202]
+    -   [register][203]
+    -   [unregister][204]
+    -   [triggerScenario][205]
+    -   [getScenarios][206]
+-   [SchedulerAPI][207]
+    -   [register][208]
+    -   [unregister][209]
+    -   [schedule][210]
+    -   [cancel][211]
+    -   [constants][212]
+-   [SchedulerService][213]
+    -   [start][214]
+    -   [stop][215]
+    -   [register][216]
+    -   [unregister][217]
+    -   [schedule][218]
+    -   [cancel][219]
+    -   [timeEvent][220]
+-   [SchedulerDbObject][221]
+-   [identifier][222]
+-   [data][223]
+-   [triggerDate][224]
+-   [triggered][225]
+-   [SensorAPI][226]
+    -   [registerForm][227]
+    -   [registerClass][228]
+    -   [registerSensorEvent][229]
+    -   [unregisterSensorEvent][230]
+    -   [getSensors][231]
+    -   [getValue][232]
+    -   [getSensor][233]
+    -   [iotAppPowered][234]
+    -   [constants][235]
+-   [IotsListForm][236]
+    -   [identifier][237]
+    -   [json][238]
+    -   [getIotsName][239]
+    -   [getIotsId][240]
+-   [FormObject][241]
+    -   [json][242]
+-   [id][243]
+-   [SensorsManager][244]
+    -   [pluginsLoaded][245]
+    -   [initSensors][246]
+    -   [initSensor][247]
+    -   [registerSensorEvent][248]
+    -   [getSensor][249]
+    -   [unregisterSensorEvent][250]
+    -   [getAllSensors][251]
+    -   [onNewSensorValue][252]
+    -   [getValue][253]
+    -   [processAPI][254]
+    -   [statisticsWsResponse][255]
+    -   [comparator][256]
+    -   [getSensorConfiguration][257]
+    -   [registerSensorsListForm][258]
+-   [SensorsForm][259]
+    -   [sensorId][260]
+    -   [json][261]
+    -   [getSensorIds][262]
+    -   [getSensorNames][263]
+-   [SensorsListForm][264]
+    -   [identifier][265]
+    -   [json][266]
+    -   [getSensorsName][267]
+    -   [getSensorsId][268]
+-   [PluginsManager][269]
+    -   [getPluginsFromDirectory][270]
+    -   [checkPluginSanity][271]
+    -   [initPlugin][272]
+    -   [initPlugins][273]
+    -   [registerPlugins][274]
+    -   [load][275]
+    -   [getPluginsByCategory][276]
+    -   [getPluginByIdentifier][277]
+    -   [isEnabled][278]
+    -   [prepareToposortArray][279]
+    -   [toposort][280]
+    -   [topsortedArrayConverter][281]
+    -   [getPluginConf][282]
+    -   [changePluginStatus][283]
+    -   [processAPI][284]
+-   [PluginsAPI][285]
+    -   [exportClass][286]
+    -   [init][287]
+    -   [registerInstance][288]
+    -   [getPluginInstance][289]
+    -   [constants][290]
+-   [IotForm][291]
+    -   [iotApp][292]
+    -   [name][293]
+    -   [json][294]
+-   [ImageUtils][295]
+    -   [sanitizeFormConfiguration][296]
+    -   [resize][297]
+    -   [blur][298]
+-   [PluginConf][299]
+    -   [json][300]
+-   [ServicesManagerAPI][301]
+    -   [add][302]
+    -   [remove][303]
+    -   [stop][304]
+    -   [start][305]
+-   [ThemeAPI][306]
+    -   [getColors][307]
+-   [TimeEventAPI][308]
+    -   [register][309]
+    -   [unregister][310]
+    -   [constants][311]
+-   [TimeEventService][312]
+    -   [start][313]
+    -   [stop][314]
+    -   [hash][315]
+    -   [elementForHash][316]
+    -   [register][317]
+    -   [unregister][318]
+    -   [convertMode][319]
+    -   [timeEvent][320]
+-   [TranslateAPI][321]
+    -   [load][322]
+    -   [t][323]
+-   [UserAPI][324]
+    -   [addAdditionalFields][325]
+    -   [getUsers][326]
+    -   [allUsersAtHome][327]
+    -   [nobodyAtHome][328]
+    -   [somebodyAtHome][329]
+    -   [registerHomeNotifications][330]
+    -   [unregisterHomeNotifications][331]
+-   [WebAPI][332]
+    -   [register][333]
+    -   [unregister][334]
+    -   [Authentication][335]
+    -   [APIResponse][336]
+    -   [constants][337]
+-   [Authentication][338]
+    -   [clearExpiredTokens][339]
+    -   [generateToken][340]
+    -   [processAPI][341]
+    -   [checkLocalIp][342]
+    -   [processAuthentication][343]
+-   [AuthenticationData][344]
+    -   [authorized][345]
+    -   [username][346]
+    -   [level][347]
+-   [DateUtils][348]
+    -   [timestamp][349]
+    -   [dateToUTCTimestamp][350]
+    -   [dateToTimestamp][351]
+    -   [roundedTimestamp][352]
+    -   [dateFormatted][353]
+    -   [secondsElapsedSinceMidnight][354]
+-   [Logger][355]
+    -   [setLogLevel][356]
+    -   [log][357]
+    -   [removeColors][358]
+    -   [flog][359]
+    -   [warn][360]
+    -   [err][361]
+    -   [verbose][362]
+    -   [info][363]
+    -   [debug][364]
+    -   [getHistory][365]
+-   [APIResponse][366]
+    -   [success][367]
+    -   [response][368]
+    -   [errorCode][369]
+    -   [errorMessage][370]
+-   [Cleaner][371]
+    -   [exportConstants][372]
+    -   [cleanDbObject][373]
+-   [WebServices][374]
+    -   [start][375]
+    -   [startTunnel][376]
+    -   [stop][377]
+    -   [registerInfos][378]
+    -   [getRouteIdentifier][379]
+    -   [processAPI][380]
+    -   [register][381]
+    -   [unregister][382]
+    -   [registerAPI][383]
+    -   [unregisterAPI][384]
+    -   [manageResponse][385]
+    -   [buildPromises][386]
+    -   [runPromises][387]
+    -   [sendAPIResponse][388]
+-   [Service][389]
+    -   [start][390]
+    -   [run][391]
+    -   [threadCallback][392]
+    -   [send][393]
+    -   [startThreaded][394]
+    -   [stopThreaded][395]
+    -   [startExternal][396]
+    -   [stopExternal][397]
+    -   [stop][398]
+    -   [restart][399]
+    -   [status][400]
+    -   [register][401]
+    -   [unregister][402]
+    -   [setThreadsManager][403]
+    -   [setExternalTerminatedCommandCb][404]
+-   [APIRequest][405]
+    -   [method][406]
+    -   [ip][407]
+    -   [route][408]
+    -   [path][409]
+    -   [action][410]
+    -   [params][411]
+    -   [data][412]
+    -   [authenticationData][413]
+    -   [addAuthenticationData][414]
+-   [APIRegistration][415]
+    -   [delegate][416]
+    -   [method][417]
+    -   [route][418]
+    -   [authLevel][419]
+    -   [isEqual][420]
+    -   [getRouteBase][421]
 
 ## AlarmAPI
 
@@ -435,7 +436,7 @@ Public API for alarm
 
 Get alarm state
 
-Returns **[boolean][421]** True if alarm is enabled, false otherwise
+Returns **[boolean][422]** True if alarm is enabled, false otherwise
 
 ### enableAlarm
 
@@ -457,7 +458,7 @@ Public API for backup
 
 Get alarm state
 
-Returns **[boolean][421]** True if alarm is enabled, false otherwise
+Returns **[boolean][422]** True if alarm is enabled, false otherwise
 
 ### backup
 
@@ -465,10 +466,10 @@ Start a backup
 
 **Parameters**
 
--   `cb` **[Function][422]** A callback as `(err, backupFilePath) => {}`
--   `saveConfig` **[boolean][421]** Configuration should be saved (optional, default `true`)
--   `saveDb` **[boolean][421]** Dabatabase should be saved (optional, default `true`)
--   `saveCameraHistory` **[boolean][421]** Cameras historyshould be saved (optional, default `false`)
+-   `cb` **[Function][423]** A callback as `(err, backupFilePath) => {}`
+-   `saveConfig` **[boolean][422]** Configuration should be saved (optional, default `true`)
+-   `saveDb` **[boolean][422]** Dabatabase should be saved (optional, default `true`)
+-   `saveCameraHistory` **[boolean][422]** Cameras historyshould be saved (optional, default `false`)
 
 ### restore
 
@@ -476,8 +477,8 @@ Restore a backup local file
 
 **Parameters**
 
--   `backupFilePath` **[string][423]** A backup zip local file
--   `cb` **[Function][422]** A callback `(err) => {}`
+-   `backupFilePath` **[string][424]** A backup zip local file
+-   `cb` **[Function][423]** A callback `(err) => {}`
 
 ### cleanBackupFile
 
@@ -485,7 +486,7 @@ Clean a backup file
 
 **Parameters**
 
--   `backupFilePath` **[string][423]** Backup file path
+-   `backupFilePath` **[string][424]** Backup file path
 
 ## BotEngineAPI
 
@@ -501,7 +502,7 @@ Play a sound
 
 **Parameters**
 
--   `soundPath` **[string][423]** The sound's file path
+-   `soundPath` **[string][424]** The sound's file path
 
 ### textToSpeech
 
@@ -509,7 +510,7 @@ Speech some text
 
 **Parameters**
 
--   `text` **[string][423]** A text
+-   `text` **[string][424]** A text
 
 ### registerBotAction
 
@@ -517,8 +518,8 @@ Register a bot action
 
 **Parameters**
 
--   `actionKey` **[string][423]** The action key
--   `cb` **[Function][422]** The callback to implement : `(action, value, type, confidence, sender, cb) => {cb("Job done !");}`
+-   `actionKey` **[string][424]** The action key
+-   `cb` **[Function][423]** The callback to implement : `(action, value, type, confidence, sender, cb) => {cb("Job done !");}`
 
 ### unregisterBotAction
 
@@ -526,7 +527,7 @@ Unregister a bot action
 
 **Parameters**
 
--   `actionKey` **[string][423]** The action key
+-   `actionKey` **[string][424]** The action key
 
 ### stringSimilarity
 
@@ -540,7 +541,7 @@ Enable or disable voice commands. Can throw an error.
 
 **Parameters**
 
--   `enable` **[boolean][421]** `true` to enable voice command, `false` otherwise. If null, switch status automatically.
+-   `enable` **[boolean][422]** `true` to enable voice command, `false` otherwise. If null, switch status automatically.
 
 ## CameraAPI
 
@@ -559,7 +560,7 @@ Register a camera form
 **Parameters**
 
 -   `formClass` **Class** A form annotation's implemented class
--   `inject` **...[Object][424]** The injected objects
+-   `inject` **...[Object][425]** The injected objects
 
 ### registerClass
 
@@ -573,7 +574,7 @@ Register a camera class
 
 Get all cameras
 
-Returns **[Object][424]** On object with id:name
+Returns **[Object][425]** On object with id:name
 
 ### getImage
 
@@ -581,9 +582,9 @@ Get a picture
 
 **Parameters**
 
--   `id` **[number][425]** Camera identifier
--   `cb` **[Function][422]** A callback with error, image buffer and mime type. Example : `(err, data, mime) => {}`
--   `timestamp` **[number][425]** The timestamp of the picture. If `null`, live snapshot. (optional, default `null`)
+-   `id` **[number][426]** Camera identifier
+-   `cb` **[Function][423]** A callback with error, image buffer and mime type. Example : `(err, data, mime) => {}`
+-   `timestamp` **[number][426]** The timestamp of the picture. If `null`, live snapshot. (optional, default `null`)
 
 ### record
 
@@ -591,9 +592,9 @@ Record a video session for a specific camera
 
 **Parameters**
 
--   `id` **[number][425]** The camera identifier
--   `cb` **[Function][422]** A callback `(err, generatedFilepath) => {}`
--   `timer` **[number][425]** Duration of capture in seconds (optional, default `60`)
+-   `id` **[number][426]** The camera identifier
+-   `cb` **[Function][423]** A callback `(err, generatedFilepath) => {}`
+-   `timer` **[number][426]** Duration of capture in seconds (optional, default `60`)
 
 ## ConfigurationAPI
 
@@ -615,19 +616,19 @@ Register a form
 **Parameters**
 
 -   `formClass` **Class** A form annotation's implemented class
--   `inject` **...[Object][424]** The injected objects
+-   `inject` **...[Object][425]** The injected objects
 
 ### getConfiguration
 
 Returns the configuration
 
-Returns **[Object][424]** Configuration object
+Returns **[Object][425]** Configuration object
 
 ### getForm
 
 Return the formatted form object
 
-Returns **[Object][424]** Formatted form object
+Returns **[Object][425]** Formatted form object
 
 ### setUpdateCb
 
@@ -635,7 +636,7 @@ Set the update callback. Called back when delete or save action is done.
 
 **Parameters**
 
--   `cb` **[Function][422]** A callback with data as parameter, e.g. `cb(data) => {}`
+-   `cb` **[Function][423]** A callback with data as parameter, e.g. `cb(data) => {}`
 
 ### loadData
 
@@ -644,9 +645,9 @@ Load data manually from file (Array or object)
 **Parameters**
 
 -   `classType` **class** The object class. This class MUST implement a json() method to process JSON to Object mapping
--   `disableClassMapping` **[boolean][421]** Disable class mapping (optional, default `false`)
+-   `disableClassMapping` **[boolean][422]** Disable class mapping (optional, default `false`)
 
-Returns **[Array][426]** An array of objects (instance of classType), or an object
+Returns **[Array][427]** An array of objects (instance of classType), or an object
 
 ### saveData
 
@@ -654,7 +655,7 @@ Save data manually for a specific key. Can throw error.
 
 **Parameters**
 
--   `data` **[Object][424]** A JS object
+-   `data` **[Object][425]** A JS object
 
 ## FormConfiguration
 
@@ -664,11 +665,11 @@ This class allows to manage form configuration
 
 -   `confManager` **ConfManager** A configuration manager
 -   `formManager` **FormManager** A form manager
--   `webServices` **[WebServices][427]** Web services instance
--   `name` **[string][423]** A name or identifier
--   `list` **[boolean][421]** True if form configuration manage a list, false otherwise (optional, default `false`)
+-   `webServices` **[WebServices][428]** Web services instance
+-   `name` **[string][424]** A name or identifier
+-   `list` **[boolean][422]** True if form configuration manage a list, false otherwise (optional, default `false`)
 -   `formClass` **Class** A form annotation's implemented class. Can be called later through `register` method (optional, default `null`)
--   `inject` **...[Object][424]** Parameters injection on static methods
+-   `inject` **...[Object][425]** Parameters injection on static methods
 
 ### setUpdateCb
 
@@ -676,7 +677,7 @@ Set the update callback. Called back when delete or save action is done.
 
 **Parameters**
 
--   `cb` **[Function][422]** A callback with data as parameter, e.g. `cb(data) => {}`
+-   `cb` **[Function][423]** A callback with data as parameter, e.g. `cb(data) => {}`
 
 ### addAdditionalFields
 
@@ -685,9 +686,9 @@ Add additional fields
 **Parameters**
 
 -   `form` **Class** A form
--   `title` **[string][423]** The form title
--   `isList` **[boolean][421]** `true` if this is a list of objects, otherwise `false`
--   `inject` **...[Object][424]** Parameters injection on static methods
+-   `title` **[string][424]** The form title
+-   `isList` **[boolean][422]** `true` if this is a list of objects, otherwise `false`
+-   `inject` **...[Object][425]** Parameters injection on static methods
 
 ### loadConfig
 
@@ -699,7 +700,7 @@ Save configuration
 
 **Parameters**
 
--   `data` **[Object][424]** Object data
+-   `data` **[Object][425]** Object data
 
 ### save
 
@@ -711,10 +712,10 @@ List comparator for ConfManager
 
 **Parameters**
 
--   `obj1` **[Object][424]** An first object
--   `obj2` **[Object][424]** A second object
+-   `obj1` **[Object][425]** An first object
+-   `obj2` **[Object][425]** A second object
 
-Returns **[boolean][421]** True if equals, false otherwise
+Returns **[boolean][422]** True if equals, false otherwise
 
 ### registerForm
 
@@ -723,7 +724,7 @@ Register a form shortcut
 **Parameters**
 
 -   `formClass` **Class** A form annotation's implemented class
--   `inject` **...[Object][424]** The inject objects
+-   `inject` **...[Object][425]** The inject objects
 
 ### processAPI
 
@@ -731,27 +732,27 @@ Process API callback
 
 **Parameters**
 
--   `apiRequest` **[APIRequest][428]** An APIRequest
+-   `apiRequest` **[APIRequest][429]** An APIRequest
 
-Returns **[Promise][429]** A promise with an APIResponse object
+Returns **[Promise][430]** A promise with an APIResponse object
 
 ### getDataCopy
 
 Returns a copy of the data object
 
-Returns **([Array][426] \| [Object][424])** A copy of data
+Returns **([Array][427] \| [Object][425])** A copy of data
 
 ### getConfig
 
 Return configuration
 
-Returns **[Object][424]** A configuration
+Returns **[Object][425]** A configuration
 
 ### getForm
 
 Return the form
 
-Returns **[Object][424]** A formatted form object
+Returns **[Object][425]** A formatted form object
 
 ### setSortFunction
 
@@ -759,7 +760,7 @@ Set the sort function
 
 **Parameters**
 
--   `f` **[Function][422]** The function
+-   `f` **[Function][423]** The function
 
 ## CoreAPI
 
@@ -776,8 +777,8 @@ Dispatch an event through all registered modules
 
 **Parameters**
 
--   `name` **[string][423]** An event name
--   `data` **[Object][424]** Some data (optional, default `null`)
+-   `name` **[string][424]** An event name
+-   `data` **[Object][425]** Some data (optional, default `null`)
 
 ### registerEvent
 
@@ -785,14 +786,14 @@ Register to a specific event
 
 **Parameters**
 
--   `name` **[string][423]** The event's name
--   `cb` **[Function][422]** A callback \`(data) => {}``
+-   `name` **[string][424]** The event's name
+-   `cb` **[Function][423]** A callback \`(data) => {}``
 
 ### cachePath
 
 Get the cache path
 
-Returns **[string][423]** A cache path
+Returns **[string][424]** A cache path
 
 ## DashboardAPI
 
@@ -808,7 +809,7 @@ Register a tile
 
 **Parameters**
 
--   `tile` **[Tile][430]** A tile object
+-   `tile` **[Tile][431]** A tile object
 
 ### unregisterTile
 
@@ -816,7 +817,7 @@ Unregister a tile
 
 **Parameters**
 
--   `identifier` **[string][423]** A tile identifier
+-   `identifier` **[string][424]** A tile identifier
 
 ### Tile
 
@@ -824,26 +825,26 @@ Constructor
 
 **Parameters**
 
--   `identifier` **[string][423]** The tile identifier (must be unique)
--   `type` **[string][423]** The tile's model (or type). Models cosntants can be retrieved through `TileType()` (optional, default `TILE_INFO_ONE_TEXT`)
--   `icon` **[string][423]** The icon. Use `api.exported.Icons.class.list()` to retrieve icon list. (optional, default `null`)
--   `subIcon` **[string][423]** The subicon. Use `api.exported.Icons.class.list()` to retrieve icon list. (optional, default `null`)
--   `text` **[string][423]** The text (optional, default `null`)
--   `subText` **[string][423]** The sub text (optional, default `null`)
--   `picture` **[string][423]** A picture in base64 format (optional, default `null`)
--   `pictures` **[Array][426]** A list of Base64 pictures (optional, default `null`)
--   `status` **[number][425]** A status (0, 1, ...) (optional, default `0`)
--   `order` **[number][425]** A number that represents the place of the tile. 1 is on top, 999999 is on bottom :) (optional, default `1`)
--   `action` **[string][423]** The action (route endpoint without `:`) (optional, default `null`)
--   `object` **[Object][424]** An object (optional, default `null`)
+-   `identifier` **[string][424]** The tile identifier (must be unique)
+-   `type` **[string][424]** The tile's model (or type). Models cosntants can be retrieved through `TileType()` (optional, default `TILE_INFO_ONE_TEXT`)
+-   `icon` **[string][424]** The icon. Use `api.exported.Icons.class.list()` to retrieve icon list. (optional, default `null`)
+-   `subIcon` **[string][424]** The subicon. Use `api.exported.Icons.class.list()` to retrieve icon list. (optional, default `null`)
+-   `text` **[string][424]** The text (optional, default `null`)
+-   `subText` **[string][424]** The sub text (optional, default `null`)
+-   `picture` **[string][424]** A picture in base64 format (optional, default `null`)
+-   `pictures` **[Array][427]** A list of Base64 pictures (optional, default `null`)
+-   `status` **[number][426]** A status (0, 1, ...) (optional, default `0`)
+-   `order` **[number][426]** A number that represents the place of the tile. 1 is on top, 999999 is on bottom :) (optional, default `1`)
+-   `action` **[string][424]** The action (route endpoint without `:`) (optional, default `null`)
+-   `object` **[Object][425]** An object (optional, default `null`)
 
-Returns **[Tile][430]** A tile
+Returns **[Tile][431]** A tile
 
 ### TileType
 
 Expose a list of tile's type : `TILE_INFO_ONE_TEXT`, `TILE_INFO_TWO_TEXT`, `TILE_INFO_TWO_ICONS`, `TILE_ACTION_ONE_ICON`, `TILE_PICTURE_TEXT`, `TILE_PICTURES`, `TILE_GENERIC_ACTION` or `TILE_GENERIC_ACTION_STATUS`
 
-Returns **[Object][424]** Constants
+Returns **[Object][425]** Constants
 
 ## Tile
 
@@ -852,30 +853,30 @@ This class describes tiles
 **Parameters**
 
 -   `themeManager` **ThemeManager** The theme manager
--   `identifier` **[string][423]** The tile identifier (must be unique)
--   `type` **[string][423]** The tile's model (or type). Check enum. (optional, default `TILE_INFO_ONE_TEXT`)
--   `icon` **[string][423]** The icon (optional, default `null`)
--   `subIcon` **[string][423]** The subicon (optional, default `null`)
--   `text` **[string][423]** The text (optional, default `null`)
--   `subText` **[string][423]** The sub text (optional, default `null`)
--   `picture` **[string][423]** A picture in base64 format (optional, default `null`)
--   `pictures` **[Array][426]** A list of Base64 pictures (optional, default `null`)
--   `status` **[number][425]** A status (0, 1, ...) (optional, default `0`)
--   `order` **[number][425]** A number that represents the place of the tile. 1 is on top, 999999 is on bottom :) (optional, default `1`)
--   `action` **[string][423]** The action (route endpoint without `:`) (optional, default `null`)
--   `object` **[Object][424]** An object (optional, default `null`)
+-   `identifier` **[string][424]** The tile identifier (must be unique)
+-   `type` **[string][424]** The tile's model (or type). Check enum. (optional, default `TILE_INFO_ONE_TEXT`)
+-   `icon` **[string][424]** The icon (optional, default `null`)
+-   `subIcon` **[string][424]** The subicon (optional, default `null`)
+-   `text` **[string][424]** The text (optional, default `null`)
+-   `subText` **[string][424]** The sub text (optional, default `null`)
+-   `picture` **[string][424]** A picture in base64 format (optional, default `null`)
+-   `pictures` **[Array][427]** A list of Base64 pictures (optional, default `null`)
+-   `status` **[number][426]** A status (0, 1, ...) (optional, default `0`)
+-   `order` **[number][426]** A number that represents the place of the tile. 1 is on top, 999999 is on bottom :) (optional, default `1`)
+-   `action` **[string][424]** The action (route endpoint without `:`) (optional, default `null`)
+-   `object` **[Object][425]** An object (optional, default `null`)
 
 ### get
 
 Get the tile without useless informations
 
-Returns **[Object][424]** A tile ready to be serialized
+Returns **[Object][425]** A tile ready to be serialized
 
 ### hash
 
 Get the hash value of the tile
 
-Returns **[string][423]** The object hash
+Returns **[string][424]** The object hash
 
 ## DatabaseAPI
 
@@ -892,8 +893,8 @@ Register database object and create associated schema (annotations)
 
 **Parameters**
 
--   `dbObjectClass` **[DbObject][431]** A class extending DbObject
--   `cb` **[Function][422]** A callback with an error in parameter : `(err) => {}` (optional, default `null`)
+-   `dbObjectClass` **[DbObject][432]** A class extending DbObject
+-   `cb` **[Function][423]** A callback with an error in parameter : `(err) => {}` (optional, default `null`)
 
 ### dbHelper
 
@@ -903,9 +904,9 @@ The DbHelper object allows you to create, update, delete or execute queries on t
 
 **Parameters**
 
--   `dbObjectClass` **[DbObject][431]** A database object extended class with annotations. Please read documentation
+-   `dbObjectClass` **[DbObject][432]** A database object extended class with annotations. Please read documentation
 
-Returns **[DbHelper][432]** A DbHelper object
+Returns **[DbHelper][433]** A DbHelper object
 
 ## DbHelper
 
@@ -914,15 +915,15 @@ Public API for database manager
 **Parameters**
 
 -   `dbManager` **DbManager** A DbManager instance
--   `schema` **[Object][424]** A database schema
--   `table` **[string][423]** A table
+-   `schema` **[Object][425]** A database schema
+-   `table` **[string][424]** A table
 -   `dbObjectClass` **Class** A DbObject extended class. If not provided, a classic DbObject will be provided (optional, default `null`)
 
 ### RequestBuilder
 
 Shortcut to create a DbRequestBuilder
 
-Returns **[DbRequestBuilder][433]** A request builder
+Returns **[DbRequestBuilder][434]** A request builder
 
 ### Operators
 
@@ -946,13 +947,13 @@ COUNT
 FIELD_ID
 FIELD_TIMESTAMP
 
-Returns **[Object][424]** A list of constants
+Returns **[Object][425]** A list of constants
 
 ### getFieldsForTable
 
 Return the list of fields for a shema
 
-Returns **[Array][426]** A list of fields
+Returns **[Array][427]** A list of fields
 
 ### saveObject
 
@@ -960,8 +961,8 @@ Save an object in database (upsert mode)
 
 **Parameters**
 
--   `object` **[Object][424]** An object macthing schema
--   `cb` **[Function][422]** Callback of type `(error) => {}`. Error is null if no errors (optional, default `null`)
+-   `object` **[Object][425]** An object macthing schema
+-   `cb` **[Function][423]** Callback of type `(error) => {}`. Error is null if no errors (optional, default `null`)
 
 ### getObject
 
@@ -969,8 +970,8 @@ Get an object from database
 
 **Parameters**
 
--   `object` **[Object][424]** An object macthing schema, with values inside. Example `getObject("myTable", schema, {id:152}, (err, object) => {console.log(object);})`
--   `cb` **[Function][422]** Callback of type `(error, object) => {}`. Error is null if no errors (optional, default `null`)
+-   `object` **[Object][425]** An object macthing schema, with values inside. Example `getObject("myTable", schema, {id:152}, (err, object) => {console.log(object);})`
+-   `cb` **[Function][423]** Callback of type `(error, object) => {}`. Error is null if no errors (optional, default `null`)
 
 ### getObjects
 
@@ -978,8 +979,8 @@ Get an objects from database
 
 **Parameters**
 
--   `request` **[DbRequestBuilder][433]** A request with the desired parameters. For example `RequestBuilder("history", schema).where("value", GT, 32)`
--   `cb` **[Function][422]** Callback of type `(error, objects) => {}`. Error is null if no errors (optional, default `null`)
+-   `request` **[DbRequestBuilder][434]** A request with the desired parameters. For example `RequestBuilder("history", schema).where("value", GT, 32)`
+-   `cb` **[Function][423]** Callback of type `(error, objects) => {}`. Error is null if no errors (optional, default `null`)
 
 ### getLastObject
 
@@ -987,7 +988,7 @@ Get the last object from database (by timestamp)
 
 **Parameters**
 
--   `cb` **[Function][422]** Callback of type `(error, object) => {}`. Error is null if no errors (optional, default `null`)
+-   `cb` **[Function][423]** Callback of type `(error, object) => {}`. Error is null if no errors (optional, default `null`)
 
 ### delObject
 
@@ -995,8 +996,8 @@ Delete an object from database
 
 **Parameters**
 
--   `object` **[Object][424]** An object macthing schema, with values inside. Example `getObject("myTable", schema, {id:152}, (err) => {})`
--   `cb` **[Function][422]** Callback of type `(error) => {}`. Error is null if no errors (optional, default `null`)
+-   `object` **[Object][425]** An object macthing schema, with values inside. Example `getObject("myTable", schema, {id:152}, (err) => {})`
+-   `cb` **[Function][423]** Callback of type `(error) => {}`. Error is null if no errors (optional, default `null`)
 
 ### delObjects
 
@@ -1004,8 +1005,8 @@ Delete objects from database
 
 **Parameters**
 
--   `request` **[DbRequestBuilder][433]** A request with the desired parameters. For example `RequestBuilder("history", schema).where("value", GT, 32)`
--   `cb` **[Function][422]** Callback of type `(error) => {}`. Error is null if no errors (optional, default `null`)
+-   `request` **[DbRequestBuilder][434]** A request with the desired parameters. For example `RequestBuilder("history", schema).where("value", GT, 32)`
+-   `cb` **[Function][423]** Callback of type `(error) => {}`. Error is null if no errors (optional, default `null`)
 
 ## DbObject
 
@@ -1014,14 +1015,14 @@ This class must be extended
 
 **Parameters**
 
--   `dbHelper` **[DbHelper][432]** A database helper object (optional, default `null`)
+-   `dbHelper` **[DbHelper][433]** A database helper object (optional, default `null`)
 -   `values` **...any** A list of values
 
 ### base
 
 Creates an object cloned with only field properties
 
-Returns **[Object][424]** A cloned object without any methods
+Returns **[Object][425]** A cloned object without any methods
 
 ### save
 
@@ -1029,7 +1030,7 @@ Save the database object
 
 **Parameters**
 
--   `cb` **[Function][422]** Callback of type `(error) => {}`. Error is null if no errors (optional, default `null`)
+-   `cb` **[Function][423]** Callback of type `(error) => {}`. Error is null if no errors (optional, default `null`)
 
 ### del
 
@@ -1037,7 +1038,7 @@ Delete the database object
 
 **Parameters**
 
--   `cb` **[Function][422]** Callback of type `(error) => {}`. Error is null if no errors (optional, default `null`)
+-   `cb` **[Function][423]** Callback of type `(error) => {}`. Error is null if no errors (optional, default `null`)
 
 ## DbRequestBuilder
 
@@ -1046,8 +1047,8 @@ This class generates a SQL query from parameters, but does NOT check that SQL qu
 
 **Parameters**
 
--   `table` **[string][423]** Database table
--   `schema` **[Object][424]** A JSON Database schema
+-   `table` **[string][424]** Database table
+-   `schema` **[Object][425]** A JSON Database schema
 
 ### removeLastComma
 
@@ -1055,9 +1056,9 @@ Remove last comma of parameter
 
 **Parameters**
 
--   `sql` **[string][423]** A SQL request
+-   `sql` **[string][424]** A SQL request
 
-Returns **[string][423]** Result
+Returns **[string][424]** Result
 
 ### escapeString
 
@@ -1065,9 +1066,9 @@ Escape SQL special characters
 
 **Parameters**
 
--   `val` **[string][423]** Input
+-   `val` **[string][424]** Input
 
-Returns **[string][423]** Escaped output
+Returns **[string][424]** Escaped output
 
 ### getValueEncapsulated
 
@@ -1076,9 +1077,9 @@ Encapsulate data. For example, if field is a string &lt;&lt; L'envie >>, returns
 **Parameters**
 
 -   `value` **any** A value
--   `meta` **[Object][424]** The field meta data from schema
+-   `meta` **[Object][425]** The field meta data from schema
 
-Returns **[string][423]** The encapsulated value
+Returns **[string][424]** The encapsulated value
 
 ### getMetaForField
 
@@ -1086,9 +1087,9 @@ Internal, get meta data from shcema for a specific field
 
 **Parameters**
 
--   `field` **[string][423]** A field
+-   `field` **[string][424]** A field
 
-Returns **[Object][424]** Metadata for field, null if nothing match
+Returns **[Object][425]** Metadata for field, null if nothing match
 
 ### save
 
@@ -1096,9 +1097,9 @@ Create a request for saving an object
 
 **Parameters**
 
--   `obj` **[Object][424]** An object with some values inside in relation with the database schema
+-   `obj` **[Object][425]** An object with some values inside in relation with the database schema
 
-Returns **[DbRequestBuilder][433]** The instance
+Returns **[DbRequestBuilder][434]** The instance
 
 ### get
 
@@ -1107,9 +1108,9 @@ The execution of the request will return an object matching the object contents
 
 **Parameters**
 
--   `obj` **[Object][424]** An object with some values inside in relation with the database schema
+-   `obj` **[Object][425]** An object with some values inside in relation with the database schema
 
-Returns **[DbRequestBuilder][433]** The instance
+Returns **[DbRequestBuilder][434]** The instance
 
 ### del
 
@@ -1118,9 +1119,9 @@ The execution of the request will delete an object matching the object contents
 
 **Parameters**
 
--   `obj` **[Object][424]** An object with some values inside in relation with the database schema
+-   `obj` **[Object][425]** An object with some values inside in relation with the database schema
 
-Returns **[DbRequestBuilder][433]** The instance
+Returns **[DbRequestBuilder][434]** The instance
 
 ### selectOp
 
@@ -1131,11 +1132,11 @@ Request example : `SELECT operator(field) as alias`
 
 **Parameters**
 
--   `operator` **[string][423]** An operator, (exported constants) : `AVG`, `SUM`, `MIN`, `MAX` or `COUNT`
--   `field` **[string][423]** The field to aggregate
--   `alias` **[string][423]** An alias for request result. If not provided, will be set into field name (optional, default `null`)
+-   `operator` **[string][424]** An operator, (exported constants) : `AVG`, `SUM`, `MIN`, `MAX` or `COUNT`
+-   `field` **[string][424]** The field to aggregate
+-   `alias` **[string][424]** An alias for request result. If not provided, will be set into field name (optional, default `null`)
 
-Returns **[DbRequestBuilder][433]** The instance
+Returns **[DbRequestBuilder][434]** The instance
 
 ### select
 
@@ -1145,9 +1146,9 @@ Given example : `.select("id", "timestamp") or .select()`
 
 **Parameters**
 
--   `fields` **...[string][423]** Aa list of fields, or nothing if need all fields
+-   `fields` **...[string][424]** Aa list of fields, or nothing if need all fields
 
-Returns **[DbRequestBuilder][433]** The instance
+Returns **[DbRequestBuilder][434]** The instance
 
 ### insert
 
@@ -1158,9 +1159,9 @@ Given example : `.insert("id", "timestamp") or .insert()`
 
 **Parameters**
 
--   `fields` **...[string][423]** Aa list of fields, or nothing if need all fields
+-   `fields` **...[string][424]** Aa list of fields, or nothing if need all fields
 
-Returns **[DbRequestBuilder][433]** The instance
+Returns **[DbRequestBuilder][434]** The instance
 
 ### update
 
@@ -1171,9 +1172,9 @@ Given example : `.update("timestamp") or .update()`
 
 **Parameters**
 
--   `fields` **...[string][423]** Aa list of fields, or nothing if need all fields
+-   `fields` **...[string][424]** Aa list of fields, or nothing if need all fields
 
-Returns **[DbRequestBuilder][433]** The instance
+Returns **[DbRequestBuilder][434]** The instance
 
 ### upsert
 
@@ -1185,16 +1186,16 @@ Given example : `.upsert("timestamp") or .upsert()`
 
 **Parameters**
 
--   `fields` **...[string][423]** Aa list of fields, or nothing if need all fields
+-   `fields` **...[string][424]** Aa list of fields, or nothing if need all fields
 
-Returns **[DbRequestBuilder][433]** The instance
+Returns **[DbRequestBuilder][434]** The instance
 
 ### remove
 
 Add delete closure
 Usually needs to be combinated with `.where()`
 
-Returns **[DbRequestBuilder][433]** The instance
+Returns **[DbRequestBuilder][434]** The instance
 
 ### values
 
@@ -1204,9 +1205,9 @@ Given example : `.upsert("myText").values("foobar").where("id", EQ, 5)`
 
 **Parameters**
 
--   `values` **...[string][423]** A list of values
+-   `values` **...[string][424]** A list of values
 
-Returns **[DbRequestBuilder][433]** The instance
+Returns **[DbRequestBuilder][434]** The instance
 
 ### where
 
@@ -1217,11 +1218,11 @@ Given example :`.select().where("id", EQ, 5)\`
 
 **Parameters**
 
--   `field` **[string][423]** The field to aggregate
--   `operator` **[string][423]** An operator, (exported constants) : `EQ`, `NEQ`, `LT`, `GT`, `LTE`, `GTE`, `LIKE` or `NLIKE`
+-   `field` **[string][424]** The field to aggregate
+-   `operator` **[string][424]** An operator, (exported constants) : `EQ`, `NEQ`, `LT`, `GT`, `LTE`, `GTE`, `LIKE` or `NLIKE`
 -   `value` **any?** A value
 
-Returns **[DbRequestBuilder][433]** The instance
+Returns **[DbRequestBuilder][434]** The instance
 
 ### complexWhere
 
@@ -1229,9 +1230,9 @@ Add a complex WHERE clause
 
 **Parameters**
 
--   `clause` **[string][423]** A WHERE SQL query part
+-   `clause` **[string][424]** A WHERE SQL query part
 
-Returns **[DbRequestBuilder][433]** The instance
+Returns **[DbRequestBuilder][434]** The instance
 
 ### groupOp
 
@@ -1240,10 +1241,10 @@ Given example : `.select().where("id", EQ, 5).groupOp(AVG, "value")`
 
 **Parameters**
 
--   `operator` **[string][423]** An operator can be (exported constants) : `AVG`, `SUM`, `MIN`, `MAX` or `COUNT`
--   `field` **[string][423]** A field
+-   `operator` **[string][424]** An operator can be (exported constants) : `AVG`, `SUM`, `MIN`, `MAX` or `COUNT`
+-   `field` **[string][424]** A field
 
-Returns **[DbRequestBuilder][433]** The instance
+Returns **[DbRequestBuilder][434]** The instance
 
 ### group
 
@@ -1252,9 +1253,9 @@ Given example : `.select().where("id", EQ, 5).groupOp("value")`
 
 **Parameters**
 
--   `fields` **...[string][423]** A  list of fields
+-   `fields` **...[string][424]** A  list of fields
 
-Returns **[DbRequestBuilder][433]** The instance
+Returns **[DbRequestBuilder][434]** The instance
 
 ### order
 
@@ -1263,10 +1264,10 @@ Given example : `.select().order(DESC, "id")`
 
 **Parameters**
 
--   `operator` **[string][423]** An operator can be (exported constants) : `ASC` or `DESC`
--   `field` **[string][423]** A field
+-   `operator` **[string][424]** An operator can be (exported constants) : `ASC` or `DESC`
+-   `field` **[string][424]** A field
 
-Returns **[DbRequestBuilder][433]** The instance
+Returns **[DbRequestBuilder][434]** The instance
 
 ### lim
 
@@ -1278,7 +1279,7 @@ Will retrieve results from `start` to `start + length`
 -   `start` **int** The start index
 -   `length` **int** The number of database items to retrieve
 
-Returns **[DbRequestBuilder][433]** The instance
+Returns **[DbRequestBuilder][434]** The instance
 
 ### first
 
@@ -1288,7 +1289,7 @@ Will return the first `length` results
 
 -   `length` **int** The number of database items to retrieve from the start (optional, default `1`)
 
-Returns **[DbRequestBuilder][433]** The instance
+Returns **[DbRequestBuilder][434]** The instance
 
 ### cleanForSelect
 
@@ -1296,13 +1297,13 @@ Internal. Clean query for select
 Used when a query is passed as parameter before triggering database execution.
 For example, passing some where filters
 
-Returns **[DbRequestBuilder][433]** The instance
+Returns **[DbRequestBuilder][434]** The instance
 
 ### distinct
 
 De-duplicate values
 
-Returns **[DbRequestBuilder][433]** The instance
+Returns **[DbRequestBuilder][434]** The instance
 
 ### cleanForDelete
 
@@ -1310,13 +1311,13 @@ Internal. Clean query for delete
 Used when a query is passed as parameter before triggering database execution.
 For example, passing some where filters
 
-Returns **[DbRequestBuilder][433]** The instance
+Returns **[DbRequestBuilder][434]** The instance
 
 ### request
 
 Generate SQL request
 
-Returns **[string][423]** The SQL query
+Returns **[string][424]** The SQL query
 
 ## DbSchemaConverter
 
@@ -1328,9 +1329,9 @@ Get a table name from a DbObject extended class
 
 **Parameters**
 
--   `dbObjectClass` **[DbObject][431]** A class extending DbObject
+-   `dbObjectClass` **[DbObject][432]** A class extending DbObject
 
-Returns **[string][423]** The table name
+Returns **[string][424]** The table name
 
 ### toSchema
 
@@ -1338,9 +1339,9 @@ Convert DbObject annotations to db schema
 
 **Parameters**
 
--   `dbObjectClass` **[DbObject][431]** A class extending DbObject
+-   `dbObjectClass` **[DbObject][432]** A class extending DbObject
 
-Returns **[Object][424]** A database schema
+Returns **[Object][425]** A database schema
 
 ## Convert
 
@@ -1352,9 +1353,9 @@ Convert key / values object into a single one. Example `[{key:"Foo", value:"Bar"
 
 **Parameters**
 
--   `inputObject` **[Object][424]** An input object
+-   `inputObject` **[Object][425]** An input object
 
-Returns **[Object][424]** An output object
+Returns **[Object][425]** An output object
 
 ## DeviceAPI
 
@@ -1368,7 +1369,7 @@ Public API for devices
 
 Return the list of devices
 
-Returns **[Array][426]** The list of devices
+Returns **[Array][427]** The list of devices
 
 ### switchDevice
 
@@ -1376,17 +1377,17 @@ Switch a device status
 
 **Parameters**
 
--   `id` **[number][425]** A device identifier
--   `status` **[string][423]** A status  (`on`, `off` or int status) (optional, default `null`)
+-   `id` **[number][426]** A device identifier
+-   `status` **[string][424]** A status  (`on`, `off` or int status) (optional, default `null`)
 -   `brightness` **int** Brightness (between 0 and 1) (optional, default `0`)
--   `color` **[string][423]** Color (hex color) (optional, default `FFFFFF`)
+-   `color` **[string][424]** Color (hex color) (optional, default `FFFFFF`)
 -   `colorTemperature` **int** Color temperature (between 0 and 1) (optional, default `0`)
 
 ### constants
 
 Expose a list of constants (status)
 
-Returns **[Object][424]** Constants
+Returns **[Object][425]** Constants
 
 ### getDeviceStatus
 
@@ -1394,9 +1395,9 @@ Return a status of a device
 
 **Parameters**
 
--   `id` **[number][425]** A device identifier
+-   `id` **[number][426]** A device identifier
 
-Returns **[boolean][421]** Status of the device
+Returns **[boolean][422]** Status of the device
 
 ### addForm
 
@@ -1404,11 +1405,11 @@ Add a form device part
 
 **Parameters**
 
--   `key` **[string][423]** A key
+-   `key` **[string][424]** A key
 -   `form` **Form** A form
--   `title` **[string][423]** A title
--   `isList` **[boolean][421]** `true` if this is a list of subforms, `false` otherwise (optional, default `false`)
--   `inject` **...[Object][424]** The injected objects
+-   `title` **[string][424]** A title
+-   `isList` **[boolean][422]** `true` if this is a list of subforms, `false` otherwise (optional, default `false`)
+-   `inject` **...[Object][425]** The injected objects
 
 ### registerSwitchDevice
 
@@ -1417,9 +1418,9 @@ The method `addForm` should be called before
 
 **Parameters**
 
--   `key` **[string][423]** A key, the same as set in `addForm`
--   `cb` **[Function][422]** The callback when a device switches `(device, formData, deviceStatus) => {}`. Please note that this callback can return a DeviceStatus object to save state. You can modify and return the status as parameter.
--   `type` **[string][423]** The device type, constant can be `DEVICE_TYPE_LIGHT`, `DEVICE_TYPE_LIGHT_DIMMABLE`, `DEVICE_TYPE_LIGHT_DIMMABLE_COLOR`, `DEVICE_TYPE_SHUTTER`
+-   `key` **[string][424]** A key, the same as set in `addForm`
+-   `cb` **[Function][423]** The callback when a device switches `(device, formData, deviceStatus) => {}`. Please note that this callback can return a DeviceStatus object to save state. You can modify and return the status as parameter.
+-   `type` **[string][424]** The device type, constant can be `DEVICE_TYPE_LIGHT`, `DEVICE_TYPE_LIGHT_DIMMABLE`, `DEVICE_TYPE_LIGHT_DIMMABLE_COLOR`, `DEVICE_TYPE_SHUTTER`
 
 ### saveDevice
 
@@ -1427,7 +1428,7 @@ Save a device
 
 **Parameters**
 
--   `device` **[Object][424]** A device
+-   `device` **[Object][425]** A device
 
 ### getDeviceTypes
 
@@ -1435,9 +1436,9 @@ Returns the supported modes for a specific device (e.g. light, dimmable, color, 
 
 **Parameters**
 
--   `device` **[Object][424]** A device
+-   `device` **[Object][425]** A device
 
-Returns **\[[string][423]]** The list of supported modes
+Returns **\[[string][424]]** The list of supported modes
 
 ### getDeviceById
 
@@ -1445,9 +1446,9 @@ Returns a device from an identifier
 
 **Parameters**
 
--   `id` **[string][423]** An identifier
+-   `id` **[string][424]** An identifier
 
-Returns **[Object][424]** A device
+Returns **[Object][425]** A device
 
 ### switchDeviceWithDevice
 
@@ -1455,7 +1456,7 @@ Switch device with a device object
 
 **Parameters**
 
--   `device` **[Object][424]** A device
+-   `device` **[Object][425]** A device
 
 ## DeviceManager
 
@@ -1465,14 +1466,14 @@ This class allows to manage devices
 
 -   `confManager` **ConfManager** A configuration manager
 -   `formManager` **FormManager** A form manager
--   `webServices` **[WebServices][427]** The web services
+-   `webServices` **[WebServices][428]** The web services
 -   `radioManager` **RadioManager** The radio manager
 -   `dashboardManager` **DashboardManager** The dashboard manager
 -   `scenarioManager` **ScenarioManager** The scenario manager
 -   `translateManager` **TranslateManager** The translate manager
 -   `environmentManager` **EnvironmentManager** The environment manager
 -   `botEngine` **BotEngine** The bot engine
--   `sensorsManager` **[SensorsManager][434]** The sensrsManager
+-   `sensorsManager` **[SensorsManager][435]** The sensrsManager
 -   `eventBus` **EventEmitter** The global event bus
 
 ### addForm
@@ -1481,10 +1482,10 @@ Add a form device part
 
 **Parameters**
 
--   `key` **[string][423]** A key
+-   `key` **[string][424]** A key
 -   `form` **Form** A form
--   `title` **[string][423]** A title
--   `isList` **[boolean][421]** `true` if this is a list of subforms, `false` otherwise (optional, default `false`)
+-   `title` **[string][424]** A title
+-   `isList` **[boolean][422]** `true` if this is a list of subforms, `false` otherwise (optional, default `false`)
 
 ### registerSwitchDevice
 
@@ -1493,9 +1494,9 @@ The method `addForm` should be called before
 
 **Parameters**
 
--   `key` **[string][423]** A key, the same as set in `addForm`
--   `cb` **[Function][422]** The callback when a device switches `(device, formData, deviceStatus) => {}`. Please note that this callback can return a DeviceStatus object to save state. You can modify and return the status as parameter.
--   `type` **[string][423]** The device type, constant can be `DEVICE_TYPE_LIGHT`, `DEVICE_TYPE_LIGHT_DIMMABLE`, `DEVICE_TYPE_LIGHT_DIMMABLE_COLOR`, `DEVICE_TYPE_SHUTTER` (optional, default `DEVICE_TYPE_LIGHT`)
+-   `key` **[string][424]** A key, the same as set in `addForm`
+-   `cb` **[Function][423]** The callback when a device switches `(device, formData, deviceStatus) => {}`. Please note that this callback can return a DeviceStatus object to save state. You can modify and return the status as parameter.
+-   `type` **[string][424]** The device type, constant can be `DEVICE_TYPE_LIGHT`, `DEVICE_TYPE_LIGHT_DIMMABLE`, `DEVICE_TYPE_LIGHT_DIMMABLE_COLOR`, `DEVICE_TYPE_SHUTTER` (optional, default `DEVICE_TYPE_LIGHT`)
 
 ### triggerScenario
 
@@ -1503,8 +1504,8 @@ Trigger scenario elements
 
 **Parameters**
 
--   `scenario` **[Object][424]** A dynamic scenario object
--   `context` **[DeviceManager][435]** The context
+-   `scenario` **[Object][425]** A dynamic scenario object
+-   `context` **[DeviceManager][436]** The context
 
 ### registerDeviceListForm
 
@@ -1518,7 +1519,7 @@ Register all devices on dashboard to get tiles on UI
 
 Return the list of devices
 
-Returns **[Array][426]** The list of devices
+Returns **[Array][427]** The list of devices
 
 ### getDeviceStatus
 
@@ -1526,9 +1527,9 @@ Return a status of a device
 
 **Parameters**
 
--   `id` **[number][425]** A device identifier
+-   `id` **[number][426]** A device identifier
 
-Returns **[boolean][421]** Status of the device
+Returns **[boolean][422]** Status of the device
 
 ### registerDeviceTile
 
@@ -1536,9 +1537,9 @@ Register a device on dashboard
 
 **Parameters**
 
--   `device` **[DeviceForm][436]** A device
--   `data` **[Array][426]** Some data (optional, default `[]`)
--   `index` **[number][425]** An index (optional, default `-1`)
+-   `device` **[DeviceForm][437]** A device
+-   `data` **[Array][427]** Some data (optional, default `[]`)
+-   `index` **[number][426]** An index (optional, default `-1`)
 
 ### getDeviceTypes
 
@@ -1546,9 +1547,9 @@ Returns the supported modes for a specific device (e.g. light, dimmable, color, 
 
 **Parameters**
 
--   `device` **[Object][424]** A device
+-   `device` **[Object][425]** A device
 
-Returns **\[[string][423]]** The list of supported modes
+Returns **\[[string][424]]** The list of supported modes
 
 ### getDeviceById
 
@@ -1556,9 +1557,9 @@ Returns a device from an identifier
 
 **Parameters**
 
--   `id` **[string][423]** An identifier
+-   `id` **[string][424]** An identifier
 
-Returns **[Object][424]** A device
+Returns **[Object][425]** A device
 
 ### switchDevice
 
@@ -1566,10 +1567,10 @@ Switch a device status
 
 **Parameters**
 
--   `id` **[number][425]** A device identifier
--   `status` **[string][423]** A status  (`on`, `off` or int status) (optional, default `null`)
+-   `id` **[number][426]** A device identifier
+-   `status` **[string][424]** A status  (`on`, `off` or int status) (optional, default `null`)
 -   `brightness` **int** Brightness (between 0 and 1) (optional, default `0`)
--   `color` **[string][423]** Color (hex color) (optional, default `FFFFFF`)
+-   `color` **[string][424]** Color (hex color) (optional, default `FFFFFF`)
 -   `colorTemperature` **int** Color temperature (between 0 and 1) (optional, default `0`)
 
 ### switchDeviceWithDevice
@@ -1578,7 +1579,7 @@ Switch device with a device object
 
 **Parameters**
 
--   `device` **[Object][424]** A device
+-   `device` **[Object][425]** A device
 
 ### saveDevice
 
@@ -1586,7 +1587,7 @@ Save device
 
 **Parameters**
 
--   `device` **[Object][424]** A device
+-   `device` **[Object][425]** A device
 
 ### switchAll
 
@@ -1594,7 +1595,7 @@ Switch all devices depending on excludeAll flag
 
 **Parameters**
 
--   `status` **[string][423]** The status
+-   `status` **[string][424]** The status
 
 ### processAPI
 
@@ -1602,9 +1603,9 @@ Process API callback
 
 **Parameters**
 
--   `apiRequest` **[APIRequest][428]** An APIRequest
+-   `apiRequest` **[APIRequest][429]** An APIRequest
 
-Returns **[Promise][429]** A promise with an APIResponse object
+Returns **[Promise][430]** A promise with an APIResponse object
 
 ## DeviceForm
 
@@ -1614,17 +1615,17 @@ This class provides a form for one device
 
 **Parameters**
 
--   `id` **[number][425]** An identifier (optional, default `null`)
--   `name` **[string][423]** A device name (optional, default `null`)
--   `excludeFromAll` **[boolean][421]** When all on or all of is called, set this value to `true` won't do action (optional, default `null`)
--   `visible` **[boolean][421]** Show in dashboard (optional, default `null`)
--   `worksOnlyOnDayNight` **[number][425]** Trigger on condition : `0` for Both, `1` for day, `2` for night (optional, default `null`)
+-   `id` **[number][426]** An identifier (optional, default `null`)
+-   `name` **[string][424]** A device name (optional, default `null`)
+-   `excludeFromAll` **[boolean][422]** When all on or all of is called, set this value to `true` won't do action (optional, default `null`)
+-   `visible` **[boolean][422]** Show in dashboard (optional, default `null`)
+-   `worksOnlyOnDayNight` **[number][426]** Trigger on condition : `0` for Both, `1` for day, `2` for night (optional, default `null`)
 -   `icon` **IconForm** An icon (optional, default `null`)
 -   `radio` **RadioForm** A radio informations (optional, default `null`)
--   `status` **[number][425]** A status (optional, default `null`)
--   `brightness` **[number][425]** The brightness for dimmable (optional, default `1`)
--   `color` **[string][423]** The device color (optional, default `"FFFFFF"`)
--   `colorTemperature` **[string][423]** The device color temperature (optional, default `0`)
+-   `status` **[number][426]** A status (optional, default `null`)
+-   `brightness` **[number][426]** The brightness for dimmable (optional, default `1`)
+-   `color` **[string][424]** The device color (optional, default `"FFFFFF"`)
+-   `colorTemperature` **[string][424]** The device color temperature (optional, default `0`)
 
 ### name
 
@@ -1650,9 +1651,9 @@ Convert json data
 
 **Parameters**
 
--   `data` **[Object][424]** Some key / value data
+-   `data` **[Object][425]** Some key / value data
 
-Returns **[DeviceForm][436]** A form object
+Returns **[DeviceForm][437]** A form object
 
 ## DevicesListForm
 
@@ -1662,12 +1663,12 @@ This class provides a form for one device
 
 **Parameters**
 
--   `id` **[number][425]** An identifier (optional, default `null`)
--   `identifier` **[number][425]** The device identifier (optional, default `null`)
--   `status` **[string][423]** The status (optional, default `null`)
--   `brightness` **[number][425]** Brightness (optional, default `1`)
--   `color` **[string][423]** Color (optional, default `"FFFFFF"`)
--   `colorTemperature` **[string][423]** Color temperature (optional, default `0`)
+-   `id` **[number][426]** An identifier (optional, default `null`)
+-   `identifier` **[number][426]** The device identifier (optional, default `null`)
+-   `status` **[string][424]** The status (optional, default `null`)
+-   `brightness` **[number][426]** Brightness (optional, default `1`)
+-   `color` **[string][424]** Color (optional, default `"FFFFFF"`)
+-   `colorTemperature` **[string][424]** Color temperature (optional, default `0`)
 
 ### identifier
 
@@ -1685,9 +1686,9 @@ Convert json data
 
 **Parameters**
 
--   `data` **[Object][424]** Some key / value data
+-   `data` **[Object][425]** Some key / value data
 
-Returns **[DevicesListForm][437]** A form object
+Returns **[DevicesListForm][438]** A form object
 
 ### getDevicesName
 
@@ -1695,9 +1696,9 @@ Form injection method for Devices name
 
 **Parameters**
 
--   `inject` **...[Object][424]** The modules list array
+-   `inject` **...[Object][425]** The modules list array
 
-Returns **[Array][426]** An array of devices name
+Returns **[Array][427]** An array of devices name
 
 ### getDevicesId
 
@@ -1705,9 +1706,9 @@ Form injection method for Devices ids
 
 **Parameters**
 
--   `inject` **...[Object][424]** The modules list array
+-   `inject` **...[Object][425]** The modules list array
 
-Returns **[Array][426]** An array of devices id
+Returns **[Array][427]** An array of devices id
 
 ## DevicesListScenarioForm
 
@@ -1717,10 +1718,10 @@ This class provides a form for one device
 
 **Parameters**
 
--   `id` **[number][425]** An identifier (optional, default `null`)
--   `turnOnAll` **[boolean][421]** Turn on all devices (optional, default `null`)
--   `turnOffAll` **[boolean][421]** Turn off all devices (optional, default `null`)
--   `devices` **[Array][426]** An array if DevicesListForm (optional, default `null`)
+-   `id` **[number][426]** An identifier (optional, default `null`)
+-   `turnOnAll` **[boolean][422]** Turn on all devices (optional, default `null`)
+-   `turnOffAll` **[boolean][422]** Turn off all devices (optional, default `null`)
+-   `devices` **[Array][427]** An array if DevicesListForm (optional, default `null`)
 
 ### turnOnAll
 
@@ -1734,9 +1735,9 @@ Convert json data
 
 **Parameters**
 
--   `data` **[Object][424]** Some key / value data
+-   `data` **[Object][425]** Some key / value data
 
-Returns **[DevicesListScenarioForm][438]** A form object
+Returns **[DevicesListScenarioForm][439]** A form object
 
 ## Icons
 
@@ -1746,13 +1747,13 @@ Utility class for icons
 
 Return a list of icons (key / value)
 
-Returns **[Object][424]** The icons under Key / Value format
+Returns **[Object][425]** The icons under Key / Value format
 
 ### raw
 
 Return the raw icons object
 
-Returns **[Object][424]** Raw icons object
+Returns **[Object][425]** Raw icons object
 
 ## DeviceStatus
 
@@ -1760,36 +1761,36 @@ This class provides is a POJO for device status
 
 **Parameters**
 
--   `deviceTypes` **\[[string][423]]** Supported mode for device
+-   `deviceTypes` **\[[string][424]]** Supported mode for device
 -   `status` **int** The status
 -   `brightness` **int** The brightness
--   `color` **[string][423]** The color
+-   `color` **[string][424]** The color
 -   `colorTemperature` **int** The color temperature
--   `changes` **\[[string][423]]** Changes (optional, default `[]`)
+-   `changes` **\[[string][424]]** Changes (optional, default `[]`)
 
 ### getStatus
 
 Get status
 
-Returns **[number][425]** Status
+Returns **[number][426]** Status
 
 ### getBrightness
 
 Get Brightness
 
-Returns **[number][425]** Brightness
+Returns **[number][426]** Brightness
 
 ### getColor
 
 Get color
 
-Returns **[string][423]** Color
+Returns **[string][424]** Color
 
 ### getColorTemperature
 
 Get color temperature
 
-Returns **[number][425]** Color temperature
+Returns **[number][426]** Color temperature
 
 ### setStatus
 
@@ -1813,7 +1814,7 @@ Set color
 
 **Parameters**
 
--   `color` **[string][423]** The hex color
+-   `color` **[string][424]** The hex color
 
 ### setColorTemperature
 
@@ -1821,13 +1822,13 @@ Set color temperature
 
 **Parameters**
 
--   `colorTemperature` **[number][425]** The color temperature
+-   `colorTemperature` **[number][426]** The color temperature
 
 ### tileFormat
 
 Generates a standard object format for tile
 
-Returns **[Object][424]** Standard object
+Returns **[Object][425]** Standard object
 
 ## EnvironmentAPI
 
@@ -1841,7 +1842,7 @@ Public API for home environement
 
 Return the home's coordinates
 
-Returns **[Object][424]** The coordinates
+Returns **[Object][425]** The coordinates
 
 ### setDay
 
@@ -1855,7 +1856,7 @@ Set night
 
 Is it night ?
 
-Returns **[boolean][421]** `true` if night mode, otherwise `false`
+Returns **[boolean][422]** `true` if night mode, otherwise `false`
 
 ### registerDayNightNotifications
 
@@ -1863,8 +1864,8 @@ Register for day/night notifications
 
 **Parameters**
 
--   `cb` **[Function][422]** A callback triggered when day/night information is received. Example : `(isNight) => {}`
--   `id` **[string][423]** An identifier (optional, default `null`)
+-   `cb` **[Function][423]** A callback triggered when day/night information is received. Example : `(isNight) => {}`
+-   `id` **[string][424]** An identifier (optional, default `null`)
 
 ### unregisterDayNightNotifications
 
@@ -1872,26 +1873,26 @@ Unegister for day/night notifications
 
 **Parameters**
 
--   `cb` **[Function][422]** A callback triggered when day/night information is received. Example : `(isNight) => {}`
--   `id` **[string][423]** An identifier (optional, default `null`)
+-   `cb` **[Function][423]** A callback triggered when day/night information is received. Example : `(isNight) => {}`
+-   `id` **[string][424]** An identifier (optional, default `null`)
 
 ### getLocalAPIUrl
 
 Get the local API Url
 
-Returns **[string][423]** The local API url (e.g. : [http://192.168.2.34:8100/api/][439])
+Returns **[string][424]** The local API url (e.g. : [http://192.168.2.34:8100/api/][440])
 
 ### getHautomationId
 
 Returns the hautomation ID
 
-Returns **[string][423]** Hautomation identifier
+Returns **[string][424]** Hautomation identifier
 
 ### getFullHautomationId
 
 Returns the full hautomation ID
 
-Returns **[string][423]** Hautomation full identifier
+Returns **[string][424]** Hautomation full identifier
 
 ## InstallerAPI
 
@@ -1908,11 +1909,11 @@ Register a command to be executed for a specific version
 
 **Parameters**
 
--   `arch` **([string][423] \| [Array][426])** The architecture ('arm', 'arm64', 'ia32', 'mips', 'mipsel', 'ppc', 'ppc64', 's390', 's390x', 'x32', 'x64', and 'x86'). Can be `*` for all arch, or an array of architectures (optional, default `"*"`)
--   `command` **[string][423]** A command
--   `sudo` **[boolean][421]** True if command should be executed as sudo, false otherwise. The Hautomation process owner user should be in `sudo` group without password. (optional, default `false`)
--   `wait` **[boolean][421]** True if command is executed synchronously, false otherwise (optional, default `true`)
--   `skipError` **[boolean][421]** True if command fails should continue, false for retrying (optional, default `false`)
+-   `arch` **([string][424] \| [Array][427])** The architecture ('arm', 'arm64', 'ia32', 'mips', 'mipsel', 'ppc', 'ppc64', 's390', 's390x', 'x32', 'x64', and 'x86'). Can be `*` for all arch, or an array of architectures (optional, default `"*"`)
+-   `command` **[string][424]** A command
+-   `sudo` **[boolean][422]** True if command should be executed as sudo, false otherwise. The Hautomation process owner user should be in `sudo` group without password. (optional, default `false`)
+-   `wait` **[boolean][422]** True if command is executed synchronously, false otherwise (optional, default `true`)
+-   `skipError` **[boolean][422]** True if command fails should continue, false for retrying (optional, default `false`)
 
 ### executeCommand
 
@@ -1920,11 +1921,11 @@ Execute a command. Can throw an error if wait is `true`
 
 **Parameters**
 
--   `command` **[string][423]** The command
--   `wait` **[boolean][421]** True if command is executed synchronously, false otherwise (optional, default `true`)
--   `cb` **[Function][422]** A callback (only if wait parameter is false) : `(error, stdout, stderr) => {}` (optional, default `null`)
+-   `command` **[string][424]** The command
+-   `wait` **[boolean][422]** True if command is executed synchronously, false otherwise (optional, default `true`)
+-   `cb` **[Function][423]** A callback (only if wait parameter is false) : `(error, stdout, stderr) => {}` (optional, default `null`)
 
-Returns **[Object][424]** An object result if wait is `true`
+Returns **[Object][425]** An object result if wait is `true`
 
 ## IotAPI
 
@@ -1941,10 +1942,10 @@ A library folder should contain `global_lib` and `lib` folder, inside `path` par
 
 **Parameters**
 
--   `path` **[string][423]** The library path
--   `appId` **[string][423]** An app identifier
--   `form` **[FormObject][440]** A form (optional, default `null`)
--   `inject` **...[Object][424]** Some form injection parameters
+-   `path` **[string][424]** The library path
+-   `appId` **[string][424]** An app identifier
+-   `form` **[FormObject][441]** A form (optional, default `null`)
+-   `inject` **...[Object][425]** Some form injection parameters
 -   `version` **int** A version number (optional, default `0`)
 
 ### registerApp
@@ -1955,17 +1956,17 @@ A `main.cpp` file should be created under `src` folder.
 
 **Parameters**
 
--   `path` **[string][423]** The application file path
--   `appId` **[string][423]** An app identifier
--   `name` **[string][423]** The app name
+-   `path` **[string][424]** The application file path
+-   `appId` **[string][424]** An app identifier
+-   `name` **[string][424]** The app name
 -   `version` **int** The application version number
--   `platform` **[string][423]** A platform
--   `board` **[string][423]** A board type
--   `framework` **[string][423]** A framework
--   `form` **[FormObject][440]** A form (optional, default `null`)
--   `inject` **...[Object][424]** Some form injection parameters
--   `dependencies` **[Array][426]** The array of library dependencies. Can be en empty array or an array of library app identifiers.
--   `options` **[Object][424]** A list of options injected in IoT configuration during flash sequence (optional, default `null`)
+-   `platform` **[string][424]** A platform
+-   `board` **[string][424]** A board type
+-   `framework` **[string][424]** A framework
+-   `form` **[FormObject][441]** A form (optional, default `null`)
+-   `inject` **...[Object][425]** Some form injection parameters
+-   `dependencies` **[Array][427]** The array of library dependencies. Can be en empty array or an array of library app identifiers.
+-   `options` **[Object][425]** A list of options injected in IoT configuration during flash sequence (optional, default `null`)
 
 ### iotAppExists
 
@@ -1973,9 +1974,9 @@ Check if an IoT app exists
 
 **Parameters**
 
--   `appId` **[string][423]** An app identifier
+-   `appId` **[string][424]** An app identifier
 
-Returns **[boolean][421]** `true` if the iot app is registered, `false` otherwise
+Returns **[boolean][422]** `true` if the iot app is registered, `false` otherwise
 
 ### getVersion
 
@@ -1983,7 +1984,7 @@ Get a version for a specific IoT app
 
 **Parameters**
 
--   `appId` **[string][423]** An app identifier
+-   `appId` **[string][424]** An app identifier
 
 Returns **int** A version number
 
@@ -1993,9 +1994,9 @@ Retrieve an IoT (not application, but configured instance)
 
 **Parameters**
 
--   `id` **[number][425]** An IoT identifier
+-   `id` **[number][426]** An IoT identifier
 
-Returns **[Object][424]** An IoT configuration object
+Returns **[Object][425]** An IoT configuration object
 
 ### build
 
@@ -2003,16 +2004,16 @@ Build a firmware for a specific appId
 
 **Parameters**
 
--   `appId` **[string][423]** An app identifier
--   `flash` **[Boolean][421]** `true` if USB flash sequence should be done after build, `false` otherwise (optional, default `false`)
--   `config` **[Object][424]** A configuration injected to firmware (optional, default `null`)
--   `cb` **[Function][422]** A callback `(error, result) => {}` called when firmware / flash is done. The result object contains 2 properties, `firmwarePath` for the firmware, `stdout` for the results
+-   `appId` **[string][424]** An app identifier
+-   `flash` **[Boolean][422]** `true` if USB flash sequence should be done after build, `false` otherwise (optional, default `false`)
+-   `config` **[Object][425]** A configuration injected to firmware (optional, default `null`)
+-   `cb` **[Function][423]** A callback `(error, result) => {}` called when firmware / flash is done. The result object contains 2 properties, `firmwarePath` for the firmware, `stdout` for the results
 
 ### constants
 
 Get the constants `constants().PLATFORMS`, `constants().BOARDS` and `constants().FRAMEWORKS`
 
-Returns **[Object][424]** The constants object
+Returns **[Object][425]** The constants object
 
 ### getIots
 
@@ -2020,15 +2021,15 @@ Retrieve IoTs (not application, but configured instance)
 
 **Parameters**
 
--   `app` **[string][423]** An IoT app identifier (optional, default `null`)
+-   `app` **[string][424]** An IoT app identifier (optional, default `null`)
 
-Returns **[array][426]** A list of IoT configuration objects
+Returns **[array][427]** A list of IoT configuration objects
 
 ### isBuilding
 
 Get the global build status
 
-Returns **[Boolean][421]** Returns `true` if a build is already running, `false` otherwise
+Returns **[Boolean][422]** Returns `true` if a build is already running, `false` otherwise
 
 ## MessageAPI
 
@@ -2044,11 +2045,11 @@ Send a message to all plugins.
 
 **Parameters**
 
--   `recipients` **([string][423] \| [Array][426])** The recipients. `*` for all users, otherwise an array of usernames - user `userAPI`, e.g. `["seb", "ema"]` (optional, default `"*"`)
--   `message` **[string][423]** The notification message
--   `action` **[string][423]** The action (optional, default `null`)
--   `link` **[string][423]** The link (optional, default `null`)
--   `picture` **[string][423]** The picture (optional, default `null`)
+-   `recipients` **([string][424] \| [Array][427])** The recipients. `*` for all users, otherwise an array of usernames - user `userAPI`, e.g. `["seb", "ema"]` (optional, default `"*"`)
+-   `message` **[string][424]** The notification message
+-   `action` **[string][424]** The action (optional, default `null`)
+-   `link` **[string][424]** The link (optional, default `null`)
+-   `picture` **[string][424]** The picture (optional, default `null`)
 
 ### register
 
@@ -2056,7 +2057,7 @@ Register an object to message events. The callback must implement `onMessageRece
 
 **Parameters**
 
--   `o` **[Object][424]** An object that implements callback
+-   `o` **[Object][425]** An object that implements callback
 
 ### unregister
 
@@ -2064,7 +2065,7 @@ Unregister an object to message events
 
 **Parameters**
 
--   `o` **[Object][424]** An object that implements callback
+-   `o` **[Object][425]** An object that implements callback
 
 ### onMessageReceived
 
@@ -2072,8 +2073,8 @@ Callback when a message is received, dispatched to registered elements
 
 **Parameters**
 
--   `sender` **[string][423]** The sender's username
--   `message` **[string][423]** The message received
+-   `sender` **[string][424]** The sender's username
+-   `message` **[string][424]** The message received
 
 ### getMessages
 
@@ -2081,9 +2082,9 @@ Get messages
 
 **Parameters**
 
--   `cb` **[Function][422]** A callback `(err, results) => {}`
--   `username` **[string][423]** A username
--   `lastTimestamp` **[number][425]** Last timestamp retrieval (optional, default `null`)
+-   `cb` **[Function][423]** A callback `(err, results) => {}`
+-   `username` **[string][424]** A username
+-   `lastTimestamp` **[number][426]** Last timestamp retrieval (optional, default `null`)
 
 ## RadioAPI
 
@@ -2099,8 +2100,8 @@ Register for radio events
 
 **Parameters**
 
--   `cb` **[Function][422]** A callback triggered when radio information is received. Example : `(radioObj) => {}`
--   `id` **[string][423]** An identifier (optional, default `null`)
+-   `cb` **[Function][423]** A callback triggered when radio information is received. Example : `(radioObj) => {}`
+-   `id` **[string][424]** An identifier (optional, default `null`)
 
 ### unregister
 
@@ -2108,8 +2109,8 @@ Unegister an timer element
 
 **Parameters**
 
--   `cb` **[Function][422]** A callback triggered when radio information is received. Example : `(radioObj) => {}`
--   `id` **[string][423]** An identifier (optional, default `null`)
+-   `cb` **[Function][423]** A callback triggered when radio information is received. Example : `(radioObj) => {}`
+-   `id` **[string][424]** An identifier (optional, default `null`)
 
 ### compareFormObject
 
@@ -2118,9 +2119,18 @@ Compare a `RadioScenarioForm` object and a standard received `RadioObject`
 **Parameters**
 
 -   `radioFormObject` **RadioScenarioForm** The radio scenario form object
--   `radioObject` **[Object][424]** A standard radio object
+-   `radioObject` **[Object][425]** A standard radio object
 
-Returns **[boolean][421]** `true` if objects matches, `false` otherwise
+Returns **[boolean][422]** `true` if objects matches, `false` otherwise
+
+### getLastReceivedRadioInformations
+
+Get last received radio informations
+
+**Parameters**
+
+-   `cb` **[Function][423]** A callback `cb(radioObjects) => {}`
+-   `nbElements` **[number][426]** Number of elements (optional, default `100`)
 
 ## ScenarioAPI
 
@@ -2136,9 +2146,9 @@ Register to scenario execution engine
 
 **Parameters**
 
--   `formPart` **[FormObject][440]** A form part
--   `triggerCb` **[Function][422]** A trigger called when a scenario should be executed. E.g. : `(scenario) => {}` (optional, default `null`)
--   `title` **[string][423]** The title for sub form (can be translation key) (optional, default `null`)
+-   `formPart` **[FormObject][441]** A form part
+-   `triggerCb` **[Function][423]** A trigger called when a scenario should be executed. E.g. : `(scenario) => {}` (optional, default `null`)
+-   `title` **[string][424]** The title for sub form (can be translation key) (optional, default `null`)
 
 ### unregister
 
@@ -2146,8 +2156,8 @@ Unregister to scenario execution engine
 
 **Parameters**
 
--   `formPart` **[FormObject][440]** A form part
--   `triggerCb` **[Function][422]** A trigger called when a scenario should be executed. E.g. : `(scenario) => {}` (optional, default `null`)
+-   `formPart` **[FormObject][441]** A form part
+-   `triggerCb` **[Function][423]** A trigger called when a scenario should be executed. E.g. : `(scenario) => {}` (optional, default `null`)
 
 ### triggerScenario
 
@@ -2177,8 +2187,8 @@ Register a scheduler callback
 
 **Parameters**
 
--   `id` **[string][423]** An identifier (must be unique)
--   `callback` **[Function][422]** A callback with an object in parameter : \`(data) => {}``
+-   `id` **[string][424]** An identifier (must be unique)
+-   `callback` **[Function][423]** A callback with an object in parameter : \`(data) => {}``
 
 ### unregister
 
@@ -2186,7 +2196,7 @@ Unregister a scheduler callback
 
 **Parameters**
 
--   `id` **[string][423]** An identifier (must be unique)
+-   `id` **[string][424]** An identifier (must be unique)
 
 ### schedule
 
@@ -2194,9 +2204,9 @@ Schedule an operation for a registered callback
 
 **Parameters**
 
--   `id` **[string][423]** An identifier (must be unique)
+-   `id` **[string][424]** An identifier (must be unique)
 -   `timestamp` **timestamp** A timestamp or a constant : `IN_A_MINUTE`, `IN_FIVE_MINUTES`, `IN_TEN_MINUTES`, `IN_THIRTY_MINUTES`, `IN_A_HOUR`, `IN_TWELVE_HOUR`, `IN_A_DAY`
--   `data` **[Object][424]** A data passed to callback when triggered (optional, default `{}`)
+-   `data` **[Object][425]** A data passed to callback when triggered (optional, default `{}`)
 
 ### cancel
 
@@ -2204,13 +2214,13 @@ Cancel a scheduled operation
 
 **Parameters**
 
--   `id` **[string][423]** An identifier (must be unique)
+-   `id` **[string][424]** An identifier (must be unique)
 
 ### constants
 
 Expose a list of constants : `IN_A_MINUTE`, `IN_FIVE_MINUTES`, `IN_TEN_MINUTES`, `IN_THIRTY_MINUTES`, `IN_A_HOUR`, `IN_TWELVE_HOUR`, `IN_A_DAY`
 
-Returns **[Object][424]** Constants
+Returns **[Object][425]** Constants
 
 ## SchedulerService
 
@@ -2221,7 +2231,7 @@ This class allows to execute some operations in future
 **Parameters**
 
 -   `dbManager` **DbManager** A DbManager object
--   `timeEventService` **[TimeEventService][441]** The TimeEventService instan e
+-   `timeEventService` **[TimeEventService][442]** The TimeEventService instan e
 
 ### start
 
@@ -2237,8 +2247,8 @@ Register a scheduler callback
 
 **Parameters**
 
--   `id` **[string][423]** An identifier (must be unique)
--   `callback` **[Function][422]** A callback with an object in parameter : \`(data) => {}``
+-   `id` **[string][424]** An identifier (must be unique)
+-   `callback` **[Function][423]** A callback with an object in parameter : \`(data) => {}``
 
 ### unregister
 
@@ -2246,7 +2256,7 @@ Unregister a scheduler callback
 
 **Parameters**
 
--   `id` **[string][423]** An identifier (must be unique)
+-   `id` **[string][424]** An identifier (must be unique)
 
 ### schedule
 
@@ -2254,9 +2264,9 @@ Schedule an operation for a registered callback
 
 **Parameters**
 
--   `id` **[string][423]** An identifier (must be unique)
+-   `id` **[string][424]** An identifier (must be unique)
 -   `timestamp` **timestamp** A timestamp or a constant : `IN_A_MINUTE`, `IN_FIVE_MINUTES`, `IN_TEN_MINUTES`, `IN_THIRTY_MINUTES`, `IN_A_HOUR`, `IN_TWELVE_HOUR`, `IN_A_DAY`
--   `data` **[Object][424]** A data passed to callback when triggered (optional, default `{}`)
+-   `data` **[Object][425]** A data passed to callback when triggered (optional, default `{}`)
 
 ### cancel
 
@@ -2264,7 +2274,7 @@ Cancel a scheduled operation
 
 **Parameters**
 
--   `id` **[string][423]** An identifier (must be unique)
+-   `id` **[string][424]** An identifier (must be unique)
 
 ### timeEvent
 
@@ -2272,7 +2282,7 @@ Timer event registered
 
 **Parameters**
 
--   `self` **[SchedulerService][442]** The SchedulerService instance
+-   `self` **[SchedulerService][443]** The SchedulerService instance
 
 ## SchedulerDbObject
 
@@ -2282,8 +2292,8 @@ Database object and schema for scheduler
 
 **Parameters**
 
--   `dbHelper` **[DbHelper][432]** A DbHelper object mapping (optional, default `null`)
--   `values` **...[Object][424]** The values
+-   `dbHelper` **[DbHelper][433]** A DbHelper object mapping (optional, default `null`)
+-   `values` **...[Object][425]** The values
 
 ## identifier
 
@@ -2310,7 +2320,7 @@ Register a sensor form
 **Parameters**
 
 -   `formClass` **Class** A form annotation's implemented class
--   `inject` **...[Object][424]** The injected objects
+-   `inject` **...[Object][425]** The injected objects
 
 ### registerClass
 
@@ -2326,9 +2336,9 @@ Register a callback for a/all sensor
 
 **Parameters**
 
--   `cb` **[Function][422]** A callback `(id, type, value, unit, vcc, aggValue, aggUnit) => {}`
--   `identifier` **[string][423]** A sensor identifier (retrieved through `getAllSensors()`, or `*` for all) (optional, default `"*"`)
--   `type` **[string][423]** A sensor type. For all types, use `*` (optional, default `"*"`)
+-   `cb` **[Function][423]** A callback `(id, type, value, unit, vcc, aggValue, aggUnit) => {}`
+-   `identifier` **[string][424]** A sensor identifier (retrieved through `getAllSensors()`, or `*` for all) (optional, default `"*"`)
+-   `type` **[string][424]** A sensor type. For all types, use `*` (optional, default `"*"`)
 
 ### unregisterSensorEvent
 
@@ -2336,9 +2346,9 @@ Unregister a callback for a/all sensor
 
 **Parameters**
 
--   `cb` **[Function][422]** A callback `(id, type, value, unit, vcc, aggValue, aggUnit) => {}`
--   `identifier` **[string][423]** A sensor identifier (retrieved through `getAllSensors()`, or `*` for all) (optional, default `"*"`)
--   `type` **[string][423]** A sensor type. For all types, use `*` (optional, default `"*"`)
+-   `cb` **[Function][423]** A callback `(id, type, value, unit, vcc, aggValue, aggUnit) => {}`
+-   `identifier` **[string][424]** A sensor identifier (retrieved through `getAllSensors()`, or `*` for all) (optional, default `"*"`)
+-   `type` **[string][424]** A sensor type. For all types, use `*` (optional, default `"*"`)
 
 ### getSensors
 
@@ -2346,9 +2356,9 @@ Get all sensors
 
 **Parameters**
 
--   `type` **[string][423]** Sensor's type or category. If not specified, send back all sensors. (optional, default `null`)
+-   `type` **[string][424]** Sensor's type or category. If not specified, send back all sensors. (optional, default `null`)
 
-Returns **[Object][424]** On object with id:name
+Returns **[Object][425]** On object with id:name
 
 ### getValue
 
@@ -2356,9 +2366,9 @@ Get a sensor's value
 
 **Parameters**
 
--   `id` **[number][425]** The sensor's identifier
--   `cb` **[Function][422]** A callback e.g. `(err, res) => {}`
--   `duration` **[number][425]** A duration in seconds. If null or not provided, will provide last inserted database value. (optional, default `null`)
+-   `id` **[number][426]** The sensor's identifier
+-   `cb` **[Function][423]** A callback e.g. `(err, res) => {}`
+-   `duration` **[number][426]** A duration in seconds. If null or not provided, will provide last inserted database value. (optional, default `null`)
 
 ### getSensor
 
@@ -2366,7 +2376,7 @@ Get sensor by identifier
 
 **Parameters**
 
--   `identifier` **[string][423]** An identiifer
+-   `identifier` **[string][424]** An identiifer
 
 Returns **Sensor** A sensor object
 
@@ -2379,7 +2389,7 @@ The method should be called before `registerForm()` !
 
 Expose a list of constants (status)
 
-Returns **[Object][424]** Constants
+Returns **[Object][425]** Constants
 
 ## IotsListForm
 
@@ -2389,8 +2399,8 @@ This class provides a iot list form
 
 **Parameters**
 
--   `id` **[number][425]** An identifier (optional, default `null`)
--   `identifier` **[number][425]** The iot identifier (optional, default `null`)
+-   `id` **[number][426]** An identifier (optional, default `null`)
+-   `identifier` **[number][426]** The iot identifier (optional, default `null`)
 
 ### identifier
 
@@ -2400,9 +2410,9 @@ Convert json data
 
 **Parameters**
 
--   `data` **[Object][424]** Some key / value data
+-   `data` **[Object][425]** Some key / value data
 
-Returns **[IotsListForm][443]** A form object
+Returns **[IotsListForm][444]** A form object
 
 ### getIotsName
 
@@ -2410,9 +2420,9 @@ Form injection method for Iots name
 
 **Parameters**
 
--   `inject` **...[Object][424]** The modules list array
+-   `inject` **...[Object][425]** The modules list array
 
-Returns **[Array][426]** An array of iots name
+Returns **[Array][427]** An array of iots name
 
 ### getIotsId
 
@@ -2420,9 +2430,9 @@ Form injection method for Iots ids
 
 **Parameters**
 
--   `inject` **...[Object][424]** The modules list array
+-   `inject` **...[Object][425]** The modules list array
 
-Returns **[Array][426]** An array of iots id
+Returns **[Array][427]** An array of iots id
 
 ## FormObject
 
@@ -2431,7 +2441,7 @@ This class must be extended
 
 **Parameters**
 
--   `id` **[number][425]** An identifier (optional, default `null`)
+-   `id` **[number][426]** An identifier (optional, default `null`)
 
 ### json
 
@@ -2439,9 +2449,9 @@ Convert json data
 
 **Parameters**
 
--   `data` **[Object][424]** Some key / value data
+-   `data` **[Object][425]** Some key / value data
 
-Returns **[FormObject][440]** A form object
+Returns **[FormObject][441]** A form object
 
 ## id
 
@@ -2451,15 +2461,15 @@ This class allows to manage sensors
 
 **Parameters**
 
--   `pluginsManager` **[PluginsManager][444]** A plugin manager
+-   `pluginsManager` **[PluginsManager][445]** A plugin manager
 -   `eventBus` **EventEmitter** The global event bus
--   `webServices` **[WebServices][427]** The web services
+-   `webServices` **[WebServices][428]** The web services
 -   `formManager` **FormManager** The form manager
 -   `confManager` **ConfManager** The configuration manager
 -   `translateManager` **TranslateManager** The translate manager
 -   `themeManager` **ThemeManager** The theme manager
 -   `botEngine` **BotEngine** The bot engine
--   `timeEventService` **[TimeEventService][441]** The time event service
+-   `timeEventService` **[TimeEventService][442]** The time event service
 
 ### pluginsLoaded
 
@@ -2468,8 +2478,8 @@ Initially, this method wad used in contructor.
 
 **Parameters**
 
--   `pluginsManager` **[PluginsManager][444]** The plugins manager instance
--   `context` **[SensorsManager][434]** The context (self, this, etc ...)
+-   `pluginsManager` **[PluginsManager][445]** The plugins manager instance
+-   `context` **[SensorsManager][435]** The context (self, this, etc ...)
 
 ### initSensors
 
@@ -2481,7 +2491,7 @@ Init a sensor instance and add to local array
 
 **Parameters**
 
--   `configuration` **[Object][424]** The sensor configuration
+-   `configuration` **[Object][425]** The sensor configuration
 
 ### registerSensorEvent
 
@@ -2489,9 +2499,9 @@ Register a callback for a/all sensor
 
 **Parameters**
 
--   `cb` **[Function][422]** A callback `(id, type, value, unit, vcc, aggValue, aggUnit) => {}`
--   `identifier` **[string][423]** A sensor identifier (retrieved through `getAllSensors()`, or `*` for all) (optional, default `"*"`)
--   `type` **[string][423]** A sensor type. For all types, use `*` (optional, default `"*"`)
+-   `cb` **[Function][423]** A callback `(id, type, value, unit, vcc, aggValue, aggUnit) => {}`
+-   `identifier` **[string][424]** A sensor identifier (retrieved through `getAllSensors()`, or `*` for all) (optional, default `"*"`)
+-   `type` **[string][424]** A sensor type. For all types, use `*` (optional, default `"*"`)
 
 ### getSensor
 
@@ -2499,7 +2509,7 @@ Get sensor by identifier
 
 **Parameters**
 
--   `identifier` **[string][423]** An identiifer
+-   `identifier` **[string][424]** An identiifer
 
 Returns **Sensor** A sensor object
 
@@ -2509,9 +2519,9 @@ Unregister a callback for a/all sensor
 
 **Parameters**
 
--   `cb` **[Function][422]** A callback `(id, type, value, unit, vcc, aggValue, aggUnit) => {}`
--   `identifier` **[string][423]** A sensor identifier (retrieved through `getAllSensors()`, or `*` for all) (optional, default `"*"`)
--   `type` **[string][423]** A sensor type. For all types, use `*` (optional, default `"*"`)
+-   `cb` **[Function][423]** A callback `(id, type, value, unit, vcc, aggValue, aggUnit) => {}`
+-   `identifier` **[string][424]** A sensor identifier (retrieved through `getAllSensors()`, or `*` for all) (optional, default `"*"`)
+-   `type` **[string][424]** A sensor type. For all types, use `*` (optional, default `"*"`)
 
 ### getAllSensors
 
@@ -2519,9 +2529,9 @@ Get all sensors
 
 **Parameters**
 
--   `type` **[string][423]** Sensor's type or category. If not specified, send back all sensors. (optional, default `null`)
+-   `type` **[string][424]** Sensor's type or category. If not specified, send back all sensors. (optional, default `null`)
 
-Returns **[Object][424]** On object with id:name
+Returns **[Object][425]** On object with id:name
 
 ### onNewSensorValue
 
@@ -2529,13 +2539,13 @@ Callback when a sensor receives a value
 
 **Parameters**
 
--   `id` **[number][425]** The identifier
--   `type` **[string][423]** The type
--   `value` **[number][425]** The raw value
--   `unit` **[string][423]** The raw unit
--   `vcc` **[number][425]** The sensor's voltage
--   `aggValue` **[number][425]** The aggregated value
--   `aggUnit` **[string][423]** The aggregated unit
+-   `id` **[number][426]** The identifier
+-   `type` **[string][424]** The type
+-   `value` **[number][426]** The raw value
+-   `unit` **[string][424]** The raw unit
+-   `vcc` **[number][426]** The sensor's voltage
+-   `aggValue` **[number][426]** The aggregated value
+-   `aggUnit` **[string][424]** The aggregated unit
 
 ### getValue
 
@@ -2543,9 +2553,9 @@ Get a sensor's value
 
 **Parameters**
 
--   `id` **[number][425]** The sensor's identifier
--   `cb` **[Function][422]** A callback e.g. `(err, res) => {}`
--   `duration` **[number][425]** A duration in seconds. If null or not provided, will provide last inserted database value. (optional, default `null`)
+-   `id` **[number][426]** The sensor's identifier
+-   `cb` **[Function][423]** A callback e.g. `(err, res) => {}`
+-   `duration` **[number][426]** A duration in seconds. If null or not provided, will provide last inserted database value. (optional, default `null`)
 
 ### processAPI
 
@@ -2553,9 +2563,9 @@ Process API callback
 
 **Parameters**
 
--   `apiRequest` **[APIRequest][428]** An APIRequest
+-   `apiRequest` **[APIRequest][429]** An APIRequest
 
-Returns **[Promise][429]** A promise with an APIResponse object
+Returns **[Promise][430]** A promise with an APIResponse object
 
 ### statisticsWsResponse
 
@@ -2563,14 +2573,14 @@ Build a statistics data
 
 **Parameters**
 
--   `endTimestamp` **[number][425]** The end timestamp for aggregation
--   `duration` **[number][425]** A duration in seconds (period)
--   `aggregation` **[number][425]** The aggregation in seconds
--   `displayDateFormat` **[string][423]** The display date format
--   `roundTimestampFunction` **[Function][422]** A  e.g. `(timestamp) => {return  timestamp;}` (optional, default `null`)
--   `roundDateSqlFormat` **[string][423]** In relation with roundTimeStampFunction, the SQL date format. E.g. : "%Y-%m-01 00:00:00" (optional, default `null`)
+-   `endTimestamp` **[number][426]** The end timestamp for aggregation
+-   `duration` **[number][426]** A duration in seconds (period)
+-   `aggregation` **[number][426]** The aggregation in seconds
+-   `displayDateFormat` **[string][424]** The display date format
+-   `roundTimestampFunction` **[Function][423]** A  e.g. `(timestamp) => {return  timestamp;}` (optional, default `null`)
+-   `roundDateSqlFormat` **[string][424]** In relation with roundTimeStampFunction, the SQL date format. E.g. : "%Y-%m-01 00:00:00" (optional, default `null`)
 
-Returns **[Promise][429]** A promise
+Returns **[Promise][430]** A promise
 
 ### comparator
 
@@ -2578,10 +2588,10 @@ Compare sensor data
 
 **Parameters**
 
--   `sensorData1` **[Object][424]** Sensor data 1
--   `sensorData2` **[Object][424]** Sensor data 2
+-   `sensorData1` **[Object][425]** Sensor data 1
+-   `sensorData2` **[Object][425]** Sensor data 2
 
-Returns **[boolean][421]** True if id is the same, false otherwise
+Returns **[boolean][422]** True if id is the same, false otherwise
 
 ### getSensorConfiguration
 
@@ -2589,9 +2599,9 @@ Get sensor configuration. If no parameters are passed, returns the array of all 
 
 **Parameters**
 
--   `sensorId` **[string][423]** The sensor identifier. Can be null. (optional, default `null`)
+-   `sensorId` **[string][424]** The sensor identifier. Can be null. (optional, default `null`)
 
-Returns **[Object][424]** The sensor configuration, or configurations, or null if nothing found
+Returns **[Object][425]** The sensor configuration, or configurations, or null if nothing found
 
 ### registerSensorsListForm
 
@@ -2605,8 +2615,8 @@ This class provides a form for one device
 
 **Parameters**
 
--   `id` **[number][425]** An identifier (optional, default `null`)
--   `sensorId` **[number][425]** A sensor identifier (optional, default `null`)
+-   `id` **[number][426]** An identifier (optional, default `null`)
+-   `sensorId` **[number][426]** A sensor identifier (optional, default `null`)
 
 ### sensorId
 
@@ -2616,9 +2626,9 @@ Convert json data
 
 **Parameters**
 
--   `data` **[Object][424]** Some key / value data
+-   `data` **[Object][425]** Some key / value data
 
-Returns **[SensorsForm][445]** A form object
+Returns **[SensorsForm][446]** A form object
 
 ### getSensorIds
 
@@ -2626,9 +2636,9 @@ Sensors id injection
 
 **Parameters**
 
--   `inject` **...[Object][424]** Inject parameters
+-   `inject` **...[Object][425]** Inject parameters
 
-Returns **[Array][426]** An array of ids
+Returns **[Array][427]** An array of ids
 
 ### getSensorNames
 
@@ -2636,9 +2646,9 @@ Sensors name injection
 
 **Parameters**
 
--   `inject` **...[Object][424]** Inject parameters
+-   `inject` **...[Object][425]** Inject parameters
 
-Returns **[Array][426]** An array of names
+Returns **[Array][427]** An array of names
 
 ## SensorsListForm
 
@@ -2648,8 +2658,8 @@ This class provides a form for sensors
 
 **Parameters**
 
--   `id` **[number][425]** An identifier (optional, default `null`)
--   `identifier` **[number][425]** The sensor identifier (optional, default `null`)
+-   `id` **[number][426]** An identifier (optional, default `null`)
+-   `identifier` **[number][426]** The sensor identifier (optional, default `null`)
 
 ### identifier
 
@@ -2659,9 +2669,9 @@ Convert json data
 
 **Parameters**
 
--   `data` **[Object][424]** Some key / value data
+-   `data` **[Object][425]** Some key / value data
 
-Returns **[SensorsListForm][446]** A form object
+Returns **[SensorsListForm][447]** A form object
 
 ### getSensorsName
 
@@ -2669,9 +2679,9 @@ Form injection method for Sensors name
 
 **Parameters**
 
--   `inject` **...[Object][424]** The modules list array
+-   `inject` **...[Object][425]** The modules list array
 
-Returns **[Array][426]** An array of sensors name
+Returns **[Array][427]** An array of sensors name
 
 ### getSensorsId
 
@@ -2679,9 +2689,9 @@ Form injection method for Sensors ids
 
 **Parameters**
 
--   `inject` **...[Object][424]** The modules list array
+-   `inject` **...[Object][425]** The modules list array
 
-Returns **[Array][426]** An array of sensors id
+Returns **[Array][427]** An array of sensors id
 
 ## PluginsManager
 
@@ -2690,17 +2700,17 @@ This class manage plugins
 **Parameters**
 
 -   `confManager` **ConfManager** The configuration manager
--   `webServices` **[WebServices][427]** The web services
+-   `webServices` **[WebServices][428]** The web services
 -   `servicesManager` **ServicesManager** The services manager
 -   `dbManager` **DbManager** The database manager
 -   `translateManager` **TranslateManager** The translate manager
 -   `formManager` **FormManager** The form manager
--   `timeEventService` **[TimeEventService][441]** The time event service
--   `schedulerService` **[SchedulerService][442]** The scheduler service
+-   `timeEventService` **[TimeEventService][442]** The time event service
+-   `schedulerService` **[SchedulerService][443]** The scheduler service
 -   `dashboardManager` **DashboardManager** The dashboard manager
 -   `eventBus` **EventEmitter** The global event bus
 -   `themeManager` **ThemeManager** The theme manager
--   `sensorsManager` **[SensorsManager][434]** The sensors manager
+-   `sensorsManager` **[SensorsManager][435]** The sensors manager
 -   `installationManager` **InstallationManager** The installation manager
 -   `userManager` **UserManager** The user manager
 -   `messageManager` **MessageManager** The message manager
@@ -2708,13 +2718,13 @@ This class manage plugins
 -   `alarmManager` **AlarmManager** The alarm manager
 -   `camerasManager` **CamerasManager** The cameras manager
 -   `radioManager` **RadioManager** The radio manager
--   `appConfiguration` **[Object][424]** The global configuration
+-   `appConfiguration` **[Object][425]** The global configuration
 -   `environmentManager` **EnvironmentManager** The environment manager
 -   `iotManager` **IotManager** The IoT manager
 -   `botEngine` **BotEngine** The bot engine
--   `deviceManager` **[DeviceManager][435]** The device manager
+-   `deviceManager` **[DeviceManager][436]** The device manager
 -   `backupManager` **BackupManager** The backup manager
--   `CORE_EVENT_READY` **[string][423]** The core event ready identifier
+-   `CORE_EVENT_READY` **[string][424]** The core event ready identifier
 
 ### getPluginsFromDirectory
 
@@ -2722,9 +2732,9 @@ Get plugins from external directory
 
 **Parameters**
 
--   `srcPath` **[string][423]** A source path
+-   `srcPath` **[string][424]** A source path
 
-Returns **\[[string][423]]** An array of plugins where prefix is well set as descripbed in PLUGIN_PREFIX
+Returns **\[[string][424]]** An array of plugins where prefix is well set as descripbed in PLUGIN_PREFIX
 
 ### checkPluginSanity
 
@@ -2732,7 +2742,7 @@ Check plugin sanity. A plugin should have name, version and description properti
 
 **Parameters**
 
--   `p` **[Object][424]** A plugin object as set in require. This method throws errors
+-   `p` **[Object][425]** A plugin object as set in require. This method throws errors
 -   `plugins` **\[PluginAPI]** plugins The plugin API array (optional, default `[]`)
 
 ### initPlugin
@@ -2741,9 +2751,9 @@ Init plugin by doing a require and create a Plugin API object for each registere
 
 **Parameters**
 
--   `plugin` **[string][423]** The plugin
--   `path` **[string][423]** Plugins path
--   `relative` **[boolean][421]** True if path is relative, else false (optional, default `false`)
+-   `plugin` **[string][424]** The plugin
+-   `path` **[string][424]** Plugins path
+-   `relative` **[boolean][422]** True if path is relative, else false (optional, default `false`)
 
 Returns **PluginAPI** Returns an array of plugins API
 
@@ -2753,9 +2763,9 @@ Init plugins by doing a require and create a Plugin API object for each register
 
 **Parameters**
 
--   `path` **[string][423]** Plugins path
--   `plugins` **\[[string][423]]** An array of plugins name
--   `relative` **[boolean][421]** True if path is relative, else false (optional, default `false`)
+-   `path` **[string][424]** Plugins path
+-   `plugins` **\[[string][424]]** An array of plugins name
+-   `relative` **[boolean][422]** True if path is relative, else false (optional, default `false`)
 
 Returns **\[PluginAPI]** Returns an array of plugins API
 
@@ -2779,10 +2789,10 @@ Get plugin per gategory
 
 **Parameters**
 
--   `category` **[string][423]** A category
--   `checkInstance` **[boolean][421]** True if return with instance, false otherwise. If set to true (default), it will check that there is an instance. False for testing is recommended. (optional, default `true`)
+-   `category` **[string][424]** A category
+-   `checkInstance` **[boolean][422]** True if return with instance, false otherwise. If set to true (default), it will check that there is an instance. False for testing is recommended. (optional, default `true`)
 
-Returns **[Array][426]** An array of plugins
+Returns **[Array][427]** An array of plugins
 
 ### getPluginByIdentifier
 
@@ -2790,8 +2800,8 @@ Get a plugin with identifier
 
 **Parameters**
 
--   `identifier` **[string][423]** A plugin identifier
--   `checkInstance` **[boolean][421]** True if return with instance, false otherwise. If set to true (default), it will check that there is an instance. False for testing is recommended. (optional, default `true`)
+-   `identifier` **[string][424]** A plugin identifier
+-   `checkInstance` **[boolean][422]** True if return with instance, false otherwise. If set to true (default), it will check that there is an instance. False for testing is recommended. (optional, default `true`)
 
 Returns **PluginAPI** A plugin
 
@@ -2801,9 +2811,9 @@ Is the plugin enabled
 
 **Parameters**
 
--   `pluginIdentifier` **[string][423]** The plugin identifier
+-   `pluginIdentifier` **[string][424]** The plugin identifier
 
-Returns **[boolean][421]** `true` if enabled, `false` otherwise
+Returns **[boolean][422]** `true` if enabled, `false` otherwise
 
 ### prepareToposortArray
 
@@ -2813,7 +2823,7 @@ Return a table prepared for toposort, with dependencies
 
 -   `plugins` **\[PluginAPI]** A list of PluginAPI objects
 
-Returns **\[[array][426]]** An array ready to be sorted, e.g. \[["a", "b"], ["b"], ["c"]]
+Returns **\[[array][427]]** An array ready to be sorted, e.g. \[["a", "b"], ["b"], ["c"]]
 
 ### toposort
 
@@ -2821,9 +2831,9 @@ Toposort the array
 
 **Parameters**
 
--   `toposortArray` **\[[array][426]]** A toposort prepared array, processed previously in prepareToposortArray(). All undefined elements will be removed.
+-   `toposortArray` **\[[array][427]]** A toposort prepared array, processed previously in prepareToposortArray(). All undefined elements will be removed.
 
-Returns **\[[string][423]]** A toposorted array, sorted with dependencies
+Returns **\[[string][424]]** A toposorted array, sorted with dependencies
 
 ### topsortedArrayConverter
 
@@ -2831,7 +2841,7 @@ Re-create a correctly sorted array of plugins with the previous toposort order
 
 **Parameters**
 
--   `toposortedArray` **\[[string][423]]** A toposorted array, build with toposort()
+-   `toposortedArray` **\[[string][424]]** A toposorted array, build with toposort()
 -   `plugins` **\[PluginAPI]** The unsorted plugins array
 
 Returns **\[PluginAPI]** An array of plugins sorted depending on dependencies
@@ -2842,9 +2852,9 @@ Returns a plugin configuration
 
 **Parameters**
 
--   `identifier` **[string][423]** The plugin identifier
+-   `identifier` **[string][424]** The plugin identifier
 
-Returns **[PluginConf][447]** The plugin configuration
+Returns **[PluginConf][448]** The plugin configuration
 
 ### changePluginStatus
 
@@ -2852,8 +2862,8 @@ Change plugin status
 
 **Parameters**
 
--   `pluginConf` **[PluginConf][447]** The changing plugin conf
--   `status` **[boolean][421]** The new status
+-   `pluginConf` **[PluginConf][448]** The changing plugin conf
+-   `status` **[boolean][422]** The new status
 
 ### processAPI
 
@@ -2861,9 +2871,9 @@ Process API callback
 
 **Parameters**
 
--   `apiRequest` **[APIRequest][428]** An APIRequest
+-   `apiRequest` **[APIRequest][429]** An APIRequest
 
-Returns **[Promise][429]** A promise with an APIResponse object
+Returns **[Promise][430]** A promise with an APIResponse object
 
 ## PluginsAPI
 
@@ -2919,7 +2929,7 @@ Register an instance as Entry point.
 
 **Parameters**
 
--   `i` **[Object][424]** An instance
+-   `i` **[Object][425]** An instance
 
 ### getPluginInstance
 
@@ -2927,7 +2937,7 @@ Get a plugin instance
 
 **Parameters**
 
--   `identifier` **[string][423]** A plugin identifier
+-   `identifier` **[string][424]** A plugin identifier
 
 Returns **PluginAPI** A plugin
 
@@ -2935,7 +2945,7 @@ Returns **PluginAPI** A plugin
 
 Expose a list of constants
 
-Returns **[Object][424]** Constants
+Returns **[Object][425]** Constants
 
 ## IotForm
 
@@ -2945,9 +2955,9 @@ This class provides an Iot device. Need to be overloaded.
 
 **Parameters**
 
--   `id` **[number][425]** An identifier (optional, default `null`)
--   `iotApp` **[string][423]** An iot app identifier (optional, default `null`)
--   `name` **[string][423]** A device name (optional, default `null`)
+-   `id` **[number][426]** An identifier (optional, default `null`)
+-   `iotApp` **[string][424]** An iot app identifier (optional, default `null`)
+-   `name` **[string][424]** A device name (optional, default `null`)
 
 ### iotApp
 
@@ -2959,9 +2969,9 @@ Convert json data
 
 **Parameters**
 
--   `data` **[Object][424]** Some key / value data
+-   `data` **[Object][425]** Some key / value data
 
-Returns **[IotForm][448]** A form object
+Returns **[IotForm][449]** A form object
 
 ## ImageUtils
 
@@ -2973,9 +2983,9 @@ Convert form data to base 64 image
 
 **Parameters**
 
--   `fieldData` **[string][423]** Field data
+-   `fieldData` **[string][424]** Field data
 
-Returns **[string][423]** Base64 image
+Returns **[string][424]** Base64 image
 
 ### resize
 
@@ -2983,11 +2993,11 @@ Resize an image and convert to png
 
 **Parameters**
 
--   `b64string` **[string][423]** The base64 image string
--   `cb` **[Function][422]** A callback when image process is done `(err, data) => {}`
--   `size` **[number][425]** The size in pixel (optional, default `100`)
+-   `b64string` **[string][424]** The base64 image string
+-   `cb` **[Function][423]** A callback when image process is done `(err, data) => {}`
+-   `size` **[number][426]** The size in pixel (optional, default `100`)
 
-Returns **[string][423]** The base64 output image string
+Returns **[string][424]** The base64 output image string
 
 ### blur
 
@@ -2995,11 +3005,11 @@ Blur, resize an image and convert to png
 
 **Parameters**
 
--   `b64string` **[string][423]** The base64 image string
--   `cb` **[Function][422]** A callback when image process is done \`(err, data) => {}``
--   `size` **[number][425]** The size in pixel (optional, default `100`)
+-   `b64string` **[string][424]** The base64 image string
+-   `cb` **[Function][423]** A callback when image process is done \`(err, data) => {}``
+-   `size` **[number][426]** The size in pixel (optional, default `100`)
 
-Returns **[string][423]** The base64 output image string
+Returns **[string][424]** The base64 output image string
 
 ## PluginConf
 
@@ -3007,12 +3017,12 @@ This class is a Plugin POJO
 
 **Parameters**
 
--   `path` **[string][423]?** The plugin path
--   `relative` **[boolean][421]?** The plugin path
--   `identifier` **[string][423]** Plugin identifier (optional, default `null`)
--   `version` **[string][423]** Plugin version (optional, default `null`)
--   `enable` **[boolean][421]** `true` if plugin is enable, `false` otherwise (optional, default `true`)
--   `dependencies` **[Array][426]** The dependencies (array of identifiers) list (optional, default `[]`)
+-   `path` **[string][424]?** The plugin path
+-   `relative` **[boolean][422]?** The plugin path
+-   `identifier` **[string][424]** Plugin identifier (optional, default `null`)
+-   `version` **[string][424]** Plugin version (optional, default `null`)
+-   `enable` **[boolean][422]** `true` if plugin is enable, `false` otherwise (optional, default `true`)
+-   `dependencies` **[Array][427]** The dependencies (array of identifiers) list (optional, default `[]`)
 
 ### json
 
@@ -3020,9 +3030,9 @@ Transform json raw object to instance
 
 **Parameters**
 
--   `data` **[Object][424]** JSON object data
+-   `data` **[Object][425]** JSON object data
 
-Returns **[PluginConf][447]** A User instance
+Returns **[PluginConf][448]** A User instance
 
 ## ServicesManagerAPI
 
@@ -3038,7 +3048,7 @@ Add a service
 
 **Parameters**
 
--   `service` **[Service][449]** The service
+-   `service` **[Service][450]** The service
 
 ### remove
 
@@ -3046,7 +3056,7 @@ Remove a service to services pool
 
 **Parameters**
 
--   `service` **[Service][449]** A service
+-   `service` **[Service][450]** A service
 
 ### stop
 
@@ -3068,7 +3078,7 @@ Public API for theme, colors
 
 Retrieve the theme colors
 
-Returns **[Object][424]** Colors
+Returns **[Object][425]** Colors
 
 ## TimeEventAPI
 
@@ -3084,13 +3094,13 @@ Register an timer element
 
 **Parameters**
 
--   `cb` **[Function][422]** A callback triggered when conditions are reached (context will be set back as parameter). Example : `(self) => {}`
--   `context` **[Object][424]** The context to exectue the callback
+-   `cb` **[Function][423]** A callback triggered when conditions are reached (context will be set back as parameter). Example : `(self) => {}`
+-   `context` **[Object][425]** The context to exectue the callback
 -   `mode` **int** Mode (enum) : `EVERY_SECONDS`, `EVERY_MINUTES`, `EVERY_HOURS`, `EVERY_DAYS` or `CUSTOM`
--   `hour` **[string][423]** The hour value. `*` for all (optional, default `null`)
--   `minute` **[string][423]** The minute value. `*` for all (optional, default `null`)
--   `second` **[string][423]** The second value. `*` for all (optional, default `null`)
--   `key` **[string][423]** A register key (optional) (optional, default `null`)
+-   `hour` **[string][424]** The hour value. `*` for all (optional, default `null`)
+-   `minute` **[string][424]** The minute value. `*` for all (optional, default `null`)
+-   `second` **[string][424]** The second value. `*` for all (optional, default `null`)
+-   `key` **[string][424]** A register key (optional) (optional, default `null`)
 
 ### unregister
 
@@ -3098,18 +3108,18 @@ Unegister an timer element
 
 **Parameters**
 
--   `cb` **[Function][422]** A callback triggered when conditions are reached (context will be set back as parameter). Example : `(self) => {}`
+-   `cb` **[Function][423]** A callback triggered when conditions are reached (context will be set back as parameter). Example : `(self) => {}`
 -   `mode` **int** Mode (enum) : `EVERY_SECONDS`, `EVERY_MINUTES`, `EVERY_HOURS`, `EVERY_DAYS` or `CUSTOM`
--   `hour` **[string][423]** The hour value. `*` for all (optional, default `null`)
--   `minute` **[string][423]** The minute value. `*` for all (optional, default `null`)
--   `second` **[string][423]** The second value. `*` for all (optional, default `null`)
--   `key` **[string][423]** A register key (optional) (optional, default `null`)
+-   `hour` **[string][424]** The hour value. `*` for all (optional, default `null`)
+-   `minute` **[string][424]** The minute value. `*` for all (optional, default `null`)
+-   `second` **[string][424]** The second value. `*` for all (optional, default `null`)
+-   `key` **[string][424]** A register key (optional) (optional, default `null`)
 
 ### constants
 
 Expose a list of constants : `EVERY_SECONDS`, `EVERY_MINUTES`, `EVERY_HOURS`, `EVERY_DAYS` or `CUSTOM`
 
-Returns **[Object][424]** Constants
+Returns **[Object][425]** Constants
 
 ## TimeEventService
 
@@ -3131,13 +3141,13 @@ Compute a SHA256 hash for the registered object
 
 **Parameters**
 
--   `cb` **[Function][422]** A callback
+-   `cb` **[Function][423]** A callback
 -   `mode` **int** Mode (enum) : `EVERY_SECONDS`, `EVERY_MINUTES`, `EVERY_HOURS`, `EVERY_DAYS` or `CUSTOM`
--   `hour` **[string][423]** An hour (optional, default `null`)
--   `minute` **[string][423]** A minute (optional, default `null`)
--   `second` **[string][423]** A second (optional, default `null`)
+-   `hour` **[string][424]** An hour (optional, default `null`)
+-   `minute` **[string][424]** A minute (optional, default `null`)
+-   `second` **[string][424]** A second (optional, default `null`)
 
-Returns **[string][423]** A SHA256 hash key
+Returns **[string][424]** A SHA256 hash key
 
 ### elementForHash
 
@@ -3145,7 +3155,7 @@ Check if the element is already registered
 
 **Parameters**
 
--   `hash` **[string][423]** A registered element hash
+-   `hash` **[string][424]** A registered element hash
 
 Returns **int** The index of the element in array. If not found, returns -1
 
@@ -3155,13 +3165,13 @@ Register an timer element
 
 **Parameters**
 
--   `cb` **[Function][422]** A callback triggered when conditions are reached (context will be set back as parameter). Example : `(self) => {}`
--   `context` **[Object][424]** The context to exectue the callback
+-   `cb` **[Function][423]** A callback triggered when conditions are reached (context will be set back as parameter). Example : `(self) => {}`
+-   `context` **[Object][425]** The context to exectue the callback
 -   `mode` **int** Mode (enum) : `EVERY_SECONDS`, `EVERY_MINUTES`, `EVERY_HOURS`, `EVERY_DAYS` or `CUSTOM`
--   `hour` **[string][423]** The hour value. `*` for all (optional, default `null`)
--   `minute` **[string][423]** The minute value. `*` for all (optional, default `null`)
--   `second` **[string][423]** The second value. `*` for all (optional, default `null`)
--   `key` **[string][423]** A register key (optional) (optional, default `null`)
+-   `hour` **[string][424]** The hour value. `*` for all (optional, default `null`)
+-   `minute` **[string][424]** The minute value. `*` for all (optional, default `null`)
+-   `second` **[string][424]** The second value. `*` for all (optional, default `null`)
+-   `key` **[string][424]** A register key (optional) (optional, default `null`)
 
 ### unregister
 
@@ -3169,12 +3179,12 @@ Unegister an timer element
 
 **Parameters**
 
--   `cb` **[Function][422]** A callback triggered when conditions are reached (context will be set back as parameter). Example : `(self) => {}`
+-   `cb` **[Function][423]** A callback triggered when conditions are reached (context will be set back as parameter). Example : `(self) => {}`
 -   `mode` **int** Mode (enum) : `EVERY_SECONDS`, `EVERY_MINUTES`, `EVERY_HOURS`, `EVERY_DAYS` or `CUSTOM`
--   `hour` **[string][423]** The hour value. `*` for all (optional, default `null`)
--   `minute` **[string][423]** The minute value. `*` for all (optional, default `null`)
--   `second` **[string][423]** The second value. `*` for all (optional, default `null`)
--   `key` **[string][423]** A register key (optional) (optional, default `null`)
+-   `hour` **[string][424]** The hour value. `*` for all (optional, default `null`)
+-   `minute` **[string][424]** The minute value. `*` for all (optional, default `null`)
+-   `second` **[string][424]** The second value. `*` for all (optional, default `null`)
+-   `key` **[string][424]** A register key (optional) (optional, default `null`)
 
 ### convertMode
 
@@ -3182,9 +3192,9 @@ Convert values fro menum to valid hour, minute and seconds
 
 **Parameters**
 
--   `obj` **[Object][424]** A TimerEvent object
+-   `obj` **[Object][425]** A TimerEvent object
 
-Returns **[Object][424]** A converted timerEvent object
+Returns **[Object][425]** A converted timerEvent object
 
 ### timeEvent
 
@@ -3212,10 +3222,10 @@ Return a translation value
 
 **Parameters**
 
--   `key` **[string][423]** the key where values containe possible `%@` placeholders
--   `values` **...[string][423]** Optional, the placeholders values. Each `%@` will be sequentially replaced by thos values
+-   `key` **[string][424]** the key where values containe possible `%@` placeholders
+-   `values` **...[string][424]** Optional, the placeholders values. Each `%@` will be sequentially replaced by thos values
 
-Returns **[string][423]** A translation
+Returns **[string][424]** A translation
 
 ## UserAPI
 
@@ -3231,32 +3241,32 @@ Add additional fields to user registration
 
 **Parameters**
 
--   `form` **[FormObject][440]** A form object
--   `inject` **...[Object][424]** Parameters injection on static methods
+-   `form` **[FormObject][441]** A form object
+-   `inject` **...[Object][425]** Parameters injection on static methods
 
 ### getUsers
 
 Get all users (anonymized)
 
-Returns **[Array][426]** An array of users
+Returns **[Array][427]** An array of users
 
 ### allUsersAtHome
 
 Check if all users are at home
 
-Returns **[boolean][421]** True if everybody is at home, false otherwise
+Returns **[boolean][422]** True if everybody is at home, false otherwise
 
 ### nobodyAtHome
 
 Check if no users are at home
 
-Returns **[boolean][421]** True if nobody is at home, false otherwise
+Returns **[boolean][422]** True if nobody is at home, false otherwise
 
 ### somebodyAtHome
 
 Check if at lesat one user is at home
 
-Returns **[boolean][421]** True if somebody is at home, false otherwise
+Returns **[boolean][422]** True if somebody is at home, false otherwise
 
 ### registerHomeNotifications
 
@@ -3264,7 +3274,7 @@ Register for user's home notifications, ie when a user leaves / enter home
 
 **Parameters**
 
--   `cb` **[Function][422]** A callback `(user) => {}`
+-   `cb` **[Function][423]** A callback `(user) => {}`
 
 ### unregisterHomeNotifications
 
@@ -3272,7 +3282,7 @@ Unregister for user's home notifications, ie when a user leaves / enter home
 
 **Parameters**
 
--   `cb` **[Function][422]** A callback `(user) => {}`
+-   `cb` **[Function][423]** A callback `(user) => {}`
 
 ## WebAPI
 
@@ -3288,9 +3298,9 @@ Register to a specific web service be notified when a route and/or method is cal
 
 **Parameters**
 
--   `delegate` **[Object][424]** A delegate which implements the processAPI(apiRequest) function
--   `method` **[string][423]** A method (\*, WebServices.GET / WebServices.POST) (optional, default `"*"`)
--   `route` **[string][423]** A route (\*, :/my/route/) (optional, default `"*"`)
+-   `delegate` **[Object][425]** A delegate which implements the processAPI(apiRequest) function
+-   `method` **[string][424]** A method (\*, WebServices.GET / WebServices.POST) (optional, default `"*"`)
+-   `route` **[string][424]** A route (\*, :/my/route/) (optional, default `"*"`)
 -   `authLevel` **int** An authentification level (optional, default `Authentication.AUTH_USAGE_LEVEL`)
 -   `tokenExpirationTime` **int** A token expiration time in seconds, for token authentication. 0 for one time token. (optional, default `0`)
 
@@ -3300,15 +3310,15 @@ Unregister to a specific web service be notified when a route and/or method is c
 
 **Parameters**
 
--   `delegate` **[Object][424]** A delegate which implements the processAPI(apiRequest) function
--   `method` **[string][423]** A method (\*, WebServices.GET / WebServices.POST) (optional, default `"*"`)
--   `route` **[string][423]** A route (\*, :/my/route/) (optional, default `"*"`)
+-   `delegate` **[Object][425]** A delegate which implements the processAPI(apiRequest) function
+-   `method` **[string][424]** A method (\*, WebServices.GET / WebServices.POST) (optional, default `"*"`)
+-   `route` **[string][424]** A route (\*, :/my/route/) (optional, default `"*"`)
 
 ### Authentication
 
 Get authentication constants : e.g. :  this.webApi.Authentication().AUTH_NO_LEVEL
 
-Returns **[Object][424]** All constants as properties
+Returns **[Object][425]** All constants as properties
 
 ### APIResponse
 
@@ -3316,18 +3326,18 @@ Create an APIResponse object
 
 **Parameters**
 
--   `success` **[boolean][421]** Set to true if API success, else false (optional, default `false`)
--   `response` **[Object][424]** A response object to transmit (optional) (optional, default `{}`)
+-   `success` **[boolean][422]** Set to true if API success, else false (optional, default `false`)
+-   `response` **[Object][425]** A response object to transmit (optional) (optional, default `{}`)
 -   `errorCode` **int** The error code (optional) (optional, default `-1`)
--   `errorMessage` **[string][423]** The error message (optional) (optional, default `null`)
+-   `errorMessage` **[string][424]** The error message (optional) (optional, default `null`)
 
-Returns **[APIResponse][450]** The instance
+Returns **[APIResponse][451]** The instance
 
 ### constants
 
 Access to web services constants
 
-Returns **[Object][424]** The constants
+Returns **[Object][425]** The constants
 
 ## Authentication
 
@@ -3349,11 +3359,11 @@ Generates a token
 
 **Parameters**
 
--   `username` **[string][423]** The username
--   `serviceIdentifier` **[string][423]** The service identifier
+-   `username` **[string][424]** The username
+-   `serviceIdentifier` **[string][424]** The service identifier
 -   `expirationTime` **int** Expiration time (optional, default `0`)
 
-Returns **[string][423]** The token
+Returns **[string][424]** The token
 
 ### processAPI
 
@@ -3361,9 +3371,9 @@ Process API callback
 
 **Parameters**
 
--   `apiRequest` **[APIRequest][428]** An APIRequest
+-   `apiRequest` **[APIRequest][429]** An APIRequest
 
-Returns **[Promise][429]** A promise with an APIResponse object
+Returns **[Promise][430]** A promise with an APIResponse object
 
 ### checkLocalIp
 
@@ -3371,9 +3381,9 @@ Check if an ip is on the same network
 
 **Parameters**
 
--   `ipSource` **[string][423]** The source ip
+-   `ipSource` **[string][424]** The source ip
 
-Returns **[boolean][421]** `true` if the ip is on the same network, `false` otherwise
+Returns **[boolean][422]** `true` if the ip is on the same network, `false` otherwise
 
 ### processAuthentication
 
@@ -3381,9 +3391,9 @@ Process authentication
 
 **Parameters**
 
--   `apiRequest` **[APIRequest][428]** The api request
--   `resolve` **[Function][422]** The resolve function
--   `reject` **[Function][422]** The reject function
+-   `apiRequest` **[APIRequest][429]** The api request
+-   `resolve` **[Function][423]** The resolve function
+-   `reject` **[Function][423]** The reject function
 
 ## AuthenticationData
 
@@ -3391,9 +3401,9 @@ This class encapsulate authentication data
 
 **Parameters**
 
--   `authorized` **[boolean][421]** True if authorized, else false (optional, default `false`)
--   `username` **[string][423]** Username (optional, default `null`)
--   `level` **[number][425]** Authorization level (optional, default `-1`)
+-   `authorized` **[boolean][422]** True if authorized, else false (optional, default `false`)
+-   `username` **[string][424]** Username (optional, default `null`)
+-   `level` **[number][426]** Authorization level (optional, default `-1`)
 
 ### authorized
 
@@ -3415,7 +3425,7 @@ Utility class for dates
 
 Return the current timestamp
 
-Returns **[number][425]** The current timestamp
+Returns **[number][426]** The current timestamp
 
 ### dateToUTCTimestamp
 
@@ -3423,9 +3433,9 @@ Convert a string date time zoned to UTC timestamp
 
 **Parameters**
 
--   `date` **[string][423]** The GMT date
+-   `date` **[string][424]** The GMT date
 
-Returns **[number][425]** The UTC timestamp
+Returns **[number][426]** The UTC timestamp
 
 ### dateToTimestamp
 
@@ -3433,9 +3443,9 @@ Convert a string date time zoned to timestamp
 
 **Parameters**
 
--   `date` **[string][423]** The GMT date
+-   `date` **[string][424]** The GMT date
 
-Returns **[number][425]** The GMT timestamp
+Returns **[number][426]** The GMT timestamp
 
 ### roundedTimestamp
 
@@ -3443,10 +3453,10 @@ Round the timestamp to the mode
 
 **Parameters**
 
--   `timestamp` **[number][425]** A timestamp
--   `mode` **[number][425]** The mode (contant : `DateUtils.ROUND_TIMESTAMP_MINUTE`, `DateUtils.ROUND_TIMESTAMP_HOUR`, `DateUtils.ROUND_TIMESTAMP_DAY`, `DateUtils.ROUND_TIMESTAMP_MONTH`)
+-   `timestamp` **[number][426]** A timestamp
+-   `mode` **[number][426]** The mode (contant : `DateUtils.ROUND_TIMESTAMP_MINUTE`, `DateUtils.ROUND_TIMESTAMP_HOUR`, `DateUtils.ROUND_TIMESTAMP_DAY`, `DateUtils.ROUND_TIMESTAMP_MONTH`)
 
-Returns **[number][425]** Rounded timestamp
+Returns **[number][426]** Rounded timestamp
 
 ### dateFormatted
 
@@ -3454,10 +3464,10 @@ Format the current date with parameter
 
 **Parameters**
 
--   `format` **[string][423]** A format (Y for year, m for month, d for day, H for hour, i for minutes, s for seconds)
--   `timestamp` **[number][425]** A timestamp. If not provided, use current timestamp. (optional, default `null`)
+-   `format` **[string][424]** A format (Y for year, m for month, d for day, H for hour, i for minutes, s for seconds)
+-   `timestamp` **[number][426]** A timestamp. If not provided, use current timestamp. (optional, default `null`)
 
-Returns **[string][423]** The formatted date
+Returns **[string][424]** The formatted date
 
 ### secondsElapsedSinceMidnight
 
@@ -3465,9 +3475,9 @@ Return the number of seconds elapsed since midnight in UTC format
 
 **Parameters**
 
--   `timestamp` **[number][425]** A timestamp in seconds
+-   `timestamp` **[number][426]** A timestamp in seconds
 
-Returns **[number][425]** A number of seconds elapsed
+Returns **[number][426]** A number of seconds elapsed
 
 ## Logger
 
@@ -3479,7 +3489,7 @@ Set the log level
 
 **Parameters**
 
--   `level` **[number][425]** Log level between 0 and 5 (optional, default `3`)
+-   `level` **[number][426]** Log level between 0 and 5 (optional, default `3`)
 
 ### log
 
@@ -3487,9 +3497,9 @@ Log to a file
 
 **Parameters**
 
--   `message` **[string][423]** A log message
+-   `message` **[string][424]** A log message
 -   `level` **int** Log level between 0 to 5 (optional, default `3`)
--   `params` **\[[string][423]]** Some parameters
+-   `params` **\[[string][424]]** Some parameters
 
 ### removeColors
 
@@ -3497,9 +3507,9 @@ Remove console colors from a string
 
 **Parameters**
 
--   `entry` **[string][423]** A text entry
+-   `entry` **[string][424]** A text entry
 
-Returns **[string][423]** Output string without colors
+Returns **[string][424]** Output string without colors
 
 ### flog
 
@@ -3507,8 +3517,8 @@ Log a log to a file
 
 **Parameters**
 
--   `message` **[string][423]** A log message
--   `params` **\[[string][423]]** Some parameters
+-   `message` **[string][424]** A log message
+-   `params` **\[[string][424]]** Some parameters
 
 ### warn
 
@@ -3516,8 +3526,8 @@ Log a warning to a file
 
 **Parameters**
 
--   `message` **[string][423]** A log message
--   `params` **\[[string][423]]** Some parameters
+-   `message` **[string][424]** A log message
+-   `params` **\[[string][424]]** Some parameters
 
 ### err
 
@@ -3525,8 +3535,8 @@ Log an error to a file
 
 **Parameters**
 
--   `message` **[string][423]** A log message
--   `params` **\[[string][423]]** Some parameters
+-   `message` **[string][424]** A log message
+-   `params` **\[[string][424]]** Some parameters
 
 ### verbose
 
@@ -3534,8 +3544,8 @@ Log a verbose message to a file
 
 **Parameters**
 
--   `message` **[string][423]** A log message
--   `params` **\[[string][423]]** Some parameters
+-   `message` **[string][424]** A log message
+-   `params` **\[[string][424]]** Some parameters
 
 ### info
 
@@ -3543,8 +3553,8 @@ Log an information to a file
 
 **Parameters**
 
--   `message` **[string][423]** A log message
--   `params` **\[[string][423]]** Some parameters
+-   `message` **[string][424]** A log message
+-   `params` **\[[string][424]]** Some parameters
 
 ### debug
 
@@ -3552,14 +3562,14 @@ Log a debug message to a file, with stacktrace
 
 **Parameters**
 
--   `message` **[string][423]** A log message
--   `params` **\[[string][423]]** Some parameters
+-   `message` **[string][424]** A log message
+-   `params` **\[[string][424]]** Some parameters
 
 ### getHistory
 
 Get the log history
 
-Returns **[Array][426]** An array of logs
+Returns **[Array][427]** An array of logs
 
 ## APIResponse
 
@@ -3567,12 +3577,12 @@ This class is a POJO representing an APIResponse item
 
 **Parameters**
 
--   `success` **[boolean][421]** Set to true if API success, else false (optional, default `false`)
--   `response` **[Object][424]** A response object to transmit (optional) (optional, default `{}`)
+-   `success` **[boolean][422]** Set to true if API success, else false (optional, default `false`)
+-   `response` **[Object][425]** A response object to transmit (optional) (optional, default `{}`)
 -   `errorCode` **int** The error code (optional) (optional, default `-1`)
--   `errorMessage` **[string][423]** The error message (optional) (optional, default `null`)
--   `upToDate` **[boolean][421]** True will return 304 no content. (optional, default `false`)
--   `contentType` **[string][423]** The content type (optional, default `"application/json"`)
+-   `errorMessage` **[string][424]** The error message (optional) (optional, default `null`)
+-   `upToDate` **[boolean][422]** True will return 304 no content. (optional, default `false`)
+-   `contentType` **[string][424]** The content type (optional, default `"application/json"`)
 
 ### success
 
@@ -3600,9 +3610,9 @@ Clean an exported class by removing the `class` property
 
 **Parameters**
 
--   `exported` **[Object][424]** An exported object with `class` property
+-   `exported` **[Object][425]** An exported object with `class` property
 
-Returns **[Object][424]** A clean object
+Returns **[Object][425]** A clean object
 
 ### cleanDbObject
 
@@ -3610,9 +3620,9 @@ Clean a DbObject by removing DbHelper
 
 **Parameters**
 
--   `dbObject` **[DbObject][431]** A database object
+-   `dbObject` **[DbObject][432]** A database object
 
-Returns **[Object][424]** A cleaned object
+Returns **[Object][425]** A cleaned object
 
 ## WebServices
 
@@ -3625,10 +3635,10 @@ This class manage Web Services call, and more specifically the external APIs
 -   `translateManager` **TranslateManager** The translation manager
 -   `port` **int** The listening HTTP port (optional, default `8080`)
 -   `sslPort` **int** The listening HTTPS port (optional, default `8443`)
--   `sslKey` **[string][423]** The path for SSL key (optional, default `null`)
--   `sslCert` **[string][423]** The path for sslCert key (optional, default `null`)
--   `enableCompression` **[string][423]** Enable gzip data compression (optional, default `true`)
--   `cachePath` **[string][423]** The cache path (optional, default `null`)
+-   `sslKey` **[string][424]** The path for SSL key (optional, default `null`)
+-   `sslCert` **[string][424]** The path for sslCert key (optional, default `null`)
+-   `enableCompression` **[string][424]** Enable gzip data compression (optional, default `true`)
+-   `cachePath` **[string][424]** The cache path (optional, default `null`)
 
 ### start
 
@@ -3652,9 +3662,9 @@ Get the route serviceIdentifier
 
 **Parameters**
 
--   `route` **[string][423]** A route
+-   `route` **[string][424]** A route
 
-Returns **[string][423]** The identifier
+Returns **[string][424]** The identifier
 
 ### processAPI
 
@@ -3662,9 +3672,9 @@ Process API callback
 
 **Parameters**
 
--   `apiRequest` **[APIRequest][428]** An APIRequest
+-   `apiRequest` **[APIRequest][429]** An APIRequest
 
-Returns **[Promise][429]** A promise with an APIResponse object
+Returns **[Promise][430]** A promise with an APIResponse object
 
 ### register
 
@@ -3672,7 +3682,7 @@ Override Register service callback
 
 **Parameters**
 
--   `delegate` **[Object][424]** The service delegate
+-   `delegate` **[Object][425]** The service delegate
 
 ### unregister
 
@@ -3680,7 +3690,7 @@ Override Unregister service callback
 
 **Parameters**
 
--   `delegate` **[Object][424]** The service delegate
+-   `delegate` **[Object][425]** The service delegate
 
 ### registerAPI
 
@@ -3688,9 +3698,9 @@ Register to a specific API to be notified when a route and/or method is called
 
 **Parameters**
 
--   `delegate` **[Object][424]** A delegate which implements the processAPI(apiRequest) function
--   `method` **[string][423]** A method (\*, WebServices.GET / WebServices.POST / WebServices.DELETE) (optional, default `"*"`)
--   `route` **[string][423]** A route (\*, :/my/route/) (optional, default `"*"`)
+-   `delegate` **[Object][425]** A delegate which implements the processAPI(apiRequest) function
+-   `method` **[string][424]** A method (\*, WebServices.GET / WebServices.POST / WebServices.DELETE) (optional, default `"*"`)
+-   `route` **[string][424]** A route (\*, :/my/route/) (optional, default `"*"`)
 -   `authLevel` **int** An authentification level (optional, default `Authentication.AUTH_USAGE_LEVEL`)
 -   `tokenExpirationTime` **int** A token expiration time in seconds, for token authentication. 0 for one time token. (optional, default `0`)
 
@@ -3700,9 +3710,9 @@ Unregister a specific API to be not notified when a route and/or method is calle
 
 **Parameters**
 
--   `delegate` **[Object][424]** A delegate which implements the processAPI(apiRequest) function
--   `method` **[string][423]** A method (\*, WebServices.GET / WebServices.POST) (optional, default `"*"`)
--   `route` **[string][423]** A route (\*, :/my/route/) (optional, default `"*"`)
+-   `delegate` **[Object][425]** A delegate which implements the processAPI(apiRequest) function
+-   `method` **[string][424]** A method (\*, WebServices.GET / WebServices.POST) (optional, default `"*"`)
+-   `route` **[string][424]** A route (\*, :/my/route/) (optional, default `"*"`)
 
 ### manageResponse
 
@@ -3710,11 +3720,11 @@ Create an API
 
 **Parameters**
 
--   `req` **[Request][451]** The WS request
--   `endpoint` **[string][423]** The WS endpoint
--   `res` **[Response][452]** The WS response
+-   `req` **[Request][452]** The WS request
+-   `endpoint` **[string][424]** The WS endpoint
+-   `res` **[Response][453]** The WS response
 
-Returns **[APIRequest][428]** An API Request
+Returns **[APIRequest][429]** An API Request
 
 ### buildPromises
 
@@ -3722,9 +3732,9 @@ Build a promise array from delegates
 
 **Parameters**
 
--   `apiRequest` **[APIRequest][428]** The apiRequest
+-   `apiRequest` **[APIRequest][429]** The apiRequest
 
-Returns **\[[Promise][429]]** An array of promises
+Returns **\[[Promise][430]]** An array of promises
 
 ### runPromises
 
@@ -3732,9 +3742,9 @@ Run promises sequentially
 
 **Parameters**
 
--   `apiRequest` **\[[APIRequest][428]]** The API Request object
+-   `apiRequest` **\[[APIRequest][429]]** The API Request object
 -   `promises` **\[promises]** An array of promises (delegates callees)
--   `res` **[Response][452]** The response
+-   `res` **[Response][453]** The response
 
 ### sendAPIResponse
 
@@ -3742,8 +3752,8 @@ Process sending results in JSON to API caller
 
 **Parameters**
 
--   `apiResponses` **\[[APIResponse][450]]** The API responses
--   `res` **[Response][452]** The response
+-   `apiResponses` **\[[APIResponse][451]]** The API responses
+-   `res` **[Response][453]** The response
 
 ## Service
 
@@ -3752,10 +3762,10 @@ This class is used for services, start, stop, ...
 
 **Parameters**
 
--   `name` **[string][423]** The service identifier
+-   `name` **[string][424]** The service identifier
 -   `threadsManager` **ThreadManager** The thread manager, mandatory if using SERVICE_MODE_THREADED mode service (optional, default `null`)
 -   `mode` **int** The service running mode : SERVICE_MODE_CLASSIC, SERVICE_MODE_THREADED, SERVICE_MODE_EXTERNAL (optional, default `SERVICE_MODE_CLASSIC`)
--   `command` **[string][423]** The external service command to execute, in case of SERVICE_MODE_EXTERNAL (optional, default `null`)
+-   `command` **[string][424]** The external service command to execute, in case of SERVICE_MODE_EXTERNAL (optional, default `null`)
 
 ### start
 
@@ -3768,8 +3778,8 @@ Should be overloaded by service
 
 **Parameters**
 
--   `data` **[Object][424]** A data passed as initial value
--   `send` **[Function][422]** Send a message to parent process
+-   `data` **[Object][425]** A data passed as initial value
+-   `send` **[Function][423]** Send a message to parent process
 
 ### threadCallback
 
@@ -3778,7 +3788,7 @@ Should be overloaded by service
 
 **Parameters**
 
--   `data` **[Object][424]** A data passed as initial value
+-   `data` **[Object][425]** A data passed as initial value
 
 ### send
 
@@ -3786,8 +3796,8 @@ Send data to sub process
 
 **Parameters**
 
--   `event` **[string][423]** An event
--   `data` **[Object][424]** A data (optional, default `null`)
+-   `event` **[string][424]** An event
+-   `data` **[Object][425]** A data (optional, default `null`)
 
 ### startThreaded
 
@@ -3829,7 +3839,7 @@ Register service callback
 
 **Parameters**
 
--   `delegate` **[Object][424]** The service delegate
+-   `delegate` **[Object][425]** The service delegate
 
 ### unregister
 
@@ -3837,7 +3847,7 @@ Unregister service callback
 
 **Parameters**
 
--   `delegate` **[Object][424]** The service delegate
+-   `delegate` **[Object][425]** The service delegate
 
 ### setThreadsManager
 
@@ -3853,7 +3863,7 @@ Set the callback when the external command is terminated
 
 **Parameters**
 
--   `cb` **[Function][422]** A callback `(service, error)=>{}`
+-   `cb` **[Function][423]** A callback `(service, error)=>{}`
 
 ## APIRequest
 
@@ -3861,16 +3871,16 @@ This class is a POJO representing an APIRequest item
 
 **Parameters**
 
--   `method` **[string][423]** The method
--   `ip` **[string][423]** IP address
--   `route` **[string][423]** The route
--   `path` **[Array][426]** The path (route splitted in array)
--   `action` **[string][423]** The action (first element of route)
--   `params` **[Object][424]** The parameters under key / value format
--   `req` **[Request][451]?** The request
--   `res` **[Response][452]?** The response
--   `data` **[Object][424]** The object sent (optional, default `null`)
--   `apiRegistration` **[APIRegistration][453]** The corresponding API registration (optional, default `null`)
+-   `method` **[string][424]** The method
+-   `ip` **[string][424]** IP address
+-   `route` **[string][424]** The route
+-   `path` **[Array][427]** The path (route splitted in array)
+-   `action` **[string][424]** The action (first element of route)
+-   `params` **[Object][425]** The parameters under key / value format
+-   `req` **[Request][452]?** The request
+-   `res` **[Response][453]?** The response
+-   `data` **[Object][425]** The object sent (optional, default `null`)
+-   `apiRegistration` **[APIRegistration][454]** The corresponding API registration (optional, default `null`)
 
 ### method
 
@@ -3910,7 +3920,7 @@ Add authentication data to request
 
 **Parameters**
 
--   `authenticationData` **[AuthenticationData][454]** The data authentication
+-   `authenticationData` **[AuthenticationData][455]** The data authentication
 
 ## APIRegistration
 
@@ -3918,11 +3928,11 @@ This class is a POJO representing an APIRegistration item
 
 **Parameters**
 
--   `delegate` **[Object][424]** The object which implements the processAPI callback
--   `method` **[string][423]** The method (GET, POST, ...) (optional, default `"*"`)
--   `route` **[string][423]** The needed route (:/foo/bar) (optional, default `"*"`)
+-   `delegate` **[Object][425]** The object which implements the processAPI callback
+-   `method` **[string][424]** The method (GET, POST, ...) (optional, default `"*"`)
+-   `route` **[string][424]** The needed route (:/foo/bar) (optional, default `"*"`)
 -   `authLevel` **int** The authentication level needed to be called (optional, default `Authentication.AUTH_USAGE_LEVEL`)
--   `identifier` **[string][423]** The route service identifier (optional, default `null`)
+-   `identifier` **[string][424]** The route service identifier (optional, default `null`)
 -   `authTokenExpiration` **int** The expiration time for token, in seconds (optional, default `0`)
 
 ### delegate
@@ -3947,15 +3957,15 @@ Check if the parameter equality
 
 **Parameters**
 
--   `obj` **[APIRegistration][453]** An APIRegistration object
+-   `obj` **[APIRegistration][454]** An APIRegistration object
 
-Returns **[boolean][421]** true or false
+Returns **[boolean][422]** true or false
 
 ### getRouteBase
 
 Returns the route base string
 
-Returns **[string][423]** The base route (without parameters)
+Returns **[string][424]** The base route (without parameters)
 
 [1]: #alarmapi
 
@@ -4357,510 +4367,512 @@ Returns **[string][423]** The base route (without parameters)
 
 [200]: #compareformobject
 
-[201]: #scenarioapi
+[201]: #getlastreceivedradioinformations
 
-[202]: #register-5
+[202]: #scenarioapi
 
-[203]: #unregister-2
+[203]: #register-5
 
-[204]: #triggerscenario-1
+[204]: #unregister-2
 
-[205]: #getscenarios
+[205]: #triggerscenario-1
 
-[206]: #schedulerapi
+[206]: #getscenarios
 
-[207]: #register-6
+[207]: #schedulerapi
 
-[208]: #unregister-3
+[208]: #register-6
 
-[209]: #schedule
+[209]: #unregister-3
 
-[210]: #cancel
+[210]: #schedule
 
-[211]: #constants-2
+[211]: #cancel
 
-[212]: #schedulerservice
+[212]: #constants-2
 
-[213]: #start
+[213]: #schedulerservice
 
-[214]: #stop
+[214]: #start
 
-[215]: #register-7
+[215]: #stop
 
-[216]: #unregister-4
+[216]: #register-7
 
-[217]: #schedule-1
+[217]: #unregister-4
 
-[218]: #cancel-1
+[218]: #schedule-1
 
-[219]: #timeevent
+[219]: #cancel-1
 
-[220]: #schedulerdbobject
+[220]: #timeevent
 
-[221]: #identifier-1
+[221]: #schedulerdbobject
 
-[222]: #data
+[222]: #identifier-1
 
-[223]: #triggerdate
+[223]: #data
 
-[224]: #triggered
+[224]: #triggerdate
 
-[225]: #sensorapi
+[225]: #triggered
 
-[226]: #registerform-2
+[226]: #sensorapi
 
-[227]: #registerclass-1
+[227]: #registerform-2
 
-[228]: #registersensorevent
+[228]: #registerclass-1
 
-[229]: #unregistersensorevent
+[229]: #registersensorevent
 
-[230]: #getsensors
+[230]: #unregistersensorevent
 
-[231]: #getvalue
+[231]: #getsensors
 
-[232]: #getsensor
+[232]: #getvalue
 
-[233]: #iotapppowered
+[233]: #getsensor
 
-[234]: #constants-3
+[234]: #iotapppowered
 
-[235]: #iotslistform
+[235]: #constants-3
 
-[236]: #identifier-2
+[236]: #iotslistform
 
-[237]: #json-3
+[237]: #identifier-2
 
-[238]: #getiotsname
+[238]: #json-3
 
-[239]: #getiotsid
+[239]: #getiotsname
 
-[240]: #formobject
+[240]: #getiotsid
 
-[241]: #json-4
+[241]: #formobject
 
-[242]: #id
+[242]: #json-4
 
-[243]: #sensorsmanager
+[243]: #id
 
-[244]: #pluginsloaded
+[244]: #sensorsmanager
 
-[245]: #initsensors
+[245]: #pluginsloaded
 
-[246]: #initsensor
+[246]: #initsensors
 
-[247]: #registersensorevent-1
+[247]: #initsensor
 
-[248]: #getsensor-1
+[248]: #registersensorevent-1
 
-[249]: #unregistersensorevent-1
+[249]: #getsensor-1
 
-[250]: #getallsensors
+[250]: #unregistersensorevent-1
 
-[251]: #onnewsensorvalue
+[251]: #getallsensors
 
-[252]: #getvalue-1
+[252]: #onnewsensorvalue
 
-[253]: #processapi-2
+[253]: #getvalue-1
 
-[254]: #statisticswsresponse
+[254]: #processapi-2
 
-[255]: #comparator-1
+[255]: #statisticswsresponse
 
-[256]: #getsensorconfiguration
+[256]: #comparator-1
 
-[257]: #registersensorslistform
+[257]: #getsensorconfiguration
 
-[258]: #sensorsform
+[258]: #registersensorslistform
 
-[259]: #sensorid
+[259]: #sensorsform
 
-[260]: #json-5
+[260]: #sensorid
 
-[261]: #getsensorids
+[261]: #json-5
 
-[262]: #getsensornames
+[262]: #getsensorids
 
-[263]: #sensorslistform
+[263]: #getsensornames
 
-[264]: #identifier-3
+[264]: #sensorslistform
 
-[265]: #json-6
+[265]: #identifier-3
 
-[266]: #getsensorsname
+[266]: #json-6
 
-[267]: #getsensorsid
+[267]: #getsensorsname
 
-[268]: #pluginsmanager
+[268]: #getsensorsid
 
-[269]: #getpluginsfromdirectory
+[269]: #pluginsmanager
 
-[270]: #checkpluginsanity
+[270]: #getpluginsfromdirectory
 
-[271]: #initplugin
+[271]: #checkpluginsanity
 
-[272]: #initplugins
+[272]: #initplugin
 
-[273]: #registerplugins
+[273]: #initplugins
 
-[274]: #load
+[274]: #registerplugins
 
-[275]: #getpluginsbycategory
+[275]: #load
 
-[276]: #getpluginbyidentifier
+[276]: #getpluginsbycategory
 
-[277]: #isenabled
+[277]: #getpluginbyidentifier
 
-[278]: #preparetoposortarray
+[278]: #isenabled
 
-[279]: #toposort
+[279]: #preparetoposortarray
 
-[280]: #topsortedarrayconverter
+[280]: #toposort
 
-[281]: #getpluginconf
+[281]: #topsortedarrayconverter
 
-[282]: #changepluginstatus
+[282]: #getpluginconf
 
-[283]: #processapi-3
+[283]: #changepluginstatus
 
-[284]: #pluginsapi
+[284]: #processapi-3
 
-[285]: #exportclass
+[285]: #pluginsapi
 
-[286]: #init
+[286]: #exportclass
 
-[287]: #registerinstance
+[287]: #init
 
-[288]: #getplugininstance
+[288]: #registerinstance
 
-[289]: #constants-4
+[289]: #getplugininstance
 
-[290]: #iotform
+[290]: #constants-4
 
-[291]: #iotapp
+[291]: #iotform
 
-[292]: #name-1
+[292]: #iotapp
 
-[293]: #json-7
+[293]: #name-1
 
-[294]: #imageutils
+[294]: #json-7
 
-[295]: #sanitizeformconfiguration
+[295]: #imageutils
 
-[296]: #resize
+[296]: #sanitizeformconfiguration
 
-[297]: #blur
+[297]: #resize
 
-[298]: #pluginconf
+[298]: #blur
 
-[299]: #json-8
+[299]: #pluginconf
 
-[300]: #servicesmanagerapi
+[300]: #json-8
 
-[301]: #add
+[301]: #servicesmanagerapi
 
-[302]: #remove-1
+[302]: #add
 
-[303]: #stop-1
+[303]: #remove-1
 
-[304]: #start-1
+[304]: #stop-1
 
-[305]: #themeapi
+[305]: #start-1
 
-[306]: #getcolors
+[306]: #themeapi
 
-[307]: #timeeventapi
+[307]: #getcolors
 
-[308]: #register-8
+[308]: #timeeventapi
 
-[309]: #unregister-5
+[309]: #register-8
 
-[310]: #constants-5
+[310]: #unregister-5
 
-[311]: #timeeventservice
+[311]: #constants-5
 
-[312]: #start-2
+[312]: #timeeventservice
 
-[313]: #stop-2
+[313]: #start-2
 
-[314]: #hash-1
+[314]: #stop-2
 
-[315]: #elementforhash
+[315]: #hash-1
 
-[316]: #register-9
+[316]: #elementforhash
 
-[317]: #unregister-6
+[317]: #register-9
 
-[318]: #convertmode
+[318]: #unregister-6
 
-[319]: #timeevent-1
+[319]: #convertmode
 
-[320]: #translateapi
+[320]: #timeevent-1
 
-[321]: #load-1
+[321]: #translateapi
 
-[322]: #t
+[322]: #load-1
 
-[323]: #userapi
+[323]: #t
 
-[324]: #addadditionalfields-1
+[324]: #userapi
 
-[325]: #getusers
+[325]: #addadditionalfields-1
 
-[326]: #allusersathome
+[326]: #getusers
 
-[327]: #nobodyathome
+[327]: #allusersathome
 
-[328]: #somebodyathome
+[328]: #nobodyathome
 
-[329]: #registerhomenotifications
+[329]: #somebodyathome
 
-[330]: #unregisterhomenotifications
+[330]: #registerhomenotifications
 
-[331]: #webapi
+[331]: #unregisterhomenotifications
 
-[332]: #register-10
+[332]: #webapi
 
-[333]: #unregister-7
+[333]: #register-10
 
-[334]: #authentication
+[334]: #unregister-7
 
-[335]: #apiresponse
+[335]: #authentication
 
-[336]: #constants-6
+[336]: #apiresponse
 
-[337]: #authentication-1
+[337]: #constants-6
 
-[338]: #clearexpiredtokens
+[338]: #authentication-1
 
-[339]: #generatetoken
+[339]: #clearexpiredtokens
 
-[340]: #processapi-4
+[340]: #generatetoken
 
-[341]: #checklocalip
+[341]: #processapi-4
 
-[342]: #processauthentication
+[342]: #checklocalip
 
-[343]: #authenticationdata
+[343]: #processauthentication
 
-[344]: #authorized
+[344]: #authenticationdata
 
-[345]: #username
+[345]: #authorized
 
-[346]: #level
+[346]: #username
 
-[347]: #dateutils
+[347]: #level
 
-[348]: #timestamp
+[348]: #dateutils
 
-[349]: #datetoutctimestamp
+[349]: #timestamp
 
-[350]: #datetotimestamp
+[350]: #datetoutctimestamp
 
-[351]: #roundedtimestamp
+[351]: #datetotimestamp
 
-[352]: #dateformatted
+[352]: #roundedtimestamp
 
-[353]: #secondselapsedsincemidnight
+[353]: #dateformatted
 
-[354]: #logger
+[354]: #secondselapsedsincemidnight
 
-[355]: #setloglevel
+[355]: #logger
 
-[356]: #log
+[356]: #setloglevel
 
-[357]: #removecolors
+[357]: #log
 
-[358]: #flog
+[358]: #removecolors
 
-[359]: #warn
+[359]: #flog
 
-[360]: #err
+[360]: #warn
 
-[361]: #verbose
+[361]: #err
 
-[362]: #info
+[362]: #verbose
 
-[363]: #debug
+[363]: #info
 
-[364]: #gethistory
+[364]: #debug
 
-[365]: #apiresponse-1
+[365]: #gethistory
 
-[366]: #success
+[366]: #apiresponse-1
 
-[367]: #response
+[367]: #success
 
-[368]: #errorcode
+[368]: #response
 
-[369]: #errormessage
+[369]: #errorcode
 
-[370]: #cleaner
+[370]: #errormessage
 
-[371]: #exportconstants
+[371]: #cleaner
 
-[372]: #cleandbobject
+[372]: #exportconstants
 
-[373]: #webservices
+[373]: #cleandbobject
 
-[374]: #start-3
+[374]: #webservices
 
-[375]: #starttunnel
+[375]: #start-3
 
-[376]: #stop-3
+[376]: #starttunnel
 
-[377]: #registerinfos
+[377]: #stop-3
 
-[378]: #getrouteidentifier
+[378]: #registerinfos
 
-[379]: #processapi-5
+[379]: #getrouteidentifier
 
-[380]: #register-11
+[380]: #processapi-5
 
-[381]: #unregister-8
+[381]: #register-11
 
-[382]: #registerapi
+[382]: #unregister-8
 
-[383]: #unregisterapi
+[383]: #registerapi
 
-[384]: #manageresponse
+[384]: #unregisterapi
 
-[385]: #buildpromises
+[385]: #manageresponse
 
-[386]: #runpromises
+[386]: #buildpromises
 
-[387]: #sendapiresponse
+[387]: #runpromises
 
-[388]: #service
+[388]: #sendapiresponse
 
-[389]: #start-4
+[389]: #service
 
-[390]: #run
+[390]: #start-4
 
-[391]: #threadcallback
+[391]: #run
 
-[392]: #send
+[392]: #threadcallback
 
-[393]: #startthreaded
+[393]: #send
 
-[394]: #stopthreaded
+[394]: #startthreaded
 
-[395]: #startexternal
+[395]: #stopthreaded
 
-[396]: #stopexternal
+[396]: #startexternal
 
-[397]: #stop-4
+[397]: #stopexternal
 
-[398]: #restart
+[398]: #stop-4
 
-[399]: #status-2
+[399]: #restart
 
-[400]: #register-12
+[400]: #status-2
 
-[401]: #unregister-9
+[401]: #register-12
 
-[402]: #setthreadsmanager
+[402]: #unregister-9
 
-[403]: #setexternalterminatedcommandcb
+[403]: #setthreadsmanager
 
-[404]: #apirequest
+[404]: #setexternalterminatedcommandcb
 
-[405]: #method
+[405]: #apirequest
 
-[406]: #ip
+[406]: #method
 
-[407]: #route
+[407]: #ip
 
-[408]: #path
+[408]: #route
 
-[409]: #action
+[409]: #path
 
-[410]: #params
+[410]: #action
 
-[411]: #data-1
+[411]: #params
 
-[412]: #authenticationdata-1
+[412]: #data-1
 
-[413]: #addauthenticationdata
+[413]: #authenticationdata-1
 
-[414]: #apiregistration
+[414]: #addauthenticationdata
 
-[415]: #delegate
+[415]: #apiregistration
 
-[416]: #method-1
+[416]: #delegate
 
-[417]: #route-1
+[417]: #method-1
 
-[418]: #authlevel
+[418]: #route-1
 
-[419]: #isequal
+[419]: #authlevel
 
-[420]: #getroutebase
+[420]: #isequal
 
-[421]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+[421]: #getroutebase
 
-[422]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
+[422]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
 
-[423]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+[423]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
 
-[424]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+[424]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
 
-[425]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
+[425]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
 
-[426]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
+[426]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
 
-[427]: #webservices
+[427]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
 
-[428]: #apirequest
+[428]: #webservices
 
-[429]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
+[429]: #apirequest
 
-[430]: #tile
+[430]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
 
-[431]: #dbobject
+[431]: #tile
 
-[432]: #dbhelper
+[432]: #dbobject
 
-[433]: #dbrequestbuilder
+[433]: #dbhelper
 
-[434]: #sensorsmanager
+[434]: #dbrequestbuilder
 
-[435]: #devicemanager
+[435]: #sensorsmanager
 
-[436]: #deviceform
+[436]: #devicemanager
 
-[437]: #deviceslistform
+[437]: #deviceform
 
-[438]: #deviceslistscenarioform
+[438]: #deviceslistform
 
-[439]: http://192.168.2.34:8100/api/
+[439]: #deviceslistscenarioform
 
-[440]: #formobject
+[440]: http://192.168.2.34:8100/api/
 
-[441]: #timeeventservice
+[441]: #formobject
 
-[442]: #schedulerservice
+[442]: #timeeventservice
 
-[443]: #iotslistform
+[443]: #schedulerservice
 
-[444]: #pluginsmanager
+[444]: #iotslistform
 
-[445]: #sensorsform
+[445]: #pluginsmanager
 
-[446]: #sensorslistform
+[446]: #sensorsform
 
-[447]: #pluginconf
+[447]: #sensorslistform
 
-[448]: #iotform
+[448]: #pluginconf
 
-[449]: #service
+[449]: #iotform
 
-[450]: #apiresponse
+[450]: #service
 
-[451]: https://developer.mozilla.org/Add-ons/SDK/High-Level_APIs/request
+[451]: #apiresponse
 
-[452]: https://developer.mozilla.org/docs/Web/Guide/HTML/HTML5
+[452]: https://developer.mozilla.org/Add-ons/SDK/High-Level_APIs/request
 
-[453]: #apiregistration
+[453]: https://developer.mozilla.org/docs/Web/Guide/HTML/HTML5
 
-[454]: #authenticationdata
+[454]: #apiregistration
+
+[455]: #authenticationdata
