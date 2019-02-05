@@ -409,7 +409,7 @@ function loaded(api) {
 
                     // Dispatch
                     const aggregated = this.convertValue(object.value);
-                    this.api.sensorAPI.onNewSensorValue(this.id, this.type, object.value, this.unit, vcc, aggregated.value, aggregated.unit);
+                    this.api.sensorAPI.onNewSensorValue(this.id, this.type, value, this.unit, vcc, aggregated.value, aggregated.unit);
                     if (cb) cb(null);
                 } else {
                     if (!error) {
@@ -422,7 +422,7 @@ function loaded(api) {
 
                                 // Dispatch
                                 const aggregated = this.convertValue(currentObject.value);
-                                this.api.sensorAPI.onNewSensorValue(this.id, this.type, currentObject.value, this.unit, vcc, aggregated.value, aggregated.unit);
+                                this.api.sensorAPI.onNewSensorValue(this.id, this.type, value, this.unit, vcc, aggregated.value, aggregated.unit);
 
                                 if (cb) cb(null);
                             } else {

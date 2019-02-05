@@ -75,9 +75,11 @@ class TranslateManager {
      */
     translateArray(arr) {
         let translatedElements = [];
-        arr.forEach((el) => {
-            translatedElements.push(this.t(el));
-        });
+        if (arr && arr.length > 0) {
+            arr.forEach((el) => {
+                translatedElements.push(this.t(el));
+            });
+        }
 
         return translatedElements;
     }

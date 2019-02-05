@@ -8,6 +8,8 @@ const DateUtils = require("./../../utils/DateUtils");
 const TimeEventService = require("./../../services/timeeventservice/TimeEventService");
 const SensorsForm = require("./SensorsForm");
 const SensorsListForm = require("./SensorsListForm");
+const SensorsListScenarioForm = require("./SensorsListScenarioForm");
+const SensorScenarioForm = require("./SensorScenarioForm");
 
 const CONF_MANAGER_KEY = "sensors";
 const SENSORS_MANAGER_AVAILABLE_GET = ":/sensors/available/get/";
@@ -47,9 +49,10 @@ class SensorsManager {
      * @param  {ThemeManager} themeManager    The theme manager
      * @param  {BotEngine} botEngine    The bot engine
      * @param  {TimeEventService} timeEventService    The time event service
+     * @param  {ScenarioManager} scenarioManager    The scenario manager
      * @returns {SensorsManager}                       The instance
      */
-    constructor(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager, botEngine, timeEventService) {
+    constructor(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager, botEngine, timeEventService, scenarioManager) {
         this.pluginsManager = pluginsManager;
         this.webServices = webServices;
         this.formManager = formManager;
@@ -62,6 +65,7 @@ class SensorsManager {
         this.delegates = {};
         this.statisticsCache = {};
         this.eventBus = eventBus;
+        this.scenarioManager = scenarioManager;
 
         try {
             this.sensorsConfiguration = this.confManager.loadData(Object, CONF_MANAGER_KEY, true);
@@ -176,6 +180,18 @@ class SensorsManager {
         this.registerSensorsListForm();
 
         this.eventBus.emit(EVENT_SENSORS_READY);
+
+        this.formManager.register(SensorScenarioForm.class);
+
+        this.scenarioManager.unregister(SensorsListScenarioForm.class, this.scenarioTrigger);
+        this.scenarioManager.register(SensorsListScenarioForm.class, this.scenarioTrigger);
+    }
+
+    /**
+     * Scenario trigger Callback
+     */
+    scenarioTrigger() {
+
     }
 
     /**
@@ -285,6 +301,33 @@ class SensorsManager {
                 && (registeredEl.identifier === "*" || (parseInt(registeredEl.identifier) === parseInt(id)))
                 && registeredEl.cb) {
                 registeredEl.cb(id, type, value, unit, vcc, aggValue, aggUnit);
+            }
+        });
+
+        // Trigger scenarios
+
+        this.scenarioManager.getScenarios().forEach((scenario) => {
+            if (scenario.SensorsListScenarioForm) {
+                if (scenario.SensorsListScenarioForm.sensors && scenario.SensorsListScenarioForm.sensors.length > 0) {
+                    let shouldExecuteAction = false;
+                    scenario.SensorsListScenarioForm.sensors.forEach((sensorScenarioForm) => {
+                        if (sensorScenarioForm.sensor && sensorScenarioForm.sensor.identifier && sensorScenarioForm.operator) {
+                            if (sensorScenarioForm.sensor.identifier === id) {
+                                if (sensorScenarioForm.operator === "=" && parseInt(value) === parseInt(sensorScenarioForm.threshold)) {
+                                    shouldExecuteAction = true;
+                                } else if (sensorScenarioForm.operator === ">" && parseInt(value) > parseInt(sensorScenarioForm.threshold)) {
+                                    shouldExecuteAction = true;
+                                } else if (sensorScenarioForm.operator === "<" && parseInt(value) < parseInt(sensorScenarioForm.threshold)) {
+                                    shouldExecuteAction = true;
+                                }
+                            }
+                        }
+                    });
+
+                    if (shouldExecuteAction) {
+                        this.scenarioManager.triggerScenario(scenario);
+                    }
+                }
             }
         });
     }

@@ -157,7 +157,7 @@ function loaded(api) {
          * @param  {RFLink} [context=null] THe context (instance)
          */
         flashFirstInstallation(context = null) {
-            if (api.configurationAPI.getConfiguration() && api.configurationAPI.getConfiguration().port && !context.connected && !context.isFlashing) {
+            if (api.configurationAPI.getConfiguration() && api.configurationAPI.getConfiguration().port && api.configurationAPI.getConfiguration().port.length > 1 && !context.connected && !context.isFlashing) {
                 api.exported.Logger.info("RFLink seems to be not flashed, trying to install it ...");
                 context.service.stop();
                 api.exported.Logger.info("Service has been stopped");
@@ -386,8 +386,8 @@ function loaded(api) {
          * @param  {Object} data A data object containing serial ports
          */
         onDetectedPortsReceive(data) {
-            const ports  = [];
-            const portsTitle  = [];
+            const ports  = ["-"];
+            const portsTitle  = ["-"];
 
             this.api.iotAPI.getIots("rflink-lan").forEach((d) => {
                 ports.push(d.id.toString());
