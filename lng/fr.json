@@ -87,6 +87,7 @@
     "devices.list.form.status.off": "Off",
     "devices.list.form.status.on": "On",
     "devices.list.form.status.invert": "Inverser le statut",
+    "devices.list.form.status.ignore": "Aucune importance",
     "devices.list.form.brightness": "Luminosité",
     "devices.list.form.color": "Couleur",
     "devices.list.form.color.temperature": "Temperature (froid <--> chaud)",
@@ -113,5 +114,6 @@
     "core.update.available": "Une nouvelle version %@ d'Hautomation est disponible. Mise à jour automatique.",
     "sensors.list.scenario.sensors": "Déclencher ce scénario sur lorsqu'un capteur envoie une valeur",
     "sensors.manager.scenario.operator": "Operateur",
-    "sensors.manager.scenario.threshold": "Seuil (valeur brute)"
+    "sensors.manager.scenario.threshold": "Seuil (valeur brute)",
+    "devices.list.scenario.trigger.devices": "Déclencher ce scénario lorsqu'un périphérique change d'état"
 }

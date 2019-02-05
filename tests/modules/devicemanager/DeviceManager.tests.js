@@ -324,6 +324,83 @@ describe("DeviceManager", function() {
         expect(deviceManager.getDeviceTypes(devices[0])[0]).to.be.equal(DeviceManager.DEVICE_TYPE_LIGHT);
     });
 
+    it("switchDevice on should trigger scenario", function() {
+        sinon.stub(core.scenarioManager, "getScenarios").callsFake(() => {
+            return [{
+                id:1,
+                DevicesListScenarioForm: {
+                    triggerOnDevice:[
+                        {identifier:2,status:"on"}
+                    ]
+                }
+            }];
+        });
+        sinon.stub(core.scenarioManager, "triggerScenario").callsFake(() => {});
+        deviceManager.switchDevice(2, DeviceManager.STATUS_ON);
+        expect(core.scenarioManager.triggerScenario.calledOnce).to.be.true;
+
+        core.scenarioManager.getScenarios.restore();
+        core.scenarioManager.triggerScenario.restore();
+    });
+
+    it("switchDevice off should trigger scenario", function() {
+        sinon.stub(core.scenarioManager, "getScenarios").callsFake(() => {
+            return [{
+                id:1,
+                DevicesListScenarioForm: {
+                    triggerOnDevice:[
+                        {identifier:3,status:"off"}
+                    ]
+                }
+            }];
+        });
+        sinon.stub(core.scenarioManager, "triggerScenario").callsFake(() => {});
+        deviceManager.switchDevice(3, DeviceManager.INT_STATUS_OFF);
+        expect(core.scenarioManager.triggerScenario.calledOnce).to.be.true;
+
+        core.scenarioManager.getScenarios.restore();
+        core.scenarioManager.triggerScenario.restore();
+    });
+
+    it("switchDevice ignore should trigger scenario", function() {
+        sinon.stub(core.scenarioManager, "getScenarios").callsFake(() => {
+            return [{
+                id:1,
+                DevicesListScenarioForm: {
+                    triggerOnDevice:[
+                        {identifier:4,status:"ignore"}
+                    ]
+                }
+            }];
+        });
+        sinon.stub(core.scenarioManager, "triggerScenario").callsFake(() => {});
+        deviceManager.switchDevice(4, DeviceManager.STATUS_ON);
+        deviceManager.switchDevice(4, DeviceManager.STATUS_OFF);
+        expect(core.scenarioManager.triggerScenario.calledTwice).to.be.true;
+
+        core.scenarioManager.getScenarios.restore();
+        core.scenarioManager.triggerScenario.restore();
+    });
+
+    it("switchDevice should not trigger scenario", function() {
+        sinon.stub(core.scenarioManager, "getScenarios").callsFake(() => {
+            return [{
+                id:1,
+                DevicesListScenarioForm: {
+                    triggerOnDevice:[
+                        {identifier:5,status:"off"}
+                    ]
+                }
+            }];
+        });
+        sinon.stub(core.scenarioManager, "triggerScenario").callsFake(() => {});
+        deviceManager.switchDevice(4, DeviceManager.STATUS_ON);
+        expect(core.scenarioManager.triggerScenario.notCalled).to.be.true;
+
+        core.scenarioManager.getScenarios.restore();
+        core.scenarioManager.triggerScenario.restore();
+    });
+
 
     after(() => {
         radioPlugin.instance.service.send.restore();

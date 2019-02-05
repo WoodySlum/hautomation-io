@@ -357,13 +357,15 @@ function loaded(api) {
          * @param  {Function} cb A callback when retrieve is done
          */
         retrieveLights(cb) {
-            this.client.lights.getAll()
-              .then(lights => {
-                  this.hueDevices = lights;
-                  cb(lights);
-              }).catch((err) => {
-                  api.exported.Logger.err(err.message);
-              });
+            if (this.client && this.client.lights) {
+                this.client.lights.getAll()
+                  .then(lights => {
+                      this.hueDevices = lights;
+                      cb(lights);
+                  }).catch((err) => {
+                      api.exported.Logger.err(err.message);
+                  });
+            }
         }
     }
 

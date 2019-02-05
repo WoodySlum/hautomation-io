@@ -89,6 +89,7 @@
     "devices.list.form.status.off": "Off",
     "devices.list.form.status.on": "On",
     "devices.list.form.status.invert": "Invert status",
+    "devices.list.form.status.ignore": "Doesn't matter",
     "devices.list.form.brightness": "Brightness",
     "devices.list.form.color": "Color",
     "devices.list.form.color.temperature": "Temperature (cold <--> hot)",
@@ -115,5 +116,6 @@
     "core.update.available": "A new Hautomation version %@ is available. Updating.",
     "sensors.list.scenario.sensors": "Trigger scenario on sensor value",
     "sensors.manager.scenario.operator": "Operator",
-    "sensors.manager.scenario.threshold": "Threshold (raw value)"
+    "sensors.manager.scenario.threshold": "Threshold (raw value)",
+    "devices.list.scenario.trigger.devices": "Trigger scenario on device changes state"
 }

@@ -12,9 +12,10 @@ class DevicesListScenarioForm extends FormObject.class {
      * @param  {boolean} [turnOnAll=null]  Turn on all devices
      * @param  {boolean} [turnOffAll=null] Turn off all devices
      * @param  {Array} [devices=null]    An array if DevicesListForm
+     * @param  {Array} [triggerOnDevice=null]    An array if DevicesListForm, scenario is triggered when this haappens
      * @returns {DevicesListScenarioForm}                            The instance
      */
-    constructor(id = null, turnOnAll = null, turnOffAll = null, devices = null) {
+    constructor(id = null, turnOnAll = null, turnOffAll = null, devices = null, triggerOnDevice = null) {
         super(id);
 
         /**
@@ -38,6 +39,14 @@ class DevicesListScenarioForm extends FormObject.class {
          * @Title("devices.list.scenario.devices");
          */
         this.devices = devices;
+
+        /**
+         * @Property("triggerOnDevice");
+         * @Type("objects");
+         * @Cl("DevicesListScenarioTriggerForm");
+         * @Title("devices.list.scenario.trigger.devices");
+         */
+        this.triggerOnDevice = triggerOnDevice;
     }
 
     /**
@@ -47,7 +56,7 @@ class DevicesListScenarioForm extends FormObject.class {
      * @returns {DevicesListScenarioForm}      A form object
      */
     json(data) {
-        return new DevicesListScenarioForm(data.id, data.turnOnAll, data.turnOffAll, data.devices);
+        return new DevicesListScenarioForm(data.id, data.turnOnAll, data.turnOffAll, data.devices, data.triggerOnDevice);
     }
 }
 

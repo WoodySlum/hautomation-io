@@ -305,14 +305,13 @@ class SensorsManager {
         });
 
         // Trigger scenarios
-
         this.scenarioManager.getScenarios().forEach((scenario) => {
             if (scenario.SensorsListScenarioForm) {
                 if (scenario.SensorsListScenarioForm.sensors && scenario.SensorsListScenarioForm.sensors.length > 0) {
                     let shouldExecuteAction = false;
                     scenario.SensorsListScenarioForm.sensors.forEach((sensorScenarioForm) => {
                         if (sensorScenarioForm.sensor && sensorScenarioForm.sensor.identifier && sensorScenarioForm.operator) {
-                            if (sensorScenarioForm.sensor.identifier === id) {
+                            if (sensorScenarioForm.sensor.identifier.toString() === id.toString()) {
                                 if (sensorScenarioForm.operator === "=" && parseInt(value) === parseInt(sensorScenarioForm.threshold)) {
                                     shouldExecuteAction = true;
                                 } else if (sensorScenarioForm.operator === ">" && parseInt(value) > parseInt(sensorScenarioForm.threshold)) {

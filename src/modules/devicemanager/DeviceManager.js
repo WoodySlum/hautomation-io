@@ -7,6 +7,7 @@ const Authentication = require("./../authentication/Authentication");
 const APIResponse = require("./../../services/webservices/APIResponse");
 const Tile = require("./../dashboardmanager/Tile");
 const DevicesListForm = require("./DevicesListForm");
+const DevicesListScenarioTriggerForm = require("./DevicesListScenarioTriggerForm");
 const DevicesListScenarioForm = require("./DevicesListScenarioForm");
 const Icons = require("./../../utils/Icons");
 const DeviceStatus = require("./DeviceStatus");
@@ -18,6 +19,7 @@ const DEVICE_TYPE_SHUTTER = "shutter";
 
 const STATUS_ON = "on";
 const STATUS_OFF = "off";
+const STATUS_IGNORE = "ignore";
 const INT_STATUS_ON = 1;
 const INT_STATUS_OFF = -1;
 const STATUS_INVERT = "invert";
@@ -226,6 +228,7 @@ class DeviceManager {
             devicesId.push(device.id);
         });
         this.formManager.register(DevicesListForm.class, devicesName, devicesId);
+        this.formManager.register(DevicesListScenarioTriggerForm.class, devicesName, devicesId);
     }
 
     /**
@@ -347,6 +350,8 @@ class DeviceManager {
                 status = INT_STATUS_OFF;
             } else if (status && status.toLowerCase() === STATUS_INVERT) {
                 status = null;
+            } else {
+                status = parseInt(status);
             }
         }
 
@@ -392,6 +397,30 @@ class DeviceManager {
                     }
                 } else {
                     Logger.warn("Turning device " + device.id + " is not authorized due to day / night mode. Device configuration (" + device.worksOnlyOnDayNight + "), Current mode is night (" + this.environmentManager.isNight() + "), Status (" + device.status + "), Compared status (" + INT_STATUS_ON + ")");
+                }
+            }
+        });
+
+        // Trigger scenarios
+        this.scenarioManager.getScenarios().forEach((scenario) => {
+            if (scenario.DevicesListScenarioForm) {
+                if (scenario.DevicesListScenarioForm.triggerOnDevice && scenario.DevicesListScenarioForm.triggerOnDevice.length > 0) {
+                    let shouldExecuteAction = false;
+                    scenario.DevicesListScenarioForm.triggerOnDevice.forEach((deviceTriggerScenario) => {
+                        if (deviceTriggerScenario.identifier.toString() === id.toString()) {
+                            if (deviceTriggerScenario.status === STATUS_ON && status === INT_STATUS_ON) {
+                                shouldExecuteAction = true;
+                            } else if (deviceTriggerScenario.status === STATUS_OFF && status === INT_STATUS_OFF) {
+                                shouldExecuteAction = true;
+                            } else if (deviceTriggerScenario.status === STATUS_IGNORE) {
+                                shouldExecuteAction = true;
+                            }
+                        }
+                    });
+
+                    if (shouldExecuteAction) {
+                        this.scenarioManager.triggerScenario(scenario);
+                    }
                 }
             }
         });
