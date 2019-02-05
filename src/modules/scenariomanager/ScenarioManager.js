@@ -2,6 +2,7 @@
 const Logger = require("./../../logger/Logger");
 const ScenariosListForm = require("./ScenariosListForm");
 const ScenarioSubActionForm = require("./ScenarioSubActionForm");
+const ScenarioTriggerAfterForm = require("./ScenarioTriggerAfterForm");
 const FormConfiguration = require("./../formconfiguration/FormConfiguration");
 const TimeEventService = require("./../../services/timeeventservice/TimeEventService");
 const ScenarioForm = require("./ScenarioForm");
@@ -10,6 +11,11 @@ const DateUtils = require("./../../utils/DateUtils");
 const sha256 = require("sha256");
 const CONF_KEY = "scenarios";
 const SUB_ACTION_SCHEDULER_KEY = "sub-action";
+const ACTION_SCHEDULER_KEY = "action";
+const DELAY_IMMEDIATELY = "immediately";
+const DELAY_DAYS = "days";
+const DELAY_HOURS = "hours";
+const DELAY_MINUTES = "minutes";
 
 /**
  * This class allows to manage scenarios
@@ -57,6 +63,14 @@ class ScenarioManager {
             });
         });
 
+        this.schedulerService.register(ACTION_SCHEDULER_KEY, (data) => {
+            self.getScenarios().forEach((scenario) => {
+                if (scenario.id === data.scenarioId) {
+                    self.triggerScenario(scenario, true);
+                }
+            });
+        });
+
         this.formConfiguration.setSortFunction((a,b) => a.name.localeCompare(b.name));
     }
 
@@ -70,6 +84,7 @@ class ScenarioManager {
             scenariosName.push(scenario.name);
             scenariosId.push(scenario.id);
         });
+        this.formManager.register(ScenarioTriggerAfterForm.class);
         this.formManager.register(ScenariosListForm.class, scenariosName, scenariosId);
     }
 
@@ -115,28 +130,47 @@ class ScenarioManager {
      * Called when a scenario is triggered
      *
      * @param  {ScenarioForm} scenario A scenario
+     * @param  {boolean} [isScheduled=false] Flag to detect if action should be executed immediately or scheduled
      */
-    triggerScenario(scenario) {
+    triggerScenario(scenario, isScheduled = false) {
         const self = this;
         if (scenario.enabled) {
-            Logger.info("Trigger scenario " + scenario.id);
-            Object.keys(self.registered).forEach((registeredScenarioKey) => {
-                const registeredScenario = this.registered[registeredScenarioKey];
-                if (registeredScenario.triggerCb) {
-                    registeredScenario.triggerCb(scenario);
-                }
-            });
-
-            // Plan sub actions
-            if (scenario.subActions && scenario.subActions.length > 0) {
-                scenario.subActions.forEach((subAction) => {
-                    let delay = parseInt(subAction.delay);
-                    const nextTriggerTimestamp = delay * 60 + DateUtils.class.timestamp();
-                    Logger.info("Scheduling scenario " + subAction.scenario.scenario + " at " + nextTriggerTimestamp);
-                    self.schedulerService.schedule(SUB_ACTION_SCHEDULER_KEY, nextTriggerTimestamp , {scenarioId:subAction.scenario.scenario});
+            if (isScheduled || !scenario.delay || !scenario.delay.unit || (scenario.delay && scenario.delay.unit && scenario.delay.unit === DELAY_IMMEDIATELY)) {
+                Logger.info("Trigger scenario " + scenario.id);
+                Object.keys(self.registered).forEach((registeredScenarioKey) => {
+                    const registeredScenario = this.registered[registeredScenarioKey];
+                    if (registeredScenario.triggerCb) {
+                        registeredScenario.triggerCb(scenario);
+                    }
                 });
 
+                // Plan sub actions
+                if (scenario.subActions && scenario.subActions.length > 0) {
+                    scenario.subActions.forEach((subAction) => {
+                        let delay = parseInt(subAction.delay);
+                        const nextTriggerTimestamp = delay * 60 + DateUtils.class.timestamp();
+                        Logger.info("Scheduling sub scenario " + subAction.scenario.scenario + " at " + nextTriggerTimestamp);
+                        self.schedulerService.schedule(SUB_ACTION_SCHEDULER_KEY, nextTriggerTimestamp , {scenarioId:subAction.scenario.scenario});
+                    });
+
+                }
+            } else {
+                // Plan action
+                const delay = scenario.delay.delay ? parseInt(scenario.delay.delay) : 0;
+                let delta = 0;
+                if (scenario.delay.unit === DELAY_DAYS) {
+                    delta += 60 * 60 * 24 * delay;
+                } else if (scenario.delay.unit === DELAY_HOURS) {
+                    delta += 60 * 60 * delay;
+                } else if (scenario.delay.unit === DELAY_MINUTES) {
+                    delta += 60 * delay;
+                }
+                const nextTriggerTimestamp = delta + DateUtils.class.timestamp();
+                Logger.info("Scheduling scenario " + scenario.id + " at " + nextTriggerTimestamp);
+                self.schedulerService.schedule(ACTION_SCHEDULER_KEY, nextTriggerTimestamp , {scenarioId:scenario.id});
+
             }
+
         }
     }
 

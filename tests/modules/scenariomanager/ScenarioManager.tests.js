@@ -49,9 +49,9 @@ describe("ScenarioManager", function() {
         sinon.spy(core.timeEventService, "register");
         sinon.spy(core.schedulerService, "register");
         scenarioManager = new ScenarioManager.class(confManager, formManager, webServices, timeEventService, schedulerService);
-        expect(core.formManager.register.callCount === 4).to.be.true;
+        expect(core.formManager.register.callCount === 5).to.be.true;
         expect(core.timeEventService.register.calledOnce).to.be.true;
-        expect(core.schedulerService.register.calledOnce).to.be.true;
+        expect(core.schedulerService.register.calledTwice).to.be.true;
         expect(Object.keys(scenarioManager.registered).length).to.be.equal(0);
         core.formManager.register.restore();
         core.timeEventService.register.restore();
@@ -326,6 +326,33 @@ describe("ScenarioManager", function() {
         core.environmentManager.setNight();
         expect(core.deviceManager.switchDevice.calledOnce).to.be.false;
         core.deviceManager.switchDevice.restore();
+    });
+
+    it("triggerScenario should schedule the action", function() {
+        const scenarioManager = new ScenarioManager.class(confManager, formManager, webServices, timeEventService, schedulerService);
+        scenarioManager.formConfiguration.data = [{id:1503304879572, enabled:true, delay:{unit:"minutes", delay:1}}];
+        sinon.stub(schedulerService, "schedule").callsFake(() => {});
+        scenarioManager.triggerScenario(scenarioManager.formConfiguration.data[0]);
+        expect(schedulerService.schedule.calledOnce).to.be.true;
+        schedulerService.schedule.restore();
+    });
+
+    it("triggerScenario should be executed immediately if nothing set", function() {
+        const scenarioManager = new ScenarioManager.class(confManager, formManager, webServices, timeEventService, schedulerService);
+        scenarioManager.formConfiguration.data = [{id:1503304879572, enabled:true}];
+        sinon.stub(schedulerService, "schedule").callsFake(() => {});
+        scenarioManager.triggerScenario(scenarioManager.formConfiguration.data[0]);
+        expect(schedulerService.schedule.notCalled).to.be.true;
+        schedulerService.schedule.restore();
+    });
+
+    it("triggerScenario should be executed immediately if delay is immediately", function() {
+        const scenarioManager = new ScenarioManager.class(confManager, formManager, webServices, timeEventService, schedulerService);
+        scenarioManager.formConfiguration.data = [{id:1503304879572, enabled:true, delay:{unit:"immediately", delay:0}}];
+        sinon.stub(schedulerService, "schedule").callsFake(() => {});
+        scenarioManager.triggerScenario(scenarioManager.formConfiguration.data[0]);
+        expect(schedulerService.schedule.notCalled).to.be.true;
+        schedulerService.schedule.restore();
     });
 
     afterEach(() => {

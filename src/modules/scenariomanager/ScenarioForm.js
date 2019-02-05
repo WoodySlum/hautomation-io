@@ -14,9 +14,10 @@ class ScenarioForm extends FormObject.class {
      * @param  {IconForm} [icon=null]                An icon
      * @param  {TimeScenarioForm} [timeTrigger=null]         The time trigger
      * @param {Array} [subActions=null]         The sub actions
+     * @param {ScenarioTriggerAfterForm} [delay=null]         The delay
      * @returns {ScenarioForm} The instance
      */
-    constructor(id = null, name = null, enabled = null, icon = null, timeTrigger = null, subActions = null) {
+    constructor(id = null, name = null, enabled = null, icon = null, timeTrigger = null, subActions = null, delay = null) {
         super(id);
 
         /**
@@ -44,6 +45,14 @@ class ScenarioForm extends FormObject.class {
         this.icon = icon;
 
         /**
+         * @Property("delay");
+         * @Title("scenario.form.delay");
+         * @Type("object");
+         * @Cl("ScenarioTriggerAfterForm");
+         */
+        this.delay = delay;
+
+        /**
          * @Property("timeTrigger");
          * @Title("scenario.form.time.trigger");
          * @Type("objects");
@@ -67,7 +76,7 @@ class ScenarioForm extends FormObject.class {
      * @returns {ScenarioForm}      A form object
      */
     json(data) {
-        return new ScenarioForm(data.id, data.name, data.enabled, data.icon, data.timeTrigger, data.subActions);
+        return new ScenarioForm(data.id, data.name, data.enabled, data.icon, data.timeTrigger, data.subActions, data.delay);
     }
 }
 
