@@ -99,7 +99,7 @@
         "pkg": "^4.3",
         "remove-console-logs": "^0.1",
         "resolve-options": "^1.1",
-        "sinon": "^2.4",
+        "sinon": "^7.2",
         "nan": "^2.11"
     },
     "dependencies": {
