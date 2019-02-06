@@ -124,6 +124,7 @@
         "huejay": "^1.8",
         "is-running": "^2.1",
         "isomorphic-fetch": "^2.2",
+        "mac-scanner": "^1.1",
         "md5-file": "^3.2",
         "mjpeg-proxy": "^0.2",
         "moment": "^2.22",

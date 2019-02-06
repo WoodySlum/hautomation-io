@@ -435,7 +435,12 @@ class FormManager {
                         });
                         if (!foundDependencyWithSameCriteria) {
                             const dependencyForm = {};
-                            dependencyForm[meta.DependencyField] = {enum:meta.DependencyValues.split(",")};
+                            if (cl[meta.DependencyValues]) {
+                                dependencyForm[meta.DependencyField] = {enum:cl[meta.DependencyValues](...inject)};
+                            } else {
+                                dependencyForm[meta.DependencyField] = {enum:meta.DependencyValues.split(",")};
+                            }
+
                             dependencyForm[prop] = schemaPropertiesProp;
                             schema.dependencies[meta.DependencyField].oneOf.push({
                                 properties: dependencyForm

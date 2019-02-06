@@ -19,7 +19,7 @@ describe("EnvironmentManager", function() {
         sinon.spy(core.dashboardManager, "registerTile");
         const environmentManager = new EnvironmentManager.class({home:{foo:"bar"}}, core.confManager, core.formManager, core.webServices, core.dashboardManager, core.translateManager, core.scenarioManager, 0, 0, core.installationManager, core.timeEventService);
         expect(core.confManager.readFile.calledOnce).to.be.true;
-        expect(core.formManager.register.calledTwice).to.be.true;
+        expect(core.formManager.register.calledThrice).to.be.true;
         expect(core.dashboardManager.registerTile.calledOnce).to.be.true;
         expect(environmentManager.formConfiguration.data).to.be.not.null;
         expect(Object.keys(environmentManager.formConfiguration.data).length).to.be.equal(0);

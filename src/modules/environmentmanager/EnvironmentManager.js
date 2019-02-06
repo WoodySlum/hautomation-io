@@ -5,6 +5,8 @@ const fs = require("fs-extra");
 const https = require("https");
 const timezone = require("node-google-timezone");
 const crypto = require("crypto");
+const { MacScanner } = require("mac-scanner");
+const dns = require("dns");
 const Logger = require("./../../logger/Logger");
 const FormConfiguration = require("./../formconfiguration/FormConfiguration");
 const EnvironmentForm = require("./EnvironmentForm");
@@ -16,12 +18,15 @@ const Authentication = require("./../authentication/Authentication");
 const APIResponse = require("./../../services/webservices/APIResponse");
 const TimeEventService = require("./../../services/timeeventservice/TimeEventService");
 const HautomationRunnerConstants = require("./../../../HautomationRunnerConstants");
+const IpScanForm = require("./IpScanForm");
 const ROUTE_APP_ENVIRONMENT_INFORMATION = "/environment/app/get/";
 const ROUTE_APP_SET_CONFIGURATION = "/environment/conf/set/";
 const ROUTE_APP_GET_CONFIGURATION = "/environment/conf/get/";
 const MAIN_CONFIG_PATH = "./data/config.json";
 const DEBIAN_REPOSITORY = "https://deb.hautomation-io.com/";
 const DEBIAN_REPOSITORY_LAST_VERSION = "dists/trusty/main/binary-armhf/Packages";
+const SCAN_IP_CHANGES = "scan-ip-change";
+const SCAN_IP_UPDATE = "scan-ip-update";
 
 /**
  * This class allows to manage house environment
@@ -44,10 +49,11 @@ class EnvironmentManager {
      * @param  {TimeEventService} timeEventService    The time event service
      * @param  {EventEmitter} eventBus    The global event bus
      * @param  {MessageManager} messageManager    The message manager
+     * @param  {string} eventStop    The stop event (broadcast identifier)
      *
      * @returns {EnvironmentManager}              The instance
      */
-    constructor(appConfiguration, confManager, formManager, webServices, dashboardManager, translateManager, scenarioManager, version, hash, installationManager, timeEventService, eventBus, messageManager) {
+    constructor(appConfiguration, confManager, formManager, webServices, dashboardManager, translateManager, scenarioManager, version, hash, installationManager, timeEventService, eventBus, messageManager, eventStop) {
         this.appConfiguration = appConfiguration;
         this.formConfiguration = new FormConfiguration.class(confManager, formManager, webServices, "environment", false, EnvironmentForm.class);
         this.dashboardManager = dashboardManager;
@@ -65,9 +71,12 @@ class EnvironmentManager {
         this.installationManager = installationManager;
         this.timeEventService = timeEventService;
         this.messageManager = messageManager;
+        this.eventStop = eventStop;
+        this.scannedIps = [];
         webServices.registerAPI(this, WebServices.GET, ":" + ROUTE_APP_ENVIRONMENT_INFORMATION, Authentication.AUTH_USAGE_LEVEL);
         webServices.registerAPI(this, WebServices.POST, ":" + ROUTE_APP_SET_CONFIGURATION, Authentication.AUTH_ADMIN_LEVEL);
         webServices.registerAPI(this, WebServices.GET, ":" + ROUTE_APP_GET_CONFIGURATION, Authentication.AUTH_ADMIN_LEVEL);
+        this.registerIpScanForm();
 
         this.timeEventService.register((self) => {
             self.updateCore();
@@ -77,6 +86,8 @@ class EnvironmentManager {
         if (!process.env.TEST) {
             this.setTimezone(this.appConfiguration);
         }
+
+        this.startIpScan();
     }
 
     /**
@@ -534,6 +545,89 @@ class EnvironmentManager {
 
         return macAddress;
     }
+
+    /**
+     * Register ip scan form
+     */
+    registerIpScanForm() {
+        const values = [];
+        const valuesWithoutFreetext = [];
+        const labels = [];
+        this.scannedIps.forEach((scannedIp) => {
+            values.push(scannedIp.ip);
+            valuesWithoutFreetext.push(scannedIp.ip);
+            if (scannedIp.name) {
+                labels.push(scannedIp.name + " [" + scannedIp.ip + "]");
+            } else {
+                labels.push(scannedIp.mac + " [" + scannedIp.ip + "]");
+            }
+
+        });
+        values.push("freetext");
+        labels.push(this.translateManager.t("form.ip.scan.freetext.list"));
+        this.formManager.register(IpScanForm.class, values, labels, valuesWithoutFreetext);
+    }
+
+    /**
+     * Start ip scanner service and update ip scan form
+     */
+    startIpScan() {
+        const localIp = this.getLocalIp();
+        if (localIp && !process.env.TEST) {
+            const splitIp = this.getLocalIp().split(".");
+            if (splitIp.length === 4) {
+                const baseIp = splitIp[0] + "." + splitIp[1] + "."+ splitIp[2];
+                const config = {
+                    debug: false,
+                    initial: true,
+                    network: baseIp + ".1/24",
+                    concurrency: 50, //amount of ips that are pinged in parallel
+                    scanTimeout: 15000 //runs scan every 30 seconds (+ time it takes to execute 250 ips ~ 5 secs)
+                };
+                const scanner = new MacScanner(config);
+                scanner.start();
+
+                scanner.on("error", (error) => {
+                    Logger.err(error.message);
+                });
+                scanner.on("scanned", (availableHosts) => {
+                    Logger.verbose("New ip scanned received");
+                    this.scannedIps = availableHosts;
+                    let counter = availableHosts.length;
+                    availableHosts.forEach((availableHost) => {
+                        dns.reverse(availableHost.ip, (err, domains) => {
+                            if (!err && domains && domains.length > 0) {
+                                for (let i = 0 ; i < this.scannedIps.length ; i++) {
+                                    if (this.scannedIps[i].ip === availableHost.ip) {
+                                        this.scannedIps[i].name = domains[0];
+                                    }
+                                }
+                            }
+                            counter--;
+                            if (counter <= 0) {
+                                this.registerIpScanForm();
+                                this.eventBus.emit(SCAN_IP_UPDATE, {scannedIp:this.scannedIps});
+                            }
+                        });
+                    });
+                });
+
+                scanner.on("entered", (target) => {
+                    this.eventBus.emit(SCAN_IP_CHANGES, {scannedIp:this.scannedIps, target:target});
+                });
+
+                scanner.on("left", (target) => {
+                    this.eventBus.emit(SCAN_IP_CHANGES, {scannedIp:this.scannedIps, target:target});
+                });
+
+                this.eventBus.on(this.eventStop, () => {
+                    scanner.stop();
+                    scanner.close();
+                });
+            }
+
+        }
+    }
 }
 
-module.exports = {class:EnvironmentManager};
+module.exports = {class:EnvironmentManager, SCAN_IP_CHANGES:SCAN_IP_CHANGES, SCAN_IP_UPDATE:SCAN_IP_UPDATE};

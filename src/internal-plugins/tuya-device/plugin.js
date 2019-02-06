@@ -44,10 +44,9 @@ function loaded(api) {
 
             /**
              * @Property("tuyaIp");
-             * @Type("string");
-             * @Title("tuya.device.ip");
+             * @Type("object");
+             * @Cl("IpScanForm");
              * @Required(true);
-             * @Regexp("[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}");
              */
             this.tuyaIp = tuyaIp;
         }
@@ -87,11 +86,12 @@ function loaded(api) {
                     // let hasFailed = false;
                     for (let i = 0 ; i < formData.length ; i++) {
                         const tuyaConfig = formData[i];
-                        if (tuyaConfig && tuyaConfig.tuyaId && tuyaConfig.tuyaKey && tuyaConfig.tuyaIp) {
+                        if (tuyaConfig && tuyaConfig.tuyaId && tuyaConfig.tuyaKey && tuyaConfig.tuyaIp && tuyaConfig.tuyaIp.ip) {
+                            console.log(tuyaConfig);
                             const device = new TuyAPI({
                                 id: tuyaConfig.tuyaId,
                                 key: tuyaConfig.tuyaKey,
-                                ip: tuyaConfig.tuyaIp});
+                                ip: (tuyaConfig.tuyaIp.ip === "freetext") ? tuyaConfig.tuyaIp.freetext : tuyaConfig.tuyaIp.ip});
 
                             device.set({set: ((deviceStatus.getStatus() === api.deviceAPI.constants().INT_STATUS_ON) ? true : false)}).then((success) => {
                                 if (!success) {
@@ -134,8 +134,10 @@ function loaded(api) {
                 if (device && device.TuyaDeviceForm) {
                     const promises = [];
                     for (let i = 0 ; i < device.TuyaDeviceForm.length ; i++) {
-                        const tuyaDevice = new TuyAPI({id: device.TuyaDeviceForm[i].tuyaId, key: device.TuyaDeviceForm[i].tuyaKey, ip: device.TuyaDeviceForm[i].tuyaIp});
-                        promises.push(tuyaDevice.get());
+                        if (device.TuyaDeviceForm[i] && device.TuyaDeviceForm[i].tuyaId && device.TuyaDeviceForm[i].tuyaKey && device.TuyaDeviceForm[i].tuyaIp && device.TuyaDeviceForm[i].tuyaIp.ip) {
+                            const tuyaDevice = new TuyAPI({id: device.TuyaDeviceForm[i].tuyaId, key: device.TuyaDeviceForm[i].tuyaKey, ip: (device.TuyaDeviceForm[i].tuyaIp.ip === "freetext") ? device.TuyaDeviceForm[i].tuyaIp.freetext : device.TuyaDeviceForm[i].tuyaIp.ip});
+                            promises.push(tuyaDevice.get());
+                        }
                     }
 
                     Promise.all(promises).then((statuses) => {

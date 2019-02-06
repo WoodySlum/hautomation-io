@@ -1,5 +1,7 @@
 "use strict";
 const PrivateProperties = require("./../PrivateProperties");
+const Cleaner = require("./../../../utils/Cleaner");
+const EnvironmentManager = require("./../../environmentmanager/EnvironmentManager");
 
 /**
  * Public API for home environement
@@ -96,6 +98,24 @@ class EnvironmentAPI {
      */
     getFullHautomationId() {
         return PrivateProperties.oprivate(this).environmentManager.getFullHautomationId();
+    }
+
+    /**
+     * Get the list of ips and mac address of local network
+     *
+     * @returns {Array} List of scanned ip on local network
+     */
+    getScannedIp() {
+        return PrivateProperties.oprivate(this).environmentManager.scannedIps;
+    }
+
+    /**
+     * Expose a list of constants (status)
+     *
+     * @returns {Object} Constants
+     */
+    constants() {
+        return Cleaner.class.exportConstants(EnvironmentManager);
     }
 }
 
