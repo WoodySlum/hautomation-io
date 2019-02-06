@@ -159,7 +159,7 @@ class ConfManager {
             // Fix #55
             // Encrypt configuration data
             try {
-                const cipher = crypto.createCipher(ENCRYPTION_ALGORITHM, String.fromCharCode.apply(null, ENCRYPTION_KEY));
+                const cipher = crypto.createCipheriv(ENCRYPTION_ALGORITHM, String.fromCharCode.apply(null, ENCRYPTION_KEY));
                 let crypted = cipher.update(context.toBeSaved[key], "utf8", "hex");
                 crypted += cipher.final("hex");
                 context.toBeSaved[key] = crypted;
