@@ -29,8 +29,8 @@ function loaded(api) {
 
             /**
              * @Property("ip");
-             * @Type("string");
-             * @Title("hue.settings.ip");
+             * @Type("object");
+             * @Cl("IpScanForm");
              */
             this.ip = ip;
 
@@ -135,9 +135,9 @@ function loaded(api) {
                 if (!data.username || data.username.length === 0) {
                     huejay.discover()
                     .then(bridges => {
-                        if (data.ip && data.ip.length > 0) {
+                        if (data.ip && data.ip.ip) {
                             this.client = new huejay.Client({
-                                host:     data.ip,
+                                host:     (data.ip.ip === "freetext") ? data.ip.freetext : data.ip.ip,
                                 username: data.username
                             });
                         } else {
@@ -327,9 +327,9 @@ function loaded(api) {
             if (data && data.username) {
                 huejay.discover()
                 .then(bridges => {
-                    if (data.ip && data.ip.length > 0) {
+                    if (data.ip && data.ip.ip) {
                         this.client = new huejay.Client({
-                            host:     data.ip,
+                            host:     (data.ip.ip === "freetext") ? data.ip.freetext : data.ip.ip,
                             username: data.username
                         });
                     } else {
