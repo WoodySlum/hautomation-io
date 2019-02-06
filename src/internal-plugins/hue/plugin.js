@@ -135,7 +135,7 @@ function loaded(api) {
                 if (!data.username || data.username.length === 0) {
                     huejay.discover()
                     .then(bridges => {
-                        if (data.ip && data.ip.ip) {
+                        if (data.ip && data.ip.ip && (data.ip.ip != "freetext" || (data.ip.ip === "freetext" && data.ip.freetext.length > 0))) {
                             this.client = new huejay.Client({
                                 host:     (data.ip.ip === "freetext") ? data.ip.freetext : data.ip.ip,
                                 username: data.username
@@ -327,7 +327,7 @@ function loaded(api) {
             if (data && data.username) {
                 huejay.discover()
                 .then(bridges => {
-                    if (data.ip && data.ip.ip) {
+                    if (data.ip && data.ip.ip && (data.ip.ip != "freetext" || (data.ip.ip === "freetext" && data.ip.freetext.length > 0))) {
                         this.client = new huejay.Client({
                             host:     (data.ip.ip === "freetext") ? data.ip.freetext : data.ip.ip,
                             username: data.username
