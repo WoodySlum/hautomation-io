@@ -167,7 +167,7 @@ function loaded(api) {
 
                             if (currentDeviceStatus != isOn) {
                                 device.status = isOn;
-                                context.api.deviceAPI.saveDevice(device);
+                                context.api.deviceAPI.switchDeviceWithDevice(device);
                             }
                         });
 
@@ -175,7 +175,6 @@ function loaded(api) {
                     });
                 }
             }).catch((e) => {
-                context.api.exported.Logger.warn("Communication issue with device");
                 context.api.exported.Logger.warn(e.message);
             });
         }

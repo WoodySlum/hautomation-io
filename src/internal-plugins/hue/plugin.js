@@ -220,28 +220,37 @@ function loaded(api) {
                 context = this;
             }
 
-            context.hueDevices.forEach((hueDevice) => {
-                context.api.deviceAPI.getDevices().forEach((device) => {
-                    if (device.HueDeviceForm && device.HueDeviceForm.length > 0) {
+            context.api.deviceAPI.getDevices().forEach((device) => {
+
+                if (device.HueDeviceForm && device.HueDeviceForm.length > 0) {
+                    let isOn = context.api.deviceAPI.constants().INT_STATUS_OFF;
+                    context.hueDevices.forEach((hueDevice) => {
                         device.HueDeviceForm.forEach((subd) => {
                             if ( subd.device.toString() === hueDevice.attributes.attributes.id.toString()) {
                                 const state = hueDevice.state.attributes;
-                                const status = state.on ? context.api.deviceAPI.constants().INT_STATUS_ON : context.api.deviceAPI.constants().INT_STATUS_OFF;
                                 const brightness = parseFloat(Math.round(state.bri / 254 * 10) / 10);
                                 const color = colorutil.rgb.to.hex(colorutil.hsv.to.rgb({h: (Math.round((state.hue / 65534) * colorRound) / colorRound), s: (Math.round((state.sat / 254) * colorRound) / colorRound), v: 1, a: 1})).toUpperCase().replace("#", "");
                                 const colorTemperature = parseFloat(Math.round(((state.ct - 153) / 500) * 100) / 100);
-                                if (status != device.status || brightness != device.brightness || color != device.color || colorTemperature != device.colorTemperature) {
-                                    device.status = status;
+
+                                if (state.on) {
+                                    isOn = context.api.deviceAPI.constants().INT_STATUS_ON;
+                                }
+
+                                if (brightness != device.brightness || color != device.color || colorTemperature != device.colorTemperature) {
                                     device.brightness = brightness;
                                     device.color = color;
                                     device.colorTemperature = colorTemperature;
-
                                     context.api.deviceAPI.saveDevice(device);
                                 }
                             }
                         });
+                    });
+
+                    if (device.status != isOn) {
+                        device.status = isOn;
+                        context.api.deviceAPI.switchDeviceWithDevice(device);
                     }
-                });
+                }
             });
         }
 
