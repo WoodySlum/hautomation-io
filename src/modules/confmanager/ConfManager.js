@@ -11,6 +11,7 @@ const ERROR_NO_JSON_METHOD = "ERROR_NO_JSON_METHOD";
 const DATA_NOT_FOUND      = "DATA_NOT_FOUND";
 //"RjG?#5-i.:>f5.3i@&'R9PG&Sz'd29"
 const ENCRYPTION_KEY = [0, 82, 0, 106, 0, 71, 0, 63, 0, 35, 0, 53, 0, 45, 0, 105, 0, 46, 0, 58, 0, 62, 0, 102, 0, 53, 0, 46, 0, 51, 0, 105, 0, 64, 0, 38, 0, 39, 0, 82, 0, 57, 0, 80, 0, 71, 0, 38, 0, 83, 0, 122, 0, 39, 0, 100, 0, 50, 0, 57];
+const IV = new Buffer("gbyEX=H(STQ8:5K/");
 const ENCRYPTION_ALGORITHM = "aes-256-ctr";
 const CONF_FILE_EXTENSION = ".json";
 
@@ -103,7 +104,7 @@ class ConfManager {
             if (!validJson) {
                 Logger.info("Cannot read file " + jsonPath + ". Try to uncrypt.");
                 try {
-                    const decipher = crypto.createDecipheriv(ENCRYPTION_ALGORITHM, crypto.createHash("sha256").update(String.fromCharCode.apply(null, ENCRYPTION_KEY)).digest("base64").substr(0, 32), crypto.randomBytes(16));
+                    const decipher = crypto.createDecipheriv(ENCRYPTION_ALGORITHM, crypto.createHash("sha256").update(String.fromCharCode.apply(null, ENCRYPTION_KEY)).digest("base64").substr(0, 32), IV);
                     let dec = decipher.update(content, "hex", "utf8");
                     dec += decipher.final("utf8");
 
@@ -170,10 +171,10 @@ class ConfManager {
             // Fix #55
             // Encrypt configuration data
             try {
-                const cipher = crypto.createCipheriv(ENCRYPTION_ALGORITHM, crypto.createHash("sha256").update(String.fromCharCode.apply(null, ENCRYPTION_KEY)).digest("base64").substr(0, 32), crypto.randomBytes(16));
-                let crypted = cipher.update("toto", "utf8", "hex");
+                const cipher = crypto.createCipheriv(ENCRYPTION_ALGORITHM, crypto.createHash("sha256").update(String.fromCharCode.apply(null, ENCRYPTION_KEY)).digest("base64").substr(0, 32), IV);
+                let crypted = cipher.update(context.toBeSaved[key], "utf8", "hex");
                 crypted += cipher.final("hex");
-                // context.toBeSaved[key] = crypted;
+                context.toBeSaved[key] = crypted;
             } catch(e) {
                 Logger.err(e.message);
             }
