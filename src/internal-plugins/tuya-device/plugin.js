@@ -128,36 +128,55 @@ function loaded(api) {
             if (!context) {
                 context = this;
             }
-
+            const listUpdate = {};
+            const promises = [];
             context.api.deviceAPI.getDevices().forEach((device) => {
                 if (device && device.TuyaDeviceForm) {
-                    const promises = [];
                     for (let i = 0 ; i < device.TuyaDeviceForm.length ; i++) {
                         if (device.TuyaDeviceForm[i] && device.TuyaDeviceForm[i].tuyaId && device.TuyaDeviceForm[i].tuyaKey && device.TuyaDeviceForm[i].tuyaIp && device.TuyaDeviceForm[i].tuyaIp.ip) {
-                            const tuyaDevice = new TuyAPI({id: device.TuyaDeviceForm[i].tuyaId, key: device.TuyaDeviceForm[i].tuyaKey, ip: (device.TuyaDeviceForm[i].tuyaIp.ip === "freetext") ? device.TuyaDeviceForm[i].tuyaIp.freetext : device.TuyaDeviceForm[i].tuyaIp.ip});
-                            promises.push(tuyaDevice.get());
+                            if (listUpdate[device.TuyaDeviceForm[i].tuyaId]) {
+                                listUpdate[device.TuyaDeviceForm[i].tuyaId].devices.push(device);
+                            } else {
+                                listUpdate[device.TuyaDeviceForm[i].tuyaId] = {
+                                    devices:[device],
+                                    formData:device.TuyaDeviceForm[i]
+                                };
+                            }
                         }
                     }
+                }
+            });
 
-                    Promise.all(promises).then((statuses) => {
-                        const currentDeviceStatus = device.status;
-                        let isOn = context.api.deviceAPI.constants().INT_STATUS_OFF;
-                        statuses.forEach((status) => {
+            Object.keys(listUpdate).forEach((listUpdateKey) => {
+                const tuyaDevice = new TuyAPI({id: listUpdate[listUpdateKey].formData.tuyaId, key: listUpdate[listUpdateKey].formData.tuyaKey, ip: (listUpdate[listUpdateKey].formData.tuyaIp.ip === "freetext") ? listUpdate[listUpdateKey].formData.tuyaIp.freetext : listUpdate[listUpdateKey].formData.tuyaIp.ip}).get();
+                promises.push(tuyaDevice);
+            });
+
+            Promise.all(promises).then((statuses) => {
+                if (statuses.length === Object.keys(listUpdate).length) {
+                    let i = 0;
+                    Object.keys(listUpdate).forEach((listUpdateKey) => {
+                        const status = statuses[i];
+                        // Update devices
+                        listUpdate[listUpdateKey].devices.forEach((device) => {
+                            const currentDeviceStatus = device.status;
+                            let isOn = context.api.deviceAPI.constants().INT_STATUS_OFF;
                             if (status) {
                                 isOn = context.api.deviceAPI.constants().INT_STATUS_ON;
                             }
+
+                            if (currentDeviceStatus != isOn) {
+                                device.status = isOn;
+                                context.api.deviceAPI.saveDevice(device);
+                            }
                         });
 
-                        if (currentDeviceStatus != isOn) {
-                            device.status = isOn;
-                        }
-
-                        context.api.deviceAPI.saveDevice(device);
-                    }).catch((e) => {
-                        api.exported.Logger.warn("Communication issue with device " + device.name);
-                        api.exported.Logger.warn(e.message);
+                        i++;
                     });
                 }
+            }).catch((e) => {
+                context.api.exported.Logger.warn("Communication issue with device");
+                context.api.exported.Logger.warn(e.message);
             });
         }
     }
