@@ -87,7 +87,6 @@ function loaded(api) {
                     for (let i = 0 ; i < formData.length ; i++) {
                         const tuyaConfig = formData[i];
                         if (tuyaConfig && tuyaConfig.tuyaId && tuyaConfig.tuyaKey && tuyaConfig.tuyaIp && tuyaConfig.tuyaIp.ip) {
-                            console.log(tuyaConfig);
                             const device = new TuyAPI({
                                 id: tuyaConfig.tuyaId,
                                 key: tuyaConfig.tuyaKey,

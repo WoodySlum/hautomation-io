@@ -58,8 +58,11 @@ class GatewayManager {
         const self = this;
 
         this.eventBus.on(readyEvent, () => {
-            self.bootMode = BOOT_MODE_READY;
-            self.transmit();
+            setTimeout(() => {
+                self.bootMode = BOOT_MODE_READY;
+                self.transmit();
+            }, 2000);
+
         });
 
         this.eventBus.on(HautomationRunnerConstants.RESTART, () => {

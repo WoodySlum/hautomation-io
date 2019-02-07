@@ -102,12 +102,23 @@ class ConfManager {
             // If content cannot be read, try to uncrypt
             if (!validJson) {
                 Logger.info("Cannot read file " + jsonPath + ". Try to uncrypt.");
-                const decipher = crypto.createDecipher(ENCRYPTION_ALGORITHM, String.fromCharCode.apply(null, ENCRYPTION_KEY));
                 try {
+                    const decipher = crypto.createDecipheriv(ENCRYPTION_ALGORITHM, crypto.createHash("sha256").update(String.fromCharCode.apply(null, ENCRYPTION_KEY)).digest("base64").substr(0, 32), crypto.randomBytes(16));
                     let dec = decipher.update(content, "hex", "utf8");
                     dec += decipher.final("utf8");
-                    content = dec;
-                    validJson = t.isJsonValid(content);
+
+                    validJson = t.isJsonValid(dec);
+                    if (!validJson) {
+                        const decipherDeprecated = crypto.createDecipher(ENCRYPTION_ALGORITHM, String.fromCharCode.apply(null, ENCRYPTION_KEY));
+                        dec = decipherDeprecated.update(content, "hex", "utf8");
+                        dec += decipherDeprecated.final("utf8");
+                        validJson = t.isJsonValid(dec);
+                        if (validJson) {
+                            content = dec;
+                        }
+                    } else {
+                        content = dec;
+                    }
                 } catch(e) {
                     Logger.err(e.message);
                 }
@@ -159,10 +170,10 @@ class ConfManager {
             // Fix #55
             // Encrypt configuration data
             try {
-                const cipher = crypto.createCipheriv(ENCRYPTION_ALGORITHM, String.fromCharCode.apply(null, ENCRYPTION_KEY));
-                let crypted = cipher.update(context.toBeSaved[key], "utf8", "hex");
+                const cipher = crypto.createCipheriv(ENCRYPTION_ALGORITHM, crypto.createHash("sha256").update(String.fromCharCode.apply(null, ENCRYPTION_KEY)).digest("base64").substr(0, 32), crypto.randomBytes(16));
+                let crypted = cipher.update("toto", "utf8", "hex");
                 crypted += cipher.final("hex");
-                context.toBeSaved[key] = crypted;
+                // context.toBeSaved[key] = crypted;
             } catch(e) {
                 Logger.err(e.message);
             }

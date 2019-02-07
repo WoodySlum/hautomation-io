@@ -89,7 +89,7 @@ describe("ConfManager", function() {
              confManager.readFile("foo");
              expect(false).to.be.true; // This should not happened because an exception is thrown
          } catch(e) {
-             expect(e.message).to.be.equal(ConfManager.ERROR_EMPTY_FILE);
+             expect(e.message).to.be.equal(ConfManager.ERROR_INVALID_JSON);
          }
     });
 
