@@ -77,7 +77,7 @@ function loaded(api) {
             this.api = api;
             this.api.timeEventAPI.register((self) => {
                 api.exported.Logger.verbose("Synchronizing tuya devices");
-                // self.updateLocalState(self);
+                self.updateLocalState(self);
             }, this, api.timeEventAPI.constants().EVERY_MINUTES);
 
             this.api.deviceAPI.addForm("tuyaDevice", TuyaDeviceForm, "tuya.form.title", true);
@@ -153,7 +153,7 @@ function loaded(api) {
             });
 
             Promise.all(promises).then((statuses) => {
-                if (statuses.length === Object.keys(listUpdate).length) {
+                if (statuses.length === Object.keys(listUpdate).length && typeof statuses[i] == typeof true) {
                     let i = 0;
                     Object.keys(listUpdate).forEach((listUpdateKey) => {
                         const status = statuses[i];
