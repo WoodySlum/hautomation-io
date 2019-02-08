@@ -11,6 +11,7 @@ const DevicesListScenarioTriggerForm = require("./DevicesListScenarioTriggerForm
 const DevicesListScenarioForm = require("./DevicesListScenarioForm");
 const Icons = require("./../../utils/Icons");
 const DeviceStatus = require("./DeviceStatus");
+const EnvironmentManager = require("./../environmentmanager/EnvironmentManager");
 
 const DEVICE_TYPE_LIGHT = "light";
 const DEVICE_TYPE_LIGHT_DIMMABLE = "light-dimmable";
@@ -157,6 +158,16 @@ class DeviceManager {
         // Fix #56 - Refactor devices and radio
         // The radio manager will add the good radio form instead of adding statically
         this.radioManager.registerDeviceManagerForm(this);
+
+        // Restore when power outage has occured
+        this.eventBus.on(EnvironmentManager.EVENT_POWER_OUTAGE, () => {
+            Logger.info("Restoring devices states due to power outage alert");
+            self.getDevices().forEach((device) => {
+                if (device.powerOutageRestore) {
+                    self.switchDeviceWithDevice(device);
+                }
+            });
+        });
     }
 
     /**
@@ -357,6 +368,7 @@ class DeviceManager {
 
         this.formConfiguration.getDataCopy().forEach((device) => {
             if (parseInt(device.id) === parseInt(id)) {
+                Logger.info("Switch device " + device.name + " (" + device.id + "). Status (" + status + ") / Brightness (" + brightness + ") / Color (" + color + ") / ColorTemperature (" + colorTemperature + ")");
                 // Check for day and night mode
                 if (!device.worksOnlyOnDayNight
                     || (device.worksOnlyOnDayNight === 1)

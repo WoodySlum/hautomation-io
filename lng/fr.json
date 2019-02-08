@@ -40,6 +40,7 @@
     "device.form.worksOnlyOnDayNight.both": "Jour et nuit",
     "device.form.worksOnlyOnDayNight.day": "Seulement la journée",
     "device.form.worksOnlyOnDayNight.night": "Seulement la nuit",
+    "device.form.power.outage.restore": "Restaurer l'état après une coupure de courant",
     "icon.form.name": "Icône",
     "radio.form.module": "Module",
     "radio.form.protocol": "Protocole",
@@ -125,5 +126,6 @@
     "devices.list.scenario.trigger.devices": "Déclencher ce scénario lorsqu'un périphérique change d'état",
     "form.ip.scan": "Adresse IP",
     "form.ip.scan.freetext.list": "Autre",
-    "form.ip.scan.freetext": "Saisissez manuellement une adresse IP ou un domaine"
+    "form.ip.scan.freetext": "Saisissez manuellement une adresse IP ou un domaine",
+    "power.outage.alert": "Une coupure de courant d'une durée de %@ minutes s'est produite"
 }

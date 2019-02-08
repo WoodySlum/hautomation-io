@@ -153,23 +153,25 @@ function loaded(api) {
             });
 
             Promise.all(promises).then((statuses) => {
-                if (statuses.length === Object.keys(listUpdate).length && typeof statuses[i] == typeof true) {
+                if (statuses.length === Object.keys(listUpdate).length) {
                     let i = 0;
                     Object.keys(listUpdate).forEach((listUpdateKey) => {
                         const status = statuses[i];
-                        // Update devices
-                        listUpdate[listUpdateKey].devices.forEach((device) => {
-                            const currentDeviceStatus = device.status;
-                            let isOn = context.api.deviceAPI.constants().INT_STATUS_OFF;
-                            if (status) {
-                                isOn = context.api.deviceAPI.constants().INT_STATUS_ON;
-                            }
+                        if (typeof status == typeof true) {
+                            // Update devices
+                            listUpdate[listUpdateKey].devices.forEach((device) => {
+                                const currentDeviceStatus = device.status;
+                                let isOn = context.api.deviceAPI.constants().INT_STATUS_OFF;
+                                if (status) {
+                                    isOn = context.api.deviceAPI.constants().INT_STATUS_ON;
+                                }
 
-                            if (currentDeviceStatus != isOn) {
-                                device.status = isOn;
-                                context.api.deviceAPI.switchDeviceWithDevice(device);
-                            }
-                        });
+                                if (currentDeviceStatus != isOn) {
+                                    device.status = isOn;
+                                    context.api.deviceAPI.switchDeviceWithDevice(device);
+                                }
+                            });
+                        }
 
                         i++;
                     });

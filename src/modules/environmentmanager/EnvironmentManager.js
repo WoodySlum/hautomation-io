@@ -19,14 +19,18 @@ const APIResponse = require("./../../services/webservices/APIResponse");
 const TimeEventService = require("./../../services/timeeventservice/TimeEventService");
 const HautomationRunnerConstants = require("./../../../HautomationRunnerConstants");
 const IpScanForm = require("./IpScanForm");
+const DateUtils = require("../../utils/DateUtils");
 const ROUTE_APP_ENVIRONMENT_INFORMATION = "/environment/app/get/";
 const ROUTE_APP_SET_CONFIGURATION = "/environment/conf/set/";
 const ROUTE_APP_GET_CONFIGURATION = "/environment/conf/get/";
 const MAIN_CONFIG_PATH = "./data/config.json";
 const DEBIAN_REPOSITORY = "https://deb.hautomation-io.com/";
 const DEBIAN_REPOSITORY_LAST_VERSION = "dists/trusty/main/binary-armhf/Packages";
-const SCAN_IP_CHANGES = "scan-ip-change";
-const SCAN_IP_UPDATE = "scan-ip-update";
+const EVENT_SCAN_IP_CHANGES = "scan-ip-change";
+const EVENT_SCAN_IP_UPDATE = "scan-ip-update";
+const UPTIME_FILE = ".uptime";
+const EVENT_POWER_OUTAGE = "power-outage";
+const POWER_OUTAGE_DELAY = 10 * 1000;
 
 /**
  * This class allows to manage house environment
@@ -50,10 +54,11 @@ class EnvironmentManager {
      * @param  {EventEmitter} eventBus    The global event bus
      * @param  {MessageManager} messageManager    The message manager
      * @param  {string} eventStop    The stop event (broadcast identifier)
+     * @param  {string} eventReady    The ready event (broadcast identifier)
      *
      * @returns {EnvironmentManager}              The instance
      */
-    constructor(appConfiguration, confManager, formManager, webServices, dashboardManager, translateManager, scenarioManager, version, hash, installationManager, timeEventService, eventBus, messageManager, eventStop) {
+    constructor(appConfiguration, confManager, formManager, webServices, dashboardManager, translateManager, scenarioManager, version, hash, installationManager, timeEventService, eventBus, messageManager, eventStop, eventReady) {
         this.appConfiguration = appConfiguration;
         this.formConfiguration = new FormConfiguration.class(confManager, formManager, webServices, "environment", false, EnvironmentForm.class);
         this.dashboardManager = dashboardManager;
@@ -72,7 +77,9 @@ class EnvironmentManager {
         this.timeEventService = timeEventService;
         this.messageManager = messageManager;
         this.eventStop = eventStop;
+        this.eventReady = eventReady;
         this.scannedIps = [];
+        this.manageUptimeFile();
         webServices.registerAPI(this, WebServices.GET, ":" + ROUTE_APP_ENVIRONMENT_INFORMATION, Authentication.AUTH_USAGE_LEVEL);
         webServices.registerAPI(this, WebServices.POST, ":" + ROUTE_APP_SET_CONFIGURATION, Authentication.AUTH_ADMIN_LEVEL);
         webServices.registerAPI(this, WebServices.GET, ":" + ROUTE_APP_GET_CONFIGURATION, Authentication.AUTH_ADMIN_LEVEL);
@@ -606,18 +613,18 @@ class EnvironmentManager {
                             counter--;
                             if (counter <= 0) {
                                 this.registerIpScanForm();
-                                this.eventBus.emit(SCAN_IP_UPDATE, {scannedIp:this.scannedIps});
+                                this.eventBus.emit(EVENT_SCAN_IP_UPDATE, {scannedIp:this.scannedIps});
                             }
                         });
                     });
                 });
 
                 scanner.on("entered", (target) => {
-                    this.eventBus.emit(SCAN_IP_CHANGES, {scannedIp:this.scannedIps, target:target});
+                    this.eventBus.emit(EVENT_SCAN_IP_CHANGES, {scannedIp:this.scannedIps, target:target});
                 });
 
                 scanner.on("left", (target) => {
-                    this.eventBus.emit(SCAN_IP_CHANGES, {scannedIp:this.scannedIps, target:target});
+                    this.eventBus.emit(EVENT_SCAN_IP_CHANGES, {scannedIp:this.scannedIps, target:target});
                 });
 
                 this.eventBus.on(this.eventStop, () => {
@@ -628,6 +635,33 @@ class EnvironmentManager {
 
         }
     }
+
+    /**
+     * Manage the uptime file
+     */
+    manageUptimeFile() {
+        if (!process.env.TEST) {
+            const uptimeFile = this.appConfiguration.configurationPath + UPTIME_FILE;
+
+            if (fs.existsSync(uptimeFile)) {
+                const powerOutageDuration = parseInt((DateUtils.class.timestamp() - parseInt(fs.readFileSync(uptimeFile))) / 60); // In minutes
+                setTimeout((self) => {
+                    self.messageManager.sendMessage("*", self.translateManager.t("power.outage.alert", powerOutageDuration));
+                    this.eventBus.emit(EVENT_POWER_OUTAGE, {duration:(powerOutageDuration * 60)});
+                }, POWER_OUTAGE_DELAY, this);
+            }
+
+            fs.writeFileSync(uptimeFile, DateUtils.class.timestamp());
+
+            this.timeEventService.register(() => {
+                fs.writeFileSync(uptimeFile, DateUtils.class.timestamp());
+            }, this, TimeEventService.EVERY_MINUTES);
+
+            this.eventBus.on(this.eventStop, () => {
+                fs.unlinkSync(uptimeFile);
+            });
+        }
+    }
 }
 
-module.exports = {class:EnvironmentManager, SCAN_IP_CHANGES:SCAN_IP_CHANGES, SCAN_IP_UPDATE:SCAN_IP_UPDATE};
+module.exports = {class:EnvironmentManager, EVENT_SCAN_IP_CHANGES:EVENT_SCAN_IP_CHANGES, EVENT_SCAN_IP_UPDATE:EVENT_SCAN_IP_UPDATE, EVENT_POWER_OUTAGE:EVENT_POWER_OUTAGE};

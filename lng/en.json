@@ -40,6 +40,7 @@
     "device.form.worksOnlyOnDayNight.both": "Day and night",
     "device.form.worksOnlyOnDayNight.day": "Day only",
     "device.form.worksOnlyOnDayNight.night": "Night only",
+    "device.form.power.outage.restore": "Restore state after power outage",
     "icon.form.name": "Icon",
     "radio.form.module": "Module",
     "radio.form.protocol": "Protocol",
@@ -127,5 +128,6 @@
     "devices.list.scenario.trigger.devices": "Trigger scenario on device changes state",
     "form.ip.scan": "Ip address",
     "form.ip.scan.freetext.list": "Other",
-    "form.ip.scan.freetext": "Fill in manual ip or domain"
+    "form.ip.scan.freetext": "Fill in manual ip or domain",
+    "power.outage.alert": "A power outage of %@ minutes duration has occured"
 }
