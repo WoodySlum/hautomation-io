@@ -173,7 +173,6 @@ function loaded(api) {
                     } else {
                         context.api.exported.Logger.info("Radio data successfully cleaned");
                     }
-                    process.exit(0);
                 });
             }
         }
