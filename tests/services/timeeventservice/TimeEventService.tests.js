@@ -39,7 +39,8 @@ describe("TimeEventService", function() {
     it("should convert correctly constant EVERY_MINUTES", function() {
         const input = {mode : TimeEventService.EVERY_MINUTES};
         const output = timeEventService.convertMode(input);
-        expect(output.second).to.be.equal(0);
+        expect(output.second).to.be.above(-1);
+        expect(output.second).to.be.below(60);
         expect(output.minute).to.be.equal("*");
         expect(output.hour).to.be.equal("*");
     });
