@@ -55,10 +55,11 @@ class EnvironmentManager {
      * @param  {MessageManager} messageManager    The message manager
      * @param  {string} eventStop    The stop event (broadcast identifier)
      * @param  {string} eventReady    The ready event (broadcast identifier)
+     * @param  {UserManager} userManager    The user manager
      *
      * @returns {EnvironmentManager}              The instance
      */
-    constructor(appConfiguration, confManager, formManager, webServices, dashboardManager, translateManager, scenarioManager, version, hash, installationManager, timeEventService, eventBus, messageManager, eventStop, eventReady) {
+    constructor(appConfiguration, confManager, formManager, webServices, dashboardManager, translateManager, scenarioManager, version, hash, installationManager, timeEventService, eventBus, messageManager, eventStop, eventReady, userManager) {
         this.appConfiguration = appConfiguration;
         this.formConfiguration = new FormConfiguration.class(confManager, formManager, webServices, "environment", false, EnvironmentForm.class);
         this.dashboardManager = dashboardManager;
@@ -78,6 +79,8 @@ class EnvironmentManager {
         this.messageManager = messageManager;
         this.eventStop = eventStop;
         this.eventReady = eventReady;
+        this.userManager = userManager;
+        this.userManager.environmentManager = this;
         this.scannedIps = [];
         this.manageUptimeFile();
         webServices.registerAPI(this, WebServices.GET, ":" + ROUTE_APP_ENVIRONMENT_INFORMATION, Authentication.AUTH_USAGE_LEVEL);

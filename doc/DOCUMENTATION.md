@@ -6496,6 +6496,7 @@ This class allows to manage house environment
 -   `messageManager` **[MessageManager][1251]** The message manager
 -   `eventStop` **[string][1181]** The stop event (broadcast identifier)
 -   `eventReady` **[string][1181]** The ready event (broadcast identifier)
+-   `userManager` **[UserManager][1247]** The user manager
 
 ### setTimezone
 
