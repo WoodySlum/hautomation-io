@@ -31,13 +31,14 @@ class ThemeManager {
      */
     getColors() {
         return  {
-            primaryColor:"#ABB0AF",
-            secondaryColor:"#bdc2c1",
+            primaryColor:"#617D8A",
+            secondaryColor:"#344C70",
             tertiaryColor:"#99BD47",
-            darkenColor: "#343a40",
-            clearColor:"#FFFFFF",
-            onColor:"#99BD47",
-            offColor:"#bdc2c1"
+            darkenColor: "#344C70",
+            clearColor:"#EEEEEE",
+            onColor:"#50AE55",
+            offColor:"#F1453D",
+            tilesSpacing: 0
         };
     }
 
