@@ -37,7 +37,7 @@ class ThemeManager {
             darkenColor: "#344C70",
             clearColor:"#EEEEEE",
             onColor:"#50AE55",
-            offColor:"#F1453D",
+            offColor:"#C41621",
             tilesSpacing: 1
         };
     }

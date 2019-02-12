@@ -164,57 +164,57 @@
     -   [devices][160]
     -   [triggerOnDevice][161]
     -   [json][162]
--   [DeviceStatus][163]
-    -   [getStatus][164]
-    -   [getBrightness][165]
-    -   [getColor][166]
-    -   [getColorTemperature][167]
-    -   [setStatus][168]
-    -   [setBrightness][169]
-    -   [setColor][170]
-    -   [setColorTemperature][171]
-    -   [tileFormat][172]
--   [EnvironmentAPI][173]
-    -   [getCoordinates][174]
-    -   [setDay][175]
-    -   [setNight][176]
-    -   [isNight][177]
-    -   [registerDayNightNotifications][178]
-    -   [unregisterDayNightNotifications][179]
-    -   [getLocalAPIUrl][180]
-    -   [getHautomationId][181]
-    -   [getFullHautomationId][182]
-    -   [getScannedIp][183]
-    -   [constants][184]
--   [EnvironmentManager][185]
-    -   [setTimezone][186]
-    -   [registerDayNightNotifications][187]
-    -   [unregisterDayNightNotifications][188]
-    -   [registerTile][189]
-    -   [getCoordinates][190]
-    -   [dispatchDayNightChange][191]
-    -   [setDay][192]
-    -   [setNight][193]
-    -   [isNight][194]
-    -   [getLocalPort][195]
-    -   [getLocalIp][196]
-    -   [getMacAddress][197]
-    -   [getLocalAPIUrl][198]
-    -   [saveMainConfiguration][199]
-    -   [processAPI][200]
-    -   [updateCore][201]
-    -   [isDefaultConfig][202]
-    -   [getHautomationId][203]
-    -   [getFullHautomationId][204]
-    -   [registerIpScanForm][205]
-    -   [startIpScan][206]
-    -   [manageUptimeFile][207]
--   [EnvironmentForm][208]
-    -   [day][209]
-    -   [json][210]
--   [Icons][211]
-    -   [list][212]
-    -   [raw][213]
+-   [Icons][163]
+    -   [list][164]
+    -   [raw][165]
+-   [DeviceStatus][166]
+    -   [getStatus][167]
+    -   [getBrightness][168]
+    -   [getColor][169]
+    -   [getColorTemperature][170]
+    -   [setStatus][171]
+    -   [setBrightness][172]
+    -   [setColor][173]
+    -   [setColorTemperature][174]
+    -   [tileFormat][175]
+-   [EnvironmentAPI][176]
+    -   [getCoordinates][177]
+    -   [setDay][178]
+    -   [setNight][179]
+    -   [isNight][180]
+    -   [registerDayNightNotifications][181]
+    -   [unregisterDayNightNotifications][182]
+    -   [getLocalAPIUrl][183]
+    -   [getHautomationId][184]
+    -   [getFullHautomationId][185]
+    -   [getScannedIp][186]
+    -   [constants][187]
+-   [EnvironmentManager][188]
+    -   [setTimezone][189]
+    -   [registerDayNightNotifications][190]
+    -   [unregisterDayNightNotifications][191]
+    -   [registerTile][192]
+    -   [getCoordinates][193]
+    -   [dispatchDayNightChange][194]
+    -   [setDay][195]
+    -   [setNight][196]
+    -   [isNight][197]
+    -   [getLocalPort][198]
+    -   [getLocalIp][199]
+    -   [getMacAddress][200]
+    -   [getLocalAPIUrl][201]
+    -   [saveMainConfiguration][202]
+    -   [processAPI][203]
+    -   [updateCore][204]
+    -   [isDefaultConfig][205]
+    -   [getHautomationId][206]
+    -   [getFullHautomationId][207]
+    -   [registerIpScanForm][208]
+    -   [startIpScan][209]
+    -   [manageUptimeFile][210]
+-   [EnvironmentForm][211]
+    -   [day][212]
+    -   [json][213]
 -   [DayNightScenarioForm][214]
     -   [day][215]
     -   [night][216]
@@ -1848,6 +1848,22 @@ Convert json data
 
 Returns **[DevicesListScenarioForm][498]** A form object
 
+## Icons
+
+Utility class for icons
+
+### list
+
+Return a list of icons (key / value)
+
+Returns **[Object][482]** The icons under Key / Value format
+
+### raw
+
+Return the raw icons object
+
+Returns **[Object][482]** Raw icons object
+
 ## DeviceStatus
 
 This class provides is a POJO for device status
@@ -2174,22 +2190,6 @@ Convert json data
 -   `data` **[Object][482]** Some key / value data
 
 Returns **[EnvironmentForm][501]** A form object
-
-## Icons
-
-Utility class for icons
-
-### list
-
-Return a list of icons (key / value)
-
-Returns **[Object][482]** The icons under Key / Value format
-
-### raw
-
-Return the raw icons object
-
-Returns **[Object][482]** Raw icons object
 
 ## DayNightScenarioForm
 
@@ -4730,107 +4730,107 @@ Returns **[string][481]** The base route (without parameters)
 
 [162]: #json-3
 
-[163]: #devicestatus
+[163]: #icons
 
-[164]: #getstatus
+[164]: #list
 
-[165]: #getbrightness
+[165]: #raw
 
-[166]: #getcolor
+[166]: #devicestatus
 
-[167]: #getcolortemperature
+[167]: #getstatus
 
-[168]: #setstatus
+[168]: #getbrightness
 
-[169]: #setbrightness
+[169]: #getcolor
 
-[170]: #setcolor
+[170]: #getcolortemperature
 
-[171]: #setcolortemperature
+[171]: #setstatus
 
-[172]: #tileformat
+[172]: #setbrightness
 
-[173]: #environmentapi
+[173]: #setcolor
 
-[174]: #getcoordinates
+[174]: #setcolortemperature
 
-[175]: #setday
+[175]: #tileformat
 
-[176]: #setnight
+[176]: #environmentapi
 
-[177]: #isnight
+[177]: #getcoordinates
 
-[178]: #registerdaynightnotifications
+[178]: #setday
 
-[179]: #unregisterdaynightnotifications
+[179]: #setnight
 
-[180]: #getlocalapiurl
+[180]: #isnight
 
-[181]: #gethautomationid
+[181]: #registerdaynightnotifications
 
-[182]: #getfullhautomationid
+[182]: #unregisterdaynightnotifications
 
-[183]: #getscannedip
+[183]: #getlocalapiurl
 
-[184]: #constants-1
+[184]: #gethautomationid
 
-[185]: #environmentmanager
+[185]: #getfullhautomationid
 
-[186]: #settimezone
+[186]: #getscannedip
 
-[187]: #registerdaynightnotifications-1
+[187]: #constants-1
 
-[188]: #unregisterdaynightnotifications-1
+[188]: #environmentmanager
 
-[189]: #registertile-1
+[189]: #settimezone
 
-[190]: #getcoordinates-1
+[190]: #registerdaynightnotifications-1
 
-[191]: #dispatchdaynightchange
+[191]: #unregisterdaynightnotifications-1
 
-[192]: #setday-1
+[192]: #registertile-1
 
-[193]: #setnight-1
+[193]: #getcoordinates-1
 
-[194]: #isnight-1
+[194]: #dispatchdaynightchange
 
-[195]: #getlocalport
+[195]: #setday-1
 
-[196]: #getlocalip
+[196]: #setnight-1
 
-[197]: #getmacaddress
+[197]: #isnight-1
 
-[198]: #getlocalapiurl-1
+[198]: #getlocalport
 
-[199]: #savemainconfiguration
+[199]: #getlocalip
 
-[200]: #processapi-2
+[200]: #getmacaddress
 
-[201]: #updatecore
+[201]: #getlocalapiurl-1
 
-[202]: #isdefaultconfig
+[202]: #savemainconfiguration
 
-[203]: #gethautomationid-1
+[203]: #processapi-2
 
-[204]: #getfullhautomationid-1
+[204]: #updatecore
 
-[205]: #registeripscanform
+[205]: #isdefaultconfig
 
-[206]: #startipscan
+[206]: #gethautomationid-1
 
-[207]: #manageuptimefile
+[207]: #getfullhautomationid-1
 
-[208]: #environmentform
+[208]: #registeripscanform
 
-[209]: #day
+[209]: #startipscan
 
-[210]: #json-4
+[210]: #manageuptimefile
 
-[211]: #icons
+[211]: #environmentform
 
-[212]: #list
+[212]: #day
 
-[213]: #raw
+[213]: #json-4
 
 [214]: #daynightscenarioform
 
