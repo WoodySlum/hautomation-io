@@ -88,9 +88,6 @@ class HautomationCore {
         // Logger
         Logger.setLogLevel((AppConfiguration.logLevel != null && typeof AppConfiguration.logLevel != "undefined")?AppConfiguration.logLevel:null);
 
-        // Theme manager
-        this.themeManager = new ThemeManager.class(AppConfiguration);
-
         // Translation
         this.translateManager = new TranslateManager.class(AppConfiguration.lng);
         this.translateManager.addTranslations(__dirname + "/.."); // Base translations
@@ -113,6 +110,9 @@ class HautomationCore {
         // Init modules
         // Logs
         this.logManager = new LogManager.class(this.webServices);
+
+        // Theme manager
+        this.themeManager = new ThemeManager.class(AppConfiguration, this.webServices);
 
         // Db manager
         this.dbManager = new DbManager.class(AppConfiguration);

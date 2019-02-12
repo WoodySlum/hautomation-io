@@ -1,6 +1,6 @@
 "use strict";
 const TuyAPI = require("tuyapi");
-const DELTA_RETRIEVAL = 5;// In seconds
+const DELTA_RETRIEVAL = 10;// In seconds
 
 /**
  * Loaded plugin function
