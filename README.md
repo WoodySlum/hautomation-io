@@ -10,7 +10,7 @@ In preferences / languages / Javascript, set ECMAScript 6 and save.
 
 ### Requirements
 
-* node 8.9.1 or upper version
+* node 10.14.1 or upper version
 
 ### Installation
 
