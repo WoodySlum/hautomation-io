@@ -9619,7 +9619,6 @@ This class generates dashboard
 **Parameters**
 
 -   `appConfiguration` **AppConfiguration** Configuration
--   `webService`  
 -   `webServices` **[WebServices][1246]** The web services
 
 ### getColors

@@ -17,9 +17,9 @@ class ThemeManager {
      * @param  {WebServices} webServices    The web services
      * @returns {ThemeManager}                  The instance
      */
-    constructor(appConfiguration, webService) {
+    constructor(appConfiguration, webServices) {
         this.appConfiguration = appConfiguration;
-        this.webServices = webService;
+        this.webServices = webServices;
 
         this.webServices.registerAPI(this, WebServices.GET, THEME_GET, Authentication.AUTH_NO_LEVEL);
     }
