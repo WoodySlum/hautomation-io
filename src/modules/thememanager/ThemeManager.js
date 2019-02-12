@@ -38,7 +38,7 @@ class ThemeManager {
             clearColor:"#EEEEEE",
             onColor:"#50AE55",
             offColor:"#F1453D",
-            tilesSpacing: 0
+            tilesSpacing: 1
         };
     }
 
