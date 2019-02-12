@@ -1,5 +1,6 @@
 "use strict";
 const TuyAPI = require("tuyapi");
+const DELTA_RETRIEVAL = 2;// In seconds
 
 /**
  * Loaded plugin function
@@ -77,7 +78,7 @@ function loaded(api) {
             this.api = api;
             this.api.timeEventAPI.register((self) => {
                 api.exported.Logger.verbose("Synchronizing tuya devices");
-                // self.updateLocalState(self);
+                self.updateLocalState(self);
             }, this, api.timeEventAPI.constants().EVERY_MINUTES);
 
             this.api.deviceAPI.addForm("tuyaDevice", TuyaDeviceForm, "tuya.form.title", true);
@@ -147,9 +148,22 @@ function loaded(api) {
                 }
             });
 
+            let timeout = 0;
             Object.keys(listUpdate).forEach((listUpdateKey) => {
-                const tuyaDevice = new TuyAPI({id: listUpdate[listUpdateKey].formData.tuyaId, key: listUpdate[listUpdateKey].formData.tuyaKey, ip: (listUpdate[listUpdateKey].formData.tuyaIp.ip === "freetext") ? listUpdate[listUpdateKey].formData.tuyaIp.freetext : listUpdate[listUpdateKey].formData.tuyaIp.ip}).get();
-                promises.push(tuyaDevice);
+                const tuyaDevicePromise = new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                        const tuya = new TuyAPI({id: listUpdate[listUpdateKey].formData.tuyaId, key: listUpdate[listUpdateKey].formData.tuyaKey, ip: (listUpdate[listUpdateKey].formData.tuyaIp.ip === "freetext") ? listUpdate[listUpdateKey].formData.tuyaIp.freetext : listUpdate[listUpdateKey].formData.tuyaIp.ip}).get();
+                        tuya.then((r) => {
+                            resolve(r);
+                        })
+                        .catch((e) => {
+                            reject(e);
+                        });
+                    }, timeout * 1000);
+                });
+
+                promises.push(tuyaDevicePromise);
+                timeout += DELTA_RETRIEVAL;
             });
 
             Promise.all(promises).then((statuses) => {
