@@ -77,8 +77,8 @@ function loaded(api) {
         constructor(api) {
             this.api = api;
             this.api.timeEventAPI.register((self) => {
-                api.exported.Logger.verbose("Synchronizing tuya devices");
-                self.updateLocalState(self);
+                // api.exported.Logger.verbose("Synchronizing tuya devices");
+                // self.updateLocalState(self);
             }, this, api.timeEventAPI.constants().EVERY_MINUTES);
 
             this.api.deviceAPI.addForm("tuyaDevice", TuyaDeviceForm, "tuya.form.title", true);
