@@ -32,12 +32,12 @@ class ThemeManager {
     getColors() {
         return  {
             primaryColor:"#617D8A",
-            secondaryColor:"#344C70",
-            tertiaryColor:"#99BD47",
-            darkenColor: "#344C70",
-            clearColor:"#EEEEEE",
-            onColor:"#50AE55",
-            offColor:"#C41621",
+            secondaryColor:"#8BAACC",
+            tertiaryColor:"#ECCF46",
+            darkenColor: "#4578A3",
+            clearColor:"#E4EEF2",
+            onColor:"#79B84A",
+            offColor:"#D04B48",
             tilesSpacing: 1
         };
     }
