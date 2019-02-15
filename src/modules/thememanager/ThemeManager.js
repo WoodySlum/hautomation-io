@@ -35,7 +35,7 @@ class ThemeManager {
             secondaryColor:"#8BAACC",
             tertiaryColor:"#ECCF46",
             darkenColor: "#4578A3",
-            clearColor:"#E4EEF2",
+            clearColor:"#FFFFFF",
             onColor:"#79B84A",
             offColor:"#D04B48",
             tilesSpacing: 1
