@@ -148,7 +148,7 @@
         "string-similarity": "^1.2",
         "threads": "git://github.com/WoodySlum/threads.js.git#master",
         "toposort": "^1.0",
-        "tuyapi": "github:codetheweb/tuyapi",
+        "tuyapi": "^3.2",
         "underscore": "^1.9",
         "usb-detection": "^4.1",
         "waveheader": "^0.0",
