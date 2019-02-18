@@ -11,7 +11,7 @@ const ERROR_NO_JSON_METHOD = "ERROR_NO_JSON_METHOD";
 const DATA_NOT_FOUND      = "DATA_NOT_FOUND";
 //"RjG?#5-i.:>f5.3i@&'R9PG&Sz'd29"
 const ENCRYPTION_KEY = [0, 82, 0, 106, 0, 71, 0, 63, 0, 35, 0, 53, 0, 45, 0, 105, 0, 46, 0, 58, 0, 62, 0, 102, 0, 53, 0, 46, 0, 51, 0, 105, 0, 64, 0, 38, 0, 39, 0, 82, 0, 57, 0, 80, 0, 71, 0, 38, 0, 83, 0, 122, 0, 39, 0, 100, 0, 50, 0, 57];
-const IV = new Buffer("gbyEX=H(STQ8:5K/");
+const IV = new Buffer.from("gbyEX=H(STQ8:5K/", "binary");
 const ENCRYPTION_ALGORITHM = "aes-256-ctr";
 const CONF_FILE_EXTENSION = ".json";
 
