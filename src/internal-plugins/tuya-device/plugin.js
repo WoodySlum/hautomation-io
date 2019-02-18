@@ -1,6 +1,5 @@
 "use strict";
-const TuyAPI = require("tuyapi");
-const DELTA_RETRIEVAL = 10;// In seconds
+const CloudTuya = require("cloudtuya");
 
 /**
  * Loaded plugin function
@@ -9,6 +8,51 @@ const DELTA_RETRIEVAL = 10;// In seconds
  */
 function loaded(api) {
     api.init();
+
+    /**
+     * This class is used for TpLink TL-MR6400 form
+     * @class
+     */
+    class TuyaForm extends api.exported.FormObject.class {
+        /**
+         * Constructor
+         *
+         * @param  {number} id           Identifier
+         * @param  {string} username The username
+         * @param  {string} password The password
+         * @returns {TuyaForm}              The instance
+         */
+        constructor(id, username, password) {
+            super(id);
+
+            /**
+             * @Property("username");
+             * @Type("string");
+             * @Title("tuya.cloud.username");
+             */
+            this.username = username;
+
+            /**
+             * @Property("password");
+             * @Type("string");
+             * @Title("tuya.cloud.password");
+             * @Display("password");
+             */
+            this.password = password;
+        }
+
+        /**
+         * Convert json data
+         *
+         * @param  {Object} data Some key / value data
+         * @returns {TuyaForm}      A form object
+         */
+        json(data) {
+            return new TuyaForm(data.id, data.username, data.password);
+        }
+    }
+
+    api.configurationAPI.register(TuyaForm);
 
     /**
      * This class manage Tuya device form configuration
@@ -20,36 +64,39 @@ function loaded(api) {
          *
          * @param  {number} id The identifier
          * @param {string} tuyaId  The device identifier
-         * @param {string} tuyaKey The device key
-         * @param {string} tuyaIp  The device IP
          * @returns {TuyaDeviceForm}        The instance
          */
-        constructor(id, tuyaId, tuyaKey, tuyaIp) {
+        constructor(id, tuyaId) {
             super(id);
 
             /**
              * @Property("tuyaId");
              * @Type("string");
              * @Title("tuya.device.id");
-             * @Required(true);
+             * @Enum("getTuyaIds");
+             * @EnumNames("getTuyaIdsLabels");
              */
             this.tuyaId = tuyaId;
+        }
 
-            /**
-             * @Property("tuyaKey");
-             * @Type("string");
-             * @Title("tuya.device.key");
-             * @Required(true);
-             */
-            this.tuyaKey = tuyaKey;
+        /**
+         * Form injection method for ports
+         *
+         * @param  {...Object} inject The ports list array
+         * @returns {Array}        An array of ports
+         */
+        static getTuyaIds(...inject) {
+            return inject[0];
+        }
 
-            /**
-             * @Property("tuyaIp");
-             * @Type("object");
-             * @Cl("IpScanForm");
-             * @Required(true);
-             */
-            this.tuyaIp = tuyaIp;
+        /**
+         * Form injection method for ports name
+         *
+         * @param  {...Object} inject The ports name list array
+         * @returns {Array}        An array of ports name
+         */
+        static getTuyaIdsLabels(...inject) {
+            return inject[1];
         }
 
         /**
@@ -59,7 +106,7 @@ function loaded(api) {
          * @returns {TuyaDeviceForm}      An instance
          */
         json(data) {
-            return new TuyaDeviceForm(data.id, data.tuyaId, data.tuyaKey, data.tuyaIp);
+            return new TuyaDeviceForm(data.id, data.tuyaId);
         }
     }
 
@@ -76,48 +123,114 @@ function loaded(api) {
          */
         constructor(api) {
             this.api = api;
+            this.tuyaDevices = [];
+
             this.api.timeEventAPI.register((self) => {
-                // api.exported.Logger.verbose("Synchronizing tuya devices");
-                // self.updateLocalState(self);
+                api.exported.Logger.verbose("Synchronizing tuya devices");
+                self.updateLocalState(self);
             }, this, api.timeEventAPI.constants().EVERY_MINUTES);
 
-            this.api.deviceAPI.addForm("tuyaDevice", TuyaDeviceForm, "tuya.form.title", true);
+            this.registerSwitchCommand(); // For init
+            this.retrieveDevicesAndStates();
+
+            this.api.configurationAPI.setUpdateCb(() => {
+                this.retrieveDevicesAndStates();
+            });
+        }
+
+        /**
+         * Register switch command
+         */
+        registerSwitchCommand() {
+            const tuyaIds = [];
+            const tuyaIdsLabels = [];
+            this.tuyaDevices.forEach((tuyaDevice) => {
+                tuyaIds.push(tuyaDevice.id);
+                tuyaIdsLabels.push(tuyaDevice.name + " - " + tuyaDevice.id + " (" + tuyaDevice.ha_type + ")");
+            });
+
+            this.api.deviceAPI.addForm("tuyaDevice", TuyaDeviceForm, "tuya.form.title", true, tuyaIds, tuyaIdsLabels);
             this.api.deviceAPI.registerSwitchDevice("tuyaDevice", (device, formData, deviceStatus) => {
                 if (formData && formData.length > 0) {
                     // let hasFailed = false;
                     for (let i = 0 ; i < formData.length ; i++) {
                         const tuyaConfig = formData[i];
-                        if (tuyaConfig && tuyaConfig.tuyaId && tuyaConfig.tuyaKey && tuyaConfig.tuyaIp && tuyaConfig.tuyaIp.ip) {
-                            const device = new TuyAPI({
-                                id: tuyaConfig.tuyaId,
-                                key: tuyaConfig.tuyaKey,
-                                ip: (tuyaConfig.tuyaIp.ip === "freetext") ? tuyaConfig.tuyaIp.freetext : tuyaConfig.tuyaIp.ip});
+                        if (tuyaConfig && tuyaConfig.tuyaId) {
+                            const configuration = this.api.configurationAPI.getConfiguration();
+                            if (configuration && configuration.username && configuration.password) {
+                                const tuyaApi = new CloudTuya({
+                                    userName: configuration.username,
+                                    password: configuration.password
+                                });
 
-                            device.set({set: ((deviceStatus.getStatus() === api.deviceAPI.constants().INT_STATUS_ON) ? true : false)}).then((success) => {
-                                if (!success) {
-                                    // hasFailed = true;
-                                    api.exported.Logger.err("Tuya error");
-                                }
-                            }).catch((e) => {
-                                // hasFailed = true;
-                                api.exported.Logger.err("Tuya error : " + e.message);
-                            });
+                                tuyaApi.login().then(() => {
+                                    tuyaApi.setState({devId: tuyaConfig.tuyaId, setState: ((deviceStatus.getStatus() === api.deviceAPI.constants().INT_STATUS_ON) ? 1 : 0)}).then((r) => {
+                                        if (r && r.header && r.header.code === "SUCCESS") {
+                                            this.api.exported.Logger.info("Tuya device sucessfully updated");
+                                            // Update local state
+                                            for (let i = 0 ; i < this.tuyaDevices.length ; i++) {
+                                                if (this.tuyaDevices[i].id === tuyaConfig.tuyaId) {
+                                                    this.tuyaDevices[i].data.state = ((deviceStatus.getStatus() === api.deviceAPI.constants().INT_STATUS_ON) ? true : false);
+                                                }
+                                            }
+                                        } else {
+                                            this.api.exported.Logger.err("Could not change tuya device status");
+                                            // deviceStatus.status = (deviceStatus.getStatus() === api.deviceAPI.constants().INT_STATUS_ON) ? api.deviceAPI.constants().INT_STATUS_OFF : api.deviceAPI.constants().INT_STATUS_ON;
+                                        }
+                                    })
+                                    .catch((e) => {
+                                        this.api.exported.Logger.err(e.message);
+                                    });
+                                })
+                                .catch((e) => {
+                                    this.api.exported.Logger.err(e.message);
+                                });
+                            }
                         } else {
                             api.exported.Logger.warn("Invalid configuration for tuya");
                         }
                     }
-
-                    // if (hasFailed) {
-                    //     if (deviceStatus.getStatus() === api.deviceAPI.constants().INT_STATUS_ON) {
-                    //         deviceStatus.setStatus(api.deviceAPI.constants().INT_STATUS_OFF);
-                    //     } else {
-                    //         deviceStatus.setStatus(api.deviceAPI.constants().INT_STATUS_ON);
-                    //     }
-                    // }
                 }
 
                 return deviceStatus;
             });
+        }
+
+        /**
+         * Retrieve device and status
+         * 
+         * @param  {Function} [cb=null] A callback when done. If something wrong occurs, callback won't be called
+         */
+        retrieveDevicesAndStates(cb = null) {
+            const configuration = this.api.configurationAPI.getConfiguration();
+            if (configuration && configuration.username && configuration.password) {
+                const tuyaApi = new CloudTuya({
+                    userName: configuration.username,
+                    password: configuration.password
+                });
+
+                tuyaApi.login().then(() => {
+                    tuyaApi.find().then((r) => {
+                        if (!r) {
+                            this.api.exported.Logger.err("Error while retrieving tuya devices. Maybe username or password is wrong ...");
+                        } else {
+                            this.tuyaDevices = r;
+                            this.registerSwitchCommand();
+                            if (cb) {
+                                cb();
+                            }
+                        }
+                    })
+                    .catch((e) => {
+                        this.api.exported.Logger.err(e.message);
+                    });
+                })
+                .catch((e) => {
+                    this.api.exported.Logger.err(e.message);
+                });
+            }
+
+
         }
 
         /**
@@ -129,69 +242,31 @@ function loaded(api) {
             if (!context) {
                 context = this;
             }
-            const listUpdate = {};
-            const promises = [];
-            context.api.deviceAPI.getDevices().forEach((device) => {
-                if (device && device.TuyaDeviceForm) {
-                    for (let i = 0 ; i < device.TuyaDeviceForm.length ; i++) {
-                        if (device.TuyaDeviceForm[i] && device.TuyaDeviceForm[i].tuyaId && device.TuyaDeviceForm[i].tuyaKey && device.TuyaDeviceForm[i].tuyaIp && device.TuyaDeviceForm[i].tuyaIp.ip) {
-                            if (listUpdate[device.TuyaDeviceForm[i].tuyaId]) {
-                                listUpdate[device.TuyaDeviceForm[i].tuyaId].devices.push(device);
-                            } else {
-                                listUpdate[device.TuyaDeviceForm[i].tuyaId] = {
-                                    devices:[device],
-                                    formData:device.TuyaDeviceForm[i]
-                                };
+
+            context.retrieveDevicesAndStates(() => {
+                context.api.deviceAPI.getDevices().forEach((device) => {
+                    let isTuyaDevice = false;
+                    let isOn = context.api.deviceAPI.constants().INT_STATUS_OFF;
+                    if (device && device.TuyaDeviceForm) {
+                        for (let i = 0 ; i < device.TuyaDeviceForm.length ; i++) {
+                            if (device.TuyaDeviceForm[i] && device.TuyaDeviceForm[i].tuyaId) {
+                                for (let j = 0 ; j < context.tuyaDevices.length ; j++) {
+                                    if (context.tuyaDevices[j].id === device.TuyaDeviceForm[i].tuyaId) {
+                                        isTuyaDevice = true;
+                                        if (context.tuyaDevices[j].data.state) {
+                                            isOn = context.api.deviceAPI.constants().INT_STATUS_ON;
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
-                }
-            });
 
-            let timeout = 0;
-            Object.keys(listUpdate).forEach((listUpdateKey) => {
-                const tuyaDevicePromise = new Promise((resolve, reject) => {
-                    setTimeout(() => {
-                        const tuya = new TuyAPI({id: listUpdate[listUpdateKey].formData.tuyaId, key: listUpdate[listUpdateKey].formData.tuyaKey, ip: (listUpdate[listUpdateKey].formData.tuyaIp.ip === "freetext") ? listUpdate[listUpdateKey].formData.tuyaIp.freetext : listUpdate[listUpdateKey].formData.tuyaIp.ip}).get();
-                        tuya.then((r) => {
-                            resolve(r);
-                        })
-                        .catch((e) => {
-                            reject(e);
-                        });
-                    }, timeout * 1000);
+                    if (isTuyaDevice && device.status != isOn) {
+                        device.status = isOn;
+                        context.api.deviceAPI.switchDeviceWithDevice(device);
+                    }
                 });
-
-                promises.push(tuyaDevicePromise);
-                timeout += DELTA_RETRIEVAL;
-            });
-
-            Promise.all(promises).then((statuses) => {
-                if (statuses.length === Object.keys(listUpdate).length) {
-                    let i = 0;
-                    Object.keys(listUpdate).forEach((listUpdateKey) => {
-                        const status = statuses[i];
-                        if (typeof status == typeof true) {
-                            // Update devices
-                            listUpdate[listUpdateKey].devices.forEach((device) => {
-                                const currentDeviceStatus = device.status;
-                                let isOn = context.api.deviceAPI.constants().INT_STATUS_OFF;
-                                if (status) {
-                                    isOn = context.api.deviceAPI.constants().INT_STATUS_ON;
-                                }
-
-                                if (currentDeviceStatus != isOn) {
-                                    device.status = isOn;
-                                    context.api.deviceAPI.switchDeviceWithDevice(device);
-                                }
-                            });
-                        }
-
-                        i++;
-                    });
-                }
-            }).catch((e) => {
-                context.api.exported.Logger.warn(e.message);
             });
         }
     }

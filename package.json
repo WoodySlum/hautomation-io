@@ -148,12 +148,12 @@
         "string-similarity": "^1.2",
         "threads": "git://github.com/WoodySlum/threads.js.git#master",
         "toposort": "^1.0",
-        "tuyapi": "^3.2",
         "underscore": "^1.9",
         "usb-detection": "^4.1",
         "waveheader": "^0.0",
         "xml2js": "^0.4",
         "xmlhttprequest-ssl": "^1.5",
-        "zip-dir": "^1.0"
+        "zip-dir": "^1.0",
+        "cloudtuya": "git://github.com/unparagoned/cloudtuya#master"
     }
 }
