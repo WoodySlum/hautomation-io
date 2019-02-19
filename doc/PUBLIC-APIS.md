@@ -113,142 +113,142 @@
     -   [distinct][109]
     -   [cleanForDelete][110]
     -   [request][111]
--   [DateUtils][112]
-    -   [timestamp][113]
-    -   [dateToUTCTimestamp][114]
-    -   [dateToTimestamp][115]
-    -   [roundedTimestamp][116]
-    -   [dateFormatted][117]
-    -   [secondsElapsedSinceMidnight][118]
--   [DbSchemaConverter][119]
-    -   [tableName][120]
-    -   [toSchema][121]
--   [Convert][122]
-    -   [convertProperties][123]
--   [DeviceAPI][124]
-    -   [getDevices][125]
-    -   [switchDevice][126]
-    -   [constants][127]
-    -   [getDeviceStatus][128]
+-   [DbSchemaConverter][112]
+    -   [tableName][113]
+    -   [toSchema][114]
+-   [Convert][115]
+    -   [convertProperties][116]
+-   [DeviceAPI][117]
+    -   [getDevices][118]
+    -   [switchDevice][119]
+    -   [constants][120]
+    -   [getDeviceStatus][121]
+    -   [addForm][122]
+    -   [registerSwitchDevice][123]
+    -   [saveDevice][124]
+    -   [getDeviceTypes][125]
+    -   [getDeviceById][126]
+    -   [switchDeviceWithDevice][127]
+-   [DeviceManager][128]
     -   [addForm][129]
     -   [registerSwitchDevice][130]
-    -   [saveDevice][131]
-    -   [getDeviceTypes][132]
-    -   [getDeviceById][133]
-    -   [switchDeviceWithDevice][134]
--   [DeviceManager][135]
-    -   [addForm][136]
-    -   [registerSwitchDevice][137]
-    -   [triggerScenario][138]
-    -   [registerDeviceListForm][139]
-    -   [registerDeviceTiles][140]
-    -   [getDevices][141]
-    -   [getDeviceStatus][142]
-    -   [registerDeviceTile][143]
-    -   [getDeviceTypes][144]
-    -   [getDeviceById][145]
-    -   [switchDevice][146]
-    -   [switchDeviceWithDevice][147]
-    -   [saveDevice][148]
-    -   [switchAll][149]
-    -   [processAPI][150]
--   [DeviceForm][151]
-    -   [name][152]
-    -   [excludeFromAll][153]
-    -   [visible][154]
-    -   [powerOutageRestore][155]
-    -   [worksOnlyOnDayNight][156]
-    -   [icon][157]
+    -   [triggerScenario][131]
+    -   [registerDeviceListForm][132]
+    -   [registerDeviceTiles][133]
+    -   [getDevices][134]
+    -   [getDeviceStatus][135]
+    -   [registerDeviceTile][136]
+    -   [getDeviceTypes][137]
+    -   [getDeviceById][138]
+    -   [switchDevice][139]
+    -   [switchDeviceWithDevice][140]
+    -   [saveDevice][141]
+    -   [switchAll][142]
+    -   [processAPI][143]
+-   [DeviceForm][144]
+    -   [name][145]
+    -   [excludeFromAll][146]
+    -   [visible][147]
+    -   [powerOutageRestore][148]
+    -   [worksOnlyOnDayNight][149]
+    -   [icon][150]
+    -   [status][151]
+    -   [brightness][152]
+    -   [color][153]
+    -   [colorTemperature][154]
+    -   [json][155]
+-   [DevicesListForm][156]
+    -   [identifier][157]
     -   [status][158]
-    -   [brightness][159]
-    -   [color][160]
-    -   [colorTemperature][161]
-    -   [json][162]
--   [DevicesListForm][163]
-    -   [identifier][164]
-    -   [status][165]
-    -   [keepParams][166]
-    -   [brightness][167]
-    -   [color][168]
-    -   [colorTemperature][169]
-    -   [json][170]
-    -   [getDevicesName][171]
-    -   [getDevicesId][172]
--   [DevicesListScenarioTriggerForm][173]
-    -   [identifier][174]
-    -   [status][175]
-    -   [json][176]
-    -   [getDevicesName][177]
-    -   [getDevicesId][178]
--   [DevicesListScenarioForm][179]
-    -   [turnOnAll][180]
-    -   [turnOffAll][181]
-    -   [devices][182]
-    -   [triggerOnDevice][183]
-    -   [json][184]
--   [Icons][185]
-    -   [list][186]
-    -   [raw][187]
--   [DeviceStatus][188]
-    -   [getStatus][189]
-    -   [getBrightness][190]
-    -   [getColor][191]
-    -   [getColorTemperature][192]
-    -   [setStatus][193]
-    -   [setBrightness][194]
-    -   [setColor][195]
-    -   [setColorTemperature][196]
-    -   [tileFormat][197]
--   [EnvironmentAPI][198]
-    -   [getCoordinates][199]
-    -   [setDay][200]
-    -   [setNight][201]
-    -   [isNight][202]
-    -   [registerDayNightNotifications][203]
-    -   [unregisterDayNightNotifications][204]
-    -   [getLocalAPIUrl][205]
-    -   [getHautomationId][206]
-    -   [getFullHautomationId][207]
-    -   [getScannedIp][208]
-    -   [constants][209]
--   [EnvironmentManager][210]
-    -   [setTimezone][211]
-    -   [registerDayNightNotifications][212]
-    -   [unregisterDayNightNotifications][213]
-    -   [registerTile][214]
-    -   [getCoordinates][215]
-    -   [dispatchDayNightChange][216]
-    -   [setDay][217]
-    -   [setNight][218]
-    -   [isNight][219]
-    -   [getLocalPort][220]
-    -   [getLocalIp][221]
-    -   [getMacAddress][222]
-    -   [getLocalAPIUrl][223]
-    -   [saveMainConfiguration][224]
-    -   [processAPI][225]
-    -   [updateCore][226]
-    -   [isDefaultConfig][227]
-    -   [getHautomationId][228]
-    -   [getFullHautomationId][229]
-    -   [registerIpScanForm][230]
-    -   [startIpScan][231]
-    -   [manageUptimeFile][232]
--   [EnvironmentForm][233]
-    -   [day][234]
-    -   [json][235]
--   [DayNightScenarioForm][236]
-    -   [day][237]
-    -   [night][238]
-    -   [json][239]
--   [IpScanForm][240]
-    -   [ip][241]
-    -   [freetext][242]
-    -   [freetextHidden][243]
-    -   [json][244]
-    -   [getValues][245]
-    -   [getValuesWithoutFreetext][246]
-    -   [getTitles][247]
+    -   [keepParams][159]
+    -   [brightness][160]
+    -   [color][161]
+    -   [colorTemperature][162]
+    -   [json][163]
+    -   [getDevicesName][164]
+    -   [getDevicesId][165]
+-   [DevicesListScenarioTriggerForm][166]
+    -   [identifier][167]
+    -   [status][168]
+    -   [json][169]
+    -   [getDevicesName][170]
+    -   [getDevicesId][171]
+-   [DevicesListScenarioForm][172]
+    -   [turnOnAll][173]
+    -   [turnOffAll][174]
+    -   [devices][175]
+    -   [triggerOnDevice][176]
+    -   [json][177]
+-   [DeviceStatus][178]
+    -   [getStatus][179]
+    -   [getBrightness][180]
+    -   [getColor][181]
+    -   [getColorTemperature][182]
+    -   [setStatus][183]
+    -   [setBrightness][184]
+    -   [setColor][185]
+    -   [setColorTemperature][186]
+    -   [tileFormat][187]
+-   [EnvironmentAPI][188]
+    -   [getCoordinates][189]
+    -   [setDay][190]
+    -   [setNight][191]
+    -   [isNight][192]
+    -   [registerDayNightNotifications][193]
+    -   [unregisterDayNightNotifications][194]
+    -   [getLocalAPIUrl][195]
+    -   [getHautomationId][196]
+    -   [getFullHautomationId][197]
+    -   [getScannedIp][198]
+    -   [constants][199]
+-   [EnvironmentManager][200]
+    -   [setTimezone][201]
+    -   [registerDayNightNotifications][202]
+    -   [unregisterDayNightNotifications][203]
+    -   [registerTile][204]
+    -   [getCoordinates][205]
+    -   [dispatchDayNightChange][206]
+    -   [setDay][207]
+    -   [setNight][208]
+    -   [isNight][209]
+    -   [getLocalPort][210]
+    -   [getLocalIp][211]
+    -   [getMacAddress][212]
+    -   [getLocalAPIUrl][213]
+    -   [saveMainConfiguration][214]
+    -   [processAPI][215]
+    -   [updateCore][216]
+    -   [isDefaultConfig][217]
+    -   [getHautomationId][218]
+    -   [getFullHautomationId][219]
+    -   [registerIpScanForm][220]
+    -   [startIpScan][221]
+    -   [manageUptimeFile][222]
+-   [EnvironmentForm][223]
+    -   [day][224]
+    -   [json][225]
+-   [Icons][226]
+    -   [list][227]
+    -   [raw][228]
+-   [DayNightScenarioForm][229]
+    -   [day][230]
+    -   [night][231]
+    -   [json][232]
+-   [IpScanForm][233]
+    -   [ip][234]
+    -   [freetext][235]
+    -   [freetextHidden][236]
+    -   [json][237]
+    -   [getValues][238]
+    -   [getValuesWithoutFreetext][239]
+    -   [getTitles][240]
+-   [DateUtils][241]
+    -   [timestamp][242]
+    -   [dateToUTCTimestamp][243]
+    -   [dateToTimestamp][244]
+    -   [roundedTimestamp][245]
+    -   [dateFormatted][246]
+    -   [secondsElapsedSinceMidnight][247]
 -   [InstallerAPI][248]
     -   [register][249]
     -   [executeCommand][250]
@@ -1493,68 +1493,6 @@ Generate SQL request
 
 Returns **[string][482]** The SQL query
 
-## DateUtils
-
-Utility class for dates
-
-### timestamp
-
-Return the current timestamp
-
-Returns **[number][484]** The current timestamp
-
-### dateToUTCTimestamp
-
-Convert a string date time zoned to UTC timestamp
-
-**Parameters**
-
--   `date` **[string][482]** The GMT date
-
-Returns **[number][484]** The UTC timestamp
-
-### dateToTimestamp
-
-Convert a string date time zoned to timestamp
-
-**Parameters**
-
--   `date` **[string][482]** The GMT date
-
-Returns **[number][484]** The GMT timestamp
-
-### roundedTimestamp
-
-Round the timestamp to the mode
-
-**Parameters**
-
--   `timestamp` **[number][484]** A timestamp
--   `mode` **[number][484]** The mode (contant : `DateUtils.ROUND_TIMESTAMP_MINUTE`, `DateUtils.ROUND_TIMESTAMP_HOUR`, `DateUtils.ROUND_TIMESTAMP_DAY`, `DateUtils.ROUND_TIMESTAMP_MONTH`)
-
-Returns **[number][484]** Rounded timestamp
-
-### dateFormatted
-
-Format the current date with parameter
-
-**Parameters**
-
--   `format` **[string][482]** A format (Y for year, m for month, d for day, H for hour, i for minutes, s for seconds)
--   `timestamp` **[number][484]** A timestamp. If not provided, use current timestamp. (optional, default `null`)
-
-Returns **[string][482]** The formatted date
-
-### secondsElapsedSinceMidnight
-
-Return the number of seconds elapsed since midnight in UTC format
-
-**Parameters**
-
--   `timestamp` **[number][484]** A timestamp in seconds
-
-Returns **[number][484]** A number of seconds elapsed
-
 ## DbSchemaConverter
 
 Convert a DbObject with annotations into a JSON schema (adapter)
@@ -2030,22 +1968,6 @@ Convert json data
 
 Returns **[DevicesListScenarioForm][499]** A form object
 
-## Icons
-
-Utility class for icons
-
-### list
-
-Return a list of icons (key / value)
-
-Returns **[Object][483]** The icons under Key / Value format
-
-### raw
-
-Return the raw icons object
-
-Returns **[Object][483]** Raw icons object
-
 ## DeviceStatus
 
 This class provides is a POJO for device status
@@ -2373,6 +2295,22 @@ Convert json data
 
 Returns **[EnvironmentForm][502]** A form object
 
+## Icons
+
+Utility class for icons
+
+### list
+
+Return a list of icons (key / value)
+
+Returns **[Object][483]** The icons under Key / Value format
+
+### raw
+
+Return the raw icons object
+
+Returns **[Object][483]** Raw icons object
+
 ## DayNightScenarioForm
 
 **Extends FormObject.class**
@@ -2457,6 +2395,68 @@ Get titles
 -   `inject` **...[Array][485]** Injection
 
 Returns **[Array][485]** Result
+
+## DateUtils
+
+Utility class for dates
+
+### timestamp
+
+Return the current timestamp
+
+Returns **[number][484]** The current timestamp
+
+### dateToUTCTimestamp
+
+Convert a string date time zoned to UTC timestamp
+
+**Parameters**
+
+-   `date` **[string][482]** The GMT date
+
+Returns **[number][484]** The UTC timestamp
+
+### dateToTimestamp
+
+Convert a string date time zoned to timestamp
+
+**Parameters**
+
+-   `date` **[string][482]** The GMT date
+
+Returns **[number][484]** The GMT timestamp
+
+### roundedTimestamp
+
+Round the timestamp to the mode
+
+**Parameters**
+
+-   `timestamp` **[number][484]** A timestamp
+-   `mode` **[number][484]** The mode (contant : `DateUtils.ROUND_TIMESTAMP_MINUTE`, `DateUtils.ROUND_TIMESTAMP_HOUR`, `DateUtils.ROUND_TIMESTAMP_DAY`, `DateUtils.ROUND_TIMESTAMP_MONTH`)
+
+Returns **[number][484]** Rounded timestamp
+
+### dateFormatted
+
+Format the current date with parameter
+
+**Parameters**
+
+-   `format` **[string][482]** A format (Y for year, m for month, d for day, H for hour, i for minutes, s for seconds)
+-   `timestamp` **[number][484]** A timestamp. If not provided, use current timestamp. (optional, default `null`)
+
+Returns **[string][482]** The formatted date
+
+### secondsElapsedSinceMidnight
+
+Return the number of seconds elapsed since midnight in UTC format
+
+**Parameters**
+
+-   `timestamp` **[number][484]** A timestamp in seconds
+
+Returns **[number][484]** A number of seconds elapsed
 
 ## InstallerAPI
 
@@ -4632,277 +4632,277 @@ Returns **[string][482]** The base route (without parameters)
 
 [111]: #request
 
-[112]: #dateutils
+[112]: #dbschemaconverter
 
-[113]: #timestamp
+[113]: #tablename
 
-[114]: #datetoutctimestamp
+[114]: #toschema
 
-[115]: #datetotimestamp
+[115]: #convert
 
-[116]: #roundedtimestamp
+[116]: #convertproperties
 
-[117]: #dateformatted
+[117]: #deviceapi
 
-[118]: #secondselapsedsincemidnight
+[118]: #getdevices
 
-[119]: #dbschemaconverter
+[119]: #switchdevice
 
-[120]: #tablename
+[120]: #constants
 
-[121]: #toschema
+[121]: #getdevicestatus
 
-[122]: #convert
+[122]: #addform
 
-[123]: #convertproperties
+[123]: #registerswitchdevice
 
-[124]: #deviceapi
+[124]: #savedevice
 
-[125]: #getdevices
+[125]: #getdevicetypes
 
-[126]: #switchdevice
+[126]: #getdevicebyid
 
-[127]: #constants
+[127]: #switchdevicewithdevice
 
-[128]: #getdevicestatus
+[128]: #devicemanager
 
-[129]: #addform
+[129]: #addform-1
 
-[130]: #registerswitchdevice
+[130]: #registerswitchdevice-1
 
-[131]: #savedevice
+[131]: #triggerscenario
 
-[132]: #getdevicetypes
+[132]: #registerdevicelistform
 
-[133]: #getdevicebyid
+[133]: #registerdevicetiles
 
-[134]: #switchdevicewithdevice
+[134]: #getdevices-1
 
-[135]: #devicemanager
+[135]: #getdevicestatus-1
 
-[136]: #addform-1
+[136]: #registerdevicetile
 
-[137]: #registerswitchdevice-1
+[137]: #getdevicetypes-1
 
-[138]: #triggerscenario
+[138]: #getdevicebyid-1
 
-[139]: #registerdevicelistform
+[139]: #switchdevice-1
 
-[140]: #registerdevicetiles
+[140]: #switchdevicewithdevice-1
 
-[141]: #getdevices-1
+[141]: #savedevice-1
 
-[142]: #getdevicestatus-1
+[142]: #switchall
 
-[143]: #registerdevicetile
+[143]: #processapi-1
 
-[144]: #getdevicetypes-1
+[144]: #deviceform
 
-[145]: #getdevicebyid-1
+[145]: #name
 
-[146]: #switchdevice-1
+[146]: #excludefromall
 
-[147]: #switchdevicewithdevice-1
+[147]: #visible
 
-[148]: #savedevice-1
+[148]: #poweroutagerestore
 
-[149]: #switchall
+[149]: #worksonlyondaynight
 
-[150]: #processapi-1
+[150]: #icon
 
-[151]: #deviceform
+[151]: #status
 
-[152]: #name
+[152]: #brightness
 
-[153]: #excludefromall
+[153]: #color
 
-[154]: #visible
+[154]: #colortemperature
 
-[155]: #poweroutagerestore
+[155]: #json
 
-[156]: #worksonlyondaynight
+[156]: #deviceslistform
 
-[157]: #icon
+[157]: #identifier
 
-[158]: #status
+[158]: #status-1
 
-[159]: #brightness
+[159]: #keepparams
 
-[160]: #color
+[160]: #brightness-1
 
-[161]: #colortemperature
+[161]: #color-1
 
-[162]: #json
+[162]: #colortemperature-1
 
-[163]: #deviceslistform
+[163]: #json-1
 
-[164]: #identifier
+[164]: #getdevicesname
 
-[165]: #status-1
+[165]: #getdevicesid
 
-[166]: #keepparams
+[166]: #deviceslistscenariotriggerform
 
-[167]: #brightness-1
+[167]: #identifier-1
 
-[168]: #color-1
+[168]: #status-2
 
-[169]: #colortemperature-1
+[169]: #json-2
 
-[170]: #json-1
+[170]: #getdevicesname-1
 
-[171]: #getdevicesname
+[171]: #getdevicesid-1
 
-[172]: #getdevicesid
+[172]: #deviceslistscenarioform
 
-[173]: #deviceslistscenariotriggerform
+[173]: #turnonall
 
-[174]: #identifier-1
+[174]: #turnoffall
 
-[175]: #status-2
+[175]: #devices
 
-[176]: #json-2
+[176]: #triggerondevice
 
-[177]: #getdevicesname-1
+[177]: #json-3
 
-[178]: #getdevicesid-1
+[178]: #devicestatus
 
-[179]: #deviceslistscenarioform
+[179]: #getstatus
 
-[180]: #turnonall
+[180]: #getbrightness
 
-[181]: #turnoffall
+[181]: #getcolor
 
-[182]: #devices
+[182]: #getcolortemperature
 
-[183]: #triggerondevice
+[183]: #setstatus
 
-[184]: #json-3
+[184]: #setbrightness
 
-[185]: #icons
+[185]: #setcolor
 
-[186]: #list
+[186]: #setcolortemperature
 
-[187]: #raw
+[187]: #tileformat
 
-[188]: #devicestatus
+[188]: #environmentapi
 
-[189]: #getstatus
+[189]: #getcoordinates
 
-[190]: #getbrightness
+[190]: #setday
 
-[191]: #getcolor
+[191]: #setnight
 
-[192]: #getcolortemperature
+[192]: #isnight
 
-[193]: #setstatus
+[193]: #registerdaynightnotifications
 
-[194]: #setbrightness
+[194]: #unregisterdaynightnotifications
 
-[195]: #setcolor
+[195]: #getlocalapiurl
 
-[196]: #setcolortemperature
+[196]: #gethautomationid
 
-[197]: #tileformat
+[197]: #getfullhautomationid
 
-[198]: #environmentapi
+[198]: #getscannedip
 
-[199]: #getcoordinates
+[199]: #constants-1
 
-[200]: #setday
+[200]: #environmentmanager
 
-[201]: #setnight
+[201]: #settimezone
 
-[202]: #isnight
+[202]: #registerdaynightnotifications-1
 
-[203]: #registerdaynightnotifications
+[203]: #unregisterdaynightnotifications-1
 
-[204]: #unregisterdaynightnotifications
+[204]: #registertile-1
 
-[205]: #getlocalapiurl
+[205]: #getcoordinates-1
 
-[206]: #gethautomationid
+[206]: #dispatchdaynightchange
 
-[207]: #getfullhautomationid
+[207]: #setday-1
 
-[208]: #getscannedip
+[208]: #setnight-1
 
-[209]: #constants-1
+[209]: #isnight-1
 
-[210]: #environmentmanager
+[210]: #getlocalport
 
-[211]: #settimezone
+[211]: #getlocalip
 
-[212]: #registerdaynightnotifications-1
+[212]: #getmacaddress
 
-[213]: #unregisterdaynightnotifications-1
+[213]: #getlocalapiurl-1
 
-[214]: #registertile-1
+[214]: #savemainconfiguration
 
-[215]: #getcoordinates-1
+[215]: #processapi-2
 
-[216]: #dispatchdaynightchange
+[216]: #updatecore
 
-[217]: #setday-1
+[217]: #isdefaultconfig
 
-[218]: #setnight-1
+[218]: #gethautomationid-1
 
-[219]: #isnight-1
+[219]: #getfullhautomationid-1
 
-[220]: #getlocalport
+[220]: #registeripscanform
 
-[221]: #getlocalip
+[221]: #startipscan
 
-[222]: #getmacaddress
+[222]: #manageuptimefile
 
-[223]: #getlocalapiurl-1
+[223]: #environmentform
 
-[224]: #savemainconfiguration
+[224]: #day
 
-[225]: #processapi-2
+[225]: #json-4
 
-[226]: #updatecore
+[226]: #icons
 
-[227]: #isdefaultconfig
+[227]: #list
 
-[228]: #gethautomationid-1
+[228]: #raw
 
-[229]: #getfullhautomationid-1
+[229]: #daynightscenarioform
 
-[230]: #registeripscanform
+[230]: #day-1
 
-[231]: #startipscan
+[231]: #night
 
-[232]: #manageuptimefile
+[232]: #json-5
 
-[233]: #environmentform
+[233]: #ipscanform
 
-[234]: #day
+[234]: #ip
 
-[235]: #json-4
+[235]: #freetext
 
-[236]: #daynightscenarioform
+[236]: #freetexthidden
 
-[237]: #day-1
+[237]: #json-6
 
-[238]: #night
+[238]: #getvalues
 
-[239]: #json-5
+[239]: #getvalueswithoutfreetext
 
-[240]: #ipscanform
+[240]: #gettitles
 
-[241]: #ip
+[241]: #dateutils
 
-[242]: #freetext
+[242]: #timestamp
 
-[243]: #freetexthidden
+[243]: #datetoutctimestamp
 
-[244]: #json-6
+[244]: #datetotimestamp
 
-[245]: #getvalues
+[245]: #roundedtimestamp
 
-[246]: #getvalueswithoutfreetext
+[246]: #dateformatted
 
-[247]: #gettitles
+[247]: #secondselapsedsincemidnight
 
 [248]: #installerapi
 
