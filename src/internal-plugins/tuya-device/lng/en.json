@@ -1,8 +1,6 @@
 {
     "tuya.form.title":"Tuya WiFI devices",
     "tuya.device.id": "Tuya device",
-    "tuya.device.key": "Key",
-    "tuya.device.ip": "Ip address",
     "tuya.cloud.username": "Tuya Cloud Username (Smart Life application )",
     "tuya.cloud.password": "Tuya Cloud Password (Smart Life application)"
 }
