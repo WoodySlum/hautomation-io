@@ -125,10 +125,12 @@ function loaded(api) {
             this.api = api;
             this.tuyaDevices = [];
 
-            this.api.timeEventAPI.register((self) => {
-                api.exported.Logger.verbose("Synchronizing tuya devices");
-                self.updateLocalState(self);
-            }, this, api.timeEventAPI.constants().EVERY_MINUTES);
+            api.timeEventAPI.register((self) => {
+                if ((new Date()).getSeconds() === 30) { // Shift to 30 seconds to avoid interfacing with time events
+                    api.exported.Logger.verbose("Synchronizing tuya devices");
+                    self.updateLocalState(self);
+                }
+            }, this, api.timeEventAPI.constants().EVERY_SECONDS);
 
             this.registerSwitchCommand(); // For init
             this.retrieveDevicesAndStates();
@@ -198,7 +200,7 @@ function loaded(api) {
 
         /**
          * Retrieve device and status
-         * 
+         *
          * @param  {Function} [cb=null] A callback when done. If something wrong occurs, callback won't be called
          */
         retrieveDevicesAndStates(cb = null) {

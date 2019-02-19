@@ -156,7 +156,7 @@ class TimeEventService extends Service.class {
             obj.hour = "*";
             break;
         case EVERY_MINUTES:
-            obj.second = Math.floor(Math.random() * 59) + 0;
+            obj.second = 0;
             obj.minute = "*";
             obj.hour = "*";
             break;

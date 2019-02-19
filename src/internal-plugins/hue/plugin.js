@@ -179,9 +179,11 @@ function loaded(api) {
             });
 
             api.timeEventAPI.register((self) => {
-                api.exported.Logger.verbose("Synchronizing Philips Hue lights");
-                self.updateLights(self);
-            }, this, api.timeEventAPI.constants().EVERY_MINUTES);
+                if ((new Date()).getSeconds() === 30) { // Shift to 30 seconds to avoid interfacing with time events
+                    api.exported.Logger.verbose("Synchronizing Philips Hue lights");
+                    self.updateLights(self);
+                }
+            }, this, api.timeEventAPI.constants().EVERY_SECONDS);
         }
 
         /**
@@ -221,12 +223,13 @@ function loaded(api) {
             }
 
             context.api.deviceAPI.getDevices().forEach((device) => {
-
+                let isHueDevice = false;
                 if (device.HueDeviceForm && device.HueDeviceForm.length > 0) {
                     let isOn = context.api.deviceAPI.constants().INT_STATUS_OFF;
                     context.hueDevices.forEach((hueDevice) => {
                         device.HueDeviceForm.forEach((subd) => {
                             if ( subd.device.toString() === hueDevice.attributes.attributes.id.toString()) {
+                                isHueDevice = true;
                                 const state = hueDevice.state.attributes;
                                 const brightness = parseFloat(Math.round(state.bri / 254 * 10) / 10);
                                 const color = colorutil.rgb.to.hex(colorutil.hsv.to.rgb({h: (Math.round((state.hue / 65534) * colorRound) / colorRound), s: (Math.round((state.sat / 254) * colorRound) / colorRound), v: 1, a: 1})).toUpperCase().replace("#", "");
@@ -246,7 +249,7 @@ function loaded(api) {
                         });
                     });
 
-                    if (device.status != isOn) {
+                    if (isHueDevice && device.status != isOn) {
                         device.status = isOn;
                         context.api.deviceAPI.switchDeviceWithDevice(device);
                     }

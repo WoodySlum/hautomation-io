@@ -222,7 +222,14 @@ class DeviceManager {
 
             if (scenario.DevicesListScenarioForm.devices && scenario.DevicesListScenarioForm.devices.length > 0) {
                 scenario.DevicesListScenarioForm.devices.forEach((scenarioDevice) => {
-                    context.switchDevice(scenarioDevice.identifier, scenarioDevice.status, scenarioDevice.brightness, scenarioDevice.color);
+                    if (!scenarioDevice.keepParams) {
+                        context.switchDevice(scenarioDevice.identifier, scenarioDevice.status, scenarioDevice.brightness, scenarioDevice.color, scenarioDevice.colorTemperature);
+                    } else {
+                        const device = context.getDeviceById(scenarioDevice.identifier);
+                        if (device) {
+                            context.switchDevice(scenarioDevice.identifier, scenarioDevice.status, device.brightness, device.color, device.colorTemperature);
+                        }
+                    }
                 });
             }
         }

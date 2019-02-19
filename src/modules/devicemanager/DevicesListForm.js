@@ -14,9 +14,10 @@ class DevicesListForm extends FormObject.class {
      * @param {number} [brightness=1]    Brightness
      * @param {string} [color="FFFFFF"]  Color
      * @param {string} [colorTemperature=0]  Color temperature
+     * @param {boolean} [keepParams=true]    Keep params existing
      * @returns {DevicesListForm}                            The instance
      */
-    constructor(id = null, identifier = null, status = null, brightness = 1, color = "FFFFFF", colorTemperature = 0) {
+    constructor(id = null, identifier = null, status = null, brightness = 1, color = "FFFFFF", colorTemperature = 0, keepParams = true) {
         super(id);
 
         /**
@@ -36,6 +37,14 @@ class DevicesListForm extends FormObject.class {
          * @EnumNames(["devices.list.form.status.off", "devices.list.form.status.on", "devices.list.form.status.invert"]);
          */
         this.status = status;
+
+        /**
+         * @Property("keepParams");
+         * @Type("boolean");
+         * @Title("devices.list.form.keep.params");
+         * @Default(true);
+         */
+        this.keepParams = keepParams;
 
         /**
          * @Property("brightness");
@@ -89,7 +98,7 @@ class DevicesListForm extends FormObject.class {
      * @returns {DevicesListForm}      A form object
      */
     json(data) {
-        return new DevicesListForm(data.id, data.identifier, data.status, data.brightness, data.color, data.colorTemperature);
+        return new DevicesListForm(data.id, data.identifier, data.status, data.brightness, data.color, data.colorTemperature, data.keepParams);
     }
 }
 
