@@ -18,6 +18,7 @@ class IconForm extends FormObject.class {
         /**
          * @Property("icon");
          * @Type("string");
+         * @Display("typeahead");
          * @Title("icon.form.name");
          * @Enum("getIcons");
          * @EnumNames("getIconsLabels");

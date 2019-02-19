@@ -398,6 +398,25 @@ class FormManager {
                                 schemaUI[prop]["ui:widget"] = "textarea";
                             } else if (display === "password") {
                                 schemaUI[prop]["ui:widget"] = "password";
+                            } else if (display === "typeahead") {
+                                if (schemaPropertiesProp.enum && schemaPropertiesProp.enumNames && schemaPropertiesProp.enum.length === schemaPropertiesProp.enumNames.length) {
+                                    const typeHeadArray = [];
+                                    for (let l = 0 ; l < schemaPropertiesProp.enum.length ; l++) {
+                                        typeHeadArray.push({key: schemaPropertiesProp.enum[l], label: schemaPropertiesProp.enumNames[l]});
+                                    }
+                                    schemaUI[prop]["ui:field"] = "typeahead";
+                                    schemaUI[prop]["typeahead"] = {
+                                        "options": typeHeadArray,
+                                        "labelKey": "label",
+                                        "minLength":0,
+                                        "mapping":"key",
+                                        "placeholder": self.translateManager.t("form.typeahead.search", meta.Title ? self.translateManager.t(meta.Title) : "")
+
+                                    };
+
+                                    delete schemaPropertiesProp.enum;
+                                    delete schemaPropertiesProp.enumNames;
+                                }
                             }
                         }
 

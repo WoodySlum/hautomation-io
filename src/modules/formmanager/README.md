@@ -200,6 +200,25 @@ The values of l-the list will be `value1` for title `foo.translate.key` and `val
 
 Remember than `inject` is global.
 
+#### Type ahead list
+
+Identical to list, but a search text box will appear
+
+    class Foo extends api.exported.FormObject.class {
+        constructor(id, bar) {
+            super(id);
+            /**
+             * @Property("bar");
+             * @Type("string");
+             * @Title("my.translate.key");
+             * @Enum(["foo", "bar"]);
+             * @EnumNames(["foo.translate.key", "bar.translate.key"]);
+             * @Display("typeahead");
+             */
+            this.bar = bar;
+        }
+    }
+
 #### Radio buttons
 
 Can be static or dynamic, as lists.
