@@ -78,7 +78,7 @@ function loaded(api) {
          */
         init() {
             super.init();
-            this.api.timeEventAPI.unregister({}, this.api.timeEventAPI.constants().EVERY_MINUTES, null, null, null, BASE_KEY + this.id);
+            this.api.timeEventAPI.unregister({}, this.api.timeEventAPI.constants().EVERY_HOURS, null, null, null, BASE_KEY + this.id);
             this.api.timeEventAPI.register((self) => {
                 const domain = (self.configuration.domain && this.configuration.domain.length > 0) ? self.configuration.domain : DEFAULT_DOMAIN;
                 dns.lookup(domain, (err, ip) => {
@@ -96,7 +96,7 @@ function loaded(api) {
                         self.api.exported.Logger.err(err.message);
                     }
                 });
-            }, this, this.api.timeEventAPI.constants().EVERY_MINUTES, null, null, null, BASE_KEY + this.id);
+            }, this, this.api.timeEventAPI.constants().EVERY_HOURS, null, null, null, BASE_KEY + this.id);
         }
     }
 
