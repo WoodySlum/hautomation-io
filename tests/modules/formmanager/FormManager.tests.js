@@ -212,6 +212,8 @@ class BarFoo extends FormObject.class {
 
     }
 }
+
+
 const apiSim = {exported : {FormObject : FormObject}};
 class BarFooExtended extends apiSim.exported.FormObject.class {
     constructor() {
@@ -221,6 +223,30 @@ class BarFooExtended extends apiSim.exported.FormObject.class {
          * @Title("Another extended form");
          */
         this.xo = null;
+    }
+
+    json() {
+
+    }
+}
+
+class BarFooSorted extends FormObject.class {
+    constructor() {
+        super();
+
+        /**
+         * @Property("firstField");
+         * @Type("string");
+         * @Sort(10);
+         */
+        this.firstField = null;
+
+        /**
+         * @Property("secondField");
+         * @Type("string");
+         * @Sort(2);
+         */
+        this.secondField = null;
     }
 
     json() {
@@ -353,6 +379,16 @@ describe("FormManager", function() {
         } catch(e) {
             expect(e.message).to.be.equal(FormManager.ERROR_NO_JSON_METHOD);
         }
+    });
+
+    it("getForm should sort fields", function() {
+        formManager.register(BarFooSorted);
+        const generatedForm = formManager.getForm(BarFooSorted);
+        const keys = Object.keys(generatedForm.schema.properties);
+        expect(keys.length).to.be.equal(3);
+        expect(keys[0]).to.be.equal("secondField");
+        expect(keys[1]).to.be.equal("firstField");
+        expect(keys[2]).to.be.equal("id");
     });
 
     after(() => {

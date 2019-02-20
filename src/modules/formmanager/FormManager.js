@@ -7,6 +7,7 @@ const Convert = require("./../../utils/Convert");
 const ERROR_NO_JSON_METHOD = "No `json` method implemented";
 const ERROR_NO_FORMOBJECT_EXTEND = "The form class does not extend `FormObject` class";
 const ERROR_PARENT_CLASS_NOT_REGISTERED = "The parent form class is not registered";
+const BASE_SORTING = 100;
 
 /**
  * Generate forms from a specific object
@@ -54,6 +55,7 @@ class FormManager {
 
     /**
      * Add additional fields to a form base
+     * Deprecated - Use addAdditionalFieldsWithSort
      *
      * @param {Class} formBase The base form
      * @param {string} title The form title
@@ -61,11 +63,25 @@ class FormManager {
      * @param {boolean} [isList=false] `true` if this is a list of objects, otherwise `false`
      */
     addAdditionalFields(formBase, title, forms, isList = false) {
+        this.addAdditionalFieldsWithSort(formBase, title, forms, BASE_SORTING, isList);
+    }
+
+    /**
+     * Add additional fields to a form base
+     *
+     * @param {Class} formBase The base form
+     * @param {string} title The form title
+     * @param {Array} forms    An array of forms
+     * @param {number} sort    Sort
+     * @param {boolean} [isList=false] `true` if this is a list of objects, otherwise `false`
+     */
+    addAdditionalFieldsWithSort(formBase, title, forms, sort = BASE_SORTING, isList = false) {
         const additionalProperties = this.registeredForms[formBase.name].additionalFields;
         forms.forEach((form) => {
             additionalProperties[form.name] = [
                     {key:"Type", value:(isList ? "objects" : "object")},
                     {key:"Cl", value:form.name},
+                    {key:"Sort", value:(sort ? sort : BASE_SORTING)},
                     {key:"Title", value:title}
             ];
         });
@@ -164,6 +180,63 @@ class FormManager {
     }
 
     /**
+     * Sort the form recursively
+     *
+     * @param  {Object} schema A form schema
+     */
+    sort(schema) {
+        let properties = [];
+        let toClean = [];
+        if (schema.properties) {
+            Object.keys(schema.properties).forEach((property) => {
+                let sort = schema.properties[property].sort;
+                if (!sort) {
+                    if (schema.properties[property].type) {
+                        schema.properties[property] = this.sort(schema.properties[property]);
+                    }
+
+                    if (schema.properties[property].properties) {
+                        schema.properties[property] = this.sort(schema.properties[property]);
+                    }
+
+                    if (schema.properties[property].items) {
+                        schema.properties[property].items = this.sort(schema.properties[property].items);
+                    }
+
+                    sort = BASE_SORTING;
+                } else {
+                    toClean.push(schema.properties[property]);
+                }
+
+                properties.push({property: property, sort:sort});
+            });
+        }
+
+        if (properties.length > 0) {
+            const sorted = properties.map((data, idx) => {
+                return {idx: idx, data: data};
+            }).sort((a, b) => {
+                if (a.data.sort < b.data.sort) return -1;
+                if (a.data.sort > b.data.sort) return 1;
+                return a.idx - b.idx;
+            }).map(function(val){
+                return val.data;
+            });
+
+            const savedProperties = Object.assign({}, schema.properties);
+            schema.properties = {};
+            sorted.forEach((sortedElement) => {
+                if (savedProperties[sortedElement.property]) {
+                    delete savedProperties[sortedElement.property].sort;
+                    schema.properties[sortedElement.property] = savedProperties[sortedElement.property];
+                }
+            });
+        }
+
+        return schema;
+    }
+
+    /**
      * Get a form object
      *
      * @param  {Class} cl     A class with form annotations
@@ -194,7 +267,7 @@ class FormManager {
             const c = this.registeredForms[className].class;
             const inject = this.registeredForms[className].inject;
             form = this.generateForm(c, this.registeredForms[className].additionalFields, schema, schemaUI, ...inject);
-            schema = form.schema;
+            schema = this.sort(form.schema);
             schemaUI = form.schemaUI;
         });
 
@@ -219,13 +292,18 @@ class FormManager {
             const properties = Object.assign(AnnotationReader.comments.properties, additionalFields);
             Object.keys(properties).forEach((prop) => {
                 const meta = Convert.class.convertProperties(properties[prop]);
+
+                let sort = BASE_SORTING;
+                if (meta.Sort) {
+                    sort = parseInt(meta.Sort);
+                }
                 if (meta.Type) {
                     const type = meta.Type.toLowerCase();
                     let exist = false;
                     // Type and create properties
-                    let schemaPropertiesProp = {};
-
+                    let schemaPropertiesProp = {sort:sort};
                     schemaUI[prop] = {};
+
                     if (type === "string") {
                         schemaPropertiesProp.type = "string";
                         exist = true;
@@ -255,7 +333,7 @@ class FormManager {
                         exist = true;
                     } else if (type === "object" && meta.Cl) {
                         const subForm =  self.generateForm(self.registeredForms[meta.Cl].class, self.registeredForms[meta.Cl].additionalFields, self.initSchema(), self.initSchemaUI(), ...self.registeredForms[meta.Cl].inject);
-                        schemaPropertiesProp = subForm.schema;
+                        schemaPropertiesProp = Object.assign({sort: sort}, subForm.schema);
                         schemaPropertiesProp.type = "object";
                         schemaUI[prop] = subForm.schemaUI;
 

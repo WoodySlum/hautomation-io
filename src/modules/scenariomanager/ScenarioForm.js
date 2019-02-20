@@ -57,6 +57,7 @@ class ScenarioForm extends FormObject.class {
          * @Title("scenario.form.time.trigger");
          * @Type("objects");
          * @Cl("TimeScenarioForm");
+         * @Sort(200);
          */
         this.timeTrigger = timeTrigger;
 

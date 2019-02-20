@@ -20,6 +20,7 @@ class SensorsListScenarioForm extends FormObject.class {
          * @Type("objects");
          * @Cl("SensorScenarioForm");
          * @Title("sensors.list.scenario.sensors");
+         * @Sort(200);
          */
         this.sensors = sensors;
     }

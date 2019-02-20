@@ -71,7 +71,7 @@ class EnvironmentManager {
         this.registeredElements = {};
         this.registerTile();
         this.formManager.register(DayNightScenarioForm.class);
-        this.scenarioManager.register(DayNightScenarioForm.class, null, "daynight.scenario.trigger.title");
+        this.scenarioManager.register(DayNightScenarioForm.class, null, "daynight.scenario.trigger.title", 200);
         this.version = version;
         this.hash = hash;
         this.installationManager = installationManager;

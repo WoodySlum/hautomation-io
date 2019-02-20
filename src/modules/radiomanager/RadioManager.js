@@ -93,7 +93,7 @@ class RadioManager {
         context.registerRadioEvents();
         context.formManager.register(RadioForm.class, context.modules, context.protocols);
         context.formManager.register(RadioScenarioForm.class);
-        context.scenarioManager.register(RadioScenariosForm.class, null, "radio.scenario.form.trigger");
+        context.scenarioManager.register(RadioScenariosForm.class, null, "radio.scenario.form.trigger", 200);
     }
 
     /**

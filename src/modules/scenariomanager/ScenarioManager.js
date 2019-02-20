@@ -108,11 +108,12 @@ class ScenarioManager {
      * @param  {FormObject} formPart         A form part
      * @param  {Function} [triggerCb=null] A trigger called when a scenario should be executed. E.g. : `(scenario) => {}`
      * @param  {string} [title=null]     The title for sub form
+     * @param  {number} [sort=null]      Sort
      */
-    register(formPart, triggerCb = null, title = null) {
+    register(formPart, triggerCb = null, title = null, sort = null) {
         this.registered[this.generateKey(formPart, triggerCb)] = {formPart:formPart, triggerCb:triggerCb};
         if (formPart) {
-            this.formConfiguration.addAdditionalFields(formPart, title);
+            this.formConfiguration.addAdditionalFieldsWithSort(formPart, title, sort);
         }
     }
 

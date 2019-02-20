@@ -322,6 +322,12 @@ Can be static or dynamic, as lists.
 
     @Hidden(true);
 
+#### Sort fields
+
+This will order fields ascending. Default value is 100.
+
+    @Sort(200);
+
 ### Add multiple list elements
 
 You can use the `@Unique` tag to get the possibility to add multiple elements to a list :

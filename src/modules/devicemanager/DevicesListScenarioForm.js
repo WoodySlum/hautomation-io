@@ -45,6 +45,7 @@ class DevicesListScenarioForm extends FormObject.class {
          * @Type("objects");
          * @Cl("DevicesListScenarioTriggerForm");
          * @Title("devices.list.scenario.trigger.devices");
+         * @Sort(200);
          */
         this.triggerOnDevice = triggerOnDevice;
     }

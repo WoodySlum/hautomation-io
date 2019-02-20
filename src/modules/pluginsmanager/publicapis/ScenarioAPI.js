@@ -25,9 +25,10 @@ class ScenarioAPI {
      * @param  {FormObject} formPart         A form part
      * @param  {Function} [triggerCb=null] A trigger called when a scenario should be executed. E.g. : `(scenario) => {}`
      * @param  {string} [title=null]     The title for sub form (can be translation key)
+     * @param  {number} [sort=null]      Sort
      */
-    register(formPart, triggerCb = null, title = null) {
-        PrivateProperties.oprivate(this).scenarioManager.register(formPart, triggerCb, title);
+    register(formPart, triggerCb = null, title = null, sort = null) {
+        PrivateProperties.oprivate(this).scenarioManager.register(formPart, triggerCb, title, sort);
     }
 
     /**

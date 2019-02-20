@@ -78,6 +78,7 @@ class FormConfiguration {
 
     /**
      * Add additional fields
+     * Deprecated - Use addAdditionalFieldsWithSort
      *
      * @param {Class} form A form
      * @param {string} title The form title
@@ -85,10 +86,23 @@ class FormConfiguration {
      * @param  {...Object} inject Parameters injection on static methods
      */
     addAdditionalFields(form, title, isList, ...inject) {
+        this.addAdditionalFieldsWithSort(form, title, isList, null, ...inject);
+    }
+
+    /**
+     * Add additional fields
+     *
+     * @param {Class} form A form
+     * @param {string} title The form title
+     * @param {boolean} isList `true` if this is a list of objects, otherwise `false`
+     * @param  {number} [sort=null]      Sort
+     * @param  {...Object} inject Parameters injection on static methods
+     */
+    addAdditionalFieldsWithSort(form, title, isList, sort = null, ...inject) {
         if (this.additionalFields.indexOf(form) === -1 && this.formClass) {
             this.formManager.register(form, ...inject);
             this.additionalFields.push(form);
-            this.formManager.addAdditionalFields(this.formClass, title, [form], isList);
+            this.formManager.addAdditionalFieldsWithSort(this.formClass, title, [form], isList, sort);
         }
     }
 
