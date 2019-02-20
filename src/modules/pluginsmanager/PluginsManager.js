@@ -73,7 +73,8 @@ const INTERNAL_PLUGINS = [
     "huawei-fairuse-sensor",
     "hue",
     "dropbox",
-    "tuya-device"
+    "tuya-device",
+    "ping-sensor"
 ];
 
 const CORE_PLUGINS = [

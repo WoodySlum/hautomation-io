@@ -108,6 +108,7 @@
         "audiohub": "git://github.com/WoodySlum/audiohub.git#master",
         "body-parser": "^1.18",
         "callsite": "^1.0",
+        "cloudtuya": "git://github.com/unparagoned/cloudtuya#master",
         "color-util": "^2.2",
         "columnify": "^1.5",
         "compression": "^1.7",
@@ -129,6 +130,7 @@
         "mjpeg-proxy": "^0.2",
         "moment": "^2.22",
         "moment-timezone": "^0.5",
+        "net-ping": "^1.2",
         "ngrok": "^3.1",
         "node-datetime": "^1.0",
         "node-google-timezone": "^0.1",
@@ -153,7 +155,6 @@
         "waveheader": "^0.0",
         "xml2js": "^0.4",
         "xmlhttprequest-ssl": "^1.5",
-        "zip-dir": "^1.0",
-        "cloudtuya": "git://github.com/unparagoned/cloudtuya#master"
+        "zip-dir": "^1.0"
     }
 }
