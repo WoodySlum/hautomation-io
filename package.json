@@ -67,6 +67,7 @@
             "./**/*.json",
             "./src/**/*.c",
             "./src/**/*.cpp",
+            "./src/**/*.hpp",
             "./src/**/*.h",
             "./src/**/lib/*",
             "./src/**/global_lib/*",
