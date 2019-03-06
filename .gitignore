@@ -22,7 +22,7 @@ data/plugins.json
 data/*.conf.json
 data/*.json
 data/.uptime
-
+!data/config.json
 
 # Camera files
 data/cameras/

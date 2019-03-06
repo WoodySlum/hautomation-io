@@ -34,11 +34,9 @@ const GatewayManager = require("./modules/gatewaymanager/GatewayManager");
 const BotEngine = require("./modules/botengine/BotEngine");
 const LogManager = require("./modules/logmanager/LogManager");
 const BackupManager = require("./modules/backupmanager/BackupManager");
-let CONFIGURATION_FILE = "./data/config.json";
-if (!fs.existsSync(CONFIGURATION_FILE)) {
-    fs.copyFileSync(CONFIGURATION_FILE + ".default", CONFIGURATION_FILE);
-}
-var AppConfiguration = require("../data/config.json");
+const CONFIGURATION_FILE = "data/config.json";
+var AppConfiguration = require("./../data/config.json");
+
 var NpmPackage = require("./../package.json");
 const commit = require("../version.json").commit;
 const events = require("events");

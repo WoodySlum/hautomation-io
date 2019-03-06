@@ -100,355 +100,355 @@
     -   [distinct][96]
     -   [cleanForDelete][97]
     -   [request][98]
--   [DateUtils][99]
-    -   [timestamp][100]
-    -   [dateToUTCTimestamp][101]
-    -   [dateToTimestamp][102]
-    -   [roundedTimestamp][103]
-    -   [dateFormatted][104]
-    -   [secondsElapsedSinceMidnight][105]
--   [DbSchemaConverter][106]
-    -   [tableName][107]
-    -   [toSchema][108]
--   [Convert][109]
-    -   [convertProperties][110]
--   [DeviceAPI][111]
-    -   [getDevices][112]
-    -   [switchDevice][113]
-    -   [constants][114]
-    -   [getDeviceStatus][115]
+-   [DbSchemaConverter][99]
+    -   [tableName][100]
+    -   [toSchema][101]
+-   [Convert][102]
+    -   [convertProperties][103]
+-   [DeviceAPI][104]
+    -   [getDevices][105]
+    -   [switchDevice][106]
+    -   [constants][107]
+    -   [getDeviceStatus][108]
+    -   [addForm][109]
+    -   [registerSwitchDevice][110]
+    -   [saveDevice][111]
+    -   [getDeviceTypes][112]
+    -   [getDeviceById][113]
+    -   [switchDeviceWithDevice][114]
+-   [DeviceManager][115]
     -   [addForm][116]
     -   [registerSwitchDevice][117]
-    -   [saveDevice][118]
-    -   [getDeviceTypes][119]
-    -   [getDeviceById][120]
-    -   [switchDeviceWithDevice][121]
--   [DeviceManager][122]
-    -   [addForm][123]
-    -   [registerSwitchDevice][124]
-    -   [triggerScenario][125]
-    -   [registerDeviceListForm][126]
-    -   [registerDeviceTiles][127]
-    -   [getDevices][128]
-    -   [getDeviceStatus][129]
-    -   [registerDeviceTile][130]
-    -   [getDeviceTypes][131]
-    -   [getDeviceById][132]
-    -   [switchDevice][133]
-    -   [switchDeviceWithDevice][134]
-    -   [saveDevice][135]
-    -   [switchAll][136]
-    -   [processAPI][137]
--   [DeviceForm][138]
-    -   [name][139]
-    -   [excludeFromAll][140]
-    -   [visible][141]
-    -   [powerOutageRestore][142]
-    -   [worksOnlyOnDayNight][143]
-    -   [icon][144]
+    -   [triggerScenario][118]
+    -   [registerDeviceListForm][119]
+    -   [registerDeviceTiles][120]
+    -   [getDevices][121]
+    -   [getDeviceStatus][122]
+    -   [registerDeviceTile][123]
+    -   [getDeviceTypes][124]
+    -   [getDeviceById][125]
+    -   [switchDevice][126]
+    -   [switchDeviceWithDevice][127]
+    -   [saveDevice][128]
+    -   [switchAll][129]
+    -   [processAPI][130]
+-   [DeviceForm][131]
+    -   [name][132]
+    -   [excludeFromAll][133]
+    -   [visible][134]
+    -   [powerOutageRestore][135]
+    -   [worksOnlyOnDayNight][136]
+    -   [icon][137]
+    -   [status][138]
+    -   [brightness][139]
+    -   [color][140]
+    -   [colorTemperature][141]
+    -   [json][142]
+-   [DevicesListForm][143]
+    -   [identifier][144]
     -   [status][145]
-    -   [brightness][146]
-    -   [color][147]
-    -   [colorTemperature][148]
-    -   [json][149]
--   [DevicesListForm][150]
-    -   [identifier][151]
-    -   [status][152]
-    -   [keepParams][153]
-    -   [brightness][154]
-    -   [color][155]
-    -   [colorTemperature][156]
-    -   [json][157]
-    -   [getDevicesName][158]
-    -   [getDevicesId][159]
--   [DevicesListScenarioTriggerForm][160]
-    -   [identifier][161]
-    -   [status][162]
-    -   [json][163]
-    -   [getDevicesName][164]
-    -   [getDevicesId][165]
--   [DevicesListScenarioForm][166]
-    -   [turnOnAll][167]
-    -   [turnOffAll][168]
-    -   [devices][169]
-    -   [triggerOnDevice][170]
-    -   [json][171]
--   [Icons][172]
-    -   [list][173]
-    -   [raw][174]
--   [DeviceStatus][175]
-    -   [getStatus][176]
-    -   [getBrightness][177]
-    -   [getColor][178]
-    -   [getColorTemperature][179]
-    -   [setStatus][180]
-    -   [setBrightness][181]
-    -   [setColor][182]
-    -   [setColorTemperature][183]
-    -   [tileFormat][184]
--   [EnvironmentAPI][185]
-    -   [getCoordinates][186]
-    -   [setDay][187]
-    -   [setNight][188]
-    -   [isNight][189]
-    -   [registerDayNightNotifications][190]
-    -   [unregisterDayNightNotifications][191]
-    -   [getLocalAPIUrl][192]
-    -   [getHautomationId][193]
-    -   [getFullHautomationId][194]
-    -   [getScannedIp][195]
-    -   [constants][196]
--   [EnvironmentManager][197]
-    -   [setTimezone][198]
-    -   [registerDayNightNotifications][199]
-    -   [unregisterDayNightNotifications][200]
-    -   [registerTile][201]
-    -   [getCoordinates][202]
-    -   [dispatchDayNightChange][203]
-    -   [setDay][204]
-    -   [setNight][205]
-    -   [isNight][206]
-    -   [getLocalPort][207]
-    -   [getLocalIp][208]
-    -   [getMacAddress][209]
-    -   [getLocalAPIUrl][210]
-    -   [saveMainConfiguration][211]
-    -   [processAPI][212]
-    -   [updateCore][213]
-    -   [isDefaultConfig][214]
-    -   [getHautomationId][215]
-    -   [getFullHautomationId][216]
-    -   [registerIpScanForm][217]
-    -   [startIpScan][218]
-    -   [manageUptimeFile][219]
--   [EnvironmentForm][220]
-    -   [day][221]
-    -   [json][222]
--   [DayNightScenarioForm][223]
-    -   [day][224]
-    -   [night][225]
-    -   [json][226]
--   [IpScanForm][227]
-    -   [ip][228]
-    -   [freetext][229]
-    -   [freetextHidden][230]
-    -   [json][231]
-    -   [getValues][232]
-    -   [getValuesWithoutFreetext][233]
-    -   [getTitles][234]
--   [InstallerAPI][235]
-    -   [register][236]
-    -   [executeCommand][237]
--   [IotAPI][238]
-    -   [registerLib][239]
-    -   [registerApp][240]
-    -   [iotAppExists][241]
-    -   [getVersion][242]
-    -   [getIot][243]
-    -   [build][244]
-    -   [constants][245]
-    -   [getIots][246]
-    -   [isBuilding][247]
--   [MessageAPI][248]
-    -   [sendMessage][249]
-    -   [register][250]
-    -   [unregister][251]
-    -   [onMessageReceived][252]
-    -   [getMessages][253]
--   [RadioAPI][254]
-    -   [register][255]
-    -   [unregister][256]
-    -   [compareFormObject][257]
-    -   [getLastReceivedRadioInformations][258]
--   [ScenarioAPI][259]
-    -   [register][260]
-    -   [unregister][261]
-    -   [triggerScenario][262]
-    -   [getScenarios][263]
--   [SchedulerAPI][264]
-    -   [register][265]
-    -   [unregister][266]
-    -   [schedule][267]
-    -   [cancel][268]
-    -   [constants][269]
--   [SchedulerService][270]
-    -   [start][271]
-    -   [stop][272]
-    -   [register][273]
-    -   [unregister][274]
-    -   [schedule][275]
-    -   [cancel][276]
-    -   [timeEvent][277]
--   [SchedulerDbObject][278]
--   [identifier][279]
--   [data][280]
--   [triggerDate][281]
--   [triggered][282]
--   [SensorAPI][283]
-    -   [registerForm][284]
-    -   [registerClass][285]
-    -   [registerSensorEvent][286]
-    -   [unregisterSensorEvent][287]
-    -   [getSensors][288]
-    -   [getValue][289]
-    -   [getSensor][290]
-    -   [iotAppPowered][291]
-    -   [constants][292]
--   [IotsListForm][293]
-    -   [identifier][294]
-    -   [json][295]
-    -   [getIotsName][296]
-    -   [getIotsId][297]
--   [FormObject][298]
-    -   [json][299]
--   [id][300]
--   [SensorsManager][301]
-    -   [pluginsLoaded][302]
-    -   [initSensors][303]
-    -   [scenarioTrigger][304]
-    -   [initSensor][305]
-    -   [registerSensorEvent][306]
-    -   [getSensor][307]
-    -   [unregisterSensorEvent][308]
-    -   [getAllSensors][309]
-    -   [onNewSensorValue][310]
-    -   [getValue][311]
-    -   [processAPI][312]
-    -   [statisticsWsResponse][313]
-    -   [comparator][314]
-    -   [getSensorConfiguration][315]
-    -   [registerSensorsListForm][316]
--   [SensorsForm][317]
-    -   [sensorId][318]
-    -   [json][319]
-    -   [getSensorIds][320]
-    -   [getSensorNames][321]
--   [SensorsListForm][322]
-    -   [identifier][323]
-    -   [json][324]
-    -   [getSensorsName][325]
-    -   [getSensorsId][326]
--   [SensorsListScenarioForm][327]
-    -   [sensors][328]
-    -   [json][329]
--   [SensorScenarioForm][330]
-    -   [sensor][331]
-    -   [operator][332]
-    -   [threshold][333]
-    -   [json][334]
--   [PluginsManager][335]
-    -   [getPluginsFromDirectory][336]
-    -   [checkPluginSanity][337]
-    -   [initPlugin][338]
-    -   [initPlugins][339]
-    -   [registerPlugins][340]
-    -   [load][341]
-    -   [getPluginsByCategory][342]
-    -   [getPluginByIdentifier][343]
-    -   [isEnabled][344]
-    -   [prepareToposortArray][345]
-    -   [toposort][346]
-    -   [topsortedArrayConverter][347]
-    -   [getPluginConf][348]
-    -   [changePluginStatus][349]
-    -   [processAPI][350]
--   [PluginsAPI][351]
-    -   [exportClass][352]
-    -   [init][353]
-    -   [registerInstance][354]
-    -   [getPluginInstance][355]
-    -   [constants][356]
--   [IotForm][357]
-    -   [iotApp][358]
-    -   [name][359]
-    -   [json][360]
--   [ImageUtils][361]
-    -   [sanitizeFormConfiguration][362]
-    -   [resize][363]
-    -   [blur][364]
--   [PluginConf][365]
-    -   [json][366]
--   [ServicesManagerAPI][367]
-    -   [add][368]
-    -   [remove][369]
-    -   [stop][370]
-    -   [start][371]
--   [ThemeAPI][372]
-    -   [getColors][373]
--   [TimeEventAPI][374]
-    -   [register][375]
-    -   [unregister][376]
-    -   [constants][377]
--   [TimeEventService][378]
-    -   [start][379]
-    -   [stop][380]
-    -   [hash][381]
-    -   [elementForHash][382]
-    -   [register][383]
-    -   [unregister][384]
-    -   [convertMode][385]
-    -   [timeEvent][386]
--   [TranslateAPI][387]
-    -   [load][388]
-    -   [t][389]
--   [UserAPI][390]
-    -   [addAdditionalFields][391]
-    -   [getUsers][392]
-    -   [allUsersAtHome][393]
-    -   [nobodyAtHome][394]
-    -   [somebodyAtHome][395]
-    -   [registerHomeNotifications][396]
-    -   [unregisterHomeNotifications][397]
--   [WebAPI][398]
-    -   [register][399]
-    -   [unregister][400]
-    -   [Authentication][401]
-    -   [APIResponse][402]
-    -   [constants][403]
--   [Authentication][404]
-    -   [clearExpiredTokens][405]
-    -   [generateToken][406]
-    -   [processAPI][407]
-    -   [checkLocalIp][408]
-    -   [processAuthentication][409]
--   [AuthenticationData][410]
-    -   [authorized][411]
-    -   [username][412]
-    -   [level][413]
--   [APIResponse][414]
-    -   [success][415]
-    -   [response][416]
-    -   [errorCode][417]
-    -   [errorMessage][418]
--   [Cleaner][419]
-    -   [exportConstants][420]
-    -   [cleanDbObject][421]
--   [WebServices][422]
-    -   [start][423]
-    -   [startTunnel][424]
-    -   [stop][425]
-    -   [registerInfos][426]
-    -   [getRouteIdentifier][427]
-    -   [processAPI][428]
-    -   [register][429]
-    -   [unregister][430]
-    -   [registerAPI][431]
-    -   [unregisterAPI][432]
-    -   [manageResponse][433]
-    -   [buildPromises][434]
-    -   [runPromises][435]
-    -   [sendAPIResponse][436]
--   [Logger][437]
-    -   [setLogLevel][438]
-    -   [log][439]
-    -   [removeColors][440]
-    -   [flog][441]
-    -   [warn][442]
-    -   [err][443]
-    -   [verbose][444]
-    -   [info][445]
-    -   [debug][446]
-    -   [getHistory][447]
+    -   [keepParams][146]
+    -   [brightness][147]
+    -   [color][148]
+    -   [colorTemperature][149]
+    -   [json][150]
+    -   [getDevicesName][151]
+    -   [getDevicesId][152]
+-   [DevicesListScenarioTriggerForm][153]
+    -   [identifier][154]
+    -   [status][155]
+    -   [json][156]
+    -   [getDevicesName][157]
+    -   [getDevicesId][158]
+-   [DevicesListScenarioForm][159]
+    -   [turnOnAll][160]
+    -   [turnOffAll][161]
+    -   [devices][162]
+    -   [triggerOnDevice][163]
+    -   [json][164]
+-   [Icons][165]
+    -   [list][166]
+    -   [raw][167]
+-   [DeviceStatus][168]
+    -   [getStatus][169]
+    -   [getBrightness][170]
+    -   [getColor][171]
+    -   [getColorTemperature][172]
+    -   [setStatus][173]
+    -   [setBrightness][174]
+    -   [setColor][175]
+    -   [setColorTemperature][176]
+    -   [tileFormat][177]
+-   [EnvironmentAPI][178]
+    -   [getCoordinates][179]
+    -   [setDay][180]
+    -   [setNight][181]
+    -   [isNight][182]
+    -   [registerDayNightNotifications][183]
+    -   [unregisterDayNightNotifications][184]
+    -   [getLocalAPIUrl][185]
+    -   [getHautomationId][186]
+    -   [getFullHautomationId][187]
+    -   [getScannedIp][188]
+    -   [constants][189]
+-   [EnvironmentManager][190]
+    -   [setTimezone][191]
+    -   [registerDayNightNotifications][192]
+    -   [unregisterDayNightNotifications][193]
+    -   [registerTile][194]
+    -   [getCoordinates][195]
+    -   [dispatchDayNightChange][196]
+    -   [setDay][197]
+    -   [setNight][198]
+    -   [isNight][199]
+    -   [getLocalPort][200]
+    -   [getLocalIp][201]
+    -   [getMacAddress][202]
+    -   [getLocalAPIUrl][203]
+    -   [saveMainConfiguration][204]
+    -   [processAPI][205]
+    -   [updateCore][206]
+    -   [isDefaultConfig][207]
+    -   [getHautomationId][208]
+    -   [getFullHautomationId][209]
+    -   [registerIpScanForm][210]
+    -   [startIpScan][211]
+    -   [manageUptimeFile][212]
+-   [EnvironmentForm][213]
+    -   [day][214]
+    -   [json][215]
+-   [DayNightScenarioForm][216]
+    -   [day][217]
+    -   [night][218]
+    -   [json][219]
+-   [IpScanForm][220]
+    -   [ip][221]
+    -   [freetext][222]
+    -   [freetextHidden][223]
+    -   [json][224]
+    -   [getValues][225]
+    -   [getValuesWithoutFreetext][226]
+    -   [getTitles][227]
+-   [InstallerAPI][228]
+    -   [register][229]
+    -   [executeCommand][230]
+-   [IotAPI][231]
+    -   [registerLib][232]
+    -   [registerApp][233]
+    -   [iotAppExists][234]
+    -   [getVersion][235]
+    -   [getIot][236]
+    -   [build][237]
+    -   [constants][238]
+    -   [getIots][239]
+    -   [isBuilding][240]
+-   [MessageAPI][241]
+    -   [sendMessage][242]
+    -   [register][243]
+    -   [unregister][244]
+    -   [onMessageReceived][245]
+    -   [getMessages][246]
+-   [RadioAPI][247]
+    -   [register][248]
+    -   [unregister][249]
+    -   [compareFormObject][250]
+    -   [getLastReceivedRadioInformations][251]
+-   [ScenarioAPI][252]
+    -   [register][253]
+    -   [unregister][254]
+    -   [triggerScenario][255]
+    -   [getScenarios][256]
+-   [SchedulerAPI][257]
+    -   [register][258]
+    -   [unregister][259]
+    -   [schedule][260]
+    -   [cancel][261]
+    -   [constants][262]
+-   [SchedulerService][263]
+    -   [start][264]
+    -   [stop][265]
+    -   [register][266]
+    -   [unregister][267]
+    -   [schedule][268]
+    -   [cancel][269]
+    -   [timeEvent][270]
+-   [SchedulerDbObject][271]
+-   [identifier][272]
+-   [data][273]
+-   [triggerDate][274]
+-   [triggered][275]
+-   [SensorAPI][276]
+    -   [registerForm][277]
+    -   [registerClass][278]
+    -   [registerSensorEvent][279]
+    -   [unregisterSensorEvent][280]
+    -   [getSensors][281]
+    -   [getValue][282]
+    -   [getSensor][283]
+    -   [iotAppPowered][284]
+    -   [constants][285]
+-   [IotsListForm][286]
+    -   [identifier][287]
+    -   [json][288]
+    -   [getIotsName][289]
+    -   [getIotsId][290]
+-   [FormObject][291]
+    -   [json][292]
+-   [id][293]
+-   [SensorsManager][294]
+    -   [pluginsLoaded][295]
+    -   [initSensors][296]
+    -   [scenarioTrigger][297]
+    -   [initSensor][298]
+    -   [registerSensorEvent][299]
+    -   [getSensor][300]
+    -   [unregisterSensorEvent][301]
+    -   [getAllSensors][302]
+    -   [onNewSensorValue][303]
+    -   [getValue][304]
+    -   [processAPI][305]
+    -   [statisticsWsResponse][306]
+    -   [comparator][307]
+    -   [getSensorConfiguration][308]
+    -   [registerSensorsListForm][309]
+-   [SensorsForm][310]
+    -   [sensorId][311]
+    -   [json][312]
+    -   [getSensorIds][313]
+    -   [getSensorNames][314]
+-   [SensorsListForm][315]
+    -   [identifier][316]
+    -   [json][317]
+    -   [getSensorsName][318]
+    -   [getSensorsId][319]
+-   [SensorsListScenarioForm][320]
+    -   [sensors][321]
+    -   [json][322]
+-   [SensorScenarioForm][323]
+    -   [sensor][324]
+    -   [operator][325]
+    -   [threshold][326]
+    -   [json][327]
+-   [PluginsManager][328]
+    -   [getPluginsFromDirectory][329]
+    -   [checkPluginSanity][330]
+    -   [initPlugin][331]
+    -   [initPlugins][332]
+    -   [registerPlugins][333]
+    -   [load][334]
+    -   [getPluginsByCategory][335]
+    -   [getPluginByIdentifier][336]
+    -   [isEnabled][337]
+    -   [prepareToposortArray][338]
+    -   [toposort][339]
+    -   [topsortedArrayConverter][340]
+    -   [getPluginConf][341]
+    -   [changePluginStatus][342]
+    -   [processAPI][343]
+-   [PluginsAPI][344]
+    -   [exportClass][345]
+    -   [init][346]
+    -   [registerInstance][347]
+    -   [getPluginInstance][348]
+    -   [constants][349]
+-   [IotForm][350]
+    -   [iotApp][351]
+    -   [name][352]
+    -   [json][353]
+-   [ImageUtils][354]
+    -   [sanitizeFormConfiguration][355]
+    -   [resize][356]
+    -   [blur][357]
+-   [PluginConf][358]
+    -   [json][359]
+-   [ServicesManagerAPI][360]
+    -   [add][361]
+    -   [remove][362]
+    -   [stop][363]
+    -   [start][364]
+-   [ThemeAPI][365]
+    -   [getColors][366]
+-   [TimeEventAPI][367]
+    -   [register][368]
+    -   [unregister][369]
+    -   [constants][370]
+-   [TimeEventService][371]
+    -   [start][372]
+    -   [stop][373]
+    -   [hash][374]
+    -   [elementForHash][375]
+    -   [register][376]
+    -   [unregister][377]
+    -   [convertMode][378]
+    -   [timeEvent][379]
+-   [TranslateAPI][380]
+    -   [load][381]
+    -   [t][382]
+-   [UserAPI][383]
+    -   [addAdditionalFields][384]
+    -   [getUsers][385]
+    -   [allUsersAtHome][386]
+    -   [nobodyAtHome][387]
+    -   [somebodyAtHome][388]
+    -   [registerHomeNotifications][389]
+    -   [unregisterHomeNotifications][390]
+-   [WebAPI][391]
+    -   [register][392]
+    -   [unregister][393]
+    -   [Authentication][394]
+    -   [APIResponse][395]
+    -   [constants][396]
+-   [Authentication][397]
+    -   [clearExpiredTokens][398]
+    -   [generateToken][399]
+    -   [processAPI][400]
+    -   [checkLocalIp][401]
+    -   [processAuthentication][402]
+-   [AuthenticationData][403]
+    -   [authorized][404]
+    -   [username][405]
+    -   [level][406]
+-   [DateUtils][407]
+    -   [timestamp][408]
+    -   [dateToUTCTimestamp][409]
+    -   [dateToTimestamp][410]
+    -   [roundedTimestamp][411]
+    -   [dateFormatted][412]
+    -   [secondsElapsedSinceMidnight][413]
+-   [Logger][414]
+    -   [setLogLevel][415]
+    -   [log][416]
+    -   [removeColors][417]
+    -   [flog][418]
+    -   [warn][419]
+    -   [err][420]
+    -   [verbose][421]
+    -   [info][422]
+    -   [debug][423]
+    -   [getHistory][424]
+-   [APIResponse][425]
+    -   [success][426]
+    -   [response][427]
+    -   [errorCode][428]
+    -   [errorMessage][429]
+-   [Cleaner][430]
+    -   [exportConstants][431]
+    -   [cleanDbObject][432]
+-   [WebServices][433]
+    -   [start][434]
+    -   [startTunnel][435]
+    -   [stop][436]
+    -   [registerInfos][437]
+    -   [getRouteIdentifier][438]
+    -   [processAPI][439]
+    -   [register][440]
+    -   [unregister][441]
+    -   [registerAPI][442]
+    -   [unregisterAPI][443]
+    -   [manageResponse][444]
+    -   [buildPromises][445]
+    -   [runPromises][446]
+    -   [sendAPIResponse][447]
 -   [Service][448]
     -   [start][449]
     -   [run][450]
@@ -1390,68 +1390,6 @@ Returns **[DbRequestBuilder][493]** The instance
 Generate SQL request
 
 Returns **[string][483]** The SQL query
-
-## DateUtils
-
-Utility class for dates
-
-### timestamp
-
-Return the current timestamp
-
-Returns **[number][485]** The current timestamp
-
-### dateToUTCTimestamp
-
-Convert a string date time zoned to UTC timestamp
-
-**Parameters**
-
--   `date` **[string][483]** The GMT date
-
-Returns **[number][485]** The UTC timestamp
-
-### dateToTimestamp
-
-Convert a string date time zoned to timestamp
-
-**Parameters**
-
--   `date` **[string][483]** The GMT date
-
-Returns **[number][485]** The GMT timestamp
-
-### roundedTimestamp
-
-Round the timestamp to the mode
-
-**Parameters**
-
--   `timestamp` **[number][485]** A timestamp
--   `mode` **[number][485]** The mode (contant : `DateUtils.ROUND_TIMESTAMP_MINUTE`, `DateUtils.ROUND_TIMESTAMP_HOUR`, `DateUtils.ROUND_TIMESTAMP_DAY`, `DateUtils.ROUND_TIMESTAMP_MONTH`)
-
-Returns **[number][485]** Rounded timestamp
-
-### dateFormatted
-
-Format the current date with parameter
-
-**Parameters**
-
--   `format` **[string][483]** A format (Y for year, m for month, d for day, H for hour, i for minutes, s for seconds)
--   `timestamp` **[number][485]** A timestamp. If not provided, use current timestamp. (optional, default `null`)
-
-Returns **[string][483]** The formatted date
-
-### secondsElapsedSinceMidnight
-
-Return the number of seconds elapsed since midnight in UTC format
-
-**Parameters**
-
--   `timestamp` **[number][485]** A timestamp in seconds
-
-Returns **[number][485]** A number of seconds elapsed
 
 ## DbSchemaConverter
 
@@ -3937,6 +3875,160 @@ Username
 
 App access level
 
+## DateUtils
+
+Utility class for dates
+
+### timestamp
+
+Return the current timestamp
+
+Returns **[number][485]** The current timestamp
+
+### dateToUTCTimestamp
+
+Convert a string date time zoned to UTC timestamp
+
+**Parameters**
+
+-   `date` **[string][483]** The GMT date
+
+Returns **[number][485]** The UTC timestamp
+
+### dateToTimestamp
+
+Convert a string date time zoned to timestamp
+
+**Parameters**
+
+-   `date` **[string][483]** The GMT date
+
+Returns **[number][485]** The GMT timestamp
+
+### roundedTimestamp
+
+Round the timestamp to the mode
+
+**Parameters**
+
+-   `timestamp` **[number][485]** A timestamp
+-   `mode` **[number][485]** The mode (contant : `DateUtils.ROUND_TIMESTAMP_MINUTE`, `DateUtils.ROUND_TIMESTAMP_HOUR`, `DateUtils.ROUND_TIMESTAMP_DAY`, `DateUtils.ROUND_TIMESTAMP_MONTH`)
+
+Returns **[number][485]** Rounded timestamp
+
+### dateFormatted
+
+Format the current date with parameter
+
+**Parameters**
+
+-   `format` **[string][483]** A format (Y for year, m for month, d for day, H for hour, i for minutes, s for seconds)
+-   `timestamp` **[number][485]** A timestamp. If not provided, use current timestamp. (optional, default `null`)
+
+Returns **[string][483]** The formatted date
+
+### secondsElapsedSinceMidnight
+
+Return the number of seconds elapsed since midnight in UTC format
+
+**Parameters**
+
+-   `timestamp` **[number][485]** A timestamp in seconds
+
+Returns **[number][485]** A number of seconds elapsed
+
+## Logger
+
+This class provides static methods to log into a file.
+
+### setLogLevel
+
+Set the log level
+
+**Parameters**
+
+-   `level` **[number][485]** Log level between 0 and 5 (optional, default `3`)
+
+### log
+
+Log to a file
+
+**Parameters**
+
+-   `message` **[string][483]** A log message
+-   `level` **int** Log level between 0 to 5 (optional, default `3`)
+-   `params` **\[[string][483]]** Some parameters
+
+### removeColors
+
+Remove console colors from a string
+
+**Parameters**
+
+-   `entry` **[string][483]** A text entry
+
+Returns **[string][483]** Output string without colors
+
+### flog
+
+Log a log to a file
+
+**Parameters**
+
+-   `message` **[string][483]** A log message
+-   `params` **\[[string][483]]** Some parameters
+
+### warn
+
+Log a warning to a file
+
+**Parameters**
+
+-   `message` **[string][483]** A log message
+-   `params` **\[[string][483]]** Some parameters
+
+### err
+
+Log an error to a file
+
+**Parameters**
+
+-   `message` **[string][483]** A log message
+-   `params` **\[[string][483]]** Some parameters
+
+### verbose
+
+Log a verbose message to a file
+
+**Parameters**
+
+-   `message` **[string][483]** A log message
+-   `params` **\[[string][483]]** Some parameters
+
+### info
+
+Log an information to a file
+
+**Parameters**
+
+-   `message` **[string][483]** A log message
+-   `params` **\[[string][483]]** Some parameters
+
+### debug
+
+Log a debug message to a file, with stacktrace
+
+**Parameters**
+
+-   `message` **[string][483]** A log message
+-   `params` **\[[string][483]]** Some parameters
+
+### getHistory
+
+Get the log history
+
+Returns **[Array][486]** An array of logs
+
 ## APIResponse
 
 This class is a POJO representing an APIResponse item
@@ -4120,98 +4212,6 @@ Process sending results in JSON to API caller
 
 -   `apiResponses` **\[[APIResponse][517]]** The API responses
 -   `res` **[Response][519]** The response
-
-## Logger
-
-This class provides static methods to log into a file.
-
-### setLogLevel
-
-Set the log level
-
-**Parameters**
-
--   `level` **[number][485]** Log level between 0 and 5 (optional, default `3`)
-
-### log
-
-Log to a file
-
-**Parameters**
-
--   `message` **[string][483]** A log message
--   `level` **int** Log level between 0 to 5 (optional, default `3`)
--   `params` **\[[string][483]]** Some parameters
-
-### removeColors
-
-Remove console colors from a string
-
-**Parameters**
-
--   `entry` **[string][483]** A text entry
-
-Returns **[string][483]** Output string without colors
-
-### flog
-
-Log a log to a file
-
-**Parameters**
-
--   `message` **[string][483]** A log message
--   `params` **\[[string][483]]** Some parameters
-
-### warn
-
-Log a warning to a file
-
-**Parameters**
-
--   `message` **[string][483]** A log message
--   `params` **\[[string][483]]** Some parameters
-
-### err
-
-Log an error to a file
-
-**Parameters**
-
--   `message` **[string][483]** A log message
--   `params` **\[[string][483]]** Some parameters
-
-### verbose
-
-Log a verbose message to a file
-
-**Parameters**
-
--   `message` **[string][483]** A log message
--   `params` **\[[string][483]]** Some parameters
-
-### info
-
-Log an information to a file
-
-**Parameters**
-
--   `message` **[string][483]** A log message
--   `params` **\[[string][483]]** Some parameters
-
-### debug
-
-Log a debug message to a file, with stacktrace
-
-**Parameters**
-
--   `message` **[string][483]** A log message
--   `params` **\[[string][483]]** Some parameters
-
-### getHistory
-
-Get the log history
-
-Returns **[Array][486]** An array of logs
 
 ## Service
 
@@ -4621,703 +4621,703 @@ Returns **[string][483]** The base route (without parameters)
 
 [98]: #request
 
-[99]: #dateutils
+[99]: #dbschemaconverter
 
-[100]: #timestamp
+[100]: #tablename
 
-[101]: #datetoutctimestamp
+[101]: #toschema
 
-[102]: #datetotimestamp
+[102]: #convert
 
-[103]: #roundedtimestamp
+[103]: #convertproperties
 
-[104]: #dateformatted
+[104]: #deviceapi
 
-[105]: #secondselapsedsincemidnight
+[105]: #getdevices
 
-[106]: #dbschemaconverter
+[106]: #switchdevice
 
-[107]: #tablename
+[107]: #constants
 
-[108]: #toschema
+[108]: #getdevicestatus
 
-[109]: #convert
+[109]: #addform
 
-[110]: #convertproperties
+[110]: #registerswitchdevice
 
-[111]: #deviceapi
+[111]: #savedevice
 
-[112]: #getdevices
+[112]: #getdevicetypes
 
-[113]: #switchdevice
+[113]: #getdevicebyid
 
-[114]: #constants
+[114]: #switchdevicewithdevice
 
-[115]: #getdevicestatus
+[115]: #devicemanager
 
-[116]: #addform
+[116]: #addform-1
 
-[117]: #registerswitchdevice
+[117]: #registerswitchdevice-1
 
-[118]: #savedevice
+[118]: #triggerscenario
 
-[119]: #getdevicetypes
+[119]: #registerdevicelistform
 
-[120]: #getdevicebyid
+[120]: #registerdevicetiles
 
-[121]: #switchdevicewithdevice
+[121]: #getdevices-1
 
-[122]: #devicemanager
+[122]: #getdevicestatus-1
 
-[123]: #addform-1
+[123]: #registerdevicetile
 
-[124]: #registerswitchdevice-1
+[124]: #getdevicetypes-1
 
-[125]: #triggerscenario
+[125]: #getdevicebyid-1
 
-[126]: #registerdevicelistform
+[126]: #switchdevice-1
 
-[127]: #registerdevicetiles
+[127]: #switchdevicewithdevice-1
 
-[128]: #getdevices-1
+[128]: #savedevice-1
 
-[129]: #getdevicestatus-1
+[129]: #switchall
 
-[130]: #registerdevicetile
+[130]: #processapi-1
 
-[131]: #getdevicetypes-1
+[131]: #deviceform
 
-[132]: #getdevicebyid-1
+[132]: #name
 
-[133]: #switchdevice-1
+[133]: #excludefromall
 
-[134]: #switchdevicewithdevice-1
+[134]: #visible
 
-[135]: #savedevice-1
+[135]: #poweroutagerestore
 
-[136]: #switchall
+[136]: #worksonlyondaynight
 
-[137]: #processapi-1
+[137]: #icon
 
-[138]: #deviceform
+[138]: #status
 
-[139]: #name
+[139]: #brightness
 
-[140]: #excludefromall
+[140]: #color
 
-[141]: #visible
+[141]: #colortemperature
 
-[142]: #poweroutagerestore
+[142]: #json
 
-[143]: #worksonlyondaynight
+[143]: #deviceslistform
 
-[144]: #icon
+[144]: #identifier
 
-[145]: #status
+[145]: #status-1
 
-[146]: #brightness
+[146]: #keepparams
 
-[147]: #color
+[147]: #brightness-1
 
-[148]: #colortemperature
+[148]: #color-1
 
-[149]: #json
+[149]: #colortemperature-1
 
-[150]: #deviceslistform
+[150]: #json-1
 
-[151]: #identifier
+[151]: #getdevicesname
 
-[152]: #status-1
+[152]: #getdevicesid
 
-[153]: #keepparams
+[153]: #deviceslistscenariotriggerform
 
-[154]: #brightness-1
+[154]: #identifier-1
 
-[155]: #color-1
+[155]: #status-2
 
-[156]: #colortemperature-1
+[156]: #json-2
 
-[157]: #json-1
+[157]: #getdevicesname-1
 
-[158]: #getdevicesname
+[158]: #getdevicesid-1
 
-[159]: #getdevicesid
+[159]: #deviceslistscenarioform
 
-[160]: #deviceslistscenariotriggerform
+[160]: #turnonall
 
-[161]: #identifier-1
+[161]: #turnoffall
 
-[162]: #status-2
+[162]: #devices
 
-[163]: #json-2
+[163]: #triggerondevice
 
-[164]: #getdevicesname-1
+[164]: #json-3
 
-[165]: #getdevicesid-1
+[165]: #icons
 
-[166]: #deviceslistscenarioform
+[166]: #list
 
-[167]: #turnonall
+[167]: #raw
 
-[168]: #turnoffall
+[168]: #devicestatus
 
-[169]: #devices
+[169]: #getstatus
 
-[170]: #triggerondevice
+[170]: #getbrightness
 
-[171]: #json-3
+[171]: #getcolor
 
-[172]: #icons
+[172]: #getcolortemperature
 
-[173]: #list
+[173]: #setstatus
 
-[174]: #raw
+[174]: #setbrightness
 
-[175]: #devicestatus
+[175]: #setcolor
 
-[176]: #getstatus
+[176]: #setcolortemperature
 
-[177]: #getbrightness
+[177]: #tileformat
 
-[178]: #getcolor
+[178]: #environmentapi
 
-[179]: #getcolortemperature
+[179]: #getcoordinates
 
-[180]: #setstatus
+[180]: #setday
 
-[181]: #setbrightness
+[181]: #setnight
 
-[182]: #setcolor
+[182]: #isnight
 
-[183]: #setcolortemperature
+[183]: #registerdaynightnotifications
 
-[184]: #tileformat
+[184]: #unregisterdaynightnotifications
 
-[185]: #environmentapi
+[185]: #getlocalapiurl
 
-[186]: #getcoordinates
+[186]: #gethautomationid
 
-[187]: #setday
+[187]: #getfullhautomationid
 
-[188]: #setnight
+[188]: #getscannedip
 
-[189]: #isnight
+[189]: #constants-1
 
-[190]: #registerdaynightnotifications
+[190]: #environmentmanager
 
-[191]: #unregisterdaynightnotifications
+[191]: #settimezone
 
-[192]: #getlocalapiurl
+[192]: #registerdaynightnotifications-1
 
-[193]: #gethautomationid
+[193]: #unregisterdaynightnotifications-1
 
-[194]: #getfullhautomationid
+[194]: #registertile-1
 
-[195]: #getscannedip
+[195]: #getcoordinates-1
 
-[196]: #constants-1
+[196]: #dispatchdaynightchange
 
-[197]: #environmentmanager
+[197]: #setday-1
 
-[198]: #settimezone
+[198]: #setnight-1
 
-[199]: #registerdaynightnotifications-1
+[199]: #isnight-1
 
-[200]: #unregisterdaynightnotifications-1
+[200]: #getlocalport
 
-[201]: #registertile-1
+[201]: #getlocalip
 
-[202]: #getcoordinates-1
+[202]: #getmacaddress
 
-[203]: #dispatchdaynightchange
+[203]: #getlocalapiurl-1
 
-[204]: #setday-1
+[204]: #savemainconfiguration
 
-[205]: #setnight-1
+[205]: #processapi-2
 
-[206]: #isnight-1
+[206]: #updatecore
 
-[207]: #getlocalport
+[207]: #isdefaultconfig
 
-[208]: #getlocalip
+[208]: #gethautomationid-1
 
-[209]: #getmacaddress
+[209]: #getfullhautomationid-1
 
-[210]: #getlocalapiurl-1
+[210]: #registeripscanform
 
-[211]: #savemainconfiguration
+[211]: #startipscan
 
-[212]: #processapi-2
+[212]: #manageuptimefile
 
-[213]: #updatecore
+[213]: #environmentform
 
-[214]: #isdefaultconfig
+[214]: #day
 
-[215]: #gethautomationid-1
+[215]: #json-4
 
-[216]: #getfullhautomationid-1
+[216]: #daynightscenarioform
 
-[217]: #registeripscanform
+[217]: #day-1
 
-[218]: #startipscan
+[218]: #night
 
-[219]: #manageuptimefile
+[219]: #json-5
 
-[220]: #environmentform
+[220]: #ipscanform
 
-[221]: #day
+[221]: #ip
 
-[222]: #json-4
+[222]: #freetext
 
-[223]: #daynightscenarioform
+[223]: #freetexthidden
 
-[224]: #day-1
+[224]: #json-6
 
-[225]: #night
+[225]: #getvalues
 
-[226]: #json-5
+[226]: #getvalueswithoutfreetext
 
-[227]: #ipscanform
+[227]: #gettitles
 
-[228]: #ip
+[228]: #installerapi
 
-[229]: #freetext
+[229]: #register-2
 
-[230]: #freetexthidden
+[230]: #executecommand
 
-[231]: #json-6
+[231]: #iotapi
 
-[232]: #getvalues
+[232]: #registerlib
 
-[233]: #getvalueswithoutfreetext
+[233]: #registerapp
 
-[234]: #gettitles
+[234]: #iotappexists
 
-[235]: #installerapi
+[235]: #getversion
 
-[236]: #register-2
+[236]: #getiot
 
-[237]: #executecommand
+[237]: #build
 
-[238]: #iotapi
+[238]: #constants-2
 
-[239]: #registerlib
+[239]: #getiots
 
-[240]: #registerapp
+[240]: #isbuilding
 
-[241]: #iotappexists
+[241]: #messageapi
 
-[242]: #getversion
+[242]: #sendmessage
 
-[243]: #getiot
+[243]: #register-3
 
-[244]: #build
+[244]: #unregister
 
-[245]: #constants-2
+[245]: #onmessagereceived
 
-[246]: #getiots
+[246]: #getmessages
 
-[247]: #isbuilding
+[247]: #radioapi
 
-[248]: #messageapi
+[248]: #register-4
 
-[249]: #sendmessage
+[249]: #unregister-1
 
-[250]: #register-3
+[250]: #compareformobject
 
-[251]: #unregister
+[251]: #getlastreceivedradioinformations
 
-[252]: #onmessagereceived
+[252]: #scenarioapi
 
-[253]: #getmessages
+[253]: #register-5
 
-[254]: #radioapi
+[254]: #unregister-2
 
-[255]: #register-4
+[255]: #triggerscenario-1
 
-[256]: #unregister-1
+[256]: #getscenarios
 
-[257]: #compareformobject
+[257]: #schedulerapi
 
-[258]: #getlastreceivedradioinformations
+[258]: #register-6
 
-[259]: #scenarioapi
+[259]: #unregister-3
 
-[260]: #register-5
+[260]: #schedule
 
-[261]: #unregister-2
+[261]: #cancel
 
-[262]: #triggerscenario-1
+[262]: #constants-3
 
-[263]: #getscenarios
+[263]: #schedulerservice
 
-[264]: #schedulerapi
+[264]: #start
 
-[265]: #register-6
+[265]: #stop
 
-[266]: #unregister-3
+[266]: #register-7
 
-[267]: #schedule
+[267]: #unregister-4
 
-[268]: #cancel
+[268]: #schedule-1
 
-[269]: #constants-3
+[269]: #cancel-1
 
-[270]: #schedulerservice
+[270]: #timeevent
 
-[271]: #start
+[271]: #schedulerdbobject
 
-[272]: #stop
+[272]: #identifier-2
 
-[273]: #register-7
+[273]: #data
 
-[274]: #unregister-4
+[274]: #triggerdate
 
-[275]: #schedule-1
+[275]: #triggered
 
-[276]: #cancel-1
+[276]: #sensorapi
 
-[277]: #timeevent
+[277]: #registerform-2
 
-[278]: #schedulerdbobject
+[278]: #registerclass-1
 
-[279]: #identifier-2
+[279]: #registersensorevent
 
-[280]: #data
+[280]: #unregistersensorevent
 
-[281]: #triggerdate
+[281]: #getsensors
 
-[282]: #triggered
+[282]: #getvalue
 
-[283]: #sensorapi
+[283]: #getsensor
 
-[284]: #registerform-2
+[284]: #iotapppowered
 
-[285]: #registerclass-1
+[285]: #constants-4
 
-[286]: #registersensorevent
+[286]: #iotslistform
 
-[287]: #unregistersensorevent
+[287]: #identifier-3
 
-[288]: #getsensors
+[288]: #json-7
 
-[289]: #getvalue
+[289]: #getiotsname
 
-[290]: #getsensor
+[290]: #getiotsid
 
-[291]: #iotapppowered
+[291]: #formobject
 
-[292]: #constants-4
+[292]: #json-8
 
-[293]: #iotslistform
+[293]: #id
 
-[294]: #identifier-3
+[294]: #sensorsmanager
 
-[295]: #json-7
+[295]: #pluginsloaded
 
-[296]: #getiotsname
+[296]: #initsensors
 
-[297]: #getiotsid
+[297]: #scenariotrigger
 
-[298]: #formobject
+[298]: #initsensor
 
-[299]: #json-8
+[299]: #registersensorevent-1
 
-[300]: #id
+[300]: #getsensor-1
 
-[301]: #sensorsmanager
+[301]: #unregistersensorevent-1
 
-[302]: #pluginsloaded
+[302]: #getallsensors
 
-[303]: #initsensors
+[303]: #onnewsensorvalue
 
-[304]: #scenariotrigger
+[304]: #getvalue-1
 
-[305]: #initsensor
+[305]: #processapi-3
 
-[306]: #registersensorevent-1
+[306]: #statisticswsresponse
 
-[307]: #getsensor-1
+[307]: #comparator-1
 
-[308]: #unregistersensorevent-1
+[308]: #getsensorconfiguration
 
-[309]: #getallsensors
+[309]: #registersensorslistform
 
-[310]: #onnewsensorvalue
+[310]: #sensorsform
 
-[311]: #getvalue-1
+[311]: #sensorid
 
-[312]: #processapi-3
+[312]: #json-9
 
-[313]: #statisticswsresponse
+[313]: #getsensorids
 
-[314]: #comparator-1
+[314]: #getsensornames
 
-[315]: #getsensorconfiguration
+[315]: #sensorslistform
 
-[316]: #registersensorslistform
+[316]: #identifier-4
 
-[317]: #sensorsform
+[317]: #json-10
 
-[318]: #sensorid
+[318]: #getsensorsname
 
-[319]: #json-9
+[319]: #getsensorsid
 
-[320]: #getsensorids
+[320]: #sensorslistscenarioform
 
-[321]: #getsensornames
+[321]: #sensors
 
-[322]: #sensorslistform
+[322]: #json-11
 
-[323]: #identifier-4
+[323]: #sensorscenarioform
 
-[324]: #json-10
+[324]: #sensor
 
-[325]: #getsensorsname
+[325]: #operator
 
-[326]: #getsensorsid
+[326]: #threshold
 
-[327]: #sensorslistscenarioform
+[327]: #json-12
 
-[328]: #sensors
+[328]: #pluginsmanager
 
-[329]: #json-11
+[329]: #getpluginsfromdirectory
 
-[330]: #sensorscenarioform
+[330]: #checkpluginsanity
 
-[331]: #sensor
+[331]: #initplugin
 
-[332]: #operator
+[332]: #initplugins
 
-[333]: #threshold
+[333]: #registerplugins
 
-[334]: #json-12
+[334]: #load
 
-[335]: #pluginsmanager
+[335]: #getpluginsbycategory
 
-[336]: #getpluginsfromdirectory
+[336]: #getpluginbyidentifier
 
-[337]: #checkpluginsanity
+[337]: #isenabled
 
-[338]: #initplugin
+[338]: #preparetoposortarray
 
-[339]: #initplugins
+[339]: #toposort
 
-[340]: #registerplugins
+[340]: #topsortedarrayconverter
 
-[341]: #load
+[341]: #getpluginconf
 
-[342]: #getpluginsbycategory
+[342]: #changepluginstatus
 
-[343]: #getpluginbyidentifier
+[343]: #processapi-4
 
-[344]: #isenabled
+[344]: #pluginsapi
 
-[345]: #preparetoposortarray
+[345]: #exportclass
 
-[346]: #toposort
+[346]: #init
 
-[347]: #topsortedarrayconverter
+[347]: #registerinstance
 
-[348]: #getpluginconf
+[348]: #getplugininstance
 
-[349]: #changepluginstatus
+[349]: #constants-5
 
-[350]: #processapi-4
+[350]: #iotform
 
-[351]: #pluginsapi
+[351]: #iotapp
 
-[352]: #exportclass
+[352]: #name-1
 
-[353]: #init
+[353]: #json-13
 
-[354]: #registerinstance
+[354]: #imageutils
 
-[355]: #getplugininstance
+[355]: #sanitizeformconfiguration
 
-[356]: #constants-5
+[356]: #resize
 
-[357]: #iotform
+[357]: #blur
 
-[358]: #iotapp
+[358]: #pluginconf
 
-[359]: #name-1
+[359]: #json-14
 
-[360]: #json-13
+[360]: #servicesmanagerapi
 
-[361]: #imageutils
+[361]: #add
 
-[362]: #sanitizeformconfiguration
+[362]: #remove-1
 
-[363]: #resize
+[363]: #stop-1
 
-[364]: #blur
+[364]: #start-1
 
-[365]: #pluginconf
+[365]: #themeapi
 
-[366]: #json-14
+[366]: #getcolors
 
-[367]: #servicesmanagerapi
+[367]: #timeeventapi
 
-[368]: #add
+[368]: #register-8
 
-[369]: #remove-1
+[369]: #unregister-5
 
-[370]: #stop-1
+[370]: #constants-6
 
-[371]: #start-1
+[371]: #timeeventservice
 
-[372]: #themeapi
+[372]: #start-2
 
-[373]: #getcolors
+[373]: #stop-2
 
-[374]: #timeeventapi
+[374]: #hash-1
 
-[375]: #register-8
+[375]: #elementforhash
 
-[376]: #unregister-5
+[376]: #register-9
 
-[377]: #constants-6
+[377]: #unregister-6
 
-[378]: #timeeventservice
+[378]: #convertmode
 
-[379]: #start-2
+[379]: #timeevent-1
 
-[380]: #stop-2
+[380]: #translateapi
 
-[381]: #hash-1
+[381]: #load-1
 
-[382]: #elementforhash
+[382]: #t
 
-[383]: #register-9
+[383]: #userapi
 
-[384]: #unregister-6
+[384]: #addadditionalfields-1
 
-[385]: #convertmode
+[385]: #getusers
 
-[386]: #timeevent-1
+[386]: #allusersathome
 
-[387]: #translateapi
+[387]: #nobodyathome
 
-[388]: #load-1
+[388]: #somebodyathome
 
-[389]: #t
+[389]: #registerhomenotifications
 
-[390]: #userapi
+[390]: #unregisterhomenotifications
 
-[391]: #addadditionalfields-1
+[391]: #webapi
 
-[392]: #getusers
+[392]: #register-10
 
-[393]: #allusersathome
+[393]: #unregister-7
 
-[394]: #nobodyathome
+[394]: #authentication
 
-[395]: #somebodyathome
+[395]: #apiresponse
 
-[396]: #registerhomenotifications
+[396]: #constants-7
 
-[397]: #unregisterhomenotifications
+[397]: #authentication-1
 
-[398]: #webapi
+[398]: #clearexpiredtokens
 
-[399]: #register-10
+[399]: #generatetoken
 
-[400]: #unregister-7
+[400]: #processapi-5
 
-[401]: #authentication
+[401]: #checklocalip
 
-[402]: #apiresponse
+[402]: #processauthentication
 
-[403]: #constants-7
+[403]: #authenticationdata
 
-[404]: #authentication-1
+[404]: #authorized
 
-[405]: #clearexpiredtokens
+[405]: #username
 
-[406]: #generatetoken
+[406]: #level
 
-[407]: #processapi-5
+[407]: #dateutils
 
-[408]: #checklocalip
+[408]: #timestamp
 
-[409]: #processauthentication
+[409]: #datetoutctimestamp
 
-[410]: #authenticationdata
+[410]: #datetotimestamp
 
-[411]: #authorized
+[411]: #roundedtimestamp
 
-[412]: #username
+[412]: #dateformatted
 
-[413]: #level
+[413]: #secondselapsedsincemidnight
 
-[414]: #apiresponse-1
+[414]: #logger
 
-[415]: #success
+[415]: #setloglevel
 
-[416]: #response
+[416]: #log
 
-[417]: #errorcode
+[417]: #removecolors
 
-[418]: #errormessage
+[418]: #flog
 
-[419]: #cleaner
+[419]: #warn
 
-[420]: #exportconstants
+[420]: #err
 
-[421]: #cleandbobject
+[421]: #verbose
 
-[422]: #webservices
+[422]: #info
 
-[423]: #start-3
+[423]: #debug
 
-[424]: #starttunnel
+[424]: #gethistory
 
-[425]: #stop-3
+[425]: #apiresponse-1
 
-[426]: #registerinfos
+[426]: #success
 
-[427]: #getrouteidentifier
+[427]: #response
 
-[428]: #processapi-6
+[428]: #errorcode
 
-[429]: #register-11
+[429]: #errormessage
 
-[430]: #unregister-8
+[430]: #cleaner
 
-[431]: #registerapi
+[431]: #exportconstants
 
-[432]: #unregisterapi
+[432]: #cleandbobject
 
-[433]: #manageresponse
+[433]: #webservices
 
-[434]: #buildpromises
+[434]: #start-3
 
-[435]: #runpromises
+[435]: #starttunnel
 
-[436]: #sendapiresponse
+[436]: #stop-3
 
-[437]: #logger
+[437]: #registerinfos
 
-[438]: #setloglevel
+[438]: #getrouteidentifier
 
-[439]: #log
+[439]: #processapi-6
 
-[440]: #removecolors
+[440]: #register-11
 
-[441]: #flog
+[441]: #unregister-8
 
-[442]: #warn
+[442]: #registerapi
 
-[443]: #err
+[443]: #unregisterapi
 
-[444]: #verbose
+[444]: #manageresponse
 
-[445]: #info
+[445]: #buildpromises
 
-[446]: #debug
+[446]: #runpromises
 
-[447]: #gethistory
+[447]: #sendapiresponse
 
 [448]: #service
 
