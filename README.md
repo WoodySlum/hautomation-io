@@ -1,6 +1,5 @@
-<p align="center">
 ![](res/icons/logo-gitlab.png)
-</p>
+
 # Hautomation-IO
 
 Hautomation is a **complete home automation system**. It allows you to **use multiple devices brands and orchestrate them together**, *for example you can turn on yout Philps Hue lights with a Chacon switch*.
@@ -15,9 +14,7 @@ For developers, you can easily **create plugins**, lot of APIs are available and
 
 The most important informations are presented with **tiles on dashboard**.
 
-<p align="center"><br/>
 ![](res/icons/dashboard.png)
-</p>
 
 ## Supported features
 
@@ -108,9 +105,7 @@ You can list the available rest APIS with https://me.hautomation-io.com/XXXX/api
 
 ## Global architecture
 
-<p align="center"><br/>
 ![Global architecture](doc/architecture.png "Global architecture")
-</p>
 
 ## Documentation
 
