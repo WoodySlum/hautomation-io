@@ -36,7 +36,10 @@ const LogManager = require("./modules/logmanager/LogManager");
 const BackupManager = require("./modules/backupmanager/BackupManager");
 
 const CONFIGURATION_FILE = "data/config.json";
-var AppConfiguration = require("./../data/config.json");
+if (!fs.existsSync("./../" + CONFIGURATION_FILE)) {
+    fs.writeFileSync("./../" + CONFIGURATION_FILE, JSON.stringify({}));
+}
+var AppConfiguration = require("./../" + CONFIGURATION_FILE);
 var NpmPackage = require("./../package.json");
 const commit = require("../version.json").commit;
 const events = require("events");
