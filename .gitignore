@@ -20,6 +20,8 @@ data/database.db
 # Data file
 data/plugins.json
 data/*.conf.json
+data/*.json
+data/.uptime
 
 
 # Camera files
