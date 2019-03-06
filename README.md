@@ -1,20 +1,23 @@
-# Hautomation Core
+# Hautomation-io
 
-![coverage](http://gitlab.hautomation-io.com:81/hautomation/core-node/badges/master/coverage.svg?job=test)  ![build](http://gitlab.hautomation-io.com:81/hautomation/core-node/badges/master/build.svg)
+Hautomation is a complete home automation system. It allows you to use multiple devices brands.
 
 ## Environment
-
-### WebStorm
-
-In preferences / languages / Javascript, set ECMAScript 6 and save.
 
 ### Requirements
 
 * node 10.14.1 or upper version
+* Mac or Linux. Windows is not yet supported.
 
 ### Installation
 
 In console, type `npm install` and everything should go on.
+
+### Run app and connect
+
+`npm start`
+
+Once app is started, open your browser and type https://me.hautomation-io.com/ 
 
 ### Dev commands
 
