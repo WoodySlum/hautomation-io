@@ -35,9 +35,9 @@ const BotEngine = require("./modules/botengine/BotEngine");
 const LogManager = require("./modules/logmanager/LogManager");
 const BackupManager = require("./modules/backupmanager/BackupManager");
 
-const CONFIGURATION_FILE = "data/config.json";
-if (!fs.existsSync("./../" + CONFIGURATION_FILE)) {
-    fs.writeFileSync("./../" + CONFIGURATION_FILE, JSON.stringify({}));
+const CONFIGURATION_FILE = "./data/config.json";
+if (!fs.existsSync(CONFIGURATION_FILE)) {
+    fs.copyFileSync(CONFIGURATION_FILE + ".default", CONFIGURATION_FILE);
 }
 var AppConfiguration = require("./../" + CONFIGURATION_FILE);
 var NpmPackage = require("./../package.json");
