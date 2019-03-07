@@ -1,4 +1,8 @@
-![](res/icons/logo-gitlab.png)
+
+
+<p style="text-align: center;">
+    <img style="float: right;" src="res/icons/logo-gitlab.png">
+</p>
 
 # Hautomation-IO
 
