@@ -1,7 +1,6 @@
 
-
-<p style="text-align: center;">
-    <img style="border: 0;" src="res/icons/logo-gitlab.png">
+<p align="center">
+<img src="res/icons/logo-gitlab.png" style="" width="150" height="150" />
 </p>
 
 # Hautomation-IO
@@ -109,7 +108,9 @@ You can list the available rest APIS with https://me.hautomation-io.com/XXXX/api
 
 ## Global architecture
 
-![Global architecture](doc/architecture.png "Global architecture")
+<p align="center">
+<img src="doc/architecture.png" style="" width="500" height="350" />
+</p>
 
 ## Documentation
 
