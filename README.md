@@ -1,7 +1,7 @@
 
 
 <p style="text-align: center;">
-    <img style="float: right;" src="res/icons/logo-gitlab.png">
+    <img style="border: 0;" src="res/icons/logo-gitlab.png">
 </p>
 
 # Hautomation-IO
