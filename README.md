@@ -35,7 +35,7 @@ Control Tuya Outlets
 
 ##### Cameras
 
-Keep an eye on your house. You can check camera history over 7 days, and 2 timelapses are generated every day :
+Keep an eye on your house. You can check camera history over 5 days, and 2 timelapses are generated every day :
 * Last 24 hours : Check in 60 sec whole past day (one picture per minute over 24h)
 * Season : Contemplate the evolution of seasons (one picture per day over one year)
 
@@ -59,6 +59,10 @@ Create scenarios to automate home. For example, you can turn off all lights when
 ##### IOTs
 
 Create your own cheap sensors or anything else using ESP8266 or Arduino. An Arduino framework is provided and is very easy to use.
+
+##### HomeKit Siri and Alexa support
+
+Use voice command to control home devices.
 
 ## Environment
 
