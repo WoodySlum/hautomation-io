@@ -1,11 +1,11 @@
 
 <p align="center">
-<img src="res/icons/logo-gitlab.png" style="" width="150" height="150" />
+<img src="res/icons/logo-gitlab.png" style="" width="150" height="145" />
 </p>
 
 # Hautomation-IO
 
-Hautomation is a **complete home automation system**. It allows you to **use multiple devices brands and orchestrate them together**, *for example you can turn on yout Philps Hue lights with a Chacon switch*.
+Hautomation is a **complete home automation system**. It allows you to **use multiple devices brands and orchestrate them together**, *for example you can turn on your Philips Hue lights with a Chacon switch*.
 
 Hautomation use Ngrok secured tunnel and can be accessed from everywhere without configuring your router, even over a 4G router !
 
