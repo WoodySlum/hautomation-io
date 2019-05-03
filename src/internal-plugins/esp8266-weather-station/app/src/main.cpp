@@ -54,10 +54,18 @@ void transmitSensor() {
     Serial.println(rainValue);
 
     // Pressure sensor
-    float tBMP = bmp.readTemperature();
-    float aBMP = bmp.readAltitude();
-    float pBMP = bmp.readPressure();
-    float sBMP = bmp.readSealevelPressure();
+    float tBMP = 0;
+    float aBMP = 0;
+    float pBMP = 0;
+    float sBMP = 0;
+    if(!bmp.begin()) {
+        Serial.println("No bmp detected");
+    } else {
+        tBMP = bmp.readTemperature();
+        aBMP = bmp.readAltitude();
+        pBMP = bmp.readPressure();
+        sBMP = bmp.readSealevelPressure();
+    }
 
 
     // Aggregation
