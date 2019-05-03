@@ -409,7 +409,7 @@ class FormManager {
                             }
 
                             if (schemaPropertiesProp.enum.length === 0) {
-                                schemaPropertiesProp.enum = [""];
+                                // schemaPropertiesProp.enum = [""];
                             }
                         }
 
@@ -422,7 +422,7 @@ class FormManager {
                             }
 
                             if (schemaPropertiesProp.enumNames.length === 0) {
-                                schemaPropertiesProp.enumNames = [""];
+                                // schemaPropertiesProp.enumNames = [""];
                             }
                         }
 
