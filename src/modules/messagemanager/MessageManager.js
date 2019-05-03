@@ -10,6 +10,7 @@ const Authentication = require("./../authentication/Authentication");
 const DateUtils = require("./../../utils/DateUtils");
 const Tile = require("./../dashboardmanager/Tile");
 const Icons = require("./../../utils/Icons");
+const MessageScenarioForm = require("./MessageScenarioForm");
 
 const DB_VERSION = "0.0.0";
 const ROUTE_GET = ":/messages/get/";
@@ -30,9 +31,10 @@ class MessageManager {
      * @param  {WebServices} webServices    The web services
      * @param  {TranslateManager} translateManager    The translate manager
      * @param  {DashboardManager} dashboardManager    The dashboard manager
+     * @param  {ScenarioManager} scenarioManager    The scenario manager
      * @returns {InstallationManager}             The instance
      */
-    constructor(pluginsManager = null, eventBus, userManager, dbManager, webServices, translateManager, dashboardManager) {
+    constructor(pluginsManager = null, eventBus, userManager, dbManager, webServices, translateManager, dashboardManager, scenarioManager) {
         this.pluginsManager = pluginsManager;
         this.eventBus = eventBus;
         this.userManager = userManager;
@@ -40,6 +42,7 @@ class MessageManager {
         this.webServices = webServices;
         this.translateManager = translateManager;
         this.dashboardManager = dashboardManager;
+        this.scenarioManager = scenarioManager;
         this.dbSchema = DbSchemaConverter.class.toSchema(DbMessage.class);
         this.dbManager.initSchema(this.dbSchema, DB_VERSION, null);
         this.dbHelper = new DbHelper.class(this.dbManager, this.dbSchema, DbSchemaConverter.class.tableName(DbMessage.class), DbMessage.class);
@@ -57,6 +60,11 @@ class MessageManager {
         // Dashboard
         const tile = new Tile.class(this.dashboardManager.themeManager, "chat", Tile.TILE_GENERIC_ACTION, Icons.class.list()["uniF1D7"], null, this.translateManager.t("tile.chat"), null, null, null, 0, 500, "chat");
         this.dashboardManager.registerTile(tile);
+
+        // Scenario
+        this.scenarioManager.register(MessageScenarioForm.class, (scenario) => {
+            self.triggerScenario(scenario, self);
+        }, "message.scenario.title");
     }
 
     /**
@@ -242,6 +250,20 @@ class MessageManager {
                     });
                 }, apiRequest.authenticationData.username);
             });
+        }
+    }
+
+    /**
+     * Trigger scenario elements
+     *
+     * @param  {Object} scenario A dynamic scenario object
+     * @param  {DeviceManager} context  The context
+     */
+    triggerScenario(scenario, context) {
+        if (scenario && scenario.MessageScenarioForm) {
+            if (scenario.MessageScenarioForm.message && scenario.MessageScenarioForm.message.length > 0) {
+                context.sendMessage("*", scenario.MessageScenarioForm.message);
+            }
         }
     }
 }

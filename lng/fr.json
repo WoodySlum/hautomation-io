@@ -129,5 +129,7 @@
     "form.ip.scan.freetext.list": "Autre",
     "form.ip.scan.freetext": "Saisissez manuellement une adresse IP ou un domaine",
     "power.outage.alert": "Une coupure de courant d'une durée de %@ minutes s'est produite",
-    "form.typeahead.search": "Rechercher un(e) %@"
+    "form.typeahead.search": "Rechercher un(e) %@",
+    "message.scenario.title": "Envoyer un message",
+    "message.scenario.message": "Contenu"
 }

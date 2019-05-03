@@ -407,6 +407,10 @@ class FormManager {
                             } else {
                                 schemaPropertiesProp.enum = cl[meta.Enum](...inject);
                             }
+
+                            if (schemaPropertiesProp.enum.length === 0) {
+                                schemaPropertiesProp.enum = [""];
+                            }
                         }
 
                         // Enum names
@@ -415,6 +419,10 @@ class FormManager {
                                 schemaPropertiesProp.enumNames = self.translateManager.translateArray(meta.EnumNames);
                             } else {
                                 schemaPropertiesProp.enumNames = self.translateManager.translateArray(cl[meta.EnumNames](...inject));
+                            }
+
+                            if (schemaPropertiesProp.enumNames.length === 0) {
+                                schemaPropertiesProp.enumNames = [""];
                             }
                         }
 

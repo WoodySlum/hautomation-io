@@ -74,7 +74,9 @@ const INTERNAL_PLUGINS = [
     "hue",
     "dropbox",
     "tuya-device",
-    "ping-sensor"
+    "ping-sensor",
+    "smoke-sensor",
+    "radio-smoke-sensor"
 ];
 
 const CORE_PLUGINS = [
@@ -92,7 +94,8 @@ const CORE_PLUGINS = [
     "sms",
     "electric-sensor",
     "rain-time-sensor",
-    "fairuse-sensor"
+    "fairuse-sensor",
+    "smoke-sensor"
 ];
 
 /**
@@ -308,6 +311,7 @@ class PluginsManager {
      */
     initPlugins(path, plugins, relative = false) {
         let initializedPlugins = [];
+
         plugins.forEach((plugin) => {
             let pApi = this.initPlugin(plugin, path, relative);
             if (pApi) {
@@ -326,6 +330,7 @@ class PluginsManager {
      */
     registerPlugins(plugins) {
         let registeredPlugins = [];
+
         plugins.forEach((plugin) => {
             let registrator = this.remi(plugin);
             registrator.hook(remiRunner());
@@ -349,6 +354,7 @@ class PluginsManager {
      */
     load() {
         let initializedPlugins = [];
+
         initializedPlugins = initializedPlugins.concat(this.initPlugins(INTERNAL_PLUGIN_PATH, INTERNAL_PLUGINS, true));
         initializedPlugins = initializedPlugins.concat(this.initPlugins(EXTERNAL_PLUGIN_PATH, this.getPluginsFromDirectory(EXTERNAL_PLUGIN_PATH)));
 

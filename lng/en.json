@@ -131,5 +131,7 @@
     "form.ip.scan.freetext.list": "Other",
     "form.ip.scan.freetext": "Fill in manual ip or domain",
     "power.outage.alert": "A power outage of %@ minutes duration has occured",
-    "form.typeahead.search": "Search for a(n) %@"
+    "form.typeahead.search": "Search for a(n) %@",
+    "message.scenario.title": "Send a message",
+    "message.scenario.message": "Content"
 }
