@@ -43,6 +43,17 @@ const scenarioManager = {register:()=>{}, unregister:()=>{}, triggerScenario:()=
                 }
             ]
         }
+    },{
+        id:2,
+        SensorsListScenarioForm:{
+            sensors: [
+                {
+                    sensor: {identifier: 102},
+                    operator: "value",
+                    threshold: 0
+                }
+            ]
+        }
     }];
 }};
 let initIndicator = false;
@@ -240,6 +251,14 @@ describe("SensorsManager", function() {
         sinon.spy(scenarioManager, "triggerScenario");
         sensorsManager.onNewSensorValue(100, null, 1, null, 0, null, null);
         expect(scenarioManager.triggerScenario.notCalled).to.be.true;
+        scenarioManager.triggerScenario.restore();
+    });
+
+    it("onNewSensorValue should trigger a scenario when any value is sent", function() {
+        const sensorsManager = new SensorsManager.class(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager, botEngine, timeEventService, scenarioManager);
+        sinon.spy(scenarioManager, "triggerScenario");
+        sensorsManager.onNewSensorValue(102, null, null, null, 0, null, null);
+        expect(scenarioManager.triggerScenario.calledOnce).to.be.true;
         scenarioManager.triggerScenario.restore();
     });
 

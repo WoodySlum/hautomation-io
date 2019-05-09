@@ -318,6 +318,8 @@ class SensorsManager {
                                     shouldExecuteAction = true;
                                 } else if (sensorScenarioForm.operator === "<" && parseInt(value) < parseInt(sensorScenarioForm.threshold)) {
                                     shouldExecuteAction = true;
+                                } else if (sensorScenarioForm.operator === "value") {
+                                    shouldExecuteAction = true;
                                 }
                             }
                         }

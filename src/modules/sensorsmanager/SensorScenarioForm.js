@@ -27,10 +27,10 @@ class SensorScenarioForm extends FormObject.class {
         /**
          * @Property("operator");
          * @Type("string");
-         * @Enum(["=", ">", "<"]);
-         * @EnumNames(["=", ">", "<"]);
+         * @Enum(["value", "=", ">", "<"]);
+         * @EnumNames(["sensors.manager.scenario.value", "=", ">", "<"]);
          * @Title("sensors.manager.scenario.operator");
-         * @Default("=");
+         * @Default("value");
          */
         this.operator = operator;
 
@@ -38,7 +38,7 @@ class SensorScenarioForm extends FormObject.class {
          * @Property("threshold");
          * @Type("number");
          * @Title("sensors.manager.scenario.threshold");
-         * @Default("0");
+         * @Default(0);
          */
         this.threshold = threshold;
     }

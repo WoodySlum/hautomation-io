@@ -126,6 +126,7 @@
     "sensors.list.scenario.sensors": "Trigger scenario on sensor value",
     "sensors.manager.scenario.operator": "Operator",
     "sensors.manager.scenario.threshold": "Threshold (raw value)",
+    "sensors.manager.scenario.value": "Any value",
     "devices.list.scenario.trigger.devices": "Trigger scenario on device changes state",
     "form.ip.scan": "Ip address",
     "form.ip.scan.freetext.list": "Other",
