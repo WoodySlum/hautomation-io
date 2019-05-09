@@ -184,7 +184,7 @@ module.exports.attributes = {
     name: "homebridge",
     version: "0.0.0",
     category: "bridge",
-    description: "Manage through Apple's Siri and HomeKit",
+    description: "Manage through Apple's HomeKit, Siri and Amazon Alexa",
     dependencies:[],
     classes:[]
 };
