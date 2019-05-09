@@ -409,7 +409,8 @@ class FormManager {
                             }
 
                             if (schemaPropertiesProp.enum.length === 0) {
-                                // schemaPropertiesProp.enum = [""];
+                                meta.Hidden = true;
+                                delete schemaPropertiesProp.enum;
                             }
                         }
 
@@ -422,7 +423,7 @@ class FormManager {
                             }
 
                             if (schemaPropertiesProp.enumNames.length === 0) {
-                                // schemaPropertiesProp.enumNames = [""];
+                                delete schemaPropertiesProp.enumNames;
                             }
                         }
 

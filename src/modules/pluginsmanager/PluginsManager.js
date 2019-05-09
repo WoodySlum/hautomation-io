@@ -76,7 +76,8 @@ const INTERNAL_PLUGINS = [
     "tuya-device",
     "ping-sensor",
     "smoke-sensor",
-    "radio-smoke-sensor"
+    "radio-smoke-sensor",
+    "pushme"
 ];
 
 const CORE_PLUGINS = [
