@@ -78,12 +78,11 @@ function loaded(api) {
                                     title:message,
                                     token: user.PushMeForm.pushMeToken
                                 }
-                            }, (error, res, body) => {
-                              if (error) {
-                                api.exported.Logger.warn(error.message);
-                              }
-
-                          });
+                            }, (error) => {
+                                if (error) {
+                                    api.exported.Logger.warn(error.message);
+                                }
+                            });
                         }
                     } catch(e) {
                         api.exported.Logger.warn(e.message);
