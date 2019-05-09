@@ -77,7 +77,9 @@ const INTERNAL_PLUGINS = [
     "ping-sensor",
     "smoke-sensor",
     "radio-smoke-sensor",
-    "pushme"
+    "pushme",
+    "signal-db-sensor",
+    "huawei-signal-db-sensor"
 ];
 
 const CORE_PLUGINS = [
@@ -96,7 +98,8 @@ const CORE_PLUGINS = [
     "electric-sensor",
     "rain-time-sensor",
     "fairuse-sensor",
-    "smoke-sensor"
+    "smoke-sensor",
+    "signal-db-sensor"
 ];
 
 /**

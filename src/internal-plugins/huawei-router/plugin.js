@@ -95,7 +95,7 @@ function loaded(api) {
                 self.getApiInformations();
             });
 
-            // Save weather every hour and dispatch
+            // Save box api call every hour and dispatch
             api.timeEventAPI.register((self) => {
                 const d = new Date();
                 const m = d.getMinutes();
@@ -159,48 +159,60 @@ function loaded(api) {
                                             self.api.exported.Logger.err(signalStatsError.message);
                                         }
 
-                                        try {
-                                            api.exported.Logger.info("Retrieved router informations");
-                                            self.apiInfos = {
-                                                dataUsage: monthlyStatsResponse,
-                                                signal: signalStatsResponse
-                                            };
-                                            Object.keys(self.registeredElements).forEach((registeredKey) => {
-                                                self.registeredElements[registeredKey](self.apiInfos);
-                                            });
-
-                                            // Show tile
-                                            if (self.apiInfos.signal && self.apiInfos.signal.mode[0] && self.apiInfos.signal.rssi[0]) {
-                                                let networkType = "-";
-                                                if (parseInt(self.apiInfos.signal.mode[0]) >= 3) {
-                                                    networkType = "4G";
-                                                } else if (parseInt(self.apiInfos.signal.mode[0]) === 2) {
-                                                    networkType = "3G";
-                                                } else if (parseInt(self.apiInfos.signal.mode[0]) === 1) {
-                                                    networkType = "2G";
-                                                }
-
-                                                const rssi = parseInt(self.apiInfos.signal.rssi[0].replace("dBm", ""));
-
-                                                //-51 : Good signal
-                                                //-113 : Poor signal
-                                                let rssiIndicator = parseInt(100 - ((rssi - (-51)) * 100 / (-113 - -51)));
-                                                if (rssiIndicator < 0) {
-                                                    rssiIndicator = 0;
-                                                } else if (rssiIndicator > 100) {
-                                                    rssiIndicator = 100;
-                                                }
-
-                                                if (conf.technoTile) {
-                                                    const tile = api.dashboardAPI.Tile("huawei-router-network", api.dashboardAPI.TileType().TILE_INFO_TWO_TEXT, api.exported.Icons.class.list()["signal"], null, api.translateAPI.t("huawei.router.router.title"), networkType + " [" + rssiIndicator + "%]");
-                                                    api.dashboardAPI.registerTile(tile);
-                                                } else {
-                                                    api.dashboardAPI.unregisterTile("huawei-router-network");
-                                                }
+                                        router.getStatus(token, function(statusStatsError, statusStatsResponse){
+                                            if (statusStatsError) {
+                                                self.api.exported.Logger.err(statusStatsError.message);
                                             }
-                                        } catch(e) {
-                                            api.exported.Logger.err(e.message);
-                                        }
+
+                                            try {
+                                                api.exported.Logger.info("Retrieved router informations");
+                                                self.apiInfos = {
+                                                    dataUsage: monthlyStatsResponse,
+                                                    signal: signalStatsResponse,
+                                                    status: statusStatsResponse
+                                                };
+                                                Object.keys(self.registeredElements).forEach((registeredKey) => {
+                                                    self.registeredElements[registeredKey](self.apiInfos);
+                                                });
+
+                                                // Show tile
+                                                if (self.apiInfos.signal && self.apiInfos.signal.mode[0] && self.apiInfos.signal.rssi[0]) {
+                                                    let networkType = "-";
+                                                    if (parseInt(self.apiInfos.signal.mode[0]) >= 3) {
+                                                        if (parseInt(self.apiInfos.status.CurrentNetworkTypeEx) === 1011) {
+                                                            networkType = "4G+";
+                                                        } else {
+                                                            networkType = "4G";
+                                                        }
+                                                    } else if (parseInt(self.apiInfos.signal.mode[0]) === 2) {
+                                                        networkType = "3G";
+                                                    } else if (parseInt(self.apiInfos.signal.mode[0]) === 1) {
+                                                        networkType = "2G";
+                                                    }
+
+                                                    const rssi = parseInt(self.apiInfos.signal.rssi[0].replace("dBm", ""));
+
+                                                    //-51 : Good signal
+                                                    //-113 : Poor signal
+                                                    let rssiIndicator = parseInt(100 - ((rssi - (-51)) * 100 / (-113 - -51)));
+                                                    if (rssiIndicator < 0) {
+                                                        rssiIndicator = 0;
+                                                    } else if (rssiIndicator > 100) {
+                                                        rssiIndicator = 100;
+                                                    }
+
+                                                    if (conf.technoTile) {
+                                                        const tile = api.dashboardAPI.Tile("huawei-router-network", api.dashboardAPI.TileType().TILE_INFO_TWO_TEXT, api.exported.Icons.class.list()["signal"], null, api.translateAPI.t("huawei.router.router.title"), networkType + " [" + rssiIndicator + "%]");
+                                                        api.dashboardAPI.registerTile(tile);
+                                                    } else {
+                                                        api.dashboardAPI.unregisterTile("huawei-router-network");
+                                                    }
+                                                }
+                                            } catch(e) {
+                                                api.exported.Logger.err(e.message);
+                                            }
+
+                                        });
                                     });
                                 });
                             });
