@@ -56,7 +56,7 @@ function loaded(api) {
          */
         constructor(api, id, configuration) {
             super(api, id, "SIGNAL-DB", configuration, api.exported.Icons.class.list()["signal"], 0);
-            this.unit = "Db";
+            this.unit = "dBm";
         }
     }
 
