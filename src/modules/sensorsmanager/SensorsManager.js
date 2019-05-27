@@ -185,6 +185,8 @@ class SensorsManager {
 
         this.scenarioManager.unregister(SensorsListScenarioForm.class, this.scenarioTrigger);
         this.scenarioManager.register(SensorsListScenarioForm.class, this.scenarioTrigger);
+
+        this.statisticsCache = {};
     }
 
     /**
