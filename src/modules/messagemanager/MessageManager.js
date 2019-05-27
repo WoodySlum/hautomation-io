@@ -11,8 +11,10 @@ const DateUtils = require("./../../utils/DateUtils");
 const Tile = require("./../dashboardmanager/Tile");
 const Icons = require("./../../utils/Icons");
 const MessageScenarioForm = require("./MessageScenarioForm");
+const fs = require("fs-extra");
 
 const DB_VERSION = "0.0.0";
+const LOCK_FILE_PREFIX = "message-lock-time-";
 const ROUTE_GET = ":/messages/get/";
 const ROUTE_SET = ":/messages/set/";
 
@@ -32,9 +34,10 @@ class MessageManager {
      * @param  {TranslateManager} translateManager    The translate manager
      * @param  {DashboardManager} dashboardManager    The dashboard manager
      * @param  {ScenarioManager} scenarioManager    The scenario manager
+     * @param  {string} cachePath The app cache
      * @returns {InstallationManager}             The instance
      */
-    constructor(pluginsManager = null, eventBus, userManager, dbManager, webServices, translateManager, dashboardManager, scenarioManager) {
+    constructor(pluginsManager = null, eventBus, userManager, dbManager, webServices, translateManager, dashboardManager, scenarioManager, cachePath) {
         this.pluginsManager = pluginsManager;
         this.eventBus = eventBus;
         this.userManager = userManager;
@@ -46,6 +49,7 @@ class MessageManager {
         this.dbSchema = DbSchemaConverter.class.toSchema(DbMessage.class);
         this.dbManager.initSchema(this.dbSchema, DB_VERSION, null);
         this.dbHelper = new DbHelper.class(this.dbManager, this.dbSchema, DbSchemaConverter.class.tableName(DbMessage.class), DbMessage.class);
+        this.cachePath = cachePath;
         this.registered = [];
 
         const self = this;
@@ -262,7 +266,22 @@ class MessageManager {
     triggerScenario(scenario, context) {
         if (scenario && scenario.MessageScenarioForm) {
             if (scenario.MessageScenarioForm.message && scenario.MessageScenarioForm.message.length > 0) {
-                context.sendMessage("*", scenario.MessageScenarioForm.message);
+                let lockTime = 0;
+                if (scenario.MessageScenarioForm.lockTime) {
+                    lockTime = parseInt(scenario.MessageScenarioForm.lockTime) * 3600;
+                }
+                const messageCachePath = this.cachePath + "/" + LOCK_FILE_PREFIX + scenario.id;
+                let lastMessageSentTimestamp = 0;
+                if (fs.existsSync(messageCachePath)) {
+                    lastMessageSentTimestamp = parseInt(fs.readFileSync(messageCachePath));
+                }
+
+                if (DateUtils.class.timestamp() > (lastMessageSentTimestamp + lockTime)) {
+                    context.sendMessage("*", scenario.MessageScenarioForm.message);
+                    fs.writeFileSync(messageCachePath, DateUtils.class.timestamp());
+                } else {
+                    Logger.info("Coulf not send '" + scenario.MessageScenarioForm.message + "'. Lock time " + DateUtils.class.timestamp() + " / " + (lastMessageSentTimestamp + lockTime));
+                }
             }
         }
     }

@@ -10,9 +10,10 @@ class MessageScenarioForm extends FormObject.class {
      *
      * @param  {number} [id=null]                  An identifier
      * @param  {string} [message=null]  A message
+     * @param  {string} [lockTime=0]  Lock timer
      * @returns {MessageScenarioForm}                            The instance
      */
-    constructor(id = null, message = null) {
+    constructor(id = null, message = null, lockTime = "0") {
         super(id);
 
         /**
@@ -21,6 +22,16 @@ class MessageScenarioForm extends FormObject.class {
          * @Title("message.scenario.message");
          */
         this.message = message;
+
+        /**
+         * @Property("lockTime");
+         * @Type("string");
+         * @Title("message.scenario.lock.time");
+         * @Enum(["0", "1", "2", "4", "6", "12", "24"]);
+         * @EnumNames(["message.scenario.lock.time.none", "message.scenario.lock.time.one.hour", "message.scenario.lock.time.two.hours", "message.scenario.lock.time.four.hours", "message.scenario.lock.time.six.hours", "message.scenario.lock.time.twelve.hours", "message.scenario.lock.time.twenty.four.hours"]);
+         * @Default("0");
+         */
+        this.lockTime = lockTime;
     }
 
     /**
@@ -30,7 +41,7 @@ class MessageScenarioForm extends FormObject.class {
      * @returns {MessageScenarioForm}      A form object
      */
     json(data) {
-        return new MessageScenarioForm(data.id, data.message);
+        return new MessageScenarioForm(data.id, data.message, data.lockTime);
     }
 }
 

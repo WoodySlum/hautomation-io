@@ -134,5 +134,13 @@
     "power.outage.alert": "A power outage of %@ minutes duration has occured",
     "form.typeahead.search": "Search for a(n) %@",
     "message.scenario.title": "Send a message",
-    "message.scenario.message": "Content"
+    "message.scenario.message": "Content",
+    "message.scenario.lock.time": "Lock time. Do not re-send a message until this period, when a message has been sent",
+    "message.scenario.lock.time.none": "Disable",
+    "message.scenario.lock.time.one.hour": "1 hour",
+    "message.scenario.lock.time.two.hours": "2 hours",
+    "message.scenario.lock.time.four.hours": "4 hours",
+    "message.scenario.lock.time.six.hours": "6 hours",
+    "message.scenario.lock.time.twelve.hours": "12 hours",
+    "message.scenario.lock.time.twenty.four.hours": "24 hours"
 }

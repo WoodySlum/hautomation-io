@@ -132,5 +132,13 @@
     "power.outage.alert": "Une coupure de courant d'une durée de %@ minutes s'est produite",
     "form.typeahead.search": "Rechercher un(e) %@",
     "message.scenario.title": "Envoyer un message",
-    "message.scenario.message": "Contenu"
+    "message.scenario.message": "Contenu",
+    "message.scenario.lock.time": "Verrouillage. N'envoie pas de nouveau message identique jusqu'à ce que temps soit atteint",
+    "message.scenario.lock.time.none": "Désactiver",
+    "message.scenario.lock.time.one.hour": "1 heure",
+    "message.scenario.lock.time.two.hours": "2 heures",
+    "message.scenario.lock.time.four.hours": "4 heures",
+    "message.scenario.lock.time.six.hours": "6 heures",
+    "message.scenario.lock.time.twelve.hours": "12 heures",
+    "message.scenario.lock.time.twenty.four.hours": "24 heures"
 }
