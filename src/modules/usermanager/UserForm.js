@@ -15,9 +15,10 @@ class UserForm extends FormObject.class {
      * @param  {string} [name=null] Full name
      * @param  {string} [picture=null]  Picture, in base64 format
      * @param  {boolean} [atHome=false]  True if user is at home, false otherwise
+     * @param  {string} [theme=null]  Theme, in base64 format
      * @returns {UserForm} The instance
      */
-    constructor(id = null, username = null, password = null, level = null, name = null, picture = null, atHome = false) {
+    constructor(id = null, username = null, password = null, level = null, name = null, picture = null, atHome = false, theme = null) {
         super(id);
 
         /**
@@ -70,6 +71,13 @@ class UserForm extends FormObject.class {
          * @Default(false);
          */
         this.atHome = atHome;
+
+        /**
+         * @Property("theme");
+         * @Title("user.form.theme");
+         * @Type("file");
+         */
+        this.theme = theme;
     }
 
     /**
@@ -79,7 +87,7 @@ class UserForm extends FormObject.class {
      * @returns {UserForm}      A form object
      */
     json(data) {
-        return new UserForm(data.id, data.username, data.password, data.level, data.name, data.picture, data.atHome);
+        return new UserForm(data.id, data.username, data.password, data.level, data.name, data.picture, data.atHome, data.theme);
     }
 }
 

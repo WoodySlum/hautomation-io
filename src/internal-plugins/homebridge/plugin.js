@@ -94,8 +94,10 @@ function loaded(api) {
             this.api = api;
             this.devices = [];
             this.sensors = [];
+            this.alarm = [];
             this.generateHapDevices();
             this.generateHapSensors();
+            this.generateHapAlarm();
 
             if (!process.env.TEST) {
                 this.service = new HomebridgeService(api, this.devices, this.sensors);
@@ -111,7 +113,8 @@ function loaded(api) {
                 api.coreAPI.registerEvent(api.constants().CORE_EVENT_READY, () => {
                     this.service.stop();
                     this.generateHapSensors();
-                    this.service.init(this.devices, this.sensors);
+                    this.generateHapAlarm();
+                    this.service.init(this.devices, this.sensors, this.alarm);
                     this.service.start();
                 });
 
@@ -145,6 +148,18 @@ function loaded(api) {
                         device: device
                     });
                 }
+            });
+        }
+
+        /**
+         * Generate alarm config
+         */
+        generateHapAlarm() {
+            this.alarm = [];
+            this.alarm.push({
+                accessory: "Hautomation alarm",
+                name: api.translateApi.t("alarm.tile.title"),
+                coreApi:api
             });
         }
 

@@ -105,6 +105,28 @@ class UserManager {
     }
 
     /**
+    * Get a theme for a specific user
+    *
+    * @param  {string} username The username
+    * @returns {Object}   A theme
+    */
+    getTheme(username) {
+        const user = this.getUser(username);
+        if (user && user.theme && user.theme.length > 0) {
+            const buf = new Buffer(user.theme, "base64");
+            const themeStr = buf.toString("ascii");
+            try {
+                const theme = JSON.parse(themeStr);
+                return theme;
+            } catch (e) {
+                Logger.err("Invalid JSON for theme. User : " + username);
+            }
+        }
+
+        return null;
+    }
+
+    /**
     * Get a user with username
     *
     * @param  {string} username The username

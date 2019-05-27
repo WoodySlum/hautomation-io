@@ -42,12 +42,14 @@ function loaded(api) {
          *
          * @param {Array} devices A list of hap devices
          * @param {Array} sensors A list of hap sensors
+         * @param {Array} alarm A list of hap alarm
          */
-        init(devices, sensors) {
+        init(devices, sensors, alarm) {
             const insecureAccess = true;
             Plugin.addPluginPath(__dirname + "/homebridge-plugins/homebridge-hautomation-lights");
             Plugin.addPluginPath(__dirname + "/homebridge-plugins/homebridge-hautomation-temperature");
             Plugin.addPluginPath(__dirname + "/homebridge-plugins/homebridge-hautomation-humidity");
+            Plugin.addPluginPath(__dirname + "/homebridge-plugins/homebridge-hautomation-alarm");
             const conf = api.configurationAPI.getConfiguration() ? api.configurationAPI.getConfiguration() : {};
             if (!conf.homebridgeIdentifier) {
                 const hid = api.environmentAPI.getFullHautomationId();
@@ -76,7 +78,7 @@ function loaded(api) {
                         port: port,
                         pin: pin
                     },
-                    accessories: devices.concat(sensors),
+                    accessories: devices.concat(sensors).concat(alarm),
                     platforms:platforms
                 };
                 hap.init(User.persistPath());
