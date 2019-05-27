@@ -158,7 +158,7 @@ function loaded(api) {
             this.alarm = [];
             this.alarm.push({
                 accessory: "Hautomation alarm",
-                name: api.translateApi.t("alarm.tile.title"),
+                name: api.translateAPI.t("alarm.tile.title"),
                 coreApi:api
             });
         }
