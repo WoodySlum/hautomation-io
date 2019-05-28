@@ -22,10 +22,11 @@ class ThemeAPI {
     /**
      * Retrieve the theme colors
      *
+     * @param  {string} [username=null] A username, for customization
      * @returns {Object} Colors
      */
-    getColors() {
-        return PrivateProperties.oprivate(this).themeManager.getColors();
+    getColors(username = null) {
+        return PrivateProperties.oprivate(this).themeManager.getColors(username);
     }
 }
 

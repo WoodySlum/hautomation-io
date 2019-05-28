@@ -37,9 +37,10 @@ class UserManager {
     * @param  {ScenarioManager} scenarioManager  The scenario manager
     * @param  {EnvironmentManager} environmentManager  The environment manager
     * @param  {TranslateManager} translateManager  The translate manager
+    * @param {ThemeManager} themeManager       The theme manager
     * @returns {UserManager} The instance
     */
-    constructor(confManager, formManager, webServices, dashboardManager, appConfiguration, scenarioManager, environmentManager, translateManager) {
+    constructor(confManager, formManager, webServices, dashboardManager, appConfiguration, scenarioManager, environmentManager, translateManager, themeManager) {
         this.formConfiguration = new FormConfiguration.class(confManager, formManager, webServices, CONF_KEY, true, UserForm.class);
         this.confManager = confManager;
         this.dashboardManager = dashboardManager;
@@ -49,6 +50,7 @@ class UserManager {
         this.environmentManager = environmentManager;
         this.botEngine = null;
         this.translateManager = translateManager;
+        this.themeManager = themeManager;
         this.updateTile();
         this.registeredHomeNotifications = {};
 
@@ -56,11 +58,13 @@ class UserManager {
         this.webServices.registerAPI(this, WebServices.POST, ROUTE_USER_LOCATION + "[longitude]/[latitude]/[radius*]/[speed*]/[timestamp*]/", Authentication.AUTH_USAGE_LEVEL);
         this.webServices.registerAPI(this, WebServices.GET, ROUTE_USER_SETTINGS, Authentication.AUTH_USAGE_LEVEL);
         this.formConfiguration.setUpdateCb(() => {
+            this.setAllUsersTheme();
             this.updateTile();
         });
 
         this.scenarioManager.register(UserScenarioForm.class, null, "user.scenario.form.mode.trigger", 200);
         this.formConfiguration.setSortFunction((a,b) => a.username.localeCompare(b.username));
+        this.setAllUsersTheme();
     }
 
     /**
@@ -113,17 +117,32 @@ class UserManager {
     getTheme(username) {
         const user = this.getUser(username);
         if (user && user.theme && user.theme.length > 0) {
-            const buf = new Buffer(user.theme, "base64");
-            const themeStr = buf.toString("ascii");
-            try {
-                const theme = JSON.parse(themeStr);
-                return theme;
-            } catch (e) {
-                Logger.err("Invalid JSON for theme. User : " + username);
+            const base64Array = user.theme.split("base64,");
+            if (base64Array.length === 2) {
+                const buf = new Buffer(base64Array[1], "base64");
+                const themeStr = buf.toString("ascii");
+                try {
+                    const theme = JSON.parse(themeStr);
+                    return theme;
+                } catch (e) {
+                    Logger.err("Invalid JSON for theme. User : " + username);
+                }
+            } else {
+                Logger.err("Invalid base64 for theme. User : " + username);
             }
         }
 
         return null;
+    }
+
+    /**
+     * Set all users theme to theme manager
+     */
+    setAllUsersTheme() {
+        this.getUsers().forEach((user) => {
+            const theme = this.getTheme(user.username);
+            this.themeManager.setThemeForUser(user.username, theme);
+        });
     }
 
     /**

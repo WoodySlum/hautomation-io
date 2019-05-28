@@ -50,21 +50,8 @@ class Tile {
         this.action = action;
         this.object = object;
         this.colors = {};
-        this.themeColors = themeManager.getColors();
-        if (this.type === TILE_INFO_ONE_TEXT || this.type === TILE_INFO_TWO_TEXT || this.type === TILE_INFO_TWO_ICONS || this.type === TILE_PICTURES) {
-            this.colors.colorDefault = themeManager.getColors().secondaryColor;
-            this.colors.colorContent = themeManager.getColors().clearColor;
-        } else if (this.type === TILE_ACTION_ONE_ICON || this.type === TILE_GENERIC_ACTION) {
-            this.colors.colorDefault = themeManager.getColors().primaryColor;
-            this.colors.colorContent = themeManager.getColors().clearColor;
-        } else if (this.type === TILE_PICTURE_TEXT) {
-            this.colors.colorContent = themeManager.getColors().clearColor;
-        } else if (this.type === TILE_GENERIC_ACTION_STATUS || this.type === TILE_DEVICE) {
-            this.colors.colorDefault = themeManager.getColors().primaryColor;
-            this.colors.colorContent = themeManager.getColors().clearColor;
-            this.colors.colorOn = themeManager.getColors().onColor;
-            this.colors.colorOff = themeManager.getColors().offColor;
-        }
+        this.themeManager = themeManager;
+        this.customize();
         if (this.action && this.action.substr(0, 1) === "/") {
             this.action = this.action.substr(1, this.action.length - 1);
         }
@@ -79,6 +66,29 @@ class Tile {
         const tmpTile = Object.assign({}, this);
         delete tmpTile.themeManager;
         return tmpTile;
+    }
+
+    /**
+     * Customize theme
+     *
+     * @param  {string} [username=null] A username
+     */
+    customize(username = null) {
+        this.themeColors = this.themeManager.getColors(username);
+        if (this.type === TILE_INFO_ONE_TEXT || this.type === TILE_INFO_TWO_TEXT || this.type === TILE_INFO_TWO_ICONS || this.type === TILE_PICTURES) {
+            this.colors.colorDefault = this.themeManager.getColors(username).secondaryColor;
+            this.colors.colorContent = this.themeManager.getColors(username).clearColor;
+        } else if (this.type === TILE_ACTION_ONE_ICON || this.type === TILE_GENERIC_ACTION) {
+            this.colors.colorDefault = this.themeManager.getColors(username).primaryColor;
+            this.colors.colorContent = this.themeManager.getColors(username).clearColor;
+        } else if (this.type === TILE_PICTURE_TEXT) {
+            this.colors.colorContent = this.themeManager.getColors(username).clearColor;
+        } else if (this.type === TILE_GENERIC_ACTION_STATUS || this.type === TILE_DEVICE) {
+            this.colors.colorDefault = this.themeManager.getColors(username).primaryColor;
+            this.colors.colorContent = this.themeManager.getColors(username).clearColor;
+            this.colors.colorOn = this.themeManager.getColors(username).onColor;
+            this.colors.colorOff = this.themeManager.getColors(username).offColor;
+        }
     }
 
     /**

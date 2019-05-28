@@ -48,11 +48,13 @@ class DashboardManager {
     /**
      * Get readable tiles object (without methods, simple POJO)
      *
+     * @param  {string} [username=null] A username, for tile customization
      * @returns {[Object]} The readable tiles
      */
-    getReadableTiles() {
+    getReadableTiles(username = null) {
         const tiles = [];
         this.tiles.forEach((tile) => {
+            tile.customize(username); // Customize tile colors depending on theme
             tiles.push(tile.get());
         });
 
@@ -168,7 +170,7 @@ class DashboardManager {
      * @returns {Object} A dashboard object
      */
     buildDashboard(username, allTiles = true) {
-        const tiles = this.getReadableTiles().sort(function(a, b) {
+        const tiles = this.getReadableTiles(username).sort(function(a, b) {
             if (parseFloat(a.order) > parseFloat(b.order)) {
                 return 1;
             } else if (parseFloat(a.order) < parseFloat(b.order)) {

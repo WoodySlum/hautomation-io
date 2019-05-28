@@ -5,7 +5,6 @@ const WebServices = require("./../../services/webservices/WebServices");
 const APIResponse = require("./../../services/webservices/APIResponse");
 const Authentication = require("./../authentication/Authentication");
 const DateUtils = require("./../../utils/DateUtils");
-const TimeEventService = require("./../../services/timeeventservice/TimeEventService");
 const SensorsForm = require("./SensorsForm");
 const SensorsListForm = require("./SensorsListForm");
 const SensorsListScenarioForm = require("./SensorsListScenarioForm");
@@ -24,10 +23,6 @@ const SENSORS_MANAGER_STATISTICS_YEAR = ":/sensors/statistics/year/";
 
 const ERROR_ALREADY_REGISTERED = "Already registered";
 const ERROR_NOT_REGISTERED = "Not registered";
-
-const DAILY = "daily";
-const MONTHLY = "monthly";
-const YEARLY = "yearly";
 
 const SENSOR_NAME_COMPARE_CONFIDENCE = 0.31;
 const EVENT_SENSORS_READY = "event-sensors-ready";
@@ -117,35 +112,6 @@ class SensorsManager {
                 cb(this.translateManager.t("sensor.bot.notfound"));
             }
         });
-
-        // Consolidate statistics in cache every hours
-        this.timeEventService.register((self) => {
-            Logger.verbose("Consolidating daily statistics ...");
-            setTimeout(() => {
-                self.statisticsCache[DAILY] = self.statisticsWsResponse(DateUtils.class.timestamp(), 24 * 60 * 60, 60 * 60, self.translateManager.t("sensors.statistics.day.dateformat"));
-                Logger.verbose("Consolidating daily statistics ... Done.");
-            }, 0);
-        }, this, TimeEventService.CUSTOM, "*", 3, 30);
-
-        this.timeEventService.register((self) => {
-            Logger.verbose("Consolidating monthly statistics ...");
-            setTimeout(() => {
-                self.statisticsCache[MONTHLY] = self.statisticsWsResponse(DateUtils.class.timestamp(), 31 * 24 * 60 * 60, 24 * 60 * 60, self.translateManager.t("sensors.statistics.month.dateformat"), (timestamp) => {
-                    return DateUtils.class.roundedTimestamp(timestamp, DateUtils.ROUND_TIMESTAMP_DAY);
-                }, "%Y-%m-%d 00:00:00");
-                Logger.verbose("Consolidating monthly statistics ... Done.");
-            }, 0);
-        }, this, TimeEventService.CUSTOM, "*", 13, 30);
-
-        this.timeEventService.register((self) => {
-            Logger.verbose("Consolidating yearly statistics ...");
-            setTimeout(() => {
-                self.statisticsCache[YEARLY] = this.statisticsWsResponse(DateUtils.class.timestamp(), 12 * 31 * 24 * 60 * 60, 31 * 24 * 60 * 60, self.translateManager.t("sensors.statistics.year.dateformat"), (timestamp) => {
-                    return DateUtils.class.roundedTimestamp(timestamp, DateUtils.ROUND_TIMESTAMP_MONTH);
-                }, "%Y-%m-01 00:00:00");
-                Logger.verbose("Consolidating yearly statistics ... Done.");
-            }, 0);
-        }, this, TimeEventService.CUSTOM, 7, 18, 30);
     }
 
     /**
@@ -440,30 +406,16 @@ class SensorsManager {
                 }
             });
         } else if (apiRequest.route === SENSORS_MANAGER_STATISTICS_DAY) {
-            if (!this.statisticsCache[DAILY]) {
-                Logger.info("Missing daily statistics cache, generating data");
-                this.statisticsCache[DAILY] = this.statisticsWsResponse(DateUtils.class.timestamp(), 24 * 60 * 60, 60 * 60, this.translateManager.t("sensors.statistics.day.dateformat"));
-            }
+            return this.statisticsWsResponse(DateUtils.class.timestamp(), 24 * 60 * 60, 60 * 60, this.translateManager.t("sensors.statistics.day.dateformat"), null, null, null, apiRequest.authenticationData.username);
 
-            return this.statisticsCache[DAILY];
         } else if (apiRequest.route === SENSORS_MANAGER_STATISTICS_MONTH) {
-            if (!this.statisticsCache[MONTHLY]) {
-                Logger.info("Missing monthly statistics cache, generating data");
-                this.statisticsCache[MONTHLY] = this.statisticsWsResponse(DateUtils.class.timestamp(), 31 * 24 * 60 * 60, 24 * 60 * 60, this.translateManager.t("sensors.statistics.month.dateformat"), (timestamp) => {
-                    return DateUtils.class.roundedTimestamp(timestamp, DateUtils.ROUND_TIMESTAMP_DAY);
-                }, "%Y-%m-%d 00:00:00");
-            }
-
-            return this.statisticsCache[MONTHLY];
+            return this.statisticsWsResponse(DateUtils.class.timestamp(), 31 * 24 * 60 * 60, 24 * 60 * 60, this.translateManager.t("sensors.statistics.month.dateformat"), (timestamp) => {
+                return DateUtils.class.roundedTimestamp(timestamp, DateUtils.ROUND_TIMESTAMP_DAY);
+            }, "%Y-%m-%d 00:00:00", null, apiRequest.authenticationData.username);
         } else if (apiRequest.route === SENSORS_MANAGER_STATISTICS_YEAR) {
-            if (!this.statisticsCache[YEARLY]) {
-                Logger.info("Missing yearly statistics cache, generating data");
-                this.statisticsCache[YEARLY] = this.statisticsWsResponse(DateUtils.class.timestamp(), 12 * 31 * 24 * 60 * 60, 31 * 24 * 60 * 60, this.translateManager.t("sensors.statistics.year.dateformat"), (timestamp) => {
-                    return DateUtils.class.roundedTimestamp(timestamp, DateUtils.ROUND_TIMESTAMP_MONTH);
-                }, "%Y-%m-01 00:00:00");
-            }
-
-            return this.statisticsCache[YEARLY];
+            return this.statisticsWsResponse(DateUtils.class.timestamp(), 12 * 31 * 24 * 60 * 60, 31 * 24 * 60 * 60, this.translateManager.t("sensors.statistics.year.dateformat"), (timestamp) => {
+                return DateUtils.class.roundedTimestamp(timestamp, DateUtils.ROUND_TIMESTAMP_MONTH);
+            }, "%Y-%m-01 00:00:00", null, apiRequest.authenticationData.username);
         }
     }
 
@@ -476,9 +428,10 @@ class SensorsManager {
      * @param  {string} displayDateFormat The display date format
      * @param  {Function} [roundTimestampFunction=null]  A  e.g. `(timestamp) => {return  timestamp;}`
      * @param {string}    [roundDateSqlFormat=null] In relation with roundTimeStampFunction, the SQL date format. E.g. : "%Y-%m-01 00:00:00"
+     * @param  {string} [username=null]   A username
      * @returns {Promise}                   A promise
      */
-    statisticsWsResponse(endTimestamp, duration, aggregation, displayDateFormat, roundTimestampFunction = null, roundDateSqlFormat = null) {
+    statisticsWsResponse(endTimestamp, duration, aggregation, displayDateFormat, roundTimestampFunction = null, roundDateSqlFormat = null, username = null) {
         const self = this;
         return new Promise((resolve, reject) => {
             const eligibleSensors = [];
@@ -509,7 +462,7 @@ class SensorsManager {
                                     globalResults[results.unit] = {};
                                 }
 
-                                globalResults[results.unit][sensor.id] = {name: sensor.configuration.name, color:(sensor.configuration.statisticsColor?sensor.configuration.statisticsColor:this.themeManager.getColors().primaryColor), chartType:sensor.chartType, values:[]};
+                                globalResults[results.unit][sensor.id] = {name: sensor.configuration.name, color:(sensor.configuration.statisticsColor?sensor.configuration.statisticsColor:this.themeManager.getColors(username).primaryColor), chartType:sensor.chartType, values:[]};
                                 Object.keys(results.values).forEach((timestamp) => {
                                     globalResults[results.unit][sensor.id].values.push(results.values[timestamp]);
                                 });

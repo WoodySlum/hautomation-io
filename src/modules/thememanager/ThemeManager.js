@@ -4,6 +4,7 @@ const THEME_GET = ":/theme/get/";
 const WebServices = require("./../../services/webservices/WebServices");
 const Authentication = require("./../authentication/Authentication");
 const APIResponse = require("./../../services/webservices/APIResponse");
+const Logger = require("./../../logger/Logger");
 
 /**
  * This class generates dashboard
@@ -20,25 +21,96 @@ class ThemeManager {
     constructor(appConfiguration, webServices) {
         this.appConfiguration = appConfiguration;
         this.webServices = webServices;
+        this.userThemes = {};
 
         this.webServices.registerAPI(this, WebServices.GET, THEME_GET, Authentication.AUTH_NO_LEVEL);
     }
 
     /**
+     * Check if the color is in right format
+     *
+     * @param  {string} color A color
+     * @returns {boolean}       `true` if color is ok, `false` otherwise
+     */
+    checkColorFormat(color) {
+        if (/^#((0x){0,1}|#{0,1})([0-9A-F]{8}|[0-9A-F]{6})$/.test(color)) {
+            return true;
+        } else {
+            Logger.warn("Invalid color for theme : " + color);
+            return false;
+        }
+    }
+
+    /**
+     * Set a specific theme for a user
+     *
+     * @param {string} username A username
+     * @param {Object} theme    A theme
+     */
+    setThemeForUser(username, theme) {
+        if (username && theme) {
+            Logger.info("Set theme for user " + username);
+            this.userThemes[username] = {};
+            if (theme.primaryColor && this.checkColorFormat(theme.primaryColor)) {
+
+                this.userThemes[username].primaryColor = theme.primaryColor;
+            }
+
+            if (theme.secondaryColor && this.checkColorFormat(theme.secondaryColor)) {
+
+                this.userThemes[username].secondaryColor = theme.secondaryColor;
+            }
+
+            if (theme.tertiaryColor && this.checkColorFormat(theme.tertiaryColor)) {
+
+                this.userThemes[username].tertiaryColor = theme.tertiaryColor;
+            }
+
+            if (theme.darkenColor && this.checkColorFormat(theme.darkenColor)) {
+
+                this.userThemes[username].darkenColor = theme.darkenColor;
+            }
+
+            if (theme.clearColor && this.checkColorFormat(theme.clearColor)) {
+
+                this.userThemes[username].clearColor = theme.clearColor;
+            }
+
+            if (theme.onColor && this.checkColorFormat(theme.onColor)) {
+
+                this.userThemes[username].onColor = theme.onColor;
+            }
+
+            if (theme.offColor && this.checkColorFormat(theme.offColor)) {
+
+                this.userThemes[username].offColor = theme.offColor;
+            }
+
+            if (typeof theme.tilesSpacing !== "undefined") {
+
+                this.userThemes[username].tilesSpacing = parseInt(theme.tilesSpacing);
+            }
+        }
+    }
+
+    /**
      * Retrieve the theme colors
      *
+     * @param  {string} [username=null] A username
      * @returns {Object} Colors
      */
-    getColors() {
-        return  {
-            primaryColor:"#617D8A",
-            secondaryColor:"#8BAACC",
-            tertiaryColor:"#ECCF46",
-            darkenColor: "#4578A3",
-            clearColor:"#FFFFFF",
-            onColor:"#79B84A",
-            offColor:"#D04B48",
-            tilesSpacing: 1
+    getColors(username = null) {
+        const customizedTheme = this.userThemes[username] ? this.userThemes[username] : {};
+
+        return {
+            primaryColor:(customizedTheme.primaryColor ? customizedTheme.primaryColor : "#617D8A"),
+            secondaryColor:(customizedTheme.secondaryColor ? customizedTheme.secondaryColor : "#8BAACC"),
+            tertiaryColor:(customizedTheme.tertiaryColor ? customizedTheme.tertiaryColor : "#ECCF46"),
+            darkenColor:(customizedTheme.darkenColor ? customizedTheme.darkenColor : "#4578A3"),
+            clearColor:(customizedTheme.clearColor ? customizedTheme.clearColor : "#FFFFFF"),
+            onColor:(customizedTheme.onColor ? customizedTheme.onColor : "#79B84A"),
+            offColor:(customizedTheme.offColor ? customizedTheme.offColor : "#D04B48"),
+            tilesSpacing:(typeof customizedTheme.tilesSpacing !== "undefined" ? customizedTheme.tilesSpacing : 1)
         };
     }
 
@@ -52,7 +124,7 @@ class ThemeManager {
         const self = this;
         if (apiRequest.route === THEME_GET) {
             return new Promise((resolve) => {
-                resolve(new APIResponse.class(true, self.getColors()));
+                resolve(new APIResponse.class(true, self.getColors(apiRequest.authenticationData.username)));
             });
         }
     }
