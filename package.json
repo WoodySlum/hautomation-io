@@ -87,6 +87,7 @@
     "license": "ISC",
     "devDependencies": {
         "chai": "^4.2.0",
+        "parse-domain": "2.1.7",
         "documentation": "^5.5",
         "eslint": "^3.19",
         "eslint-plugin-jsdoc": "^3.9.1",
@@ -152,7 +153,7 @@
         "threads": "git://github.com/WoodySlum/threads.js.git#master",
         "toposort": "^1.0",
         "underscore": "^1.9",
-        "usb-detection": "4.2.0",
+        "usb-detection": "^4.1",
         "waveheader": "^0.0",
         "xml2js": "^0.4",
         "xmlhttprequest-ssl": "^1.5",
