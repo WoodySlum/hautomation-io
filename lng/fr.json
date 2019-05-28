@@ -57,6 +57,7 @@
     "user.form.fullname": "Nom complet",
     "user.form.picture": "Photo",
     "user.form.atHome": "Utilisateur présent au domicile",
+    "user.form.theme": "Thème",
     "scenario.form.name": "Nom",
     "scenario.form.enabled": "Activer ce scénario",
     "time.scenario.form.day": "Jour de la semaine",
