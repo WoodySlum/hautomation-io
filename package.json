@@ -152,7 +152,7 @@
         "threads": "git://github.com/WoodySlum/threads.js.git#master",
         "toposort": "^1.0",
         "underscore": "^1.9",
-        "usb-detection": "^4.1",
+        "usb-detection": "4.2.0",
         "waveheader": "^0.0",
         "xml2js": "^0.4",
         "xmlhttprequest-ssl": "^1.5",
