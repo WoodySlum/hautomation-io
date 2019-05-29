@@ -12,11 +12,16 @@ const DevicesListScenarioForm = require("./DevicesListScenarioForm");
 const Icons = require("./../../utils/Icons");
 const DeviceStatus = require("./DeviceStatus");
 const EnvironmentManager = require("./../environmentmanager/EnvironmentManager");
+const DbSchemaConverter = require("./../dbmanager/DbSchemaConverter");
+const DbHelper = require("./../dbmanager/DbHelper");
+const DbDevice = require("./DbDevice");
 
 const DEVICE_TYPE_LIGHT = "light";
 const DEVICE_TYPE_LIGHT_DIMMABLE = "light-dimmable";
 const DEVICE_TYPE_LIGHT_DIMMABLE_COLOR = "light-dimmable-color";
 const DEVICE_TYPE_SHUTTER = "shutter";
+
+const DB_VERSION = "0.0.0";
 
 const STATUS_ON = "on";
 const STATUS_OFF = "off";
@@ -75,9 +80,10 @@ class DeviceManager {
      * @param  {BotEngine} botEngine    The bot engine
      * @param  {SensorsManager} sensorsManager    The sensrsManager
      * @param  {EventEmitter} eventBus    The global event bus
+     * @param  {DbManager} dbManager    The database manager
      * @returns {DeviceManager}              The instance
      */
-    constructor(confManager, formManager, webServices, radioManager, dashboardManager, scenarioManager, translateManager, environmentManager, botEngine, sensorsManager, eventBus) {
+    constructor(confManager, formManager, webServices, radioManager, dashboardManager, scenarioManager, translateManager, environmentManager, botEngine, sensorsManager, eventBus, dbManager) {
         this.formConfiguration = new FormConfiguration.class(confManager, formManager, webServices, "devices", true, DeviceForm.class);
         this.radioManager = radioManager;
         this.dashboardManager = dashboardManager;
@@ -88,6 +94,7 @@ class DeviceManager {
         this.botEngine = botEngine;
         this.sensorsManager = sensorsManager;
         this.eventBus = eventBus;
+        this.dbManager = dbManager;
         this.switchDeviceModules = {};
 
         this.radioManager.deviceManager = this; // Set the device manager. used to associate devices to received radio objects
@@ -95,6 +102,10 @@ class DeviceManager {
         webServices.registerAPI(this, WebServices.POST, ":/device/set/[id]/[status*]/[brightness*]/[color*]/[colorTemperature*]/", Authentication.AUTH_USAGE_LEVEL);
         webServices.registerAPI(this, WebServices.POST, ":" + ROUTE_ALL_ON, Authentication.AUTH_USAGE_LEVEL);
         webServices.registerAPI(this, WebServices.POST, ":" + ROUTE_ALL_OFF, Authentication.AUTH_USAGE_LEVEL);
+
+        this.dbSchema = DbSchemaConverter.class.toSchema(DbDevice.class);
+        this.dbManager.initSchema(this.dbSchema, DB_VERSION, null);
+        this.dbHelper = new DbHelper.class(this.dbManager, this.dbSchema, DbSchemaConverter.class.tableName(DbDevice.class), DbDevice.class);
 
         this.registerDeviceTiles();
         this.registerDeviceListForm();
@@ -443,6 +454,10 @@ class DeviceManager {
                 }
             }
         });
+
+        // Save device to database
+        const dbDevice = new DbDevice.class(this.dbHelper, id, status, brightness, color, colorTemperature);
+        dbDevice.save();
     }
 
     /**
@@ -481,6 +496,15 @@ class DeviceManager {
                 self.switchDevice(device.id, status);
             }
         });
+    }
+
+    /**
+     * Get db helper
+     *
+     * @returns {DbHelper} The device DbHelper object
+     */
+    getDbHelper() {
+        return this.dbHelper;
     }
 
     /**

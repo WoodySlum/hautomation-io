@@ -125,6 +125,15 @@ class DeviceAPI {
     switchDeviceWithDevice(device) {
         PrivateProperties.oprivate(this).deviceManager.switchDeviceWithDevice(device);
     }
+
+    /**
+     * Get db helper
+     *
+     * @returns {DbHelper} The device DbHelper object
+     */
+    getDbHelper() {
+        return PrivateProperties.oprivate(this).deviceManager.getDbHelper();
+    }
 }
 
 module.exports = {class:DeviceAPI};
