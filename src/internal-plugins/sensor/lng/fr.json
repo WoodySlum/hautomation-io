@@ -3,5 +3,6 @@
     "sensor.dashboard": "Ajouter un élément au tableau de bord",
     "sensor.statistics": "Afficher dans les statistiques",
     "sensor.dashboard.color": "Couleur de l'élément du tableau de bord",
-    "sensor.statistics.color": "Couleur de l'élément dans les statistiques"
+    "sensor.statistics.color": "Couleur de l'élément dans les statistiques",
+    "sensors.health.indicator.threshold": "Seuil de l'indicateur santé (en jours). Ajoute un indicateur permettant de savoir si le capteur a envoyé une donnée depuis ce temps."
 }

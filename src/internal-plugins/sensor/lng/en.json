@@ -3,5 +3,6 @@
     "sensor.dashboard": "Add tile to dashboard",
     "sensor.statistics": "Show in statistics",
     "sensor.dashboard.color": "Dashboard color",
-    "sensor.statistics.color": "Statistics color"
+    "sensor.statistics.color": "Statistics color",
+    "sensors.health.indicator.threshold": "Health indicator threshold (in days). Add an indicator which allows to know if the sensor has sent a value since this value."
 }

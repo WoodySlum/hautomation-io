@@ -1,4 +1,7 @@
 "use strict";
+
+const DEFAULT_HEALTH_INDICATOR_VALUE = 24 * 60 * 60;
+
 /**
  * Loaded function
  *
@@ -45,6 +48,45 @@ function loaded(api) {
             this.vcc;
         }
     }
+
+    /**
+     * This class manage Sensors global form configuration
+     * @class
+     */
+    class SensorGlobalForm extends api.exported.FormObject.class {
+        /**
+         * Constructor
+         *
+         * @param  {number} id The identifier
+         * @param  {string} healthIndicatorThreshold Health indicator threshold in days
+         * @returns {SensorGlobalForm}        The instance
+         */
+        constructor(id, healthIndicatorThreshold) {
+            super(id);
+
+            /**
+             * @Property("healthIndicatorThreshold");
+             * @Type("string");
+             * @Title("sensors.health.indicator.threshold");
+             * @Default("1");
+             */
+            this.healthIndicatorThreshold = healthIndicatorThreshold;
+        }
+
+
+        /**
+         * Convert a json object to SensorGlobalForm object
+         *
+         * @param  {Object} data Some data
+         * @returns {SensorGlobalForm}      An instance
+         */
+        json(data) {
+            return new SensorGlobalForm(data.id, data.healthIndicatorThreshold);
+        }
+    }
+
+    // Register the form
+    api.configurationAPI.register(SensorGlobalForm);
 
     /**
      * This class is extended by sensors forms
@@ -562,6 +604,20 @@ function loaded(api) {
             }
 
             return identifier;
+        }
+
+        /**
+         * Get the health indicator threshold value
+         *
+         * @returns {int} The health indicator threshold value
+         */
+        getHealthIndicatorThresholdValue() {
+            let healthIndicatorThreshold = DEFAULT_HEALTH_INDICATOR_VALUE;
+            if (api.configurationAPI.getConfiguration() && api.configurationAPI.getConfiguration().healthIndicatorThreshold) {
+                healthIndicatorThreshold = parseInt(api.configurationAPI.getConfiguration().healthIndicatorThreshold) * 24 * 60 * 60;
+            }
+
+            return healthIndicatorThreshold;
         }
     }
 
