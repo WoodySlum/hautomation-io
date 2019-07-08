@@ -164,7 +164,7 @@ class HautomationCore {
         this.backupManager = new BackupManager.class(AppConfiguration, this.confManager, this.eventBus);
 
         // Plugins manager module
-        this.pluginsManager = new PluginsManager.class(this.confManager, this.webServices, this.servicesManager, this.dbManager, this.translateManager, this.formManager, this.timeEventService, this.schedulerService, this.dashboardManager, this.eventBus, this.themeManager, this.sensorsManager, this.installationManager, this.userManager, this.messageManager, this.scenarioManager, this.alarmManager, this.camerasManager, this.radioManager, AppConfiguration, this.environmentManager, this.iotManager, this.botEngine, this.deviceManager, this.backupManager, EVENT_READY);
+        this.pluginsManager = new PluginsManager.class(this.confManager, this.webServices, this.servicesManager, this.dbManager, this.translateManager, this.formManager, this.timeEventService, this.schedulerService, this.dashboardManager, this.eventBus, this.themeManager, this.sensorsManager, this.installationManager, this.userManager, this.messageManager, this.scenarioManager, this.alarmManager, this.camerasManager, this.radioManager, AppConfiguration, this.environmentManager, this.iotManager, this.botEngine, this.deviceManager, this.backupManager, this.gatewayManager, EVENT_READY);
 
         // Add services to manager
         this.servicesManager.add(this.webServices);

@@ -1,5 +1,6 @@
 {
     "ifttt.maker.key":"IFTTT maker key",
-    "ifttt.scenario.event":"Evènement IFTTT de déclenchement",
-    "ifttt.scenario.title":"IFTTT"
+    "ifttt.scenario.event":"Evènement qui va déclencher un scénario IFTTT (sortant)",
+    "ifttt.scenario.title":"IFTTT",
+    "ifttt.trigger.url": "URL de déclenchement IFTTT (entrant)"
 }

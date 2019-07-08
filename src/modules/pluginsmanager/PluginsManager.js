@@ -136,10 +136,11 @@ class PluginsManager {
      * @param  {BotEngine} botEngine The bot engine
      * @param  {DeviceManager} deviceManager The device manager
      * @param  {BackupManager} backupManager The backup manager
+     * @param  {GatewayManager} gatewayManager The gateway manager
      * @param  {string} CORE_EVENT_READY The core event ready identifier
      * @returns {PluginsManager} The instance
      */
-    constructor(confManager, webServices, servicesManager, dbManager, translateManager, formManager, timeEventService, schedulerService, dashboardManager, eventBus, themeManager, sensorsManager, installationManager, userManager, messageManager, scenarioManager, alarmManager, camerasManager, radioManager, appConfiguration, environmentManager, iotManager, botEngine, deviceManager, backupManager, CORE_EVENT_READY) {
+    constructor(confManager, webServices, servicesManager, dbManager, translateManager, formManager, timeEventService, schedulerService, dashboardManager, eventBus, themeManager, sensorsManager, installationManager, userManager, messageManager, scenarioManager, alarmManager, camerasManager, radioManager, appConfiguration, environmentManager, iotManager, botEngine, deviceManager, backupManager, gatewayManager, CORE_EVENT_READY) {
         this.fs = fs;
         this.path = path;
         this.remi = remi;
@@ -169,6 +170,7 @@ class PluginsManager {
         this.botEngine = botEngine;
         this.deviceManager = deviceManager;
         this.backupManager = backupManager;
+        this.gatewayManager = gatewayManager;
         this.CORE_EVENT_READY = CORE_EVENT_READY;
 
         this.plugins = [];
@@ -296,6 +298,7 @@ class PluginsManager {
                 this.eventBus,
                 this.deviceManager,
                 this.backupManager,
+                this.gatewayManager,
                 this.CORE_EVENT_READY
             );
 

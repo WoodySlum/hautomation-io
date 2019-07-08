@@ -4,6 +4,7 @@ const Logger = require("./../../logger/Logger");
 const TimeEventService = require("./../../services/timeeventservice/TimeEventService");
 const DateUtils = require("./../../utils/DateUtils");
 const HautomationRunnerConstants = require("./../../../HautomationRunnerConstants");
+const WebServices = require("./../../services/webservices/WebServices");
 
 const GATEWAY_MODE = 1;
 const GATEWAY_URL = "https://api.hautomation-io.com/ping/";
@@ -47,7 +48,7 @@ class GatewayManager {
         Logger.flog("+-----------------------+");
         Logger.flog("| Hautomation ID : " + this.environmentManager.getHautomationId() + " |");
         Logger.flog("+-----------------------+");
-        Logger.flog("Your access : " + UI_URL + this.environmentManager.getHautomationId() + "/");
+        Logger.flog("Your access : " + this.getDistantUrl());
 
         this.transmit();
 
@@ -69,6 +70,24 @@ class GatewayManager {
             self.bootMode = BOOT_MODE_BOOTING;
             self.transmit();
         });
+    }
+
+    /**
+     * Get full hautomation URL
+     * 
+     * @returns {string} The URL
+     */
+    getDistantUrl() {
+        return UI_URL + this.environmentManager.getHautomationId() + "/";
+    }
+
+    /**
+     * Get full hautomation API URL
+     *
+     * @returns {string} The URL
+     */
+    getDistantApiUrl() {
+        return UI_URL + this.environmentManager.getHautomationId() + WebServices.ENDPOINT_API;
     }
 
     /**

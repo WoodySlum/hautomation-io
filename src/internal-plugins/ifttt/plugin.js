@@ -1,6 +1,10 @@
 "use strict";
 
 const IFTTT = require("node-ifttt-maker");
+const WEBSERVICE_KEY = "ifttt/get";
+const ROUTE_GET_BASE_PATH = ":/" + WEBSERVICE_KEY + "/";
+const ROUTE_GET_FULL_PATH = ROUTE_GET_BASE_PATH + "[key]/";
+const ERROR_CODE_IFTT_TRIGGER = 400;
 
 /**
  * Loaded function
@@ -53,9 +57,11 @@ function loaded(api) {
           *
           * @param  {number} id           Identifier
           * @param  {string} iftttEvent       The ifttt event
+          * @param  {string} iftttTriggerUrlToken       The ifttt trigger url token
+          * @param  {string} iftttTriggerUrl       The ifttt trigger url
           * @returns {IftttScenarioForm}              The instance
           */
-        constructor(id, iftttEvent) {
+        constructor(id, iftttEvent, iftttTriggerUrlToken, iftttTriggerUrl) {
             super(id);
 
              /**
@@ -64,7 +70,45 @@ function loaded(api) {
               * @Title("ifttt.scenario.event");
               */
             this.iftttEvent = iftttEvent;
+
+            /**
+             * @Property("iftttTriggerUrlToken");
+             * @Type("string");
+             * @Hidden(true);
+             * @Sort(200);
+             */
+            this.iftttTriggerUrlToken = iftttTriggerUrlToken;
+
+            /**
+             * @Property("iftttTriggerUrl");
+             * @Type("string");
+             * @Readonly(true);
+             * @Title("ifttt.trigger.url");
+             * @Value("getIftttUrl");
+             * @Sort(200);
+             */
+            this.iftttTriggerUrl = iftttTriggerUrl;
         }
+
+        /**
+         * Returns the IFTT url fot the scenario
+         *
+         * @returns {string} A complete URL
+         */
+        static getIftttUrl() {
+            if (!this.iftttTriggerUrlToken) {
+                let randomStr = "";
+                const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+                const charactersLength = characters.length;
+                for (var i = 0 ; i < 15 ; i++) {
+                    randomStr += characters.charAt(Math.floor(Math.random() * charactersLength));
+                }
+
+                this.iftttTriggerUrlToken = randomStr;
+            }
+            return api.gatewayAPI.getDistantApiUrl() + WEBSERVICE_KEY + "/" + this.iftttTriggerUrlToken + "/";
+        }
+
 
          /**
           * Convert json data
@@ -73,14 +117,14 @@ function loaded(api) {
           * @returns {IftttForm}      A form object
           */
         json(data) {
-            return new IftttScenarioForm(data.id, data.iftttEvent);
+            return new IftttScenarioForm(data.id, data.iftttEvent, data.iftttTriggerUrlToken, data.iftttTriggerUrl);
         }
     }
 
     api.configurationAPI.register(IftttForm);
 
     /**
-     * This class manage huawei routers
+     * This class manage Ifttt extension
      * @class
      */
     class Ifttt {
@@ -92,6 +136,9 @@ function loaded(api) {
          */
         constructor(api) {
             this.api = api;
+
+            this.api.webAPI.register(this, this.api.webAPI.constants().GET, ROUTE_GET_FULL_PATH, this.api.webAPI.Authentication().AUTH_NO_LEVEL);
+
             this.api.scenarioAPI.register(IftttScenarioForm, (scenario) => {
                 if (scenario.IftttScenarioForm && scenario.IftttScenarioForm.iftttEvent && scenario.IftttScenarioForm.iftttEvent.length > 0) {
                     if (api.configurationAPI.getConfiguration() && api.configurationAPI.getConfiguration().makerKey) {
@@ -113,6 +160,36 @@ function loaded(api) {
                     }
                 }
             }, this.api.translateAPI.t("ifttt.scenario.title"));
+        }
+
+        /**
+         * Process API callback
+         *
+         * @param  {APIRequest} apiRequest An APIRequest
+         * @returns {Promise}  A promise with an APIResponse object
+         */
+        processAPI(apiRequest) {
+            const self = this;
+            if (apiRequest.route.startsWith(ROUTE_GET_BASE_PATH)) {
+                return new Promise((resolve, reject) => {
+                    const ifttWebServiceKey = apiRequest.data.key;
+                    let scenarioDetected = null;
+                    self.api.scenarioAPI.getScenarios().forEach((scenario) => {
+                        if (ifttWebServiceKey && scenario.IftttScenarioForm && scenario.IftttScenarioForm.iftttTriggerUrl && scenario.IftttScenarioForm.iftttTriggerUrl.indexOf(ifttWebServiceKey) > 0) {
+                            scenarioDetected = scenario;
+                        }
+                    });
+                    if (scenarioDetected) {
+                        self.api.scenarioAPI.triggerScenario(scenarioDetected);
+                        resolve(self.api.webAPI.APIResponse(true, {success: true}));
+                    } else {
+                        self.api.exported.Logger.err("Could not find an IFTTT scenario to trigger for key " + ifttWebServiceKey);
+                        reject(self.api.webAPI.APIResponse(false, {}, ERROR_CODE_IFTT_TRIGGER, "Invalid key"));
+                    }
+
+
+                });
+            }
         }
     }
 

@@ -1,5 +1,6 @@
 {
     "ifttt.maker.key":"IFTTT maker key",
-    "ifttt.scenario.event":"IFTTT event trigger",
-    "ifttt.scenario.title":"IFTTT"
+    "ifttt.scenario.event":"IFTTT event trigger (out)",
+    "ifttt.scenario.title":"IFTTT",
+    "ifttt.trigger.url": "URL for IFTTT triggering (in)"
 }
