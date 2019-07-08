@@ -79,7 +79,8 @@ const INTERNAL_PLUGINS = [
     "radio-smoke-sensor",
     "pushme",
     "signal-db-sensor",
-    "huawei-signal-db-sensor"
+    "huawei-signal-db-sensor",
+    "ifttt"
 ];
 
 const CORE_PLUGINS = [

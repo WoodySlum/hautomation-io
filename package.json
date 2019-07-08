@@ -138,6 +138,7 @@
         "node-google-timezone": "^0.1",
         "node-gtts": "^2.0",
         "node-gyp": "latest",
+        "node-ifttt-maker": "^1.0.2",
         "node-record-lpcm16": "^0.3",
         "node-wit": "^4.3",
         "node-witai-speech": "^1.0",
