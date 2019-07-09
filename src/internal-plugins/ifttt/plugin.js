@@ -114,7 +114,7 @@ function loaded(api) {
              * @Type("string");
              * @Readonly(true);
              * @Title("ifttt.trigger.url");
-             * @Value("getIftttUrl");
+             * @Default("getIftttUrl");
              */
             this.iftttTriggerUrl = iftttTriggerUrl;
         }
@@ -125,17 +125,14 @@ function loaded(api) {
          * @returns {string} A complete URL
          */
         static getIftttUrl() {
-            if (!this.iftttTriggerUrlToken) {
-                let randomStr = "";
-                const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-                const charactersLength = characters.length;
-                for (var i = 0 ; i < 15 ; i++) {
-                    randomStr += characters.charAt(Math.floor(Math.random() * charactersLength));
-                }
-
-                this.iftttTriggerUrlToken = randomStr;
+            let randomStr = "";
+            const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            const charactersLength = characters.length;
+            for (var i = 0 ; i < 15 ; i++) {
+                randomStr += characters.charAt(Math.floor(Math.random() * charactersLength));
             }
-            return api.gatewayAPI.getDistantApiUrl() + WEBSERVICE_KEY + "/" + this.iftttTriggerUrlToken + "/";
+
+            return api.gatewayAPI.getDistantApiUrl() + WEBSERVICE_KEY + "/" + randomStr + "/";
         }
 
          /**
@@ -208,7 +205,7 @@ function loaded(api) {
                     const ifttWebServiceKey = apiRequest.data.key;
                     let scenarioDetected = null;
                     self.api.scenarioAPI.getScenarios().forEach((scenario) => {
-                        if (ifttWebServiceKey && scenario.IftttScenarioForm && scenario.IftttScenarioForm.iftttTriggerUrl && scenario.IftttScenarioForm.iftttTriggerUrl.indexOf(ifttWebServiceKey) > 0) {
+                        if (ifttWebServiceKey && scenario.IftttScenarioTriggerForm && scenario.IftttScenarioTriggerForm.iftttTriggerUrl && scenario.IftttScenarioTriggerForm.iftttTriggerUrl.indexOf(ifttWebServiceKey) > 0) {
                             scenarioDetected = scenario;
                         }
                     });
