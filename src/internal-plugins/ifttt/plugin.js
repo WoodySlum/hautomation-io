@@ -47,6 +47,9 @@ function loaded(api) {
             return new IftttForm(data.id, data.makerKey);
         }
     }
+
+    api.configurationAPI.register(IftttForm);
+
     /**
      * This class is used for IFTTT scenario form
      * @class
@@ -57,11 +60,9 @@ function loaded(api) {
           *
           * @param  {number} id           Identifier
           * @param  {string} iftttEvent       The ifttt event
-          * @param  {string} iftttTriggerUrlToken       The ifttt trigger url token
-          * @param  {string} iftttTriggerUrl       The ifttt trigger url
           * @returns {IftttScenarioForm}              The instance
           */
-        constructor(id, iftttEvent, iftttTriggerUrlToken, iftttTriggerUrl) {
+        constructor(id, iftttEvent) {
             super(id);
 
              /**
@@ -70,6 +71,35 @@ function loaded(api) {
               * @Title("ifttt.scenario.event");
               */
             this.iftttEvent = iftttEvent;
+        }
+
+
+         /**
+          * Convert json data
+          *
+          * @param  {Object} data Some key / value data
+          * @returns {IftttForm}      A form object
+          */
+        json(data) {
+            return new IftttScenarioForm(data.id, data.iftttEvent);
+        }
+    }
+
+    /**
+     * This class is used for IFTTT scenario form
+     * @class
+     */
+    class IftttScenarioTriggerForm extends api.exported.FormObject.class {
+         /**
+          * Constructor
+          *
+          * @param  {number} id           Identifier
+          * @param  {string} iftttTriggerUrlToken       The ifttt trigger url token
+          * @param  {string} iftttTriggerUrl       The ifttt trigger url
+          * @returns {IftttScenarioTriggerForm}              The instance
+          */
+        constructor(id, iftttTriggerUrlToken, iftttTriggerUrl) {
+            super(id);
 
             /**
              * @Property("iftttTriggerUrlToken");
@@ -85,7 +115,6 @@ function loaded(api) {
              * @Readonly(true);
              * @Title("ifttt.trigger.url");
              * @Value("getIftttUrl");
-             * @Sort(200);
              */
             this.iftttTriggerUrl = iftttTriggerUrl;
         }
@@ -109,7 +138,6 @@ function loaded(api) {
             return api.gatewayAPI.getDistantApiUrl() + WEBSERVICE_KEY + "/" + this.iftttTriggerUrlToken + "/";
         }
 
-
          /**
           * Convert json data
           *
@@ -117,11 +145,11 @@ function loaded(api) {
           * @returns {IftttForm}      A form object
           */
         json(data) {
-            return new IftttScenarioForm(data.id, data.iftttEvent, data.iftttTriggerUrlToken, data.iftttTriggerUrl);
+            return new IftttScenarioTriggerForm(data.id, data.iftttTriggerUrlToken, data.iftttTriggerUrl);
         }
     }
 
-    api.configurationAPI.register(IftttForm);
+
 
     /**
      * This class manage Ifttt extension
@@ -140,26 +168,31 @@ function loaded(api) {
             this.api.webAPI.register(this, this.api.webAPI.constants().GET, ROUTE_GET_FULL_PATH, this.api.webAPI.Authentication().AUTH_NO_LEVEL);
 
             this.api.scenarioAPI.register(IftttScenarioForm, (scenario) => {
-                if (scenario.IftttScenarioForm && scenario.IftttScenarioForm.iftttEvent && scenario.IftttScenarioForm.iftttEvent.length > 0) {
-                    if (api.configurationAPI.getConfiguration() && api.configurationAPI.getConfiguration().makerKey) {
-                        const ifttt = new IFTTT(api.configurationAPI.getConfiguration().makerKey);
+                if (scenario.IftttScenarioForm && scenario.IftttScenarioForm.length > 0) {
+                    scenario.IftttScenarioForm.forEach((iftttScenarioForm) => {
+                        if (iftttScenarioForm.iftttEvent && iftttScenarioForm.iftttEvent.length > 0 && api.configurationAPI.getConfiguration() && api.configurationAPI.getConfiguration().makerKey) {
+                            const ifttt = new IFTTT(api.configurationAPI.getConfiguration().makerKey);
 
-                        const event = scenario.IftttScenarioForm.iftttEvent;
+                            const event = iftttScenarioForm.iftttEvent;
 
-                        ifttt
-                        .request(event)
-                        .then((response) => {
-                            api.exported.Logger.info("Event " + scenario.IftttScenarioForm.iftttEvent + " sent to IFTTT");
-                            api.exported.Logger.verbose(response);
-                        })
-                        .catch((err) => {
-                            api.exported.Logger.err(err.message);
-                        });
-                    } else {
-                        api.exported.Logger.err("No maker key configured. Could not send event to IFTTT");
-                    }
+                            ifttt
+                            .request(event)
+                            .then((response) => {
+                                api.exported.Logger.info("Event " + event + " sent to IFTTT");
+                                api.exported.Logger.verbose(response);
+                            })
+                            .catch((err) => {
+                                api.exported.Logger.err(err.message);
+                            });
+                        } else {
+                            api.exported.Logger.err("No maker key configured. Could not send event to IFTTT");
+                        }
+                    });
                 }
-            }, this.api.translateAPI.t("ifttt.scenario.title"));
+            }, this.api.translateAPI.t("ifttt.scenario.title"), null, true);
+
+            this.api.scenarioAPI.register(IftttScenarioTriggerForm, null, this.api.translateAPI.t("ifttt.scenario.webhook.title"), 200);
+
         }
 
         /**

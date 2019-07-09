@@ -10,6 +10,7 @@ const WebServices = require("./../../services/webservices/WebServices");
 const APIResponse = require("./../../services/webservices/APIResponse");
 const GeoUtils = require("./../../utils/GeoUtils");
 const UserScenarioForm = require("./UserScenarioForm");
+const UserScenarioTriggerForm = require("./UserScenarioTriggerForm");
 const sha256 = require("sha256");
 
 const CONF_KEY = "users";
@@ -60,11 +61,43 @@ class UserManager {
         this.formConfiguration.setUpdateCb(() => {
             this.setAllUsersTheme();
             this.updateTile();
+            this.registerScenarioForms();
         });
 
-        this.scenarioManager.register(UserScenarioForm.class, null, "user.scenario.form.mode.trigger", 200);
+        this.registerScenarioForms();
         this.formConfiguration.setSortFunction((a,b) => a.username.localeCompare(b.username));
         this.setAllUsersTheme();
+    }
+
+    /**
+     * Register scenario forms
+     */
+    registerScenarioForms() {
+        this.scenarioManager.register(UserScenarioForm.class, null, "user.scenario.form.mode.trigger", 200);
+        const usernames = [];
+        const usernamesLabels = [];
+        this.getUsers().forEach((user) => {
+            usernames.push(user.username);
+            usernamesLabels.push(user.name);
+        });
+
+        this.scenarioManager.registerWithInjection(UserScenarioTriggerForm.class, (scenario) => {
+            if (scenario && scenario.UserScenarioTriggerForm && scenario.UserScenarioTriggerForm.length > 0) {
+                scenario.UserScenarioTriggerForm.forEach((userScenarioTriggerForm) => {
+                    console.log(userScenarioTriggerForm);
+                    if (userScenarioTriggerForm.inorout === 1) {
+                        this.setUserZone(userScenarioTriggerForm.username, true);
+                    } else if (userScenarioTriggerForm.inorout === 2) {
+                        this.setUserZone(userScenarioTriggerForm.username, false);
+                    } else if (userScenarioTriggerForm.inorout === 3) {
+                        const user = this.getUser(userScenarioTriggerForm.username);
+                        if (user) {
+                            this.setUserZone(userScenarioTriggerForm.username, !user.atHome);
+                        }
+                    }
+                });
+            }
+        }, "user.scenario.form.trigger.mode.trigger", 100, true, usernames, usernamesLabels);
     }
 
     /**

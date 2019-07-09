@@ -54,6 +54,14 @@ class FormManager {
     }
 
     /**
+     * Unregister a form
+     * @param  {Class} cl     A class with form annotations
+     */
+    unregister(cl) {
+        delete this.registeredForms[cl.name];
+    }
+
+    /**
      * Add additional fields to a form base
      * Deprecated - Use addAdditionalFieldsWithSort
      *
