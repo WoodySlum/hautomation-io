@@ -87,31 +87,31 @@ function loaded(api) {
                     let finished = false;
                     let error = false;
                     let r = request({ method: "GET", url: dlFile, gzip: false, timeout:timeout})
-                    .on("error", (err) => {
-                        error = true;
-                        self.api.exported.Logger.err("Throughput download failed. Error : ");
-                        self.api.exported.Logger.err(err.message);
-                        self.setValue(0);
-                    })
-                    .on("timeout", () => {
-                        error = true;
-                        self.api.exported.Logger.warn("Throughput timeout");
-                        self.setValue(0);
-                    })
-                    .on("data", (chunk) => {
-                        contentLength += chunk.length;
-                    })
-                    .on("end", () => {
-                        if (!error || self.configuration.doNotFailOnTimeout) {
-                            const end = Date.now();
-                            const elapsed = (end - start) / 1000;
-                            const kb = contentLength / 1024;
-                            const throughput = Math.floor((kb / elapsed) | 0);
-                            self.api.exported.Logger.info("Throughput sensor downloaded " + kb + " bytes in " + elapsed + " seconds. Throughput : " + throughput + " kb/s");
-                            self.setValue(throughput);
-                            finished = true;
-                        }
-                    });
+                        .on("error", (err) => {
+                            error = true;
+                            self.api.exported.Logger.err("Throughput download failed. Error : ");
+                            self.api.exported.Logger.err(err.message);
+                            self.setValue(0);
+                        })
+                        .on("timeout", () => {
+                            error = true;
+                            self.api.exported.Logger.warn("Throughput timeout");
+                            self.setValue(0);
+                        })
+                        .on("data", (chunk) => {
+                            contentLength += chunk.length;
+                        })
+                        .on("end", () => {
+                            if (!error || self.configuration.doNotFailOnTimeout) {
+                                const end = Date.now();
+                                const elapsed = (end - start) / 1000;
+                                const kb = contentLength / 1024;
+                                const throughput = Math.floor((kb / elapsed) | 0);
+                                self.api.exported.Logger.info("Throughput sensor downloaded " + kb + " bytes in " + elapsed + " seconds. Throughput : " + throughput + " kb/s");
+                                self.setValue(throughput);
+                                finished = true;
+                            }
+                        });
 
                     setTimeout(() => {
                         if (!finished && !self.configuration.doNotFailOnTimeout) {

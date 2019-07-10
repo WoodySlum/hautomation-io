@@ -52,7 +52,7 @@ class APIRegistration {
             if (routeElement != ":" && routeElement != "") {
                 this.routeBase.push(routeElement);
             }
-            const regex = /(\[)([a-zA-Z0-9\-\*]+)(\])/g;
+            const regex = /(\[)([a-zA-Z0-9\-*]+)(\])/g;
             let r = regex.exec(routeElement);
             if (r && r.length > 2) {
                 const optional = (r[2].indexOf("*") === -1)?false:true;
@@ -84,7 +84,7 @@ class APIRegistration {
 
     /**
      * Returns the route base string
-     * 
+     *
      * @returns {string} The base route (without parameters)
      */
     getRouteBase() {

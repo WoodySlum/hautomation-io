@@ -340,19 +340,19 @@ function loaded(api) {
             let lastObjectRequest;
             if (duration) {
                 lastObjectRequest = this.dbHelper.RequestBuilder()
-                                                        .selectOp(operator, "value")
-                                                        .selectOp(this.dbHelper.Operators().MIN, "vcc")
-                                                        .where("sensorId", this.dbHelper.Operators().EQ, this.id)
-                                                        .where(this.dbHelper.Operators().FIELD_TIMESTAMP, this.dbHelper.Operators().GTE, (this.api.exported.DateUtils.class.timestamp() - duration))
-                                                        .where(this.dbHelper.Operators().FIELD_TIMESTAMP, this.dbHelper.Operators().LTE, this.api.exported.DateUtils.class.timestamp())
-                                                        .order(this.dbHelper.Operators().DESC, this.dbHelper.Operators().FIELD_TIMESTAMP)
-                                                        .first();
+                    .selectOp(operator, "value")
+                    .selectOp(this.dbHelper.Operators().MIN, "vcc")
+                    .where("sensorId", this.dbHelper.Operators().EQ, this.id)
+                    .where(this.dbHelper.Operators().FIELD_TIMESTAMP, this.dbHelper.Operators().GTE, (this.api.exported.DateUtils.class.timestamp() - duration))
+                    .where(this.dbHelper.Operators().FIELD_TIMESTAMP, this.dbHelper.Operators().LTE, this.api.exported.DateUtils.class.timestamp())
+                    .order(this.dbHelper.Operators().DESC, this.dbHelper.Operators().FIELD_TIMESTAMP)
+                    .first();
             } else {
                 lastObjectRequest = this.dbHelper.RequestBuilder()
-                                                        .select()
-                                                        .where("sensorId", this.dbHelper.Operators().EQ, this.id)
-                                                        .order(this.dbHelper.Operators().DESC, this.dbHelper.Operators().FIELD_TIMESTAMP)
-                                                        .first();
+                    .select()
+                    .where("sensorId", this.dbHelper.Operators().EQ, this.id)
+                    .order(this.dbHelper.Operators().DESC, this.dbHelper.Operators().FIELD_TIMESTAMP)
+                    .first();
             }
 
             this.dbHelper.getObjects(lastObjectRequest, (err, res) => {
@@ -418,10 +418,10 @@ function loaded(api) {
             const existing = {};
             existing[this.dbHelper.Operators().FIELD_TIMESTAMP] = timestamp;
             const timestampRequest = this.dbHelper.RequestBuilder()
-                                      .select()
-                                      .where("CAST(strftime('%s', timestamp) AS NUMERIC)", this.dbHelper.Operators().EQ, timestamp)
-                                      .where("sensorId", this.dbHelper.Operators().EQ, this.id)
-                                      .first();
+                .select()
+                .where("CAST(strftime('%s', timestamp) AS NUMERIC)", this.dbHelper.Operators().EQ, timestamp)
+                .where("sensorId", this.dbHelper.Operators().EQ, this.id)
+                .first();
             this.dbHelper.getObjects(timestampRequest, (error, objects) => {
                 if (objects && objects.length == 1) {
                     const object = objects[0];
@@ -540,13 +540,13 @@ function loaded(api) {
             }
 
             const statisticsRequest = this.dbHelper.RequestBuilder()
-                                      .select(roundDateSqlFormat?"CAST(strftime('%s', strftime('" + roundDateSqlFormat + "', date(timestamp, 'utc'))) AS NUMERIC) as aggTimestamp":"CAST(strftime('%s',  timestamp)  AS NUMERIC) - (CAST(strftime('%s',  timestamp)  AS NUMERIC) % " + granularity + ") as aggTimestamp")
-                                      .selectOp(aggregationMode, "value")
-                                      .where("CAST(strftime('%s', timestamp) AS NUMERIC)", this.dbHelper.Operators().GTE, timestampBegin)
-                                      .where("CAST(strftime('%s', timestamp) AS NUMERIC)", this.dbHelper.Operators().LTE, timestampEnd)
-                                      .where("sensorId", this.dbHelper.Operators().EQ, this.id)
-                                      .group("aggTimestamp")
-                                      .order(this.dbHelper.Operators().ASC, "aggTimestamp");
+                .select(roundDateSqlFormat?"CAST(strftime('%s', strftime('" + roundDateSqlFormat + "', date(timestamp, 'utc'))) AS NUMERIC) as aggTimestamp":"CAST(strftime('%s',  timestamp)  AS NUMERIC) - (CAST(strftime('%s',  timestamp)  AS NUMERIC) % " + granularity + ") as aggTimestamp")
+                .selectOp(aggregationMode, "value")
+                .where("CAST(strftime('%s', timestamp) AS NUMERIC)", this.dbHelper.Operators().GTE, timestampBegin)
+                .where("CAST(strftime('%s', timestamp) AS NUMERIC)", this.dbHelper.Operators().LTE, timestampEnd)
+                .where("sensorId", this.dbHelper.Operators().EQ, this.id)
+                .group("aggTimestamp")
+                .order(this.dbHelper.Operators().ASC, "aggTimestamp");
 
             const self = this;
             this.dbHelper.getObjects(statisticsRequest, (error, objects) => {

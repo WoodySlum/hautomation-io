@@ -32,12 +32,12 @@ function loaded(api) {
              */
             this.radioEvents = radioEvents;
 
-             /**
-              * @Property("cameras");
-              * @Type("objects");
-              * @Cl("CamerasListForm");
-              * @Title("ring.alert.cameras");
-              */
+            /**
+             * @Property("cameras");
+             * @Type("objects");
+             * @Cl("CamerasListForm");
+             * @Title("ring.alert.cameras");
+             */
             this.cameras = cameras;
         }
 

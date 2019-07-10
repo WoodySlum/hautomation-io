@@ -451,7 +451,7 @@ class EnvironmentManager {
                         const rRegex = versionRegex.exec(body);
                         const hashRegex = /SHA256: ([0-9a-z]+)/gm;
                         const rhashRegex = hashRegex.exec(body);
-                        const fileRegex = /Filename: ([a-zA-Z\/\-._0-9]+)/gm;
+                        const fileRegex = /Filename: ([a-zA-Z/\-._0-9]+)/gm;
                         const rfileRegex = fileRegex.exec(body);
 
                         if (rRegex && rRegex.length > 1 && rhashRegex && rhashRegex.length > 1 && rfileRegex && rfileRegex.length > 1) {

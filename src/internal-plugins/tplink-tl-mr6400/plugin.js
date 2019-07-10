@@ -12,7 +12,7 @@ const crypto = require("crypto");
 function loaded(api) {
     api.init();
 
-   /**
+    /**
     * This class is used for TpLink TL-MR6400 form
     * @class
     */
@@ -159,7 +159,7 @@ function loaded(api) {
 
                 request(options, (error, response, body) => {
                     if (!error && response.statusCode == 200) {
-                        const regex = /(href([ ]*)=([ ]*)\")(.*)(\")/gm;
+                        const regex = /(href([ ]*)=([ ]*)")(.*)(")/gm;
 
                         let m = regex.exec(body);
                         if (m && m.length === 6) {

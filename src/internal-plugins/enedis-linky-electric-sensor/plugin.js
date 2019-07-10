@@ -106,36 +106,36 @@ function loaded(api) {
                                 user:configuration.username,
                                 password:configuration.password
                             })
-                            .then((data) => {
-                                if (data && data.length > 0 && data[0] && data[0].date) {
-                                    context.api.exported.Logger.info("Updating Linky data");
-                                    // Every 30 minutes, so aaggregate to hour
-                                    let i = 0;
-                                    let intermediateData = 0;
-                                    let timestamp = this.api.exported.DateUtils.class.dateToTimestamp(data[0].date) - 3600;
-                                    data.forEach((data) => {
-                                        intermediateData += data.value*1000;
+                                .then((data) => {
+                                    if (data && data.length > 0 && data[0] && data[0].date) {
+                                        context.api.exported.Logger.info("Updating Linky data");
+                                        // Every 30 minutes, so aaggregate to hour
+                                        let i = 0;
+                                        let intermediateData = 0;
+                                        let timestamp = this.api.exported.DateUtils.class.dateToTimestamp(data[0].date) - 3600;
+                                        data.forEach((data) => {
+                                            intermediateData += data.value*1000;
 
-                                        if (i%2 === 1) {
-                                            if (intermediateData >= 0) {
-                                                context.setValue(intermediateData, 0, null, timestamp);
+                                            if (i%2 === 1) {
+                                                if (intermediateData >= 0) {
+                                                    context.setValue(intermediateData, 0, null, timestamp);
+                                                }
+
+                                                intermediateData = 0;
+                                                timestamp += 3600;
                                             }
 
-                                            intermediateData = 0;
-                                            timestamp += 3600;
-                                        }
-
-                                        i++;
-                                    });
-                                }
-                            })
+                                            i++;
+                                        });
+                                    }
+                                })
+                                .catch((e) => {
+                                    context.api.exported.Logger.err(e.message);
+                                });
+                        })
                             .catch((e) => {
                                 context.api.exported.Logger.err(e.message);
                             });
-                        })
-                        .catch((e) => {
-                            context.api.exported.Logger.err(e.message);
-                        });
                     }
                 } catch(e) {
                     context.api.exported.Logger.err(e.message);

@@ -10,7 +10,7 @@ const routerBridge = require("dialog-router-api");
 function loaded(api) {
     api.init();
 
-   /**
+    /**
     * This class is used for Huawei Router form
     * @class
     */

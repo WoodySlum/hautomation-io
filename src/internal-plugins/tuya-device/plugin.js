@@ -180,13 +180,13 @@ function loaded(api) {
                                             // deviceStatus.status = (deviceStatus.getStatus() === api.deviceAPI.constants().INT_STATUS_ON) ? api.deviceAPI.constants().INT_STATUS_OFF : api.deviceAPI.constants().INT_STATUS_ON;
                                         }
                                     })
+                                        .catch((e) => {
+                                            this.api.exported.Logger.err(e.message);
+                                        });
+                                })
                                     .catch((e) => {
                                         this.api.exported.Logger.err(e.message);
                                     });
-                                })
-                                .catch((e) => {
-                                    this.api.exported.Logger.err(e.message);
-                                });
                             }
                         } else {
                             api.exported.Logger.warn("Invalid configuration for tuya");
@@ -223,13 +223,13 @@ function loaded(api) {
                             }
                         }
                     })
+                        .catch((e) => {
+                            this.api.exported.Logger.err(e.message);
+                        });
+                })
                     .catch((e) => {
                         this.api.exported.Logger.err(e.message);
                     });
-                })
-                .catch((e) => {
-                    this.api.exported.Logger.err(e.message);
-                });
             }
 
 

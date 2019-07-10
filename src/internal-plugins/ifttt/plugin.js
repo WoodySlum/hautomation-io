@@ -14,7 +14,7 @@ const ERROR_CODE_IFTT_TRIGGER = 400;
 function loaded(api) {
     api.init();
 
-   /**
+    /**
     * This class is used for IFTTT form
     * @class
     */
@@ -55,7 +55,7 @@ function loaded(api) {
      * @class
      */
     class IftttScenarioForm extends api.exported.FormObject.class {
-         /**
+        /**
           * Constructor
           *
           * @param  {number} id           Identifier
@@ -65,7 +65,7 @@ function loaded(api) {
         constructor(id, iftttEvent) {
             super(id);
 
-             /**
+            /**
               * @Property("iftttEvent");
               * @Type("string");
               * @Title("ifttt.scenario.event");
@@ -74,7 +74,7 @@ function loaded(api) {
         }
 
 
-         /**
+        /**
           * Convert json data
           *
           * @param  {Object} data Some key / value data
@@ -90,7 +90,7 @@ function loaded(api) {
      * @class
      */
     class IftttScenarioTriggerForm extends api.exported.FormObject.class {
-         /**
+        /**
           * Constructor
           *
           * @param  {number} id           Identifier
@@ -135,7 +135,7 @@ function loaded(api) {
             return api.gatewayAPI.getDistantApiUrl() + WEBSERVICE_KEY + "/" + randomStr + "/";
         }
 
-         /**
+        /**
           * Convert json data
           *
           * @param  {Object} data Some key / value data
@@ -173,14 +173,14 @@ function loaded(api) {
                             const event = iftttScenarioForm.iftttEvent;
 
                             ifttt
-                            .request(event)
-                            .then((response) => {
-                                api.exported.Logger.info("Event " + event + " sent to IFTTT");
-                                api.exported.Logger.verbose(response);
-                            })
-                            .catch((err) => {
-                                api.exported.Logger.err(err.message);
-                            });
+                                .request(event)
+                                .then((response) => {
+                                    api.exported.Logger.info("Event " + event + " sent to IFTTT");
+                                    api.exported.Logger.verbose(response);
+                                })
+                                .catch((err) => {
+                                    api.exported.Logger.err(err.message);
+                                });
                         } else {
                             api.exported.Logger.err("No maker key configured. Could not send event to IFTTT");
                         }

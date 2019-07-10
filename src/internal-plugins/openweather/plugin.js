@@ -109,7 +109,7 @@ function loaded(api) {
         }
     }
 
-   /**
+    /**
     * This class is used for OpenWeather form
     * @class
     */

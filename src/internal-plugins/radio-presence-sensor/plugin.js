@@ -36,22 +36,22 @@ function loaded(api) {
         constructor(id, plugin, name, dashboard, statistics, dashboardColor, statisticsColor, radio, alertOnBatteryLow = false) {
             super(id, plugin, name, dashboard, statistics, dashboardColor, statisticsColor);
 
-             /**
-              * @Property("radio");
-              * @Type("objects");
-              * @Cl("RadioForm");
-              * @Title("device.form.radio");
-              * @Default([]);
-              */
+            /**
+             * @Property("radio");
+             * @Type("objects");
+             * @Cl("RadioForm");
+             * @Title("device.form.radio");
+             * @Default([]);
+             */
             this.radio = radio;
 
-             /**
-              * @Property("alertOnBatteryLow");
-              * @Type("boolean");
-              * @Cl("RadioForm");
-              * @Title("radio.presence.sensor.alert.on.battery.low");
-              * @Default(true);
-              */
+            /**
+             * @Property("alertOnBatteryLow");
+             * @Type("boolean");
+             * @Cl("RadioForm");
+             * @Title("radio.presence.sensor.alert.on.battery.low");
+             * @Default(true);
+             */
             this.alertOnBatteryLow = alertOnBatteryLow;
         }
 
@@ -124,9 +124,9 @@ function loaded(api) {
             api.timeEventAPI.register(() => {
                 if (configuration.alertOnBatteryLow === true) {
                     const request = dbHelper.RequestBuilder()
-                    .selectOp(dbHelper.Operators().COUNT, dbHelper.Operators().FIELD_ID)
-                    .where("sensorId", dbHelper.Operators().EQ, configuration.id)
-                    .where(dbHelper.Operators().FIELD_TIMESTAMP, dbHelper.Operators().GTE, (api.exported.DateUtils.class.timestamp() - MAX_BATTERY_HISTORY_TIME));
+                        .selectOp(dbHelper.Operators().COUNT, dbHelper.Operators().FIELD_ID)
+                        .where("sensorId", dbHelper.Operators().EQ, configuration.id)
+                        .where(dbHelper.Operators().FIELD_TIMESTAMP, dbHelper.Operators().GTE, (api.exported.DateUtils.class.timestamp() - MAX_BATTERY_HISTORY_TIME));
                     dbHelper.getObjects(request, (error, objects) => {
                         if (!error && objects) {
                             const resultsCount = objects[0][dbHelper.Operators().FIELD_ID];

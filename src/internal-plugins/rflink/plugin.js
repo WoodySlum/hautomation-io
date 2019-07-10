@@ -402,17 +402,17 @@ function loaded(api) {
             api.configurationAPI.register(RFlinkForm, ports, portsTitle);
         }
 
-       /**
-        * Emit radio request
-        *
-        * @param  {number} frequency The frequency
-        * @param  {string} protocol  The protocol
-        * @param  {string} deviceId  The device ID
-        * @param  {string} switchId  The switch ID
-        * @param  {number} [status=null]    The status (or enum called through `constants()`)
-        * @param  {number} [previousStatus=null]    The previous object status, used if status is null to invert
-        * @returns {DbRadio}           A radio  object
-        */
+        /**
+         * Emit radio request
+         *
+         * @param  {number} frequency The frequency
+         * @param  {string} protocol  The protocol
+         * @param  {string} deviceId  The device ID
+         * @param  {string} switchId  The switch ID
+         * @param  {number} [status=null]    The status (or enum called through `constants()`)
+         * @param  {number} [previousStatus=null]    The previous object status, used if status is null to invert
+         * @returns {DbRadio}           A radio  object
+         */
         emit(frequency, protocol, deviceId, switchId, status = null, previousStatus = null) {
             const radioObject = super.emit(frequency, protocol, deviceId, switchId, status, previousStatus);
 

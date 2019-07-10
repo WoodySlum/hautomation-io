@@ -132,9 +132,9 @@ class SchedulerService extends Service.class {
     cancel(id) {
         Logger.info("Cancelling alarm " + id);
         const request = this.dbHelper.RequestBuilder()
-                    .select()
-                    .where("triggered", this.dbHelper.Operators().EQ, -1)
-                    .where("identifier", this.dbHelper.Operators().LIKE, sha256(id));
+            .select()
+            .where("triggered", this.dbHelper.Operators().EQ, -1)
+            .where("identifier", this.dbHelper.Operators().LIKE, sha256(id));
         this.dbHelper.getObjects(request, (err, results) => {
             if (!err && results) {
                 results.forEach((schedulerDbObject) => {

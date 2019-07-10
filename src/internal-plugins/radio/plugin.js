@@ -81,37 +81,37 @@ function loaded(api) {
         }
     }
 
-   /**
-    * This class is used for radio configuration form
-    * @class
-    */
+    /**
+     * This class is used for radio configuration form
+     * @class
+     */
     class RadioConfigForm extends api.exported.FormObject.class {
-       /**
-        * Constructor
-        *
-        * @param  {number} id           Identifier
-        * @param  {number} autoCleanMode       Auto clean
-        * @returns {RadioConfigForm}              The instance
-        */
+        /**
+         * Constructor
+         *
+         * @param  {number} id           Identifier
+         * @param  {number} autoCleanMode       Auto clean
+         * @returns {RadioConfigForm}              The instance
+         */
         constructor(id, autoCleanMode = 1) {
             super(id);
-           /**
-            * @Property("autoCleanMode");
-            * @Type("number");
-            * @Title("radio.config.autoCleanMode");
-            * @Default(1);
-            * @Enum([0, 1, 2, 3]);
-            * @EnumNames(["radio.config.clean.every.month", "radio.config.clean.every.three.month", "radio.config.clean.every.year", "radio.config.clean.no"]);
-            */
+            /**
+             * @Property("autoCleanMode");
+             * @Type("number");
+             * @Title("radio.config.autoCleanMode");
+             * @Default(1);
+             * @Enum([0, 1, 2, 3]);
+             * @EnumNames(["radio.config.clean.every.month", "radio.config.clean.every.three.month", "radio.config.clean.every.year", "radio.config.clean.no"]);
+             */
             this.autoCleanMode = autoCleanMode;
         }
 
-       /**
-        * Convert json data
-        *
-        * @param  {Object} data Some key / value data
-        * @returns {RadioConfigForm}      A form object
-        */
+        /**
+         * Convert json data
+         *
+         * @param  {Object} data Some key / value data
+         * @returns {RadioConfigForm}      A form object
+         */
         json(data) {
             return new RadioConfigForm(data.id, data.autoCleanMode);
         }
@@ -119,17 +119,17 @@ function loaded(api) {
 
     api.configurationAPI.register(RadioConfigForm);
 
-   /**
-    * This class is a radio master class, executing generic radio actions
-    * @class
-    */
+    /**
+     * This class is a radio master class, executing generic radio actions
+     * @class
+     */
     class RadioMaster {
-       /**
-        * Constructor
-        *
-        * @param  {PluginAPI} api The core APIs
-        * @returns {RadioMaster}        The instance
-        */
+        /**
+         * Constructor
+         *
+         * @param  {PluginAPI} api The core APIs
+         * @returns {RadioMaster}        The instance
+         */
         constructor(api) {
             this.api = api;
             this.api.databaseAPI.register(DbRadio);
@@ -139,11 +139,11 @@ function loaded(api) {
             }, this, this.api.timeEventAPI.constants().EVERY_DAYS);
         }
 
-       /**
-        * Clean radio data
-        *
-        * @param  {RadioMaster} [context=null] The instance
-        */
+        /**
+         * Clean radio data
+         *
+         * @param  {RadioMaster} [context=null] The instance
+         */
         cleanRadioData(context = null) {
             if (!context) {
                 context = this;
@@ -212,10 +212,10 @@ function loaded(api) {
          */
         getProtocolList(cb) {
             const request = this.dbHelper.RequestBuilder()
-            .distinct()
-            .select("protocol")
-            .where("module", this.dbHelper.Operators().EQ, this.module)
-            .order(this.dbHelper.Operators().ASC, "protocol");
+                .distinct()
+                .select("protocol")
+                .where("module", this.dbHelper.Operators().EQ, this.module)
+                .order(this.dbHelper.Operators().ASC, "protocol");
             this.dbHelper.getObjects(request, (err, dbRadioObjects) => {
                 if (!err) {
                     const protocolList = [];
@@ -237,10 +237,10 @@ function loaded(api) {
          */
         getLastReceivedRadioInformations(cb, nbElements = 100) {
             const request = this.dbHelper.RequestBuilder()
-            .select()
-            .where("module", this.dbHelper.Operators().EQ, this.module)
-            .order(this.dbHelper.Operators().DESC, this.dbHelper.Operators().FIELD_TIMESTAMP)
-            .first(nbElements);
+                .select()
+                .where("module", this.dbHelper.Operators().EQ, this.module)
+                .order(this.dbHelper.Operators().DESC, this.dbHelper.Operators().FIELD_TIMESTAMP)
+                .first(nbElements);
             this.dbHelper.getObjects(request, (err, dbRadioObjects) => {
                 if (!err) {
                     cb(null, dbRadioObjects);

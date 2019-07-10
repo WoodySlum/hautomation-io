@@ -134,45 +134,45 @@ function loaded(api) {
             api.configurationAPI.setUpdateCb((data) => {
                 if (!data.username || data.username.length === 0) {
                     huejay.discover()
-                    .then(bridges => {
-                        if (data.ip && data.ip.ip && (data.ip.ip != "freetext" || (data.ip.ip === "freetext" && data.ip.freetext.length > 0))) {
-                            this.client = new huejay.Client({
-                                host:     (data.ip.ip === "freetext") ? data.ip.freetext : data.ip.ip,
-                                username: data.username
-                            });
-                        } else {
-                            for (let bridge of bridges) {
+                        .then(bridges => {
+                            if (data.ip && data.ip.ip && (data.ip.ip != "freetext" || (data.ip.ip === "freetext" && data.ip.freetext.length > 0))) {
                                 this.client = new huejay.Client({
-                                    host:     bridge.ip,
+                                    host:     (data.ip.ip === "freetext") ? data.ip.freetext : data.ip.ip,
                                     username: data.username
                                 });
-                                api.exported.Logger.info("Found bridge with IP " + bridge.ip);
-                            }
-                        }
-
-                        if (this.client) {
-                            const user = new this.client.users.User;
-
-                            // Optionally configure a device type / agent on the user
-                            user.deviceType = "hautomation"; // Default is 'huejay'
-
-                            this.client.users.create(user)
-                            .then(user => {
-                                data.username = user.username;
-                                api.exported.Logger.info("Hue new user created - username : " + user.username);
-                                api.configurationAPI.saveData(data);
-                                this.initClient();
-                            }).catch(error => {
-                                if (error instanceof huejay.Error && error.type === 101) {
-                                    api.exported.Logger.info("Link button not pressed. Try again...");
+                            } else {
+                                for (let bridge of bridges) {
+                                    this.client = new huejay.Client({
+                                        host:     bridge.ip,
+                                        username: data.username
+                                    });
+                                    api.exported.Logger.info("Found bridge with IP " + bridge.ip);
                                 }
-                            });
-                        } else {
-                            api.exported.Logger.err("Bridge not found");
-                        }
-                    }).catch(error => {
-                        api.exported.Logger.err(error.message);
-                    });
+                            }
+
+                            if (this.client) {
+                                const user = new this.client.users.User;
+
+                                // Optionally configure a device type / agent on the user
+                                user.deviceType = "hautomation"; // Default is 'huejay'
+
+                                this.client.users.create(user)
+                                    .then(user => {
+                                        data.username = user.username;
+                                        api.exported.Logger.info("Hue new user created - username : " + user.username);
+                                        api.configurationAPI.saveData(data);
+                                        this.initClient();
+                                    }).catch(error => {
+                                        if (error instanceof huejay.Error && error.type === 101) {
+                                            api.exported.Logger.info("Link button not pressed. Try again...");
+                                        }
+                                    });
+                            } else {
+                                api.exported.Logger.err("Bridge not found");
+                            }
+                        }).catch(error => {
+                            api.exported.Logger.err(error.message);
+                        });
                 } else {
                     this.initClient();
                 }
@@ -275,53 +275,53 @@ function loaded(api) {
                     formData.forEach((hueDevice) => {
                         if (context.client && context.client.lights) {
                             context.client.lights.getById(parseInt(hueDevice.device))
-                            .then(light => {
-                                light.name = device.name;
+                                .then(light => {
+                                    light.name = device.name;
 
-                                // Default values if not set
-                                if (!device.color) {
-                                    device.color = "FFFFFF";
-                                }
-
-                                if (!device.brightness) {
-                                    device.brightness = 1;
-                                }
-
-                                if (!device.colorTemperature) {
-                                    device.colorTemperature = 0;
-                                }
-
-                                let brightness = parseInt(device.brightness > -1 ? (device.brightness * 254) : 254);
-                                if (device.status === context.api.deviceAPI.constants().INT_STATUS_ON) {
-                                    light.on = true;
-                                    if (deviceStatus.changes.indexOf(context.api.deviceAPI.constants().ITEM_CHANGE_BRIGHTNESS) >= 0) {
-                                        light.brightness = brightness;
+                                    // Default values if not set
+                                    if (!device.color) {
+                                        device.color = "FFFFFF";
                                     }
 
-                                    if (light.state.attributes.hasOwnProperty("hue") && device.color && deviceStatus.changes.indexOf(context.api.deviceAPI.constants().ITEM_CHANGE_COLOR) >= 0) {
-                                        light.hue = Math.round(parseInt(colorutil.rgb.to.hsv(colorutil.hex.to.rgb("#" + device.color)).h * 65534) * colorRound) / colorRound;
+                                    if (!device.brightness) {
+                                        device.brightness = 1;
                                     }
 
-                                    if (light.state.attributes.hasOwnProperty("sat") && device.color && deviceStatus.changes.indexOf(context.api.deviceAPI.constants().ITEM_CHANGE_COLOR) >= 0) {
-                                        light.saturation = Math.round(parseInt(colorutil.rgb.to.hsv(colorutil.hex.to.rgb("#" + device.color)).s * 254) * colorRound) / colorRound;
+                                    if (!device.colorTemperature) {
+                                        device.colorTemperature = 0;
                                     }
 
-                                    if (light.state.attributes.hasOwnProperty("ct") && device.colorTemperature && deviceStatus.changes.indexOf(context.api.deviceAPI.constants().ITEM_CHANGE_COLOR_TEMP) >= 0) {
-                                        light.colorTemp = parseInt(device.colorTemperature > -1 ? (device.colorTemperature * 347) : 347) + 153;
-                                    }
-                                } else {
-                                    light.on = false;
-                                }
+                                    let brightness = parseInt(device.brightness > -1 ? (device.brightness * 254) : 254);
+                                    if (device.status === context.api.deviceAPI.constants().INT_STATUS_ON) {
+                                        light.on = true;
+                                        if (deviceStatus.changes.indexOf(context.api.deviceAPI.constants().ITEM_CHANGE_BRIGHTNESS) >= 0) {
+                                            light.brightness = brightness;
+                                        }
 
-                                return context.client.lights.save(light);
-                            })
-                            .then(light => {
-                                context.api.exported.Logger.info("Updated hue light " + light.id);
-                            })
-                            .catch(error => {
-                                context.api.exported.Logger.err("Something went wrong when trying to change Hue");
-                                context.api.exported.Logger.err(error.stack);
-                            });
+                                        if (light.state.attributes.hasOwnProperty("hue") && device.color && deviceStatus.changes.indexOf(context.api.deviceAPI.constants().ITEM_CHANGE_COLOR) >= 0) {
+                                            light.hue = Math.round(parseInt(colorutil.rgb.to.hsv(colorutil.hex.to.rgb("#" + device.color)).h * 65534) * colorRound) / colorRound;
+                                        }
+
+                                        if (light.state.attributes.hasOwnProperty("sat") && device.color && deviceStatus.changes.indexOf(context.api.deviceAPI.constants().ITEM_CHANGE_COLOR) >= 0) {
+                                            light.saturation = Math.round(parseInt(colorutil.rgb.to.hsv(colorutil.hex.to.rgb("#" + device.color)).s * 254) * colorRound) / colorRound;
+                                        }
+
+                                        if (light.state.attributes.hasOwnProperty("ct") && device.colorTemperature && deviceStatus.changes.indexOf(context.api.deviceAPI.constants().ITEM_CHANGE_COLOR_TEMP) >= 0) {
+                                            light.colorTemp = parseInt(device.colorTemperature > -1 ? (device.colorTemperature * 347) : 347) + 153;
+                                        }
+                                    } else {
+                                        light.on = false;
+                                    }
+
+                                    return context.client.lights.save(light);
+                                })
+                                .then(light => {
+                                    context.api.exported.Logger.info("Updated hue light " + light.id);
+                                })
+                                .catch(error => {
+                                    context.api.exported.Logger.err("Something went wrong when trying to change Hue");
+                                    context.api.exported.Logger.err(error.stack);
+                                });
                         }
                     });
 
@@ -338,28 +338,28 @@ function loaded(api) {
 
             if (data && data.username) {
                 huejay.discover()
-                .then(bridges => {
-                    if (data.ip && data.ip.ip && (data.ip.ip != "freetext" || (data.ip.ip === "freetext" && data.ip.freetext.length > 0))) {
-                        this.client = new huejay.Client({
-                            host:     (data.ip.ip === "freetext") ? data.ip.freetext : data.ip.ip,
-                            username: data.username
-                        });
-                    } else {
-                        for (let bridge of bridges) {
+                    .then(bridges => {
+                        if (data.ip && data.ip.ip && (data.ip.ip != "freetext" || (data.ip.ip === "freetext" && data.ip.freetext.length > 0))) {
                             this.client = new huejay.Client({
-                                host:     bridge.ip,
+                                host:     (data.ip.ip === "freetext") ? data.ip.freetext : data.ip.ip,
                                 username: data.username
                             });
-                            api.exported.Logger.info("Found bridge with IP " + bridge.ip);
+                        } else {
+                            for (let bridge of bridges) {
+                                this.client = new huejay.Client({
+                                    host:     bridge.ip,
+                                    username: data.username
+                                });
+                                api.exported.Logger.info("Found bridge with IP " + bridge.ip);
+                            }
                         }
-                    }
 
-                    if (this.client) {
-                        this.updateLights();
-                    }
-                }).catch(error => {
-                    api.exported.Logger.err("An error occurred : " + error.message);
-                });
+                        if (this.client) {
+                            this.updateLights();
+                        }
+                    }).catch(error => {
+                        api.exported.Logger.err("An error occurred : " + error.message);
+                    });
             }
         }
 
@@ -371,12 +371,12 @@ function loaded(api) {
         retrieveLights(cb) {
             if (this.client && this.client.lights) {
                 this.client.lights.getAll()
-                  .then(lights => {
-                      this.hueDevices = lights;
-                      cb(lights);
-                  }).catch((err) => {
-                      api.exported.Logger.err(err.message);
-                  });
+                    .then(lights => {
+                        this.hueDevices = lights;
+                        cb(lights);
+                    }).catch((err) => {
+                        api.exported.Logger.err(err.message);
+                    });
             }
         }
     }

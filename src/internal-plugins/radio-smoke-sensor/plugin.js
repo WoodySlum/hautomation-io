@@ -29,13 +29,13 @@ function loaded(api) {
         constructor(id, plugin, name, dashboard, statistics, dashboardColor, statisticsColor, radio) {
             super(id, plugin, name, dashboard, statistics, dashboardColor, statisticsColor);
 
-             /**
-              * @Property("radio");
-              * @Type("objects");
-              * @Cl("RadioForm");
-              * @Title("device.form.radio");
-              * @Default([]);
-              */
+            /**
+             * @Property("radio");
+             * @Type("objects");
+             * @Cl("RadioForm");
+             * @Title("device.form.radio");
+             * @Default([]);
+             */
             this.radio = radio;
         }
 

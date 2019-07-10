@@ -33,15 +33,15 @@ class ImageUtils {
     static resize(b64string, cb, size = 100) {
         const buf = Buffer.from(b64string, "base64");
         gm(buf)
-        .resize(size, size)
-        .setFormat("png")
-        .toBuffer(function (err, buffer) {
-            if (err) {
-                cb(err);
-            } else {
-                cb(null, buffer.toString("base64"));
-            }
-        });
+            .resize(size, size)
+            .setFormat("png")
+            .toBuffer(function (err, buffer) {
+                if (err) {
+                    cb(err);
+                } else {
+                    cb(null, buffer.toString("base64"));
+                }
+            });
     }
 
     /**
@@ -55,20 +55,20 @@ class ImageUtils {
     static blur(b64string, cb, size = 100) {
         const buf = Buffer.from(b64string, "base64");
         gm(buf)
-        .resize(size, size)
-        .blur(10,5)
-        .out("-matte")
-        .out("-operator", "Opacity", "Assign", "70%")
-        .out("-flatten")
-        .out("-background", "#FFFFFF")
-        .setFormat("png")
-        .toBuffer(function (err, buffer) {
-            if (err) {
-                cb(err);
-            } else {
-                cb(null, buffer.toString("base64"));
-            }
-        });
+            .resize(size, size)
+            .blur(10,5)
+            .out("-matte")
+            .out("-operator", "Opacity", "Assign", "70%")
+            .out("-flatten")
+            .out("-background", "#FFFFFF")
+            .setFormat("png")
+            .toBuffer(function (err, buffer) {
+                if (err) {
+                    cb(err);
+                } else {
+                    cb(null, buffer.toString("base64"));
+                }
+            });
     }
 }
 

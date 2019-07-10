@@ -78,20 +78,20 @@ class ThreadsManager {
             }
             done(input.identifier);
         })
-        .send({dirname: __dirname, identifier:identifier, prototype:prototype, data:data})
-        .on("progress", function message(tData) {
-            if (callback) {
-                callback(tData);
-            }
-        })
-        .on("error", function(error) {
-            Logger.err("Error in thread " + identifier);
-            Logger.err(error.message);
-            Logger.err(error.stack);
-        })
-        .on("done", () => {
+            .send({dirname: __dirname, identifier:identifier, prototype:prototype, data:data})
+            .on("progress", function message(tData) {
+                if (callback) {
+                    callback(tData);
+                }
+            })
+            .on("error", function(error) {
+                Logger.err("Error in thread " + identifier);
+                Logger.err(error.message);
+                Logger.err(error.stack);
+            })
+            .on("done", () => {
 
-        });
+            });
 
         this.threads[identifier] = thread;
     }

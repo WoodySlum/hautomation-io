@@ -275,8 +275,8 @@ class DbManager {
             }
         } else {
             let sql = this.RequestBuilder(table, schema)
-                        .save(object)
-                        .request();
+                .save(object)
+                .request();
             Logger.verbose(sql);
             this.db.run(sql, (err) => {
                 if (err && cb) {
@@ -306,9 +306,9 @@ class DbManager {
             }
         } else {
             let sql = this.RequestBuilder(table, schema)
-                        .get(object)
-                        .first(1)
-                        .request();
+                .get(object)
+                .first(1)
+                .request();
             Logger.verbose(sql);
             this.db.get(sql, (err, res) => {
                 if (err && cb) {
@@ -339,8 +339,8 @@ class DbManager {
         } else {
             if (request instanceof DbRequestBuilder.class) {
                 let sql = request
-                            .cleanForSelect()
-                            .request();
+                    .cleanForSelect()
+                    .request();
                 Logger.verbose(sql);
                 this.db.all(sql, (err, res) => {
                     if (err && cb) {
@@ -375,10 +375,10 @@ class DbManager {
             }
         } else {
             let sql = this.RequestBuilder(table, schema)
-                        .select()
-                        .order(this.Operators().DESC, this.Operators().FIELD_TIMESTAMP)
-                        .first(1)
-                        .request();
+                .select()
+                .order(this.Operators().DESC, this.Operators().FIELD_TIMESTAMP)
+                .first(1)
+                .request();
             Logger.verbose(sql);
             this.db.get(sql, (err, res) => {
                 if (err && cb) {
@@ -408,8 +408,8 @@ class DbManager {
             }
         } else {
             let sql = this.RequestBuilder(table, schema)
-                        .del(object)
-                        .request();
+                .del(object)
+                .request();
             Logger.verbose(sql);
             this.db.run(sql, (err) => {
                 if (err && cb) {
@@ -439,8 +439,8 @@ class DbManager {
             }
         } else {
             let sql = request
-                        .cleanForDelete()
-                        .request();
+                .cleanForDelete()
+                .request();
             Logger.verbose(sql);
             this.db.run(sql, (err) => {
                 if (err && cb) {

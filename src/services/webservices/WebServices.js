@@ -561,21 +561,21 @@ class WebServices extends Service.class {
      */
     runPromises(apiRequest, promises, res) {
         Promise.all(promises)
-        .then((apiResponse) => {
-            if (apiResponse) {
-                this.sendAPIResponse(apiResponse, res);
-            }
-        }).catch((apiResponse) => {
-            if (apiResponse.stack) {
-                Logger.err(apiResponse.stack);
-            }
+            .then((apiResponse) => {
+                if (apiResponse) {
+                    this.sendAPIResponse(apiResponse, res);
+                }
+            }).catch((apiResponse) => {
+                if (apiResponse.stack) {
+                    Logger.err(apiResponse.stack);
+                }
 
-            if (apiResponse) {
-                this.sendAPIResponse([apiResponse], res);
-            } else {
-                this.sendAPIResponse([new APIResponse.class()], res);
-            }
-        });
+                if (apiResponse) {
+                    this.sendAPIResponse([apiResponse], res);
+                } else {
+                    this.sendAPIResponse([new APIResponse.class()], res);
+                }
+            });
     }
 
     /**

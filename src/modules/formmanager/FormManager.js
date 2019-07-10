@@ -55,6 +55,7 @@ class FormManager {
 
     /**
      * Unregister a form
+     *
      * @param  {Class} cl     A class with form annotations
      */
     unregister(cl) {
@@ -87,10 +88,10 @@ class FormManager {
         const additionalProperties = this.registeredForms[formBase.name].additionalFields;
         forms.forEach((form) => {
             additionalProperties[form.name] = [
-                    {key:"Type", value:(isList ? "objects" : "object")},
-                    {key:"Cl", value:form.name},
-                    {key:"Sort", value:(sort ? sort : BASE_SORTING)},
-                    {key:"Title", value:title}
+                {key:"Type", value:(isList ? "objects" : "object")},
+                {key:"Cl", value:form.name},
+                {key:"Sort", value:(sort ? sort : BASE_SORTING)},
+                {key:"Title", value:title}
             ];
         });
         this.registeredForms[formBase.name].additionalFields = additionalProperties;
@@ -148,7 +149,7 @@ class FormManager {
         // Extend class lookup
         // Classic regex : class A extends B {
         // ;
-        const regex = /(extends)([ ]*)([\(]*)([a-zA-Z\.]*)([\)]*)([ ]*)(\{)/g;
+        const regex = /(extends)([ ]*)([(]*)([a-zA-Z.]*)([)]*)([ ]*)(\{)/g;
         let regexRes = regex.exec(c);
         let parent = null;
 

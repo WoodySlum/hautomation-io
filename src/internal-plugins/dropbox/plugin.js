@@ -200,19 +200,19 @@ function loaded(api) {
                     } else {
                         const dbx = new DropboxApi({accessToken: data.accessToken, fetch: fetch});
                         dbx.filesDelete({ path: "/" + BACKUP_FILE_NAME })
-                        .then((response) => {
-                            context.api.exported.Logger.info(response);
-                            context.api.exported.Logger.info("Backup uploaded to Dropbox successfully");
-                            context.uploadDropbox(context, dbx, backupFilePath, BACKUP_FILE_NAME);
-                        })
-                        .catch((err) => {
-                            // File not found
-                            if (err.response.status === 409) {
+                            .then((response) => {
+                                context.api.exported.Logger.info(response);
+                                context.api.exported.Logger.info("Backup uploaded to Dropbox successfully");
                                 context.uploadDropbox(context, dbx, backupFilePath, BACKUP_FILE_NAME);
-                            } else {
-                                context.api.exported.Logger.err(err);
-                            }
-                        });
+                            })
+                            .catch((err) => {
+                            // File not found
+                                if (err.response.status === 409) {
+                                    context.uploadDropbox(context, dbx, backupFilePath, BACKUP_FILE_NAME);
+                                } else {
+                                    context.api.exported.Logger.err(err);
+                                }
+                            });
                     }
                 }, data.saveConfiguration, data.saveDatabase, data.saveCameraHistory);
             } else {
@@ -239,19 +239,19 @@ function loaded(api) {
                 } else {
                     context.api.exported.Logger.info("Uploading backup ...");
                     dbx.filesUpload({path: "/" + fileName, contents: contents})
-                    .then((response) => {
-                        context.api.exported.Logger.verbose(response);
-                        context.api.exported.Logger.info("Dropbox backup uploaded successfully");
-                        try {
-                            context.api.backupAPI.cleanBackupFile(backupFilePath);
-                        } catch(e) {
-                            context.api.exported.Logger.err(e.message);
-                        }
-                    })
-                    .catch((err) => {
-                        context.api.exported.Logger.err("Dropbox backup uploaded failed");
-                        context.api.exported.Logger.err(err);
-                    });
+                        .then((response) => {
+                            context.api.exported.Logger.verbose(response);
+                            context.api.exported.Logger.info("Dropbox backup uploaded successfully");
+                            try {
+                                context.api.backupAPI.cleanBackupFile(backupFilePath);
+                            } catch(e) {
+                                context.api.exported.Logger.err(e.message);
+                            }
+                        })
+                        .catch((err) => {
+                            context.api.exported.Logger.err("Dropbox backup uploaded failed");
+                            context.api.exported.Logger.err(err);
+                        });
                 }
             });
         }
@@ -266,33 +266,33 @@ function loaded(api) {
             if (accessToken) {
                 const dbx = new DropboxApi({accessToken: accessToken, fetch: fetch});
                 dbx.filesAlphaGetMetadata({ path: "/" + BACKUP_FILE_NAME })
-                .then(() => {
-                    context.api.exported.Logger.info("Downloading backup ...");
-                    dbx.filesDownload({ path: "/" + BACKUP_FILE_NAME })
-                    .then(function (data) {
-                        const backupFilePath = api.exported.cachePath + "backup-" + api.exported.DateUtils.class.timestamp() + ".zip";
-                        fs.writeFile(backupFilePath, data.fileBinary, "binary", function (err) {
-                            if (err) {
-                                context.api.exported.Logger.err(err);
-                            } else {
-                                context.api.exported.Logger.info("Backup downloaded, now restoring ...");
-                                context.api.backupAPI.restore(backupFilePath, (err) => {
+                    .then(() => {
+                        context.api.exported.Logger.info("Downloading backup ...");
+                        dbx.filesDownload({ path: "/" + BACKUP_FILE_NAME })
+                            .then(function (data) {
+                                const backupFilePath = api.exported.cachePath + "backup-" + api.exported.DateUtils.class.timestamp() + ".zip";
+                                fs.writeFile(backupFilePath, data.fileBinary, "binary", function (err) {
                                     if (err) {
-                                        context.api.exported.Logger.err(err.message);
-                                    }
+                                        context.api.exported.Logger.err(err);
+                                    } else {
+                                        context.api.exported.Logger.info("Backup downloaded, now restoring ...");
+                                        context.api.backupAPI.restore(backupFilePath, (err) => {
+                                            if (err) {
+                                                context.api.exported.Logger.err(err.message);
+                                            }
 
-                                    fs.removeSync(backupFilePath);
+                                            fs.removeSync(backupFilePath);
+                                        });
+                                    }
                                 });
-                            }
-                        });
+                            })
+                            .catch(function (err) {
+                                throw err;
+                            });
                     })
-                    .catch(function (err) {
-                        throw err;
+                    .catch(() => {
+                        context.api.exported.Logger.err("Probably backup file does not exists ...");
                     });
-                })
-                .catch(() => {
-                    context.api.exported.Logger.err("Probably backup file does not exists ...");
-                });
             } else {
                 context.api.exported.Logger.err("Missing dropbox access token");
             }
