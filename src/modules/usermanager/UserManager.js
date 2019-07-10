@@ -84,7 +84,6 @@ class UserManager {
         this.scenarioManager.registerWithInjection(UserScenarioTriggerForm.class, (scenario) => {
             if (scenario && scenario.UserScenarioTriggerForm && scenario.UserScenarioTriggerForm.length > 0) {
                 scenario.UserScenarioTriggerForm.forEach((userScenarioTriggerForm) => {
-                    console.log(userScenarioTriggerForm);
                     if (userScenarioTriggerForm.inorout === 1) {
                         this.setUserZone(userScenarioTriggerForm.username, true);
                     } else if (userScenarioTriggerForm.inorout === 2) {

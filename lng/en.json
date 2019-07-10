@@ -149,5 +149,15 @@
     "message.scenario.lock.time.four.hours": "4 hours",
     "message.scenario.lock.time.six.hours": "6 hours",
     "message.scenario.lock.time.twelve.hours": "12 hours",
-    "message.scenario.lock.time.twenty.four.hours": "24 hours"
+    "message.scenario.lock.time.twenty.four.hours": "24 hours",
+    "alarm.scenario.form.title": "Alarm",
+    "alarm.scenario.form.action.none": "No action",
+    "alarm.scenario.form.action.enable": "Arm alarm",
+    "alarm.scenario.form.action.disable": "Disarm alarm",
+    "alarm.scenario.form.action.trigger": "Trigger alarm",
+    "alarm.scenario.trigger.form.title": "Trigger this scenario on alarm actions",
+    "alarm.scenario.form.trigger.action.none": "No trigger",
+    "alarm.scenario.form.trigger.action.enable": "Trigger when alarm is enabled",
+    "alarm.scenario.form.trigger.action.disable": "Trigger when alarm is disabled",
+    "alarm.scenario.form.trigger.action.trigger": "Trigger when alarm is fired"
 }

@@ -11,6 +11,8 @@ const AlarmSensorsForm = require("./AlarmSensorsForm");
 const Tile = require("./../dashboardmanager/Tile");
 const Icons = require("./../../utils/Icons");
 const DateUtils = require("./../../utils/DateUtils");
+const AlarmScenarioForm = require("./AlarmScenarioForm");
+const AlarmScenarioTriggerForm = require("./AlarmScenarioTriggerForm");
 
 const CONF_KEY = "alarm";
 const SWITCH_ALARM_ROUTE_BASE = "/alarm/switch/set/";
@@ -40,9 +42,10 @@ class AlarmManager {
      * @param  {SchedulerService} schedulerService  The Scheduler service
      * @param  {CamerasManager} camerasManager  The cameras manager
      * @param  {BotEngine} botEngine  The bot engine
+     * @param  {ScenarioManager} scenarioManager  The scenario manager
      * @returns {Alarm} The instance
      */
-    constructor(confManager, formManager, webServices, dashboardManager, userManager, sensorsManager, translateManager, deviceManager, messageManager, schedulerService, camerasManager, botEngine) {
+    constructor(confManager, formManager, webServices, dashboardManager, userManager, sensorsManager, translateManager, deviceManager, messageManager, schedulerService, camerasManager, botEngine, scenarioManager) {
         this.formConfiguration = new FormConfiguration.class(confManager, formManager, webServices, CONF_KEY, false, AlarmForm.class);
         this.confManager = confManager;
         this.webServices = webServices;
@@ -56,6 +59,7 @@ class AlarmManager {
         this.schedulerService = schedulerService;
         this.camerasManager = camerasManager;
         this.botEngine = botEngine;
+        this.scenarioManager = scenarioManager;
         this.formManager.register(AlarmSensorsForm.class);
         this.sensorsStatus = {};
         this.alarmTriggered = false;
@@ -126,6 +130,20 @@ class AlarmManager {
                 });
             }
         });
+
+        this.scenarioManager.register(AlarmScenarioForm.class, (scenario) => {
+            if (scenario && scenario.AlarmScenarioForm && scenario.AlarmScenarioForm.action && scenario.AlarmScenarioForm.action != "none") {
+                if (scenario.AlarmScenarioForm.action === "enable") {
+                    this.enableAlarm();
+                } else if (scenario.AlarmScenarioForm.action === "disable") {
+                    this.disableAlarm();
+                } else if (scenario.AlarmScenarioForm.action === "trigger") {
+                    this.triggerAlarm();
+                }
+            }
+        }, "alarm.scenario.form.title");
+
+        this.scenarioManager.register(AlarmScenarioTriggerForm.class, null, "alarm.scenario.trigger.form.title", 200);
 
 
         this.webServices.registerAPI(this, WebServices.POST, SWITCH_ALARM_ROUTE, Authentication.AUTH_USAGE_LEVEL);
@@ -215,6 +233,12 @@ class AlarmManager {
             this.formConfiguration.save();
             this.registerTile();
             this.armAlarm();
+
+            this.scenarioManager.getScenarios().forEach((scenario) => {
+                if (scenario.AlarmScenarioTriggerForm && scenario.AlarmScenarioTriggerForm.trigger && scenario.AlarmScenarioTriggerForm.trigger === "enable") {
+                    this.scenarioManager.triggerScenario(scenario);
+                }
+            });
         } else {
             Logger.info("Alarm already enabled");
         }
@@ -232,6 +256,12 @@ class AlarmManager {
             this.registerTile();
             this.stopAlarm(); // Stop sirens and ...
             this.botEngine.textToSpeech(this.translateManager.t("alarm.disabled.speak"));
+
+            this.scenarioManager.getScenarios().forEach((scenario) => {
+                if (scenario.AlarmScenarioTriggerForm && scenario.AlarmScenarioTriggerForm.trigger && scenario.AlarmScenarioTriggerForm.trigger === "disable") {
+                    this.scenarioManager.triggerScenario(scenario);
+                }
+            });
         } else {
             Logger.info("Alarm already disabled");
         }
@@ -251,6 +281,12 @@ class AlarmManager {
                 });
             }
             this.messageManager.sendMessage("*", this.translateManager.t("alarm.manager.alert"));
+
+            this.scenarioManager.getScenarios().forEach((scenario) => {
+                if (scenario.AlarmScenarioTriggerForm && scenario.AlarmScenarioTriggerForm.trigger && scenario.AlarmScenarioTriggerForm.trigger === "trigger") {
+                    this.scenarioManager.triggerScenario(scenario);
+                }
+            });
         } else {
             Logger.info("Alarm already triggered");
         }
