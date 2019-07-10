@@ -24,6 +24,7 @@ class DeviceForm extends FormObject.class {
      */
     constructor(id = null, name = null, excludeFromAll = false, visible = true, worksOnlyOnDayNight = 1, icon = {}, radio = [], status = -1, brightness = 1, color = "FFFFFF", colorTemperature = 0, powerOutageRestore = false) {
         super(id);
+        this.radio = radio;
 
         /**
          * @Property("name");
@@ -74,14 +75,6 @@ class DeviceForm extends FormObject.class {
          * @Cl("IconForm");
          */
         this.icon = icon;
-
-        /**
-         * @Property("radio");
-         * @Type("objects");
-         * @Cl("RadioForm");
-         * @Title("device.form.radio");
-         */
-        this.radio = radio;
 
         /**
          * @Property("status");
