@@ -60,9 +60,10 @@ class ScenarioAPI {
      * Called when a scenario is triggered
      *
      * @param  {ScenarioForm} scenario A scenario
+     * @param  {Object}  [additionalInfos={}] Additional informations
      */
-    triggerScenario(scenario) {
-        PrivateProperties.oprivate(this).scenarioManager.triggerScenario(scenario);
+    triggerScenario(scenario, additionalInfos) {
+        PrivateProperties.oprivate(this).scenarioManager.triggerScenario(scenario, false, additionalInfos);
     }
 
     /**

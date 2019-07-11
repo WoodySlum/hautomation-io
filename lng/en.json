@@ -97,6 +97,7 @@
     "user.scenario.form.inorout.in": "In zone",
     "user.scenario.form.inorout.out": "Out zone",
     "user.scenario.form.inorout.invert": "Invert zone",
+    "user.scenario.form.provided": "Provided by request",
     "devices.list.scenario.turnOnAll": "Turn on all devices",
     "devices.list.scenario.turnOffAll": "Turn off all devices",
     "devices.list.form.title": "Device",

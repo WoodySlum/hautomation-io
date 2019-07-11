@@ -148,8 +148,9 @@ class ScenarioManager {
      *
      * @param  {ScenarioForm} scenario A scenario
      * @param  {boolean} [isScheduled=false] Flag to detect if action should be executed immediately or scheduled
+     * @param  {Object}  [additionalInfos={}] Additional informations
      */
-    triggerScenario(scenario, isScheduled = false) {
+    triggerScenario(scenario, isScheduled = false, additionalInfos = {}) {
         const self = this;
         if (scenario.enabled) {
             if (isScheduled || !scenario.delay || !scenario.delay.unit || (scenario.delay && scenario.delay.unit && scenario.delay.unit === DELAY_IMMEDIATELY)) {
@@ -157,7 +158,7 @@ class ScenarioManager {
                 Object.keys(self.registered).forEach((registeredScenarioKey) => {
                     const registeredScenario = this.registered[registeredScenarioKey];
                     if (registeredScenario.triggerCb) {
-                        registeredScenario.triggerCb(scenario);
+                        registeredScenario.triggerCb(scenario, additionalInfos);
                     }
                 });
 

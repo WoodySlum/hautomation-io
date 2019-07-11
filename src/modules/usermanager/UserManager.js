@@ -74,25 +74,27 @@ class UserManager {
      */
     registerScenarioForms() {
         this.scenarioManager.register(UserScenarioForm.class, null, "user.scenario.form.mode.trigger", 200);
-        const usernames = [];
-        const usernamesLabels = [];
+        const usernames = ["-"];
+        const usernamesLabels = [this.translateManager.t("user.scenario.form.provided")];
         this.getUsers().forEach((user) => {
             usernames.push(user.username);
             usernamesLabels.push(user.name);
         });
 
-        this.scenarioManager.registerWithInjection(UserScenarioTriggerForm.class, (scenario) => {
+        this.scenarioManager.registerWithInjection(UserScenarioTriggerForm.class, (scenario, additionalInfos) => {
             if (scenario && scenario.UserScenarioTriggerForm && scenario.UserScenarioTriggerForm.length > 0) {
                 scenario.UserScenarioTriggerForm.forEach((userScenarioTriggerForm) => {
-                    if (userScenarioTriggerForm.inorout === 1) {
-                        this.setUserZone(userScenarioTriggerForm.username, true);
-                    } else if (userScenarioTriggerForm.inorout === 2) {
-                        this.setUserZone(userScenarioTriggerForm.username, false);
-                    } else if (userScenarioTriggerForm.inorout === 3) {
-                        const user = this.getUser(userScenarioTriggerForm.username);
-                        if (user) {
-                            this.setUserZone(userScenarioTriggerForm.username, !user.atHome);
+                    const user = this.getUser(userScenarioTriggerForm.username === "-" ? additionalInfos.username : userScenarioTriggerForm.username);
+                    if (user) {
+                        if (userScenarioTriggerForm.inorout === 1) {
+                            this.setUserZone(user.username, true);
+                        } else if (userScenarioTriggerForm.inorout === 2) {
+                            this.setUserZone(user.username, false);
+                        } else if (userScenarioTriggerForm.inorout === 3) {
+                            this.setUserZone(user.username, !user.atHome);
                         }
+                    } else {
+                        Logger.err("Could not find user");
                     }
                 });
             }
@@ -186,7 +188,7 @@ class UserManager {
     getUser(username) {
         let foundUser = null;
         this.formConfiguration.getDataCopy().forEach((user) => {
-            if (user.username.toLowerCase() === username.toLowerCase()) {
+            if (user.username && username && user.username.toLowerCase() === username.toLowerCase()) {
                 foundUser = user;
             }
         });

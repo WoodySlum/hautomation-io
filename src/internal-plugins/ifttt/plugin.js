@@ -3,7 +3,7 @@
 const IFTTT = require("node-ifttt-maker");
 const WEBSERVICE_KEY = "ifttt/get";
 const ROUTE_GET_BASE_PATH = ":/" + WEBSERVICE_KEY + "/";
-const ROUTE_GET_FULL_PATH = ROUTE_GET_BASE_PATH + "[key]/";
+const ROUTE_GET_FULL_PATH = ROUTE_GET_BASE_PATH + "[key]/[username*]/";
 const ERROR_CODE_IFTT_TRIGGER = 400;
 
 /**
@@ -210,7 +210,7 @@ function loaded(api) {
                         }
                     });
                     if (scenarioDetected) {
-                        self.api.scenarioAPI.triggerScenario(scenarioDetected);
+                        self.api.scenarioAPI.triggerScenario(scenarioDetected, ((apiRequest.authenticationData && apiRequest.authenticationData.username) ? {username: apiRequest.authenticationData.username} : ((apiRequest.data && apiRequest.data.username) ? {username:apiRequest.data.username} : {})));
                         resolve(self.api.webAPI.APIResponse(true, {success: true}));
                     } else {
                         self.api.exported.Logger.err("Could not find an IFTTT scenario to trigger for key " + ifttWebServiceKey);

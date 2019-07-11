@@ -95,6 +95,7 @@
     "user.scenario.form.inorout.in": "Dans la zone",
     "user.scenario.form.inorout.out": "En dehors de la zone",
     "user.scenario.form.inorout.invert": "Inverser la zone",
+    "user.scenario.form.provided": "Fourni dans la requête",
     "devices.list.scenario.turnOnAll": "Allumer tout",
     "devices.list.scenario.turnOffAll": "Éteindre tout",
     "devices.list.form.title": "Périphérique",
