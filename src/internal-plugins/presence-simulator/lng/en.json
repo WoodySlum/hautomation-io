@@ -1,0 +1,6 @@
+{
+    "presence.simulator.form.exclude.devices": "Exclude those devices",
+    "presence.simulator.form.enabled": "Service status",
+    "presence.simulator.form.enabled.on": "On",
+    "presence.simulator.form.enabled.off": "Off"
+}

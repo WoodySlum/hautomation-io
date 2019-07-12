@@ -1,0 +1,6 @@
+{
+    "presence.simulator.form.exclude.devices": "Exclure ces périphériques",
+    "presence.simulator.form.enabled": "État du service",
+    "presence.simulator.form.enabled.on": "On",
+    "presence.simulator.form.enabled.off": "Off"
+}

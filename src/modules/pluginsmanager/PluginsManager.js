@@ -80,7 +80,8 @@ const INTERNAL_PLUGINS = [
     "pushme",
     "signal-db-sensor",
     "huawei-signal-db-sensor",
-    "ifttt"
+    "ifttt",
+    "presence-simulator"
 ];
 
 const CORE_PLUGINS = [
