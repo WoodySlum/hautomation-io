@@ -265,7 +265,6 @@ class ScenarioManager {
      * @returns {Promise}  A promise with an APIResponse object
      */
     processAPI(apiRequest) {
-        const self = this;
         if (apiRequest.route.startsWith(ROUTE_TRIGGER_URL_BASE_PATH)) {
             return new Promise((resolve, reject) => {
                 const webServiceKey = apiRequest.data.key;
