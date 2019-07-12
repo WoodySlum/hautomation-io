@@ -158,5 +158,10 @@
     "alarm.scenario.form.trigger.action.none": "Aucun déclenchement",
     "alarm.scenario.form.trigger.action.enable": "Quand l'alarme est activée",
     "alarm.scenario.form.trigger.action.disable": "Quand l'alarme est désactivée",
-    "alarm.scenario.form.trigger.action.trigger": "Quand l'alarme se déclenche"
+    "alarm.scenario.form.trigger.action.trigger": "Quand l'alarme se déclenche",
+    "scenario.form.url.trigger.title": "Déclencher quand l'URL est appelée",
+    "scenario.form.url.trigger.url": "URL de déclenchement (vous pouvez ajouter /[username]/ a la fin de l'URL)",
+    "scenario.form.url.trigger.status": "Statut",
+    "scenario.form.url.trigger.status.off": "Désactivé",
+    "scenario.form.url.trigger.status.on": "Activé"
 }

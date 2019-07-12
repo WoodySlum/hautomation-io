@@ -5,8 +5,11 @@ const ScenarioSubActionForm = require("./ScenarioSubActionForm");
 const ScenarioTriggerAfterForm = require("./ScenarioTriggerAfterForm");
 const FormConfiguration = require("./../formconfiguration/FormConfiguration");
 const TimeEventService = require("./../../services/timeeventservice/TimeEventService");
+const ScenarioUrlTriggerForm = require("./ScenarioUrlTriggerForm");
 const ScenarioForm = require("./ScenarioForm");
 const TimeScenarioForm = require("./TimeScenarioForm");
+const Authentication = require("./../authentication/Authentication");
+const APIResponse = require("./../../services/webservices/APIResponse");
 const DateUtils = require("./../../utils/DateUtils");
 const sha256 = require("sha256");
 const CONF_KEY = "scenarios";
@@ -16,6 +19,11 @@ const DELAY_IMMEDIATELY = "immediately";
 const DELAY_DAYS = "days";
 const DELAY_HOURS = "hours";
 const DELAY_MINUTES = "minutes";
+const TRIGGER_URL_WEBSERVICE_KEY = "scenario/trigger";
+const ROUTE_TRIGGER_URL_BASE_PATH = ":/" + TRIGGER_URL_WEBSERVICE_KEY + "/";
+const ROUTE_RIGGER_URL_FULL_PATH = ROUTE_TRIGGER_URL_BASE_PATH + "[key]/[username*]/";
+const ERROR_CODE_URL_TRIGGER = 400;
+
 
 /**
  * This class allows to manage scenarios
@@ -42,6 +50,7 @@ class ScenarioManager {
         this.formManager.register(TimeScenarioForm.class);
         this.registerScenariosListForm();
         this.formManager.register(ScenarioSubActionForm.class);
+        this.gatewayManager = null; // There is a dependency ons cenario manager on gateway. Check setGatewayManager method
         // Register to form configuration callback
         this.formConfiguration.setUpdateCb(() => {
             this.registerScenariosListForm();
@@ -72,6 +81,20 @@ class ScenarioManager {
         });
 
         this.formConfiguration.setSortFunction((a,b) => a.name.localeCompare(b.name));
+
+        this.webServices.registerAPI(this, "*", ROUTE_RIGGER_URL_FULL_PATH, Authentication.AUTH_NO_LEVEL);
+    }
+
+    /**
+     * Set the gateway manager, due to cross includes
+     *
+     * @param {GatewayManager} gatewayManager The gateway manager instance
+     */
+    setGatewayManager(gatewayManager) {
+        if (!this.gatewayManager) {
+            this.gatewayManager = gatewayManager;
+            this.registerWithInjection(ScenarioUrlTriggerForm.class, null, "scenario.form.url.trigger.title", 200, false, this.gatewayManager.getDistantApiUrl(), TRIGGER_URL_WEBSERVICE_KEY);
+        }
     }
 
     /**
@@ -233,6 +256,47 @@ class ScenarioManager {
                 }
             }
         });
+    }
+
+    /**
+     * Process API callback
+     *
+     * @param  {APIRequest} apiRequest An APIRequest
+     * @returns {Promise}  A promise with an APIResponse object
+     */
+    processAPI(apiRequest) {
+        const self = this;
+        if (apiRequest.route.startsWith(ROUTE_TRIGGER_URL_BASE_PATH)) {
+            return new Promise((resolve, reject) => {
+                const webServiceKey = apiRequest.data.key;
+                let scenarioDetected = null;
+                this.getScenarios().forEach((scenario) => {
+                    if (webServiceKey && scenario.ScenarioUrlTriggerForm && scenario.ScenarioUrlTriggerForm.triggerUrl && scenario.ScenarioUrlTriggerForm.triggerUrl.indexOf(webServiceKey) > 0) {
+                        scenarioDetected = scenario;
+                    }
+                });
+
+                if (scenarioDetected) {
+                    let enabled = false;
+                    if (scenarioDetected.ScenarioUrlTriggerForm && scenarioDetected.ScenarioUrlTriggerForm.status) {
+                        if (scenarioDetected.ScenarioUrlTriggerForm.status === "on") {
+                            enabled = true;
+                        }
+                    }
+                    if (enabled) {
+                        this.triggerScenario(scenarioDetected, false, ((apiRequest.authenticationData && apiRequest.authenticationData.username) ? {username: apiRequest.authenticationData.username} : ((apiRequest.data && apiRequest.data.username) ? {username:apiRequest.data.username} : {})));
+                        resolve(new APIResponse.class(true, {success: true}));
+                    } else {
+                        reject(new APIResponse.class(false, {}, ERROR_CODE_URL_TRIGGER, "Trigger disabled"));
+                    }
+                } else {
+                    Logger.err("Could not find a scenario to trigger for key " + webServiceKey);
+                    reject(new APIResponse.class(false, {}, ERROR_CODE_URL_TRIGGER, "Invalid key"));
+                }
+
+
+            });
+        }
     }
 }
 

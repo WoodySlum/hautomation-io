@@ -29,11 +29,12 @@ class GatewayManager {
      * @param  {Object} appConfiguration App configuration
      * @param  {WebServices} webServices The web services
      * @param  {EventEmitter} eventBus    The global event bus
+     * @param  {ScenarioManager} scenarioManager    The scenario manager
      * @param  {string} readyEvent    The ready event tag
      *
      * @returns {GatewayManager} The instance
      */
-    constructor(environmentManager, version, hash, timeEventService, appConfiguration, webServices, eventBus, readyEvent) {
+    constructor(environmentManager, version, hash, timeEventService, appConfiguration, webServices, eventBus, scenarioManager, readyEvent) {
         this.environmentManager = environmentManager;
         this.version = version;
         this.hash = hash;
@@ -42,6 +43,7 @@ class GatewayManager {
         this.webServices = webServices;
         this.webServices.gatewayManager = this;
         this.eventBus = eventBus;
+        this.scenarioManager = scenarioManager;
         this.tunnelUrl = null;
         this.bootTimestamp = DateUtils.class.timestamp();
         this.bootMode = BOOT_MODE_BOOTING;
@@ -70,11 +72,14 @@ class GatewayManager {
             self.bootMode = BOOT_MODE_BOOTING;
             self.transmit();
         });
+
+        // Alert scenario manager
+        this.scenarioManager.setGatewayManager(this);
     }
 
     /**
      * Get full hautomation URL
-     * 
+     *
      * @returns {string} The URL
      */
     getDistantUrl() {

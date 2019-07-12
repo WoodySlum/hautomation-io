@@ -1,10 +1,6 @@
 "use strict";
 
 const IFTTT = require("node-ifttt-maker");
-const WEBSERVICE_KEY = "ifttt/get";
-const ROUTE_GET_BASE_PATH = ":/" + WEBSERVICE_KEY + "/";
-const ROUTE_GET_FULL_PATH = ROUTE_GET_BASE_PATH + "[key]/[username*]/";
-const ERROR_CODE_IFTT_TRIGGER = 400;
 
 /**
  * Loaded function
@@ -86,69 +82,6 @@ function loaded(api) {
     }
 
     /**
-     * This class is used for IFTTT scenario form
-     * @class
-     */
-    class IftttScenarioTriggerForm extends api.exported.FormObject.class {
-        /**
-          * Constructor
-          *
-          * @param  {number} id           Identifier
-          * @param  {string} iftttTriggerUrlToken       The ifttt trigger url token
-          * @param  {string} iftttTriggerUrl       The ifttt trigger url
-          * @returns {IftttScenarioTriggerForm}              The instance
-          */
-        constructor(id, iftttTriggerUrlToken, iftttTriggerUrl) {
-            super(id);
-
-            /**
-             * @Property("iftttTriggerUrlToken");
-             * @Type("string");
-             * @Hidden(true);
-             * @Sort(200);
-             */
-            this.iftttTriggerUrlToken = iftttTriggerUrlToken;
-
-            /**
-             * @Property("iftttTriggerUrl");
-             * @Type("string");
-             * @Readonly(true);
-             * @Title("ifttt.trigger.url");
-             * @Default("getIftttUrl");
-             */
-            this.iftttTriggerUrl = iftttTriggerUrl;
-        }
-
-        /**
-         * Returns the IFTT url fot the scenario
-         *
-         * @returns {string} A complete URL
-         */
-        static getIftttUrl() {
-            let randomStr = "";
-            const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-            const charactersLength = characters.length;
-            for (var i = 0 ; i < 15 ; i++) {
-                randomStr += characters.charAt(Math.floor(Math.random() * charactersLength));
-            }
-
-            return api.gatewayAPI.getDistantApiUrl() + WEBSERVICE_KEY + "/" + randomStr + "/";
-        }
-
-        /**
-          * Convert json data
-          *
-          * @param  {Object} data Some key / value data
-          * @returns {IftttForm}      A form object
-          */
-        json(data) {
-            return new IftttScenarioTriggerForm(data.id, data.iftttTriggerUrlToken, data.iftttTriggerUrl);
-        }
-    }
-
-
-
-    /**
      * This class manage Ifttt extension
      * @class
      */
@@ -161,8 +94,6 @@ function loaded(api) {
          */
         constructor(api) {
             this.api = api;
-
-            this.api.webAPI.register(this, this.api.webAPI.constants().GET, ROUTE_GET_FULL_PATH, this.api.webAPI.Authentication().AUTH_NO_LEVEL);
 
             this.api.scenarioAPI.register(IftttScenarioForm, (scenario) => {
                 if (scenario.IftttScenarioForm && scenario.IftttScenarioForm.length > 0) {
@@ -187,39 +118,6 @@ function loaded(api) {
                     });
                 }
             }, this.api.translateAPI.t("ifttt.scenario.title"), null, true);
-
-            this.api.scenarioAPI.register(IftttScenarioTriggerForm, null, this.api.translateAPI.t("ifttt.scenario.webhook.title"), 200);
-
-        }
-
-        /**
-         * Process API callback
-         *
-         * @param  {APIRequest} apiRequest An APIRequest
-         * @returns {Promise}  A promise with an APIResponse object
-         */
-        processAPI(apiRequest) {
-            const self = this;
-            if (apiRequest.route.startsWith(ROUTE_GET_BASE_PATH)) {
-                return new Promise((resolve, reject) => {
-                    const ifttWebServiceKey = apiRequest.data.key;
-                    let scenarioDetected = null;
-                    self.api.scenarioAPI.getScenarios().forEach((scenario) => {
-                        if (ifttWebServiceKey && scenario.IftttScenarioTriggerForm && scenario.IftttScenarioTriggerForm.iftttTriggerUrl && scenario.IftttScenarioTriggerForm.iftttTriggerUrl.indexOf(ifttWebServiceKey) > 0) {
-                            scenarioDetected = scenario;
-                        }
-                    });
-                    if (scenarioDetected) {
-                        self.api.scenarioAPI.triggerScenario(scenarioDetected, ((apiRequest.authenticationData && apiRequest.authenticationData.username) ? {username: apiRequest.authenticationData.username} : ((apiRequest.data && apiRequest.data.username) ? {username:apiRequest.data.username} : {})));
-                        resolve(self.api.webAPI.APIResponse(true, {success: true}));
-                    } else {
-                        self.api.exported.Logger.err("Could not find an IFTTT scenario to trigger for key " + ifttWebServiceKey);
-                        reject(self.api.webAPI.APIResponse(false, {}, ERROR_CODE_IFTT_TRIGGER, "Invalid key"));
-                    }
-
-
-                });
-            }
         }
     }
 

@@ -1,7 +1,5 @@
 {
     "ifttt.maker.key":"IFTTT maker key. Identifier can be retrieved at https://ifttt.com/services/maker_webhooks/settings, token is in the displayed URL, just after /use/",
     "ifttt.scenario.event":"Maker event which execute IFTTT scenario (out). In IFTTT interface, when chosing a service (+ this), pick 'Webhook' / 'Receive a web request'. Put the same event name as in this field.",
-    "ifttt.scenario.title":"Execute an IFTTT command",
-    "ifttt.trigger.url": "URL for IFTTT triggering (in). In IFTTT interface, when chosing an action service (+ that), pick 'Webhook' / 'Make a web request'. Paste the URL below on the IFTT URL field, with method GET. You can suffix URL with /[username]/ to trigger specific user actions.",
-    "ifttt.scenario.webhook.title": "Trigger this scenario with an IFTTT webhook"
+    "ifttt.scenario.title":"Execute an IFTTT command"
 }

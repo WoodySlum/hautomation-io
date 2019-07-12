@@ -160,5 +160,10 @@
     "alarm.scenario.form.trigger.action.none": "No trigger",
     "alarm.scenario.form.trigger.action.enable": "Trigger when alarm is enabled",
     "alarm.scenario.form.trigger.action.disable": "Trigger when alarm is disabled",
-    "alarm.scenario.form.trigger.action.trigger": "Trigger when alarm is fired"
+    "alarm.scenario.form.trigger.action.trigger": "Trigger when alarm is fired",
+    "scenario.form.url.trigger.title": "Trigger when this URL is called",
+    "scenario.form.url.trigger.url": "Triggering URL (you can additionally add /[username]/ at the end of the URL)",
+    "scenario.form.url.trigger.status": "Status",
+    "scenario.form.url.trigger.status.off": "Disabled",
+    "scenario.form.url.trigger.status.on": "Enabled"
 }

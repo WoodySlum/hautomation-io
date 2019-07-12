@@ -94,7 +94,7 @@ class UserManager {
                             this.setUserZone(user.username, !user.atHome);
                         }
                     } else {
-                        Logger.err("Could not find user");
+                        Logger.err("Could not find user " + additionalInfos.username);
                     }
                 });
             }
