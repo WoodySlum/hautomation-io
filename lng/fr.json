@@ -89,7 +89,7 @@
     "user.scenario.form.mode.nobody": "Lorsque personne n'est à la maison",
     "user.scenario.form.mode.at.least": "Lorsqu'au moins une personne est à la maison",
     "user.scenario.form.mode.trigger": "Déclencher le scénario en fonction de la présence",
-    "user.scenario.form.trigger.mode.trigger": "Modifier de la localisation des utilisateurs",
+    "user.scenario.form.trigger.mode.trigger": "Modifier la localisation des utilisateurs",
     "user.scenario.form.username": "Nom d'utilisateur",
     "user.scenario.form.inorout": "Action",
     "user.scenario.form.inorout.in": "Dans la zone",
@@ -163,5 +163,8 @@
     "scenario.form.url.trigger.url": "URL de déclenchement (vous pouvez ajouter /[username]/ a la fin de l'URL)",
     "scenario.form.url.trigger.status": "Statut",
     "scenario.form.url.trigger.status.off": "Désactivé",
-    "scenario.form.url.trigger.status.on": "Activé"
+    "scenario.form.url.trigger.status.on": "Activé",
+    "scenario.form.url.call.title": "Exécuter un appel HTTP",
+    "scenario.form.url.call.url": "Url",
+    "scenario.form.url.call.method": "Méthode (un contenu json peut être passé en POST)"
 }

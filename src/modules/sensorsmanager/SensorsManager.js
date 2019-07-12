@@ -294,7 +294,7 @@ class SensorsManager {
                     });
 
                     if (shouldExecuteAction) {
-                        this.scenarioManager.triggerScenario(scenario);
+                        this.scenarioManager.triggerScenario(scenario, false, {id: id, type: type, value: value, unit:unit, vcc: vcc, aggValue: aggValue, aggUnit: aggUnit});
                     }
                 }
             }

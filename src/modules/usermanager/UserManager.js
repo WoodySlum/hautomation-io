@@ -287,17 +287,17 @@ class UserManager {
                             break;
                         case 1:
                             if (self.allUsersAtHome()) {
-                                self.scenarioManager.triggerScenario(scenario);
+                                self.scenarioManager.triggerScenario(scenario, false, {username: username, inZone: inZone, allUsersAtHome: true});
                             }
                             break;
                         case 2:
                             if (self.nobodyAtHome()) {
-                                self.scenarioManager.triggerScenario(scenario);
+                                self.scenarioManager.triggerScenario(scenario, false, {username: username, inZone: inZone, nobodyAtHome: true});
                             }
                             break;
                         case 3:
                             if (self.somebodyAtHome()) {
-                                self.scenarioManager.triggerScenario(scenario);
+                                self.scenarioManager.triggerScenario(scenario, false, {username: username, inZone: inZone, somebodyAtHome: true});
                             }
                             break;
                         }

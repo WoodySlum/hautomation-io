@@ -1,5 +1,5 @@
 {
     "ifttt.maker.key":"IFTTT maker key. L'identifiant est visible à l'URL https://ifttt.com/services/maker_webhooks/settings, le token est visible dans l'URL après /use/.",
     "ifttt.scenario.event":"Maker event qui va exécuter un scénario IFTTT (sortant). Dans l'interface IFTTT, lorsque vous sélectionnez un service (+ this), choisir 'Receive a web request'. Mettez la même valeur de l'event name dans le champ ci-dessous.",
-    "ifttt.scenario.title":"Exécuter une commande IFTTT",
+    "ifttt.scenario.title":"Exécuter une commande IFTTT"
 }

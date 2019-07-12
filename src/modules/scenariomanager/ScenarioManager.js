@@ -6,12 +6,14 @@ const ScenarioTriggerAfterForm = require("./ScenarioTriggerAfterForm");
 const FormConfiguration = require("./../formconfiguration/FormConfiguration");
 const TimeEventService = require("./../../services/timeeventservice/TimeEventService");
 const ScenarioUrlTriggerForm = require("./ScenarioUrlTriggerForm");
+const ScenarioUrlCallForm = require("./ScenarioUrlCallForm");
 const ScenarioForm = require("./ScenarioForm");
 const TimeScenarioForm = require("./TimeScenarioForm");
 const Authentication = require("./../authentication/Authentication");
 const APIResponse = require("./../../services/webservices/APIResponse");
 const DateUtils = require("./../../utils/DateUtils");
 const sha256 = require("sha256");
+const request = require("request");
 const CONF_KEY = "scenarios";
 const SUB_ACTION_SCHEDULER_KEY = "sub-action";
 const ACTION_SCHEDULER_KEY = "action";
@@ -83,6 +85,37 @@ class ScenarioManager {
         this.formConfiguration.setSortFunction((a,b) => a.name.localeCompare(b.name));
 
         this.webServices.registerAPI(this, "*", ROUTE_RIGGER_URL_FULL_PATH, Authentication.AUTH_NO_LEVEL);
+
+        // Disable this for unit test
+        if (!process.env.TEST) {
+            this.register(ScenarioUrlCallForm.class, (scenario, additionalInfos) => {
+                if (scenario.ScenarioUrlCallForm && scenario.ScenarioUrlCallForm.length > 0) {
+                    scenario.ScenarioUrlCallForm.forEach((scenarioUrlCallForm) => {
+                        if (scenarioUrlCallForm.url.length > 0) {
+                            if (scenarioUrlCallForm.method === "GET") {
+                                request({url:scenarioUrlCallForm.url, method: "GET"})
+                                    .on("response", (response) => {
+                                        Logger.info("Call to " + scenarioUrlCallForm.url + " with a status code of " + response.statusCode);
+                                    })
+                                    .on("error", (err) => {
+                                        Logger.err("Error while calling GET " + scenarioUrlCallForm.url + " : " + err.message);
+                                    });
+
+                            } else if (scenarioUrlCallForm.method === "POST") {
+                                request({url:scenarioUrlCallForm.url, method: "POST", json: additionalInfos})
+                                    .on("response", (response) => {
+                                        Logger.info("Call to " + scenarioUrlCallForm.url + " with a status code of " + response.statusCode);
+                                    })
+                                    .on("error", (err) => {
+                                        Logger.err("Error while calling POST " + scenarioUrlCallForm.url + " : " + err.message);
+                                    });
+                            }
+                        }
+                    });
+                }
+
+            }, "scenario.form.url.call.title", null, true);
+        }
     }
 
     /**
@@ -129,7 +162,7 @@ class ScenarioManager {
      * Register to scenario execution engine
      *
      * @param  {FormObject} formPart         A form part
-     * @param  {Function} [triggerCb=null] A trigger called when a scenario should be executed. E.g. : `(scenario) => {}`
+     * @param  {Function} [triggerCb=null] A trigger called when a scenario should be executed. E.g. : `(scenario, additionalInfos) => {}`
      * @param  {string} [title=null]     The title for sub form
      * @param  {number} [sort=null]      Sort
      * @param {boolean} isList `false` if this is a list of objects, otherwise `false`
@@ -142,7 +175,7 @@ class ScenarioManager {
      * Register to scenario execution engine with injection
      *
      * @param  {FormObject} formPart         A form part
-     * @param  {Function} [triggerCb=null] A trigger called when a scenario should be executed. E.g. : `(scenario) => {}`
+     * @param  {Function} [triggerCb=null] A trigger called when a scenario should be executed. E.g. : `(scenario, additionalInfos) => {}`
      * @param  {string} [title=null]     The title for sub form
      * @param  {number} [sort=null]      Sort
      * @param {boolean} isList `false` if this is a list of objects, otherwise `false`

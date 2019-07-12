@@ -165,5 +165,8 @@
     "scenario.form.url.trigger.url": "Triggering URL (you can additionally add /[username]/ at the end of the URL)",
     "scenario.form.url.trigger.status": "Status",
     "scenario.form.url.trigger.status.off": "Disabled",
-    "scenario.form.url.trigger.status.on": "Enabled"
+    "scenario.form.url.trigger.status.on": "Enabled",
+    "scenario.form.url.call.title": "Do a HTTP call",
+    "scenario.form.url.call.url": "Url",
+    "scenario.form.url.call.method": "Method (a json body can be passed in POST)"
 }
