@@ -3,6 +3,7 @@
 const PERCENTAGE_THRESHOLD = 18;
 const RANDOM_MAX = 100;
 const RANDOM_THRESHOLD = 95;
+const HISTORY_NB_MONTH = 3;
 
 /**
  * Loaded function
@@ -37,7 +38,7 @@ function loaded(api) {
              * @Enum(["on", "off"]);
              * @EnumNames(["presence.simulator.form.enabled.on", "presence.simulator.form.enabled.off"]);
              * @Default("on");
-             * @display("radio");
+             * @Display("radio");
              */
             this.enabled = enabled;
 
@@ -113,7 +114,9 @@ function loaded(api) {
                 .selectOp(dbHelper.Operators().COUNT, dbHelper.Operators().FIELD_TIMESTAMP, "count")
                 .where("strftime('%w', " + dbHelper.Operators().FIELD_TIMESTAMP + ")", dbHelper.Operators().EQ, "strftime('%w', datetime(" + timestamp + ", 'unixepoch'))") // Day of the week
                 .where("strftime('%H', " + dbHelper.Operators().FIELD_TIMESTAMP + ")", dbHelper.Operators().EQ, "strftime('%H', datetime(" + timestamp + ", 'unixepoch'))") // Hour of the week
-                .group("identifier", "status");
+                .where("timestamp", dbHelper.Operators().GTE, (timestamp - (HISTORY_NB_MONTH * 30 * 24 * 60 * 60)))
+                .group("identifier", "status")
+                .order(dbHelper.Operators().DESC, "status");
 
             dbHelper.getObjects(requestBuilder, (error, devices) => {
                 if (!error) {
