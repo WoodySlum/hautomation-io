@@ -74,6 +74,15 @@ class ScenarioAPI {
     getScenarios() {
         return PrivateProperties.oprivate(this).scenarioManager.getScenarios();
     }
+
+    /**
+     * Register for scenario change (scenario creation, modify, delete)
+     *
+     * @param  {Function} cb A callback `(data) => {}`
+     */
+    registerForScenarioChanges(cb) {
+        PrivateProperties.oprivate(this).scenarioManager.registerForScenarioChanges(cb);
+    }
 }
 
 module.exports = {class:ScenarioAPI};

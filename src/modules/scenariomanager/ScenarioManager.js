@@ -57,6 +57,7 @@ class ScenarioManager {
         this.formConfiguration.setUpdateCb(() => {
             this.registerScenariosListForm();
         });
+        this.registeredScenarioChanges = [];
 
         this.registered = {};
         // Time event
@@ -83,6 +84,11 @@ class ScenarioManager {
         });
 
         this.formConfiguration.setSortFunction((a,b) => a.name.localeCompare(b.name));
+        this.formConfiguration.setUpdateCb((data) => {
+            this.registeredScenarioChanges.forEach((cb) => {
+                cb(data);
+            });
+        });
 
         this.webServices.registerAPI(this, "*", ROUTE_RIGGER_URL_FULL_PATH, Authentication.AUTH_NO_LEVEL);
 
@@ -330,6 +336,18 @@ class ScenarioManager {
             });
         }
     }
+
+    /**
+     * Register for scenario change (scenario creation, modify, delete)
+     *
+     * @param  {Function} cb A callback `(data) => {}`
+     */
+    registerForScenarioChanges(cb) {
+        if (cb) {
+            this.registeredScenarioChanges.push(cb);
+        }
+    }
+
 }
 
 module.exports = {class:ScenarioManager};

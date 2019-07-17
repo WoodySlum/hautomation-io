@@ -168,5 +168,10 @@
     "scenario.form.url.trigger.status.on": "Enabled",
     "scenario.form.url.call.title": "Do a HTTP call",
     "scenario.form.url.call.url": "Url",
-    "scenario.form.url.call.method": "Method (a json body can be passed in POST)"
+    "scenario.form.url.call.method": "Method (a json body can be passed in POST)",
+    "dashboard.scenario.trigger.form.title": "Trigger this scenario using a dashboard tile",
+    "dashboard.scenario.trigger.status": "Status",
+    "dashboard.scenario.trigger.status.on": "Enable",
+    "dashboard.scenario.trigger.status.off": "Disable",
+    "dashboard.scenario.trigger.title": "Title"
 }

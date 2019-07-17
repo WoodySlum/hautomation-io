@@ -70,7 +70,7 @@ class FormConfiguration {
     /**
      * Set the update callback. Called back when delete or save action is done.
      *
-     * @param {Function} cb A callback with data as parameter, e.g. `cb(data) => {}`
+     * @param {Function} cb A callback with data as parameter, e.g. `(data) => {}`
      */
     setUpdateCb(cb) {
         this.updateCb = cb;

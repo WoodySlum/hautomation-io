@@ -1,15 +1,18 @@
 "use strict";
 const Logger = require("./../../logger/Logger");
 const BreakException = require("./../../utils/BreakException").BreakException;
-//const Tile = require("./Tile");
+const Tile = require("./Tile");
 const WebServices = require("./../../services/webservices/WebServices");
 const Authentication = require("./../authentication/Authentication");
 const APIResponse = require("./../../services/webservices/APIResponse");
 const DateUtils = require("./../../utils/DateUtils");
+const DashboardScenarioTrigger = require("./DashboardScenarioTrigger");
 
 const BASE_ROUTE = ":/dashboard/get/";
 const ROUTE = BASE_ROUTE + "[timestamp*]/[all*]/";
 const BASE_ROUTE_CUSTOMIZE = ":/dashboard/preferences/set/";
+const SCENARIO_BASE_ROUTE = ":/scenario/dashboard/trigger/set/";
+const SCENARIO_ROUTE = SCENARIO_BASE_ROUTE + "[scenarioId]/";
 const CONF_KEY = "dashboard-preferences";
 
 /**
@@ -24,15 +27,18 @@ class DashboardManager {
      * @param  {WebServices} webServices      Web services instance
      * @param  {TranslateManager} translateManager A translate manager
      * @param  {ConfManager} confManager A configuration manager
+     * @param  {ScenarioManager} scenarioManager A scenario manager
      * @returns {DashboardManager}                  The instance
      */
-    constructor(themeManager, webServices, translateManager, confManager) {
+    constructor(themeManager, webServices, translateManager, confManager, scenarioManager) {
         this.themeManager = themeManager;
         this.webServices = webServices;
         this.translateManager = translateManager;
         this.confManager = confManager;
+        this.scenarioManager = scenarioManager;
         this.webServices.registerAPI(this, WebServices.GET, ROUTE, Authentication.AUTH_USAGE_LEVEL);
         this.webServices.registerAPI(this, WebServices.POST, BASE_ROUTE_CUSTOMIZE, Authentication.AUTH_USAGE_LEVEL);
+        this.webServices.registerAPI(this, WebServices.POST, SCENARIO_ROUTE, Authentication.AUTH_USAGE_LEVEL);
 
         try {
             this.dashboardPreferences = this.confManager.loadData(Object, CONF_KEY, true);
@@ -43,6 +49,13 @@ class DashboardManager {
         this.lastGenerated = DateUtils.class.timestamp();
 
         this.tiles = [];
+
+        // Scenario
+        this.scenarioManager.register(DashboardScenarioTrigger.class, null, "dashboard.scenario.trigger.form.title", 200);
+        this.scenarioManager.registerForScenarioChanges(() => {
+            this.generateScenarioTiles();
+        });
+        this.generateScenarioTiles();
     }
 
     /**
@@ -218,7 +231,7 @@ class DashboardManager {
         } else if (apiRequest.route === BASE_ROUTE_CUSTOMIZE) {
             return new Promise((resolve) => {
                 if (apiRequest.data.excludeTiles) {
-                    this.dashboardPreferences[apiRequest.authenticationData.username] = {excludeTiles: apiRequest.data.excludeTiles};
+                    self.dashboardPreferences[apiRequest.authenticationData.username] = {excludeTiles: apiRequest.data.excludeTiles};
                     // Remove duplicates
                     const excludeTiles = [];
                     apiRequest.data.excludeTiles.forEach((excludeTile) => {
@@ -226,17 +239,42 @@ class DashboardManager {
                             excludeTiles.push(excludeTile);
                         }
                     });
-                    this.confManager.saveData(this.dashboardPreferences, CONF_KEY);
-                    this.lastGenerated = DateUtils.class.timestamp();
+                    self.confManager.saveData(this.dashboardPreferences, CONF_KEY);
+                    self.lastGenerated = DateUtils.class.timestamp();
                     resolve(new APIResponse.class(true, {success:true}));
                 } else {
                     resolve(new APIResponse.class(false, {success:true}));
                 }
 
             });
+        } else if (apiRequest.route.startsWith(SCENARIO_BASE_ROUTE)) {
+            return new Promise((resolve) => {
+                self.scenarioManager.getScenarios().forEach((scenario) => {
+                    if (parseInt(scenario.id) === parseInt(apiRequest.data.scenarioId)) {
+                        self.scenarioManager.triggerScenario(scenario, false, {username: apiRequest.authenticationData.username});
+                    }
+                });
+                resolve(new APIResponse.class(true, {success:true}));
+            });
         }
+
     }
 
+    /**
+     * Generate tiles created from scenario
+     */
+    generateScenarioTiles() {
+        this.scenarioManager.getScenarios().forEach((scenario) => {
+            if (scenario && scenario.DashboardScenarioTriggerForm && scenario.DashboardScenarioTriggerForm.status) {
+                if (scenario.DashboardScenarioTriggerForm.status === "on") {
+                    const tile = new Tile.class(this.themeManager, "scenario-" + scenario.id, Tile.TILE_GENERIC_ACTION, scenario.DashboardScenarioTriggerForm.icon.icon, null, scenario.DashboardScenarioTriggerForm.title, null, null, null, null, null, SCENARIO_BASE_ROUTE.replace(":", "") + scenario.id + "/");
+                    this.registerTile(tile);
+                } else {
+                    this.unregisterTile("scenario-" + scenario.id);
+                }
+            }
+        });
+    }
 }
 
 module.exports = {class:DashboardManager};

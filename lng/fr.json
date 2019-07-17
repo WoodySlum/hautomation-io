@@ -166,5 +166,10 @@
     "scenario.form.url.trigger.status.on": "Activé",
     "scenario.form.url.call.title": "Exécuter un appel HTTP",
     "scenario.form.url.call.url": "Url",
-    "scenario.form.url.call.method": "Méthode (un contenu json peut être passé en POST)"
+    "scenario.form.url.call.method": "Méthode (un contenu json peut être passé en POST)",
+    "dashboard.scenario.trigger.form.title": "Déclencher le scénario avec un bouton sur l'écran d'accueil",
+    "dashboard.scenario.trigger.status": "État",
+    "dashboard.scenario.trigger.status.on": "Activer",
+    "dashboard.scenario.trigger.status.off": "Désactiver",
+    "dashboard.scenario.trigger.title": "Titre"
 }

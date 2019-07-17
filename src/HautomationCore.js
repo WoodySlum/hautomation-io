@@ -130,7 +130,7 @@ class HautomationCore {
         // Scenario manager
         this.scenarioManager = new ScenarioManager.class(this.confManager, this.formManager, this.webServices, this.timeEventService, this.schedulerService);
         // Dashboard manager
-        this.dashboardManager = new DashboardManager.class(this.themeManager, this.webServices, this.translateManager, this.confManager);
+        this.dashboardManager = new DashboardManager.class(this.themeManager, this.webServices, this.translateManager, this.confManager, this.scenarioManager);
         // Installation manager
         this.installationManager = new InstallationManager.class(this.confManager, this.eventBus);
         // Cameras manager module
