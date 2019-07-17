@@ -149,6 +149,8 @@
     "message.scenario.lock.time.six.hours": "6 heures",
     "message.scenario.lock.time.twelve.hours": "12 heures",
     "message.scenario.lock.time.twenty.four.hours": "24 heures",
+    "message.scenario.trigger.title": "Déclencher ce scénario avec un message",
+    "message.scenario.trigger.keyword": "Mot clé magique",
     "alarm.scenario.form.title": "Alarme",
     "alarm.scenario.form.action.none": "Aucune action",
     "alarm.scenario.form.action.enable": "Armer l'alarme",
@@ -171,5 +173,6 @@
     "dashboard.scenario.trigger.status": "État",
     "dashboard.scenario.trigger.status.on": "Activer",
     "dashboard.scenario.trigger.status.off": "Désactiver",
-    "dashboard.scenario.trigger.title": "Titre"
+    "dashboard.scenario.trigger.title": "Titre",
+    "message.manager.scenario.triggered": "Le scénario %@ a été déclenché"
 }

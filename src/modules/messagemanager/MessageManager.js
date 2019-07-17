@@ -11,6 +11,7 @@ const DateUtils = require("./../../utils/DateUtils");
 const Tile = require("./../dashboardmanager/Tile");
 const Icons = require("./../../utils/Icons");
 const MessageScenarioForm = require("./MessageScenarioForm");
+const MessageScenarioTriggerForm = require("./MessageScenarioTriggerForm");
 const fs = require("fs-extra");
 
 const DB_VERSION = "0.0.0";
@@ -69,6 +70,7 @@ class MessageManager {
         this.scenarioManager.register(MessageScenarioForm.class, (scenario) => {
             self.triggerScenario(scenario, self);
         }, "message.scenario.title");
+        this.scenarioManager.register(MessageScenarioTriggerForm.class, null, "message.scenario.trigger.title", 200, true);
     }
 
     /**
@@ -133,13 +135,33 @@ class MessageManager {
     onMessageReceived(sender, message, botCb = null) {
         this.userManager.getUsers().forEach((user) => {
             if (sender === user.username) {
+                // Trigger scenenario
+                let scenarioTriggered = false;
+                this.scenarioManager.getScenarios().forEach((scenario) => {
+                    if (scenario && scenario.MessageScenarioTriggerForm && scenario.MessageScenarioTriggerForm.length > 0) {
+                        scenario.MessageScenarioTriggerForm.forEach((messageScenarioTriggerForm) => {
+                            if (messageScenarioTriggerForm.keyword && messageScenarioTriggerForm.keyword.length > 0) {
+                                if (message.toLowerCase().indexOf(messageScenarioTriggerForm.keyword.toLowerCase()) >= 0) {
+                                    this.scenarioManager.triggerScenario(scenario, null, {username: user.username});
+                                    this.sendMessage([user.username], this.translateManager.t("message.manager.scenario.triggered", scenario.name));
+                                    scenarioTriggered = true;
+                                }
+                            }
+                        });
+                    }
+                });
+
                 const dbMessage = new DbMessage.class(this.dbHelper, null, user.username, message, null, null, null, 0);
                 this.registered.forEach((register) => {
                     if (register.onMessageReceived instanceof Function) {
-                        register.onMessageReceived(dbMessage, botCb);
+                        if (!scenarioTriggered) { // Dispatch only if no scenario triggered
+                            register.onMessageReceived(dbMessage, botCb);
+                        }
                     }
                 });
                 dbMessage.save();
+
+
             }
         });
     }

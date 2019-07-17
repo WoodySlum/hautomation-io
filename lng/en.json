@@ -151,6 +151,8 @@
     "message.scenario.lock.time.six.hours": "6 hours",
     "message.scenario.lock.time.twelve.hours": "12 hours",
     "message.scenario.lock.time.twenty.four.hours": "24 hours",
+    "message.scenario.trigger.title": "Trigger this scenario with a message",
+    "message.scenario.trigger.keyword": "Magic keyword",
     "alarm.scenario.form.title": "Alarm",
     "alarm.scenario.form.action.none": "No action",
     "alarm.scenario.form.action.enable": "Arm alarm",
@@ -173,5 +175,6 @@
     "dashboard.scenario.trigger.status": "Status",
     "dashboard.scenario.trigger.status.on": "Enable",
     "dashboard.scenario.trigger.status.off": "Disable",
-    "dashboard.scenario.trigger.title": "Title"
+    "dashboard.scenario.trigger.title": "Title",
+    "message.manager.scenario.triggered": "Scenario %@ fired"
 }
