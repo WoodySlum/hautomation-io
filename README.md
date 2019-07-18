@@ -55,6 +55,7 @@ Stay cool in holidays, Hautomation will keep housebreakers out.
 ##### Scenarios
 
 Create scenarios to automate home. For example, you can turn off all lights when nobody is at home, or prepare your coffee every morning at 7AM.
+Send a message if the wind blows above 35 mph.
 
 ##### IOTs
 
@@ -63,6 +64,10 @@ Create your own cheap sensors or anything else using ESP8266 or Arduino. An Ardu
 ##### HomeKit Siri and Alexa support
 
 Use voice command to control home devices.
+
+##### IFTTT
+
+Basic IFTTT usage with scenario triggering URL (both way).
 
 ## Environment
 

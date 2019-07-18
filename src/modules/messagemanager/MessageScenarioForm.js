@@ -11,9 +11,10 @@ class MessageScenarioForm extends FormObject.class {
      * @param  {number} [id=null]                  An identifier
      * @param  {string} [message=null]  A message
      * @param  {string} [lockTime=0]  Lock timer
+     * @param  {string} [recipient=*]  Recipient
      * @returns {MessageScenarioForm}                            The instance
      */
-    constructor(id = null, message = null, lockTime = "0") {
+    constructor(id = null, message = null, lockTime = "0", recipient = "*") {
         super(id);
 
         /**
@@ -32,6 +33,36 @@ class MessageScenarioForm extends FormObject.class {
          * @Default("0");
          */
         this.lockTime = lockTime;
+
+        /**
+         * @Property("recipient");
+         * @Type("string");
+         * @Title("message.scenario.recipient");
+         * @Enum("getUsernames");
+         * @EnumNames("getNames");
+         * @Default("*");
+         */
+        this.recipient = recipient;
+    }
+
+    /**
+     * Get the usernames
+     *
+     * @param  {...Array} inject Injection
+     * @returns {Array}        The usernames
+     */
+    static getUsernames(...inject) {
+        return inject[0];
+    }
+
+    /**
+     * Get the names
+     *
+     * @param  {...Array} inject Injection
+     * @returns {Array}        The names
+     */
+    static getNames(...inject) {
+        return inject[1];
     }
 
     /**
@@ -41,7 +72,7 @@ class MessageScenarioForm extends FormObject.class {
      * @returns {MessageScenarioForm}      A form object
      */
     json(data) {
-        return new MessageScenarioForm(data.id, data.message, data.lockTime);
+        return new MessageScenarioForm(data.id, data.message, data.lockTime, data.recipient);
     }
 }
 

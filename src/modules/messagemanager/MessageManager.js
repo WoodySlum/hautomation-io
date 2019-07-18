@@ -67,9 +67,16 @@ class MessageManager {
         this.dashboardManager.registerTile(tile);
 
         // Scenario
-        this.scenarioManager.register(MessageScenarioForm.class, (scenario) => {
-            self.triggerScenario(scenario, self);
-        }, "message.scenario.title");
+        const recipientListIds = ["*", "**"];
+        const recipientListLabels = [this.translateManager.t("message.scenario.recipient.all"), this.translateManager.t("message.scenario.recipient.provided")];
+        this.userManager.getUsers().forEach((user) => {
+            recipientListIds.push(user.username);
+            recipientListLabels.push(user.name);
+        });
+
+        this.scenarioManager.registerWithInjection(MessageScenarioForm.class, (scenario, additionalInfos) => {
+            self.triggerScenario(scenario, self, additionalInfos);
+        }, "message.scenario.title", null, null, recipientListIds, recipientListLabels);
         this.scenarioManager.register(MessageScenarioTriggerForm.class, null, "message.scenario.trigger.title", 200, true);
     }
 
@@ -264,8 +271,6 @@ class MessageManager {
                             resolve(new APIResponse.class(true, []));
                         } else {
                             self.getMessages((error, results) => {
-                                // console.log(error);
-                                // console.log(results);
                                 if (error) {
                                     reject(new APIResponse.class(false, {}, 467, err.message));
                                 } else {
@@ -284,8 +289,9 @@ class MessageManager {
      *
      * @param  {Object} scenario A dynamic scenario object
      * @param  {DeviceManager} context  The context
+     * @param  {Object} additionalInfos Additional infos
      */
-    triggerScenario(scenario, context) {
+    triggerScenario(scenario, context, additionalInfos) {
         if (scenario && scenario.MessageScenarioForm) {
             if (scenario.MessageScenarioForm.message && scenario.MessageScenarioForm.message.length > 0) {
                 let lockTime = 0;
@@ -299,8 +305,23 @@ class MessageManager {
                 }
 
                 if (DateUtils.class.timestamp() > (lastMessageSentTimestamp + lockTime)) {
-                    context.sendMessage("*", scenario.MessageScenarioForm.message);
-                    fs.writeFileSync(messageCachePath, DateUtils.class.timestamp());
+                    let recipient = "*";
+                    let canSend = true;
+                    if (scenario.MessageScenarioForm.recipient && scenario.MessageScenarioForm.recipient.length > 0) {
+                        recipient = scenario.MessageScenarioForm.recipient;
+                        if (recipient != "*" && recipient != "**") {
+                            recipient = [scenario.MessageScenarioForm.recipient];
+                        } else if (recipient == "**" && additionalInfos.username) {
+                            recipient = [additionalInfos.username];
+                        } else if (recipient == "**") {
+                            canSend = false;
+                            Logger.warn("Could not send scenario message : no username in additionalInfos");
+                        }
+                    }
+                    if (canSend) {
+                        context.sendMessage(recipient, scenario.MessageScenarioForm.message);
+                        fs.writeFileSync(messageCachePath, DateUtils.class.timestamp());
+                    }
                 } else {
                     Logger.info("Coulf not send '" + scenario.MessageScenarioForm.message + "'. Lock time " + DateUtils.class.timestamp() + " / " + (lastMessageSentTimestamp + lockTime));
                 }
