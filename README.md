@@ -69,6 +69,15 @@ Use voice command to control home devices.
 
 Basic IFTTT usage with scenario triggering URL (both way).
 
+## Installation on Debian ARM (rpi binaries)
+
+Installation for Debian arm :
+
+    wget -qO - https://deb.hautomation-io.com/archive.key | sudo apt-key add -
+    sudo echo 'deb https://deb.hautomation-io.com trusty main' >> /etc/apt/source.list
+    sudo apt-get update
+    sudo apt-get install hautomation
+
 ## Environment
 
 ### Requirements
@@ -164,15 +173,6 @@ You can list the available rest APIS with https://me.hautomation-io.com/XXXX/api
 #### Code documentation
 
 [Read](doc/DOCUMENTATION.md)
-
-## Deployment on Debian ARM (rpi)
-
-Installation for Debian arm :
-
-    wget -qO - https://deb.hautomation-io.com/archive.key | sudo apt-key add -
-    sudo apt-add-repository 'deb https://deb.hautomation-io.com trusty main'
-    sudo apt-get update
-    sudo apt-get install hautomation
 
 ### Troubleshooting
 
