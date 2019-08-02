@@ -353,42 +353,49 @@ class SensorsManager {
             return new Promise((resolve) => {
                 const sensors = [];
                 let i = 0;
-                self.sensorsConfiguration.forEach((sensor) => {
-                    if (self.pluginsManager.isEnabled(sensor.plugin)) {
-                        const sensorPlugin = self.pluginsManager.getPluginByIdentifier(sensor.plugin, false);
-                        const s = self.getSensor(sensor.id);
-                        s.lastObject((err, res) => {
-                            let healthStatus = true;
-                            if (!err) {
-                                if (res && res.timestamp) {
-                                    const diffTime = DateUtils.class.roundedTimestamp(DateUtils.class.timestamp(), DateUtils.ROUND_TIMESTAMP_DAY) - DateUtils.class.roundedTimestamp(DateUtils.class.dateToUTCTimestamp(res.timestamp), DateUtils.ROUND_TIMESTAMP_DAY);
-                                    if (parseInt(diffTime) > parseInt(s.getHealthIndicatorThresholdValue())) {
+                if (self.sensorsConfiguration && self.sensorsConfiguration.length === 0) {
+                    resolve(new APIResponse.class(true, sensors));
+                } else {
+                    self.sensorsConfiguration.forEach((sensor) => {
+                        if (self.pluginsManager.isEnabled(sensor.plugin)) {
+                            const sensorPlugin = self.pluginsManager.getPluginByIdentifier(sensor.plugin, false);
+                            const s = self.getSensor(sensor.id);
+                            s.lastObject((err, res) => {
+                                let healthStatus = true;
+                                console.log(err);
+                                console.log(res);
+                                if (!err) {
+                                    if (res && res.timestamp) {
+                                        const diffTime = DateUtils.class.roundedTimestamp(DateUtils.class.timestamp(), DateUtils.ROUND_TIMESTAMP_DAY) - DateUtils.class.roundedTimestamp(DateUtils.class.dateToUTCTimestamp(res.timestamp), DateUtils.ROUND_TIMESTAMP_DAY);
+                                        if (parseInt(diffTime) > parseInt(s.getHealthIndicatorThresholdValue())) {
+                                            healthStatus = false;
+                                        }
+                                    } else {
                                         healthStatus = false;
                                     }
                                 } else {
                                     healthStatus = false;
                                 }
-                            } else {
-                                healthStatus = false;
-                            }
 
-                            sensors.push({
-                                identifier: sensor.id,
-                                name: sensor.name,
-                                icon: (s?s.icon:"E8BC"),
-                                category: (s?s.type:"UNKNOWN"),
-                                healthStatus: healthStatus,
-                                form:Object.assign(self.formManager.getForm(sensorPlugin.sensorAPI.form), {data:sensor})
+                                sensors.push({
+                                    identifier: sensor.id,
+                                    name: sensor.name,
+                                    icon: (s?s.icon:"E8BC"),
+                                    category: (s?s.type:"UNKNOWN"),
+                                    healthStatus: healthStatus,
+                                    form:Object.assign(self.formManager.getForm(sensorPlugin.sensorAPI.form), {data:sensor})
+                                });
+
+                                i++;
+                                if (i === self.sensorsConfiguration.length) {
+                                    sensors.sort((a,b) => a.name.localeCompare(b.name));
+                                    resolve(new APIResponse.class(true, sensors));
+                                }
                             });
+                        }
+                    });
+                }
 
-                            i++;
-                            if (i === self.sensorsConfiguration.length) {
-                                sensors.sort((a,b) => a.name.localeCompare(b.name));
-                                resolve(new APIResponse.class(true, sensors));
-                            }
-                        });
-                    }
-                });
             });
         } else if (apiRequest.route.startsWith(SENSORS_MANAGER_POST_BASE)) {
             return new Promise((resolve, reject) => {

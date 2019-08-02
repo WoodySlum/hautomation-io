@@ -12,6 +12,7 @@ const GATEWAY_URL = "https://api.hautomation-io.com/ping/";
 const UI_URL = "https://me.hautomation-io.com/";
 const GATEWAY_TIMEOUT = 5000;
 const BOOT_MODE_BOOTING = "BOOTING";
+const BOOT_MODE_INSTALL = "INSTALL";
 const BOOT_MODE_READY = "READY";
 
 /**
@@ -31,10 +32,11 @@ class GatewayManager {
      * @param  {EventEmitter} eventBus    The global event bus
      * @param  {ScenarioManager} scenarioManager    The scenario manager
      * @param  {string} readyEvent    The ready event tag
+     * @param  {string} installEvent    The install event tag
      *
      * @returns {GatewayManager} The instance
      */
-    constructor(environmentManager, version, hash, timeEventService, appConfiguration, webServices, eventBus, scenarioManager, readyEvent) {
+    constructor(environmentManager, version, hash, timeEventService, appConfiguration, webServices, eventBus, scenarioManager, readyEvent, installEvent) {
         this.environmentManager = environmentManager;
         this.version = version;
         this.hash = hash;
@@ -52,10 +54,10 @@ class GatewayManager {
         Logger.flog("+-----------------------+");
         Logger.flog("Your access : " + this.getDistantUrl());
 
-        this.transmit();
+        this.transmit(false);
 
         this.timeEventService.register((self) => {
-            self.transmit();
+            self.transmit(false);
         }, this, TimeEventService.EVERY_DAYS);
 
         const self = this;
@@ -63,14 +65,18 @@ class GatewayManager {
         this.eventBus.on(readyEvent, () => {
             setTimeout(() => {
                 self.bootMode = BOOT_MODE_READY;
-                self.transmit();
+                self.transmit(false);
             }, 2000);
-
         });
 
         this.eventBus.on(HautomationRunnerConstants.RESTART, () => {
             self.bootMode = BOOT_MODE_BOOTING;
-            self.transmit();
+            self.transmit(false);
+        });
+
+        this.eventBus.on(installEvent, () => {
+            self.bootMode = BOOT_MODE_INSTALL;
+            self.transmit(false);
         });
 
         // Alert scenario manager
@@ -116,10 +122,9 @@ class GatewayManager {
                 tunnel: this.tunnelUrl,
                 language:this.appConfiguration.lng,
                 bootDate:this.bootTimestamp,
-                bootMode:(this.tunnelUrl ? this.bootMode : BOOT_MODE_BOOTING),
+                bootMode:this.bootMode,
                 gatewayMode: GATEWAY_MODE
             };
-            Logger.verbose(bootInfos);
 
             xhr.open("POST", GATEWAY_URL, asyncr);
             xhr.setRequestHeader("User-Agent", "Hautomation/" + this.version);

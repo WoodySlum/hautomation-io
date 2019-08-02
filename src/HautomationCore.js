@@ -35,7 +35,17 @@ const BotEngine = require("./modules/botengine/BotEngine");
 const LogManager = require("./modules/logmanager/LogManager");
 const BackupManager = require("./modules/backupmanager/BackupManager");
 const CONFIGURATION_FILE = "data/config.json";
-var AppConfiguration = require("./../data/config.json");
+var AppConfiguration = {};
+
+if (fs.existsSync("./../" + CONFIGURATION_FILE) && !process.env.TEST) {
+    AppConfiguration = JSON.parse(fs.readFileSync("./../" + CONFIGURATION_FILE, "utf8"));
+} else if (fs.existsSync("./" + CONFIGURATION_FILE) && !process.env.TEST) {
+    AppConfiguration = JSON.parse(fs.readFileSync("./" + CONFIGURATION_FILE, "utf8"));
+} else if (fs.existsSync("./../" + CONFIGURATION_FILE + ".default")) {
+    AppConfiguration = JSON.parse(fs.readFileSync("./../" + CONFIGURATION_FILE + ".default", "utf8"));
+} else if (fs.existsSync("./" + CONFIGURATION_FILE + ".default")) {
+    AppConfiguration = JSON.parse(fs.readFileSync("./" + CONFIGURATION_FILE + ".default", "utf8"));
+}
 
 var NpmPackage = require("./../package.json");
 const commit = require("../version.json").commit;
@@ -50,6 +60,7 @@ if (process.env.TEST) {
 const EVENT_STOP = "stop";
 const EVENT_RESTART = "restart";
 const EVENT_READY = "ready";
+const EVENT_INSTALL = "install";
 
 /**
  * The main class for core.
@@ -142,7 +153,7 @@ class HautomationCore {
         // Environment manager
         this.environmentManager = new EnvironmentManager.class(AppConfiguration, this.confManager, this.formManager, this.webServices, this.dashboardManager, this.translateManager, this.scenarioManager, NpmPackage.version, commit, this.installationManager, this.timeEventService, this.eventBus, this.messageManager, EVENT_STOP, EVENT_READY, this.userManager);
         // Gateway manager module
-        this.gatewayManager = new GatewayManager.class(this.environmentManager, NpmPackage.version, commit, this.timeEventService, AppConfiguration, this.webServices, this.eventBus, this.scenarioManager, EVENT_READY);
+        this.gatewayManager = new GatewayManager.class(this.environmentManager, NpmPackage.version, commit, this.timeEventService, AppConfiguration, this.webServices, this.eventBus, this.scenarioManager, EVENT_READY, EVENT_INSTALL);
         // Authentication module
         this.authentication = new Authentication.class(this.webServices, this.userManager, this.environmentManager);
         // Bot engine
@@ -173,6 +184,9 @@ class HautomationCore {
 
         // Install dependencies
         if (!process.env.TEST) {
+            if (this.eventBus) {
+                this.eventBus.emit(EVENT_INSTALL, {});
+            }
             CoreInstaller.install(this.installationManager);
         }
     }
@@ -189,6 +203,9 @@ class HautomationCore {
         }
 
         // Install dependencies
+        if (this.eventBus) {
+            this.eventBus.emit(EVENT_READY, {});
+        }
         this.installationManager.execute();
         if (this.eventBus) {
             this.eventBus.emit(EVENT_READY, {});

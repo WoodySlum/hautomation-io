@@ -95,7 +95,7 @@ class InstallationManager {
         let i = 0;
         needed.forEach((command) => {
             // Execute
-            let c = (command.sudo?"sudo ":"") + command.command;
+            let c = (command.sudo ? "sudo ":"") + command.command;
             Logger.info("Installation manager, executing command : " + c);
             if (!command.wait) {
                 this.executeCommand(c, false, (error, stdout, stderr) => {
