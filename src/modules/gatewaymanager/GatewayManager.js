@@ -54,10 +54,10 @@ class GatewayManager {
         Logger.flog("+-----------------------+");
         Logger.flog("Your access : " + this.getDistantUrl());
 
-        this.transmit(false);
+        this.transmit();
 
         this.timeEventService.register((self) => {
-            self.transmit(false);
+            self.transmit();
         }, this, TimeEventService.EVERY_DAYS);
 
         const self = this;
@@ -65,18 +65,18 @@ class GatewayManager {
         this.eventBus.on(readyEvent, () => {
             setTimeout(() => {
                 self.bootMode = BOOT_MODE_READY;
-                self.transmit(false);
+                self.transmit();
             }, 2000);
         });
 
         this.eventBus.on(HautomationRunnerConstants.RESTART, () => {
             self.bootMode = BOOT_MODE_BOOTING;
-            self.transmit(false);
+            self.transmit();
         });
 
         this.eventBus.on(installEvent, () => {
             self.bootMode = BOOT_MODE_INSTALL;
-            self.transmit(false);
+            self.transmit();
         });
 
         // Alert scenario manager
