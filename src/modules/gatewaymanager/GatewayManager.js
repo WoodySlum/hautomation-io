@@ -1,5 +1,4 @@
 "use strict";
-const XMLHttpRequest = require("xmlhttprequest-ssl").XMLHttpRequest;
 const Logger = require("./../../logger/Logger");
 const TimeEventService = require("./../../services/timeeventservice/TimeEventService");
 const DateUtils = require("./../../utils/DateUtils");
@@ -10,7 +9,6 @@ const GATEWAY_MODE = 1;
 const GATEWAY_URL = "https://api.hautomation-io.com/ping/";
 // const GATEWAY_URL = "http://api.domain.net:8081/ping/";
 const UI_URL = "https://me.hautomation-io.com/";
-const GATEWAY_TIMEOUT = 5000;
 const BOOT_MODE_BOOTING = "BOOTING";
 const BOOT_MODE_INSTALL = "INSTALL";
 const BOOT_MODE_READY = "READY";
@@ -31,12 +29,13 @@ class GatewayManager {
      * @param  {WebServices} webServices The web services
      * @param  {EventEmitter} eventBus    The global event bus
      * @param  {ScenarioManager} scenarioManager    The scenario manager
+     * @param  {ThreadsManager} threadsManager    The threads manager
      * @param  {string} readyEvent    The ready event tag
      * @param  {string} installEvent    The install event tag
      *
      * @returns {GatewayManager} The instance
      */
-    constructor(environmentManager, version, hash, timeEventService, appConfiguration, webServices, eventBus, scenarioManager, readyEvent, installEvent) {
+    constructor(environmentManager, version, hash, timeEventService, appConfiguration, webServices, eventBus, scenarioManager, threadsManager, readyEvent, installEvent) {
         this.environmentManager = environmentManager;
         this.version = version;
         this.hash = hash;
@@ -46,6 +45,7 @@ class GatewayManager {
         this.webServices.gatewayManager = this;
         this.eventBus = eventBus;
         this.scenarioManager = scenarioManager;
+        this.threadsManager = threadsManager;
         this.tunnelUrl = null;
         this.bootTimestamp = DateUtils.class.timestamp();
         this.bootMode = BOOT_MODE_BOOTING;
@@ -101,15 +101,42 @@ class GatewayManager {
         return UI_URL + this.environmentManager.getHautomationId() + WebServices.ENDPOINT_API;
     }
 
+
+    /**
+     * Transmit function threaded methods (threads manager)
+     *
+     * @param  {Object} data    The needs
+     * @param  {Function} message Called to send back answer
+     */
+    sandboxedRequest(data, message) {
+        const request = require("request");
+        request.post(data.GATEWAY_URL, {
+            json: data.bootInfos
+        }, (error, res) => {
+            message({error:error, statusCode:res.statusCode, bootMode:data.bootInfos.bootMode});
+        });
+    }
+
+    /**
+     * Transmit function sandbox callback
+     *
+     * @param  {Object} data Results
+     */
+    sandboxedRequestresponse(data) {
+        if (!data.error && data.statusCode === 200) {
+            Logger.info("Registration to gateway OK (" + data.bootMode + ")");
+        } else if (data.error) {
+            Logger.err(data.error.message);
+        } else {
+            Logger.err("Registration to gateway fails (" + data.statusCode + ")");
+        }
+    }
+
     /**
      * Transmit informations to gateway
-     *
-     * @param  {boolean} [asyncr=true] `true` if request should be asynchronously done, `false` otherwise (must be specified)
      */
-    transmit(asyncr = true) {
+    transmit() {
         if (!process.env.TEST) {
-            const xhr = new XMLHttpRequest();
-            let running = true;
             Logger.info("Transmitting informations to gateway ...");
 
             const bootInfos = {
@@ -125,47 +152,8 @@ class GatewayManager {
                 bootMode:this.bootMode,
                 gatewayMode: GATEWAY_MODE
             };
-
-            xhr.open("POST", GATEWAY_URL, asyncr);
-            xhr.setRequestHeader("User-Agent", "Hautomation/" + this.version);
-            xhr.setRequestHeader("Content-Type", "application/json");
-
-            if (asyncr) {
-                xhr.onload = () => {
-                    if (parseInt(xhr.readyState) === 4) {
-                        running = false;
-                        if (parseInt(xhr.status) === 200) {
-                            Logger.info("Registration to gateway OK (" + bootInfos.bootMode + ")");
-                        } else {
-                            Logger.err(xhr.statusText);
-                        }
-                    }
-                };
-            }
-
-            xhr.onerror = (err) => {
-                running = false;
-                Logger.err(err.message);
-            };
-
-            setTimeout(() => {
-                if (running) {
-                    xhr.abort();
-                }
-            }, GATEWAY_TIMEOUT);
-
-            xhr.send(JSON.stringify(bootInfos));
-
-            if (!asyncr) {
-                if (parseInt(xhr.readyState) === 4) {
-                    running = false;
-                    if (parseInt(xhr.status) === 200) {
-                        Logger.info("Registration to gateway OK (" + bootInfos.bootMode + ")");
-                    } else {
-                        Logger.err(xhr.statusText);
-                    }
-                }
-            }
+            // Call on separate process
+            this.threadsManager.run(this.sandboxedRequest, "gateway", {GATEWAY_URL:GATEWAY_URL, bootInfos:bootInfos}, this.sandboxedRequestresponse);
         }
     }
 }
