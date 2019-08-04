@@ -121,14 +121,21 @@ class GatewayManager {
      * Transmit function sandbox callback
      *
      * @param  {Object} data Results
+     * @param  {ThreadsManager} threadsManager The threads manager (can be used to call kill)
      */
-    sandboxedRequestresponse(data) {
+    sandboxedRequestresponse(data, threadsManager) {
         if (!data.error && data.statusCode === 200) {
             Logger.info("Registration to gateway OK (" + data.bootMode + ")");
         } else if (data.error) {
             Logger.err(data.error.message);
         } else {
             Logger.err("Registration to gateway fails (" + data.statusCode + ")");
+        }
+
+        try {
+            threadsManager.kill("gateway-" + data.bootMode);
+        } catch(e) {
+            Logger.err(e.message);
         }
     }
 
@@ -153,7 +160,7 @@ class GatewayManager {
                 gatewayMode: GATEWAY_MODE
             };
             // Call on separate process
-            this.threadsManager.run(this.sandboxedRequest, "gateway", {GATEWAY_URL:GATEWAY_URL, bootInfos:bootInfos}, this.sandboxedRequestresponse);
+            this.threadsManager.run(this.sandboxedRequest, "gateway-" + this.bootMode, {GATEWAY_URL:GATEWAY_URL, bootInfos:bootInfos}, this.sandboxedRequestresponse);
         }
     }
 }

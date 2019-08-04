@@ -223,5 +223,6 @@ module.exports.attributes = {
     name: "tplink-tl-mr6400",
     version: "0.0.0",
     category: "misc",
+    defaultDisabled: true,
     description: "TPLink TL-MR6400 router"
 };

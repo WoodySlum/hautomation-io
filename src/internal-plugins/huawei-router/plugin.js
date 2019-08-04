@@ -235,5 +235,6 @@ module.exports.attributes = {
     name: "huawei-router",
     version: "0.0.0",
     category: "misc",
+    defaultDisabled: true,
     description: "Huawei 3G/4G router"
 };

@@ -282,5 +282,6 @@ module.exports.attributes = {
     version: "0.0.0",
     category: "device",
     description: "Tuya devices support (outlet, ...)",
+    defaultDisabled: true,
     dependencies:[]
 };

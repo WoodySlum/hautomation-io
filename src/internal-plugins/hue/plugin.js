@@ -390,5 +390,6 @@ module.exports.attributes = {
     version: "0.0.0",
     category: "device",
     description: "Philips Hue support",
+    defaultDisabled: true,
     dependencies:[]
 };

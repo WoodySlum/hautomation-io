@@ -357,5 +357,6 @@ module.exports.attributes = {
     version: "0.0.0",
     category: "message-provider",
     description: "SMS message provider",
+    defaultDisabled: true,
     dependencies:["message-provider"]
 };

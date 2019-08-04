@@ -60,5 +60,6 @@ module.exports.attributes = {
     version: "0.0.0",
     category: "sensor",
     description: "Huawei router fairuse sensor",
+    defaultDisabled: true,
     dependencies:["fairuse-sensor", "huawei-router"]
 };

@@ -180,5 +180,6 @@ module.exports.attributes = {
     version: "0.0.1",
     category: "sensor",
     description: "Enedis Linky electric sensor",
+    defaultDisabled: true,
     dependencies:["electric-sensor"]
 };

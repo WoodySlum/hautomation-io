@@ -53,6 +53,7 @@ class ThreadsManager {
      */
     run(func, identifier, data = {}, callback = null) {
         const prototype = this.stringifyFunc(func);
+        const self = this;
         const thread  = threads.spawn((input, done, progress) => {
             const Logger = require(input.dirname + "/../../logger/Logger", "may-exclude");
             try {
@@ -81,7 +82,7 @@ class ThreadsManager {
             .send({dirname: __dirname, identifier:identifier, prototype:prototype, data:data})
             .on("progress", function message(tData) {
                 if (callback) {
-                    callback(tData);
+                    callback(tData, self);
                 }
             })
             .on("error", function(error) {

@@ -119,6 +119,7 @@ function loaded(api) {
             const RFLinkService = RFLinkServiceClass(api);
             this.service = new RFLinkService(this);
             api.servicesManagerAPI.add(this.service);
+
             if (api.configurationAPI.getConfiguration() && api.configurationAPI.getConfiguration().port) {
                 const port = this.startRFLinkInLanMode();
                 this.service.port = port;
@@ -595,5 +596,6 @@ module.exports.attributes = {
     category: "radio",
     description: "Manage RFLink devices",
     dependencies:["radio"],
+    defaultDisabled: true,
     classes:["esp8266"]
 };

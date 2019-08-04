@@ -57,5 +57,6 @@ module.exports.attributes = {
     version: "0.0.0",
     category: "sensor",
     description: "TP-Link TL-MR6400 fairuse sensor",
+    defaultDisabled: true,
     dependencies:["fairuse-sensor", "tplink-tl-mr6400"]
 };

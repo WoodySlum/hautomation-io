@@ -101,5 +101,6 @@ module.exports.attributes = {
     version: "0.0.0",
     category: "message-provider",
     description: "Push me message sending",
+    defaultDisabled: true,
     dependencies:["message-provider"]
 };

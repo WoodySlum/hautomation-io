@@ -260,7 +260,8 @@ class PluginsManager {
 
             // Save configuration meta data
             const existingPluginConf = this.getPluginConf(p.attributes.name);
-            const pluginConf = new PluginConf.class(path, relative, p.attributes.name, p.attributes.version, (CORE_PLUGINS.indexOf(p.attributes.name) > -1)?true:(existingPluginConf?existingPluginConf.enable:null), p.attributes.dependencies);
+            // p.attributes.defaultDisabled && !process.env.TEST => Tests should cover all plugins
+            const pluginConf = new PluginConf.class(path, relative, p.attributes.name, p.attributes.version, (CORE_PLUGINS.indexOf(p.attributes.name) > -1)?true:(existingPluginConf?existingPluginConf.enable:((p.attributes.defaultDisabled && !process.env.TEST) ? false : null)), p.attributes.dependencies);
 
             this.confManager.setData(CONF_KEY, pluginConf, this.pluginsConf, PluginConf.comparator);
 
@@ -544,6 +545,7 @@ class PluginsManager {
                 this.plugins.forEach((plugin) => {
                     if (plugin.dependencies.indexOf(pluginConf.identifier) !== -1) {
                         const dependentPluginConf = this.getPluginConf(plugin.identifier);
+
                         Logger.info("Plugin dependency changed " + dependentPluginConf.identifier);
                         dependentPluginConf.enable = status;
                         this.pluginsConf = this.confManager.setData(CONF_KEY, dependentPluginConf, this.pluginsConf, PluginConf.comparator);

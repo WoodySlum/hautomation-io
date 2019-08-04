@@ -308,5 +308,6 @@ module.exports.attributes = {
     version: "0.0.0",
     category: "backup",
     description: "Dropbox backup support",
+    defaultDisabled: true,
     dependencies:[]
 };

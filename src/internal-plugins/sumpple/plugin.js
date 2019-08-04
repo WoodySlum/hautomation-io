@@ -53,5 +53,6 @@ module.exports.attributes = {
     version: "0.0.0",
     category: "camera",
     description: "Sumpple plugin",
+    defaultDisabled: true,
     dependencies:["camera"]
 };
