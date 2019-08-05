@@ -143,7 +143,7 @@ class HautomationCore {
         // Dashboard manager
         this.dashboardManager = new DashboardManager.class(this.themeManager, this.webServices, this.translateManager, this.confManager, this.scenarioManager);
         // Installation manager
-        this.installationManager = new InstallationManager.class(this.confManager, this.eventBus);
+        this.installationManager = new InstallationManager.class(this.confManager, this.eventBus, EVENT_INSTALL);
         // Cameras manager module
         this.camerasManager = new CamerasManager.class(this.pluginsManager, this.eventBus, this.webServices, this.formManager, this.confManager, this.translateManager, this.themeManager, this.dashboardManager, this.timeEventService, AppConfiguration.cameras, AppConfiguration.cachePath, this.installationManager);
         // UserManager module
@@ -185,7 +185,7 @@ class HautomationCore {
         // Install dependencies
         if (!process.env.TEST) {
             if (this.eventBus) {
-                this.eventBus.emit(EVENT_INSTALL, {});
+                this.eventBus.emit(EVENT_INSTALL, {scheduled:0, done:0});
             }
             CoreInstaller.install(this.installationManager);
         }
@@ -205,7 +205,7 @@ class HautomationCore {
         // Install dependencies
         if (!process.env.TEST) {
             if (this.eventBus) {
-                this.eventBus.emit(EVENT_INSTALL, {});
+                this.eventBus.emit(EVENT_INSTALL, {scheduled:0, done:0});
             }
         }
         this.installationManager.execute();

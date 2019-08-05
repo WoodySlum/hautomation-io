@@ -20,12 +20,14 @@ class InstallationManager {
      *
      * @param  {ConfManager} confManager    The configuration manager
      * @param  {EventEmitter} eventBus    The global event bus
+     * @param  {String} installEventName    The install event name
      * @returns {InstallationManager}             The instance
      */
-    constructor(confManager, eventBus) {
+    constructor(confManager, eventBus, installEventName) {
         this.confManager = confManager;
         this.commandList = [];
         this.eventBus = eventBus;
+        this.installEventName = installEventName;
         try {
             this.commandDone = this.confManager.loadData(Object, CONF_KEY, true);
         } catch(e) {
@@ -183,6 +185,10 @@ class InstallationManager {
      * @param  {number} nb The max number of commands to execute
      */
     restart(i, nb) {
+        if (this.eventBus) {
+            this.eventBus.emit(this.installEventName, {scheduled:nb, done:i});
+        }
+
         if (i === nb) {
             // Dispatch event
             if (this.eventBus) {

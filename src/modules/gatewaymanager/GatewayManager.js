@@ -49,6 +49,7 @@ class GatewayManager {
         this.tunnelUrl = null;
         this.bootTimestamp = DateUtils.class.timestamp();
         this.bootMode = BOOT_MODE_BOOTING;
+        this.installationState = {};
         Logger.flog("+-----------------------+");
         Logger.flog("| Hautomation ID : " + this.environmentManager.getHautomationId() + " |");
         Logger.flog("+-----------------------+");
@@ -74,8 +75,9 @@ class GatewayManager {
             self.transmit();
         });
 
-        this.eventBus.on(installEvent, () => {
+        this.eventBus.on(installEvent, (installationState) => {
             self.bootMode = BOOT_MODE_INSTALL;
+            self.installationState = installationState;
             self.transmit();
         });
 
@@ -157,6 +159,7 @@ class GatewayManager {
                 language:this.appConfiguration.lng,
                 bootDate:this.bootTimestamp,
                 bootMode:this.bootMode,
+                installationState: this.installationState,
                 gatewayMode: GATEWAY_MODE
             };
             // Call on separate process
