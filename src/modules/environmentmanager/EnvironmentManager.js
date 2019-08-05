@@ -4,9 +4,9 @@ const os = require("os");
 const fs = require("fs-extra");
 const https = require("https");
 const timezone = require("node-google-timezone");
-const crypto = require("crypto");
 const { MacScanner } = require("mac-scanner");
 const dns = require("dns");
+const childProcess = require("child_process");
 const Logger = require("./../../logger/Logger");
 const FormConfiguration = require("./../formconfiguration/FormConfiguration");
 const EnvironmentForm = require("./EnvironmentForm");
@@ -456,8 +456,6 @@ class EnvironmentManager {
 
                         if (rRegex && rRegex.length > 1 && rhashRegex && rhashRegex.length > 1 && rfileRegex && rfileRegex.length > 1) {
                             const version = rRegex[1];
-                            const sha256 = rhashRegex[1];
-                            const debUrl = DEBIAN_REPOSITORY + rfileRegex[1];
                             // Compare version
                             const splitCurrentVersion = this.version.split(".");
                             const splitNewVersion = version.split(".");
@@ -467,40 +465,15 @@ class EnvironmentManager {
                                 if (serverVersion > currentVersion) {
                                     Logger.info("Core update available");
                                     this.messageManager.sendMessage("*", this.translateManager.t("core.update.available", version));
-                                    Logger.info("Download package ...");
-                                    const updateFile = this.appConfiguration.cachePath + "core-update-" + version + ".deb";
-
-                                    if (fs.existsSync(updateFile)) {
-                                        fs.unlinkSync(updateFile);
+                                    const updateScript = this.appConfiguration.cachePath + "core-update-" + version + ".sh";
+                                    if (fs.existsSync(updateScript)) {
+                                        fs.unlinkSync(updateScript);
                                     }
-                                    const updateFileFs = fs.createWriteStream(updateFile);
-                                    https.get(debUrl, (res) => {
-                                        res.pipe(updateFileFs);
-                                        res.on("end", () => {
-                                            if (res.statusCode === 200) {
-                                                Logger.info("Download succeeded");
-                                                const algo = "sha256";
-                                                const shasum = crypto.createHash(algo);
-                                                const s = fs.ReadStream(updateFile);
-                                                s.on("data", (d) => { shasum.update(d); });
-                                                s.on("end", () => {
-                                                    const d = shasum.digest("hex");
-                                                    if (d.toUpperCase() === sha256.toUpperCase()) {
-                                                        Logger.info("Matched sha sum");
-                                                        this.installationManager.executeCommand("sudo dpkg -i " + updateFile , false, (error, stdout, stderr) => {
-                                                            if (error) {
-                                                                Logger.err(error);
-                                                                Logger.err(stderr);
-                                                            } else {
-                                                                Logger.info(stdout);
-                                                            }
-                                                        });
-                                                    } else {
-                                                        Logger.err("Mismatching hashsum");
-                                                    }
-                                                });
-                                            }
-                                        });
+                                    fs.writeFileSync(updateScript, "sudo apt-get update\nsudo apt-get install -y --allow-unauthenticated hautomation");
+                                    fs.chmodSync(updateScript, 0o555);
+                                    childProcess.spawn(updateScript, [], {
+                                        detached: true,
+                                        stdio: [ "ignore", "ignore", "ignore" ]
                                     });
                                 } else {
                                     Logger.info("No core update available");
