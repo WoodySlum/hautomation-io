@@ -203,8 +203,10 @@ class HautomationCore {
         }
 
         // Install dependencies
-        if (this.eventBus) {
-            this.eventBus.emit(EVENT_READY, {});
+        if (!process.env.TEST) {
+            if (this.eventBus) {
+                this.eventBus.emit(EVENT_INSTALL, {});
+            }
         }
         this.installationManager.execute();
         if (this.eventBus) {
