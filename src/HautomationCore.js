@@ -153,7 +153,7 @@ class HautomationCore {
         // Environment manager
         this.environmentManager = new EnvironmentManager.class(AppConfiguration, this.confManager, this.formManager, this.webServices, this.dashboardManager, this.translateManager, this.scenarioManager, NpmPackage.version, commit, this.installationManager, this.timeEventService, this.eventBus, this.messageManager, EVENT_STOP, EVENT_READY, this.userManager);
         // Gateway manager module
-        this.gatewayManager = new GatewayManager.class(this.environmentManager, NpmPackage.version, commit, this.timeEventService, AppConfiguration, this.webServices, this.eventBus, this.scenarioManager, this.threadsManager, EVENT_READY, EVENT_INSTALL);
+        this.gatewayManager = new GatewayManager.class(this.environmentManager, NpmPackage.version, commit, this.timeEventService, AppConfiguration, this.webServices, this.eventBus, this.scenarioManager, this.threadsManager, this.messageManager, this.translateManager, EVENT_READY, EVENT_INSTALL);
         // Authentication module
         this.authentication = new Authentication.class(this.webServices, this.userManager, this.environmentManager);
         // Bot engine

@@ -177,5 +177,6 @@
     "dashboard.scenario.trigger.status.on": "Activer",
     "dashboard.scenario.trigger.status.off": "Désactiver",
     "dashboard.scenario.trigger.title": "Titre",
-    "message.manager.scenario.triggered": "Le scénario %@ a été déclenché"
+    "message.manager.scenario.triggered": "Le scénario %@ a été déclenché",
+    "gateway.manager.custom.identifier.already.taken": "Désolé ! L'identifiant personalisé %@ a déjà été réservé. Vous pouvez en choisir un nouveau dans les paramètres"
 }

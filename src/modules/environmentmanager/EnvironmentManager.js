@@ -314,6 +314,13 @@ class EnvironmentManager {
      */
     saveMainConfiguration(data) {
         const mainConfiguration = this.appConfiguration;
+        // Custom identifier part
+        if (data.customIdentifier && data.customIdentifier.length > 0) {
+            mainConfiguration.customIdentifier = data.customIdentifier.trim().toLowerCase();
+        } else {
+            mainConfiguration.customIdentifier = null;
+        }
+
         // Admin part
         if (data.admin) {
             if (data.admin.username) {
@@ -474,7 +481,7 @@ class EnvironmentManager {
                                     if (fs.existsSync(updateScript)) {
                                         fs.unlinkSync(updateScript);
                                     }
-                                    fs.writeFileSync(updateScript, "sudo apt-get update\nsudo apt-get install -y --allow-unauthenticated hautomation\nsudo service hautomation restart");
+                                    fs.writeFileSync(updateScript, "sudo service hautomation stop\nsleep 10\nsudo apt-get update\nsudo apt-get install -y --allow-unauthenticated hautomation\nsleep 10\nsudo service hautomation start");
                                     fs.chmodSync(updateScript, 0o555);
                                     childProcess.spawn(updateScript, [], {
                                         detached: true,

@@ -30,12 +30,14 @@ class GatewayManager {
      * @param  {EventEmitter} eventBus    The global event bus
      * @param  {ScenarioManager} scenarioManager    The scenario manager
      * @param  {ThreadsManager} threadsManager    The threads manager
+     * @param  {MessageManager} messageManager    The message manager
+     * @param  {TranslateManager} translateManager    The translate manager
      * @param  {string} readyEvent    The ready event tag
      * @param  {string} installEvent    The install event tag
      *
      * @returns {GatewayManager} The instance
      */
-    constructor(environmentManager, version, hash, timeEventService, appConfiguration, webServices, eventBus, scenarioManager, threadsManager, readyEvent, installEvent) {
+    constructor(environmentManager, version, hash, timeEventService, appConfiguration, webServices, eventBus, scenarioManager, threadsManager, messageManager, translateManager, readyEvent, installEvent) {
         this.environmentManager = environmentManager;
         this.version = version;
         this.hash = hash;
@@ -46,9 +48,13 @@ class GatewayManager {
         this.eventBus = eventBus;
         this.scenarioManager = scenarioManager;
         this.threadsManager = threadsManager;
+        this.messageManager = messageManager;
+        this.translateManager = translateManager;
         this.tunnelUrl = null;
         this.bootTimestamp = DateUtils.class.timestamp();
         this.bootMode = BOOT_MODE_BOOTING;
+        this.customIdentifier = appConfiguration.customIdentifier;
+        this.customIdentifierMessageSent = false;
         this.installationState = {};
         Logger.flog("+-----------------------+");
         Logger.flog("| Hautomation ID : " + this.environmentManager.getHautomationId() + " |");
@@ -124,13 +130,19 @@ class GatewayManager {
      *
      * @param  {Object} data Results
      * @param  {ThreadsManager} threadsManager The threads manager (can be used to call kill)
+     * @param  {GatewayManager} context This instance
      */
-    sandboxedRequestresponse(data, threadsManager) {
+    sandboxedRequestresponse(data, threadsManager, context) {
         if (!data.error && data.statusCode === 200) {
             Logger.info("Registration to gateway OK (" + data.bootMode + ")");
         } else if (data.error) {
             Logger.err(data.error.message);
         } else {
+            if (data.statusCode === 527 && context && !context.customIdentifierMessageSent) {
+                context.messageManager.sendMessage("*", context.translateManager.t("gateway.manager.custom.identifier.already.taken", context.appConfiguration.customIdentifier));
+                context.appConfiguration.customIdentifier = null;
+                context.customIdentifierMessageSent = true;
+            }
             Logger.err("Registration to gateway fails (" + data.statusCode + ")");
         }
 
@@ -160,11 +172,12 @@ class GatewayManager {
                 bootDate:this.bootTimestamp,
                 bootMode:this.bootMode,
                 installationState: this.installationState,
+                customIdentifier: this.customIdentifier,
                 gatewayMode: GATEWAY_MODE
             };
-            
+
             // Call on separate process
-            this.threadsManager.run(this.sandboxedRequest, "gateway-" + this.bootMode, {GATEWAY_URL:GATEWAY_URL, bootInfos:bootInfos}, this.sandboxedRequestresponse);
+            this.threadsManager.run(this.sandboxedRequest, "gateway-" + this.bootMode, {GATEWAY_URL:GATEWAY_URL, bootInfos:bootInfos}, this.sandboxedRequestresponse, this);
         }
     }
 }

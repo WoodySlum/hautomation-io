@@ -50,8 +50,9 @@ class ThreadsManager {
      * @param  {string} identifier      The thread identifier
      * @param  {Object} [data={}]       Object passed to the threaded code
      * @param  {Function} [callback=null] The callback when a message is received from the thread. Prototype example : `(tData) => {}`
+     * @param  {Object} [context=null] The context passed as parameter
      */
-    run(func, identifier, data = {}, callback = null) {
+    run(func, identifier, data = {}, callback = null, context = null) {
         const prototype = this.stringifyFunc(func);
         const self = this;
         const thread  = threads.spawn((input, done, progress) => {
@@ -82,7 +83,7 @@ class ThreadsManager {
             .send({dirname: __dirname, identifier:identifier, prototype:prototype, data:data})
             .on("progress", function message(tData) {
                 if (callback) {
-                    callback(tData, self);
+                    callback(tData, self, context);
                 }
             })
             .on("error", function(error) {
