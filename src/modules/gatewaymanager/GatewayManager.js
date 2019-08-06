@@ -137,7 +137,7 @@ class GatewayManager {
         try {
             threadsManager.kill("gateway-" + data.bootMode);
         } catch(e) {
-            Logger.err(e.message);
+            Logger.err(e.message + " gateway-" + data.bootMode);
         }
     }
 
@@ -162,6 +162,7 @@ class GatewayManager {
                 installationState: this.installationState,
                 gatewayMode: GATEWAY_MODE
             };
+            
             // Call on separate process
             this.threadsManager.run(this.sandboxedRequest, "gateway-" + this.bootMode, {GATEWAY_URL:GATEWAY_URL, bootInfos:bootInfos}, this.sandboxedRequestresponse);
         }

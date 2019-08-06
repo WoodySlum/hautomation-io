@@ -7,6 +7,7 @@ const timezone = require("node-google-timezone");
 const { MacScanner } = require("mac-scanner");
 const dns = require("dns");
 const childProcess = require("child_process");
+const machineId = require("node-machine-id");
 const Logger = require("./../../logger/Logger");
 const FormConfiguration = require("./../formconfiguration/FormConfiguration");
 const EnvironmentForm = require("./EnvironmentForm");
@@ -91,6 +92,7 @@ class EnvironmentManager {
         this.timeEventService.register((self) => {
             self.updateCore();
         }, this, TimeEventService.EVERY_DAYS);
+        this.updateCore();
 
         // Set timezone
         if (!process.env.TEST) {
@@ -280,6 +282,7 @@ class EnvironmentManager {
         const ifaces = os.networkInterfaces();
         let macAddress = null;
         Object.keys(ifaces).forEach(function (ifname) {
+
             ifaces[ifname].forEach(function (iface) {
                 if ("IPv4" !== iface.family || iface.internal !== false) {
                     // skip over internal (i.e. 127.0.0.1) and non-ipv4 addresses
@@ -469,7 +472,7 @@ class EnvironmentManager {
                                     if (fs.existsSync(updateScript)) {
                                         fs.unlinkSync(updateScript);
                                     }
-                                    fs.writeFileSync(updateScript, "sudo apt-get update\nsudo apt-get install -y --allow-unauthenticated hautomation");
+                                    fs.writeFileSync(updateScript, "sudo apt-get update\nsudo apt-get install -y --allow-unauthenticated hautomation\nsudo service hautomation restart");
                                     fs.chmodSync(updateScript, 0o555);
                                     childProcess.spawn(updateScript, [], {
                                         detached: true,
@@ -507,12 +510,7 @@ class EnvironmentManager {
      * @returns {string} Hautomation identifier
      */
     getHautomationId() {
-        const macAddress = this.getMacAddress();
-        if (macAddress) {
-            return sha256(macAddress).substr(0,4);
-        }
-
-        return macAddress;
+        return machineId.machineIdSync().substr(0,4);
     }
 
     /**
@@ -521,12 +519,7 @@ class EnvironmentManager {
      * @returns {string} Hautomation full identifier
      */
     getFullHautomationId() {
-        const macAddress = this.getMacAddress();
-        if (macAddress) {
-            return sha256(macAddress);
-        }
-
-        return macAddress;
+        return machineId.machineIdSync();
     }
 
     /**

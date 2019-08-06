@@ -20,7 +20,7 @@ class InstallationManager {
      *
      * @param  {ConfManager} confManager    The configuration manager
      * @param  {EventEmitter} eventBus    The global event bus
-     * @param  {String} installEventName    The install event name
+     * @param  {string} installEventName    The install event name
      * @returns {InstallationManager}             The instance
      */
     constructor(confManager, eventBus, installEventName) {
