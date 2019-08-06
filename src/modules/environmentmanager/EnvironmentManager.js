@@ -89,10 +89,12 @@ class EnvironmentManager {
         webServices.registerAPI(this, WebServices.GET, ":" + ROUTE_APP_GET_CONFIGURATION, Authentication.AUTH_ADMIN_LEVEL);
         this.registerIpScanForm();
 
-        this.timeEventService.register((self) => {
-            self.updateCore();
-        }, this, TimeEventService.EVERY_DAYS);
-        this.updateCore();
+        if (!process.env.TEST) {
+            this.timeEventService.register((self) => {
+                self.updateCore();
+            }, this, TimeEventService.EVERY_DAYS);
+            this.updateCore();
+        }
 
         // Set timezone
         if (!process.env.TEST) {
