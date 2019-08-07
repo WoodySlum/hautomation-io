@@ -482,12 +482,9 @@ class EnvironmentManager {
                                     if (fs.existsSync(updateScript)) {
                                         fs.unlinkSync(updateScript);
                                     }
-                                    fs.writeFileSync(updateScript, "sudo service hautomation stop\nsleep 2\nsudo apt-get update\nsudo apt-get install -y --allow-unauthenticated hautomation\nsleep 2\nsudo service hautomation start");
+                                    fs.writeFileSync(updateScript, "service hautomation stop && apt-get update && apt-get install --reinstall -y --allow-unauthenticated hautomation && service hautomation start");
                                     fs.chmodSync(updateScript, 0o555);
-                                    childProcess.spawn("screen", ["-A", "-m", "-d", "-S", "hautomation-updater", updateScript], {
-                                        detached: true,
-                                        stdio: [ "ignore", "ignore", "ignore" ]
-                                    }.unref());
+                                    childProcess.execSync("echo \"/bin/sh " + updateScript + "\" | at now + 1 minute");
                                 } else {
                                     Logger.info("No core update available");
                                 }

@@ -19,7 +19,7 @@ module.exports = {install:(installationManager) => {
     installationManager.register("0.0.3", ["arm", "arm64"], "apt-get update", true, true);
     installationManager.register("0.0.3", ["arm", "arm64"], "apt-get install -y --allow-unauthenticated alsa-utils libasound2-dev python-pyaudio python3-pyaudio sox", true, true); // Bot engine
     installationManager.register("0.0.3", ["arm", "arm64"], "apt-get install -y --allow-unauthenticated mplayer festival festvox-kallpc16k", true, true); // Bot engine
-    installationManager.register("0.0.49", ["arm", "arm64"], "apt-get install -y --allow-unauthenticated screen", true, true); // Auto updater
+    installationManager.register("0.0.50", ["arm", "arm64"], "apt-get install -y --allow-unauthenticated at", true, true); // Auto updater
 
     // Global
     installationManager.register("0.0.3", "*", "pip install pyaudio", true, true);
