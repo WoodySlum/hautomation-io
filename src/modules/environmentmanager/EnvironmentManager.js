@@ -478,15 +478,16 @@ class EnvironmentManager {
                                     Logger.info("Core update available");
                                     this.messageManager.sendMessage("*", this.translateManager.t("core.update.available", version));
                                     const updateScript = this.appConfiguration.cachePath + "core-update-" + version + ".sh";
+                                    const logs = this.appConfiguration.cachePath + "core-update-" + version + ".log";
                                     if (fs.existsSync(updateScript)) {
                                         fs.unlinkSync(updateScript);
                                     }
-                                    fs.writeFileSync(updateScript, "sudo service hautomation stop\nsleep 10\nsudo apt-get update\nsudo apt-get install -y --allow-unauthenticated hautomation\nsleep 10\nsudo service hautomation start");
+                                    fs.writeFileSync(updateScript, "sudo service hautomation stop\nsleep 2\nsudo apt-get update\nsudo apt-get install -y --allow-unauthenticated hautomation\nsleep 2\nsudo service hautomation start");
                                     fs.chmodSync(updateScript, 0o555);
-                                    childProcess.spawn(updateScript, [], {
+                                    childProcess.spawn("nohup", ["sh", "-c", "'" + updateScript + "'", "&"], {
                                         detached: true,
                                         stdio: [ "ignore", "ignore", "ignore" ]
-                                    });
+                                    }.unref());
                                 } else {
                                     Logger.info("No core update available");
                                 }
