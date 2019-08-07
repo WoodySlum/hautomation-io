@@ -20,6 +20,15 @@ class DateUtils {
     }
 
     /**
+     * Return the current timestamp
+     *
+     * @returns {number} The current timestamp
+     */
+    static timestampMs() {
+        return Math.floor((Date.now()) | 0);
+    }
+
+    /**
      * Convert a string date time zoned to UTC timestamp
      *
      * @param  {string} date The GMT date

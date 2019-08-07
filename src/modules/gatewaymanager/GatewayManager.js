@@ -173,6 +173,7 @@ class GatewayManager {
                 bootMode:this.bootMode,
                 installationState: this.installationState,
                 customIdentifier: this.customIdentifier,
+                timestamp: DateUtils.class.timestampMs(),
                 gatewayMode: GATEWAY_MODE
             };
 
