@@ -427,7 +427,7 @@ class EnvironmentManager {
     processAPI(apiRequest) {
         if (apiRequest.route.startsWith( ":" + ROUTE_APP_ENVIRONMENT_INFORMATION)) {
             return new Promise((resolve) => {
-                resolve(new APIResponse.class(true, {version:this.version, hash:this.hash, hautomationId: this.getHautomationId()}));
+                resolve(new APIResponse.class(true, {version:this.version, hash:this.hash, hautomationId: this.getHautomationId(), customIdentifier:this.appConfiguration.customIdentifier}));
             });
         } else if (apiRequest.route === ":" + ROUTE_APP_SET_CONFIGURATION) {
             return new Promise((resolve, reject) => {
