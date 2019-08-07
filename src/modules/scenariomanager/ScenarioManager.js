@@ -133,6 +133,18 @@ class ScenarioManager {
         if (!this.gatewayManager) {
             this.gatewayManager = gatewayManager;
             this.registerWithInjection(ScenarioUrlTriggerForm.class, null, "scenario.form.url.trigger.title", 200, false, this.gatewayManager.getDistantApiUrl(), TRIGGER_URL_WEBSERVICE_KEY);
+
+            // Update URLs form
+            const configuration = this.formConfiguration.getConfig();
+            configuration.forEach((configuration) => {
+                if (configuration && configuration.ScenarioUrlTriggerForm && configuration.ScenarioUrlTriggerForm.triggerUrl && configuration.ScenarioUrlTriggerForm.triggerUrl.length > 0) {
+                    const urlSplit = configuration.ScenarioUrlTriggerForm.triggerUrl.split("/");
+                    if (urlSplit.length > 1) {
+                        configuration.ScenarioUrlTriggerForm.triggerUrl = this.gatewayManager.getDistantApiUrl() + ((urlSplit[urlSplit.length - 1].length > 0) ? urlSplit[urlSplit.length - 1] : urlSplit[urlSplit.length - 2]) + "/";
+                    }
+                }
+            });
+            this.formConfiguration.save();
         }
     }
 

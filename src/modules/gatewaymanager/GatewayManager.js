@@ -106,7 +106,7 @@ class GatewayManager {
      * @returns {string} The URL
      */
     getDistantApiUrl() {
-        return UI_URL + this.environmentManager.getHautomationId() + WebServices.ENDPOINT_API;
+        return UI_URL + ((this.appConfiguration.customIdentifier && this.appConfiguration.customIdentifier.length > 0) ? this.appConfiguration.customIdentifier : this.environmentManager.getHautomationId()) + WebServices.ENDPOINT_API;
     }
 
 
