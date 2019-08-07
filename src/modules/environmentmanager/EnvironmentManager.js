@@ -478,7 +478,7 @@ class EnvironmentManager {
                                     Logger.info("Core update available");
                                     this.messageManager.sendMessage("*", this.translateManager.t("core.update.available", version));
                                     const updateScript = this.appConfiguration.cachePath + "core-update-" + version + ".sh";
-                                    const logs = this.appConfiguration.cachePath + "core-update-" + version + ".log";
+                                    
                                     if (fs.existsSync(updateScript)) {
                                         fs.unlinkSync(updateScript);
                                     }
