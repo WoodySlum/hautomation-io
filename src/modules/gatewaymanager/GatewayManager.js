@@ -169,7 +169,7 @@ class GatewayManager {
                 tunnel: this.tunnelUrl,
                 language:this.appConfiguration.lng,
                 bootDate:this.bootTimestamp,
-                bootMode:this.bootMode,
+                bootMode:((this.bootMode === BOOT_MODE_READY && !this.tunnelUrl) ? BOOT_MODE_BOOTING : this.bootMode),
                 installationState: this.installationState,
                 customIdentifier: this.customIdentifier,
                 timestamp: DateUtils.class.timestampMs(),

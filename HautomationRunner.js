@@ -5,6 +5,7 @@ var core = null;
 const HautomationRunnerConstants = require("./HautomationRunnerConstants");
 const os = require("os");
 const childProcess = require("child_process");
+const RESTART_DELAY = 5; // In seconds
 
 /**
  * The runner class.
@@ -22,7 +23,9 @@ class HautomationRunner {
 
         const self = this;
         this.runnerEventBus.on(HautomationRunnerConstants.RESTART, () => {
-            self.restart(self);
+            setTimeout((me) => {
+                me.restart(me);
+            }, RESTART_DELAY * 1000, self);
         });
 
         this.start(this);

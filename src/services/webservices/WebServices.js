@@ -220,6 +220,9 @@ class WebServices extends Service.class {
                         t.startTunnel();
                     }, 6 * 60 * 60 * 1000, this);
 
+                    self.gatewayManager.tunnelUrl = url;
+                    self.gatewayManager.transmit();
+
                     setTimeout((me, tunnelUrl) => { // Fix an issue where tunnel sent is null
                         me.gatewayManager.tunnelUrl = tunnelUrl;
                         me.gatewayManager.transmit();

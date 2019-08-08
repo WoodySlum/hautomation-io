@@ -13,7 +13,7 @@
 Tree structure :
 
 	|
-	|-hautomation
+	|-hautomation (main binary)
 	|-plugins
 		|-my-plugin
 			|-plugin.js
@@ -1145,5 +1145,3 @@ Sample code :
 		}
 
 	}
-
-

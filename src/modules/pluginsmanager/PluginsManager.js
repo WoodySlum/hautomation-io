@@ -567,7 +567,6 @@ class PluginsManager {
             Logger.info("Plugin status changed");
             pluginConf.enable = status;
             this.pluginsConf = this.confManager.setData(CONF_KEY, pluginConf, this.pluginsConf, PluginConf.comparator);
-
             this.eventBus.emit(HautomationRunnerConstants.RESTART);
         } else {
             throw Error(ERROR_DISABLE_CORE_PLUGIN);
