@@ -538,7 +538,7 @@ class PluginsManager {
      * @param  {boolean} status     The new status
      */
     changePluginStatus(pluginConf, status) {
-        Logger.info("Plugin status changed");
+        Logger.info("Plugin status changed : " + pluginConf.identifier);
         if ((CORE_PLUGINS.indexOf(pluginConf.identifier) === -1)) {
             if (!status) {
                 // Stop all dependent plugins
@@ -564,7 +564,7 @@ class PluginsManager {
             }
 
 
-            Logger.info("Plugin status changed");
+            Logger.info("Plugin status changed " + pluginConf.identifier + " / " + status);
             pluginConf.enable = status;
             this.pluginsConf = this.confManager.setData(CONF_KEY, pluginConf, this.pluginsConf, PluginConf.comparator);
             this.eventBus.emit(HautomationRunnerConstants.RESTART);

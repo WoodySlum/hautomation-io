@@ -430,40 +430,40 @@
     -   [roundedTimestamp][426]
     -   [dateFormatted][427]
     -   [secondsElapsedSinceMidnight][428]
--   [APIResponse][429]
-    -   [success][430]
-    -   [response][431]
-    -   [errorCode][432]
-    -   [errorMessage][433]
--   [Cleaner][434]
-    -   [exportConstants][435]
-    -   [cleanDbObject][436]
--   [WebServices][437]
-    -   [start][438]
-    -   [startTunnel][439]
-    -   [stop][440]
-    -   [registerInfos][441]
-    -   [getRouteIdentifier][442]
-    -   [processAPI][443]
-    -   [register][444]
-    -   [unregister][445]
-    -   [registerAPI][446]
-    -   [unregisterAPI][447]
-    -   [manageResponse][448]
-    -   [buildPromises][449]
-    -   [runPromises][450]
-    -   [sendAPIResponse][451]
--   [Logger][452]
-    -   [setLogLevel][453]
-    -   [log][454]
-    -   [removeColors][455]
-    -   [flog][456]
-    -   [warn][457]
-    -   [err][458]
-    -   [verbose][459]
-    -   [info][460]
-    -   [debug][461]
-    -   [getHistory][462]
+-   [Logger][429]
+    -   [setLogLevel][430]
+    -   [log][431]
+    -   [removeColors][432]
+    -   [flog][433]
+    -   [warn][434]
+    -   [err][435]
+    -   [verbose][436]
+    -   [info][437]
+    -   [debug][438]
+    -   [getHistory][439]
+-   [APIResponse][440]
+    -   [success][441]
+    -   [response][442]
+    -   [errorCode][443]
+    -   [errorMessage][444]
+-   [Cleaner][445]
+    -   [exportConstants][446]
+    -   [cleanDbObject][447]
+-   [WebServices][448]
+    -   [start][449]
+    -   [startTunnel][450]
+    -   [stop][451]
+    -   [registerInfos][452]
+    -   [getRouteIdentifier][453]
+    -   [processAPI][454]
+    -   [register][455]
+    -   [unregister][456]
+    -   [registerAPI][457]
+    -   [unregisterAPI][458]
+    -   [manageResponse][459]
+    -   [buildPromises][460]
+    -   [runPromises][461]
+    -   [sendAPIResponse][462]
 -   [Service][463]
     -   [start][464]
     -   [run][465]
@@ -4050,6 +4050,98 @@ Return the number of seconds elapsed since midnight in UTC format
 
 Returns **[number][500]** A number of seconds elapsed
 
+## Logger
+
+This class provides static methods to log into a file.
+
+### setLogLevel
+
+Set the log level
+
+**Parameters**
+
+-   `level` **[number][500]** Log level between 0 and 5 (optional, default `3`)
+
+### log
+
+Log to a file
+
+**Parameters**
+
+-   `message` **[string][498]** A log message
+-   `level` **int** Log level between 0 to 5 (optional, default `3`)
+-   `params` **\[[string][498]]** Some parameters
+
+### removeColors
+
+Remove console colors from a string
+
+**Parameters**
+
+-   `entry` **[string][498]** A text entry
+
+Returns **[string][498]** Output string without colors
+
+### flog
+
+Log a log to a file
+
+**Parameters**
+
+-   `message` **[string][498]** A log message
+-   `params` **\[[string][498]]** Some parameters
+
+### warn
+
+Log a warning to a file
+
+**Parameters**
+
+-   `message` **[string][498]** A log message
+-   `params` **\[[string][498]]** Some parameters
+
+### err
+
+Log an error to a file
+
+**Parameters**
+
+-   `message` **[string][498]** A log message
+-   `params` **\[[string][498]]** Some parameters
+
+### verbose
+
+Log a verbose message to a file
+
+**Parameters**
+
+-   `message` **[string][498]** A log message
+-   `params` **\[[string][498]]** Some parameters
+
+### info
+
+Log an information to a file
+
+**Parameters**
+
+-   `message` **[string][498]** A log message
+-   `params` **\[[string][498]]** Some parameters
+
+### debug
+
+Log a debug message to a file, with stacktrace
+
+**Parameters**
+
+-   `message` **[string][498]** A log message
+-   `params` **\[[string][498]]** Some parameters
+
+### getHistory
+
+Get the log history
+
+Returns **[Array][501]** An array of logs
+
 ## APIResponse
 
 This class is a POJO representing an APIResponse item
@@ -4233,98 +4325,6 @@ Process sending results in JSON to API caller
 
 -   `apiResponses` **\[[APIResponse][532]]** The API responses
 -   `res` **[Response][534]** The response
-
-## Logger
-
-This class provides static methods to log into a file.
-
-### setLogLevel
-
-Set the log level
-
-**Parameters**
-
--   `level` **[number][500]** Log level between 0 and 5 (optional, default `3`)
-
-### log
-
-Log to a file
-
-**Parameters**
-
--   `message` **[string][498]** A log message
--   `level` **int** Log level between 0 to 5 (optional, default `3`)
--   `params` **\[[string][498]]** Some parameters
-
-### removeColors
-
-Remove console colors from a string
-
-**Parameters**
-
--   `entry` **[string][498]** A text entry
-
-Returns **[string][498]** Output string without colors
-
-### flog
-
-Log a log to a file
-
-**Parameters**
-
--   `message` **[string][498]** A log message
--   `params` **\[[string][498]]** Some parameters
-
-### warn
-
-Log a warning to a file
-
-**Parameters**
-
--   `message` **[string][498]** A log message
--   `params` **\[[string][498]]** Some parameters
-
-### err
-
-Log an error to a file
-
-**Parameters**
-
--   `message` **[string][498]** A log message
--   `params` **\[[string][498]]** Some parameters
-
-### verbose
-
-Log a verbose message to a file
-
-**Parameters**
-
--   `message` **[string][498]** A log message
--   `params` **\[[string][498]]** Some parameters
-
-### info
-
-Log an information to a file
-
-**Parameters**
-
--   `message` **[string][498]** A log message
--   `params` **\[[string][498]]** Some parameters
-
-### debug
-
-Log a debug message to a file, with stacktrace
-
-**Parameters**
-
--   `message` **[string][498]** A log message
--   `params` **\[[string][498]]** Some parameters
-
-### getHistory
-
-Get the log history
-
-Returns **[Array][501]** An array of logs
 
 ## Service
 
@@ -5394,73 +5394,73 @@ Returns **[string][498]** The base route (without parameters)
 
 [428]: #secondselapsedsincemidnight
 
-[429]: #apiresponse-1
+[429]: #logger
 
-[430]: #success
+[430]: #setloglevel
 
-[431]: #response
+[431]: #log
 
-[432]: #errorcode
+[432]: #removecolors
 
-[433]: #errormessage
+[433]: #flog
 
-[434]: #cleaner
+[434]: #warn
 
-[435]: #exportconstants
+[435]: #err
 
-[436]: #cleandbobject
+[436]: #verbose
 
-[437]: #webservices
+[437]: #info
 
-[438]: #start-3
+[438]: #debug
 
-[439]: #starttunnel
+[439]: #gethistory
 
-[440]: #stop-3
+[440]: #apiresponse-1
 
-[441]: #registerinfos
+[441]: #success
 
-[442]: #getrouteidentifier
+[442]: #response
 
-[443]: #processapi-6
+[443]: #errorcode
 
-[444]: #register-11
+[444]: #errormessage
 
-[445]: #unregister-8
+[445]: #cleaner
 
-[446]: #registerapi
+[446]: #exportconstants
 
-[447]: #unregisterapi
+[447]: #cleandbobject
 
-[448]: #manageresponse
+[448]: #webservices
 
-[449]: #buildpromises
+[449]: #start-3
 
-[450]: #runpromises
+[450]: #starttunnel
 
-[451]: #sendapiresponse
+[451]: #stop-3
 
-[452]: #logger
+[452]: #registerinfos
 
-[453]: #setloglevel
+[453]: #getrouteidentifier
 
-[454]: #log
+[454]: #processapi-6
 
-[455]: #removecolors
+[455]: #register-11
 
-[456]: #flog
+[456]: #unregister-8
 
-[457]: #warn
+[457]: #registerapi
 
-[458]: #err
+[458]: #unregisterapi
 
-[459]: #verbose
+[459]: #manageresponse
 
-[460]: #info
+[460]: #buildpromises
 
-[461]: #debug
+[461]: #runpromises
 
-[462]: #gethistory
+[462]: #sendapiresponse
 
 [463]: #service
 

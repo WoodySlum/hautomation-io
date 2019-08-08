@@ -68,13 +68,8 @@ class HautomationRunner {
      * @param  {HautomationRunner} self The instance
      */
     restart(self) {
-        if (os.platform() === "linux") {
-            // If environment is linux, restart service
-            childProcess.execSync("service hautomation restart", {encoding:"utf-8"});
-        } else {
-            self.stop(self);
-            self.start(self);
-        }
+        self.stop(self);
+        self.start(self);
     }
 }
 
