@@ -210,7 +210,6 @@ class WebServices extends Service.class {
 
                 ngrok.connect({addr: self.port, protocol:"http", region: "eu", inspect:false, binPath: () => self.cachePath}).then((url) => {
                     Logger.info("HTTP tunnel URL : " + url);
-                    self.gatewayManager.tunnelUrl = url;
 
                     // Auto restart tunnel every 6 hours (expiration)
                     // New ngrok free account policy
@@ -220,7 +219,12 @@ class WebServices extends Service.class {
                         ngrok.kill();
                         t.startTunnel();
                     }, 6 * 60 * 60 * 1000, this);
-                    self.gatewayManager.transmit();
+
+                    setTimeout((me, tunnelUrl) => { // Fix an issue where tunnel sent is null
+                        me.gatewayManager.tunnelUrl = tunnelUrl;
+                        me.gatewayManager.transmit();
+                    }, 5 * 1000, self, url);
+
                 }).catch((err) => {
                     Logger.err("Could not start HTTP tunnel : " + err.msg + " - " + err.error_code + " / " + err.status_code);
                     Logger.err(err.message);

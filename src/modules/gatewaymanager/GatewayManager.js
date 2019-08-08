@@ -159,7 +159,6 @@ class GatewayManager {
     transmit() {
         if (!process.env.TEST) {
             Logger.info("Transmitting informations to gateway ...");
-
             const bootInfos = {
                 hautomationId: this.environmentManager.getHautomationId(),
                 sslPort: (this.appConfiguration.ssl && this.appConfiguration.ssl.port)?this.appConfiguration.ssl.port:null,
@@ -176,6 +175,7 @@ class GatewayManager {
                 timestamp: DateUtils.class.timestampMs(),
                 gatewayMode: GATEWAY_MODE
             };
+            Logger.info("Informations : " + JSON.stringify(bootInfos));
 
             // Call on separate process
             this.threadsManager.run(this.sandboxedRequest, "gateway-" + this.bootMode, {GATEWAY_URL:GATEWAY_URL, bootInfos:bootInfos}, this.sandboxedRequestresponse, this);
