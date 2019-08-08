@@ -232,10 +232,10 @@ class WebServices extends Service.class {
                     setTimeout((me) => {
                         me.startTunnel();
                     }, 30 * 1000, self);
-                    setTimeout((me, tunnelUrl) => { // Fix an issue where tunnel sent is null
+                    setTimeout((me) => { // Fix an issue where tunnel sent is null
                         me.gatewayManager.tunnelUrl = null;
                         me.gatewayManager.transmit();
-                    }, 5 * 1000, self, url);
+                    }, 5 * 1000, self);
                 });
             }, 0, this);
 
