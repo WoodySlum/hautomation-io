@@ -145,6 +145,7 @@ function loaded(api) {
             if (this.server) {
                 this.server._teardown();
             }
+            tis.server = null;
             super.stop();
         }
 

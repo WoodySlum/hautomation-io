@@ -6,19 +6,20 @@ const BreakException = require("./../../utils/BreakException").BreakException;
 const sha256 = require("sha256");
 
 // Internal
-var Logger = require("./../../logger/Logger");
-var Service = require("./../Service");
+const Logger = require("./../../logger/Logger");
+const Service = require("./../Service");
 
-var APIRequest = require("./APIRequest");
-var APIResponse = require("./APIResponse");
-var APIRegistration = require("./APIRegistration");
-var Authentication = require("./../../modules/authentication/Authentication");
+const APIRequest = require("./APIRequest");
+const APIResponse = require("./APIResponse");
+const APIRegistration = require("./APIRegistration");
+const Authentication = require("./../../modules/authentication/Authentication");
+const GatewayManager = require("./../../modules/gatewaymanager/GatewayManager");
 
 // External
-var BodyParser = require("body-parser");
-var fs = require("fs-extra");
-var http = require("https");
-var https = require("https");
+const BodyParser = require("body-parser");
+const fs = require("fs-extra");
+const http = require("https");
+const https = require("https");
 http.globalAgent.maxSockets = 20;
 https.globalAgent.maxSockets = 20;
 
@@ -220,10 +221,12 @@ class WebServices extends Service.class {
                         t.startTunnel();
                     }, 6 * 60 * 60 * 1000, this);
 
+                    self.gatewayManager.bootMode = GatewayManager.BOOT_MODE_READY;
                     self.gatewayManager.tunnelUrl = url;
                     self.gatewayManager.transmit();
 
                     setTimeout((me, tunnelUrl) => { // Fix an issue where tunnel sent is null
+                        me.gatewayManager.bootMode = GatewayManager.BOOT_MODE_READY;
                         me.gatewayManager.tunnelUrl = tunnelUrl;
                         me.gatewayManager.transmit();
                     }, 5 * 1000, self, url);
@@ -236,6 +239,7 @@ class WebServices extends Service.class {
                         me.startTunnel();
                     }, 30 * 1000, self);
                     setTimeout((me) => { // Fix an issue where tunnel sent is null
+                        me.gatewayManager.bootMode = GatewayManager.BOOT_MODE_BOOTING;
                         me.gatewayManager.tunnelUrl = null;
                         me.gatewayManager.transmit();
                     }, 5 * 1000, self);

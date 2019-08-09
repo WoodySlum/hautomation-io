@@ -65,7 +65,7 @@ class GatewayManager {
 
         this.timeEventService.register((self) => {
             self.transmit();
-        }, this, TimeEventService.EVERY_DAYS);
+        }, this, TimeEventService.EVERY_HOURS);
 
         const self = this;
 
@@ -183,4 +183,4 @@ class GatewayManager {
     }
 }
 
-module.exports = {class:GatewayManager};
+module.exports = {class:GatewayManager, BOOT_MODE_BOOTING:BOOT_MODE_BOOTING, BOOT_MODE_INSTALL:BOOT_MODE_INSTALL, BOOT_MODE_READY:BOOT_MODE_READY};

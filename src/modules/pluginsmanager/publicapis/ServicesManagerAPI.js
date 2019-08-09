@@ -1,5 +1,7 @@
 "use strict";
 const PrivateProperties = require("./../PrivateProperties");
+const Cleaner = require("./../../../utils/Cleaner");
+const ServicesManager = require("./../../servicesmanager/ServicesManager");
 
 /**
  * Public API for services manager
@@ -70,6 +72,24 @@ class ServicesManagerAPI {
         this.services.forEach((service) => {
             service.start();
         });
+    }
+
+    /**
+     * Returns the threads manager
+     *
+     * @returns {ThreadsManager} The threads manager
+     */
+    getThreadsManager() {
+        return PrivateProperties.oprivate(this).servicesManager.threadsManager;
+    }
+
+    /**
+     * Expose a list of constants
+     *
+     * @returns {Object} Constants
+     */
+    constants() {
+        return Cleaner.class.exportConstants(ServicesManager);
     }
 }
 
