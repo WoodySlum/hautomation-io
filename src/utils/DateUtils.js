@@ -25,7 +25,7 @@ class DateUtils {
      * @returns {number} The current timestamp
      */
     static timestampMs() {
-        return Math.floor((Date.now()) | 0);
+        return Math.floor(Date.now());
     }
 
     /**
