@@ -9,7 +9,7 @@ const Plugin = require("./../../../node_modules/homebridge/lib/plugin").Plugin;
 const User = require("./../../../node_modules/homebridge/lib/user").User;
 const log = require("./../../../node_modules/homebridge/lib/logger");
 const port = 51826;
-const WAIT_FOR_STARTING_SERVICE = 5; // Wait before starting the service (in seconds)
+const WAIT_FOR_STARTING_SERVICE = 30; // Wait before starting the service (in seconds)
 
 /**
  * Loaded plugin function
@@ -35,6 +35,7 @@ function loaded(api) {
             this.plugin = plugin;
             this.removeLogs();
             this.init(devices, sensors);
+            this.ittt = 0;
         }
 
         /**
@@ -134,6 +135,20 @@ function loaded(api) {
 
                 }
             }, WAIT_FOR_STARTING_SERVICE * 1000, this);
+
+            setTimeout((self) => {
+                // if (self.ittt < 3) {
+                //     self.stop();
+                //     setTimeout((me) => {
+                //         console.log("TOTO");
+                //         me.start();
+                //         me.ittt++;
+                //     }, 5 * 1000, self);
+                // }
+                // if (self.ittt === 0) {
+                //     api.coreAPI.dispatchEvent("runner-restart");
+                // }
+            }, (60 + WAIT_FOR_STARTING_SERVICE) * 1000, this);
         }
 
         /**
