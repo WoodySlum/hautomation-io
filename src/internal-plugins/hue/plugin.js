@@ -251,7 +251,7 @@ function loaded(api) {
 
                     if (isHueDevice && device.status != isOn) {
                         device.status = isOn;
-                        context.api.deviceAPI.switchDeviceWithDevice(device);
+                        // context.api.deviceAPI.switchDeviceWithDevice(device);
                     }
                 }
             });
