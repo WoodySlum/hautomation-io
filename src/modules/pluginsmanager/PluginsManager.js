@@ -81,7 +81,9 @@ const INTERNAL_PLUGINS = [
     "signal-db-sensor",
     "huawei-signal-db-sensor",
     "ifttt",
-    "presence-simulator"
+    "presence-simulator",
+    "tv",
+    "philips-tv"
 ];
 
 const CORE_PLUGINS = [
@@ -101,7 +103,8 @@ const CORE_PLUGINS = [
     "rain-time-sensor",
     "fairuse-sensor",
     "smoke-sensor",
-    "signal-db-sensor"
+    "signal-db-sensor",
+    "tv"
 ];
 
 /**

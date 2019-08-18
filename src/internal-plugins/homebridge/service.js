@@ -135,20 +135,6 @@ function loaded(api) {
 
                 }
             }, WAIT_FOR_STARTING_SERVICE * 1000, this);
-
-            setTimeout((self) => {
-                // if (self.ittt < 3) {
-                //     self.stop();
-                //     setTimeout((me) => {
-                //         console.log("TOTO");
-                //         me.start();
-                //         me.ittt++;
-                //     }, 5 * 1000, self);
-                // }
-                // if (self.ittt === 0) {
-                //     api.coreAPI.dispatchEvent("runner-restart");
-                // }
-            }, (60 + WAIT_FOR_STARTING_SERVICE) * 1000, this);
         }
 
         /**
