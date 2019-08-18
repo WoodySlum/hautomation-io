@@ -21,9 +21,10 @@ function loaded(api) {
          *
          * @param  {number} id The identifier
          * @param  {string} ip Ip
+         * @param  {string} year API Version
          * @returns {PhilipsTvForm}        The instance
          */
-        constructor(id, ip) {
+        constructor(id, ip, year) {
             super(id);
 
             /**
@@ -32,6 +33,16 @@ function loaded(api) {
              * @Cl("IpScanForm");
              */
             this.ip = ip;
+
+            /**
+             * @Property("year");
+             * @Title("philips.tv.year");
+             * @Type("string");
+             * @Default("unknown");
+             * @Enum(["unknown", "2014", "2015", "2016", "2017", "2018"]);
+             * @EnumNames(["philips.tv.year.unknown", "2014", "2015", "2016", "2017", "2018"]);
+             */
+            this.year = year;
         }
 
 
@@ -42,7 +53,7 @@ function loaded(api) {
          * @returns {PhilipsTvForm}      An instance
          */
         json(data) {
-            return new PhilipsTvForm(data.id, data.ip);
+            return new PhilipsTvForm(data.id, data.ip, data.year);
         }
     }
 
@@ -65,6 +76,39 @@ function loaded(api) {
             this.api.timeEventAPI.register((self) => {
                 self.getPowerState(null, self);
             }, this, this.api.timeEventAPI.constants().EVERY_MINUTES);
+        }
+
+        /**
+         * Get the API version
+         *
+         * @returns {string} The API version
+         */
+        getApiVersion() {
+            let apiVersion = "1";
+            if (this.api.configurationAPI.getConfiguration() &&  this.api.configurationAPI.getConfiguration().year) {
+                switch(this.api.configurationAPI.getConfiguration().apiVersion) {
+                    case "unknown":
+                        apiVersion = "1";
+                        break;
+                    case "2014":
+                        apiVersion = "5";
+                        break;
+                    case "2015":
+                        apiVersion = "5";
+                        break;
+                    case "2016":
+                        apiVersion = "6";
+                        break;
+                    case "2017":
+                        apiVersion = "6";
+                        break;
+                    case "2018":
+                        apiVersion = "6";
+                        break;
+                }
+            }
+
+            return apiVersion;
         }
 
         /**
@@ -112,7 +156,7 @@ function loaded(api) {
         post(route, data, cb) {
             const ip = this.api.configurationAPI.getConfiguration().ip.ip;
             const sData = JSON.stringify(data);
-            request.post("http://" + ip + ":1925/1" + route, {form:sData}, (error, response, body) => {
+            request.post("http://" + ip + ":1925/" + this.getApiVersion() + route, {form:sData}, (error, response, body) => {
               if (cb) {
                   cb(error, body);
               }
@@ -126,7 +170,7 @@ function loaded(api) {
          */
         get(route, cb) {
             const ip = this.api.configurationAPI.getConfiguration().ip.ip;
-            request("http://" + ip + ":1925/1" + route, (error, response, body) => {
+            request("http://" + ip + ":1925/" + this.getApiVersion() + route, (error, response, body) => {
               if (cb) {
                   cb(error, !error ? JSON.parse(body) : null);
               }
@@ -288,5 +332,6 @@ module.exports.attributes = {
     category: "tv",
     description: "Philips TV remote",
     dependencies:["tv"],
+    defaultDisabled: true,
     classes:[]
 };

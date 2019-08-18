@@ -28,6 +28,7 @@ function loaded(api) {
             this.api = api;
             this.identifier = "tv-" + identifier;
             this.update(0, buttons);
+            this.api.webAPI.register(this, this.api.webAPI.constants().POST, ":/" + this.identifier + "/[set*]/[action*]/", this.api.webAPI.constants().AUTH_USAGE_LEVEL);
         }
 
         /**
@@ -38,8 +39,6 @@ function loaded(api) {
         update(status = 0) {
             const tile = this.api.dashboardAPI.Tile(this.identifier, this.api.dashboardAPI.TileType().TILE_GENERIC_ACTION_STATUS, this.api.exported.Icons.class.list()["desktop"], null, this.api.translateAPI.t("tv.tile.title"), null, null, null, status, 500, this.identifier, {buttons:this.buttons});
             this.api.dashboardAPI.registerTile(tile);
-
-            this.api.webAPI.register(this, this.api.webAPI.constants().POST, ":/" + this.identifier + "/[set*]/[action*]/", this.api.webAPI.constants().AUTH_USAGE_LEVEL);
         }
 
         /**
