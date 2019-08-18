@@ -36,7 +36,7 @@ function loaded(api) {
          * @param  {int} [status=0]   The TV sattus (on => 1, off => 0)
          */
         update(status = 0) {
-            const tile = this.api.dashboardAPI.Tile(this.identifier, this.api.dashboardAPI.TileType().TILE_GENERIC_ACTION_STATUS, this.api.exported.Icons.class.list()["desktop"], null, "TV", null, null, null, status, 500, this.identifier, {buttons:this.buttons});
+            const tile = this.api.dashboardAPI.Tile(this.identifier, this.api.dashboardAPI.TileType().TILE_GENERIC_ACTION_STATUS, this.api.exported.Icons.class.list()["desktop"], null, this.api.translateAPI.t("tv.tile.title"), null, null, null, status, 500, this.identifier, {buttons:this.buttons});
             this.api.dashboardAPI.registerTile(tile);
 
             this.api.webAPI.register(this, this.api.webAPI.constants().POST, ":/" + this.identifier + "/[set*]/[action*]/", this.api.webAPI.constants().AUTH_USAGE_LEVEL);
