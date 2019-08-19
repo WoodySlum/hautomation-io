@@ -20,6 +20,16 @@ class ScenarioAPI {
     /* eslint-enable */
 
     /**
+     * Register a subform class for using into another form
+     *
+     * @param  {Class} formPart     A class with form annotations
+     * @param  {...Object} inject Parameters injection on static methods
+     */
+    registerSubform(formPart, ...inject) {
+        PrivateProperties.oprivate(this).scenarioManager.formManager.register(formPart, ...inject);
+    }
+
+    /**
      * Register to scenario execution engine
      *
      * @param  {FormObject} formPart         A form part

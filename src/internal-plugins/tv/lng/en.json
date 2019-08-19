@@ -1,3 +1,6 @@
 {
-    "tv.tile.title": "Tv"
+    "tv.tile.title": "Tv",
+    "tv.scenario.title": "Tv",
+    "tv.scenario.plugin": "Plugin",
+    "tv.scenario.action": "Action"
 }

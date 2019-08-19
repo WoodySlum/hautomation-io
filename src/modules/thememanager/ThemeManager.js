@@ -131,4 +131,4 @@ class ThemeManager {
 
 }
 
-module.exports = {class:ThemeManager};
+module.exports = {class:ThemeManager, PRIMARY_COLOR_KEY:"primaryColor", SECONDARY_COLOR_KEY:"secondaryColor", TERTIARY_COLOR_KEY:"tertiaryColor", DARK_COLOR_KEY:"darkColor", CLEAR_COLOR_KEY:"clearColor", ON_COLOR_KEY:"onColor", OFF_COLOR_KEY:"offColor", TILES_SPACING_KEY:"tilesSpacing"};

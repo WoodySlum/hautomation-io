@@ -71,7 +71,7 @@ function loaded(api) {
          * @param {PluginAPI} api          The API
          */
         constructor(api) {
-            super(api, "philips");
+            super(api, api.translateAPI.t("philips.tv.tile.title"));
             this.getPowerState();
             this.api.timeEventAPI.register((self) => {
                 self.getPowerState(null, self);
@@ -154,7 +154,10 @@ function loaded(api) {
          * @param  {Function} cb    A callback (`(error, result) => {}`)
          */
         post(route, data, cb) {
-            const ip = this.api.configurationAPI.getConfiguration().ip.ip;
+            let ip = this.api.configurationAPI.getConfiguration().ip.ip;
+            if (ip === "freetext") {
+                ip = this.api.configurationAPI.getConfiguration().ip.freetext;
+            }
             const sData = JSON.stringify(data);
             request.post("http://" + ip + ":1925/" + this.getApiVersion() + route, {form:sData}, (error, response, body) => {
               if (cb) {
@@ -169,7 +172,10 @@ function loaded(api) {
          * @param  {Function} cb    A callback (`(error, result) => {}`)
          */
         get(route, cb) {
-            const ip = this.api.configurationAPI.getConfiguration().ip.ip;
+            let ip = this.api.configurationAPI.getConfiguration().ip.ip;
+            if (ip === "freetext") {
+                ip = this.api.configurationAPI.getConfiguration().ip.freetext;
+            }
             request("http://" + ip + ":1925/" + this.getApiVersion() + route, (error, response, body) => {
               if (cb) {
                   cb(error, !error ? JSON.parse(body) : null);

@@ -415,7 +415,7 @@ class PluginsManager {
     }
 
     /**
-     * Get plugin per gategory
+     * Get plugin per category
      *
      * @param  {string} category A category
      * @param  {boolean} [checkInstance=true] True if return with instance, false otherwise. If set to true (default), it will check that there is an instance. False for testing is recommended.

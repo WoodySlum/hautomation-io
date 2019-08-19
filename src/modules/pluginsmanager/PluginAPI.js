@@ -203,6 +203,31 @@ class PluginsAPI {
     constants() {
         return {CORE_EVENT_READY:this.CORE_EVENT_READY};
     }
+
+    /**
+     * Get plugin identifiers per gategory
+     *
+     * @param  {string} category A category
+     * @param  {boolean} [checkInstance=true] True if return with instance, false otherwise. If set to true (default), it will check that there is an instance. False for testing is recommended.
+     * @returns {Array}          An array of plugins identifiers
+     */
+    getPluginsIdentifiersByCategory(category, checkInstance = true) {
+        const results = [];
+        const plugins = PrivateProperties.oprivate(this).pluginsManager.getPluginsByCategory(category, checkInstance);
+        plugins.forEach((plugin) => {
+            results.push(plugin.identifier);
+        });
+        return results;
+    }
+
+    /**
+     * Get current plugin identifier
+     *
+     * @returns {string} A plugin identifier
+     */
+    getIdentifier() {
+        return this.identifier;
+    }
 }
 
 module.exports = {class:PluginsAPI};

@@ -1,6 +1,8 @@
 /* eslint-disable */
 "use strict";
 
+const SCENARIO_ACTION_TIMER = 300; // In ms
+
 /**
  * Loaded function
  *
@@ -8,6 +10,105 @@
  */
 function loaded(api) {
     api.init();
+
+    /**
+     * This class provides a scenario form actions for tv
+     * @class
+     */
+    class TvActionsScenarioForm extends api.exported.FormObject.class {
+        /**
+         * Constructor
+         *
+         * @param  {number} [id=null]                  An identifier
+         * @param  {string} [action=null]  An action
+         * @returns {TvActionsScenarioForm}                            The instance
+         */
+        constructor(id = null, action = null) {
+            super(id);
+
+            /**
+             * @Property("action");
+             * @Title("tv.scenario.action");
+             * @Type("string");
+             * @Enum("getActions");
+             * @EnumNames("getActions");
+             */
+            this.action = action;
+        }
+
+        /**
+         * Get the actions
+         *
+         * @param  {...Array} inject Injection
+         * @returns {Array}        The actions
+         */
+        static getActions(...inject) {
+            return inject[0];
+        }
+
+        /**
+         * Convert json data
+         *
+         * @param  {Object} data Some key / value data
+         * @returns {TvActionsScenarioForm}      A form object
+         */
+        json(data) {
+            return new TvActionsScenarioForm(data.id, data.action);
+        }
+    }
+
+    /**
+     * This class provides a scenario form for tv
+     * @class
+     */
+    class TvScenarioForm extends api.exported.FormObject.class {
+        /**
+         * Constructor
+         *
+         * @param  {number} [id=null]                  An identifier
+         * @param  {string} [plugin=null]  A plugin
+         * @returns {TvScenarioForm}                            The instance
+         */
+        constructor(id = null, plugin = null, actions = null) {
+            super(id);
+
+            /**
+             * @Property("plugin");
+             * @Title("tv.scenario.plugin");
+             * @Type("string");
+             * @Enum("getPlugins");
+             * @EnumNames("getPlugins");
+             */
+            this.plugin = plugin;
+
+            /**
+             * @Property("actions");
+             * @Type("objects");
+             * @Cl("TvActionsScenarioForm");
+             */
+            this.actions = actions;
+        }
+
+        /**
+         * Get the plugins
+         *
+         * @param  {...Array} inject Injection
+         * @returns {Array}        The plugins
+         */
+        static getPlugins(...inject) {
+            return inject[0];
+        }
+
+        /**
+         * Convert json data
+         *
+         * @param  {Object} data Some key / value data
+         * @returns {TvScenarioForm}      A form object
+         */
+        json(data) {
+            return new TvScenarioForm(data.id, data.plugin, data.actions);
+        }
+    }
 
     /**
      * This class should not be implemented but only inherited.
@@ -19,16 +120,37 @@ function loaded(api) {
          * Constructor
          *
          * @param {PluginAPI} api          The API
-         * @param {string} identifier   An identifier
+         * @param {string} [tileTitle=null] A title for dashboard tile
          * @param {Array}  [buttons=[]] An array of buttons. Needed if default buttons not used
          */
-        constructor(api, identifier, buttons = []) {
-            let defaultButtons = [{standby: ""}, {up: ""}, {down: ""}, {left: ""}, {right: ""}, {enter: ""}, {back: ""}, {home: ""}, {voldown: ""}, {volup: ""}, {mute: ""}, {channelup: ""}, {channeldown: ""}, {source: ""}, {rewind: ""}, {play: ""}, {pause: ""}, {stop: ""}, {record: ""}, {forward: ""}];
-            this.buttons = buttons.length  > 0 ? buttons : defaultButtons;
+        constructor(api, tileTitle = null, buttons = []) {
             this.api = api;
-            this.identifier = "tv-" + identifier;
+            this.tileTitle = tileTitle ? tileTitle : this.api.translateAPI.t("tv.tile.title");
+            let defaultButtons = [{back: ""}, {up: "", theme: this.api.themeAPI.constants().SECONDARY_COLOR_KEY}, {standby: "", theme: this.api.themeAPI.constants().OFF_COLOR_KEY}, {left: "", theme: this.api.themeAPI.constants().SECONDARY_COLOR_KEY}, {enter: "", theme: this.api.themeAPI.constants().ON_COLOR_KEY}, {right: "", theme: this.api.themeAPI.constants().SECONDARY_COLOR_KEY}, {channeldown: ""}, {down: "", theme: this.api.themeAPI.constants().SECONDARY_COLOR_KEY}, {channelup: ""}, {voldown: ""}, {volup: ""}, {mute: ""}, {rewind: ""}, {play: ""}, {forward: ""}, {stop: ""}, {record: ""}, {home: ""}, {source: ""}];
+            this.buttons = buttons.length  > 0 ? buttons : defaultButtons;
+            this.identifier = this.api.getIdentifier();
             this.update(0, buttons);
             this.api.webAPI.register(this, this.api.webAPI.constants().POST, ":/" + this.identifier + "/[set*]/[action*]/", this.api.webAPI.constants().AUTH_USAGE_LEVEL);
+            const buttonsActions = [];
+            this.buttons.forEach((button) => {
+                const buttonKeys = Object.keys(button);
+                if (buttonKeys.length >= 1) {
+                    buttonsActions.push(buttonKeys[0]);
+                }
+            });
+            const scenarioAction = (scenario, additionalInfos) => {
+                if (scenario && scenario.TvScenarioForm && scenario.TvScenarioForm.plugin && scenario.TvScenarioForm.actions && scenario.TvScenarioForm.actions.length > 0 && scenario.TvScenarioForm.plugin === this.identifier) {
+                    let delay = 0;
+                    scenario.TvScenarioForm.actions.forEach((formAction) => {
+                        setTimeout((self) => {
+                            self.action(formAction.action);
+                        }, delay, this);
+                        delay += SCENARIO_ACTION_TIMER;
+                    });
+                }
+            };
+            this.api.scenarioAPI.registerSubform(TvActionsScenarioForm, buttonsActions);
+            this.api.scenarioAPI.registerWithInjection(TvScenarioForm, scenarioAction, this.api.translateAPI.t("tv.scenario.title"), null, false, this.api.getPluginsIdentifiersByCategory("tv", false));
         }
 
         /**
@@ -37,7 +159,7 @@ function loaded(api) {
          * @param  {int} [status=0]   The TV sattus (on => 1, off => 0)
          */
         update(status = 0) {
-            const tile = this.api.dashboardAPI.Tile(this.identifier, this.api.dashboardAPI.TileType().TILE_GENERIC_ACTION_STATUS, this.api.exported.Icons.class.list()["desktop"], null, this.api.translateAPI.t("tv.tile.title"), null, null, null, status, 500, this.identifier, {buttons:this.buttons});
+            const tile = this.api.dashboardAPI.Tile(this.identifier, this.api.dashboardAPI.TileType().TILE_GENERIC_ACTION_STATUS, this.api.exported.Icons.class.list()["desktop"], null, this.tileTitle, null, null, null, status, 500, this.identifier, {buttons:this.buttons});
             this.api.dashboardAPI.registerTile(tile);
         }
 
@@ -85,7 +207,7 @@ module.exports.attributes = {
     loadedCallback: loaded,
     name: "tv",
     version: "0.0.1",
-    category: "tv",
+    category: "tv-base",
     description: "TV base plugin",
     dependencies:[],
     classes:[]

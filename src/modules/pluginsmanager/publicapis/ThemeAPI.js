@@ -1,5 +1,7 @@
 "use strict";
 const PrivateProperties = require("./../PrivateProperties");
+const Cleaner = require("./../../../utils/Cleaner");
+const ThemeManager = require("./../../thememanager/ThemeManager");
 
 /**
  * Public API for theme, colors
@@ -27,6 +29,15 @@ class ThemeAPI {
      */
     getColors(username = null) {
         return PrivateProperties.oprivate(this).themeManager.getColors(username);
+    }
+
+    /**
+     * Access to web services constants
+     *
+     * @returns {Object} The constants
+     */
+    constants() {
+        return Cleaner.class.exportConstants(ThemeManager);
     }
 }
 
