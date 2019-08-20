@@ -2,5 +2,6 @@
     "tv.tile.title": "Télévision",
     "tv.scenario.title": "Télévision",
     "tv.scenario.plugin": "Plugin",
-    "tv.scenario.action": "Action"
+    "tv.scenario.action": "Action",
+    "tv.scenario.timer": "Temps d'attente (secondes)"
 }

@@ -1,7 +1,7 @@
 /* eslint-disable */
 "use strict";
 
-const SCENARIO_ACTION_TIMER = 300; // In ms
+const DEFAULT_ACTION_TIMER = 0.4; // In seconss
 
 /**
  * Loaded function
@@ -21,9 +21,10 @@ function loaded(api) {
          *
          * @param  {number} [id=null]                  An identifier
          * @param  {string} [action=null]  An action
+         * @param  {number} [timer=null]  A timer
          * @returns {TvActionsScenarioForm}                            The instance
          */
-        constructor(id = null, action = null) {
+        constructor(id = null, action = null, timer = 0.3) {
             super(id);
 
             /**
@@ -34,6 +35,16 @@ function loaded(api) {
              * @EnumNames("getActions");
              */
             this.action = action;
+
+
+            /**
+             * @Property("timer");
+             * @Title("tv.scenario.timer");
+             * @Type("number");
+             * @Default(0.4);
+             * @Range([0.4, 10, 0.2]);
+             */
+            this.timer = timer;
         }
 
         /**
@@ -53,7 +64,7 @@ function loaded(api) {
          * @returns {TvActionsScenarioForm}      A form object
          */
         json(data) {
-            return new TvActionsScenarioForm(data.id, data.action);
+            return new TvActionsScenarioForm(data.id, data.action, data.timer);
         }
     }
 
@@ -142,10 +153,11 @@ function loaded(api) {
                 if (scenario && scenario.TvScenarioForm && scenario.TvScenarioForm.plugin && scenario.TvScenarioForm.actions && scenario.TvScenarioForm.actions.length > 0 && scenario.TvScenarioForm.plugin === this.identifier) {
                     let delay = 0;
                     scenario.TvScenarioForm.actions.forEach((formAction) => {
+                        console.log(formAction);
                         setTimeout((self) => {
                             self.action(formAction.action);
                         }, delay, this);
-                        delay += SCENARIO_ACTION_TIMER;
+                        delay += (formAction.timer ? (parseFloat(formAction.timer) * 1000) : DEFAULT_ACTION_TIMER);
                     });
                 }
             };
@@ -159,7 +171,7 @@ function loaded(api) {
          * @param  {int} [status=0]   The TV sattus (on => 1, off => 0)
          */
         update(status = 0) {
-            const tile = this.api.dashboardAPI.Tile(this.identifier, this.api.dashboardAPI.TileType().TILE_GENERIC_ACTION_STATUS, this.api.exported.Icons.class.list()["desktop"], null, this.tileTitle, null, null, null, status, 500, this.identifier, {buttons:this.buttons});
+            const tile = this.api.dashboardAPI.Tile(this.identifier, this.api.dashboardAPI.TileType().TILE_GENERIC_ACTION_STATUS, this.api.exported.Icons.class.list()["television"], null, this.tileTitle, null, null, null, status, 8000, this.identifier, {buttons:this.buttons});
             this.api.dashboardAPI.registerTile(tile);
         }
 

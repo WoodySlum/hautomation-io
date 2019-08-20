@@ -267,7 +267,7 @@ class DashboardManager {
         this.scenarioManager.getScenarios().forEach((scenario) => {
             if (scenario && scenario.DashboardScenarioTriggerForm && scenario.DashboardScenarioTriggerForm.status) {
                 if (scenario.DashboardScenarioTriggerForm.status === "on") {
-                    const tile = new Tile.class(this.themeManager, "scenario-" + scenario.id, Tile.TILE_GENERIC_ACTION, scenario.DashboardScenarioTriggerForm.icon.icon, null, scenario.DashboardScenarioTriggerForm.title, null, null, null, null, null, SCENARIO_BASE_ROUTE.replace(":", "") + scenario.id + "/");
+                    const tile = new Tile.class(this.themeManager, "scenario-" + scenario.id, Tile.TILE_GENERIC_ACTION, scenario.DashboardScenarioTriggerForm.icon.icon, null, scenario.DashboardScenarioTriggerForm.title, null, null, null, null, 10000, SCENARIO_BASE_ROUTE.replace(":", "") + scenario.id + "/");
                     this.registerTile(tile);
                 } else {
                     this.unregisterTile("scenario-" + scenario.id);
