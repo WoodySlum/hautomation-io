@@ -1,7 +1,7 @@
 /* eslint-disable */
 "use strict";
 
-const DEFAULT_ACTION_TIMER = 0.4; // In seconss
+const DEFAULT_ACTION_TIMER = 0.4; // In seconds
 
 /**
  * Loaded function
