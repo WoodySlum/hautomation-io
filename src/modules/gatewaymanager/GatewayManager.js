@@ -3,7 +3,6 @@ const Logger = require("./../../logger/Logger");
 const TimeEventService = require("./../../services/timeeventservice/TimeEventService");
 const DateUtils = require("./../../utils/DateUtils");
 const HautomationRunnerConstants = require("./../../../HautomationRunnerConstants");
-const WebServices = require("./../../services/webservices/WebServices");
 
 const GATEWAY_MODE = 1;
 const GATEWAY_URL = "https://api.hautomation-io.com/ping/";
@@ -106,7 +105,7 @@ class GatewayManager {
      * @returns {string} The URL
      */
     getDistantApiUrl() {
-        return UI_URL + ((this.appConfiguration.customIdentifier && this.appConfiguration.customIdentifier.length > 0) ? this.appConfiguration.customIdentifier : this.environmentManager.getHautomationId()) + WebServices.ENDPOINT_API;
+        return UI_URL + ((this.appConfiguration.customIdentifier && this.appConfiguration.customIdentifier.length > 0) ? this.appConfiguration.customIdentifier : this.environmentManager.getHautomationId()) + this.webServices.getEndpointApi();
     }
 
 

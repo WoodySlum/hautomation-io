@@ -138,9 +138,16 @@ class ScenarioManager {
             const configuration = this.formConfiguration.getConfig();
             configuration.forEach((configuration) => {
                 if (configuration && configuration.ScenarioUrlTriggerForm && configuration.ScenarioUrlTriggerForm.triggerUrl && configuration.ScenarioUrlTriggerForm.triggerUrl.length > 0) {
-                    const urlSplit = configuration.ScenarioUrlTriggerForm.triggerUrl.split("/");
-                    if (urlSplit.length > 1) {
+                    let urlSplit = configuration.ScenarioUrlTriggerForm.triggerUrl.split("/");
+                    if (urlSplit.length > 1 && configuration.ScenarioUrlTriggerForm.triggerUrl.indexOf("undefined") === -1) {
                         configuration.ScenarioUrlTriggerForm.triggerUrl = this.gatewayManager.getDistantApiUrl() + ((urlSplit[urlSplit.length - 1].length > 0) ? urlSplit[urlSplit.length - 1] : urlSplit[urlSplit.length - 2]) + "/";
+                    } else {
+                        // Fix an issue in Gateway Manager where already generated URLs was 'undefined' instead of /API/
+                        // This is a dirt quick fix to help keeping old corrupted URLs
+                        urlSplit = configuration.ScenarioUrlTriggerForm.triggerUrl.split("undefined");
+                        if (urlSplit.length > 0) {
+                            configuration.ScenarioUrlTriggerForm.triggerUrl = this.gatewayManager.getDistantApiUrl() + TRIGGER_URL_WEBSERVICE_KEY + "/" + urlSplit[urlSplit.length - 1];
+                        }
                     }
                 }
             });
@@ -154,12 +161,14 @@ class ScenarioManager {
     registerScenariosListForm() {
         const scenariosName = [];
         const scenariosId = [];
-        this.formConfiguration.data.sort((a,b) => a.name.localeCompare(b.name)).forEach((scenario) => {
-            scenariosName.push(scenario.name);
-            scenariosId.push(scenario.id);
-        });
-        this.formManager.register(ScenarioTriggerAfterForm.class);
-        this.formManager.register(ScenariosListForm.class, scenariosName, scenariosId);
+        if (this.formConfiguration.data.length > 0) {
+            this.formConfiguration.data.sort((a,b) => a.name.localeCompare(b.name)).forEach((scenario) => {
+                scenariosName.push(scenario.name);
+                scenariosId.push(scenario.id);
+            });
+            this.formManager.register(ScenarioTriggerAfterForm.class);
+            this.formManager.register(ScenariosListForm.class, scenariosName, scenariosId);
+        }
     }
 
     /**

@@ -49,13 +49,14 @@ describe("ScenarioManager", function() {
         sinon.spy(core.timeEventService, "register");
         sinon.spy(core.schedulerService, "register");
         scenarioManager = new ScenarioManager.class(confManager, formManager, webServices, timeEventService, schedulerService);
-        expect(core.formManager.register.callCount === 5).to.be.true;
+        expect(core.formManager.register.callCount === 3).to.be.true;
         expect(core.timeEventService.register.calledOnce).to.be.true;
         expect(core.schedulerService.register.calledTwice).to.be.true;
         expect(Object.keys(scenarioManager.registered).length).to.be.equal(0);
         core.formManager.register.restore();
         core.timeEventService.register.restore();
         core.schedulerService.register.restore();
+
     });
 
     if (!process.env.COV) { // Can't be covered due to mangling of symbols

@@ -630,6 +630,15 @@ class WebServices extends Service.class {
             res.status(API_ERROR_HTTP_CODE).json({"code":apiResponse.errorCode,"message":apiResponse.errorMessage, "data":apiResponse.response});
         }
     }
+
+    /**
+     * Get the endpoint Apis
+     *
+     * @returns {string} The endpoint API
+     */
+    getEndpointApi() {
+        return ENDPOINT_API;
+    }
 }
 
 module.exports = {class:WebServices, CONTENT_TYPE:CONTENT_TYPE,

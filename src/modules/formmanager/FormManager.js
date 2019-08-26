@@ -340,7 +340,7 @@ class FormManager {
                         schemaUI[prop].items = subForm.schemaUI;
 
                         exist = true;
-                    } else if (type === "object" && meta.Cl) {
+                    } else if (type === "object" && meta.Cl && self.registeredForms[meta.Cl]) {
                         const subForm =  self.generateForm(self.registeredForms[meta.Cl].class, self.registeredForms[meta.Cl].additionalFields, self.initSchema(), self.initSchemaUI(), ...self.registeredForms[meta.Cl].inject);
                         schemaPropertiesProp = Object.assign({sort: sort}, subForm.schema);
                         schemaPropertiesProp.type = "object";

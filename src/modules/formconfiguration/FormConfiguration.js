@@ -244,6 +244,10 @@ class FormConfiguration {
     getDataCopy() {
         if (this.data instanceof Array) {
             const data = [];
+            if (!(this.data instanceof Array)) {
+                this.data = [];
+            }
+
             this.data.forEach((d) => {
                 data.push(Object.assign({}, d));
             });
