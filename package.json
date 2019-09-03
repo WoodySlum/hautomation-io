@@ -1,6 +1,6 @@
 {
     "name": "hautomation-core",
-    "version": "0.0.56",
+    "version": "0.0.57",
     "description": "Hautomation core module",
     "main": "HautomationRunner.js",
     "engines": {

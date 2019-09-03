@@ -182,7 +182,7 @@ function loaded(api) {
          * @returns {boolean} true if supported, false otherwise
          */
         moveSupport() {
-            return (this.leftUrl|this.rightUrl|this.upUrl|this.downUrl)?true:false;
+            return (((this.leftUrl && this.leftUrl != "")|(this.rightUrl && this.rightUrl != "")|(this.upUrl && this.upUrl != "")|(this.downUrl && this.downUrl != ""))?true:false);
         }
 
         /**
@@ -192,7 +192,7 @@ function loaded(api) {
          * @returns {string}            The complete URL
          */
         generateUrlFromTemplate(url = null) {
-            if (url) {
+            if (url && url.length > 0) {
                 let pUrl = "http://";
                 if (this.configuration.port) {
                     if (this.configuration.port === 443) {
