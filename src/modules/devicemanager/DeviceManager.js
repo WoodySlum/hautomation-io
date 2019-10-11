@@ -99,9 +99,9 @@ class DeviceManager {
 
         this.radioManager.deviceManager = this; // Set the device manager. used to associate devices to received radio objects
 
-        webServices.registerAPI(this, WebServices.POST, ":/device/set/[id]/[status*]/[brightness*]/[color*]/[colorTemperature*]/", Authentication.AUTH_USAGE_LEVEL);
-        webServices.registerAPI(this, WebServices.POST, ":" + ROUTE_ALL_ON, Authentication.AUTH_USAGE_LEVEL);
-        webServices.registerAPI(this, WebServices.POST, ":" + ROUTE_ALL_OFF, Authentication.AUTH_USAGE_LEVEL);
+        webServices.registerAPI(this, WebServices.POST, ":/device/set/[id]/[status*]/[brightness*]/[color*]/[colorTemperature*]/", Authentication.AUTH_GUEST_LEVEL);
+        webServices.registerAPI(this, WebServices.POST, ":" + ROUTE_ALL_ON, Authentication.AUTH_GUEST_LEVEL);
+        webServices.registerAPI(this, WebServices.POST, ":" + ROUTE_ALL_OFF, Authentication.AUTH_GUEST_LEVEL);
 
         this.dbSchema = DbSchemaConverter.class.toSchema(DbDevice.class);
         this.dbManager.initSchema(this.dbSchema, DB_VERSION, null);
@@ -319,7 +319,7 @@ class DeviceManager {
             if (deviceStatus.deviceTypes.indexOf(DEVICE_TYPE_LIGHT_DIMMABLE_COLOR) > -1) {
                 deviceInfos = Object.assign(deviceInfos, {colors:DEVICE_COLORS});
             }
-            const tile = new Tile.class(this.dashboardManager.themeManager, device.id, Tile.TILE_DEVICE, device.icon.icon, null, device.name, null, null, null, device.status > 0?1:0, i, "/device/set/" + device.id + "/", deviceInfos);
+            const tile = new Tile.class(this.dashboardManager.themeManager, device.id, Tile.TILE_DEVICE, device.icon.icon, null, device.name, null, null, null, device.status > 0?1:0, i, "/device/set/" + device.id + "/", deviceInfos, null, Authentication.AUTH_GUEST_LEVEL);
             this.dashboardManager.registerTile(tile);
         }
     }

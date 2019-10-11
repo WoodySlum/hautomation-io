@@ -146,7 +146,7 @@ class AlarmManager {
         this.scenarioManager.register(AlarmScenarioTriggerForm.class, null, "alarm.scenario.trigger.form.title", 200);
 
 
-        this.webServices.registerAPI(this, WebServices.POST, SWITCH_ALARM_ROUTE, Authentication.AUTH_USAGE_LEVEL);
+        this.webServices.registerAPI(this, WebServices.POST, SWITCH_ALARM_ROUTE, Authentication.AUTH_GUEST_LEVEL);
         this.registerTile();
     }
 
@@ -170,7 +170,7 @@ class AlarmManager {
      * Register alarm tile
      */
     registerTile() {
-        const tile = new Tile.class(this.dashboardManager.themeManager, "alarm", Tile.TILE_GENERIC_ACTION_STATUS, Icons.class.list()["uniF2DA"], null, this.translateManager.t("alarm.tile.title"), null, null, null, this.alarmStatus()?1:0, 5, SWITCH_ALARM_ROUTE_BASE);
+        const tile = new Tile.class(this.dashboardManager.themeManager, "alarm", Tile.TILE_GENERIC_ACTION_STATUS, Icons.class.list()["uniF2DA"], null, this.translateManager.t("alarm.tile.title"), null, null, null, this.alarmStatus()?1:0, 5, SWITCH_ALARM_ROUTE_BASE, null, Authentication.AUTH_GUEST_LEVEL);
         this.dashboardManager.registerTile(tile);
     }
 

@@ -9,6 +9,7 @@ const HautomationCore = require("./../../../src/HautomationCore").class;
 const DateUtils = require("../../../src/utils/DateUtils");
 let core;
 const AlarmManager = require("./../../../src/modules/alarmmanager/AlarmManager");
+const Authentication = require("./../../../src/modules/authentication/Authentication");
 let confManager;
 let formManager;
 let webServices;
@@ -228,7 +229,7 @@ describe("AlarmManager", function() {
         sinon.stub(core.userManager, "somebodyAtHome").returns(false);
         alarmManager = new AlarmManager.class(confManager, formManager, webServices, dashboardManager, userManager, sensorsManager, translateManager, deviceManager, messageManager, schedulerService, camerasManager, botEngine, scenarioManager);
         alarmManager.formConfiguration.data = {enabled:false, userLocationTrigger:true};
-        userManager.formConfiguration.data = [{username:"foobar", atHome:true}];
+        userManager.formConfiguration.data = [{username:"foobar", atHome:true, level: Authentication.AUTH_USAGE_LEVEL}, {username:"barfoo", atHome:true, level: Authentication.AUTH_GUEST_LEVEL}];
         userManager.setUserZone("foobar", false);
         expect(alarmManager.alarmStatus()).to.be.true;
         core.userManager.nobodyAtHome.restore();
@@ -240,7 +241,7 @@ describe("AlarmManager", function() {
         sinon.stub(core.userManager, "somebodyAtHome").returns(true);
         alarmManager = new AlarmManager.class(confManager, formManager, webServices, dashboardManager, userManager, sensorsManager, translateManager, deviceManager, messageManager, schedulerService, camerasManager, botEngine, scenarioManager);
         alarmManager.formConfiguration.data = {enabled:true, userLocationTrigger:true};
-        userManager.formConfiguration.data = [{username:"foobar", atHome:false}];
+        userManager.formConfiguration.data = [{username:"foobar", atHome:false, level: Authentication.AUTH_USAGE_LEVEL}, {username:"barfoo", atHome:true, level: Authentication.AUTH_GUEST_LEVEL}];
         userManager.setUserZone("foobar", true);
         expect(alarmManager.alarmStatus()).to.be.false;
         core.userManager.nobodyAtHome.restore();

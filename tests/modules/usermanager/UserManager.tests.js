@@ -12,8 +12,8 @@ var UserForm = require("./../../../src/modules/usermanager/UserForm");
 
 const core = new HautomationCore.class();
 describe("UserManager", function() {
-    const userA = new UserForm.class(1, "userA");
-    const userB = new UserForm.class(2, "userB");
+    const userA = new UserForm.class(1, "userA", null, Authentication.AUTH_USAGE_LEVEL);
+    const userB = new UserForm.class(2, "userB", null, Authentication.AUTH_USAGE_LEVEL);
 
     before(() => {
 

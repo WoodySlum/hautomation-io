@@ -52,6 +52,7 @@
     "user.form.password": "Mot de passe",
     "user.form.level": "Niveau d'administration",
     "user.form.level.disabled": "Utilisateur désactivé",
+    "user.form.level.guest": "Invité",
     "user.form.level.standard": "Standard",
     "user.form.level.admin": "Administrateur",
     "user.form.fullname": "Nom complet",

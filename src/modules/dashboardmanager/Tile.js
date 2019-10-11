@@ -1,5 +1,6 @@
 "use strict";
 const sha256 = require("sha256");
+const Authentication = require("./../authentication/Authentication");
 
 const TILE_INFO_ONE_TEXT = "InfoOneText"; // One icon, one text, no action
 const TILE_INFO_TWO_TEXT = "InfoTwoText"; // One icon, two text, no action
@@ -33,9 +34,10 @@ class Tile {
      * @param  {number} [order=1]                 A number that represents the place of the tile. 1 is on top, 999999 is on bottom :)
      * @param  {string} [action=null]             The action (route endpoint without `:`)
      * @param  {Object} [object=null]             An object
+     * @param  {number} [authentication=Authentication.AUTH_USAGE_LEVEL]             The authentication level
      * @returns {Tile}                             A tile
      */
-    constructor(themeManager, identifier, type = TILE_INFO_ONE_TEXT, icon = null, subIcon = null, text = null, subText = null, picture = null, pictures = null, status = 0, order = 1, action = null, object = null) {
+    constructor(themeManager, identifier, type = TILE_INFO_ONE_TEXT, icon = null, subIcon = null, text = null, subText = null, picture = null, pictures = null, status = 0, order = 1, action = null, object = null, authentication = Authentication.AUTH_USAGE_LEVEL) {
         this.themeManager = themeManager;
         this.identifier = identifier.toString();
         this.type = type;
@@ -55,6 +57,7 @@ class Tile {
         if (this.action && this.action.substr(0, 1) === "/") {
             this.action = this.action.substr(1, this.action.length - 1);
         }
+        this.authentication = authentication;
     }
 
     /**

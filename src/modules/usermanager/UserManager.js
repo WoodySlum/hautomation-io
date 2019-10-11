@@ -54,6 +54,7 @@ class UserManager {
         this.themeManager = themeManager;
         this.updateTile();
         this.registeredHomeNotifications = {};
+        this.dashboardManager.setUserManager(this);
 
         this.webServices.registerAPI(this, WebServices.POST, ROUTE_USER_ZONE + "[status]/", Authentication.AUTH_USAGE_LEVEL);
         this.webServices.registerAPI(this, WebServices.POST, ROUTE_USER_LOCATION + "[longitude]/[latitude]/[radius*]/[speed*]/[timestamp*]/", Authentication.AUTH_USAGE_LEVEL);
@@ -216,7 +217,7 @@ class UserManager {
     allUsersAtHome() {
         let allUsersAtHome = true;
         this.formConfiguration.getDataCopy().forEach((user) => {
-            if (!user.atHome) {
+            if (!user.atHome && user.level >= Authentication.AUTH_USAGE_LEVEL) {
                 allUsersAtHome = false;
             }
         });
@@ -232,7 +233,7 @@ class UserManager {
     nobodyAtHome() {
         let nobodyAtHome = true;
         this.formConfiguration.getDataCopy().forEach((user) => {
-            if (user.atHome) {
+            if (user.atHome && user.level >= Authentication.AUTH_USAGE_LEVEL) {
                 nobodyAtHome = false;
             }
         });
@@ -248,7 +249,7 @@ class UserManager {
     somebodyAtHome() {
         let somebodyAtHome = false;
         this.formConfiguration.getDataCopy().forEach((user) => {
-            if (user.atHome) {
+            if (user.atHome && user.level >= Authentication.AUTH_USAGE_LEVEL) {
                 somebodyAtHome = true;
             }
         });
@@ -272,39 +273,41 @@ class UserManager {
         });
 
         if (u) {
-            if (u.atHome !== inZone) {
-                u.atHome = inZone;
-                this.formConfiguration.saveConfig(u);
-                Object.keys(this.registeredHomeNotifications).forEach((registeredHomeNotificationsKey) => {
-                    this.registeredHomeNotifications[registeredHomeNotificationsKey](u);
-                });
+            if (u.level >= Authentication.AUTH_USAGE_LEVEL) {
+                if (u.atHome !== inZone) {
+                    u.atHome = inZone;
+                    this.formConfiguration.saveConfig(u);
+                    Object.keys(this.registeredHomeNotifications).forEach((registeredHomeNotificationsKey) => {
+                        this.registeredHomeNotifications[registeredHomeNotificationsKey](u);
+                    });
 
-                // Trigger scenarios
-                this.scenarioManager.getScenarios().forEach((scenario) => {
-                    if (scenario.UserScenarioForm && scenario.UserScenarioForm.mode) {
-                        switch(scenario.UserScenarioForm.mode) {
-                        case 0:
-                            break;
-                        case 1:
-                            if (self.allUsersAtHome()) {
-                                self.scenarioManager.triggerScenario(scenario, false, {username: username, inZone: inZone, allUsersAtHome: true});
+                    // Trigger scenarios
+                    this.scenarioManager.getScenarios().forEach((scenario) => {
+                        if (scenario.UserScenarioForm && scenario.UserScenarioForm.mode) {
+                            switch(scenario.UserScenarioForm.mode) {
+                            case 0:
+                                break;
+                            case 1:
+                                if (self.allUsersAtHome()) {
+                                    self.scenarioManager.triggerScenario(scenario, false, {username: username, inZone: inZone, allUsersAtHome: true});
+                                }
+                                break;
+                            case 2:
+                                if (self.nobodyAtHome()) {
+                                    self.scenarioManager.triggerScenario(scenario, false, {username: username, inZone: inZone, nobodyAtHome: true});
+                                }
+                                break;
+                            case 3:
+                                if (self.somebodyAtHome()) {
+                                    self.scenarioManager.triggerScenario(scenario, false, {username: username, inZone: inZone, somebodyAtHome: true});
+                                }
+                                break;
                             }
-                            break;
-                        case 2:
-                            if (self.nobodyAtHome()) {
-                                self.scenarioManager.triggerScenario(scenario, false, {username: username, inZone: inZone, nobodyAtHome: true});
-                            }
-                            break;
-                        case 3:
-                            if (self.somebodyAtHome()) {
-                                self.scenarioManager.triggerScenario(scenario, false, {username: username, inZone: inZone, somebodyAtHome: true});
-                            }
-                            break;
                         }
-                    }
-                });
-            } else {
-                Logger.info("User " + username + " home status does not changed");
+                    });
+                } else {
+                    Logger.info("User " + username + " home status does not changed");
+                }
             }
         } else {
             Logger.warn("Could not change user zone. Unknown user " + username);

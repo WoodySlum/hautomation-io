@@ -16,8 +16,8 @@ function loaded(api) {
          */
         constructor(api) {
             this.api = api;
-            this.api.webAPI.register(this, api.webAPI.constants().POST, ":" + REBOOT_ACTION, api.webAPI.constants().AUTH_ADMIN_LEVEL);
-            this.api.webAPI.register(this, api.webAPI.constants().POST, ":" + SOFT_REBOOT_ACTION, api.webAPI.constants().AUTH_USAGE_LEVEL);
+            this.api.webAPI.register(this, api.webAPI.constants().POST, ":" + REBOOT_ACTION, api.webAPI.Authentication().AUTH_ADMIN_LEVEL);
+            this.api.webAPI.register(this, api.webAPI.constants().POST, ":" + SOFT_REBOOT_ACTION, api.webAPI.Authentication().AUTH_USAGE_LEVEL);
             this.registerTile();
         }
 

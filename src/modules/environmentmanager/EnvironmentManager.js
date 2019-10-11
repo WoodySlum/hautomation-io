@@ -84,7 +84,7 @@ class EnvironmentManager {
         this.userManager.environmentManager = this;
         this.scannedIps = [];
         this.manageUptimeFile();
-        webServices.registerAPI(this, WebServices.GET, ":" + ROUTE_APP_ENVIRONMENT_INFORMATION, Authentication.AUTH_USAGE_LEVEL);
+        webServices.registerAPI(this, WebServices.GET, ":" + ROUTE_APP_ENVIRONMENT_INFORMATION, Authentication.AUTH_GUEST_LEVEL);
         webServices.registerAPI(this, WebServices.POST, ":" + ROUTE_APP_SET_CONFIGURATION, Authentication.AUTH_ADMIN_LEVEL);
         webServices.registerAPI(this, WebServices.GET, ":" + ROUTE_APP_GET_CONFIGURATION, Authentication.AUTH_ADMIN_LEVEL);
         this.registerIpScanForm();

@@ -1,7 +1,8 @@
 "use strict";
 const PrivateProperties = require("./../PrivateProperties");
 const Tile = require("./../../dashboardmanager/Tile");
-var Cleaner = require("./../../../utils/Cleaner");
+const Cleaner = require("./../../../utils/Cleaner");
+const Authentication = require("./../../authentication/Authentication");
 
 /**
  * Public API for dashboard
@@ -54,10 +55,11 @@ class DashboardAPI {
      * @param  {number} [order=1]                 A number that represents the place of the tile. 1 is on top, 999999 is on bottom :)
      * @param  {string} [action=null]             The action (route endpoint without `:`)
      * @param  {Object} [object=null]             An object
+     * @param  {number} [authentication=Authentication.AUTH_USAGE_LEVEL]             The authentication level
      * @returns {Tile}                             A tile
      */
-    Tile(identifier, type = Tile.TILE_INFO_ONE_TEXT, icon = null, subIcon = null, text = null, subText = null, picture = null, pictures = null, status = 0, order = 1, action = null, object = null) {
-        return new Tile.class(PrivateProperties.oprivate(this).dashboardManager.themeManager, identifier, type, icon, subIcon, text, subText, picture, pictures, status, order, action, object);
+    Tile(identifier, type = Tile.TILE_INFO_ONE_TEXT, icon = null, subIcon = null, text = null, subText = null, picture = null, pictures = null, status = 0, order = 1, action = null, object = null, authentication = Authentication.AUTH_USAGE_LEVEL) {
+        return new Tile.class(PrivateProperties.oprivate(this).dashboardManager.themeManager, identifier, type, icon, subIcon, text, subText, picture, pictures, status, order, action, object, authentication);
     }
 
     /**

@@ -53,6 +53,7 @@
     "user.form.password": "Password",
     "user.form.level": "Authorization level",
     "user.form.level.disabled": "User disabled",
+    "user.form.level.guest": "Guest",
     "user.form.level.standard": "Standard",
     "user.form.level.standard": "Standard",
     "user.form.level.admin": "Administrator",

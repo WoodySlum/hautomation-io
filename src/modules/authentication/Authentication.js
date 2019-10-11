@@ -16,6 +16,7 @@ const HEADER_PASSWORD = "X-HAUTOMATION-PASSWORD";
 const HEADER_TOKEN = "X-HAUTOMATION-TOKEN";
 const AUTH_NO_LEVEL = 0;
 const AUTH_LOCAL_NETWORK_LEVEL = 5;
+const AUTH_GUEST_LEVEL = 7;
 const AUTH_USAGE_LEVEL = 10;
 const AUTH_ADMIN_LEVEL = 80;
 const AUTH_MAX_LEVEL = 100;
@@ -42,7 +43,7 @@ class Authentication {
      */
     constructor(webService, userManager, environmentManager) {
         webService.registerAPI(this, "*", "*", AUTH_NO_LEVEL);
-        webService.registerAPI(this, WebServices.GET, LOGIN_ROUTE, AUTH_USAGE_LEVEL);
+        webService.registerAPI(this, WebServices.GET, LOGIN_ROUTE, AUTH_GUEST_LEVEL);
         webService.registerAPI(this, WebServices.GET, TOKEN_ROUTE, AUTH_USAGE_LEVEL);
         this.userManager = userManager;
         this.environmentManager = environmentManager;
@@ -241,4 +242,4 @@ class Authentication {
     }
 }
 
-module.exports = {class:Authentication, AUTH_NO_LEVEL:AUTH_NO_LEVEL, AUTH_USAGE_LEVEL:AUTH_USAGE_LEVEL, AUTH_ADMIN_LEVEL:AUTH_ADMIN_LEVEL, AUTH_MAX_LEVEL:AUTH_MAX_LEVEL, AUTH_LOCAL_NETWORK_LEVEL:AUTH_LOCAL_NETWORK_LEVEL, HEADER_USERNAME:HEADER_USERNAME, HEADER_PASSWORD:HEADER_PASSWORD, HEADER_TOKEN:HEADER_TOKEN};
+module.exports = {class:Authentication, AUTH_NO_LEVEL:AUTH_NO_LEVEL, AUTH_GUEST_LEVEL:AUTH_GUEST_LEVEL, AUTH_USAGE_LEVEL:AUTH_USAGE_LEVEL, AUTH_ADMIN_LEVEL:AUTH_ADMIN_LEVEL, AUTH_MAX_LEVEL:AUTH_MAX_LEVEL, AUTH_LOCAL_NETWORK_LEVEL:AUTH_LOCAL_NETWORK_LEVEL, HEADER_USERNAME:HEADER_USERNAME, HEADER_PASSWORD:HEADER_PASSWORD, HEADER_TOKEN:HEADER_TOKEN};

@@ -36,9 +36,10 @@ class DashboardManager {
         this.translateManager = translateManager;
         this.confManager = confManager;
         this.scenarioManager = scenarioManager;
-        this.webServices.registerAPI(this, WebServices.GET, ROUTE, Authentication.AUTH_USAGE_LEVEL);
-        this.webServices.registerAPI(this, WebServices.POST, BASE_ROUTE_CUSTOMIZE, Authentication.AUTH_USAGE_LEVEL);
-        this.webServices.registerAPI(this, WebServices.POST, SCENARIO_ROUTE, Authentication.AUTH_USAGE_LEVEL);
+        this.userManager = null;
+        this.webServices.registerAPI(this, WebServices.GET, ROUTE, Authentication.AUTH_GUEST_LEVEL);
+        this.webServices.registerAPI(this, WebServices.POST, BASE_ROUTE_CUSTOMIZE, Authentication.AUTH_GUEST_LEVEL);
+        this.webServices.registerAPI(this, WebServices.POST, SCENARIO_ROUTE, Authentication.AUTH_GUEST_LEVEL);
 
         try {
             this.dashboardPreferences = this.confManager.loadData(Object, CONF_KEY, true);
@@ -59,6 +60,15 @@ class DashboardManager {
     }
 
     /**
+     * Set the user manager
+     *
+     * @param  {UserManager} userManager Set the user DbManager
+     */
+    setUserManager(userManager) {
+        this.userManager = userManager;
+    }
+
+    /**
      * Get readable tiles object (without methods, simple POJO)
      *
      * @param  {string} [username=null] A username, for tile customization
@@ -66,9 +76,16 @@ class DashboardManager {
      */
     getReadableTiles(username = null) {
         const tiles = [];
+        let user = null;
+        if (this.userManager != null) {
+            user = this.userManager.getUser(username);
+        }
+
         this.tiles.forEach((tile) => {
-            tile.customize(username); // Customize tile colors depending on theme
-            tiles.push(tile.get());
+            if (!user || user && user.level >= tile.authentication) {
+                tile.customize(username); // Customize tile colors depending on theme
+                tiles.push(tile.get());
+            }
         });
 
         return tiles;

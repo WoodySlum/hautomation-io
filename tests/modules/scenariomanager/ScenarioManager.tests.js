@@ -10,6 +10,7 @@ const DateUtils = require("../../../src/utils/DateUtils");
 const RadioScenarioForm = require("./../../../src/modules/radiomanager/RadioScenarioForm");
 let core;
 const ScenarioManager = require("./../../../src/modules/scenariomanager/ScenarioManager");
+const Authentication = require("./../../../src/modules/authentication/Authentication");
 let confManager;
 let formManager;
 let webServices;
@@ -280,7 +281,7 @@ describe("ScenarioManager", function() {
         scenarioManager.formConfiguration.data = [{id:1503304879528,name:"Test multi radio",UserScenarioForm:{mode:3},enabled:true,icon:{icon:"e806"},DevicesListScenarioForm:{devices:[{identifier:1981,status:"on"}]}}];
 
         sinon.spy(core.deviceManager, "switchDevice");
-        core.userManager.formConfiguration.data = [{username:"foobar", atHome:false}];
+        core.userManager.formConfiguration.data = [{username:"foobar", atHome:false, level: Authentication.AUTH_USAGE_LEVEL}, {username:"barfoo", atHome:true, level: Authentication.AUTH_GUEST_LEVEL}];
         core.userManager.setUserZone("foobar", true);
         expect(core.deviceManager.switchDevice.calledOnce).to.be.true;
         core.deviceManager.switchDevice.restore();
@@ -291,7 +292,7 @@ describe("ScenarioManager", function() {
         scenarioManager.formConfiguration.data = [{id:1503304879528,name:"Test multi radio",UserScenarioForm:{mode:3},enabled:true,icon:{icon:"e806"},DevicesListScenarioForm:{devices:[{identifier:1981,status:"on"}]}}];
 
         sinon.spy(core.deviceManager, "switchDevice");
-        core.userManager.formConfiguration.data = [{username:"foobar", atHome:false}];
+        core.userManager.formConfiguration.data = [{username:"foobar", atHome:false, level: Authentication.AUTH_USAGE_LEVEL}, {username:"barfoo", atHome:true, level: Authentication.AUTH_GUEST_LEVEL}];
         core.userManager.setUserZone("foobar", false);
         expect(core.deviceManager.switchDevice.calledOnce).to.be.false;
         core.deviceManager.switchDevice.restore();

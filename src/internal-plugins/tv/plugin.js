@@ -141,7 +141,7 @@ function loaded(api) {
             this.buttons = buttons.length  > 0 ? buttons : defaultButtons;
             this.identifier = this.api.getIdentifier();
             this.update(0, buttons);
-            this.api.webAPI.register(this, this.api.webAPI.constants().POST, ":/" + this.identifier + "/[set*]/[action*]/", this.api.webAPI.constants().AUTH_USAGE_LEVEL);
+            this.api.webAPI.register(this, this.api.webAPI.constants().POST, ":/" + this.identifier + "/[set*]/[action*]/", api.webAPI.Authentication().AUTH_GUEST_LEVEL);
             const buttonsActions = [];
             this.buttons.forEach((button) => {
                 const buttonKeys = Object.keys(button);
@@ -171,7 +171,7 @@ function loaded(api) {
          * @param  {int} [status=0]   The TV sattus (on => 1, off => 0)
          */
         update(status = 0) {
-            const tile = this.api.dashboardAPI.Tile(this.identifier, this.api.dashboardAPI.TileType().TILE_GENERIC_ACTION_STATUS, this.api.exported.Icons.class.list()["television"], null, this.tileTitle, null, null, null, status, 8000, this.identifier, {buttons:this.buttons});
+            const tile = this.api.dashboardAPI.Tile(this.identifier, this.api.dashboardAPI.TileType().TILE_GENERIC_ACTION_STATUS, this.api.exported.Icons.class.list()["television"], null, this.tileTitle, null, null, null, status, 8000, this.identifier, {buttons:this.buttons}, null, api.webAPI.Authentication().AUTH_GUEST_LEVEL);
             this.api.dashboardAPI.registerTile(tile);
         }
 
