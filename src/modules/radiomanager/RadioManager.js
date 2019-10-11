@@ -303,8 +303,8 @@ class RadioManager {
         // Device part
         if (this.deviceManager) {
             this.deviceManager.getDevices().forEach((device) => {
-                if (device.radio) {
-                    device.radio.forEach((deviceRadio) => {
+                if (device.RadioForm) {
+                    device.RadioForm.forEach((deviceRadio) => {
                         if (deviceRadio.module === module
                             && deviceRadio.protocol === protocol
                             && deviceRadio.deviceId === deviceId
