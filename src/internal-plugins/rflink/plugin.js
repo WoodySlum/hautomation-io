@@ -449,16 +449,17 @@ function loaded(api) {
          * @param  {Function} cb A callback function `(err, protocols) => {}`
          */
         getProtocolList(cb) {
-            const baseList = ["X10","AB400D","Chuango","newkaku","ev1527","elrodb","blyss","aster","warema","selectplus","kaku","tristate","ab400d","no1527","conrad","nodo_ra1527","doorbell","fa500","nodo_radiofrev1527","astrell","nodo_radi","e7","56e82","e=004041","nodo_rv1527"];
+            const baseList = ["x10","ab400d","chuango","newkaku","ev1527","elrodb","blyss","aster","warema","selectplus","kaku","tristate"];
             super.getProtocolList((err, list) => {
                 if (!err) {
                     list.forEach((protocol) => {
-                        if (baseList.indexOf(protocol) === -1) {
-                            baseList.push(protocol);
+                        if (baseList.indexOf(protocol.toLowerCase()) === -1) {
+                            baseList.push(protocol.toLowerCase());
                         }
                     });
                 }
-                cb(null, baseList.sort((a,b) => a.localeCompare(b)));
+
+                cb(null, baseList);
             });
         }
 
