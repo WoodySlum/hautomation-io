@@ -229,7 +229,11 @@ class RadioManager {
             if (plugin.instance) {
                 plugin.instance.getProtocolList((err, res) => {
                     if (!err) {
-                        self.protocols = self.protocols.concat(res);
+                        for (let i = 0 ; i < res.length ; i++) {
+                            if (self.protocols.indexOf(res[i]) === -1) {
+                                self.protocols.push(res[i]);
+                            }
+                        }
                         self.formManager.register(RadioForm.class, this.modules, this.protocols);
                     }
                 });
