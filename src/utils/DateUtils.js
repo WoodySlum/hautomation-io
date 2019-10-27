@@ -13,7 +13,7 @@ class DateUtils {
     /**
      * Return the current timestamp
      *
-     * @returns {number} The current timestamp
+     * @returns {number} The current timestamp in seconds
      */
     static timestamp() {
         return Math.floor((Date.now() / 1000) | 0);

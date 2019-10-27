@@ -357,6 +357,29 @@ describe("ScenarioManager", function() {
         schedulerService.schedule.restore();
     });
 
+    it("lockScenario should return true and don't lock", function() {
+        const scenarioManager = core.scenarioManager;
+        const result = scenarioManager.lockScenario(null, "foo");
+        expect(result).to.be.true;
+        expect(scenarioManager.scenarioLocks).to.be.empty;
+    });
+
+    it("lockScenario should return true and lock", function() {
+        const scenarioManager = core.scenarioManager;
+        const result = scenarioManager.lockScenario({enabled: true, timer: 1}, "foo");
+        expect(result).to.be.true;
+        expect(scenarioManager.scenarioLocks).not.to.be.empty;
+    });
+
+    it("lockScenario should return false", function() {
+        const scenarioManager = core.scenarioManager;
+        scenarioManager.scenarioLocks["foo"] = 99999999999999999;
+        const result = scenarioManager.lockScenario({enabled: true, timer: 1}, "foo");
+        expect(result).to.be.false;
+        expect(scenarioManager.scenarioLocks["foo"]).to.be.equal(99999999999999999);
+        expect(Object.keys(scenarioManager.scenarioLocks).length).to.be.equal(1);
+    });
+
     afterEach(() => {
         core = null;
         confManager = null;

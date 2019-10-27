@@ -15,9 +15,10 @@ class ScenarioForm extends FormObject.class {
      * @param  {TimeScenarioForm} [timeTrigger=null]         The time trigger
      * @param {Array} [subActions=null]         The sub actions
      * @param {ScenarioTriggerAfterForm} [delay=null]         The delay
+     * @param {ScenarioLockForm} [lock=null]         The lock
      * @returns {ScenarioForm} The instance
      */
-    constructor(id = null, name = null, enabled = null, icon = null, timeTrigger = null, subActions = null, delay = null) {
+    constructor(id = null, name = null, enabled = null, icon = null, timeTrigger = null, subActions = null, delay = null, lock = null) {
         super(id);
 
         /**
@@ -51,6 +52,14 @@ class ScenarioForm extends FormObject.class {
          * @Cl("ScenarioTriggerAfterForm");
          */
         this.delay = delay;
+
+        /**
+         * @Property("lock");
+         * @Title("scenario.form.lock");
+         * @Type("object");
+         * @Cl("ScenarioLockForm");
+         */
+        this.lock = lock;
 
         /**
          * @Property("timeTrigger");

@@ -2,6 +2,7 @@
 const Logger = require("./../../logger/Logger");
 const ScenariosListForm = require("./ScenariosListForm");
 const ScenarioSubActionForm = require("./ScenarioSubActionForm");
+const ScenarioLockForm = require("./ScenarioLockForm");
 const ScenarioTriggerAfterForm = require("./ScenarioTriggerAfterForm");
 const FormConfiguration = require("./../formconfiguration/FormConfiguration");
 const TimeEventService = require("./../../services/timeeventservice/TimeEventService");
@@ -58,6 +59,7 @@ class ScenarioManager {
             this.registerScenariosListForm();
         });
         this.registeredScenarioChanges = [];
+        this.scenarioLocks = {};
 
         this.registered = {};
         // Time event
@@ -166,6 +168,7 @@ class ScenarioManager {
                 scenariosName.push(scenario.name);
                 scenariosId.push(scenario.id);
             });
+            this.formManager.register(ScenarioLockForm.class);
             this.formManager.register(ScenarioTriggerAfterForm.class);
             this.formManager.register(ScenariosListForm.class, scenariosName, scenariosId);
         }
@@ -227,6 +230,34 @@ class ScenarioManager {
     }
 
     /**
+     * Check and apply scenario lock if necessary
+
+     * @param  {ScenarioLockForm} scenarioLockForm         A scenario lock form part
+     * @param  {string} scenarioId         A scenario identifier
+     *
+     * @returns {boolean} `true` if the scenario can be executed, `false` otherwise
+     */
+    lockScenario(scenarioLockForm, scenarioId) {
+        let shouldRun = true;
+        if (scenarioLockForm && scenarioLockForm.enabled) {
+            // Check for lock
+            const newTimer = DateUtils.class.timestamp() + (60 * parseInt(scenarioLockForm.timer ? scenarioLockForm.timer : 0));
+            if (this.scenarioLocks[scenarioId]) {
+                if (DateUtils.class.timestamp() > this.scenarioLocks[scenarioId]) {
+                    this.scenarioLocks[scenarioId] = newTimer;
+                } else {
+                    Logger.info("Scenario " + scenarioId + " is locked until " + this.scenarioLocks[scenarioId] + ". Could not execute.");
+                    shouldRun = false;
+                }
+            } else {
+                this.scenarioLocks[scenarioId] = newTimer;
+            }
+        }
+
+        return shouldRun;
+    }
+
+    /**
      * Called when a scenario is triggered
      *
      * @param  {ScenarioForm} scenario A scenario
@@ -235,7 +266,7 @@ class ScenarioManager {
      */
     triggerScenario(scenario, isScheduled = false, additionalInfos = {}) {
         const self = this;
-        if (scenario.enabled) {
+        if (scenario.enabled && this.lockScenario(scenario.lock, scenario.id)) {
             if (isScheduled || !scenario.delay || !scenario.delay.unit || (scenario.delay && scenario.delay.unit && scenario.delay.unit === DELAY_IMMEDIATELY)) {
                 Logger.info("Trigger scenario " + scenario.id);
                 Object.keys(self.registered).forEach((registeredScenarioKey) => {
