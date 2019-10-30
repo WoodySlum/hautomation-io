@@ -140,8 +140,10 @@ class MessageManager {
      * @param  {Function} botCb A callback that should be called when data processing is done
      */
     onMessageReceived(sender, message, botCb = null) {
+        let found = false;
         this.userManager.getUsers().forEach((user) => {
             if (sender === user.username) {
+                found = true;
                 // Trigger scenenario
                 let scenarioTriggered = false;
                 this.scenarioManager.getScenarios().forEach((scenario) => {
@@ -159,18 +161,29 @@ class MessageManager {
                 });
 
                 const dbMessage = new DbMessage.class(this.dbHelper, null, user.username, message, null, null, null, 0);
+                let count = 1;
                 this.registered.forEach((register) => {
                     if (register.onMessageReceived instanceof Function) {
                         if (!scenarioTriggered) { // Dispatch only if no scenario triggered
-                            register.onMessageReceived(dbMessage, botCb);
+                            register.onMessageReceived(dbMessage, () => {
+                                // This is the last callback
+                                if (count === this.registered.length) {
+                                    dbMessage.save(() => {
+                                        botCb();
+                                    });
+                                }
+                                count++;
+                            });
                         }
                     }
                 });
-                dbMessage.save();
-
 
             }
         });
+
+        if (!found) {
+            botCb();
+        }
     }
 
     /**

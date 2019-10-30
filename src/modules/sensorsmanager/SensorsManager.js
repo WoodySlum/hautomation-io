@@ -352,7 +352,7 @@ class SensorsManager {
         } else if (apiRequest.route === SENSORS_MANAGER_GET) {
             return new Promise((resolve) => {
                 const sensors = [];
-                let i = 0;
+                let i = 1;
                 if (self.sensorsConfiguration && self.sensorsConfiguration.length === 0) {
                     resolve(new APIResponse.class(true, sensors));
                 } else {
@@ -360,10 +360,9 @@ class SensorsManager {
                         if (self.pluginsManager.isEnabled(sensor.plugin)) {
                             const sensorPlugin = self.pluginsManager.getPluginByIdentifier(sensor.plugin, false);
                             const s = self.getSensor(sensor.id);
+
                             s.lastObject((err, res) => {
                                 let healthStatus = true;
-                                console.log(err);
-                                console.log(res);
                                 if (!err) {
                                     if (res && res.timestamp) {
                                         const diffTime = DateUtils.class.roundedTimestamp(DateUtils.class.timestamp(), DateUtils.ROUND_TIMESTAMP_DAY) - DateUtils.class.roundedTimestamp(DateUtils.class.dateToUTCTimestamp(res.timestamp), DateUtils.ROUND_TIMESTAMP_DAY);
@@ -386,11 +385,11 @@ class SensorsManager {
                                     form:Object.assign(self.formManager.getForm(sensorPlugin.sensorAPI.form), {data:sensor})
                                 });
 
-                                i++;
                                 if (i === self.sensorsConfiguration.length) {
                                     sensors.sort((a,b) => a.name.localeCompare(b.name));
                                     resolve(new APIResponse.class(true, sensors));
                                 }
+                                i++;
                             });
                         }
                     });
