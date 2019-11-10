@@ -83,7 +83,11 @@ const INTERNAL_PLUGINS = [
     "ifttt",
     "presence-simulator",
     "tv",
-    "philips-tv"
+    "philips-tv",
+    "percent-sensor",
+    "cpu-usage-sensor",
+    "ram-usage-sensor",
+    "rom-usage-sensor"
 ];
 
 const CORE_PLUGINS = [
@@ -104,7 +108,8 @@ const CORE_PLUGINS = [
     "fairuse-sensor",
     "smoke-sensor",
     "signal-db-sensor",
-    "tv"
+    "tv",
+    "percent-sensor"
 ];
 
 /**
