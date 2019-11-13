@@ -28,12 +28,13 @@ class IotAPI {
      * @param  {string} path        The library path
      * @param  {string} appId       An app identifier
      * @param  {int} [version=0] A version number
+     * @param  {Object} [wiringSchema={}] A wiring schema with the following properties, e.g. : `{left:{"D1":[], "D2":[]}, right:{"D3":[], "D4":[]}, up:{}, down:{}}`
      * @param  {FormObject} [form=null] A form
      * @param  {...Object} inject      Some form injection parameters
      */
-    registerLib(path, appId, form = null, ...inject) {
+    registerLib(path, appId, version = 0, wiringSchema = {}, form = null, ...inject) {
         const callerPath = pathl.dirname(callsite()[1].getFileName());
-        PrivateProperties.oprivate(this).iotManager.registerLib(callerPath + "/" + path, appId, form, ...inject);
+        PrivateProperties.oprivate(this).iotManager.registerLib(callerPath + "/" + path, appId, version, wiringSchema, form, ...inject);
     }
 
     /**
@@ -50,12 +51,13 @@ class IotAPI {
      * @param  {string} framework      A framework
      * @param  {Array} dependencies    The array of library dependencies. Can be en empty array or an array of library app identifiers.
      * @param  {Object} [options=null] A list of options injected in IoT configuration during flash sequence
+     * @param  {Object} [wiringSchema={}] A wiring schema with the following properties, e.g. : `{left:{"D1":"", "D2":""}, right:{"D3":"", "D4":""}, up:{}, down:{}}`
      * @param  {FormObject} [form=null] A form
      * @param  {...Object} inject      Some form injection parameters
      */
-    registerApp(path, appId, name, version, platform, board, framework, form = null, ...inject) {
+    registerApp(path, appId, name, version, platform, board, framework, dependencies, options = null, wiringSchema = {}, form = null, ...inject) {
         const callerPath = pathl.dirname(callsite()[1].getFileName());
-        PrivateProperties.oprivate(this).iotManager.registerApp(callerPath + "/" + path, appId, name, version, platform, board, framework, form, ...inject);
+        PrivateProperties.oprivate(this).iotManager.registerApp(callerPath + "/" + path, appId, name, version, platform, board, framework, dependencies, options, wiringSchema, form, ...inject);
         this.iotApp = appId;
     }
 
@@ -127,6 +129,31 @@ class IotAPI {
      */
     isBuilding() {
         return PrivateProperties.oprivate(this).iotManager.isBuilding();
+    }
+
+    /**
+     * Returns the schema for a specific lib
+     *
+     * @param  {string} lib The lib name
+     * @returns {Object}             A wiring schema object
+     */
+    getWiringSchemaForLib(lib) {
+        return PrivateProperties.oprivate(this).iotManager.getWiringSchemaForLib(lib);
+    }
+
+    /**
+     * Register an ingredient for a receipt.
+     * This method will give a list of ingredients for the iot to end user
+     *
+     * @param  {string} iotAppOrLibKey    The app or lib key
+     * @param  {string} reference   The component's reference
+     * @param  {string} description The component's description
+     * @param  {number} [quantity=1] The quantity
+     * @param  {boolean} [isMandatory=true] `true` if component is mandatory, `false` otherwise
+     * @param  {boolean} [isMain=false] `true` if component is the main component, `false` otherwise. A main component will be the component draw in the interface. Only one main component !
+     */
+    addIngredientForReceipe(iotAppOrLibKey, reference, description, quantity = 1, isMandatory = true, isMain = false) {
+        PrivateProperties.oprivate(this).iotManager.addIngredientForReceipe(iotAppOrLibKey, reference, description, quantity, isMandatory, isMain);
     }
 }
 

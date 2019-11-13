@@ -94,10 +94,11 @@ class IotManager {
      * @param  {string} path        The library path
      * @param  {string} appId       An app identifier
      * @param  {int} [version=0] A version number
+     * @param  {Object} [wiringSchema={}] A wiring schema with the following properties, e.g. : `{left:{"D1":"", "D2":""}, right:{"D3":"", "D4":""}, up:{}, down:{}}`
      * @param  {FormObject} [form=null] A form
      * @param  {...Object} inject      Some form injection parameters
      */
-    registerLib(path, appId, version = 0, form = null, ...inject) {
+    registerLib(path, appId, version = 0, wiringSchema = {}, form = null, ...inject) {
         if (!fs.existsSync(path + "/" + LIB_FOLDER)) {
             throw Error("'lib' folder does not exists in " + path);
         }
@@ -111,6 +112,8 @@ class IotManager {
         this.iotLibs[appId].globalLib = path + "/" + GLOBAL_LIB_FOLDER;
         this.iotLibs[appId].form = form;
         this.iotLibs[appId].version = version;
+        this.iotLibs[appId].wiringSchema = wiringSchema;
+        this.iotLibs[appId].receipe = [];
 
         // Register form
         if (form) {
@@ -153,10 +156,11 @@ class IotManager {
      * @param  {string} framework      A framework
      * @param  {Array} dependencies    The array of library dependencies. Can be en empty array or an array of library app identifiers.
      * @param  {Object} [options=null] A list of options injected in IoT configuration during flash sequence
+     * @param  {Object} [wiringSchema={}] A wiring schema with the following properties, e.g. : `{left:{"D1":"", "D2":""}, right:{"D3":"", "D4":""}, up:{}, down:{}}`
      * @param  {FormObject} [form=null] A form
      * @param  {...Object} inject      Some form injection parameters
      */
-    registerApp(path, appId, name, version, platform, board, framework, dependencies, options = null, form = null, ...inject) {
+    registerApp(path, appId, name, version, platform, board, framework, dependencies, options = null, wiringSchema = {}, form = null, ...inject) {
         if (!path || !appId || !name || !version || !platform || !board || !framework) {
             throw Error("Parameters are mandatory");
         }
@@ -199,6 +203,8 @@ class IotManager {
         this.iotApps[appId].form = form;
         this.iotApps[appId].dependencies = dependencies;
         this.iotApps[appId].options = options?options:{};
+        this.iotApps[appId].wiringSchema = wiringSchema;
+        this.iotApps[appId].receipe = [];
 
         // Register form
         this.formManager.register(form, ...inject);
@@ -209,6 +215,7 @@ class IotManager {
                 const dependency = this.iotLibs[dependencyKey];
                 if (dependency && dependency.form) {
                     forms.push(dependency.form);
+                    this.iotApps[appId].receipe = this.iotApps[appId].receipe.concat(dependency.receipe);
                 }
             });
 
@@ -279,7 +286,7 @@ class IotManager {
                     self.isBuildingApp = false;
                     cb(error);
                 } else {
-                    const firmwarePath = tmpDir + ".pioenvs/" + this.iotApps[appId].board + "/firmware.bin";
+                    const firmwarePath = tmpDir + ".pio/build/" + this.iotApps[appId].board + "/firmware.bin";
                     if (fs.existsSync(firmwarePath)) {
                         self.isBuildingApp = false;
                         cb(null, {firmwarePath:firmwarePath, stdout:stdout});
@@ -412,7 +419,9 @@ class IotManager {
                     iots.push({
                         identifier: appKey,
                         description:this.iotApps[appKey].name,
-                        form: Object.assign(self.formManager.getForm(this.iotApps[appKey].form), {data:{iotApp:appKey}})
+                        form: Object.assign(self.formManager.getForm(this.iotApps[appKey].form), {data:{iotApp:appKey}}),
+                        wiringSchema: this.iotApps[appKey].wiringSchema,
+                        receipe: this.iotApps[appKey].receipe
                     });
                     iots.sort((a,b) => a.description.localeCompare(b.description));
                 });
@@ -429,7 +438,9 @@ class IotManager {
                             name: iot.name,
                             icon: "F2DB",
                             iotApp: iot.iotApp,
-                            form:Object.assign(self.formManager.getForm(this.iotApps[iot.iotApp].form), {data:iot})
+                            form:Object.assign(self.formManager.getForm(this.iotApps[iot.iotApp].form), {data:iot}),
+                            wiringSchema: this.iotApps[iot.iotApp].wiringSchema,
+                            receipe: this.iotApps[iot.iotApp].receipe
                         });
                     }
                 });
@@ -515,6 +526,46 @@ class IotManager {
      */
     isBuilding() {
         return this.isBuildingApp;
+    }
+
+    /**
+     * Returns the schema for a specific lib
+     *
+     * @param  {string} lib The lib name
+     * @returns {Object}             A wiring schema object
+     */
+    getWiringSchemaForLib(lib) {
+        if (this.iotLibs[lib] && this.iotLibs[lib].wiringSchema) {
+            return this.iotLibs[lib].wiringSchema;
+        } else {
+            return {left:{}, right:{}, up:{}, down:{}};
+        }
+    }
+
+    /**
+     * Register an ingredient for a receipt.
+     * This method will give a list of ingredients for the iot to end user
+     *
+     * @param  {string} iotAppOrLibKey    The app or lib key
+     * @param  {string} reference   The component's reference
+     * @param  {string} description The component's description
+     * @param  {number} [quantity=1] The quantity
+     * @param  {boolean} [isMandatory=true] `true` if component is mandatory, `false` otherwise
+     * @param  {boolean} [isMain=false] `true` if component is the main component, `false` otherwise. A main component will be the component draw in the interface. Only one main component !
+     */
+    addIngredientForReceipe(iotAppOrLibKey, reference, description, quantity = 1, isMandatory = true, isMain = false) {
+        const ingredient = {
+            reference: reference,
+            description: description,
+            quantity: quantity,
+            isMandatory: isMandatory,
+            isMain: isMain
+        };
+        if (this.iotLibs[iotAppOrLibKey]) {
+            this.iotLibs[iotAppOrLibKey].receipe.push(ingredient);
+        } else if (this.iotApps[iotAppOrLibKey]) {
+            this.iotApps[iotAppOrLibKey].receipe.push(ingredient);
+        }
     }
 }
 

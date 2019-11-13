@@ -11,7 +11,8 @@ function loaded(api) {
     api.init();
 
     const espPlugin = api.getPluginInstance("esp8266");
-    api.iotAPI.registerApp("app", "esp8266-weather-station", "ESP8266 Weather station", 4, api.iotAPI.constants().PLATFORMS.ESP8266, api.iotAPI.constants().BOARDS.NODEMCU, api.iotAPI.constants().FRAMEWORKS.ARDUINO, ["esp8266"], espPlugin.generateOptions(espPlugin.constants().MODE_LIGHT_SLEEP, REFRESH_TIME));
+    const wiringSchema = api.iotAPI.getWiringSchemaForLib("esp8266");
+    api.iotAPI.registerApp("app", "esp8266-weather-station", "Nodemcu Weather station", 4, api.iotAPI.constants().PLATFORMS.ESP8266, api.iotAPI.constants().BOARDS.NODEMCU, api.iotAPI.constants().FRAMEWORKS.ARDUINO, ["esp8266"], espPlugin.generateOptions(espPlugin.constants().MODE_LIGHT_SLEEP, REFRESH_TIME), wiringSchema);
 
     /**
      * This class manage EspWeatherStation

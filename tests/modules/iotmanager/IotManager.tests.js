@@ -105,7 +105,7 @@ describe("IotManager", function() {
         });
         sinon.spy(formManager, "register");
 
-        iotManager.registerLib("/tmp/foobar", "foolib", 2, IotLibForm);
+        iotManager.registerLib("/tmp/foobar", "foolib", 2, {}, IotLibForm);
         expect(iotManager.iotLibs["foolib"]).to.be.not.null;
         expect(iotManager.iotLibs["foolib"].lib).to.be.equal("/tmp/foobar/lib");
         expect(iotManager.iotLibs["foolib"].globalLib).to.be.equal("/tmp/foobar/global_lib");
@@ -121,7 +121,7 @@ describe("IotManager", function() {
         const iotManager = new IotManager.class(appConfiguration, webServices, installationManager, formManager, environmentManager, confManager);
 
         try {
-            iotManager.registerApp("/tmp/foobar", "fooapp", "Foo Bar", 5, "fooPlatform", "barBoard", "foobarFramework", [], null, IotAppForm);
+            iotManager.registerApp("/tmp/foobar", "fooapp", "Foo Bar", 5, "fooPlatform", "barBoard", "foobarFramework", [], null, {}, IotAppForm);
             expect(false).to.be.true;
         } catch(e) {
             expect(e.message).to.be.not.null;
@@ -138,7 +138,7 @@ describe("IotManager", function() {
 
         try {
             iotManager.registerLib("/tmp/foobar", "foolib", 2, IotLibForm);
-            iotManager.registerApp("/tmp/foobar", "fooapp", "Foo Bar", 5, "fooPlatform", "barBoard", "foobarFramework", ["foolib"], null, IotAppForm);
+            iotManager.registerApp("/tmp/foobar", "fooapp", "Foo Bar", 5, "fooPlatform", "barBoard", "foobarFramework", ["foolib"], null, {}, IotAppForm);
             expect(false).to.be.true;
         } catch(e) {
             expect(e.message).to.be.not.null;
@@ -157,8 +157,8 @@ describe("IotManager", function() {
         sinon.spy(formManager, "register");
         sinon.spy(formManager, "addAdditionalFields");
 
-        iotManager.registerLib("/tmp/foobar", "foolib", 2, IotLibForm);
-        iotManager.registerApp("/tmp/foobar", "fooapp", "Foo Bar", 5, "fooPlatform", "barBoard", "foobarFramework", ["foolib"], {foo:"bar"}, IotAppForm);
+        iotManager.registerLib("/tmp/foobar", "foolib", 2, {left:{"3V3":["foobar"]}}, IotLibForm);
+        iotManager.registerApp("/tmp/foobar", "fooapp", "Foo Bar", 5, "fooPlatform", "barBoard", "foobarFramework", ["foolib"], {foo:"bar"}, {right:{"GND":["barfoo"]}}, IotAppForm);
         expect(iotManager.iotApps["fooapp"]).to.be.not.null;
         expect(iotManager.iotApps["fooapp"].src).to.be.equal("/tmp/foobar/src");
         expect(iotManager.iotApps["fooapp"].lib).to.be.equal("/tmp/foobar/lib");
@@ -173,6 +173,8 @@ describe("IotManager", function() {
         expect(iotManager.iotApps["fooapp"].options.foo).to.be.equal("bar");
         expect(formManager.register.calledTwice).to.be.true;
         expect(formManager.addAdditionalFields.calledOnce).to.be.true;
+        expect(iotManager.iotLibs["foolib"].wiringSchema.left["3V3"][0]).to.be.equal("foobar");
+        expect(iotManager.iotApps["fooapp"].wiringSchema.right["GND"][0]).to.be.equal("barfoo");
 
         fs.existsSync.restore();
         formManager.register.restore();
@@ -206,8 +208,8 @@ describe("IotManager", function() {
             cb(null, command);
         });
 
-        iotManager.registerLib("/tmp/foobar", "foolib", 2, IotLibForm);
-        iotManager.registerApp("/tmp/foobar", "fooapp", "Foo Bar", 5, "fooPlatform", "barBoard", "foobarFramework", ["foolib"], {foo:"bar"}, IotAppForm);
+        iotManager.registerLib("/tmp/foobar", "foolib", 2, {}, IotLibForm);
+        iotManager.registerApp("/tmp/foobar", "fooapp", "Foo Bar", 5, "fooPlatform", "barBoard", "foobarFramework", ["foolib"], {foo:"bar"}, {}, IotAppForm);
         iotManager.build("fooapp", false, {foobar:"barfoo"}, (error, result) => {
             expect(fs.ensureDirSync.calledOnce).to.be.true;
             expect(fs.copySync.callCount).to.be.equal(5);
@@ -216,7 +218,7 @@ describe("IotManager", function() {
             expect(installationManager.executeCommand.calledOnce).to.be.true;
             expect(fs.writeFileSync.calledOnce).to.be.true;
             expect(Object.keys(result).length).to.be.equal(2);
-            expect(result.firmwarePath).to.be.equal("/foobar/iot-flash-1234-fooapp/.pioenvs/barBoard/firmware.bin");
+            expect(result.firmwarePath).to.be.equal("/foobar/iot-flash-1234-fooapp/.pio/build/barBoard/firmware.bin");
             expect(result.stdout).to.be.equal("cd /foobar/iot-flash-1234-fooapp/ ;platformio run -e barBoard");
             done();
         });
@@ -251,8 +253,8 @@ describe("IotManager", function() {
             done();
         });
 
-        iotManager.registerLib("/tmp/foobar", "foolib", 2, IotLibForm);
-        iotManager.registerApp("/tmp/foobar", "fooapp", "Foo Bar", 5, "fooPlatform", "barBoard", "foobarFramework", ["foolib"], {foo:"bar"}, IotAppForm);
+        iotManager.registerLib("/tmp/foobar", "foolib", 2, {}, IotLibForm);
+        iotManager.registerApp("/tmp/foobar", "fooapp", "Foo Bar", 5, "fooPlatform", "barBoard", "foobarFramework", ["foolib"], {foo:"bar"}, {}, IotAppForm);
         iotManager.writeDescriptor("foolder", "fooapp");
 
         fs.writeFileSync.restore();
@@ -266,8 +268,8 @@ describe("IotManager", function() {
             return true;
         });
 
-        iotManager.registerLib("/tmp/foobar", "foolib", 2, IotLibForm);
-        iotManager.registerApp("/tmp/foobar", "fooapp", "Foo Bar", 5, "fooPlatform", "barBoard", "foobarFramework", ["foolib"], {foo:"bar"}, IotAppForm);
+        iotManager.registerLib("/tmp/foobar", "foolib", 2, {}, IotLibForm);
+        iotManager.registerApp("/tmp/foobar", "fooapp", "Foo Bar", 5, "fooPlatform", "barBoard", "foobarFramework", ["foolib"], {foo:"bar"}, {}, IotAppForm);
         expect(iotManager.iotAppExists("fooapp")).to.be.true;
 
         fs.existsSync.restore();
@@ -280,8 +282,8 @@ describe("IotManager", function() {
             return true;
         });
 
-        iotManager.registerLib("/tmp/foobar", "foolib", 2, IotLibForm);
-        iotManager.registerApp("/tmp/foobar", "fooapp", "Foo Bar", 5, "fooPlatform", "barBoard", "foobarFramework", ["foolib"], {foo:"bar"}, IotAppForm);
+        iotManager.registerLib("/tmp/foobar", "foolib", 2, {}, IotLibForm);
+        iotManager.registerApp("/tmp/foobar", "fooapp", "Foo Bar", 5, "fooPlatform", "barBoard", "foobarFramework", ["foolib"], {foo:"bar"}, {}, IotAppForm);
         expect(iotManager.iotAppExists("barapp")).to.be.false;
 
         fs.existsSync.restore();
@@ -294,9 +296,9 @@ describe("IotManager", function() {
             return true;
         });
 
-        iotManager.registerLib("/tmp/foobar", "foolib", 11, IotLibForm);
-        iotManager.registerLib("/tmp/foobar", "foolib2", 5, IotLibForm);
-        iotManager.registerApp("/tmp/foobar", "fooapp", "Foo Bar", 72, "fooPlatform", "barBoard", "foobarFramework", ["foolib", "foolib2"], {foo:"bar"}, IotAppForm);
+        iotManager.registerLib("/tmp/foobar", "foolib", 11, {}, IotLibForm);
+        iotManager.registerLib("/tmp/foobar", "foolib2", 5, {}, IotLibForm);
+        iotManager.registerApp("/tmp/foobar", "fooapp", "Foo Bar", 72, "fooPlatform", "barBoard", "foobarFramework", ["foolib", "foolib2"], {foo:"bar"}, {}, IotAppForm);
         expect(iotManager.getVersion("fooapp")).to.be.equal(88);
 
         fs.existsSync.restore();
@@ -309,7 +311,7 @@ describe("IotManager", function() {
             return true;
         });
 
-        iotManager.registerApp("/tmp/foobar", "fooapp", "Foo Bar", 22, "fooPlatform", "barBoard", "foobarFramework", [], {foo:"bar"}, IotAppForm);
+        iotManager.registerApp("/tmp/foobar", "fooapp", "Foo Bar", 22, "fooPlatform", "barBoard", "foobarFramework", [], {foo:"bar"}, {}, IotAppForm);
         expect(iotManager.getVersion("fooapp")).to.be.equal(22);
 
         fs.existsSync.restore();
@@ -322,7 +324,7 @@ describe("IotManager", function() {
             return true;
         });
 
-        iotManager.registerApp("/tmp/foobar", "fooapp", "Foo Bar", 22, "fooPlatform", "barBoard", "foobarFramework", [], {foo:"bar"}, IotAppForm);
+        iotManager.registerApp("/tmp/foobar", "fooapp", "Foo Bar", 22, "fooPlatform", "barBoard", "foobarFramework", [], {foo:"bar"}, {}, IotAppForm);
         expect(iotManager.getIotApp("fooapp").name).to.be.equal("Foo Bar");
 
         fs.existsSync.restore();
@@ -335,12 +337,28 @@ describe("IotManager", function() {
             return true;
         });
 
-        iotManager.registerApp("/tmp/foobar", "fooapp", "Foo Bar", 22, "fooPlatform", "barBoard", "foobarFramework", [], {foo:"bar"}, IotAppForm);
+        iotManager.registerApp("/tmp/foobar", "fooapp", "Foo Bar", 22, "fooPlatform", "barBoard", "foobarFramework", [], {foo:"bar"}, {}, IotAppForm);
         expect(iotManager.getIotApp("barapp")).to.be.null;
 
         fs.existsSync.restore();
     });
 
+    it("addIngredientForReceipe should work well", function() {
+        const iotManager = new IotManager.class(appConfiguration, webServices, installationManager, formManager, environmentManager, confManager);
+        const fs = require("fs-extra");
+        sinon.stub(fs, "existsSync").callsFake((path) => {
+            return true;
+        });
+
+        iotManager.registerLib("/tmp/foobar", "foolib", 2, {left:{"3V3":["foobar"]}}, IotLibForm);
+        iotManager.addIngredientForReceipe("foolib", "foo", "bar", 32, true, true);
+        iotManager.registerApp("/tmp/foobar", "fooapp", "Foo Bar", 5, "fooPlatform", "barBoard", "foobarFramework", ["foolib"], {foo:"bar"}, {right:{"GND":["barfoo"]}}, IotAppForm);
+        iotManager.addIngredientForReceipe("fooapp", "bar", "foo", 3, false, false);
+        expect(iotManager.iotApps["fooapp"].receipe.length).to.be.equal(2);
+
+        fs.existsSync.restore();
+    });
+    
     after(() => {
 
     });
