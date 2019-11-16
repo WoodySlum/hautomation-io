@@ -58,6 +58,7 @@ function loaded(api) {
     const WS_SENSOR_SET_ROUTE = ":/esp/sensor/set/";
     const WS_PING_ROUTE = ":/esp/ping/";
     const WS_FIRMWARE_ROUTE = ":/esp/firmware/upgrade/";
+    const PING_EVENT_KEY = "esp8266-ping";
     const errorFirmware = {};
 
     /**
@@ -82,15 +83,24 @@ function loaded(api) {
             this.firmwareFile = {};
 
             try {
-                this.configurations = this.api.configurationAPI.loadData(Object, CONF_KEY, true);
+                this.configurations = this.api.configurationAPI.getConfManager().loadData(Object, CONF_KEY, true);
             } catch(err) {
                 this.api.exported.Logger.verbose(err.message);
             }
 
             if (!this.configurations) {
                 this.configurations = {};
+            } else {
+                // Dispatch pings initial after 5 seconds for dependent plugins
+                setTimeout((self) => {
+                    Object.keys(this.configurations).forEach((iotKey) => {
+                        self.api.coreAPI.dispatchEvent(PING_EVENT_KEY, Object.assign({id:iotKey}, self.configurations[iotKey]));
+                    });
+                }, 5000, this);
             }
         }
+
+
 
         /**
          * ESP8266 constants :
@@ -107,7 +117,8 @@ function loaded(api) {
                 MODE_LIGHT_SLEEP:3,
                 EVERY_HOUR: (60 * 60),
                 EVERY_DAY: (24 * 60 * 60),
-                EVERY_WEEK: (7* 24 * 60 * 60)
+                EVERY_WEEK: (7* 24 * 60 * 60),
+                PING_EVENT_KEY: PING_EVENT_KEY
             };
         }
 
@@ -178,8 +189,8 @@ function loaded(api) {
                 if (iot) {
                     this.configurations[iot.id.toString()] = apiRequest.params;
                     this.configurations[iot.id.toString()].lastUpdated = this.api.exported.DateUtils.class.timestamp();
-                    this.api.configurationAPI.saveData(this.configurations, CONF_KEY);
-
+                    this.api.coreAPI.dispatchEvent(PING_EVENT_KEY, Object.assign({id:iot.id.toString()}, this.configurations[iot.id.toString()]));
+                    this.api.configurationAPI.getConfManager().saveData(this.configurations, CONF_KEY);
                 }
 
                 return new Promise((resolve) => {

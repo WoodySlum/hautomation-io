@@ -27,6 +27,10 @@ Hautomation::Hautomation()
 
 }
 
+ESP8266WebServer &Hautomation::getWebServer() {
+  return httpServer;
+}
+
 void Hautomation::setup(String jsonConfiguration)
 {
     Serial.begin(115200);
@@ -80,7 +84,7 @@ void Hautomation::connect() {
             const char* passphrase = config["ESP8266Form"]["passphrase"];
 
             Serial.println("SSID : " + String(ssid));
-            //Serial.println("Passphrase : " + String(passphrase));
+            Serial.println("Passphrase : " + String(passphrase));
             WiFi.begin(ssid, passphrase);
             int counter = 0;
             while ((WiFi.status() != WL_CONNECTED) && (counter < MAX_TIME_CONNECTION_ATTEMPT)) {
@@ -163,10 +167,10 @@ void Hautomation::httpUpdateServer() {
         httpServer.send(200, "application/json", values);
     });
 
-    /*httpServer.on("/ping", [](){
-        ping();
-        httpServer.send(200, "application/json", "{}");
-    });*/
+    // httpServer.on("/ping", [](){
+    //     this.ping();
+    //     httpServer.send(200, "application/json", "{}");
+    // });
 
     Serial.println("HTTP server ready");
 }
@@ -275,19 +279,25 @@ void Hautomation::postSensorValue(String sensorType, float value) {
 }
 
 void Hautomation::loop() {
+    Serial.println("+> Connecting");
     if (WiFi.status() != WL_CONNECTED) {
+        Serial.println("+> Connect");
         connect();
     }
 
+
     // Ping only when not always powered
     if (poweredMode == POWER_MODE_SLEEP) {
+        Serial.println("+> Ping");
         ping();
     }
 
     if (canRunHttpServer()) {
+        Serial.println("+> Handle client");
         httpServer.handleClient();
     }
 
+    Serial.println("+> Connecting");
     rest(poweredMode, _min(MAX_TIME_SLEEP, sleepTime));
 }
 
@@ -317,7 +327,7 @@ int Hautomation::loadCounter() {
 }
 
 void Hautomation::resetFirmwareUpdate() {
-    Serial.println("Resetting firmare indicator");
+    Serial.println("Resetting firwmare indicator");
     EEPROM.begin(512);
     EEPROM.put(20, 100);
     EEPROM.commit();

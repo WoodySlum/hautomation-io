@@ -219,7 +219,7 @@ describe("IotManager", function() {
             expect(fs.writeFileSync.calledOnce).to.be.true;
             expect(Object.keys(result).length).to.be.equal(2);
             expect(result.firmwarePath).to.be.equal("/foobar/iot-flash-1234-fooapp/.pio/build/barBoard/firmware.bin");
-            expect(result.stdout).to.be.equal("cd /foobar/iot-flash-1234-fooapp/ ;platformio run -e barBoard");
+            expect(result.stdout).to.be.equal("cd /foobar/iot-flash-1234-fooapp/; platformio update; platformio run -e barBoard");
             done();
         });
 
@@ -358,7 +358,7 @@ describe("IotManager", function() {
 
         fs.existsSync.restore();
     });
-    
+
     after(() => {
 
     });

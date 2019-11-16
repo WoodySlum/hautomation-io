@@ -9,9 +9,10 @@
 #endif
 
 #include <ESP8266WiFi.h>
-#include <ESP8266HTTPClient.h>
+#include <WiFiClient.h>
 #include <ESP8266WebServer.h>
 #include <ESP8266mDNS.h>
+#include <ESP8266HTTPClient.h>
 #include <ESP8266httpUpdate.h>
 #include <ESP8266HTTPUpdateServer.h>
 #define ARDUINOJSON_ENABLE_PROGMEM 0
@@ -23,6 +24,7 @@ extern "C" {
 class Hautomation {
   public:
     Hautomation();
+    ESP8266WebServer &getWebServer();
     JsonObject &parseJson(DynamicJsonBuffer &jsonBuffer, String json);
     void setup(String jsonConfiguration);
     void loop();
@@ -31,12 +33,12 @@ class Hautomation {
     void postSensorValue(String sensorType, float value);
     JsonVariant &getConfig();
     void rest(int mode, long duration);
+    void ping();
   private:
     void checkRun();
     void httpUpdateServer();
     void connect();
     void parseConfig(String jsonConfiguration);
-    void ping();
     void updateFirmware();
     void saveCounter(int value);
     int loadCounter();

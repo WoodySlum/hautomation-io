@@ -281,7 +281,7 @@ class IotManager {
             this.writeDescriptor(tmpDir, appId);
             const self = this;
 
-            this.installationManager.executeCommand("cd " + tmpDir + " ;platformio run -e " + this.iotApps[appId].board + (flash?" -t upload":""), false, (error, stdout, stderr) => {
+            this.installationManager.executeCommand("cd " + tmpDir + "; platformio update; platformio run -e " + this.iotApps[appId].board + (flash?" -t upload":""), false, (error, stdout, stderr) => {
                 if (error) {
                     self.isBuildingApp = false;
                     cb(error);
@@ -383,7 +383,7 @@ class IotManager {
             }
         });
 
-        return iotFound;
+        return Object.assign({}, iotFound);
     }
 
     /**
@@ -397,7 +397,7 @@ class IotManager {
 
         this.iots.forEach((iot) => {
             if (!app || app === iot.iotApp) {
-                iots.push(iot);
+                iots.push(Object.assign({}, iot));
             }
         });
 
@@ -536,7 +536,7 @@ class IotManager {
      */
     getWiringSchemaForLib(lib) {
         if (this.iotLibs[lib] && this.iotLibs[lib].wiringSchema) {
-            return this.iotLibs[lib].wiringSchema;
+            return JSON.parse(JSON.stringify(this.iotLibs[lib].wiringSchema)); // Create a deep copy of base object
         } else {
             return {left:{}, right:{}, up:{}, down:{}};
         }

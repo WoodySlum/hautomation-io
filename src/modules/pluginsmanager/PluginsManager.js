@@ -87,7 +87,8 @@ const INTERNAL_PLUGINS = [
     "percent-sensor",
     "cpu-usage-sensor",
     "ram-usage-sensor",
-    "rom-usage-sensor"
+    "rom-usage-sensor",
+    "esp8266-roomba"
 ];
 
 const CORE_PLUGINS = [

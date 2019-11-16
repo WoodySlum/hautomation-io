@@ -107,6 +107,15 @@ class ConfigurationAPI {
         PrivateProperties.oprivate(this).formConfiguration.saveConfig(data);
     }
 
+    /**
+     * Returns the conf manager
+     *
+     * @returns {ConfManager}      The conf manager
+     */
+    getConfManager() {
+        return PrivateProperties.oprivate(this).formConfiguration.confManager;
+    }
+
 }
 
 module.exports = {class:ConfigurationAPI};
