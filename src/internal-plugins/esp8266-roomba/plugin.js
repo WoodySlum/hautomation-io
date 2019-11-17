@@ -16,6 +16,93 @@ const ROOMBA_DOCK = "dock";
 function loaded(api) {
     api.init();
 
+    /**
+     * This class provides a form for roomba actions
+     * @class
+     */
+    class RoombaScenarioForm extends api.exported.FormObject.class {
+        /**
+         * Constructor
+         *
+         * @param  {number} [id=null]                  An identifier
+         * @param  {string} [roomba=null]              The roomba identifier
+         * @param  {string} [command=null]              The command
+         * @returns {RoombaScenarioForm} The instance
+         */
+        constructor(id = null, roomba = null, command = null) {
+            super(id);
+
+            /**
+             * @Property("roomba");
+             * @Title("esp8266.roomba.scenario.roomba");
+             * @Type("string");
+             * @Enum("getRoombaIds");
+             * @EnumNames("getRoombaNames");
+             */
+            this.roomba = roomba;
+
+            /**
+             * @Property("command");
+             * @Title("esp8266.roomba.scenario.command");
+             * @Type("string");
+             * @Enum("getRoombaCommandIds");
+             * @EnumNames("getRoombaCommandNames");
+             * @Display("radio");
+             */
+            this.command = command;
+        }
+
+        /**
+         * Form injection method for roomba id
+         *
+         * @param  {...Object} inject The hue list array
+         * @returns {Array}        An array of hue ids
+         */
+        static getRoombaIds(...inject) {
+            return inject[0];
+        }
+
+        /**
+         * Form injection method for roomba names
+         *
+         * @param  {...Object} inject The hue list array
+         * @returns {Array}        An array of hue ids
+         */
+        static getRoombaNames(...inject) {
+            return inject[1];
+        }
+
+        /**
+         * Form injection method for roomba command id
+         *
+         * @param  {...Object} inject The hue list array
+         * @returns {Array}        An array of hue ids
+         */
+        static getRoombaCommandIds(...inject) {
+            return inject[2];
+        }
+
+        /**
+         * Form injection method for roomba command names
+         *
+         * @param  {...Object} inject The hue list array
+         * @returns {Array}        An array of hue ids
+         */
+        static getRoombaCommandNames(...inject) {
+            return inject[3];
+        }
+
+        /**
+         * Convert json data
+         *
+         * @param  {Object} data Some key / value data
+         * @returns {RoombaScenarioForm}      A form object
+         */
+        json(data) {
+            return new RoombaScenarioForm(data.id, data.roomba, data.command);
+        }
+    }
+
 
     /**
      * This class manage Roomba esp8266
@@ -45,16 +132,58 @@ function loaded(api) {
             const self = this;
             this.api.coreAPI.registerEvent(espPlugin.constants().PING_EVENT_KEY, (data) => {
                 const iot = self.api.iotAPI.getIot(data.id);
-                this.roombas[parseInt(data.id)] = Object.assign(iot, data);
                 if (iot && iot.iotApp === "esp8266-roomba") { // This is for me
+                    this.roombas[parseInt(data.id)] = Object.assign(iot, data);
                     self.api.exported.Logger.info("Received new Roomba ping " + iot.name);
                     this.generateTiles(data.id, iot.name);
+                    this.registerScenarioForm();
                 }
 
                 this.api.webAPI.register(this, this.api.webAPI.constants().POST, ":/" + data.id + "/[set]/[action]/", this.api.webAPI.Authentication().AUTH_USAGE_LEVEL);
             });
 
             this.api.webAPI.register(this, this.api.webAPI.constants().POST, WS_ESP8266_ROOMBA_BASE_ROUTE + "[id]/[command]/", this.api.webAPI.Authentication().AUTH_USAGE_LEVEL);
+        }
+
+        /**
+         * Get rommba id list
+         *
+         * @returns {Array}     The roomba id list
+         */
+        getRoombaIds() {
+            return Object.keys(this.roombas);
+        }
+
+        /**
+         * Get rommba name list
+         *
+         * @returns {Array}     The roomba name list
+         */
+        getRoombaNames() {
+            const names = [];
+            Object.keys(this.roombas).forEach((key) => {
+                names.push(this.roombas[key].name);
+            });
+
+            return names;
+        }
+
+        /**
+         * Get command id list
+         *
+         * @returns {Array}     The command id list
+         */
+        getRoombaCommandIds() {
+            return [ROOMBA_CLEAN, ROOMBA_STOP, ROOMBA_SPOT, ROOMBA_DOCK];
+        }
+
+        /**
+         * Get command name list
+         *
+         * @returns {Array}     The command name list
+         */
+        getRoombaCommandNames() {
+            return [this.api.translateAPI.t("esp8266.roomba.clean"), this.api.translateAPI.t("esp8266.roomba.stop"), this.api.translateAPI.t("esp8266.roomba.spot"), this.api.translateAPI.t("esp8266.roomba.dock")];
         }
 
         /**
@@ -70,6 +199,23 @@ function loaded(api) {
         }
 
         /**
+         * Register scenario form
+         */
+        registerScenarioForm() {
+            this.api.scenarioAPI.registerWithInjection(RoombaScenarioForm, (scenario) => {
+                if (scenario && scenario.RoombaScenarioForm && scenario.RoombaScenarioForm.length > 0) {
+                    scenario.RoombaScenarioForm.forEach((roombaScenarioForm) => {
+                        const self = this;
+                        const action = new Promise((resolve, reject) => {
+                            self.processRoombaCommand(roombaScenarioForm.roomba, roombaScenarioForm.command, resolve, reject);
+                        });
+                        action.then();
+                    });
+                }
+            }, this.api.translateAPI.t("esp8266.roomba.scenario.title"), null, true, this.getRoombaIds(), this.getRoombaNames(), this.getRoombaCommandIds(), this.getRoombaCommandNames());
+        }
+
+        /**
          * Process a roomba command
          *
          * @param  {string} id The roomba id
@@ -81,6 +227,7 @@ function loaded(api) {
             const roomba = this.roombas[parseInt(id)];
             if (roomba) {
                 if (command == ROOMBA_START || command == ROOMBA_CLEAN ||command == ROOMBA_STOP ||command == ROOMBA_SPOT ||command == ROOMBA_DOCK) {
+                    this.api.exported.Logger.info("Trigger " + "http://" + roomba.ip + "/" + command);
                     request("http://" + roomba.ip + "/" + command, { }, (err) => {
                         if (err) {
                             reject(this.api.webAPI.APIResponse(false, {}, 7142042425, err.message));

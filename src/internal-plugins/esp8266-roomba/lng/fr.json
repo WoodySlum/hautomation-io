@@ -1,3 +1,11 @@
 {
-    "esp8266.roomba.start": "Démarrer %@"
+    "esp8266.roomba.start": "Démarrer %@",
+    "esp8266.roomba.scenario.title": "Contrôler un Roomba",
+    "esp8266.roomba.scenario.roomba": "Roomba",
+    "esp8266.roomba.scenario.command": "Command",
+    "esp8266.roomba.start": "Démarrer",
+    "esp8266.roomba.clean": "Nettoyer",
+    "esp8266.roomba.stop": "Arrêter",
+    "esp8266.roomba.spot": "Spot",
+    "esp8266.roomba.dock": "Retour à la base"
 }
