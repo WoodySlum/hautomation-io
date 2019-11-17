@@ -1,5 +1,5 @@
 {
-    "esp8266.roomba.start": "Start %@",
+    "esp8266.roomba.tile.start": "Start %@",
     "esp8266.roomba.scenario.title": "Control Roomba",
     "esp8266.roomba.scenario.roomba": "Roomba",
     "esp8266.roomba.scenario.command": "Command",

@@ -194,7 +194,7 @@ function loaded(api) {
          */
         generateTiles(id, name) {
             const buttons = [{stop: ""}, {spot: ""}, {dock: ""}];
-            const tile = this.api.dashboardAPI.Tile(id, this.api.dashboardAPI.TileType().TILE_GENERIC_ACTION, api.exported.Icons.class.list()["contrast"], null, this.api.translateAPI.t("esp8266.roomba.start", name), null, null, null, 0, 23, "esp8266-roomba/" + id + "/start/", {buttons: buttons});
+            const tile = this.api.dashboardAPI.Tile(id, this.api.dashboardAPI.TileType().TILE_GENERIC_ACTION, api.exported.Icons.class.list()["contrast"], null, this.api.translateAPI.t("esp8266.roomba.tile.start", name), null, null, null, 0, 23, "esp8266-roomba/" + id + "/start/", {buttons: buttons});
             this.api.dashboardAPI.registerTile(tile);
         }
 

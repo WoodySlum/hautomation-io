@@ -1,5 +1,5 @@
 {
-    "esp8266.roomba.start": "Démarrer %@",
+    "esp8266.roomba.tile.start": "Démarrer %@",
     "esp8266.roomba.scenario.title": "Contrôler un Roomba",
     "esp8266.roomba.scenario.roomba": "Roomba",
     "esp8266.roomba.scenario.command": "Command",
