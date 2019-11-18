@@ -25,6 +25,8 @@ const IOT_MANAGER_DEL = IOT_MANAGER_DEL_BASE + "/[id*]/";
 
 const IOT_MANAGER_FLASH_BASE = ":/iot/flash";
 const IOT_MANAGER_FLASH = IOT_MANAGER_FLASH_BASE + "/[id]/";
+const IOT_MANAGER_FLASH_STATUS_BASE = ":/iot/status/flash/get";
+const IOT_MANAGER_FLASH_STATUS = IOT_MANAGER_FLASH_STATUS_BASE + "/[id]/";
 const IOT_MANAGER_FIRMWARE_GET_BASE = ":/iot/firmware/get";
 const IOT_MANAGER_FIRMWARE_GET = IOT_MANAGER_FIRMWARE_GET_BASE + "/[id]/";
 
@@ -55,6 +57,7 @@ class IotManager {
         this.iotApps = {};
         this.iotLibs = {};
         this.isBuildingApp = false;
+        this.builds = {};
 
         try {
             this.iots = this.confManager.loadData(Object, CONF_MANAGER_KEY, true);
@@ -75,6 +78,7 @@ class IotManager {
         this.webServices.registerAPI(this, WebServices.POST, IOT_MANAGER_POST, Authentication.AUTH_ADMIN_LEVEL);
         this.webServices.registerAPI(this, WebServices.DELETE, IOT_MANAGER_DEL, Authentication.AUTH_ADMIN_LEVEL);
         this.webServices.registerAPI(this, WebServices.POST, IOT_MANAGER_FLASH, Authentication.AUTH_ADMIN_LEVEL);
+        this.webServices.registerAPI(this, WebServices.GET, IOT_MANAGER_FLASH_STATUS, Authentication.AUTH_ADMIN_LEVEL);
         this.webServices.registerAPI(this, WebServices.GET, IOT_MANAGER_FIRMWARE_GET, Authentication.AUTH_ADMIN_LEVEL);
     }
 
@@ -505,19 +509,31 @@ class IotManager {
                 const iot = self.getIot(apiRequest.data.id);
                 if (iot) {
                     if (self.getIotApp(iot.iotApp)) {
+                        this.builds[apiRequest.data.id] = null;
                         this.build(apiRequest.data.id, iot.iotApp, true, iot, (error, details) => {
+                            this.builds[apiRequest.data.id] = details;
                             if (!error) {
-                                resolve(new APIResponse.class(true, {success:true, details:details.stdout, firmwareBuilt:((details && details.firmwarePath) ? true : false)}));
+                                this.builds[apiRequest.data.id] = {success:true, details:details.stdout, firmwareBuilt:((details && details.firmwarePath) ? true : false)};
                             } else {
-                                reject(new APIResponse.class(false, {firmwareBuilt:((details && details.firmwarePath) ? true : false)}, 8129, error.message));
+                                this.builds[apiRequest.data.id] = {success:false, error:error.message, firmwareBuilt:((details && details.firmwarePath) ? true : false)};
                             }
                         });
-
+                        resolve(new APIResponse.class(true, {success:true}));
                     } else {
                         reject(new APIResponse.class(false, {}, 8128, "Unexisting iot app found"));
                     }
                 } else {
                     reject(new APIResponse.class(false, {}, 8130, "Unexisting iot found"));
+                }
+            });
+        } else if (apiRequest.route.startsWith(IOT_MANAGER_FLASH_STATUS_BASE)) {
+            return new Promise((resolve, reject) => {
+                if (this.builds[apiRequest.data.id]) {
+                    resolve(new APIResponse.class(true, this.builds[apiRequest.data.id]));
+                } else if (this.isBuilding) {
+                    resolve(new APIResponse.class(true, {building:true}));
+                } else {
+                    reject(new APIResponse.class(false, {}, 8127, "No build"));
                 }
             });
         } else if (apiRequest.route.startsWith(IOT_MANAGER_FIRMWARE_GET_BASE)) {

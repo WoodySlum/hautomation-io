@@ -71,7 +71,7 @@ describe("IotManager", function() {
         expect(confManager.loadData.calledOnce).to.be.true;
         expect(iotManager.iots.length).to.be.equal(0);
         expect(formManager.register.calledTwice).to.be.true;
-        expect(webServices.registerAPI.callCount).to.be.equal(6);
+        expect(webServices.registerAPI.callCount).to.be.equal(7);
 
         confManager.loadData.restore();
         formManager.register.restore();
