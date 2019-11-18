@@ -8,6 +8,7 @@ const Authentication = require("./../authentication/Authentication");
 const IotForm = require("./IotForm");
 const IotsListForm = require("./IotsListForm");
 
+const FLASH_TIMEOUT_REQUEST_S = 10 * 60;
 const CONF_MANAGER_KEY = "iots";
 const SRC_FOLDER = "src";
 const LIB_FOLDER = "lib";
@@ -24,6 +25,8 @@ const IOT_MANAGER_DEL = IOT_MANAGER_DEL_BASE + "/[id*]/";
 
 const IOT_MANAGER_FLASH_BASE = ":/iot/flash";
 const IOT_MANAGER_FLASH = IOT_MANAGER_FLASH_BASE + "/[id]/";
+const IOT_MANAGER_FIRMWARE_GET_BASE = ":/iot/firmware/get";
+const IOT_MANAGER_FIRMWARE_GET = IOT_MANAGER_FIRMWARE_GET_BASE + "/[id]/";
 
 /**
  * This class allows to manage iot apps
@@ -72,6 +75,7 @@ class IotManager {
         this.webServices.registerAPI(this, WebServices.POST, IOT_MANAGER_POST, Authentication.AUTH_ADMIN_LEVEL);
         this.webServices.registerAPI(this, WebServices.DELETE, IOT_MANAGER_DEL, Authentication.AUTH_ADMIN_LEVEL);
         this.webServices.registerAPI(this, WebServices.POST, IOT_MANAGER_FLASH, Authentication.AUTH_ADMIN_LEVEL);
+        this.webServices.registerAPI(this, WebServices.GET, IOT_MANAGER_FIRMWARE_GET, Authentication.AUTH_ADMIN_LEVEL);
     }
 
     /**
@@ -205,6 +209,7 @@ class IotManager {
         this.iotApps[appId].options = options?options:{};
         this.iotApps[appId].wiringSchema = wiringSchema;
         this.iotApps[appId].receipe = [];
+        this.iotApps[appId].firmwareBuildPath = {};
 
         // Register form
         this.formManager.register(form, ...inject);
@@ -230,12 +235,13 @@ class IotManager {
     /**
      * Build a firmware for a specific appId
      *
+     * @param  {string}   id         The iot identifier
      * @param  {string}   appId         An app identifier
      * @param  {boolean}  [flash=false] `true` if USB flash sequence should be done after build, `false` otherwise
      * @param  {Object}   [config=null] A configuration injected to firmware
      * @param  {Function} cb            A callback `(error, result) => {}` called when firmware / flash is done. The result object contains 2 properties, `firmwarePath` for the firmware, `stdout` for the results
      */
-    build(appId, flash = false, config = null, cb) {
+    build(id, appId, flash = false, config = null, cb) {
         if (!this.isBuildingApp) {
             this.isBuildingApp = true;
 
@@ -282,11 +288,19 @@ class IotManager {
             const self = this;
 
             this.installationManager.executeCommand("cd " + tmpDir + "; platformio update; platformio run -e " + this.iotApps[appId].board + (flash?" -t upload":""), false, (error, stdout, stderr) => {
+                const firmwarePath = tmpDir + ".pio/build/" + this.iotApps[appId].board + "/firmware.bin";
+                if (fs.existsSync(firmwarePath)) {
+                    this.iotApps[appId].firmwareBuildPath[id] = firmwarePath;
+                }
                 if (error) {
                     self.isBuildingApp = false;
-                    cb(error);
+                    if (fs.existsSync(firmwarePath)) {
+                        cb(error, {firmwarePath:firmwarePath});
+                    } else {
+                        cb(error);
+                    }
+
                 } else {
-                    const firmwarePath = tmpDir + ".pio/build/" + this.iotApps[appId].board + "/firmware.bin";
                     if (fs.existsSync(firmwarePath)) {
                         self.isBuildingApp = false;
                         cb(null, {firmwarePath:firmwarePath, stdout:stdout});
@@ -486,20 +500,37 @@ class IotManager {
                 }
             });
         } else if (apiRequest.route.startsWith(IOT_MANAGER_FLASH_BASE)) {
+            apiRequest.req.setTimeout(FLASH_TIMEOUT_REQUEST_S * 1000);
             return new Promise((resolve, reject) => {
                 const iot = self.getIot(apiRequest.data.id);
                 if (iot) {
                     if (self.getIotApp(iot.iotApp)) {
-                        this.build(iot.iotApp, true, iot, (error, details) => {
+                        this.build(apiRequest.data.id, iot.iotApp, true, iot, (error, details) => {
                             if (!error) {
-                                resolve(new APIResponse.class(true, {success:true, details:details.stdout}));
+                                resolve(new APIResponse.class(true, {success:true, details:details.stdout, firmwareBuilt:((details && details.firmwarePath) ? true : false)}));
                             } else {
-                                reject(new APIResponse.class(false, {}, 8129, error.message));
+                                reject(new APIResponse.class(false, {firmwareBuilt:((details && details.firmwarePath) ? true : false)}, 8129, error.message));
                             }
                         });
 
                     } else {
                         reject(new APIResponse.class(false, {}, 8128, "Unexisting iot app found"));
+                    }
+                } else {
+                    reject(new APIResponse.class(false, {}, 8130, "Unexisting iot found"));
+                }
+            });
+        } else if (apiRequest.route.startsWith(IOT_MANAGER_FIRMWARE_GET_BASE)) {
+            return new Promise((resolve, reject) => {
+                const iot = self.getIot(apiRequest.data.id);
+                if (iot) {
+                    if (this.iotApps[iot.iotApp].firmwareBuildPath[apiRequest.data.id]) {
+                        apiRequest.res.setHeader("Content-type", "application/octet-stream");
+                        apiRequest.res.setHeader("Content-disposition", "attachment; filename=firmware-" + apiRequest.data.id + ".bin");
+                        const filestream = fs.createReadStream(this.iotApps[iot.iotApp].firmwareBuildPath[apiRequest.data.id]);
+                        filestream.pipe(apiRequest.res);
+                    } else {
+                        reject(new APIResponse.class(false, {}, 8136, "No firmware built"));
                     }
                 } else {
                     reject(new APIResponse.class(false, {}, 8130, "Unexisting iot found"));

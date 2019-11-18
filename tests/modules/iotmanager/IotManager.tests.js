@@ -71,7 +71,7 @@ describe("IotManager", function() {
         expect(confManager.loadData.calledOnce).to.be.true;
         expect(iotManager.iots.length).to.be.equal(0);
         expect(formManager.register.calledTwice).to.be.true;
-        expect(webServices.registerAPI.callCount).to.be.equal(5);
+        expect(webServices.registerAPI.callCount).to.be.equal(6);
 
         confManager.loadData.restore();
         formManager.register.restore();
@@ -210,7 +210,7 @@ describe("IotManager", function() {
 
         iotManager.registerLib("/tmp/foobar", "foolib", 2, {}, IotLibForm);
         iotManager.registerApp("/tmp/foobar", "fooapp", "Foo Bar", 5, "fooPlatform", "barBoard", "foobarFramework", ["foolib"], {foo:"bar"}, {}, IotAppForm);
-        iotManager.build("fooapp", false, {foobar:"barfoo"}, (error, result) => {
+        iotManager.build("fooiot", "fooapp", false, {foobar:"barfoo"}, (error, result) => {
             expect(fs.ensureDirSync.calledOnce).to.be.true;
             expect(fs.copySync.callCount).to.be.equal(5);
             expect(fs.readFileSync.calledOnce).to.be.true;

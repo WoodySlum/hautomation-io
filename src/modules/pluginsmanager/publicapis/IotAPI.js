@@ -94,13 +94,14 @@ class IotAPI {
     /**
      * Build a firmware for a specific appId
      *
+     * @param  {string}   id         The iot identifier
      * @param  {string}   appId         An app identifier
      * @param  {Boolean}  [flash=false] `true` if USB flash sequence should be done after build, `false` otherwise
      * @param  {Object}   [config=null] A configuration injected to firmware
      * @param  {Function} cb            A callback `(error, result) => {}` called when firmware / flash is done. The result object contains 2 properties, `firmwarePath` for the firmware, `stdout` for the results
      */
-    build(appId, flash = false, config = null, cb) {
-        PrivateProperties.oprivate(this).iotManager.build(appId, flash, config, cb);
+    build(id, appId, flash = false, config = null, cb) {
+        PrivateProperties.oprivate(this).iotManager.build(id, appId, flash, config, cb);
     }
 
     /**
