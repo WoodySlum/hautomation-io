@@ -94,10 +94,20 @@ function loaded(api) {
                 // Dispatch pings initial after 5 seconds for dependent plugins
                 setTimeout((self) => {
                     Object.keys(this.configurations).forEach((iotKey) => {
+                        self.api.iotAPI.setUpgradeUrl(iotKey, ((self.configurations[iotKey] && self.configurations[iotKey].ip) ? self.getUpgradeUrl(self.configurations[iotKey].ip) : null));
                         self.api.coreAPI.dispatchEvent(PING_EVENT_KEY, Object.assign({id:iotKey}, self.configurations[iotKey]));
                     });
                 }, 5000, this);
             }
+        }
+
+        /**
+         * Get the upgrade URL
+         *
+         * @param  {string} ip  The ip address
+         */
+        getUpgradeUrl(ip) {
+            return "http://" + ip + "/update";
         }
 
 
@@ -189,6 +199,7 @@ function loaded(api) {
                 if (iot) {
                     this.configurations[iot.id.toString()] = apiRequest.params;
                     this.configurations[iot.id.toString()].lastUpdated = this.api.exported.DateUtils.class.timestamp();
+                    this.api.iotAPI.setUpgradeUrl(iot.id, ((this.configurations[iot.id] && this.configurations[iot.id].ip) ? this.getUpgradeUrl(this.configurations[iot.id].ip) : null));
                     this.api.coreAPI.dispatchEvent(PING_EVENT_KEY, Object.assign({id:iot.id.toString()}, this.configurations[iot.id.toString()]));
                     this.api.configurationAPI.getConfManager().saveData(this.configurations, CONF_KEY);
                 }

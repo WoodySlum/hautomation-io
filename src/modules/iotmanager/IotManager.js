@@ -1,5 +1,6 @@
 "use strict";
 const fs = require("fs-extra");
+const md5File = require("md5-file");
 const Logger = require("./../../logger/Logger");
 const DateUtils = require("./../../utils/DateUtils");
 const WebServices = require("./../../services/webservices/WebServices");
@@ -57,7 +58,6 @@ class IotManager {
         this.iotApps = {};
         this.iotLibs = {};
         this.isBuildingApp = false;
-        this.builds = {};
 
         try {
             this.iots = this.confManager.loadData(Object, CONF_MANAGER_KEY, true);
@@ -214,6 +214,8 @@ class IotManager {
         this.iotApps[appId].wiringSchema = wiringSchema;
         this.iotApps[appId].receipe = [];
         this.iotApps[appId].firmwareBuildPath = {};
+        this.iotApps[appId].builds = {};
+        this.iotApps[appId].upgradeUrls = {};
 
         // Register form
         this.formManager.register(form, ...inject);
@@ -481,7 +483,8 @@ class IotManager {
 
                             self.iots = self.confManager.setData(CONF_MANAGER_KEY, apiRequest.data, self.iots, self.comparator);
                             self.registerIotsListForm();
-                            resolve(new APIResponse.class(true, {success:true, id:apiRequest.data.id}));
+
+                            resolve(new APIResponse.class(true, {success:true, id:apiRequest.data.id, iot: "toto"}));
                         } else {
                             reject(new APIResponse.class(false, {}, 8128, "Unexisting iot app found"));
                         }
@@ -509,13 +512,13 @@ class IotManager {
                 const iot = self.getIot(apiRequest.data.id);
                 if (iot) {
                     if (self.getIotApp(iot.iotApp)) {
-                        this.builds[apiRequest.data.id] = null;
+                        this.iotApps[iot.iotApp].builds[apiRequest.data.id] = null;
                         this.build(apiRequest.data.id, iot.iotApp, true, iot, (error, details) => {
-                            this.builds[apiRequest.data.id] = details;
+                            this.iotApps[iot.iotApp].builds[apiRequest.data.id] = details;
                             if (!error) {
-                                this.builds[apiRequest.data.id] = {success:true, details:details.stdout, firmwareBuilt:((details && details.firmwarePath) ? true : false)};
+                                this.iotApps[iot.iotApp].builds[apiRequest.data.id] = {success:true, details:details.stdout, firmwareBuilt:((details && details.firmwarePath) ? true : false)};
                             } else {
-                                this.builds[apiRequest.data.id] = {success:false, error:error.message, firmwareBuilt:((details && details.firmwarePath) ? true : false)};
+                                this.iotApps[iot.iotApp].builds[apiRequest.data.id] = {success:false, error:error.message, firmwareBuilt:((details && details.firmwarePath) ? true : false)};
                             }
                         });
                         resolve(new APIResponse.class(true, {success:true}));
@@ -528,8 +531,9 @@ class IotManager {
             });
         } else if (apiRequest.route.startsWith(IOT_MANAGER_FLASH_STATUS_BASE)) {
             return new Promise((resolve, reject) => {
-                if (this.builds[apiRequest.data.id]) {
-                    resolve(new APIResponse.class(true, this.builds[apiRequest.data.id]));
+                const iot = this.getIot(apiRequest.data.id);
+                if (iot && iot.iotApp && this.iotApps[iot.iotApp].builds[apiRequest.data.id]) {
+                    resolve(new APIResponse.class(true, Object.assign(this.iotApps[iot.iotApp].builds[apiRequest.data.id], {upgradeUrl:this.iotApps[iot.iotApp].upgradeUrls[apiRequest.data.id]})));
                 } else if (this.isBuilding) {
                     resolve(new APIResponse.class(true, {building:true}));
                 } else {
@@ -541,8 +545,9 @@ class IotManager {
                 const iot = self.getIot(apiRequest.data.id);
                 if (iot) {
                     if (this.iotApps[iot.iotApp].firmwareBuildPath[apiRequest.data.id]) {
+                        const md5Hash = md5File.sync(this.iotApps[iot.iotApp].firmwareBuildPath[apiRequest.data.id]);
                         apiRequest.res.setHeader("Content-type", "application/octet-stream");
-                        apiRequest.res.setHeader("Content-disposition", "attachment; filename=firmware-" + apiRequest.data.id + ".bin");
+                        apiRequest.res.setHeader("Content-disposition", "attachment; filename=firmware-" + apiRequest.data.id + "-md5-" + md5Hash + ".bin");
                         const filestream = fs.createReadStream(this.iotApps[iot.iotApp].firmwareBuildPath[apiRequest.data.id]);
                         filestream.pipe(apiRequest.res);
                     } else {
@@ -612,6 +617,21 @@ class IotManager {
             this.iotLibs[iotAppOrLibKey].receipe.push(ingredient);
         } else if (this.iotApps[iotAppOrLibKey]) {
             this.iotApps[iotAppOrLibKey].receipe.push(ingredient);
+        }
+    }
+
+    /**
+     * Set the upgrade URL for a specific IoT
+     *
+     * @param  {string} id    The iot identifier
+     * @param  {string} upgradeUrl   The upgrade url
+     */
+    setUpgradeUrl(id, upgradeUrl) {
+        const iot = this.getIot(id);
+        if (iot && iot.iotApp) {
+            this.iotApps[iot.iotApp].upgradeUrls[iot.id] = upgradeUrl;
+        } else {
+            throw Error("iot or iot app not found (id " + id + ")");
         }
     }
 }

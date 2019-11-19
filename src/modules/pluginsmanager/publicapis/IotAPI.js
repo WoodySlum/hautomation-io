@@ -156,6 +156,16 @@ class IotAPI {
     addIngredientForReceipe(iotAppOrLibKey, reference, description, quantity = 1, isMandatory = true, isMain = false) {
         PrivateProperties.oprivate(this).iotManager.addIngredientForReceipe(iotAppOrLibKey, reference, description, quantity, isMandatory, isMain);
     }
+
+    /**
+     * Set the upgrade URL for a specific IoT
+     *
+     * @param  {string} id    The iot identifier
+     * @param  {string} upgradeUrl   The upgrade url
+     */
+    setUpgradeUrl(id, upgradeUrl) {
+        PrivateProperties.oprivate(this).iotManager.setUpgradeUrl(id, upgradeUrl);
+    }
 }
 
 module.exports = {class:IotAPI};

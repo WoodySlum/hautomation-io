@@ -132,17 +132,21 @@ class GatewayManager {
      * @param  {GatewayManager} context This instance
      */
     sandboxedRequestresponse(data, threadsManager, context) {
-        if (!data.error && data.statusCode === 200) {
-            Logger.info("Registration to gateway OK (" + data.bootMode + ")");
-        } else if (data.error) {
-            Logger.err(data.error.message);
-        } else {
-            if (data.statusCode === 527 && context && !context.customIdentifierMessageSent) {
-                context.messageManager.sendMessage("*", context.translateManager.t("gateway.manager.custom.identifier.already.taken", context.appConfiguration.customIdentifier));
-                context.appConfiguration.customIdentifier = null;
-                context.customIdentifierMessageSent = true;
+        if (data) {
+            if (!data.error && data.statusCode === 200) {
+                Logger.info("Registration to gateway OK (" + data.bootMode + ")");
+            } else if (data.error) {
+                Logger.err(data.error.message);
+            } else {
+                if (data.statusCode === 527 && context && !context.customIdentifierMessageSent) {
+                    context.messageManager.sendMessage("*", context.translateManager.t("gateway.manager.custom.identifier.already.taken", context.appConfiguration.customIdentifier));
+                    context.appConfiguration.customIdentifier = null;
+                    context.customIdentifierMessageSent = true;
+                }
+                Logger.err("Registration to gateway fails (" + data.statusCode + ")");
             }
-            Logger.err("Registration to gateway fails (" + data.statusCode + ")");
+        } else {
+            Logger.err("No data for sandboxed request response");
         }
 
         try {

@@ -175,6 +175,9 @@ describe("IotManager", function() {
         expect(formManager.addAdditionalFields.calledOnce).to.be.true;
         expect(iotManager.iotLibs["foolib"].wiringSchema.left["3V3"][0]).to.be.equal("foobar");
         expect(iotManager.iotApps["fooapp"].wiringSchema.right["GND"][0]).to.be.equal("barfoo");
+        expect(iotManager.iotApps["fooapp"]).to.have.own.property("builds");
+        expect(iotManager.iotApps["fooapp"]).to.have.own.property("upgradeUrls");
+        expect(iotManager.iotApps["fooapp"]).to.have.own.property("firmwareBuildPath");
 
         fs.existsSync.restore();
         formManager.register.restore();
@@ -355,6 +358,23 @@ describe("IotManager", function() {
         iotManager.registerApp("/tmp/foobar", "fooapp", "Foo Bar", 5, "fooPlatform", "barBoard", "foobarFramework", ["foolib"], {foo:"bar"}, {right:{"GND":["barfoo"]}}, IotAppForm);
         iotManager.addIngredientForReceipe("fooapp", "bar", "foo", 3, false, false);
         expect(iotManager.iotApps["fooapp"].receipe.length).to.be.equal(2);
+
+        fs.existsSync.restore();
+    });
+
+    it("setUpgradeUrl should work well", function() {
+        const iotManager = new IotManager.class(appConfiguration, webServices, installationManager, formManager, environmentManager, confManager);
+        const fs = require("fs-extra");
+        sinon.stub(fs, "existsSync").callsFake((path) => {
+            return true;
+        });
+
+        iotManager.registerLib("/tmp/foobar", "foolib", 2, {left:{"3V3":["foobar"]}}, IotLibForm);
+        iotManager.registerApp("/tmp/foobar", "fooapp", "Foo Bar", 5, "fooPlatform", "barBoard", "foobarFramework", ["foolib"], {foo:"bar"}, {right:{"GND":["barfoo"]}}, IotAppForm);
+        iotManager.iots.push({id:1234, iotApp: "fooapp"});
+        iotManager.setUpgradeUrl("1234", "http://foo.bar");
+
+        expect(iotManager.iotApps["fooapp"].upgradeUrls[1234]).to.be.equal("http://foo.bar");
 
         fs.existsSync.restore();
     });
