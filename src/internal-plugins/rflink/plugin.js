@@ -52,9 +52,9 @@ function loaded(api) {
 
             /**
              * @Property("retry");
-             * @Type("number");
+             * @Type("string");
              * @Title("rflink.retry.policy");
-             * @Enum([0,1,2,3,4,5,10]);
+             * @Enum(["0","1","2","3","4","5","1"0]);
              * @EnumNames(["rflink.retry.policy.none", "rflink.retry.1s", "rflink.retry.2s", "rflink.retry.3s", "rflink.retry.4s", "rflink.retry.5s", "rflink.retry.10s"]);
              */
             this.retry = retry;
