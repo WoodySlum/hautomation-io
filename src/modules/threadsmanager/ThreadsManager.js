@@ -117,7 +117,7 @@ class ThreadsManager {
         if (this.threads[identifier] && this.isRunning(identifier)) {
             this.threads[identifier].slave.send({event:event, data:data});
         } else {
-            throw Error(ERROR_UNKNOWN_IDENTIFIER);
+            throw Error(ERROR_UNKNOWN_IDENTIFIER + " " + identifier);
         }
     }
 

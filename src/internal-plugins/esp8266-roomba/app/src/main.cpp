@@ -1,4 +1,6 @@
 #include <Hautomation.h>
+#include <string>
+#include <memory>
 
 String JSON_CONFIG = "%config%";
 Hautomation hautomation = Hautomation();
@@ -11,7 +13,6 @@ void resetRoomba() {
 	digitalWrite(BRC_PIN, LOW);
 	delay(100);
 	digitalWrite(BRC_PIN, HIGH);
-	Serial.begin(19200);
 
     Serial.write(128);
     delay(50);
@@ -95,6 +96,19 @@ void ping() {
 }
 
 void statusRoomba() {
+	byte data[2] = {0,0}; // array to store data from battery
+	byte i = 0;
+	Serial.write(142); // Send a packet of sensor data bytes
+	Serial.write(22);  // Get battery value
+	delay(200);
+	while (Serial.available()) {
+		data[i++] = Serial.read();
+	}
+	// highbyte is shifted left eight bits, lowbyte is added to highbyte
+	// encoder_count=highbyte<<8+lowbyte
+	word batteryValue = 0;
+	batteryValue = (data[0]<<8)+data[1];
+
 /*    char tmp[5];
 	char buffer[10];
     int i = 0;
@@ -144,7 +158,7 @@ void statusRoomba() {
 		status_log += " bytes.\n";
 	}*/
 
-    hautomation.getWebServer().send(200, "application/json", "{\"success\":true}");
+    hautomation.getWebServer().send(200, "application/json", "{\"success\":true, \"level\":\"" + String(batteryValue) + "\"}");
 }
 
 
