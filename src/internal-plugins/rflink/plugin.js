@@ -37,9 +37,10 @@ function loaded(api) {
          * @param  {number} id The identifier
          * @param  {string} port The port
          * @param  {number} retry Retry policy
+         * @param  {boolean} flash Flash Rflink
          * @returns {RFlinkForm}        The instance
          */
-        constructor(id, port, retry) {
+        constructor(id, port, retry, flash) {
             super(id);
             /**
              * @Property("port");
@@ -54,10 +55,18 @@ function loaded(api) {
              * @Property("retry");
              * @Type("string");
              * @Title("rflink.retry.policy");
-             * @Enum(["0","1","2","3","4","5","1"0]);
+             * @Enum(["0","1","2","3","4","5","10"]);
              * @EnumNames(["rflink.retry.policy.none", "rflink.retry.1s", "rflink.retry.2s", "rflink.retry.3s", "rflink.retry.4s", "rflink.retry.5s", "rflink.retry.10s"]);
              */
             this.retry = retry;
+
+            /**
+             * @Property("flash");
+             * @Type("boolean");
+             * @Title("rflink.flash");
+             * @Default(false);
+             */
+            this.flash = flash;
         }
 
         /**
@@ -87,7 +96,7 @@ function loaded(api) {
          * @returns {RFlinkForm}      An instance
          */
         json(data) {
-            return new RFlinkForm(data.id, data.port, data.retry);
+            return new RFlinkForm(data.id, data.port, data.retry, data.flash);
         }
     }
 
@@ -134,18 +143,25 @@ function loaded(api) {
                         this.socatService.start();
                     }
                     this.service.restart();
+                    
+                    if (data.flash) {
+                        this.flashFirstInstallation(this);
+                    }
                 }
+
+                data.flash = false;
+                api.configurationAPI.saveData(data);
             });
 
             //api.timeEventAPI.register(this.upgrade, this, api.timeEventAPI.constants().EVERY_DAYS);
             if (!process.env.TEST) {
                 // Fix #49
                 // First installation flash
-                setTimeout((self) => {
-                    if (api.configurationAPI.getConfiguration() && api.configurationAPI.getConfiguration().port && !self.connected) {
-                        api.timeEventAPI.register(self.flashFirstInstallation, self, api.timeEventAPI.constants().EVERY_MINUTES);
-                    }
-                }, 60 * 1000, this);
+                // setTimeout((self) => {
+                //     if (api.configurationAPI.getConfiguration() && api.configurationAPI.getConfiguration().port && !self.connected) {
+                //         api.timeEventAPI.register(self.flashFirstInstallation, self, api.timeEventAPI.constants().EVERY_MINUTES);
+                //     }
+                // }, 60 * 1000, this);
             }
         }
 
@@ -156,9 +172,12 @@ function loaded(api) {
          * After 60 seconds, if we don't received RFLink version and a port is set through configuration, we try to download and update
          * last RFLink firmware. If it fails, the installation will give a try every minutes.
          *
-         * @param  {RFLink} [context=null] THe context (instance)
+         * @param  {RFLink} [context=null] The context (instance)
          */
         flashFirstInstallation(context = null) {
+            if (!context) {
+                context = this;
+            }
             if (api.configurationAPI.getConfiguration() && api.configurationAPI.getConfiguration().port && api.configurationAPI.getConfiguration().port.length > 1 && !context.connected && !context.isFlashing) {
                 api.exported.Logger.info("RFLink seems to be not flashed, trying to install it ...");
                 context.service.stop();

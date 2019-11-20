@@ -10,5 +10,6 @@
     "rflink.retry.5s": "5 secondes",
     "rflink.retry.10s": "10 secondes",
     "rflink.installation.downloading": "Le module RFLink n'est pas reconnu, peut être parce que c'est une première installation. Le microprogramme va maintenant essayer de s'installer. Un message sera envoyé lorsque l'opération aura été réalisée avec succès.",
-    "rflink.installation.success": "Le module RFLink est maintenant prêt"
+    "rflink.installation.success": "Le module RFLink est maintenant prêt",
+    "rflink.flash": "Flasher le RFLink. A faire a la première mise à jour ou si vous souhaitez le mettre à jour"
 }
