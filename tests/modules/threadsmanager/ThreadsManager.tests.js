@@ -55,7 +55,7 @@ describe("ThreadsManager", function() {
             threadsManager.send("foo");
             expect(false).to.be.true;
         } catch(e) {
-            expect(e.message).to.be.equals(ThreadsManager.ERROR_UNKNOWN_IDENTIFIER);
+            expect(e.message).to.be.equals(ThreadsManager.ERROR_UNKNOWN_IDENTIFIER + " foo");
         }
     });
 
