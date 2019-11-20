@@ -137,7 +137,7 @@ function loaded(api) {
                 }
             });
 
-            api.timeEventAPI.register(this.upgrade, this, api.timeEventAPI.constants().EVERY_DAYS);
+            //api.timeEventAPI.register(this.upgrade, this, api.timeEventAPI.constants().EVERY_DAYS);
             if (!process.env.TEST) {
                 // Fix #49
                 // First installation flash
