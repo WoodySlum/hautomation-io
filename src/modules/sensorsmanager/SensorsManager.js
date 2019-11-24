@@ -17,9 +17,12 @@ const SENSORS_MANAGER_POST = SENSORS_MANAGER_POST_BASE + "/[id*]/";
 const SENSORS_MANAGER_GET = ":/sensors/get/";
 const SENSORS_MANAGER_DEL_BASE = ":/sensors/del";
 const SENSORS_MANAGER_DEL = SENSORS_MANAGER_DEL_BASE + "/[id*]/";
-const SENSORS_MANAGER_STATISTICS_DAY = ":/sensors/statistics/day/";
-const SENSORS_MANAGER_STATISTICS_MONTH = ":/sensors/statistics/month/";
-const SENSORS_MANAGER_STATISTICS_YEAR = ":/sensors/statistics/year/";
+const SENSORS_MANAGER_STATISTICS_DAY_BASE = ":/sensors/statistics/day";
+const SENSORS_MANAGER_STATISTICS_DAY = SENSORS_MANAGER_STATISTICS_DAY_BASE + "/[day*]/[month*]/[year*]/";
+const SENSORS_MANAGER_STATISTICS_MONTH_BASE = ":/sensors/statistics/month";
+const SENSORS_MANAGER_STATISTICS_MONTH = SENSORS_MANAGER_STATISTICS_MONTH_BASE + "/[month*]/[year*]/";
+const SENSORS_MANAGER_STATISTICS_YEAR_BASE = ":/sensors/statistics/year";
+const SENSORS_MANAGER_STATISTICS_YEAR = SENSORS_MANAGER_STATISTICS_YEAR_BASE + "/[year*]/";
 
 const ERROR_ALREADY_REGISTERED = "Already registered";
 const ERROR_NOT_REGISTERED = "Not registered";
@@ -432,14 +435,21 @@ class SensorsManager {
                     reject(new APIResponse.class(false, {}, 8109, e.message));
                 }
             });
-        } else if (apiRequest.route === SENSORS_MANAGER_STATISTICS_DAY) {
-            return this.statisticsWsResponse(DateUtils.class.timestamp(), 24 * 60 * 60, 60 * 60, this.translateManager.t("sensors.statistics.day.dateformat"), null, null, null, apiRequest.authenticationData.username);
+        } else if (apiRequest.route.startsWith(SENSORS_MANAGER_STATISTICS_DAY_BASE)) {
+            let ts = DateUtils.class.timestamp();
+            if (apiRequest.data.day && apiRequest.data.month && apiRequest.data.year) {
+                const day = parseInt(apiRequest.data.day);
+                const month = parseInt(apiRequest.data.month);
+                const year = parseInt(apiRequest.data.year);
+                ts = DateUtils.class.dateToUTCTimestamp(year + "-" + month + "-" + (day + 1) + " 00:00:00") - ((new Date()).getTimezoneOffset() * 60);
+            }
+            return this.statisticsWsResponse(ts, 24 * 60 * 60, 60 * 60, this.translateManager.t("sensors.statistics.day.dateformat"), null, null, null, apiRequest.authenticationData.username);
 
-        } else if (apiRequest.route === SENSORS_MANAGER_STATISTICS_MONTH) {
+        } else if (apiRequest.route.startsWith(SENSORS_MANAGER_STATISTICS_MONTH_BASE)) {
             return this.statisticsWsResponse(DateUtils.class.timestamp(), 31 * 24 * 60 * 60, 24 * 60 * 60, this.translateManager.t("sensors.statistics.month.dateformat"), (timestamp) => {
                 return DateUtils.class.roundedTimestamp(timestamp, DateUtils.ROUND_TIMESTAMP_DAY);
             }, "%Y-%m-%d 00:00:00", null, apiRequest.authenticationData.username);
-        } else if (apiRequest.route === SENSORS_MANAGER_STATISTICS_YEAR) {
+        } else if (apiRequest.route.startsWith(SENSORS_MANAGER_STATISTICS_YEAR_BASE)) {
             return this.statisticsWsResponse(DateUtils.class.timestamp(), 12 * 31 * 24 * 60 * 60, 31 * 24 * 60 * 60, this.translateManager.t("sensors.statistics.year.dateformat"), (timestamp) => {
                 return DateUtils.class.roundedTimestamp(timestamp, DateUtils.ROUND_TIMESTAMP_MONTH);
             }, "%Y-%m-01 00:00:00", null, apiRequest.authenticationData.username);
