@@ -441,16 +441,38 @@ class SensorsManager {
                 const day = parseInt(apiRequest.data.day);
                 const month = parseInt(apiRequest.data.month);
                 const year = parseInt(apiRequest.data.year);
-                ts = DateUtils.class.dateToUTCTimestamp(year + "-" + month + "-" + (day + 1) + " 00:00:00") - ((new Date()).getTimezoneOffset() * 60);
+                ts = DateUtils.class.dateToUTCTimestamp(year + "-" + month + "-" + day + " 00:00:00") - ((new Date()).getTimezoneOffset() * 60) + (24 * 60 * 60);
             }
             return this.statisticsWsResponse(ts, 24 * 60 * 60, 60 * 60, this.translateManager.t("sensors.statistics.day.dateformat"), null, null, null, apiRequest.authenticationData.username);
 
         } else if (apiRequest.route.startsWith(SENSORS_MANAGER_STATISTICS_MONTH_BASE)) {
-            return this.statisticsWsResponse(DateUtils.class.timestamp(), 31 * 24 * 60 * 60, 24 * 60 * 60, this.translateManager.t("sensors.statistics.month.dateformat"), (timestamp) => {
+            let ts = DateUtils.class.timestamp();
+            let nbDaysInMonth = parseInt(new Date((new Date().getFullYear()), (new Date().getMonth() + 1), 0).getDate());
+            if (apiRequest.data.month && apiRequest.data.year) {
+                const month = parseInt(apiRequest.data.month);
+                const year = parseInt(apiRequest.data.year);
+                nbDaysInMonth = parseInt(new Date(year, month, 0).getDate());
+                ts = DateUtils.class.dateToUTCTimestamp(year + "-" + month + "-1" + " 00:00:00") - ((new Date()).getTimezoneOffset() * 60) + (nbDaysInMonth * 24 * 60 * 60);
+            }
+            return this.statisticsWsResponse(ts, nbDaysInMonth * 24 * 60 * 60, 24 * 60 * 60, this.translateManager.t("sensors.statistics.month.dateformat"), (timestamp) => {
                 return DateUtils.class.roundedTimestamp(timestamp, DateUtils.ROUND_TIMESTAMP_DAY);
             }, "%Y-%m-%d 00:00:00", null, apiRequest.authenticationData.username);
         } else if (apiRequest.route.startsWith(SENSORS_MANAGER_STATISTICS_YEAR_BASE)) {
-            return this.statisticsWsResponse(DateUtils.class.timestamp(), 12 * 31 * 24 * 60 * 60, 31 * 24 * 60 * 60, this.translateManager.t("sensors.statistics.year.dateformat"), (timestamp) => {
+            let ts = DateUtils.class.timestamp();
+            let nbDaysInMonth = 0;
+            for (let i = 0 ; i < 12 ; i++) {
+                nbDaysInMonth += parseInt(new Date((new Date().getFullYear()), (i + 1), 0).getDate());
+            }
+
+            if (apiRequest.data.year) {
+                const year = parseInt(apiRequest.data.year);
+                nbDaysInMonth = 0;
+                for (let i = 0 ; i < 12 ; i++) {
+                    nbDaysInMonth += parseInt(new Date(year, (i + 1), 0).getDate());
+                }
+                ts = DateUtils.class.dateToUTCTimestamp(year + "-1-1" + " 00:00:00") - ((new Date()).getTimezoneOffset() * 60) + (nbDaysInMonth * 24 * 60 * 60);
+            }
+            return this.statisticsWsResponse(ts, nbDaysInMonth * 24 * 60 * 60, 31 * 24 * 60 * 60, this.translateManager.t("sensors.statistics.year.dateformat"), (timestamp) => {
                 return DateUtils.class.roundedTimestamp(timestamp, DateUtils.ROUND_TIMESTAMP_MONTH);
             }, "%Y-%m-01 00:00:00", null, apiRequest.authenticationData.username);
         }
