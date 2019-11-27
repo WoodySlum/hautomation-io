@@ -1,8 +1,8 @@
 "use strict";
 
-const PERCENTAGE_THRESHOLD = 18;
+const PERCENTAGE_THRESHOLD = 15;
 const RANDOM_MAX = 100;
-const RANDOM_THRESHOLD = 95;
+const RANDOM_THRESHOLD = 85;
 const HISTORY_NB_MONTH = 3;
 
 /**
@@ -125,6 +125,8 @@ function loaded(api) {
                     devices.forEach((device) => {
                         totalCount += device.count;
                     });
+                    devices.sort((a,b) => (a.status < b.status) ? 1 : ((b.status < a.status) ? -1 : 0));
+                    const planifiedOn = [];
                     devices.forEach((device) => {
                         const perc = Math.round((device.count / totalCount) * 100);
                         const random = Math.floor(Math.random() * Math.floor(RANDOM_MAX + perc));
@@ -138,12 +140,23 @@ function loaded(api) {
                             });
                         }
 
-                        if ((perc >= PERCENTAGE_THRESHOLD || random >= RANDOM_THRESHOLD) && !isExcluded) {
+                        Logger.info(device.identifier + " / " + device.status + " / " + perc + " / " + random);
+
+                        if ((perc >= PERCENTAGE_THRESHOLD || random >= RANDOM_THRESHOLD) && !isExcluded && device.status === api.deviceAPI.constants().INT_STATUS_ON) {
                             const scheduleTimestamp = DateUtils.class.roundedTimestamp(timestamp, DateUtils.ROUND_TIMESTAMP_HOUR) + ((Math.floor(Math.random() * Math.floor(60)) + 1) * 60);
                             Logger.info("Schedule " + device.identifier + " at " + scheduleTimestamp);
                             context.currentHourSchedule.push({scheduleTimestamp: scheduleTimestamp, device:device});
+                            planifiedOn.push({scheduleTimestamp: scheduleTimestamp, device:device, tagged: false});
+                        } else if (device.status === api.deviceAPI.constants().INT_STATUS_OFF) {
+                            planifiedOn.forEach((planifiedElement) => {
+                                if (planifiedElement.device.identifier === device.identifier) {
+                                    const maxTs = DateUtils.class.roundedTimestamp(timestamp, DateUtils.ROUND_TIMESTAMP_HOUR) + (60 * 60) - 45;
+                                    context.currentHourSchedule.push({scheduleTimestamp: maxTs, device:device});
+                                    planifiedElement.tagged = true;
+                                    Logger.info("Schedule " + device.identifier + " OFF at " + maxTs);
+                                }
+                            });
                         }
-
                     });
                 } else {
                     Logger.err(error.message);
