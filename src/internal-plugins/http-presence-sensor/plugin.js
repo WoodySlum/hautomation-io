@@ -71,7 +71,7 @@ function loaded(api) {
         }
     }
 
-    api.sensorAPI.registerForm(HttpPresenceSensorForm, api.gatewayAPI.getDistantApiUrl(), TRIGGER_URL_WEBSERVICE_KEY);
+    api.sensorAPI.registerForm(HttpPresenceSensorForm, api.environmentAPI.getLocalAPIUrl(), TRIGGER_URL_WEBSERVICE_KEY);
 
     /**
      * This class is overloaded by sensors
@@ -96,6 +96,7 @@ function loaded(api) {
                 if (urlSplit.length == 2) {
                     this.token = urlSplit[1];
                     api.webAPI.register(this, "*", ROUTE_TRIGGER_URL_BASE_PATH + this.token, this.api.webAPI.Authentication().AUTH_LOCAL_NETWORK_LEVEL);
+                    configuration.triggerUrl = api.environmentAPI.getLocalAPIUrl() + TRIGGER_URL_WEBSERVICE_KEY + this.token;
                 }
 
             }
