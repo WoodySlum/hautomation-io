@@ -48,6 +48,7 @@ class Authentication {
         this.userManager = userManager;
         this.environmentManager = environmentManager;
         this.webServices = webService;
+        this.webServices.setAuthentication(this);
         this.tokens = {};
     }
 
@@ -80,11 +81,15 @@ class Authentication {
      * @param  {int} [expirationTime=0] Expiration time
      * @returns {string}                   The token
      */
-    generateToken(username, serviceIdentifier, expirationTime = 0) {
+    generateToken(username = null, serviceIdentifier, expirationTime = 0) {
+        if (!username) {
+            username = this.userManager.getAdminUser().username;
+        }
         const token = sha256((serviceIdentifier + username + DateUtils.class.timestamp() + ((Math.random() * 10000000) + 1)).toString()).substr(((Math.random() * 40) + 1), 16);
         if (!this.tokens[username]) {
             this.tokens[username] = [];
         }
+        
         this.tokens[username].push({token:token, expiration:(DateUtils.class.timestamp() + ((expirationTime === 0)?TOKEN_DEFAULT_VALIDITY:expirationTime)), expirationTime: expirationTime, serviceIdentifier: serviceIdentifier});
 
         return token;

@@ -71,11 +71,12 @@ class CameraAPI {
      * Record a video session for a specific camera
      *
      * @param  {number}   id         The camera identifier
-     * @param  {Function} cb         A callback `(err, generatedFilepath) => {}`
+     * @param  {Function} cb         A callback `(err, generatedFilepath, key, link) => {}`
      * @param  {number}   [timer=60] Duration of capture in seconds
+     * @param  {boolean}   [sendMessage=true] Send message to users when record is done
      */
-    record(id, cb, timer = 60) {
-        return PrivateProperties.oprivate(this).camerasManager.record(id, cb, timer);
+    record(id, cb, timer = 60, sendMessage = true) {
+        return PrivateProperties.oprivate(this).camerasManager.record(id, cb, timer, sendMessage);
     }
 }
 

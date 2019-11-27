@@ -2,6 +2,7 @@
 const request = require("request");
 const MjpegProxy = require("mjpeg-proxy").MjpegProxy;
 const fs = require("fs-extra");
+const sha256 = require("sha256");
 const Logger = require("./../../logger/Logger");
 const PluginsManager = require("./../pluginsmanager/PluginsManager");
 const WebServices = require("./../../services/webservices/WebServices");
@@ -15,6 +16,7 @@ const Icons = require("./../../utils/Icons");
 const ImageUtils = require("./../../utils/ImageUtils");
 const TimeEventService = require("./../../services/timeeventservice/TimeEventService");
 const TimelapseGenerator = require("./TimelapseGenerator");
+const CameraRecordScenarioForm = require("./CameraRecordScenarioForm");
 
 const CONF_MANAGER_KEY = "cameras";
 const CAMERAS_MANAGER_AVAILABLE_GET = ":/cameras/available/get/";
@@ -39,6 +41,9 @@ const CAMERAS_MANAGER_TIMELAPSE_GET_BASE = ":/camera/timelapse/get/";
 const CAMERAS_MANAGER_TIMELAPSE_GET = CAMERAS_MANAGER_TIMELAPSE_GET_BASE + "[token]/";
 const CAMERAS_MANAGER_TIMELAPSE_STREAM_BASE = ":/camera/timelapse/stream/";
 const CAMERAS_MANAGER_TIMELAPSE_STREAM = CAMERAS_MANAGER_TIMELAPSE_STREAM_BASE + "[token]/";
+const CAMERAS_MANAGER_RECORD_GET_BASE = ":/camera/record/get/";
+const CAMERAS_MANAGER_RECORD_GET = CAMERAS_MANAGER_RECORD_GET_BASE + "[recordKey]/";
+const CAMERAS_MANAGER_RECORD_GET_TOKEN_DURATION = 7 * 24 * 60 * 60;
 
 const CAMERAS_MANAGER_LIST = ":/cameras/list/";
 const CAMERAS_RETRIEVE_BASE = ":/camera/get/";
@@ -67,6 +72,7 @@ const ERROR_TIMELAPSE_NOT_GENERATED = "Timelapse not generated";
 const ERROR_UNKNOWN_TIMELAPSE_TOKEN = "Unknown timelapse token";
 const ERROR_UNEXISTING_PICTURE = "Unexisting picture";
 const ERROR_RECORD_ALREADY_RUNNING = "Already recording camera";
+const ERROR_RECORD_UNKNOWN = "Unknown record";
 
 
 /**
@@ -89,9 +95,12 @@ class CamerasManager {
      * @param  {Object} [camerasConfiguration=null]    Cameras configuration
      * @param  {string} [cachePath=null]    Temporary files path
      * @param  {string} [installationManager=null]    Installation manager
+     * @param  {MessageManager} messageManager    The message manager
+     * @param  {GatewayManager} gatewayManager    The gateway manager
+     * @param  {ScenarioManager} scenarioManager    The scenario manager
      * @returns {CamerasManager}                       The instance
      */
-    constructor(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager, dashboardManager, timeEventService, camerasConfiguration = null, cachePath = null, installationManager = null) {
+    constructor(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager, dashboardManager, timeEventService, camerasConfiguration = null, cachePath = null, installationManager = null, messageManager, gatewayManager, scenarioManager) {
         this.pluginsManager = pluginsManager;
         this.webServices = webServices;
         this.formManager = formManager;
@@ -106,12 +115,16 @@ class CamerasManager {
         this.enableSeason = (camerasConfiguration && camerasConfiguration.season)?camerasConfiguration.season:true;
         this.enableTimelapse = (camerasConfiguration && camerasConfiguration.timelapse)?camerasConfiguration.timelapse:true;
         this.installationManager = installationManager;
+        this.messageManager = messageManager;
+        this.gatewayManager = gatewayManager;
+        this.scenarioManager = scenarioManager;
         this.cameras = [];
         this.delegates = {};
         this.currentTimelapse = null;
         this.timelapseQueue = [];
         this.currentRecording = {};
         this.generatedTimelapses = {};
+        this.recordedFiles = [];
 
         try {
             this.camerasConfiguration = this.confManager.loadData(Object, CONF_MANAGER_KEY, true);
@@ -148,6 +161,8 @@ class CamerasManager {
         // Season
         this.webServices.registerAPI(this, WebServices.GET, CAMERAS_MANAGER_TIMELAPSE_SEASON_STREAM, Authentication.AUTH_USAGE_LEVEL, 30 * 60);
         this.webServices.registerAPI(this, WebServices.GET, CAMERAS_MANAGER_TIMELAPSE_SEASON_GET, Authentication.AUTH_USAGE_LEVEL);
+        // Record
+        this.webServices.registerAPI(this, WebServices.GET, CAMERAS_MANAGER_RECORD_GET, Authentication.AUTH_USAGE_LEVEL, CAMERAS_MANAGER_RECORD_GET_TOKEN_DURATION);
 
         // Register tile refresh :)
         this.timeEventService.register((self) => {
@@ -277,11 +292,27 @@ class CamerasManager {
         const ids = [];
         const names = [];
         this.cameras.forEach((camera) => {
-            ids.push(camera.id);
+            ids.push(parseInt(camera.id));
             names.push(camera.name);
         });
         this.formManager.register(CamerasForm.class, ids, names);
         this.registerTile(this);
+
+        // Scenario
+        this.scenarioManager.registerWithInjection(CameraRecordScenarioForm.class, (scenario) => {
+            if (scenario && scenario.CameraRecordScenarioForm && scenario.CameraRecordScenarioForm.length > 0) {
+                scenario.CameraRecordScenarioForm.forEach((cameraRecordScenarioForm) => {
+                    const camera = this.getCamera(cameraRecordScenarioForm.camera);
+                    if (camera) {
+                        this.record(cameraRecordScenarioForm.camera, () => {
+                            Logger.info("Scenario complete. Camera record done for id " + cameraRecordScenarioForm.camera);
+                        }, cameraRecordScenarioForm.timer);
+                    } else {
+                        Logger.err("Could not find camera id " + cameraRecordScenarioForm.camera);
+                    }
+                });
+            }
+        }, this.translateManager.t("camera.scenario.title"), null, true, ids, names);
     }
 
     /**
@@ -627,6 +658,34 @@ class CamerasManager {
                 } else {
                     reject(new APIResponse.class(false, {}, 774, ERROR_UNKNOWN_TIMELAPSE_TOKEN));
                 }
+            });
+        } else if (apiRequest.route.startsWith(CAMERAS_MANAGER_RECORD_GET_BASE)) {
+            return new Promise((resolve, reject) => {
+                if (apiRequest && apiRequest.data && apiRequest.data.recordKey && this.recordedFiles[apiRequest.data.recordKey]) {
+                    if (fs.existsSync(this.recordedFiles[apiRequest.data.recordKey])) {
+                        apiRequest.res.setHeader("Content-disposition", "attachment; filename=record-" + apiRequest.data.recordKey + TimelapseGenerator.VIDEO_EXTENSION);
+                        apiRequest.res.setHeader("Content-type", "video/mp4");
+                        const filestream = fs.createReadStream(this.recordedFiles[apiRequest.data.recordKey]);
+                        filestream.pipe(apiRequest.res);
+                    } else {
+                        reject(new APIResponse.class(false, {}, 795, ERROR_RECORD_UNKNOWN));
+                    }
+                } else {
+                    reject(new APIResponse.class(false, {}, 794, ERROR_RECORD_UNKNOWN));
+                }
+
+                // if (this.generatedTimelapses[apiRequest.data.token]) {
+                //     if (fs.existsSync(this.generatedTimelapses[apiRequest.data.token].path)) {
+                //         apiRequest.res.setHeader("Content-disposition", "attachment; filename=daily-" + apiRequest.data.token + TimelapseGenerator.VIDEO_EXTENSION);
+                //         apiRequest.res.setHeader("Content-type", "video/mp4");
+                //         const filestream = fs.createReadStream(this.generatedTimelapses[apiRequest.data.token].path);
+                //         filestream.pipe(apiRequest.res);
+                //     } else {
+                //         reject(new APIResponse.class(false, {}, 770, ERROR_TIMELAPSE_NOT_GENERATED));
+                //     }
+                // } else {
+                //     reject(new APIResponse.class(false, {}, 774, ERROR_UNKNOWN_TIMELAPSE_TOKEN));
+                // }
             });
         }
     }
@@ -976,10 +1035,11 @@ class CamerasManager {
      * Record a video session for a specific camera
      *
      * @param  {number}   id         The camera identifier
-     * @param  {Function} cb         A callback `(err, generatedFilepath) => {}`
+     * @param  {Function} cb         A callback `(err, generatedFilepath, key, link) => {}`
      * @param  {number}   [timer=60] Duration of capture in seconds
+     * @param  {boolean}   [sendMessage=true] Send message to users when record is done
      */
-    record(id, cb, timer = 60) {
+    record(id, cb, timer = 60, sendMessage = true) {
         if (!this.currentRecording[parseInt(id)]) {
             this.currentRecording[parseInt(id)] = {};
             const camera = this.getCamera(id);
@@ -997,7 +1057,7 @@ class CamerasManager {
                         frameCount++;
                     }
                 });
-                setTimeout((vwstream, vreq) => {
+                setTimeout((vwstream, vreq, self) => {
                     vwstream.end();
                     vreq.abort();
                     const frameRate = Math.round(frameCount / timer);
@@ -1007,7 +1067,7 @@ class CamerasManager {
                     Logger.info("Detected framerate : " + frameRate);
                     Logger.info("Converting video session");
 
-                    this.installationManager.executeCommand("avconv -r " + ((frameRate < 1) ? 1:frameRate) + " -i " + recordSessionFile + ".mjpg -vcodec libx264 " + recordSessionFile + ".mp4", false, (error, stdout, stderr) => {
+                    this.installationManager.executeCommand("avconv -r " + ((frameRate < 1) ? 1:frameRate) + " -i " + recordSessionFile + ".mjpg -vcodec libx264 " + recordSessionFile + TimelapseGenerator.VIDEO_EXTENSION, false, (error, stdout, stderr) => {
                         // Clean mjpg stream
                         fs.remove(recordSessionFile + ".mjpg");
                         if (error) {
@@ -1015,10 +1075,17 @@ class CamerasManager {
                             cb(error);
                         } else {
                             Logger.info("Video session encoding terminated.");
-                            cb(null, recordSessionFile + ".mp4");
+                            const key = sha256(recordSessionFile).substr(1, 6);
+                            this.recordedFiles[key] = recordSessionFile + TimelapseGenerator.VIDEO_EXTENSION;
+                            const link = self.gatewayManager.getDistantApiUrl() + CAMERAS_MANAGER_RECORD_GET_BASE.replace(":/", "") + key + "/?t=" + self.webServices.getToken(CAMERAS_MANAGER_RECORD_GET, CAMERAS_MANAGER_RECORD_GET_TOKEN_DURATION);
+                            if (sendMessage) {
+                                self.messageManager.sendMessage("*",  self.translateManager.t("camera.record.download.message", this.getCamera(id).configuration.name, link));
+                            }
+
+                            cb(null, this.recordedFiles[key], key, link);
                         }
                     });
-                }, timer * 1000, wstream, req);
+                }, timer * 1000, wstream, req, this);
             } else {
                 cb(Error(ERROR_UNSUPPORTED_MODE));
             }

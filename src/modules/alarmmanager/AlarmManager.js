@@ -20,7 +20,7 @@ const SWITCH_ALARM_ROUTE = ":"+ SWITCH_ALARM_ROUTE_BASE + "[status*]/";
 const SENSORS_LOCK_TIME = 60 * 5; // In seconds
 const ARMED_TIMER = 30; // In seconds. Will be scheduled in next minute. At least X seconds rounded to minute.
 const ARMED_IDENTIFIER = "alarm-armed";
-const RECORDING_TIME = 60 * 5; // In seconds
+const RECORDING_TIME = 10;//60 * 5; // In seconds
 
 /**
  * This class allows to manage alarm (nable, disable, ...)

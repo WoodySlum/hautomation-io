@@ -72,6 +72,7 @@ class WebServices extends Service.class {
         this.enableCompression = enableCompression;
         this.gatewayManager = null;
         this.tokenAuthParameters = {};
+        this.authentication = null;
     }
 
     /**
@@ -638,6 +639,30 @@ class WebServices extends Service.class {
      */
     getEndpointApi() {
         return ENDPOINT_API;
+    }
+
+    /**
+     * Set authentication module
+     *
+     * @param  {Authentication} authentication             The authentication module
+     */
+    setAuthentication(authentication) {
+        this.authentication = authentication;
+    }
+
+    /**
+     * Generates a token
+     *
+     * @param  {string} route           The route
+     * @param  {int} [expirationTime=0] Expiration time - 0 for one time usage
+     * @returns {string}                   The token
+     */
+    getToken(route, expirationTime = 0) {
+        if (this.authentication) {
+            return this.authentication.generateToken(null, this.getRouteIdentifier(route), expirationTime);
+        }
+
+        return null;
     }
 }
 

@@ -184,5 +184,9 @@
     "dashboard.scenario.trigger.status.off": "Disable",
     "dashboard.scenario.trigger.title": "Title",
     "message.manager.scenario.triggered": "Scenario %@ fired",
-    "gateway.manager.custom.identifier.already.taken": "We apologized ! The custom identifier %@ is already taken. You can try a new one in the app settings"
+    "gateway.manager.custom.identifier.already.taken": "We apologized ! The custom identifier %@ is already taken. You can try a new one in the app settings",
+    "camera.record.download.message": "A new camera record is available for camera %@. Download link : %@",
+    "camera.scenario.timer":"Record time, in seconds",
+    "camera.scenario.camera":"Camera",
+    "camera.scenario.title":"Record camera"
 }

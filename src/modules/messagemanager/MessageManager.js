@@ -114,6 +114,7 @@ class MessageManager {
      */
     sendMessage(recipients = "*", message, action = null, link = null, picture = null) {
         Logger.info("Sending message '" + message + "' to " + recipients);
+        
         if (this.pluginsManager) {
             this.pluginsManager.getPluginsByCategory("message-provider").forEach((plugin) => {
                 if (plugin.instance.sendMessage instanceof Function) {

@@ -182,5 +182,9 @@
     "dashboard.scenario.trigger.status.off": "Désactiver",
     "dashboard.scenario.trigger.title": "Titre",
     "message.manager.scenario.triggered": "Le scénario %@ a été déclenché",
-    "gateway.manager.custom.identifier.already.taken": "Désolé ! L'identifiant personalisé %@ a déjà été réservé. Vous pouvez en choisir un nouveau dans les paramètres"
+    "gateway.manager.custom.identifier.already.taken": "Désolé ! L'identifiant personalisé %@ a déjà été réservé. Vous pouvez en choisir un nouveau dans les paramètres",
+    "camera.record.download.message": "Un nouvel enregistrement est disponible pour la caméra %@. Lien de téléchargement : %@",
+    "camera.scenario.timer":"Temps d'enregistrement, en secondes",
+    "camera.scenario.camera":"Caméra",
+    "camera.scenario.title":"Enregistrer une caméra"
 }

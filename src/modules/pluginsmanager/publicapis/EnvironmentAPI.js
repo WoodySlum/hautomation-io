@@ -76,7 +76,7 @@ class EnvironmentAPI {
     /**
      * Get the local API Url
      *
-     * @returns {string} The local API url (e.g. : http://192.168.2.34:8100/api/)
+     * @returns {string} The local API url (e.g. : http://192.168.1.3:8100/api/)
      */
     getLocalAPIUrl() {
         return PrivateProperties.oprivate(this).environmentManager.getLocalAPIUrl();
