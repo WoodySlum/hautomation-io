@@ -23,6 +23,7 @@ const PLUGIN_MAIN = "plugin.js";
 const ROUTE_WS_GET = ":/plugins/get/";
 const ROUTE_WS_ENABLE_SET_BASE = ":/plugins/enable/";
 const ROUTE_WS_ENABLE_SET = ROUTE_WS_ENABLE_SET_BASE + "[plugin]/[status]/";
+const ROUTE_WS_GENERAL_ENABLE_SET = ":/plugins/general/enable/";
 
 const ERROR_MISSING_PROPERTY = "Missing property name, version or description for plugin";
 const ERROR_NOT_A_FUNCTION = "Missing plugin class";
@@ -200,6 +201,7 @@ class PluginsManager {
         // Register plugins WS
         this.webServices.registerAPI(this, WebServices.GET, ROUTE_WS_GET, Authentication.AUTH_ADMIN_LEVEL);
         this.webServices.registerAPI(this, WebServices.POST, ROUTE_WS_ENABLE_SET, Authentication.AUTH_ADMIN_LEVEL);
+        this.webServices.registerAPI(this, WebServices.POST, ROUTE_WS_GENERAL_ENABLE_SET, Authentication.AUTH_ADMIN_LEVEL);
     }
 
     /**
@@ -546,8 +548,9 @@ class PluginsManager {
      *
      * @param  {PluginConf} pluginConf The changing plugin conf
      * @param  {boolean} status     The new status
+     * @param  {boolean} restart     Set `true` if you want restart system,  `false` otherwise
      */
-    changePluginStatus(pluginConf, status) {
+    changePluginStatus(pluginConf, status, restart = true) {
         Logger.info("Plugin status changed : " + pluginConf.identifier);
         if ((CORE_PLUGINS.indexOf(pluginConf.identifier) === -1)) {
             if (!status) {
@@ -577,7 +580,9 @@ class PluginsManager {
             Logger.info("Plugin status changed " + pluginConf.identifier + " / " + status);
             pluginConf.enable = status;
             this.pluginsConf = this.confManager.setData(CONF_KEY, pluginConf, this.pluginsConf, PluginConf.comparator);
-            this.eventBus.emit(HautomationRunnerConstants.RESTART);
+            if (restart) {
+                this.eventBus.emit(HautomationRunnerConstants.RESTART);
+            }
         } else {
             throw Error(ERROR_DISABLE_CORE_PLUGIN);
         }
@@ -643,6 +648,41 @@ class PluginsManager {
                     }
                 } else {
                     reject(new APIResponse.class(false, null, 9872, "Unexisting plugin"));
+                }
+            });
+        } else if (apiRequest.route == ROUTE_WS_GENERAL_ENABLE_SET) {
+            return new Promise((resolve, reject) => {
+                let rejected = false;
+                if (apiRequest.data && apiRequest.data.status && apiRequest.data.status.length > 0) {
+                    apiRequest.data.status.forEach((pluginStatus) => {
+                        const existingPluginConf = this.getPluginConf(pluginStatus.identifier);
+                        if (existingPluginConf) {
+                            const status = !!+pluginStatus.status;
+                            let error = null;
+                            if (status != existingPluginConf.enable && CORE_PLUGINS.indexOf(pluginStatus.identifier) === -1) {
+                                try {
+                                    this.changePluginStatus(existingPluginConf, status, false);
+                                } catch(e) {
+                                    error = e;
+                                }
+
+                            }
+
+                            if (error) {
+                                resolve(new APIResponse.class(false, {}, 11295, error.message));
+                                rejected = true;
+                            }
+                        } else {
+                            reject(new APIResponse.class(false, null, 11872, "Unexisting plugin"));
+                            rejected = true;
+                        }
+                    });
+                    if (!rejected) {
+                        this.eventBus.emit(HautomationRunnerConstants.RESTART);
+                        resolve(new APIResponse.class(true, {success:true}));
+                    }
+                } else {
+                    reject(new APIResponse.class(false, null, 9878, "Missing JSON data with status property : {status:[identifier:foo, status:true]}"));
                 }
             });
         }
