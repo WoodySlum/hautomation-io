@@ -1,7 +1,7 @@
 #include <Hautomation.h>
 
 #define SOIL_MOISTURE_SENSOR_PIN  A0
-#define SOIL_MOISTURE_VCC_PIN  0
+#define SOIL_MOISTURE_VCC_PIN  4
 
 String JSON_CONFIG = "%config%";
 Hautomation hautomation = Hautomation();

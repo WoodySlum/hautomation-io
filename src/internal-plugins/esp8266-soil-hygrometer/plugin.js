@@ -11,7 +11,7 @@ function loaded(api) {
     const wiringSchema = api.iotAPI.getWiringSchemaForLib("esp8266");
     wiringSchema.right["D0"].push("Nodemcu pin RST");
     wiringSchema.left["RST"].push("Nodemcu pin D0");
-    wiringSchema.right["D3"].push("Soil moisture pin #1");
+    wiringSchema.right["D2"].push("Soil moisture pin #1");
     wiringSchema.right["GND-2"].push("Soil moisture pin #2");
     wiringSchema.left["A0"].push("Soil moisture pin #4");
     api.iotAPI.registerApp("app", "esp8266-soil-hygrometer", "Nodemcu soil hygrometer for plants", 4, api.iotAPI.constants().PLATFORMS.ESP8266, api.iotAPI.constants().BOARDS.NODEMCU, api.iotAPI.constants().FRAMEWORKS.ARDUINO, ["esp8266"], espPlugin.generateOptions(espPlugin.constants().MODE_DEEP_SLEEP, 6 * 60 * 60), wiringSchema);

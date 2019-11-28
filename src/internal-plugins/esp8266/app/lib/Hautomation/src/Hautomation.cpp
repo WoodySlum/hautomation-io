@@ -34,11 +34,14 @@ ESP8266WebServer &Hautomation::getWebServer() {
 void Hautomation::enableVccPin(int pin) {
     pinMode(pin, OUTPUT);
     digitalWrite(pin, HIGH);
+    delay(200);
 }
 
 void Hautomation::disableVccPin(int pin) {
     pinMode(pin, OUTPUT);
     digitalWrite(pin, LOW);
+    delay(200);
+    pinMode(pin, INPUT);
 }
 
 void Hautomation::setup(String jsonConfiguration)
