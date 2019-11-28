@@ -56,10 +56,6 @@ void Hautomation::setup(String jsonConfiguration)
     poweredMode = config["options"]["poweredMode"];
     sleepTime = config["options"]["timer"];
 
-    if (!shouldFirmwareUpdate()) {
-        checkRun();
-    }
-
     connect();
 
     if (shouldFirmwareUpdate()) {
@@ -292,6 +288,10 @@ void Hautomation::postSensorValue(String sensorType, float value) {
 }
 
 void Hautomation::loop() {
+    if (!shouldFirmwareUpdate()) {
+        checkRun();
+    }
+
     Serial.println("+> Connecting");
     if (WiFi.status() != WL_CONNECTED) {
         Serial.println("+> Connect");
