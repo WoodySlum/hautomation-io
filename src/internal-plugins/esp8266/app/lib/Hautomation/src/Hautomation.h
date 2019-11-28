@@ -34,6 +34,8 @@ class Hautomation {
     JsonVariant &getConfig();
     void rest(int mode, long duration);
     void ping();
+    void enableVccPin(int pin);
+    void disableVccPin(int pin);
   private:
     void checkRun();
     void httpUpdateServer();

@@ -31,6 +31,16 @@ ESP8266WebServer &Hautomation::getWebServer() {
   return httpServer;
 }
 
+void Hautomation::enableVccPin(int pin) {
+    pinMode(pin, OUTPUT);
+    digitalWrite(pin, HIGH);
+}
+
+void Hautomation::disableVccPin(int pin) {
+    pinMode(pin, OUTPUT);
+    digitalWrite(pin, LOW);
+}
+
 void Hautomation::setup(String jsonConfiguration)
 {
     Serial.begin(115200);

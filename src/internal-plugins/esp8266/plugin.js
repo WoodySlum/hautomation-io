@@ -75,7 +75,7 @@ function loaded(api) {
         constructor(api) {
             this.api = api;
             const wiringSchema = {left:{"A0":[],"RSV-1":[],"RSV-2":[],"SD3":[],"SD2":[],"SD1":[],"CMD":[],"SD0":[],"CLK":[],"GND-1":[],"3V3":[],"EN":[],"RST":[],"GND-2":[],"VIN":[]}, right:{"D0":[],"D1":[],"D2":[],"D3":[],"D4":[],"3V3-1":[],"GND-1":[],"D5":[],"D6":[],"D7":[],"D8":[],"RX":[],"TX":[],"GND-2":[],"3V3-2":[]}, down:{"USB":["RPI or POWER"]}};
-            this.api.iotAPI.registerLib("app", "esp8266", 57, wiringSchema, ESP8266Form);
+            this.api.iotAPI.registerLib("app", "esp8266", 58, wiringSchema, ESP8266Form);
             this.api.iotAPI.addIngredientForReceipe("esp8266", "Nodemcu v1", "Nodemcu board, based on ESP8266", 1, true, true);
             this.api.webAPI.register(this, this.api.webAPI.constants().POST, WS_SENSOR_SET_ROUTE + "[id]/[type]/[value]/[vcc*]/", this.api.webAPI.Authentication().AUTH_LOCAL_NETWORK_LEVEL);
             this.api.webAPI.register(this, this.api.webAPI.constants().POST, WS_PING_ROUTE + "[id]/", this.api.webAPI.Authentication().AUTH_LOCAL_NETWORK_LEVEL);
@@ -94,7 +94,11 @@ function loaded(api) {
                 // Dispatch pings initial after 5 seconds for dependent plugins
                 setTimeout((self) => {
                     Object.keys(this.configurations).forEach((iotKey) => {
-                        self.api.iotAPI.setUpgradeUrl(iotKey, ((self.configurations[iotKey] && self.configurations[iotKey].ip) ? self.getUpgradeUrl(self.configurations[iotKey].ip) : null));
+                        try {
+                            self.api.iotAPI.setUpgradeUrl(iotKey, ((self.configurations[iotKey] && self.configurations[iotKey].ip) ? self.getUpgradeUrl(self.configurations[iotKey].ip) : null));
+                        } catch (e) {
+                            self.api.exported.Logger.err(e.message);
+                        }
                         self.api.coreAPI.dispatchEvent(PING_EVENT_KEY, Object.assign({id:iotKey}, self.configurations[iotKey]));
                     });
                 }, 5000, this);
@@ -215,7 +219,7 @@ function loaded(api) {
                     } else if (iot) {
                         // We need to build firmware on first time
                         if (!this.firmwareFile[apiRequest.data.id]) {
-                            this.api.iotAPI.build(iot.iotApp, false, iot, (error, details) => {
+                            this.api.iotAPI.build(apiRequest.data.id, iot.iotApp, false, iot, (error, details) => {
                                 if (error) {
                                     // Error
                                     errorFirmware[iot.iotApp] = true;

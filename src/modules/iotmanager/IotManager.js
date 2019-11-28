@@ -628,7 +628,7 @@ class IotManager {
      */
     setUpgradeUrl(id, upgradeUrl) {
         const iot = this.getIot(id);
-        if (iot && iot.iotApp) {
+        if (iot && iot.iotApp && this.iotApps[iot.iotApp]) {
             this.iotApps[iot.iotApp].upgradeUrls[iot.id] = upgradeUrl;
         } else {
             throw Error("iot or iot app not found (id " + id + ")");

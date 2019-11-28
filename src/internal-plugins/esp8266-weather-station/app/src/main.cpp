@@ -49,7 +49,11 @@ void transmitSensor() {
     // Water sensor
     pinMode(WATER_SENSOR_PIN, INPUT);
     Serial.println("Request rain sensor");
-    int rainValue = analogRead(WATER_SENSOR_PIN);
+    float rainValue = 0;
+    for (int i = 0; i < 100; i++) {
+        rainValue = rainValue + analogRead(WATER_SENSOR_PIN);
+    }
+    rainValue = rainValue  / 100.0;
     Serial.println("Rain: ");
     Serial.println(rainValue);
 
