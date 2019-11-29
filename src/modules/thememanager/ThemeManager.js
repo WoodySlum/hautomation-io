@@ -103,14 +103,14 @@ class ThemeManager {
         const customizedTheme = this.userThemes[username] ? this.userThemes[username] : {};
 
         return {
-            primaryColor:(customizedTheme.primaryColor ? customizedTheme.primaryColor : "#617D8A"),
-            secondaryColor:(customizedTheme.secondaryColor ? customizedTheme.secondaryColor : "#8BAACC"),
-            tertiaryColor:(customizedTheme.tertiaryColor ? customizedTheme.tertiaryColor : "#ECCF46"),
-            darkenColor:(customizedTheme.darkenColor ? customizedTheme.darkenColor : "#4578A3"),
-            clearColor:(customizedTheme.clearColor ? customizedTheme.clearColor : "#FFFFFF"),
-            onColor:(customizedTheme.onColor ? customizedTheme.onColor : "#79B84A"),
+            primaryColor:(customizedTheme.primaryColor ? customizedTheme.primaryColor : "#70A9A1"),
+            secondaryColor:(customizedTheme.secondaryColor ? customizedTheme.secondaryColor : "#40798C"),
+            tertiaryColor:(customizedTheme.tertiaryColor ? customizedTheme.tertiaryColor : "#9EC1A3"),
+            darkenColor:(customizedTheme.darkenColor ? customizedTheme.darkenColor : "#1F363D"),
+            clearColor:(customizedTheme.clearColor ? customizedTheme.clearColor : "#E4EEDD"),
+            onColor:(customizedTheme.onColor ? customizedTheme.onColor : "#77A310"),
             offColor:(customizedTheme.offColor ? customizedTheme.offColor : "#D04B48"),
-            tilesSpacing:(typeof customizedTheme.tilesSpacing !== "undefined" ? customizedTheme.tilesSpacing : 1)
+            tilesSpacing:(typeof customizedTheme.tilesSpacing !== "undefined" ? customizedTheme.tilesSpacing : 0)
         };
     }
 
