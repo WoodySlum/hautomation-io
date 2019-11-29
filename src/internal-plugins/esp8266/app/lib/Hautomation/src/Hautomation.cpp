@@ -2,7 +2,7 @@
 
 int MAX_TIME_CONNECTION_ATTEMPT = 30; // In seconds
 int MAX_TIME_CONNECTION_RETRY = 30; // In seconds
-int MAX_TIME_SLEEP = 70 * 60;
+int MAX_TIME_SLEEP = 60 * 60;
 int HTTP_SENSOR_TIMEOUT = 20 * 1000;
 int HTTP_PING_TIMEOUT = 10 * 1000;
 
@@ -55,6 +55,10 @@ void Hautomation::setup(String jsonConfiguration)
 
     poweredMode = config["options"]["poweredMode"];
     sleepTime = config["options"]["timer"];
+
+    if (!shouldFirmwareUpdate()) {
+        checkRun();
+    }
 
     connect();
 
@@ -125,12 +129,33 @@ void Hautomation::connect() {
     ping();
 }
 
+int Hautomation::getResetReason() {
+  rst_info* ri = system_get_rst_info();
+  if (ri == NULL)
+    return -1;
+
+  return ri->reason;
+}
+
 void Hautomation::checkRun() {
+    Serial.println("Reset reason => " + String(getResetReason()));
+    if (getResetReason() != 5) {
+        cleanCounter(); // Clear counter when unblug / replug esp
+    }
+
     //sleepTime
     if (sleepTime > MAX_TIME_SLEEP) {
         int tick = loadCounter();
+        int firstRun = 0;
+        if (tick < 0) {
+            firstRun = 1;
+            tick = 1;
+        }
         long elapsedTime = tick * MAX_TIME_SLEEP;
-        if (elapsedTime >= sleepTime) {
+        Serial.println("Tick " + String(tick));
+        if (elapsedTime >= sleepTime || firstRun == 1) {
+            Serial.println("Reset counter");
+            tick = 1;
             saveCounter(1);
         } else {
             long newSleepTime = sleepTime;
@@ -141,6 +166,7 @@ void Hautomation::checkRun() {
             }
             tick++;
             saveCounter(tick);
+            Serial.println("Remaining sleep time " + String(newSleepTime));
             rest(poweredMode, newSleepTime);
         }
     }
@@ -288,10 +314,6 @@ void Hautomation::postSensorValue(String sensorType, float value) {
 }
 
 void Hautomation::loop() {
-    if (!shouldFirmwareUpdate()) {
-        checkRun();
-    }
-
     Serial.println("+> Connecting");
     if (WiFi.status() != WL_CONNECTED) {
         Serial.println("+> Connect");
@@ -322,6 +344,14 @@ void Hautomation::saveCounter(int value) {
     EEPROM.end();
 }
 
+void Hautomation::cleanCounter() {
+    EEPROM.begin(512);
+    EEPROM.put(0, 1);
+    EEPROM.put(10, 0);
+    EEPROM.commit();
+    EEPROM.end();
+}
+
 int Hautomation::loadCounter() {
     int value = 1;
     int hasBeenWritten = 0;
@@ -333,7 +363,7 @@ int Hautomation::loadCounter() {
     EEPROM.end();
 
     if (hasBeenWritten != 1) {
-        value = 1;
+        value = -1;
     }
 
     return value;

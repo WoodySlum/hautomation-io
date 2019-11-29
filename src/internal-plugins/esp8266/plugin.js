@@ -75,7 +75,7 @@ function loaded(api) {
         constructor(api) {
             this.api = api;
             const wiringSchema = {left:{"A0":[],"RSV-1":[],"RSV-2":[],"SD3":[],"SD2":[],"SD1":[],"CMD":[],"SD0":[],"CLK":[],"GND-1":[],"3V3":[],"EN":[],"RST":[],"GND-2":[],"VIN":[]}, right:{"D0":[],"D1":[],"D2":[],"D3":[],"D4":[],"3V3-1":[],"GND-1":[],"D5":[],"D6":[],"D7":[],"D8":[],"RX":[],"TX":[],"GND-2":[],"3V3-2":[]}, down:{"USB":["RPI or POWER"]}};
-            this.api.iotAPI.registerLib("app", "esp8266", 58, wiringSchema, ESP8266Form);
+            this.api.iotAPI.registerLib("app", "esp8266", 60, wiringSchema, ESP8266Form);
             this.api.iotAPI.addIngredientForReceipe("esp8266", "Nodemcu v1", "Nodemcu board, based on ESP8266", 1, true, true);
             this.api.webAPI.register(this, this.api.webAPI.constants().POST, WS_SENSOR_SET_ROUTE + "[id]/[type]/[value]/[vcc*]/", this.api.webAPI.Authentication().AUTH_LOCAL_NETWORK_LEVEL);
             this.api.webAPI.register(this, this.api.webAPI.constants().POST, WS_PING_ROUTE + "[id]/", this.api.webAPI.Authentication().AUTH_LOCAL_NETWORK_LEVEL);
@@ -201,6 +201,7 @@ function loaded(api) {
             } else if (apiRequest.route.startsWith(WS_PING_ROUTE)) {
                 const iot = this.api.iotAPI.getIot(apiRequest.data.id);
                 if (iot) {
+                    this.api.exported.Logger.info("Ping ESP " + apiRequest.data.id + " on ip " + apiRequest.params.ip + " version " + apiRequest.params.version);
                     this.configurations[iot.id.toString()] = apiRequest.params;
                     this.configurations[iot.id.toString()].lastUpdated = this.api.exported.DateUtils.class.timestamp();
                     this.api.iotAPI.setUpgradeUrl(iot.id, ((this.configurations[iot.id] && this.configurations[iot.id].ip) ? this.getUpgradeUrl(this.configurations[iot.id].ip) : null));

@@ -37,11 +37,13 @@ class Hautomation {
     void enableVccPin(int pin);
     void disableVccPin(int pin);
   private:
+    int getResetReason();
     void checkRun();
     void httpUpdateServer();
     void connect();
     void parseConfig(String jsonConfiguration);
     void updateFirmware();
+    void cleanCounter();
     void saveCounter(int value);
     int loadCounter();
     boolean canRunHttpServer();

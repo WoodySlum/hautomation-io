@@ -333,6 +333,7 @@ class IotManager {
         iniContent += "platform = " + this.iotApps[appId].platform + "\n";
         iniContent += "board = " + this.iotApps[appId].board + "\n";
         iniContent += "framework = " + this.iotApps[appId].framework + "\n";
+        iniContent += "monitor_speed = 115200\n";
         iniContent += "\n";
         iniContent += "[platformio]\n";
         iniContent += "lib_dir = ./" + GLOBAL_LIB_FOLDER + "\n";
