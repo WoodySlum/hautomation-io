@@ -248,7 +248,8 @@ describe("IotManager", function() {
             const expected = "[env:barBoard]\n" +
                              "platform = fooPlatform\n" +
                             "board = barBoard\n" +
-                            "framework = foobarFramework\n\n" +
+                            "framework = foobarFramework\n" +
+                            "monitor_speed = 115200\n\n" +
                             "[platformio]\n" +
                             "lib_dir = ./global_lib\n" +
                             "lib_extra_dirs = ./lib\n";
