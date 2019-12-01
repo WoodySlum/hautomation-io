@@ -14,8 +14,7 @@ function loaded(api) {
     wiringSchema.left["SD3"].push("Soil moisture pin #1");
     wiringSchema.left["GND-1"].push("Soil moisture pin #2");
     wiringSchema.left["A0"].push("Soil moisture pin #4");
-    // api.iotAPI.registerApp("app", "esp8266-soil-hygrometer", "Nodemcu soil hygrometer for plants", 10, api.iotAPI.constants().PLATFORMS.ESP8266, api.iotAPI.constants().BOARDS.NODEMCU, api.iotAPI.constants().FRAMEWORKS.ARDUINO, ["esp8266"], espPlugin.generateOptions(espPlugin.constants().MODE_DEEP_SLEEP, 6 * 60 * 60), wiringSchema);
-    api.iotAPI.registerApp("app", "esp8266-soil-hygrometer", "Nodemcu soil hygrometer for plants", 10, api.iotAPI.constants().PLATFORMS.ESP8266, api.iotAPI.constants().BOARDS.NODEMCU, api.iotAPI.constants().FRAMEWORKS.ARDUINO, ["esp8266"], espPlugin.generateOptions(espPlugin.constants().MODE_DEEP_SLEEP, 10), wiringSchema);
+    api.iotAPI.registerApp("app", "esp8266-soil-hygrometer", "Nodemcu soil hygrometer for plants", 10, api.iotAPI.constants().PLATFORMS.ESP8266, api.iotAPI.constants().BOARDS.NODEMCU, api.iotAPI.constants().FRAMEWORKS.ARDUINO, ["esp8266"], espPlugin.generateOptions(espPlugin.constants().MODE_DEEP_SLEEP, 6 * 60 * 60), wiringSchema);
     api.iotAPI.addIngredientForReceipe("esp8266-soil-hygrometer", "Soil moisture", "A soil moisture sensor or soil hygrometer humidity", 1, true);
 }
 
