@@ -1,4 +1,5 @@
 {
     "esp8266.form.wifi.ssid": "Nom du réseau WiFI",
-    "esp8266.form.wifi.password": "Mot de passe WiFI"
+    "esp8266.form.wifi.password": "Mot de passe WiFI",
+    "esp8266.form.i2c.adc.use": "Utiliser un convertisseur analogique / numérique I2C (tel ADS1015). En cochant cette case le câblage sera un peu plus compliqué, mais il sera possible d'avoir le niveau de batterie. En décochant cette case il ne sera pas possible d'avoir le niveau de batterie."
 }

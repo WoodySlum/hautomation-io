@@ -5,7 +5,7 @@
 
 // DHT
 dht DHT;
-#define DHT_PIN 4
+#define DHT_PIN 9
 
 // Rain sensor
 #define WATER_SENSOR_PIN  A0
@@ -71,7 +71,6 @@ void transmitSensor() {
         sBMP = bmp.readSealevelPressure();
     }
 
-
     // Aggregation
     float avgTemperature = (tBMP + tDHT) / 2;
 
@@ -81,7 +80,6 @@ void transmitSensor() {
     hautomation.postSensorValue("ALTITUDE", aBMP);
     hautomation.postSensorValue("PRESSURE", pBMP);
     // hautomation.postSensorValue("PRESSURE", sBMP);
-
 }
 
 void setup() {

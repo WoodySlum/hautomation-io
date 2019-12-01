@@ -2,7 +2,7 @@
 
 int MAX_TIME_CONNECTION_ATTEMPT = 30; // In seconds
 int MAX_TIME_CONNECTION_RETRY = 30; // In seconds
-int MAX_TIME_SLEEP = 15 * 60;
+float MAX_TIME_SLEEP = (ESP.deepSleepMax() / 1000000L);
 int HTTP_SENSOR_TIMEOUT = 20 * 1000;
 int HTTP_PING_TIMEOUT = 10 * 1000;
 
@@ -10,6 +10,8 @@ int POWER_MODE_DEEP_SLEEP = 0;
 int POWER_MODE_SLEEP = 1;
 int POWER_MODE_ALWAYS = 2;
 int POWER_MODE_LIGHT_SLEEP = 3;
+
+#define SENSOR_VCC_PIN  10
 
 boolean updating = false;
 ESP8266WebServer httpServer(80);
@@ -22,6 +24,10 @@ JsonVariant config;
 int poweredMode = POWER_MODE_SLEEP;
 int sleepTime = 60;
 
+
+ADC_MODE(ADC_TOUT); // For analog read
+// ADC_MODE(ADC_VCC); // For VCC read
+
 Hautomation::Hautomation()
 {
 
@@ -32,12 +38,14 @@ ESP8266WebServer &Hautomation::getWebServer() {
 }
 
 void Hautomation::enableVccPin(int pin) {
+    Serial.println("Enable VCC pin");
     pinMode(pin, OUTPUT);
     digitalWrite(pin, HIGH);
     delay(200);
 }
 
 void Hautomation::disableVccPin(int pin) {
+    Serial.println("Disable VCC pin");
     pinMode(pin, OUTPUT);
     digitalWrite(pin, LOW);
     delay(200);
@@ -66,6 +74,8 @@ void Hautomation::setup(String jsonConfiguration)
         Serial.println("Entering firmware update mode");
         updateFirmware();
     }
+
+    enableVccPin(SENSOR_VCC_PIN);
 }
 
 JsonObject &Hautomation::parseJson(DynamicJsonBuffer &jsonBuffer, String json) {
@@ -221,7 +231,9 @@ void Hautomation::ping() {
         const char* id = config["id"];
         String ip = WiFi.localIP().toString();
         long freeHeap = ESP.getFreeHeap();
+        // ADC_MODE(ADC_VCC);
         float vcc = ESP.getVcc() / 1000;
+        // ADC_MODE(ADC_TOUT);
         const int currentVersion = config["version"];
 
         DynamicJsonBuffer pingBuffer;
@@ -302,7 +314,9 @@ String Hautomation::transmit(String url, JsonObject& jsonObject, int timeout) {
 void Hautomation::postSensorValue(String sensorType, float value) {
     if (!shouldFirmwareUpdate()) {
         String id = config["id"];
+        // ADC_MODE(ADC_VCC);
         String vcc = String(ESP.getVcc() / 1000);
+        // ADC_MODE(ADC_TOUT);
         String url = baseUrl() + "esp/sensor/set/" + id + "/" + sensorType + "/" + String(value) + "/" + vcc + "/";
         DynamicJsonBuffer jsonBuffer;
 
@@ -417,9 +431,11 @@ boolean Hautomation::canRunHttpServer() {
 // Duration in seconds
 void Hautomation::rest(int mode, long duration) {
     if (!updating) {
+        disableVccPin(SENSOR_VCC_PIN);
+
         if (mode == POWER_MODE_DEEP_SLEEP) {
             Serial.println("Entering deep sleep for time " + String(duration) + "s");
-            ESP.deepSleep(duration * 1000000L);
+            ESP.deepSleep(((uint64_t)duration * 1000000L));
         }
 
         if (mode == POWER_MODE_SLEEP) {
@@ -432,5 +448,7 @@ void Hautomation::rest(int mode, long duration) {
             wifi_set_sleep_type(LIGHT_SLEEP_T);
             delay(sleepTime * 1000L);
         }
+
+        enableVccPin(SENSOR_VCC_PIN);
     }
 }

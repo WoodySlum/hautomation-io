@@ -1,4 +1,5 @@
 {
     "esp8266.form.wifi.ssid": "WiFI SSID",
-    "esp8266.form.wifi.password": "Wifi passphrase"
+    "esp8266.form.wifi.password": "Wifi passphrase",
+    "esp8266.form.i2c.adc.use": "Use I2C analogic to numeric external converter (as ADS1015). Checking this will result in a little more complex wiring, but gives the ability to monitor external battery. Uncheck this box and you won't be able to get battery level."
 }

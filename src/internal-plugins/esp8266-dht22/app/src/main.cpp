@@ -3,7 +3,7 @@
 
 // DHT
 dht DHT;
-#define DHT_PIN 5
+#define DHT_PIN 9
 
 String JSON_CONFIG = "%config%";
 Hautomation hautomation = Hautomation();
@@ -31,6 +31,7 @@ void transmitSensor() {
 
     hautomation.postSensorValue("TEMPERATURE", t);
     hautomation.postSensorValue("HUMIDITY", h);
+
 }
 
 void setup() {
