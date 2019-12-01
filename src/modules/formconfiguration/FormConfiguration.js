@@ -118,6 +118,7 @@ class FormConfiguration {
             }
         } catch(e) {
             Logger.warn("Load config for " + this.name + " error : " + e.message);
+            
         }
     }
 
