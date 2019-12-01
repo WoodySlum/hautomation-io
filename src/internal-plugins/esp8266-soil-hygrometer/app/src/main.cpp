@@ -1,6 +1,10 @@
 #include <Hautomation.h>
+#include <dht.h>
 
 #define SOIL_MOISTURE_SENSOR_PIN  A0
+// DHT
+dht DHT;
+#define DHT_PIN 12
 
 String JSON_CONFIG = "%config%";
 Hautomation hautomation = Hautomation();
@@ -16,7 +20,35 @@ void transmitSensor() {
         soilMoistureValue = 0.0;
     }
 
-    hautomation.postSensorValue("HUMIDITY", soilMoistureValue);
+    hautomation.postSensorValue("SOIL-MOISTURE", soilMoistureValue);
+
+    pinMode(DHT_PIN, INPUT);
+    int chk = DHT.read22(DHT_PIN);
+    switch (chk)
+    {
+        case DHTLIB_OK:
+            Serial.println("OK,\t");
+            break;
+        case DHTLIB_ERROR_CHECKSUM:
+            Serial.println("Checksum error,\t");
+            break;
+        case DHTLIB_ERROR_TIMEOUT:
+            Serial.println("Time out error,\t");
+            break;
+        default:
+            Serial.println("Unknown error,\t");
+            break;
+    }
+
+    float h = DHT.humidity;
+    float t = DHT.temperature;
+
+    if (t > 0) {
+        hautomation.postSensorValue("TEMPERATURE", t);
+    }
+    if (h > 0) {
+        hautomation.postSensorValue("HUMIDITY", h);
+    }
 }
 
 void setup() {
