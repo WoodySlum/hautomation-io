@@ -3,12 +3,13 @@
 
 // DHT
 dht DHT;
-#define DHT_PIN 9
+#define DHT_PIN 12
 
 String JSON_CONFIG = "%config%";
 Hautomation hautomation = Hautomation();
 
 void transmitSensor() {
+    pinMode(DHT_PIN, INPUT);
     int chk = DHT.read22(DHT_PIN);
     switch (chk)
     {

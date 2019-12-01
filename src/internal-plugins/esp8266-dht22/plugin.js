@@ -11,7 +11,7 @@ function loaded(api) {
     const wiringSchema = api.iotAPI.getWiringSchemaForLib("esp8266");
     wiringSchema.right["D0"].push("Nodemcu pin RST");
     wiringSchema.left["RST"].push("Nodemcu pin D0");
-    wiringSchema.left["SD2"].push("DHT22 pin #2");
+    wiringSchema.right["D6"].push("DHT22 pin #2");
     wiringSchema.left["SD3"].push("DHT22 pin #1");
     wiringSchema.left["GND-1"].push("DHT22 pin #4");
     api.iotAPI.registerApp("app", "esp8266-dht22", "Nodemcu Temperature and humidity sensor", 5, api.iotAPI.constants().PLATFORMS.ESP8266, api.iotAPI.constants().BOARDS.NODEMCU, api.iotAPI.constants().FRAMEWORKS.ARDUINO, ["esp8266"], espPlugin.generateOptions(espPlugin.constants().MODE_DEEP_SLEEP, 1 * 58 * 60), wiringSchema);

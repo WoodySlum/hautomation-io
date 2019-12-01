@@ -5,7 +5,7 @@
 
 // DHT
 dht DHT;
-#define DHT_PIN 9
+#define DHT_PIN 12
 
 // Rain sensor
 #define WATER_SENSOR_PIN  A0

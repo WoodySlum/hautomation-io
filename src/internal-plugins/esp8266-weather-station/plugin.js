@@ -14,7 +14,7 @@ function loaded(api) {
     const wiringSchema = api.iotAPI.getWiringSchemaForLib("esp8266");
     wiringSchema.right["D0"].push("Nodemcu pin RST");
     wiringSchema.left["RST"].push("Nodemcu pin D0");
-    wiringSchema.left["SD2"].push("DHT22 pin #2");
+    wiringSchema.right["D6"].push("DHT22 pin #2");
     wiringSchema.left["SD3"].push("DHT22 pin #1", "BM180 VIN", "Water Sensor pin + / VIN");
     wiringSchema.left["GND-1"].push("DHT22 pin #4", "BM180 GND", "Water Sensor pin - / GND");
     wiringSchema.right["D4"].push("BM180 SDA");
