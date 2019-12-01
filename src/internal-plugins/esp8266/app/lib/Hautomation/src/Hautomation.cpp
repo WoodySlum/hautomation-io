@@ -342,7 +342,7 @@ void Hautomation::loop() {
 
 
     // Ping only when not always powered
-    if (poweredMode == POWER_MODE_SLEEP) {
+    if (poweredMode == POWER_MODE_SLEEP || poweredMode == POWER_MODE_LIGHT_SLEEP) {
         Serial.println("+> Ping");
         ping();
     }
