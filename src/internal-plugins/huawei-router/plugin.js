@@ -191,7 +191,6 @@ function loaded(api) {
                                                     }
 
                                                     const rssi = parseInt(self.apiInfos.signal.rssi[0].replace("dBm", "").replace(">=", "").replace("<=", "").replace(">", "").replace("<", ""));
-
                                                     //-51 : Good signal
                                                     //-113 : Poor signal
 

@@ -44,7 +44,7 @@ function loaded(api) {
             const self = this;
             api.getPluginInstance("huawei-router").register((data) => {
                 if (data && data.signal && data.signal.rssi && data.signal.rssi.length > 0) {
-                    const rssi = parseInt(data.signal.rssi[0].replace("dBm", ""));
+                    const rssi = parseInt(data.signal.rssi[0].replace("dBm", "").replace(">=", "").replace("<=", "").replace(">", "").replace("<", ""));
                     self.setValue(rssi);
                 }
             }, id);
