@@ -194,6 +194,7 @@ function loaded(api) {
 
                                                     //-51 : Good signal
                                                     //-113 : Poor signal
+                                                    api.exported.Logger.info("Huawei router RSSI value : " + rssi);
                                                     let rssiIndicator = parseInt(100 - ((rssi - (-51)) * 100 / (-113 - -51)));
                                                     if (rssiIndicator < 0) {
                                                         rssiIndicator = 0;
