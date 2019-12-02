@@ -20,7 +20,7 @@ function loaded(api) {
     wiringSchema.right["D4"].push("BM180 SDA");
     wiringSchema.right["D5"].push("BM180 SCL");
     wiringSchema.left["A0"].push("Water Sensor pin S / Data");
-    api.iotAPI.registerApp("app", "esp8266-weather-station", "Nodemcu Weather station", 8, api.iotAPI.constants().PLATFORMS.ESP8266, api.iotAPI.constants().BOARDS.NODEMCU, api.iotAPI.constants().FRAMEWORKS.ARDUINO, ["esp8266"], espPlugin.generateOptions(espPlugin.constants().MODE_DEEP_SLEEP, REFRESH_TIME), wiringSchema);
+    api.iotAPI.registerApp("app", "esp8266-weather-station", "Nodemcu Weather station", 9, api.iotAPI.constants().PLATFORMS.ESP8266, api.iotAPI.constants().BOARDS.NODEMCU, api.iotAPI.constants().FRAMEWORKS.ARDUINO, ["esp8266"], espPlugin.generateOptions(espPlugin.constants().MODE_DEEP_SLEEP, REFRESH_TIME), wiringSchema);
     api.iotAPI.addIngredientForReceipe("esp8266-weather-station", "bmp180", "Pressure, temperature and altitude sensor", 1, true);
     api.iotAPI.addIngredientForReceipe("esp8266-weather-station", "dht22", "Pressure, temperature sensor", 1, true);
     api.iotAPI.addIngredientForReceipe("esp8266-weather-station", "Funduino water sensor", "Rain drop module", 1, true);

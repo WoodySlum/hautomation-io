@@ -21,8 +21,7 @@ void transmitSensor() {
     }
 
     hautomation.postSensorValue("SOIL-MOISTURE", soilMoistureValue);
-
-    pinMode(DHT_PIN, INPUT);
+        
     int chk = DHT.read22(DHT_PIN);
     switch (chk)
     {

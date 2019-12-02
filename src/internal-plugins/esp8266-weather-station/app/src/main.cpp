@@ -22,7 +22,6 @@ Hautomation hautomation = Hautomation();
 
 void transmitSensor() {
     // DHT
-    pinMode(DHT_PIN, INPUT);
     int chk = DHT.read22(DHT_PIN);
     switch (chk)
     {
@@ -42,6 +41,8 @@ void transmitSensor() {
 
     float hDHT = DHT.humidity;
     float tDHT = DHT.temperature;
+    Serial.println("DHT Temperature: " + String(tDHT));
+    Serial.println("DHT Humidity: " + String(hDHT));
 
     // Pressure
     Wire.begin(PRESSURE_PIN_1, PRESSURE_PIN_2);
@@ -62,20 +63,20 @@ void transmitSensor() {
     float tBMP = 0;
     float aBMP = 0;
     float pBMP = 0;
-    float sBMP = 0;
+    // float sBMP = 0;
     if(!bmp.begin()) {
         Serial.println("No bmp detected");
     } else {
         tBMP = bmp.readTemperature();
         aBMP = bmp.readAltitude();
         pBMP = bmp.readPressure();
-        sBMP = bmp.readSealevelPressure();
+        // sBMP = bmp.readSealevelPressure();
     }
 
     float avgTemperature = tBMP;
     if (tDHT >= 0) {
         // Aggregation
-        float avgTemperature = (tBMP + tDHT) / 2;
+        avgTemperature = (tBMP + tDHT) / 2;
     }
 
     hautomation.postSensorValue("TEMPERATURE", avgTemperature);
