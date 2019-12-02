@@ -190,8 +190,7 @@ function loaded(api) {
                                                         networkType = "2G";
                                                     }
 
-                                                    api.exported.Logger.info("Huawei router raw RSSI value : " + self.apiInfos.signal.rssi[0]);
-                                                    const rssi = parseInt(self.apiInfos.signal.rssi[0].replace("dBm", ""));
+                                                    const rssi = parseInt(self.apiInfos.signal.rssi[0].replace("dBm", "").replace(">=", "").replace("<=", "").replace(">", "").replace("<", ""));
 
                                                     //-51 : Good signal
                                                     //-113 : Poor signal
