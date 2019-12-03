@@ -22,6 +22,7 @@ Hautomation hautomation = Hautomation();
 
 void transmitSensor() {
     // DHT
+    delay(2000);
     int chk = DHT.read22(DHT_PIN);
     switch (chk)
     {

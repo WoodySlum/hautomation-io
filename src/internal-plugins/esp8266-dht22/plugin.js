@@ -14,7 +14,7 @@ function loaded(api) {
     wiringSchema.right["D6"].push("DHT22 pin #2");
     wiringSchema.left["SD3"].push("DHT22 pin #1");
     wiringSchema.left["GND-1"].push("DHT22 pin #4");
-    api.iotAPI.registerApp("app", "esp8266-dht22", "Nodemcu Temperature and humidity sensor", 6, api.iotAPI.constants().PLATFORMS.ESP8266, api.iotAPI.constants().BOARDS.NODEMCU, api.iotAPI.constants().FRAMEWORKS.ARDUINO, ["esp8266"], espPlugin.generateOptions(espPlugin.constants().MODE_DEEP_SLEEP, 20 * 60), wiringSchema);
+    api.iotAPI.registerApp("app", "esp8266-dht22", "Nodemcu Temperature and humidity sensor", 7, api.iotAPI.constants().PLATFORMS.ESP8266, api.iotAPI.constants().BOARDS.NODEMCU, api.iotAPI.constants().FRAMEWORKS.ARDUINO, ["esp8266"], espPlugin.generateOptions(espPlugin.constants().MODE_DEEP_SLEEP, 20 * 60), wiringSchema);
     api.iotAPI.addIngredientForReceipe("esp8266-dht22", "DHT22", "DHT 22 humidity and temperature sensor", 1, true);
 }
 

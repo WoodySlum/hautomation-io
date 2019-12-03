@@ -9,6 +9,7 @@ String JSON_CONFIG = "%config%";
 Hautomation hautomation = Hautomation();
 
 void transmitSensor() {
+    delay(2000);
     int chk = DHT.read22(DHT_PIN);
     switch (chk)
     {
