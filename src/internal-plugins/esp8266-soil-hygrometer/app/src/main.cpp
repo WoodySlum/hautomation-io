@@ -42,7 +42,7 @@ void transmitSensor() {
     float h = DHT.humidity;
     float t = DHT.temperature;
 
-    if (t > 0) {
+    if (t <= 100 || t >= -100) {
         hautomation.postSensorValue("TEMPERATURE", t);
     }
     if (h > 0) {

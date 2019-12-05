@@ -57,8 +57,7 @@ void transmitSensor() {
         rainValue = rainValue + analogRead(WATER_SENSOR_PIN);
     }
     rainValue = rainValue  / 100.0;
-    Serial.println("Rain: ");
-    Serial.println(rainValue);
+    Serial.println("Rain: " + String(rainValue));
 
     // Pressure sensor
     float tBMP = 0;
@@ -72,15 +71,19 @@ void transmitSensor() {
         aBMP = bmp.readAltitude();
         pBMP = bmp.readPressure();
         // sBMP = bmp.readSealevelPressure();
+        Serial.println("BMP Temperature: " + String(tBMP));
+        Serial.println("BMP Altitude: " + String(aBMP));
+        Serial.println("BMP pressure: " + String(pBMP));
     }
 
-    float avgTemperature = tBMP;
-    if (tDHT >= 0) {
+    float temperature = tBMP;
+    if (tDHT <= 100 || tDHT >= -100) {
         // Aggregation
-        avgTemperature = (tBMP + tDHT) / 2;
+        temperature = tDHT;
     }
 
-    hautomation.postSensorValue("TEMPERATURE", avgTemperature);
+
+    hautomation.postSensorValue("TEMPERATURE", temperature);
     if (hDHT >= 0) {
         hautomation.postSensorValue("HUMIDITY", hDHT);
     }
