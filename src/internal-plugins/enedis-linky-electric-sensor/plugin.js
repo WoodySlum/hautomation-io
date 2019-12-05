@@ -82,7 +82,7 @@ function loaded(api) {
 
             api.timeEventAPI.register((self) => {
                 self.updateData(self);
-            }, this, api.timeEventAPI.constants().EVERY_HOURS);
+            }, this, api.timeEventAPI.constants().EVERY_HOURS_INACCURATE);
 
             this.updateData();
         }

@@ -20,7 +20,7 @@ describe("GatewayManager", function() {
         const eventSpy = sinon.spy(core.eventBus, "on");
         sinon.spy(GatewayManager.class.prototype, "transmit");
         const gatewayManager = new GatewayManager.class(core.environmentManager, "1.0", "aaaaaa", core.timeEventService, {}, core.webServices, core.eventBus, core.scenarioManager, core.threadsManager, core.messageManager, core.translateManager, "FOOBAR", "BARFOO");
-        expect(tesSpy.withArgs(sinon.match.any, gatewayManager, TimeEventService.EVERY_HOURS).calledOnce).to.be.true;
+        expect(tesSpy.withArgs(sinon.match.any, gatewayManager, TimeEventService.EVERY_HOURS_INACCURATE).calledOnce).to.be.true;
         expect(eventSpy.withArgs("FOOBAR", sinon.match.any).calledOnce).to.be.true;
         expect(eventSpy.withArgs("BARFOO", sinon.match.any).calledOnce).to.be.true;
         expect(eventSpy.withArgs(HautomationRunnerConstants.RESTART, sinon.match.any).calledOnce).to.be.true;

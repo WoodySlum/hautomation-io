@@ -96,7 +96,7 @@ function loaded(api) {
                         self.api.exported.Logger.err(err.message);
                     }
                 });
-            }, this, this.api.timeEventAPI.constants().EVERY_HOURS, null, null, null, BASE_KEY + this.id);
+            }, this, this.api.timeEventAPI.constants().EVERY_HOURS_INACCURATE, null, null, null, BASE_KEY + this.id);
         }
     }
 

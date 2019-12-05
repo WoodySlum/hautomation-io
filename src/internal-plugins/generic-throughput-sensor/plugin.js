@@ -127,7 +127,7 @@ function loaded(api) {
                     self.api.exported.Logger.warn("No file size set in configuration");
                 }
 
-            }, this, this.api.timeEventAPI.constants().EVERY_HOURS);
+            }, this, this.api.timeEventAPI.constants().EVERY_HOURS_INACCURATE);
         }
     }
 

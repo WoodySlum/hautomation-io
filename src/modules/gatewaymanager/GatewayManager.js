@@ -64,7 +64,7 @@ class GatewayManager {
 
         this.timeEventService.register((self) => {
             self.transmit();
-        }, this, TimeEventService.EVERY_HOURS);
+        }, this, TimeEventService.EVERY_HOURS_INACCURATE);
 
         const self = this;
 

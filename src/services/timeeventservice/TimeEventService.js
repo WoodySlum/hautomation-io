@@ -9,6 +9,7 @@ const EVERY_SECONDS = 0;
 const EVERY_MINUTES = 1;
 const EVERY_HOURS = 2;
 const EVERY_DAYS = 3;
+const EVERY_HOURS_INACCURATE = 4;
 const CUSTOM = 99;
 
 /**
@@ -165,6 +166,11 @@ class TimeEventService extends Service.class {
             obj.minute = 0;
             obj.hour = "*";
             break;
+        case EVERY_HOURS_INACCURATE:
+            obj.second = Math.floor(Math.random() * 59) + 0; // Sleek seconds for day processing
+            obj.minute = Math.floor(Math.random() * 59) + 0;
+            obj.hour = "*";
+            break;
         case EVERY_DAYS:
             obj.second = 0;
             obj.minute = Math.floor(Math.random() * 58) + 1; // Sleek minutes for day processing
@@ -194,7 +200,10 @@ class TimeEventService extends Service.class {
                 if (parseInt(minutes) === nowMinutes || minutes === "*") {
                     if (parseInt(hours) === nowHours || hours === "*") {
                         try {
-                            registeredEl.cb(registeredEl.context);
+                            // Set timeout generate in a new thread
+                            setTimeout(() => {
+                                registeredEl.cb(registeredEl.context);
+                            }, 1);
                         } catch(e) {
                             Logger.err(e.message);
                         }
@@ -209,6 +218,7 @@ module.exports = {class:TimeEventService,
     EVERY_SECONDS:EVERY_SECONDS,
     EVERY_MINUTES:EVERY_MINUTES,
     EVERY_HOURS:EVERY_HOURS,
+    EVERY_HOURS_INACCURATE:EVERY_HOURS_INACCURATE,
     EVERY_DAYS:EVERY_DAYS,
     CUSTOM:CUSTOM
 };

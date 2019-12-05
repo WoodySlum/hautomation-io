@@ -99,7 +99,7 @@ function loaded(api) {
             api.timeEventAPI.register((self) => {
                 const d = new Date();
                 const m = d.getMinutes();
-                if ((m % 15) === 0) {
+                if ((m % 17) === 0) { // 17 for dispatchingmore randomly
                     self.getApiInformations();
                 }
             }, this, api.timeEventAPI.constants().EVERY_MINUTES);
