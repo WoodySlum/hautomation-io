@@ -162,7 +162,7 @@ class HautomationCore {
         this.userManager.registerBotActions(this.botEngine);
 
         // IoT manager
-        this.iotManager = new IotManager.class(AppConfiguration, this.webServices, this.installationManager, this.formManager, this.environmentManager, this.confManager);
+        this.iotManager = new IotManager.class(AppConfiguration, this.webServices, this.installationManager, this.formManager, this.environmentManager, this.confManager, this.translateManager, this.messageManager);
         // Sensors manager module
         this.sensorsManager = new SensorsManager.class(this.pluginsManager, this.eventBus, this.webServices, this.formManager, this.confManager, this.translateManager, this.themeManager, this.botEngine, this.timeEventService, this.scenarioManager);
         // RadioManager. The plugins manager will be set later, when the pluginsLoaded event will be triggered

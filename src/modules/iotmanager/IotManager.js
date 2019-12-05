@@ -45,16 +45,20 @@ class IotManager {
      * @param  {FormManager} formManager  The form manager
      * @param  {EnvironmentManager} environmentManager  The environment manager
      * @param  {ConfManager} confManager    The configuration manager
+     * @param  {TranslateManager} translateManager  The translate manager
+     * @param  {MessageManager} messageManager    The message manager
      *
      * @returns {IotManager}              The instance
      */
-    constructor(appConfiguration, webServices, installationManager, formManager, environmentManager, confManager) {
+    constructor(appConfiguration, webServices, installationManager, formManager, environmentManager, confManager, translateManager, messageManager) {
         this.webServices = webServices;
         this.appConfiguration = appConfiguration;
         this.installationManager = installationManager;
         this.formManager = formManager;
         this.environmentManager = environmentManager;
         this.confManager = confManager;
+        this.translateManager = translateManager;
+        this.messageManager = messageManager;
         this.iotApps = {};
         this.iotLibs = {};
         this.isBuildingApp = false;
@@ -216,6 +220,7 @@ class IotManager {
         this.iotApps[appId].firmwareBuildPath = {};
         this.iotApps[appId].builds = {};
         this.iotApps[appId].upgradeUrls = {};
+        this.iotApps[appId].iotVersions = {};
 
         // Register form
         this.formManager.register(form, ...inject);
@@ -631,6 +636,24 @@ class IotManager {
         const iot = this.getIot(id);
         if (iot && iot.iotApp && this.iotApps[iot.iotApp]) {
             this.iotApps[iot.iotApp].upgradeUrls[iot.id] = upgradeUrl;
+        } else {
+            throw Error("iot or iot app not found (id " + id + ")");
+        }
+    }
+
+    /**
+     * Set the current version of the iot app
+     *
+     * @param  {string} id    The iot identifier
+     * @param  {number} version   The version
+     */
+    setVersion(id, version) {
+        const iot = this.getIot(id);
+        if (iot && iot.iotApp && this.iotApps[iot.iotApp]) {
+            if ((version != 0) && this.iotApps[iot.iotApp].iotVersions[iot.id] && (this.iotApps[iot.iotApp].iotVersions[iot.id] != version)) {
+                this.messageManager.sendMessage("*", this.translateManager.t("iot.update.message", iot.name, this.iotApps[iot.iotApp].iotVersions[iot.id], version));
+            }
+            this.iotApps[iot.iotApp].iotVersions[iot.id] = version;
         } else {
             throw Error("iot or iot app not found (id " + id + ")");
         }

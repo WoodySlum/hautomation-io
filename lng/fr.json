@@ -186,5 +186,6 @@
     "camera.record.download.message": "Un nouvel enregistrement est disponible pour la caméra %@. Lien de téléchargement : %@",
     "camera.scenario.timer":"Temps d'enregistrement, en secondes",
     "camera.scenario.camera":"Caméra",
-    "camera.scenario.title":"Enregistrer une caméra"
+    "camera.scenario.title":"Enregistrer une caméra",
+    "iot.update.message": "L'object connecté %@ a été mise à jour de la version %@ à la version %@"
 }

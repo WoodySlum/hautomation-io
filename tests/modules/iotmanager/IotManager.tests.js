@@ -18,6 +18,8 @@ const installationManager = core.installationManager;
 const formManager = core.formManager;
 const environmentManager = core.environmentManager;
 const confManager = core.confManager;
+const translateManager = core.translateManager;
+const messageManager = core.messageManager;
 
 class IotLibForm extends FormObject.class {
     constructor(id = null, myLibProperty = null) {
@@ -60,7 +62,7 @@ describe("IotManager", function() {
         sinon.spy(confManager, "loadData");
         sinon.spy(formManager, "register");
         sinon.spy(webServices, "registerAPI");
-        const iotManager = new IotManager.class(appConfiguration, webServices, installationManager, formManager, environmentManager, confManager);
+        const iotManager = new IotManager.class(appConfiguration, webServices, installationManager, formManager, environmentManager, confManager, translateManager, messageManager);
         expect(iotManager.webServices).to.be.equal(webServices);
         expect(iotManager.appConfiguration).to.be.equal(appConfiguration);
         expect(iotManager.installationManager).to.be.equal(installationManager);
@@ -79,7 +81,7 @@ describe("IotManager", function() {
     });
 
     it("registerIotsListForm should register the form", function() {
-        const iotManager = new IotManager.class(appConfiguration, webServices, installationManager, formManager, environmentManager, confManager);
+        const iotManager = new IotManager.class(appConfiguration, webServices, installationManager, formManager, environmentManager, confManager, translateManager, messageManager);
         sinon.spy(formManager, "register");
         iotManager.registerIotsListForm();
         expect(formManager.register.calledOnce).to.be.true;
@@ -87,7 +89,7 @@ describe("IotManager", function() {
     });
 
     it("registerLib should throw an exception due to empty folder", function() {
-        const iotManager = new IotManager.class(appConfiguration, webServices, installationManager, formManager, environmentManager, confManager);
+        const iotManager = new IotManager.class(appConfiguration, webServices, installationManager, formManager, environmentManager, confManager, translateManager, messageManager);
 
         try {
             iotManager.registerLib("/tmp/foobar", "foolib", 2);
@@ -98,7 +100,7 @@ describe("IotManager", function() {
     });
 
     it("registerLib should well register lib", function() {
-        const iotManager = new IotManager.class(appConfiguration, webServices, installationManager, formManager, environmentManager, confManager);
+        const iotManager = new IotManager.class(appConfiguration, webServices, installationManager, formManager, environmentManager, confManager, translateManager, messageManager);
         const fs = require("fs-extra");
         sinon.stub(fs, "existsSync").callsFake((path) => {
             return true;
@@ -118,7 +120,7 @@ describe("IotManager", function() {
     });
 
     it("registerApp should throw an exception due to empty folder", function() {
-        const iotManager = new IotManager.class(appConfiguration, webServices, installationManager, formManager, environmentManager, confManager);
+        const iotManager = new IotManager.class(appConfiguration, webServices, installationManager, formManager, environmentManager, confManager, translateManager, messageManager);
 
         try {
             iotManager.registerApp("/tmp/foobar", "fooapp", "Foo Bar", 5, "fooPlatform", "barBoard", "foobarFramework", [], null, {}, IotAppForm);
@@ -129,7 +131,7 @@ describe("IotManager", function() {
     });
 
     it("registerApp should failed due to missing dependency", function() {
-        const iotManager = new IotManager.class(appConfiguration, webServices, installationManager, formManager, environmentManager, confManager);
+        const iotManager = new IotManager.class(appConfiguration, webServices, installationManager, formManager, environmentManager, confManager, translateManager, messageManager);
         const fs = require("fs-extra");
         sinon.stub(fs, "existsSync").callsFake((path) => {
             return true;
@@ -149,7 +151,7 @@ describe("IotManager", function() {
     });
 
     it("registerApp should well register app", function() {
-        const iotManager = new IotManager.class(appConfiguration, webServices, installationManager, formManager, environmentManager, confManager);
+        const iotManager = new IotManager.class(appConfiguration, webServices, installationManager, formManager, environmentManager, confManager, translateManager, messageManager);
         const fs = require("fs-extra");
         sinon.stub(fs, "existsSync").callsFake((path) => {
             return true;
@@ -177,6 +179,7 @@ describe("IotManager", function() {
         expect(iotManager.iotApps["fooapp"].wiringSchema.right["GND"][0]).to.be.equal("barfoo");
         expect(iotManager.iotApps["fooapp"]).to.have.own.property("builds");
         expect(iotManager.iotApps["fooapp"]).to.have.own.property("upgradeUrls");
+        expect(iotManager.iotApps["fooapp"]).to.have.own.property("iotVersions");
         expect(iotManager.iotApps["fooapp"]).to.have.own.property("firmwareBuildPath");
 
         fs.existsSync.restore();
@@ -185,7 +188,7 @@ describe("IotManager", function() {
     });
 
     it("build app should execute all steps", function(done) {
-        const iotManager = new IotManager.class(appConfiguration, webServices, installationManager, formManager, environmentManager, confManager);
+        const iotManager = new IotManager.class(appConfiguration, webServices, installationManager, formManager, environmentManager, confManager, translateManager, messageManager);
         const fs = require("fs-extra");
         sinon.stub(fs, "existsSync").callsFake((path) => {
             return true;
@@ -239,7 +242,7 @@ describe("IotManager", function() {
     });
 
     it("generate descriptor should be correct", function(done) {
-        const iotManager = new IotManager.class(appConfiguration, webServices, installationManager, formManager, environmentManager, confManager);
+        const iotManager = new IotManager.class(appConfiguration, webServices, installationManager, formManager, environmentManager, confManager, translateManager, messageManager);
         const fs = require("fs-extra");
         sinon.stub(fs, "existsSync").callsFake((path) => {
             return true;
@@ -266,7 +269,7 @@ describe("IotManager", function() {
     });
 
     it("iotAppExists should return true", function() {
-        const iotManager = new IotManager.class(appConfiguration, webServices, installationManager, formManager, environmentManager, confManager);
+        const iotManager = new IotManager.class(appConfiguration, webServices, installationManager, formManager, environmentManager, confManager, translateManager, messageManager);
         const fs = require("fs-extra");
         sinon.stub(fs, "existsSync").callsFake((path) => {
             return true;
@@ -280,7 +283,7 @@ describe("IotManager", function() {
     });
 
     it("iotAppExists should return false", function() {
-        const iotManager = new IotManager.class(appConfiguration, webServices, installationManager, formManager, environmentManager, confManager);
+        const iotManager = new IotManager.class(appConfiguration, webServices, installationManager, formManager, environmentManager, confManager, translateManager, messageManager);
         const fs = require("fs-extra");
         sinon.stub(fs, "existsSync").callsFake((path) => {
             return true;
@@ -294,7 +297,7 @@ describe("IotManager", function() {
     });
 
     it("getVersion should return the correct version additinated number", function() {
-        const iotManager = new IotManager.class(appConfiguration, webServices, installationManager, formManager, environmentManager, confManager);
+        const iotManager = new IotManager.class(appConfiguration, webServices, installationManager, formManager, environmentManager, confManager, translateManager, messageManager);
         const fs = require("fs-extra");
         sinon.stub(fs, "existsSync").callsFake((path) => {
             return true;
@@ -309,7 +312,7 @@ describe("IotManager", function() {
     });
 
     it("getVersion should return the correct original version", function() {
-        const iotManager = new IotManager.class(appConfiguration, webServices, installationManager, formManager, environmentManager, confManager);
+        const iotManager = new IotManager.class(appConfiguration, webServices, installationManager, formManager, environmentManager, confManager, translateManager, messageManager);
         const fs = require("fs-extra");
         sinon.stub(fs, "existsSync").callsFake((path) => {
             return true;
@@ -322,7 +325,7 @@ describe("IotManager", function() {
     });
 
     it("getIotApp should return the good app", function() {
-        const iotManager = new IotManager.class(appConfiguration, webServices, installationManager, formManager, environmentManager, confManager);
+        const iotManager = new IotManager.class(appConfiguration, webServices, installationManager, formManager, environmentManager, confManager, translateManager, messageManager);
         const fs = require("fs-extra");
         sinon.stub(fs, "existsSync").callsFake((path) => {
             return true;
@@ -335,7 +338,7 @@ describe("IotManager", function() {
     });
 
     it("getIotApp should return null due to invalid app name", function() {
-        const iotManager = new IotManager.class(appConfiguration, webServices, installationManager, formManager, environmentManager, confManager);
+        const iotManager = new IotManager.class(appConfiguration, webServices, installationManager, formManager, environmentManager, confManager, translateManager, messageManager);
         const fs = require("fs-extra");
         sinon.stub(fs, "existsSync").callsFake((path) => {
             return true;
@@ -348,7 +351,7 @@ describe("IotManager", function() {
     });
 
     it("addIngredientForReceipe should work well", function() {
-        const iotManager = new IotManager.class(appConfiguration, webServices, installationManager, formManager, environmentManager, confManager);
+        const iotManager = new IotManager.class(appConfiguration, webServices, installationManager, formManager, environmentManager, confManager, translateManager, messageManager);
         const fs = require("fs-extra");
         sinon.stub(fs, "existsSync").callsFake((path) => {
             return true;
@@ -364,7 +367,7 @@ describe("IotManager", function() {
     });
 
     it("setUpgradeUrl should work well", function() {
-        const iotManager = new IotManager.class(appConfiguration, webServices, installationManager, formManager, environmentManager, confManager);
+        const iotManager = new IotManager.class(appConfiguration, webServices, installationManager, formManager, environmentManager, confManager, translateManager, messageManager);
         const fs = require("fs-extra");
         sinon.stub(fs, "existsSync").callsFake((path) => {
             return true;
@@ -378,6 +381,65 @@ describe("IotManager", function() {
         expect(iotManager.iotApps["fooapp"].upgradeUrls[1234]).to.be.equal("http://foo.bar");
 
         fs.existsSync.restore();
+    });
+
+    it("setVersion should work well", function() {
+        const iotManager = new IotManager.class(appConfiguration, webServices, installationManager, formManager, environmentManager, confManager, translateManager, messageManager);
+        const fs = require("fs-extra");
+        sinon.stub(fs, "existsSync").callsFake((path) => {
+            return true;
+        });
+
+        iotManager.registerLib("/tmp/foobar", "foolib", 2, {left:{"3V3":["foobar"]}}, IotLibForm);
+        iotManager.registerApp("/tmp/foobar", "fooapp", "Foo Bar", 5, "fooPlatform", "barBoard", "foobarFramework", ["foolib"], {foo:"bar"}, {right:{"GND":["barfoo"]}}, IotAppForm);
+        iotManager.iots.push({id:1234, iotApp: "fooapp"});
+        iotManager.setVersion("1234", 22);
+
+        expect(iotManager.iotApps["fooapp"].iotVersions[1234]).to.be.equal(22);
+
+        fs.existsSync.restore();
+    });
+
+    it("setVersion should send notification", function() {
+        const iotManager = new IotManager.class(appConfiguration, webServices, installationManager, formManager, environmentManager, confManager, translateManager, messageManager);
+        const fs = require("fs-extra");
+        sinon.stub(fs, "existsSync").callsFake((path) => {
+            return true;
+        });
+        let nbMessage = 0;
+        sinon.stub(messageManager, "sendMessage").callsFake(() => {nbMessage++;});
+
+        iotManager.registerLib("/tmp/foobar", "foolib", 2, {left:{"3V3":["foobar"]}}, IotLibForm);
+        iotManager.registerApp("/tmp/foobar", "fooapp", "Foo Bar", 5, "fooPlatform", "barBoard", "foobarFramework", ["foolib"], {foo:"bar"}, {right:{"GND":["barfoo"]}}, IotAppForm);
+        iotManager.iots.push({id:1234, iotApp: "fooapp"});
+        iotManager.iotApps["fooapp"].iotVersions[1234] = 4;
+        iotManager.setVersion("1234", 5);
+
+        expect(nbMessage).to.be.equal(1);
+
+        fs.existsSync.restore();
+        messageManager.sendMessage.restore();
+    });
+
+    it("setVersion should not send notification", function() {
+        const iotManager = new IotManager.class(appConfiguration, webServices, installationManager, formManager, environmentManager, confManager, translateManager, messageManager);
+        const fs = require("fs-extra");
+        sinon.stub(fs, "existsSync").callsFake((path) => {
+            return true;
+        });
+        let nbMessage = 0;
+        sinon.stub(messageManager, "sendMessage").callsFake(() => {nbMessage++;});
+
+        iotManager.registerLib("/tmp/foobar", "foolib", 2, {left:{"3V3":["foobar"]}}, IotLibForm);
+        iotManager.registerApp("/tmp/foobar", "fooapp", "Foo Bar", 5, "fooPlatform", "barBoard", "foobarFramework", ["foolib"], {foo:"bar"}, {right:{"GND":["barfoo"]}}, IotAppForm);
+        iotManager.iots.push({id:1234, iotApp: "fooapp"});
+        iotManager.iotApps["fooapp"].iotVersions[1234] = 5;
+        iotManager.setVersion("1234", 5);
+
+        expect(nbMessage).to.be.equal(0);
+
+        fs.existsSync.restore();
+        messageManager.sendMessage.restore();
     });
 
     after(() => {

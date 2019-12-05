@@ -188,5 +188,6 @@
     "camera.record.download.message": "A new camera record is available for camera %@. Download link : %@",
     "camera.scenario.timer":"Record time, in seconds",
     "camera.scenario.camera":"Camera",
-    "camera.scenario.title":"Record camera"
+    "camera.scenario.title":"Record camera",
+    "iot.update.message": "The IoT %@ has been upgraded from version %@ to version %@"
 }

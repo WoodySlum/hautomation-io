@@ -111,6 +111,7 @@ function loaded(api) {
                     Object.keys(this.configurations).forEach((iotKey) => {
                         try {
                             self.api.iotAPI.setUpgradeUrl(iotKey, ((self.configurations[iotKey] && self.configurations[iotKey].ip) ? self.getUpgradeUrl(self.configurations[iotKey].ip) : null));
+                            this.api.iotAPI.setVersion(iotKey, ((self.configurations[iotKey] && self.configurations[iotKey].currentVersion) ? self.configurations[iotKey].currentVersion : 0));
                         } catch (e) {
                             self.api.exported.Logger.err(e.message);
                         }
@@ -219,7 +220,9 @@ function loaded(api) {
                     this.api.exported.Logger.info("Ping ESP " + apiRequest.data.id + " on ip " + apiRequest.params.ip + " version " + apiRequest.params.version);
                     this.configurations[iot.id.toString()] = apiRequest.params;
                     this.configurations[iot.id.toString()].lastUpdated = this.api.exported.DateUtils.class.timestamp();
-                    this.api.iotAPI.setUpgradeUrl(iot.id, ((this.configurations[iot.id] && this.configurations[iot.id].ip) ? this.getUpgradeUrl(this.configurations[iot.id].ip) : null));
+                    this.configurations[iot.id.toString()].currentVersion = parseInt(apiRequest.params.version);
+                    this.api.iotAPI.setUpgradeUrl(iot.id, ((this.configurations[iot.id.toString()] && this.configurations[iot.id.toString()].ip) ? this.getUpgradeUrl(this.configurations[iot.id.toString()].ip) : null));
+                    this.api.iotAPI.setVersion(iot.id, ((this.configurations[iot.id.toString()] && this.configurations[iot.id.toString()].currentVersion) ? this.configurations[iot.id.toString()].currentVersion : 0));
                     this.api.coreAPI.dispatchEvent(PING_EVENT_KEY, Object.assign({id:iot.id.toString()}, this.configurations[iot.id.toString()]));
                     this.api.configurationAPI.getConfManager().saveData(this.configurations, CONF_KEY);
                 }

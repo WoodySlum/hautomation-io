@@ -166,6 +166,16 @@ class IotAPI {
     setUpgradeUrl(id, upgradeUrl) {
         PrivateProperties.oprivate(this).iotManager.setUpgradeUrl(id, upgradeUrl);
     }
+
+    /**
+     * Set the current version of the iot app
+     *
+     * @param  {string} id    The iot identifier
+     * @param  {number} version   The version
+     */
+    setVersion(id, version) {
+        PrivateProperties.oprivate(this).iotManager.setVersion(id, version);
+    }
 }
 
 module.exports = {class:IotAPI};
