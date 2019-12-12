@@ -20,7 +20,6 @@ function loaded(api) {
          */
         constructor(plugin, port) {
             super("deconz", null, api.exported.Service.SERVICE_MODE_EXTERNAL, "deCONZ -platform minimal --http-port=" + port);
-
         }
     }
 

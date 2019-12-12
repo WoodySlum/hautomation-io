@@ -1,4 +1,5 @@
 "use strict";
+const request = require("request");
 const DeconzServiceClass = require("./service.js");
 const DECONZ_HTTP_PORT = 8053;
 
@@ -9,6 +10,56 @@ const DECONZ_HTTP_PORT = 8053;
  */
 function loaded(api) {
     api.init();
+
+    /**
+     * This class manage Deconz form configuration
+     * @class
+     */
+    class DeconzForm extends api.exported.FormObject.class {
+        /**
+         * Constructor
+         *
+         * @param  {number} id The identifier
+         * @param  {boolean} associate The associate flag
+         * @param  {string} token The token
+         * @returns {DeconzForm}        The instance
+         */
+        constructor(id, associate, token) {
+            super(id);
+
+            /**
+             * @Property("associate");
+             * @Type("boolean");
+             * @Title("deconz.form.associate");
+             * @Default(false);
+             */
+            this.associate = associate;
+
+            /**
+             * @Property("token");
+             * @Type("string");
+             * @Title("deconz.form.token");
+             * @Readonly(true);
+             */
+            this.token = token;
+        }
+
+
+        /**
+         * Convert a json object to DeconzForm object
+         *
+         * @param  {Object} data Some data
+         * @returns {DeconzForm}      An instance
+         */
+        json(data) {
+            return new DeconzForm(data.id, data.associate, data.token);
+        }
+    }
+
+    // Register the hue form
+    api.configurationAPI.register(DeconzForm);
+
+
     api.installerAPI.register(["arm", "arm64"], "apt-get install lsb", true, true);
     api.installerAPI.register(["arm", "arm64"], "sudo gpasswd -a $USER dialout", true, true);
     api.installerAPI.register(["arm", "arm64"], "wget -O - http://phoscon.de/apt/deconz.pub.key | sudo apt-key add -", true, true);
@@ -34,6 +85,26 @@ function loaded(api) {
             const DeconzService = DeconzServiceClass(api);
             this.service = new DeconzService(this, DECONZ_HTTP_PORT);
             api.servicesManagerAPI.add(this.service);
+
+            api.configurationAPI.setUpdateCb((data) => {
+                if (data.associate) {
+                    request.post({
+                        headers: {"content-type" : "application/x-www-form-urlencoded"},
+                        url:     "http://127.0.0.1:" + DECONZ_HTTP_PORT + "/api",
+                        body:    "{\"devicetype\":\"hautomation-" + api.environmentAPI.getHautomationId() + "\"}"
+                    }, (error, response, body) => {
+                        if (error) {
+                            api.exported.Logger.err("Could not get token for deconz : " + error.message);
+                        } else {
+                            api.exported.Logger.info(body);
+                            api.configurationAPI.saveData(data);
+                        }
+                    });
+                }
+                data.associate = false;
+
+                api.configurationAPI.saveData(data);
+            });
 
         }
     }
