@@ -6,9 +6,6 @@
  * @param  {PluginAPI} api The core APIs
  */
 function loaded(api) {
-    var Logger;
-    var self = null;
-
     /**
      * This class conect to RFLink using serial port on a pseicif thread.
      * @class

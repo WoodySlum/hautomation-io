@@ -39,7 +39,9 @@ function loaded(api) {
     }
 
     // Instantiate. Parent will store instanciation.
-    new Deconz(api);
+    if (!process.env.TEST) {
+        new Deconz(api);
+    }
 }
 
 module.exports.attributes = {
