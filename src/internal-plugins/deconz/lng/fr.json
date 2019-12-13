@@ -1,3 +1,11 @@
 {
-    
+    "deconz.form.identifier": "Identifiant de la clé",
+    "deconz.form.associate": "Associer - Ouvrez votre navigateur Internet, et allez sur l'applicaztion web Phoscon (utilisez 'internal ip address' et 'internal port' à partir de l'URL l'URL https://phoscon.de/discover). Définissez un mot de passe maître si nécessaire, puis allez dans Menu, Gateway, Advanced et cliquez sur Authenticate app. Cochez cette case et sauvegardez.",
+    "deconz.form.token": "Token (rempli automatiquement après association)",
+    "deconz.form.scan": "Scanner les lumières, capteurs et interrupteurs pendant 60 secondes",
+    "deconz.message.new.light": "Un nouvel éclairage a été ajouté, le protocole est : %@",
+    "deconz.message.new.sensor": "Un nouvel interrupteur / capteur %@ a été ajouté, identifiant : %@",
+    "deconz.scan.error": "Erreur lors du scan Zigbee : %@",
+    "deconz.scan.end": "Scan Zigbee terminé",
+    "deconz.scan.start": "Démarrage du scan Zigbee"
 }

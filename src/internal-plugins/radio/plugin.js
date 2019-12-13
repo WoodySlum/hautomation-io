@@ -303,9 +303,10 @@ function loaded(api) {
          * @param  {string} switchId  The switch ID
          * @param  {number} [status=null]    The status (or enum called through `constants()`)
          * @param  {number} [previousStatus=null]    The previous object status, used if status is null to invert
+         * @param  {DeviceStatus} [deviceStatus=null]    The device status (color, bright, ...)
          * @returns {DbRadio}           A radio  object
          */
-        emit(frequency, protocol, deviceId, switchId, status = null, previousStatus = null) {
+        emit(frequency, protocol, deviceId, switchId, status = null, previousStatus = null, deviceStatus = null) {
             if (!status && previousStatus) {
                 status = -1 * previousStatus;
             }
@@ -313,7 +314,7 @@ function loaded(api) {
                 frequency = this.defaultFrequency();
             }
             let dbObject = new DbRadio(this.dbHelper, this.module, frequency, protocol, deviceId, switchId, null, status);
-            this.onRadioEvent(frequency, protocol, deviceId, switchId, null, status);
+            this.onRadioEvent(frequency, protocol, deviceId, switchId, null, status, deviceStatus);
             return dbObject;
         }
 

@@ -1,4 +1,11 @@
 {
-    "deconz.form.associate": "Associate",
-    "deconz.form.token": "Token (auto filled with association)"
+    "deconz.form.identifier": "Key identifier",
+    "deconz.form.associate": "Associate. Open web browser and go to phoscon web app (pick internal ip address and internal port from https://phoscon.de/discover). Set a master password if needed and then go to Menu, Gateway, Advanced and click on Authenticate app. Tick this box and save the association should be done.",
+    "deconz.form.token": "Token (auto filled with association)",
+    "deconz.form.scan": "Enable scan lights, sensors or switches for 60 seconds",
+    "deconz.message.new.light": "A new light has been added, protocol is : %@",
+    "deconz.message.new.sensor": "A new switch / sensor %@ has been added, id : %@",
+    "deconz.scan.error": "Zigbee scan error : %@",
+    "deconz.scan.end": "Zigbee scan ended",
+    "deconz.scan.start": "Zigbee scan started"
 }

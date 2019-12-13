@@ -204,7 +204,7 @@ class DeviceManager {
      * @param  {Function} cb  The callback when a device switches `(device, formData, deviceStatus) => {}`. Please note that this callback can return a DeviceStatus object to save state. You can modify and return the status as parameter.
      * @param  {string} [type=DEVICE_TYPE_LIGHT]  The device type, constant can be `DEVICE_TYPE_LIGHT`, `DEVICE_TYPE_LIGHT_DIMMABLE`, `DEVICE_TYPE_LIGHT_DIMMABLE_COLOR`, `DEVICE_TYPE_SHUTTER`
      */
-    registerSwitchDevice(key, cb, type = DEVICE_TYPE_LIGHT) {
+    registerSwitchDevice(key, cb, type = DEVICE_TYPE_LIGHT_DIMMABLE_COLOR) {
         if (!this.switchDeviceModules[key]) {
             throw Error("You must call addForm before calling registerSwitchDevice. A form must be added in order to identify which callback should be processed.");
         }
@@ -378,7 +378,12 @@ class DeviceManager {
             } else if (status && status.toLowerCase() === STATUS_OFF) {
                 status = INT_STATUS_OFF;
             } else if (status && status.toLowerCase() === STATUS_INVERT) {
-                status = null;
+                const device = this.getDeviceById(id);
+                if (device.status === INT_STATUS_ON) {
+                    status = INT_STATUS_OFF;
+                } else {
+                    status = INT_STATUS_ON;
+                }
             } else {
                 status = parseInt(status);
             }

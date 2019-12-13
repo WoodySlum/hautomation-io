@@ -67,7 +67,7 @@ class RadioManager {
         deviceManager.addForm(DEVICE_MODULE_KEY, RadioForm.class, "device.form.radio", true);
         deviceManager.registerSwitchDevice(DEVICE_MODULE_KEY, (device, data, deviceStatus) => {
             data.forEach((radio) => {
-                const radioObject = self.switchDevice(radio.module, radio.protocol, radio.deviceId, radio.switchId, deviceStatus.status, radio.frequency, device.status);
+                const radioObject = self.switchDevice(radio.module, radio.protocol, radio.deviceId, radio.switchId, deviceStatus.status, radio.frequency, device.status, deviceStatus);
                 if (radioObject && radioObject.hasOwnProperty("status") && radioObject.status) {
                     deviceStatus.setStatus(radioObject.status);
                 } else {
@@ -155,10 +155,9 @@ class RadioManager {
      */
     compareFormObject(radioFormObject, radioObject) {
         if (radioFormObject.radio.module === radioObject.module
-            && radioFormObject.radio.module === radioObject.module
             && radioFormObject.radio.protocol === radioObject.protocol
-            && radioFormObject.radio.deviceId === radioObject.deviceId
-            && radioFormObject.radio.switchId === radioObject.switchId
+            && radioFormObject.radio.deviceId.toString() === radioObject.deviceId.toString()
+            && radioFormObject.radio.switchId.toString() === radioObject.switchId.toString()
             && ((parseFloat(radioFormObject.status) === parseFloat(RadioScenarioForm.STATUS_ALL)) || (parseFloat(radioFormObject.status) === parseFloat(radioObject.status)))
         ) {
             return true;
@@ -250,13 +249,14 @@ class RadioManager {
      * @param  {string} switchId  The switch ID
      * @param  {number} [status=null]    The status (or enum called through `constants()`)
      * @param  {number} [previousStatus=null]    The previous object status, used if status is null to invert
+     * @param  {DeviceStatus} [deviceStatus=null]    The device status (color, bright, ...)
      * @returns {DbRadio}           A radio  object
      */
-    switchDevice(module, protocol, deviceId, switchId, status = null, frequency = null, previousStatus = null) {
+    switchDevice(module, protocol, deviceId, switchId, status = null, frequency = null, previousStatus = null, deviceStatus = null) {
         const plugin = this.pluginsManager.getPluginByIdentifier(module);
 
         if (plugin) {
-            return plugin.instance.emit(frequency, protocol, deviceId, switchId, status, previousStatus);
+            return plugin.instance.emit(frequency, protocol, deviceId, switchId, status, previousStatus, deviceStatus);
         } else {
             return null;
         }

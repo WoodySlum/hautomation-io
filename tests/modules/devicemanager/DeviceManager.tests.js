@@ -321,7 +321,7 @@ describe("DeviceManager", function() {
 
     it("getSupportedModes should send correct value", function() {
         expect(deviceManager.getDeviceTypes(devices[0]).length).to.be.equal(1);
-        expect(deviceManager.getDeviceTypes(devices[0])[0]).to.be.equal(DeviceManager.DEVICE_TYPE_LIGHT);
+        expect(deviceManager.getDeviceTypes(devices[0])[0]).to.be.equal(DeviceManager.DEVICE_TYPE_LIGHT_DIMMABLE_COLOR);
     });
 
     it("switchDevice on should trigger scenario", function() {

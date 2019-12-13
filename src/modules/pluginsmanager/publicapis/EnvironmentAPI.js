@@ -110,6 +110,15 @@ class EnvironmentAPI {
     }
 
     /**
+     * Get the local IP address, null if not found
+     *
+     * @returns {string} The local IP address
+     */
+    getLocalIp() {
+        return PrivateProperties.oprivate(this).environmentManager.getLocalIp();
+    }
+
+    /**
      * Expose a list of constants (status)
      *
      * @returns {Object} Constants

@@ -59,6 +59,13 @@ class RadioAPI {
     getLastReceivedRadioInformations(cb, nbElements = 100) {
         PrivateProperties.oprivate(this).radioManager.getLastReceivedRadioInformations(cb, nbElements);
     }
+
+    /**
+     * Force refresh protocols
+     */
+    refreshProtocols() {
+        PrivateProperties.oprivate(this).radioManager.getProtocols();
+    }
 }
 
 module.exports = {class:RadioAPI};
