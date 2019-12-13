@@ -159,13 +159,16 @@ function loaded(api) {
         init() {
             this.discoverDeconz((err, discovered) => {
                 if (!err && discovered && discovered.length > 0) {
-                    const data = api.configurationAPI.getConfiguration();
-                    if (data) {
-                        data.identifier = discovered[0].id;
-                        this.ip = discovered[0].internalipaddress;
-                        api.configurationAPI.saveData(data);
-                        this.getLights();
-                        this.connectWebSocket();
+                    let data = api.configurationAPI.getConfiguration();
+                    if (!data) {
+                        data = {};
+                    }
+
+                    data.identifier = discovered[0].id;
+                    this.ip = discovered[0].internalipaddress;
+                    api.configurationAPI.saveData(data);
+                    this.getLights();
+                    this.connectWebSocket();
                     }
                 } else if (err) {
                     this.api.exported.Logger.err(err);
