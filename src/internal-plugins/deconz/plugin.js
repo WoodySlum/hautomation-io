@@ -169,7 +169,6 @@ function loaded(api) {
                     api.configurationAPI.saveData(data);
                     this.getLights();
                     this.connectWebSocket();
-                    }
                 } else if (err) {
                     this.api.exported.Logger.err(err);
                 } else if (!err && discovered && discovered.length == 0) {
