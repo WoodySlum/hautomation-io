@@ -6,6 +6,7 @@ const colorutil = require("color-util");
 const colorRound = 1000;
 const DECONZ_HTTP_PORT = 8053;
 const DECONZ_URL = "https://phoscon.de/";
+const BACKUP_DIR = "/root/.local/share/dresden-elektronik/deCONZ/";
 
 /**
  * Loaded plugin function
@@ -25,23 +26,31 @@ function loaded(api) {
          *
          * @param  {number} id The identifier
          * @param  {string} identifier The identifier
+         * @param  {string} url The url
          * @param  {boolean} associate The associate flag
          * @param  {string} token The token
          * @param  {boolean} scan The scan flag
          * @returns {DeconzForm}        The instance
          */
-        constructor(id, identifier, associate, token, scan) {
+        constructor(id, identifier, url, associate, token, scan) {
             super(id);
 
             /**
              * @Property("identifier");
-             * @Type("string");
              * @Type("string");
              * @Title("deconz.form.identifier");
              * @Readonly(true);
              * @Required(true);
              */
             this.identifier = identifier;
+
+            /**
+             * @Property("url");
+             * @Type("string");
+             * @Title("deconz.form.url");
+             * @Readonly(true);
+             */
+            this.url = url;
 
             /**
              * @Property("associate");
@@ -76,7 +85,7 @@ function loaded(api) {
          * @returns {DeconzForm}      An instance
          */
         json(data) {
-            return new DeconzForm(data.id, data.identifier, data.associate, data.token, data.scan);
+            return new DeconzForm(data.id, data.identifier, data.url, data.associate, data.token, data.scan);
         }
     }
 
@@ -114,7 +123,10 @@ function loaded(api) {
             api.servicesManagerAPI.add(this.service);
             this.init();
 
-            api.configurationAPI.setUpdateCb((data) => {
+            this.api.backupAPI.addBackupFolder(BACKUP_DIR);
+
+            api.configurationAPI.setUpdateCb((data, username) => {
+                console.log(username);
                 if (data.associate) {
                     request.post({
                         headers: {"content-type" : "application/x-www-form-urlencoded"},
@@ -136,13 +148,13 @@ function loaded(api) {
                 }
                 data.associate = false;
                 if (data.scan) {
-                    this.api.messageAPI.sendMessage("*", this.api.translateAPI.t("deconz.scan.start"));
+                    this.api.messageAPI.sendMessage(username, this.api.translateAPI.t("deconz.scan.start"));
                     this.scanDevice((err, result) => {
                         this.api.exported.Logger.verbose(JSON.stringify(result));
                         if (err) {
-                            this.api.messageAPI.sendMessage("*", this.api.translateAPI.t("deconz.scan.error", err.message));
+                            this.api.messageAPI.sendMessage(username, this.api.translateAPI.t("deconz.scan.error", err.message));
                         } else {
-                            this.api.messageAPI.sendMessage("*", this.api.translateAPI.t("deconz.scan.end"));
+                            this.api.messageAPI.sendMessage(username, this.api.translateAPI.t("deconz.scan.end"));
                         }
                     });
                     data.scan = false;
@@ -166,6 +178,7 @@ function loaded(api) {
 
                     data.identifier = discovered[0].id;
                     this.ip = discovered[0].internalipaddress;
+                    data.url = "http://" + this.ip + ":" + DECONZ_HTTP_PORT +"/";
                     api.configurationAPI.saveData(data);
                     this.getLights();
                     this.connectWebSocket();
@@ -208,7 +221,8 @@ function loaded(api) {
          * @returns {string}           The deconz API URL
          */
         getApiUrl() {
-            return "http://" + (this.ip ? this.ip : "127.0.0.1") + ":" + DECONZ_HTTP_PORT + "/api/" + this.api.configurationAPI.getConfiguration().token;
+            const data = this.api.configurationAPI.getConfiguration();
+            return "http://" + (this.ip ? this.ip : "127.0.0.1") + ":" + DECONZ_HTTP_PORT + "/api/" + (data ? data.token : "");
         }
 
         /**

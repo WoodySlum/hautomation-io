@@ -1,6 +1,7 @@
 {
     "deconz.form.identifier": "Key identifier",
-    "deconz.form.associate": "Associate. Open web browser and go to phoscon web app (pick internal ip address and internal port from https://phoscon.de/discover). Set a master password if needed and then go to Menu, Gateway, Advanced and click on Authenticate app. Tick this box and save the association should be done.",
+    "deconz.form.url": "Access URL",
+    "deconz.form.associate": "Associate. Open web browser and go to phoscon web app (check URL above). Set a master password if needed and then go to Menu, Gateway, Advanced and click on Authenticate app. Tick this box and save the association should be done.",
     "deconz.form.token": "Token (auto filled with association)",
     "deconz.form.scan": "Enable scan lights, sensors or switches for 60 seconds",
     "deconz.message.new.light": "A new light has been added, protocol is : %@",

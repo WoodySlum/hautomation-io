@@ -58,6 +58,24 @@ class BackupAPI {
     cleanBackupFile(backupFilePath) {
         PrivateProperties.oprivate(this).backupManager.cleanBackupFile(backupFilePath);
     }
+
+    /**
+     * Add a backup folder
+     *
+     * @param  {string} path      A folder path
+     */
+    addBackupFolder(path) {
+        PrivateProperties.oprivate(this).backupManager.addBackupFolder(path);
+    }
+
+    /**
+     * Add a backup file path
+     *
+     * @param  {string} path      A file path
+     */
+    addBackupFile(path) {
+        PrivateProperties.oprivate(this).backupManager.addBackupFile(path);
+    }
 }
 
 module.exports = {class:BackupAPI};

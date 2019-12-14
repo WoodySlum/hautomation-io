@@ -70,7 +70,7 @@ class FormConfiguration {
     /**
      * Set the update callback. Called back when delete or save action is done.
      *
-     * @param {Function} cb A callback with data as parameter, e.g. `(data) => {}`
+     * @param {Function} cb A callback with data as parameter, e.g. `(data, username) => {}`
      */
     setUpdateCb(cb) {
         this.updateCb = cb;
@@ -118,7 +118,7 @@ class FormConfiguration {
             }
         } catch(e) {
             Logger.warn("Load config for " + this.name + " error : " + e.message);
-            
+
         }
     }
 
@@ -197,12 +197,12 @@ class FormConfiguration {
             } else if (apiRequest.route === this.setRoute) {
                 if (apiRequest.data && Object.keys(apiRequest.data).length > 0) {
                     this.saveConfig(apiRequest.data);
-                    if (this.updateCb) this.updateCb(self.data);
+                    if (this.updateCb) this.updateCb(self.data, apiRequest.authenticationData.username);
                     return new Promise((resolve) => {
                         resolve(new APIResponse.class(true, {success:true}));
                     });
                 } else {
-                    if (this.updateCb) this.updateCb(self.data);
+                    if (this.updateCb) this.updateCb(self.data, apiRequest.authenticationData.username);
                     return new Promise((resolve, reject) => {
                         reject(new APIResponse.class(false, {}, 8106, ERROR_EMPTY_DATA));
                     });
@@ -221,7 +221,7 @@ class FormConfiguration {
                 if (apiRequest.data && apiRequest.data.id) {
                     return new Promise((resolve) => {
                         self.confManager.removeData(self.confKey, new (this.formClass)(apiRequest.data.id), self.data, self.comparator);
-                        if (this.updateCb) this.updateCb(self.data);
+                        if (this.updateCb) this.updateCb(self.data, apiRequest.authenticationData.username);
                         resolve(new APIResponse.class(true, {success:true}));
                     });
                 } else {

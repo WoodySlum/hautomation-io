@@ -12,6 +12,7 @@ const HautomationRunnerConstants = require("./../../../HautomationRunnerConstant
 const DATA_TYPE_CONF = 0;
 const DATA_TYPE_DB = 1;
 const DATA_TYPE_CAMERA = 2;
+const DATA_TYPE_EXTERNAL = 3;
 const RESTART_TIMER = 5;
 const DESCRIPTOR = "descriptor.json";
 
@@ -33,6 +34,7 @@ class BackupManager {
         this.confManager = confManager;
         this.eventBus = eventBus;
         this.backupFiles = [];
+        this.backupFilesPath = [];
     }
 
     /**
@@ -47,7 +49,53 @@ class BackupManager {
     formatFileEntry(source, destination, file, dataType) {
         const fileStats = fs.statSync(source);
         const md5 = md5File.sync(source);
-        return {source: source, destination: destination, file:file, dataType: dataType, stats: fileStats, md5: md5};
+        return {source: source, destination: destination, fullPath: source, file:file, dataType: dataType, stats: fileStats, md5: md5};
+    }
+
+    /**
+     * Get files full path recursively
+     *
+     * @param  {string} dir A directory
+     * @param  {Array} [filelist=null]    A file list
+     * @returns {Array}                       An array of files full path
+     */
+    getFilesInFolder(dir, filelist = null) {
+        const files = fs.readdirSync(dir);
+        filelist = filelist || [];
+        files.forEach((file) => {
+            if (fs.statSync(path.join(dir, file)).isDirectory()) {
+                filelist = this.getFilesInFolder(path.join(dir, file), filelist);
+            } else {
+                filelist.push(path.join(dir, file));
+            }
+        });
+
+        return filelist;
+    }
+
+    /**
+     * Add a backup folder
+     *
+     * @param  {string} folderPath      A folder path
+     */
+    addBackupFolder(folderPath) {
+        if (fs.existsSync(folderPath)) {
+            const files = this.getFilesInFolder(folderPath);
+            files.forEach((file) => {
+                this.backupFilesPath.push(file);
+            });
+        }
+    }
+
+    /**
+     * Add a backup file path
+     *
+     * @param  {string} filePath      A file path
+     */
+    addBackupFile(filePath) {
+        if (fs.existsSync(filePath)) {
+            this.backupFilesPath.push(filePath);
+        }
     }
 
     /**
@@ -75,6 +123,11 @@ class BackupManager {
                     backupFiles.push(this.formatFileEntry(this.appConfiguration.configurationPath + file, backupDirPath + file, file, DATA_TYPE_CONF));
                 }
             });
+
+            // External
+            this.backupFilesPath.forEach((file) => {
+                backupFiles.push(this.formatFileEntry(file, backupDirPath + path.basename(file), path.basename(file), DATA_TYPE_EXTERNAL));
+            });
         }
 
         // Database
@@ -99,7 +152,7 @@ class BackupManager {
         let descriptor = [];
         backupFiles.forEach((backupFile) => {
             originalSize += backupFile.stats.size;
-            descriptor.push({file: backupFile.file, dataType:backupFile.dataType, md5: backupFile.md5});
+            descriptor.push({file: backupFile.file, dataType:backupFile.dataType, fullPath:backupFile.fullPath, md5: backupFile.md5});
         });
 
         Logger.info(backupFiles.length + " files to backup for " + (Math.round((originalSize / 1000000) * 100) / 100) + " Mb");
@@ -213,6 +266,14 @@ class BackupManager {
                                     if (descriptorFile.dataType === DATA_TYPE_CONF) {
                                         fs.removeSync(this.sanitize(this.appConfiguration.configurationPath + descriptorFile.file));
                                         fs.copySync(this.sanitize(backupDirPath + descriptorFile.file), this.sanitize(this.appConfiguration.configurationPath + descriptorFile.file));
+                                        fileRestored++;
+                                    }
+
+                                    // Restore external
+                                    if (descriptorFile.dataType === DATA_TYPE_EXTERNAL) {
+                                        fs.removeSync(this.sanitize(descriptorFile.fullPath));
+                                        fs.ensureDirSync(path.dirname(descriptorFile.fullPath));
+                                        fs.copySync(this.sanitize(backupDirPath + descriptorFile.file), this.sanitize(descriptorFile.fullPath));
                                         fileRestored++;
                                     }
 
