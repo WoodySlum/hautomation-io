@@ -148,13 +148,13 @@ function loaded(api) {
                 }
                 data.associate = false;
                 if (data.scan) {
-                    this.api.messageAPI.sendMessage(username, this.api.translateAPI.t("deconz.scan.start"));
+                    this.api.messageAPI.sendMessage([username], this.api.translateAPI.t("deconz.scan.start"));
                     this.scanDevice((err, result) => {
                         this.api.exported.Logger.verbose(JSON.stringify(result));
                         if (err) {
-                            this.api.messageAPI.sendMessage(username, this.api.translateAPI.t("deconz.scan.error", err.message));
+                            this.api.messageAPI.sendMessage([username], this.api.translateAPI.t("deconz.scan.error", err.message));
                         } else {
-                            this.api.messageAPI.sendMessage(username, this.api.translateAPI.t("deconz.scan.end"));
+                            this.api.messageAPI.sendMessage([username], this.api.translateAPI.t("deconz.scan.end"));
                         }
                     });
                     data.scan = false;
