@@ -12,5 +12,7 @@
     "dropbox.auto.backup.none": "Disable",
     "dropbox.auto.backup.every.day": "Every day",
     "dropbox.auto.backup.every.week": "Every week",
-    "dropbox.auto.backup.every.month": "Every month"
+    "dropbox.auto.backup.every.month": "Every month",
+    "dropbox.backup.success": "Dropbox backup successfully done",
+    "dropbox.backup.failed": "Dropbox backup failed"
 }

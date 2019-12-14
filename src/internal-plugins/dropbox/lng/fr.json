@@ -12,5 +12,7 @@
     "dropbox.auto.backup.none": "Désactiver",
     "dropbox.auto.backup.every.day": "Tous les jours",
     "dropbox.auto.backup.every.week": "Toutes les semaines",
-    "dropbox.auto.backup.every.month": "Tous les mois"
+    "dropbox.auto.backup.every.month": "Tous les mois",
+    "dropbox.backup.success": "La seauvegarde Dropbox a été réalisée avec succès",
+    "dropbox.backup.failed": "Échec de la sauvegarde Dropbox"
 }

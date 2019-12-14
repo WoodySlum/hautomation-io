@@ -128,9 +128,9 @@ function loaded(api) {
 
             const self = this;
 
-            api.configurationAPI.setUpdateCb((data) => {
+            api.configurationAPI.setUpdateCb((data, username) => {
                 if (data.manualAction === 1) {
-                    self.backup(data, self);
+                    self.backup(data, self, username);
                 } else if (data.manualAction === 2 && data.confirmRestore) {
                     self.restore(self);
                 }
@@ -187,8 +187,9 @@ function loaded(api) {
          *
          * @param  {Object} data    Form configuration data
          * @param  {Dropbox} context The context. If null, set to this
+         * @param  {string} username The username
          */
-        backup(data, context = null) {
+        backup(data, context = null, username = null) {
             if (!context) {
                 context = this;
             }
@@ -204,13 +205,22 @@ function loaded(api) {
                                 context.api.exported.Logger.info(response);
                                 context.api.exported.Logger.info("Backup uploaded to Dropbox successfully");
                                 context.uploadDropbox(context, dbx, backupFilePath, BACKUP_FILE_NAME);
+                                if (username) {
+                                    context.api.messageAPI.sendMessage([username], context.api.translateAPI.t("dropbox.backup.success"));
+                                }
                             })
                             .catch((err) => {
                             // File not found
                                 if (err.response.status === 409) {
                                     context.uploadDropbox(context, dbx, backupFilePath, BACKUP_FILE_NAME);
+                                    if (username) {
+                                        context.api.messageAPI.sendMessage([username], context.api.translateAPI.t("dropbox.backup.success"));
+                                    }
                                 } else {
                                     context.api.exported.Logger.err(err);
+                                    if (username) {
+                                        context.api.messageAPI.sendMessage([username], context.api.translateAPI.t("dropbox.backup.failed"));
+                                    }
                                 }
                             });
                     }
