@@ -29,7 +29,7 @@ function loaded(api) {
              * @Type("number");
              * @Default(20);
              * @Title("water.plant.alert.threshold");
-             * @Range([1, 100, 5]);
+             * @Range([0, 100, 5]);
              */
             this.threshold = threshold;
         }
