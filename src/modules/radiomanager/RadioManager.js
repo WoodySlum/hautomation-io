@@ -271,7 +271,7 @@ class RadioManager {
     getLastReceivedRadioInformations(cb, nbElements = 100) {
         const plugins = this.pluginsManager.getPluginsByCategory(RADIO_PLUGIN_KEY);
         let c = 0;
-        const radioObjects = [];
+        let radioObjects = [];
         plugins.forEach((plugin) => {
             plugin.instance.getLastReceivedRadioInformations((err, objects) => {
                 c++;
@@ -281,6 +281,7 @@ class RadioManager {
                     });
                 }
                 if (c === plugins.length) {
+                    radioObjects.sort((a, b) => parseFloat(b.id) - parseFloat(a.id));
                     cb(radioObjects);
                 }
             }, nbElements);
