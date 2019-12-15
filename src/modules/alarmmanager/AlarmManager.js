@@ -98,10 +98,10 @@ class AlarmManager {
                             self.sensorsStatus[sensorConfiguration.sensor.identifier] = DateUtils.class.timestamp();
                             if (sensorConfiguration.triggerAlarm) {
                                 self.triggerAlarm();
-                                self.messageManager.sendMessage("*", self.translateManager.t("alarm.manager.alert.sensor", sensor.name));
+                                self.messageManager.sendMessage("*", self.translateManager.t("alarm.manager.alert.sensor", sensor.name), null, null, null, true);
                                 Logger.info("Alert for sensor " + sensor.id + " (" + sensor.name + "). Release lock : " + (self.sensorsStatus[sensorConfiguration.sensor.identifier] + SENSORS_LOCK_TIME));
                             } else {
-                                self.messageManager.sendMessage("*", self.translateManager.t("alarm.manager.pre.alert", sensor.name));
+                                self.messageManager.sendMessage("*", self.translateManager.t("alarm.manager.pre.alert", sensor.name), null, null, null, true);
                                 Logger.info("Pre alert for sensor " + sensor.id + " (" + sensor.name + "). Release lock : " + (self.sensorsStatus[sensorConfiguration.sensor.identifier] + SENSORS_LOCK_TIME));
                             }
 
@@ -280,7 +280,7 @@ class AlarmManager {
                     this.deviceManager.switchDevice(device.identifier, device.status);
                 });
             }
-            this.messageManager.sendMessage("*", this.translateManager.t("alarm.manager.alert"));
+            this.messageManager.sendMessage("*", this.translateManager.t("alarm.manager.alert"), null, null, null, true);
 
             this.scenarioManager.getScenarios().forEach((scenario) => {
                 if (scenario.AlarmScenarioTriggerForm && scenario.AlarmScenarioTriggerForm.trigger && scenario.AlarmScenarioTriggerForm.trigger === "trigger") {

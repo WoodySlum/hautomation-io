@@ -27,9 +27,10 @@ class MessageAPI {
      * @param  {string} [action=null]    The action
      * @param  {string} [link=null]      The link
      * @param  {string} [picture=null]   The picture
+     * @param  {boolean} [critical=false]   Critical message
      */
-    sendMessage(recipients = "*", message, action = null, link = null, picture = null) {
-        PrivateProperties.oprivate(this).messageManager.sendMessage(recipients, message, action, link, picture);
+    sendMessage(recipients = "*", message, action = null, link = null, picture = null, critical = false) {
+        PrivateProperties.oprivate(this).messageManager.sendMessage(recipients, message, action, link, picture, critical);
     }
 
     /**

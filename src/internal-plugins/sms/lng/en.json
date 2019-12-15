@@ -1,4 +1,5 @@
 {
     "sms.user.phone": "Phone number",
-    "sms.port": "Pick your network dongle port"
+    "sms.port": "Pick your network dongle port",
+    "sms.critical.only": "Send SMS only if messages are critical (alarm, ...)"
 }

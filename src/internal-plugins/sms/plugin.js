@@ -34,9 +34,10 @@ function loaded(api) {
          *
          * @param  {number} [id=null]                  An identifier
          * @param  {string} [port=null] The port identifier
+         * @param  {boolean} [criticalOnly=false] Critical only message
          * @returns {SMSForm}                            The instance
          */
-        constructor(id = null, port = null) {
+        constructor(id = null, port = null, criticalOnly = false) {
             super(id);
 
             /**
@@ -47,6 +48,14 @@ function loaded(api) {
              * @EnumNames("getPortsLabels");
              */
             this.port = port;
+
+            /**
+             * @Property("criticalOnly");
+             * @Type("boolean");
+             * @Title("sms.critical.only");
+             * @Default(false);
+             */
+            this.criticalOnly = criticalOnly;
         }
 
         /**
@@ -76,7 +85,7 @@ function loaded(api) {
          * @returns {SMSForm}      A form object
          */
         json(data) {
-            return new SMSForm(data.id, data.port);
+            return new SMSForm(data.id, data.port, data.criticalOnly);
         }
     }
 
@@ -303,11 +312,22 @@ curl -H "Content-Type: application/json" -X POST -k -L --data "{\\"data\\":{\\"f
          *
          * @param  {string|Array} [recipients="*"] The recipients. `*` for all users, otherwise an array of usernames - user `userAPI`, e.g. `["seb", "ema"]`
          * @param  {string} message          The notification message
+         * @param  {string} [action=null]    The action
+         * @param  {string} [link=null]      The link
+         * @param  {string} [picture=null]   The picture
+         * @param  {boolean} [critical=false]   Critical message
          */
-        sendMessage(recipients = "*", message) {
+        sendMessage(recipients = "*", message, action = null, link = null, picture = null, critical = false) {
+            action; // Lint
+            link; // Lint
+            picture; // Lint
+            let criticalOnly = false;
+            if (this.api.configurationAPI.getConfiguration()) {
+                criticalOnly = !!this.api.configurationAPI.getConfiguration().criticalOnly;
+            }
             this.api.userAPI.getUsers().forEach((user) => {
                 if (message && (recipients === "*" || (recipients instanceof Array && recipients.indexOf(user.username) !== -1))) {
-                    if (this.gammuConfigFile && user.SMSUserForm && user.SMSUserForm.phoneNumber && user.SMSUserForm.phoneNumber.length > 0) {
+                    if (this.gammuConfigFile && user.SMSUserForm && user.SMSUserForm.phoneNumber && user.SMSUserForm.phoneNumber.length > 0 && (!criticalOnly || (critical && criticalOnly))) {
                         this.sendSMS(user.SMSUserForm.phoneNumber.split(" ").join(""), message);
                     }
                 }

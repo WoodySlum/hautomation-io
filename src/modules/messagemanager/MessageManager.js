@@ -111,14 +111,15 @@ class MessageManager {
      * @param  {string} [action=null]    The action
      * @param  {string} [link=null]      The link
      * @param  {string} [picture=null]   The picture
+     * @param  {boolean} [critical=false]   Critical message
      */
-    sendMessage(recipients = "*", message, action = null, link = null, picture = null) {
+    sendMessage(recipients = "*", message, action = null, link = null, picture = null, critical = false) {
         Logger.info("Sending message '" + message + "' to " + recipients);
 
         if (this.pluginsManager) {
             this.pluginsManager.getPluginsByCategory("message-provider").forEach((plugin) => {
                 if (plugin.instance.sendMessage instanceof Function) {
-                    plugin.instance.sendMessage(recipients, message, action, link, picture);
+                    plugin.instance.sendMessage(recipients, message, action, link, picture, critical);
                 } else {
                     Logger.warn("sendMessage method for plugin " + plugin.name + " not implemented. Could not send message.");
                 }
