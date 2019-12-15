@@ -126,7 +126,6 @@ function loaded(api) {
             this.api.backupAPI.addBackupFolder(BACKUP_DIR);
 
             api.configurationAPI.setUpdateCb((data, username) => {
-                console.log(username);
                 if (data.associate) {
                     request.post({
                         headers: {"content-type" : "application/x-www-form-urlencoded"},
