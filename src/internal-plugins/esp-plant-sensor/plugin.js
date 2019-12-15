@@ -44,7 +44,7 @@ function loaded(api) {
         constructor(api, id, configuration) {
             super(api, id, configuration);
             this.icon = api.exported.Icons.class.list()["envira"];
-            this.dashboardGranularity = 24 * 60 * 60;
+            this.dashboardGranularity = 7 * 60 * 60;
             this.type = "SOIL-MOISTURE"; // Fork from humidity
         }
 

@@ -47,10 +47,10 @@ class DbObject {
     base() {
         let baseObj = {};
         this.dbHelper.getFieldsForTable().forEach((field) => {
-            if (this[field]) {
-                baseObj[field] = this[field];
-            } else {
+            if (this[field] === null || this[field] === "") {
                 baseObj[field] = null;
+            } else {
+                baseObj[field] = this[field];
             }
         });
 

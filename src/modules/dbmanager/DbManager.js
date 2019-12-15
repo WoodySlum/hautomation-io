@@ -277,6 +277,7 @@ class DbManager {
             let sql = this.RequestBuilder(table, schema)
                 .save(object)
                 .request();
+                
             Logger.verbose(sql);
             this.db.run(sql, (err) => {
                 if (err && cb) {

@@ -106,11 +106,13 @@ class DbRequestBuilder {
      */
     getValueEncapsulated(value, meta) {
         if (meta) {
-            if (value && (meta.type === "number" || meta.type === "int" || meta.type === "float" || meta.type === "double" || meta.type === "timestamp")) {
+
+            if (!(value === null || value === "") && (meta.type === "number" || meta.type === "int" || meta.type === "float" || meta.type === "double" || meta.type === "timestamp")) {
                 return value;
             } else if (value && (meta.type === "date" || meta.type === "datetime" || meta.type === "string")) {
                 return "'" + this.escapeString(value) + "'";
             }
+
             return "null";
         } else {
             return value;
@@ -154,6 +156,7 @@ class DbRequestBuilder {
             fields.push(field);
             values.push(obj[field]);
         });
+
         this.upsert(...fields);
         this.values(...values);
         return this;

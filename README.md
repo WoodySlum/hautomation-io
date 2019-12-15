@@ -21,9 +21,11 @@ The most important informations are presented with **tiles on dashboard**.
 
 ## Supported features
 
-#### Radio communication devices (Chacon, ...)
+#### Radio communication devices (Chacon, Zigbee, ...)
 
 Using a RFLink will allow you to control lights and sensors for a really interesting price. Note that you'll need to buy a USB Gateway (http://www.rflink.nl) to access this feature.
+
+Using a Conbee II USB key will allow you to control Zigbee lights, sensors and switches.
 
 ##### Philips Hue
 
