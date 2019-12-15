@@ -1,0 +1,5 @@
+{
+    "water.plant.alert.sensors": "Water plant sensors",
+    "water.plant.alert.threshold": "Threshold for notifications",
+    "water.plant.alert.message": "La plante %@ a besoin d'un arrosage"
+}

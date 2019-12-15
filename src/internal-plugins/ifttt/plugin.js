@@ -120,8 +120,7 @@ function loaded(api) {
             }, this.api.translateAPI.t("ifttt.scenario.title"), null, true);
         }
     }
-
-    //api.exportClass(HuaweiRouter);
+    
     api.registerInstance(new Ifttt(api));
 }
 

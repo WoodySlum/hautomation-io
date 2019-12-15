@@ -93,7 +93,9 @@ const INTERNAL_PLUGINS = [
     "http-presence-sensor",
     "esp8266-soil-hygrometer",
     "esp-plant-sensor",
-    "deconz"
+    "deconz",
+    "water-plant-alert",
+    "plant-sensor"
 ];
 
 const CORE_PLUGINS = [
@@ -115,7 +117,8 @@ const CORE_PLUGINS = [
     "smoke-sensor",
     "signal-db-sensor",
     "tv",
-    "percent-sensor"
+    "percent-sensor",
+    "plant-sensor"
 ];
 
 /**
