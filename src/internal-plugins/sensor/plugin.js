@@ -377,7 +377,7 @@ function loaded(api) {
          */
         updateTile(cb = null, value = null) {
             this.lastObject((err, lastObject) => {
-                if (!err && lastObject.value) {
+                if (!err && lastObject.value !== null) {
                     const convertedValue = value ? this.convertValue(value) : this.convertValue(lastObject.value);
                     const tile = this.api.dashboardAPI.Tile("sensor-"+this.id, this.api.dashboardAPI.TileType().TILE_INFO_TWO_TEXT, this.icon, null, this.name, convertedValue.value + " " + convertedValue.unit, null, null, null, 800, "statistics");
                     if (this.configuration.dashboardColor) {
