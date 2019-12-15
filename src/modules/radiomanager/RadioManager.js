@@ -282,7 +282,7 @@ class RadioManager {
                 }
                 if (c === plugins.length) {
                     radioObjects.sort((a, b) => parseFloat(b.id) - parseFloat(a.id));
-                    cb(radioObjects);
+                    cb(radioObjects.slice(0, nbElements));
                 }
             }, nbElements);
         });
