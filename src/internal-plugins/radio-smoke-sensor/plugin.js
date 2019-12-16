@@ -76,7 +76,7 @@ function loaded(api) {
                             && radioConfiguration.protocol === radioObject.protocol
                             && radioConfiguration.deviceId === radioObject.deviceId
                             && radioConfiguration.switchId === radioObject.switchId) {
-                            api.messageAPI.sendMessage("*", api.translateAPI.t("radio.smoke.sensor.message", configuration.name));
+                            api.messageAPI.sendMessage("*", api.translateAPI.t("radio.smoke.sensor.message", configuration.name), null, null, null, true);
                         }
                     });
                 }
