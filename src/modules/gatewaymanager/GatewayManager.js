@@ -120,7 +120,11 @@ class GatewayManager {
         request.post(data.GATEWAY_URL, {
             json: data.bootInfos
         }, (error, res) => {
-            message({error:error, statusCode:res.statusCode, bootMode:data.bootInfos.bootMode});
+            if (!error) {
+                message({error:error, statusCode:res.statusCode, bootMode:data.bootInfos.bootMode});
+            } else {
+                message({error:error, statusCode:500, bootMode:data.bootInfos.bootMode});
+            }
         });
     }
 
@@ -136,7 +140,7 @@ class GatewayManager {
             if (!data.error && data.statusCode === 200) {
                 Logger.info("Registration to gateway OK (" + data.bootMode + ")");
             } else if (data.error) {
-                Logger.err(data.error.message);
+                Logger.err("An error occured while transmitting Gateway informations : " + data.error.errno);
             } else {
                 if (data.statusCode === 527 && context && !context.customIdentifierMessageSent) {
                     context.messageManager.sendMessage("*", context.translateManager.t("gateway.manager.custom.identifier.already.taken", context.appConfiguration.customIdentifier));
