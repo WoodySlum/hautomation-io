@@ -152,7 +152,10 @@ function loaded(api) {
             const DeconzService = DeconzServiceClass(api);
             this.service = new DeconzService(this, DECONZ_HTTP_PORT);
             api.servicesManagerAPI.add(this.service);
-            this.init();
+            setTimeout((self) => { // Wait 30s for service start
+                self.init();
+            }, 30000, this);
+
 
             this.api.backupAPI.addBackupFolder(BACKUP_DIR);
 
@@ -294,6 +297,7 @@ function loaded(api) {
                         const data = this.api.configurationAPI.getConfiguration();
                         data.token = bodyJson[0].success.username;
                         this.api.configurationAPI.saveData(data);
+                        api.exported.Logger.info("Token : " + data.token);
                         cb(null, bodyJson[0].success.username);
                     } else {
                         cb(Error("Could not generate token"));

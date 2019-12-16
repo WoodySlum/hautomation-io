@@ -106,7 +106,7 @@
         "sinon": "^7.5.0"
     },
     "dependencies": {
-        "@bokub/linky": "latest",
+        "@bokub/linky": "^0.2.2",
         "annotation": "git://github.com/WoodySlum/node-annotation.git#master",
         "audiohub": "git://github.com/WoodySlum/audiohub.git#master",
         "body-parser": "^1.19.0",
