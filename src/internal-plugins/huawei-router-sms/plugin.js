@@ -141,10 +141,14 @@ function loaded(api) {
             if (this.api.configurationAPI.getConfiguration()) {
                 criticalOnly = !!this.api.configurationAPI.getConfiguration().criticalOnly;
             }
+            let delay = 100;
             this.api.userAPI.getUsers().forEach((user) => {
                 if (message && (recipients === "*" || (recipients instanceof Array && recipients.indexOf(user.username) !== -1))) {
                     if (user.HuaweiSmsUserForm && user.HuaweiSmsUserForm.phoneNumber && user.HuaweiSmsUserForm.phoneNumber.length > 0 && (!criticalOnly || (critical && criticalOnly))) {
-                        this.sendSMS(user.HuaweiSmsUserForm.phoneNumber.split(" ").join(""), message);
+                        setTimeout((self) => {
+                            self.sendSMS(user.HuaweiSmsUserForm.phoneNumber.split(" ").join(""), message);
+                        }, delay, this);
+                        delay += 2000;
                     }
                 }
             });
