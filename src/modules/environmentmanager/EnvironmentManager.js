@@ -502,7 +502,7 @@ class EnvironmentManager {
                 });
 
                 req.on("error", (e) => {
-                  Logger.err(e.message);
+                    Logger.err(e.message);
                 });
             } catch(e) {
                 Logger.err(e.message);
