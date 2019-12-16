@@ -29,10 +29,13 @@ function loaded(api) {
          * @param  {string} url The url
          * @param  {boolean} associate The associate flag
          * @param  {string} token The token
+         * @param  {string} model The model
+         * @param  {string} username The username
+         * @param  {string} password The password
          * @param  {boolean} scan The scan flag
          * @returns {DeconzForm}        The instance
          */
-        constructor(id, identifier, url, associate, token, scan) {
+        constructor(id, identifier, url, associate, token, model, username, password, scan) {
             super(id);
 
             /**
@@ -57,6 +60,7 @@ function loaded(api) {
              * @Type("boolean");
              * @Title("deconz.form.associate");
              * @Default(false);
+             * @Hidden(true);
              */
             this.associate = associate;
 
@@ -65,8 +69,35 @@ function loaded(api) {
              * @Type("string");
              * @Title("deconz.form.token");
              * @Readonly(true);
+             * @Hidden(true);
              */
             this.token = token;
+
+            /**
+             * @Property("model");
+             * @Type("string");
+             * @Title("deconz.form.model");
+             * @Enum(["Phoscon#B1680x618"]);
+             * @EnumNames(["Conbee II"]);
+             * @Default("Phoscon#B1680x618");
+             */
+            this.model = model;
+
+            /**
+             * @Property("username");
+             * @Type("string");
+             * @Title("deconz.form.username");
+             * @Default("delight");
+             */
+            this.username = username;
+
+            /**
+             * @Property("password");
+             * @Type("string");
+             * @Title("deconz.form.password");
+             * @Display("password");
+             */
+            this.password = password;
 
             /**
              * @Property("scan");
@@ -85,7 +116,7 @@ function loaded(api) {
          * @returns {DeconzForm}      An instance
          */
         json(data) {
-            return new DeconzForm(data.id, data.identifier, data.url, data.associate, data.token, data.scan);
+            return new DeconzForm(data.id, data.identifier, data.url, data.associate, data.token, data.model, data.username, data.password, data.scan);
         }
     }
 
@@ -129,7 +160,7 @@ function loaded(api) {
                 if (data.associate) {
                     request.post({
                         headers: {"content-type" : "application/x-www-form-urlencoded"},
-                        url:     "http://" + (this.ip ? this.ip : "127.0.0.1") + ":" + DECONZ_HTTP_PORT + "/api",
+                        url:     "http://" + (this.ip ? this.ip : this.api.environmentAPI.getLocalIp()) + ":" + DECONZ_HTTP_PORT + "/api",
                         body:    JSON.stringify({devicetype: "hautomation-" + api.environmentAPI.getHautomationId()})
                     }, (error, response, body) => {
                         if (error) {
@@ -179,14 +210,29 @@ function loaded(api) {
                     this.ip = discovered[0].internalipaddress;
                     data.url = "http://" + this.ip + ":" + DECONZ_HTTP_PORT +"/";
                     api.configurationAPI.saveData(data);
-                    this.getLights();
-                    this.connectWebSocket();
+                    this.getToken((err) => {
+                        if (err) {
+                            api.exported.Logger.err("Could not get token for deconz : " + err.message);
+                        } else {
+                            this.getLights();
+                            this.connectWebSocket();
+                        }
+                    });
                 } else if (err) {
                     this.api.exported.Logger.err(err);
                 } else if (!err && discovered && discovered.length == 0) {
+                    let data = api.configurationAPI.getConfiguration();
                     this.ip = this.api.environmentAPI.getLocalIp();
-                    this.getLights();
-                    this.connectWebSocket();
+                    data.url = "http://" + this.ip + ":" + DECONZ_HTTP_PORT +"/";
+                    api.configurationAPI.saveData(data);
+                    this.getToken((err) => {
+                        if (err) {
+                            api.exported.Logger.err("Could not get token for deconz : " + err.message);
+                        } else {
+                            this.getLights();
+                            this.connectWebSocket();
+                        }
+                    });
                 }
             });
         }
@@ -221,7 +267,39 @@ function loaded(api) {
          */
         getApiUrl() {
             const data = this.api.configurationAPI.getConfiguration();
-            return "http://" + (this.ip ? this.ip : "127.0.0.1") + ":" + DECONZ_HTTP_PORT + "/api/" + (data ? data.token : "");
+            return "http://" + (this.ip ? this.ip : this.api.environmentAPI.getLocalIp()) + ":" + DECONZ_HTTP_PORT + "/api/" + (data ? data.token : "");
+        }
+
+        /**
+         * Get authentication token
+         *
+         * @param  {Function} cb A callback e.g. `(err, token) => {}`
+         */
+        getToken(cb) {
+            const data = this.api.configurationAPI.getConfiguration();
+            const login = data.username;
+            const password = data.password;
+            const model = data.model;
+
+            request.post({
+                headers: {"content-type" : "application/x-www-form-urlencoded", "Authorization":"Basic " + (new Buffer(login + ":" + password)).toString("base64")},
+                url:     "http://" + (this.ip ? this.ip : this.api.environmentAPI.getLocalIp()) + ":" + DECONZ_HTTP_PORT + "/api",
+                body:    JSON.stringify({devicetype: model,login: login})
+            }, (error, response, body) => {
+                if (error) {
+                    cb(error);
+                } else {
+                    const bodyJson = JSON.parse(body);
+                    if (bodyJson && bodyJson.length === 1 && bodyJson[0].success && bodyJson[0].success.username) {
+                        const data = this.api.configurationAPI.getConfiguration();
+                        data.token = bodyJson[0].success.username;
+                        this.api.configurationAPI.saveData(data);
+                        cb(null, bodyJson[0].success.username);
+                    } else {
+                        cb(Error("Could not generate token"));
+                    }
+                }
+            });
         }
 
         /**

@@ -8,5 +8,8 @@
     "deconz.message.new.sensor": "Un nouvel interrupteur / capteur %@ a été ajouté, identifiant : %@",
     "deconz.scan.error": "Erreur lors du scan Zigbee : %@",
     "deconz.scan.end": "Scan Zigbee terminé",
-    "deconz.scan.start": "Démarrage du scan Zigbee"
+    "deconz.scan.start": "Démarrage du scan Zigbee",
+    "deconz.form.model": "Modèle",
+    "deconz.form.username": "Nom d'utilisateur",
+    "deconz.form.password": "Mot de passe"
 }

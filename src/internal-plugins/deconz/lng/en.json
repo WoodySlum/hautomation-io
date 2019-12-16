@@ -8,5 +8,8 @@
     "deconz.message.new.sensor": "A new switch / sensor %@ has been added, id : %@",
     "deconz.scan.error": "Zigbee scan error : %@",
     "deconz.scan.end": "Zigbee scan ended",
-    "deconz.scan.start": "Zigbee scan started"
+    "deconz.scan.start": "Zigbee scan started",
+    "deconz.form.model": "Model",
+    "deconz.form.username": "Username",
+    "deconz.form.password": "Password"
 }
