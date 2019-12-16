@@ -171,7 +171,9 @@ class MessageManager {
                                 // This is the last callback
                                 if (count === this.registered.length) {
                                     dbMessage.save(() => {
-                                        botCb();
+                                        if (botCb) {
+                                            botCb();
+                                        }
                                     });
                                 }
                                 count++;
@@ -183,7 +185,7 @@ class MessageManager {
             }
         });
 
-        if (!found) {
+        if (!found && botCb) {
             botCb();
         }
     }

@@ -95,7 +95,8 @@ const INTERNAL_PLUGINS = [
     "esp-plant-sensor",
     "deconz",
     "water-plant-alert",
-    "plant-sensor"
+    "plant-sensor",
+    "huawei-router-sms"
 ];
 
 const CORE_PLUGINS = [
@@ -110,7 +111,6 @@ const CORE_PLUGINS = [
     "camera",
     "presence-sensor",
     "radio-presence-sensor",
-    "sms",
     "electric-sensor",
     "rain-time-sensor",
     "fairuse-sensor",

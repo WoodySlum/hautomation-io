@@ -87,6 +87,7 @@ function loaded(api) {
             this.api = api;
             this.apiInfos = {};
             this.registeredElements = {};
+            this.receivedSms = [];
 
             this.getApiInformations();
 
@@ -99,8 +100,14 @@ function loaded(api) {
             api.timeEventAPI.register((self) => {
                 const d = new Date();
                 const m = d.getMinutes();
-                if ((m % 17) === 0) { // 17 for dispatchingmore randomly
+                if ((m % 17) === 0) { // 17 for dispatching more randomly
                     self.getApiInformations();
+                }
+
+                if ((m % 5) === 0) { // Chezck every 5 minutes
+                    setTimeout(() => {
+                        self.getSMS();
+                    }, 100);
                 }
             }, this, api.timeEventAPI.constants().EVERY_MINUTES);
 
@@ -118,7 +125,7 @@ function loaded(api) {
         }
 
         /**
-         * Unegister router informations
+         * Unregister router informations
          *
          * @param  {Function} cb             A callback triggered when weather information is received. Example : `(error, weatherDbObject) => {}`
          * @param  {string} id            An identifier
@@ -222,6 +229,81 @@ function loaded(api) {
                     self.api.exported.Logger.err(e.message);
                 }
 
+            }
+        }
+
+        /**
+         * Retrieve SMS
+         */
+        getSMS() {
+            const conf = this.api.configurationAPI.getConfiguration();
+            const self = this;
+            if (conf && conf.ip && conf.username && conf.password) {
+                api.exported.Logger.info("Retrieving router SMS");
+                const router = routerBridge.create({
+                    gateway: conf.ip
+                });
+
+                try {
+                    router.getToken((error, token) => {
+                        if (error) {
+                            self.api.exported.Logger.err(error.message);
+                        } else {
+                            router.login(token, conf.username, conf.password, () => {
+                                router.getAllSms(token, true, (err, messages) => {
+                                    if (err) {
+                                        console.log(err);
+                                        self.api.exported.Logger.warn(err.message);
+                                    } else if (messages.length > 0) {
+                                        messages.forEach((message) => {
+                                            if (self.receivedSms.indexOf(message.Date + "-" + message.Phone) === -1)  {
+                                                self.receivedSms.push(message.Date + "-" + message.Phone);
+                                                self.api.coreAPI.dispatchEvent("huawei-sms-event", {phoneNumber:message.Phone, date:message.Date, message:message.Content});
+                                            }
+                                        });
+                                    }
+                                });
+                            });
+                        }
+                    });
+                } catch(e) {
+                    api.exported.Logger.err(e.message);
+                }
+            }
+        }
+
+        /**
+         * Send a SMS message
+         *
+         * @param  {string} number  The pgone number
+         * @param  {string} message the message
+         */
+        sendSMS(number, message) {
+            const conf = this.api.configurationAPI.getConfiguration();
+            const self = this;
+            if (conf && conf.ip && conf.username && conf.password) {
+                api.exported.Logger.info("Sending sms through router");
+                const router = routerBridge.create({
+                    gateway: conf.ip
+                });
+
+                try {
+                    router.getToken((error, token) => {
+                        if (error) {
+                            self.api.exported.Logger.err(error.message);
+                        } else {
+                            router.login(token, conf.username, conf.password, () => {
+                                router.sendSms(token, number, message, (err) => {
+                                    if (err) {
+                                        self.api.exported.Logger.err(err.message);
+                                    }
+                                });
+                            });
+                        }
+                    });
+                } catch(e) {
+                    api.exported.Logger.err(e.message);
+                }
             }
         }
     }

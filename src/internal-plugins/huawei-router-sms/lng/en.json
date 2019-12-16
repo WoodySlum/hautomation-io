@@ -1,0 +1,4 @@
+{
+    "huawei.sms.user.phone": "Phone number",
+    "huawei.sms.critical.only": "Send SMS only if messages are critical (alarm, ...)"
+}
