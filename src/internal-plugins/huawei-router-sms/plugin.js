@@ -148,7 +148,7 @@ function loaded(api) {
                         setTimeout((self) => {
                             self.sendSMS(user.HuaweiSmsUserForm.phoneNumber.split(" ").join(""), message);
                         }, delay, this);
-                        delay += 2000;
+                        delay += 6000;
                     }
                 }
             });

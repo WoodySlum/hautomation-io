@@ -154,7 +154,10 @@ function loaded(api) {
             api.servicesManagerAPI.add(this.service);
             setTimeout((self) => { // Wait 30s for service start
                 self.init();
-            }, 30000, this);
+                setTimeout((self) => { // Wait 60s for service start
+                    self.init();
+                }, 60000, this);
+            }, 20000, this);
 
 
             this.api.backupAPI.addBackupFolder(BACKUP_DIR);
