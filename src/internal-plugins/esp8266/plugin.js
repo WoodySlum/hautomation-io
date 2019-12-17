@@ -89,7 +89,7 @@ function loaded(api) {
             wiringSchema.right["D2"].push("ADS1015 SDA");
             wiringSchema.left["SD3"].push("ADS1015 VCC");
             wiringSchema.right["GND-2"].push("ADS1015 GND");
-            this.api.iotAPI.registerLib("app", "esp8266", 60, wiringSchema, ESP8266Form);
+            this.api.iotAPI.registerLib("app", "esp8266", 61, wiringSchema, ESP8266Form);
             this.api.iotAPI.addIngredientForReceipe("esp8266", "Nodemcu v1", "Nodemcu board, based on ESP8266. SD3 pin is used for powering 3v3 sensors and save battery life.", 1, true, true);
             this.api.iotAPI.addIngredientForReceipe("esp8266", "ADS1015", "Analog digital converter", 1, false, false);
             this.api.webAPI.register(this, this.api.webAPI.constants().POST, WS_SENSOR_SET_ROUTE + "[id]/[type]/[value]/[vcc*]/", this.api.webAPI.Authentication().AUTH_LOCAL_NETWORK_LEVEL);

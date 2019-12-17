@@ -24,11 +24,11 @@ JsonVariant config;
 int poweredMode = POWER_MODE_SLEEP;
 int sleepTime = 60;
 
-#ifdef ENABLE_ADC_VCC_MONITOR
-ADC_MODE(ADC_VCC); // For VCC read
-#else
-ADC_MODE(ADC_TOUT); // For analog read
-#endif
+// #ifdef ENABLE_ADC_VCC_MONITOR
+// ADC_MODE(ADC_VCC); // For VCC read
+// #else
+// ADC_MODE(ADC_TOUT); // For analog read
+// #endif
 
 Hautomation::Hautomation()
 {
