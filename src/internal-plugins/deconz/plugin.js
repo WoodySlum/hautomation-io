@@ -154,10 +154,12 @@ function loaded(api) {
             api.servicesManagerAPI.add(this.service);
             setTimeout((self) => { // Wait 30s for service start
                 self.init();
-                setTimeout((self) => { // Wait 60s for service start
-                    self.init();
-                }, 60000, this);
-            }, 20000, this);
+            }, 30000, this);
+
+            // Reconnect every hours
+            this.api.timeEventAPI.register((self) => {
+                self.init();
+            }, this, api.timeEventAPI.constants().EVERY_HOURS);
 
 
             this.api.backupAPI.addBackupFolder(BACKUP_DIR);
@@ -468,7 +470,8 @@ function loaded(api) {
                 body:    JSON.stringify(data)
             }, (error, response, body) => {
                 if (error) {
-                    this.api.exported.Logger.err("Could switch light : " + error.message);
+                    this.api.exported.Logger.err("Could not switch light : " + error.message);
+                    this.init(); // Try to reconnect if switch fails
                     if (cb) {
                         cb(error, null);
                     }
