@@ -464,11 +464,18 @@ function loaded(api) {
                 data.ct = ct;
             }
 
+            this.api.exported.Logger.info("Switch light URL : " + this.getApiUrl() + "/lights/" + key + "/state");
+            this.api.exported.Logger.info("Switch light params : " + JSON.stringify(data));
             request.put({
                 headers: {"content-type" : "application/json"},
                 url:     this.getApiUrl() + "/lights/" + key + "/state",
                 body:    JSON.stringify(data)
             }, (error, response, body) => {
+                this.api.exported.Logger.info("Switch light results : ");
+                this.api.exported.Logger.info(error);
+                this.api.exported.Logger.info(response);
+                this.api.exported.Logger.info(body);
+                
                 if (error) {
                     this.api.exported.Logger.err("Could not switch light : " + error.message);
                     this.init(); // Try to reconnect if switch fails
