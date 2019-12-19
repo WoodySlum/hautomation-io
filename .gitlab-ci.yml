@@ -1,10 +1,10 @@
 image: woodyslum/hautomation-ci:10.14-1
 
 stages:
+  - build
   - lint
   - test
   - doc
-  - build
   - deploy
 
 cache:
@@ -18,8 +18,6 @@ test:
   script:
   - export NODE_TLS_REJECT_UNAUTHORIZED=0
   - npm config set strict-ssl false
-  - rm -Rf package-lock.json
-  - npm install
   - npm run --verbose test
   - npm run --verbose cov
   coverage: '/Statements   : \d+\.\d+/'
@@ -33,8 +31,6 @@ lint:
   script:
   - export NODE_TLS_REJECT_UNAUTHORIZED=0
   - npm config set strict-ssl false
-  - rm -Rf package-lock.json
-  - npm install
   - npm run --verbose lint
 
 build:
