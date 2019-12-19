@@ -498,7 +498,8 @@ class DeviceManager {
 
         this.formConfiguration.getDataCopy().forEach((device) => {
             if (!device.excludeFromAll) {
-                self.switchDevice(device.id, status);
+                device.status = status;
+                self.switchDeviceWithDevice(device);
             }
         });
     }
