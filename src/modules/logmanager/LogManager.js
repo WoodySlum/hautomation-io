@@ -20,7 +20,7 @@ class LogManager {
      * @returns {LogManager}              The instance
      */
     constructor(webServices) {
-        webServices.registerAPI(this, WebServices.GET, ":" + ROUTE_LOG_GET, Authentication.AUTH_ADMIN_LEVEL);
+        webServices.registerAPI(this, WebServices.GET, ":" + ROUTE_LOG_GET, Authentication.AUTH_DEV_LEVEL);
     }
 
 

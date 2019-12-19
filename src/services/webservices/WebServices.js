@@ -276,7 +276,7 @@ class WebServices extends Service.class {
      * Register and list informations
      */
     registerInfos() {
-        this.registerAPI(this, GET, INFOS_ENDPOINT, Authentication.AUTH_NO_LEVEL);
+        this.registerAPI(this, GET, INFOS_ENDPOINT, Authentication.AUTH_DEV_LEVEL);
     }
 
     /**

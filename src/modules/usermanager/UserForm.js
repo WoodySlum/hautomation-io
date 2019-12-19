@@ -42,8 +42,8 @@ class UserForm extends FormObject.class {
          * @Property("level");
          * @Title("user.form.level");
          * @Type("number");
-         * @EnumNames(["user.form.level.disabled", "user.form.level.guest", "user.form.level.standard", "user.form.level.admin"]);
-         * @Enum([0, 7, 10, 80]);
+         * @EnumNames(["user.form.level.disabled", "user.form.level.guest", "user.form.level.standard", "user.form.level.admin", "user.form.level.dev"]);
+         * @Enum([0, 7, 10, 80, 90]);
          * @Required(true);
          */
         this.level = level;

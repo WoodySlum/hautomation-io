@@ -57,6 +57,7 @@
     "user.form.level.standard": "Standard",
     "user.form.level.standard": "Standard",
     "user.form.level.admin": "Administrator",
+    "user.form.level.dev": "Developer",
     "user.form.fullname": "Full name",
     "user.form.picture": "Picture",
     "user.form.atHome": "User is at home",

@@ -19,6 +19,7 @@ const AUTH_LOCAL_NETWORK_LEVEL = 5;
 const AUTH_GUEST_LEVEL = 7;
 const AUTH_USAGE_LEVEL = 10;
 const AUTH_ADMIN_LEVEL = 80;
+const AUTH_DEV_LEVEL = 90;
 const AUTH_MAX_LEVEL = 100;
 const TOKEN_DEFAULT_VALIDITY = 3 *  60 * 60;
 
@@ -89,7 +90,7 @@ class Authentication {
         if (!this.tokens[username]) {
             this.tokens[username] = [];
         }
-        
+
         this.tokens[username].push({token:token, expiration:(DateUtils.class.timestamp() + ((expirationTime === 0)?TOKEN_DEFAULT_VALIDITY:expirationTime)), expirationTime: expirationTime, serviceIdentifier: serviceIdentifier});
 
         return token;
@@ -247,4 +248,4 @@ class Authentication {
     }
 }
 
-module.exports = {class:Authentication, AUTH_NO_LEVEL:AUTH_NO_LEVEL, AUTH_GUEST_LEVEL:AUTH_GUEST_LEVEL, AUTH_USAGE_LEVEL:AUTH_USAGE_LEVEL, AUTH_ADMIN_LEVEL:AUTH_ADMIN_LEVEL, AUTH_MAX_LEVEL:AUTH_MAX_LEVEL, AUTH_LOCAL_NETWORK_LEVEL:AUTH_LOCAL_NETWORK_LEVEL, HEADER_USERNAME:HEADER_USERNAME, HEADER_PASSWORD:HEADER_PASSWORD, HEADER_TOKEN:HEADER_TOKEN};
+module.exports = {class:Authentication, AUTH_NO_LEVEL:AUTH_NO_LEVEL, AUTH_GUEST_LEVEL:AUTH_GUEST_LEVEL, AUTH_USAGE_LEVEL:AUTH_USAGE_LEVEL, AUTH_ADMIN_LEVEL:AUTH_ADMIN_LEVEL, AUTH_MAX_LEVEL:AUTH_MAX_LEVEL, AUTH_LOCAL_NETWORK_LEVEL:AUTH_LOCAL_NETWORK_LEVEL, AUTH_DEV_LEVEL:AUTH_DEV_LEVEL, HEADER_USERNAME:HEADER_USERNAME, HEADER_PASSWORD:HEADER_PASSWORD, HEADER_TOKEN:HEADER_TOKEN};
