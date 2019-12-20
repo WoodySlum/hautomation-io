@@ -1,0 +1,5 @@
+{
+    "radio.presence.sensor.alert.on.battery.low":"Alert when battery is low",
+    "radio.presence.sensor.alert.on.battery.low.message":"Sensor %@ doesn't seem to be reachable. Please check battery.",
+    "radio.presence.sensor.alert.on.battery.ok": "Sensor %@ is now reachable. You can ignore this alert."
+}

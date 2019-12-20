@@ -152,14 +152,12 @@ function loaded(api) {
             const DeconzService = DeconzServiceClass(api);
             this.service = new DeconzService(this, DECONZ_HTTP_PORT);
             api.servicesManagerAPI.add(this.service);
+            this.init();
+
+
             setTimeout((self) => { // Wait 30s for service start
                 self.init();
             }, 30000, this);
-
-            // Reconnect every hours
-            this.api.timeEventAPI.register((self) => {
-                self.init();
-            }, this, api.timeEventAPI.constants().EVERY_HOURS);
 
 
             this.api.backupAPI.addBackupFolder(BACKUP_DIR);
@@ -565,8 +563,25 @@ function loaded(api) {
                             this.webSocket = new WebSocket("ws://" + this.ip + ":" + config.websocketport);
                             this.webSocket.onmessage = (msg) => {
                                 const d = JSON.parse(msg.data);
-                                this.api.exported.Logger.verbose("Message received");
-                                this.api.exported.Logger.verbose(msg.data);
+                                this.api.exported.Logger.info("Message received");
+                                this.api.exported.Logger.info(msg.data);
+
+                                // Light
+                                if (d && d.state && d.uniqueid && d.r == "sensors" && d.state.hasOwnProperty("lux")) {
+                                    this.onRadioEvent(2400, "zigbee", d.uniqueid, 1, d.state.lux, this.constants().STATUS_ON, "LIGHT");
+                                }
+
+                                // Presence
+                                if (d && d.state && d.uniqueid && d.r == "sensors" && d.state.presence && d.state.hasOwnProperty("presence")) {
+                                    this.onRadioEvent(2400, "zigbee", d.uniqueid, 1, (d.state.presence ? 1 : 0), this.constants().STATUS_ON, "PRESENCE");
+                                }
+
+                                // Battery
+                                if (d && d.config && d.uniqueid && d.config.hasOwnProperty("battery")) {
+                                    this.onRadioEvent(2400, "zigbee", d.uniqueid, 1, d.config.battery, this.constants().STATUS_ON, "BATTERY");
+                                }
+
+                                // Switch
                                 if (d && d.state && d.state.buttonevent && d.uniqueid) {
                                     this.onRadioEvent(2400, "zigbee", d.uniqueid, d.state.buttonevent, d.state.buttonevent, this.constants().STATUS_ON);
                                 }

@@ -96,7 +96,9 @@ const INTERNAL_PLUGINS = [
     "deconz",
     "water-plant-alert",
     "plant-sensor",
-    "huawei-router-sms"
+    "huawei-router-sms",
+    "light-sensor",
+    "radio-light-sensor"
 ];
 
 const CORE_PLUGINS = [
@@ -118,7 +120,9 @@ const CORE_PLUGINS = [
     "signal-db-sensor",
     "tv",
     "percent-sensor",
-    "plant-sensor"
+    "plant-sensor",
+    "light-sensor",
+    "radio-light-sensor"
 ];
 
 /**

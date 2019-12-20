@@ -2,7 +2,7 @@
 
 const fs = require("fs-extra");
 
-const LOCK_TIME = 5 * 60;
+const LOCK_TIME = 60;
 const MAX_BATTERY_HISTORY_TIME = 30 * 24 * 60 * 60;
 const TMP_FILE_PREFIX = "radio-presence-sensor-notification-sent-";
 
@@ -87,11 +87,10 @@ function loaded(api) {
             api.radioAPI.register((radioObject) => {
                 if (radioObject && configuration && configuration.radio && configuration.radio.length > 0) {
                     configuration.radio.forEach((radioConfiguration) => {
-                        if (radioConfiguration.module === radioObject.module
-                            && radioConfiguration.module === radioObject.module
-                            && radioConfiguration.protocol === radioObject.protocol
-                            && radioConfiguration.deviceId === radioObject.deviceId
-                            && radioConfiguration.switchId === radioObject.switchId) {
+                        if (radioConfiguration.module.toString() === radioObject.module.toString()
+                            && radioConfiguration.protocol.toString() === radioObject.protocol.toString()
+                            && radioConfiguration.deviceId.toString() === radioObject.deviceId.toString()
+                            && radioConfiguration.switchId.toString() === radioObject.switchId.toString()) {
                             const timestamp = api.exported.DateUtils.class.timestamp();
                             if (this.lastEmitted < (timestamp - LOCK_TIME)) {
                                 this.setValue(LOCK_TIME);

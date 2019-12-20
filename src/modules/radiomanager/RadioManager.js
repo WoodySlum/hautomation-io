@@ -397,6 +397,7 @@ class RadioManager {
                             deviceId: object.deviceId,
                             status: object.status,
                             value: object.value,
+                            sensorType: object.sensorType,
                             description: null,
                             associated:self.getAssociatedItems(object.module, object.protocol, object.switchId, object.deviceId, object.status)
                         });
