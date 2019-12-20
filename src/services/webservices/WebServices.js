@@ -300,21 +300,20 @@ class WebServices extends Service.class {
 
             return new Promise((resolve) => {
                 let registered = {};
-
                 this.delegates.forEach((registeredEl) => {
                     if (!registered[registeredEl.delegate.constructor.name]) {
                         registered[registeredEl.delegate.constructor.name] = {
                             method: {
                                 [registeredEl.method]:[
-                                    {identifier:registeredEl.identifier, route:registeredEl.route, parameters:registeredEl.parameters}
+                                    {identifier:registeredEl.identifier, route:registeredEl.route, parameters:registeredEl.parameters, authLevel: registeredEl.authLevel}
                                 ]
                             }
                         };
                     } else {
                         if (registered[registeredEl.delegate.constructor.name].method[registeredEl.method]) {
-                            registered[registeredEl.delegate.constructor.name].method[registeredEl.method].push({identifier:registeredEl.identifier, route:registeredEl.route, parameters:registeredEl.parameters});
+                            registered[registeredEl.delegate.constructor.name].method[registeredEl.method].push({identifier:registeredEl.identifier, route:registeredEl.route, parameters:registeredEl.parameters, authLevel: registeredEl.authLevel});
                         } else {
-                            registered[registeredEl.delegate.constructor.name].method[registeredEl.method] = [{identifier:registeredEl.identifier, route:registeredEl.route, parameters:registeredEl.parameters}];
+                            registered[registeredEl.delegate.constructor.name].method[registeredEl.method] = [{identifier:registeredEl.identifier, route:registeredEl.route, parameters:registeredEl.parameters, authLevel: registeredEl.authLevel}];
                         }
                     }
 
