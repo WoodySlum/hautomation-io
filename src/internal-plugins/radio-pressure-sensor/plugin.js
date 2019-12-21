@@ -84,7 +84,13 @@ function loaded(api) {
                             && radioConfiguration.protocol.toString() === radioObject.protocol.toString()
                             && radioConfiguration.deviceId.toString() === radioObject.deviceId.toString()
                             && radioConfiguration.switchId.toString() === radioObject.switchId.toString()) {
-                            this.setValue(parseInt(radioObject.value));
+                            if (radioObject.sensorType) {
+                                if (radioObject.sensorType === this.type) {
+                                    this.setValue(parseInt(radioObject.value));
+                                }
+                            } else {
+                                this.setValue(parseInt(radioObject.value));
+                            }
                         }
                     });
                 }
