@@ -517,7 +517,7 @@ function loaded(api) {
                         light.protocolName = LIGHT_PREFIX + light.uniqueid;
                         this.lights.push(light);
                     });
-                    
+
                     this.api.radioAPI.refreshProtocols();
 
                     if (cb) {
@@ -576,7 +576,9 @@ function loaded(api) {
 
                                 // Presence
                                 if (d && d.state && d.uniqueid && d.r == "sensors" && d.state.presence && d.state.hasOwnProperty("presence")) {
-                                    this.onRadioEvent(2400, "zigbee", d.uniqueid, 1, (d.state.presence ? 1 : 0), this.constants().STATUS_ON, "PRESENCE");
+                                    if (d.state.presence) {
+                                        this.onRadioEvent(2400, "zigbee", d.uniqueid, 1, (d.state.presence ? 1 : 0), this.constants().STATUS_ON, "PRESENCE");
+                                    }
                                 }
 
                                 // Battery
