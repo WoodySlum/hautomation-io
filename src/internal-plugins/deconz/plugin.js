@@ -7,6 +7,7 @@ const colorRound = 1000;
 const DECONZ_HTTP_PORT = 8053;
 const DECONZ_URL = "https://phoscon.de/";
 const BACKUP_DIR = "/root/.local/share/dresden-elektronik/deCONZ/";
+const LIGHT_PREFIX = "zigbee-light-";
 
 /**
  * Loaded plugin function
@@ -424,7 +425,7 @@ function loaded(api) {
             previousStatus; // Avoid lint warning :)
             let found = null;
             this.lights.forEach((light) => {
-                if (light.uniqueid === protocol) {
+                if (light.protocolName === protocol) {
                     found = light;
                 }
             });
@@ -513,8 +514,10 @@ function loaded(api) {
                     keys.forEach((key) => {
                         const light = lights[key];
                         light.key = key;
+                        light.protocolName = LIGHT_PREFIX + light.uniqueid;
                         this.lights.push(light);
                     });
+                    
                     this.api.radioAPI.refreshProtocols();
 
                     if (cb) {
@@ -629,7 +632,7 @@ function loaded(api) {
         getProtocolList(cb) {
             const baseList = ["zigbee"];
             this.lights.forEach((light) => {
-                baseList.push(light.uniqueid);
+                baseList.push(LIGHT_PREFIX + light.uniqueid);
             });
             super.getProtocolList((err, list) => {
                 if (!err) {
