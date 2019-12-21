@@ -98,7 +98,10 @@ const INTERNAL_PLUGINS = [
     "plant-sensor",
     "huawei-router-sms",
     "light-sensor",
-    "radio-light-sensor"
+    "radio-light-sensor",
+    "radio-temperature-sensor",
+    "radio-humidity-sensor",
+    "radio-pressure-sensor"
 ];
 
 const CORE_PLUGINS = [
@@ -122,7 +125,10 @@ const CORE_PLUGINS = [
     "percent-sensor",
     "plant-sensor",
     "light-sensor",
-    "radio-light-sensor"
+    "radio-light-sensor",
+    "radio-temperature-sensor",
+    "radio-humidity-sensor",
+    "radio-pressure-sensor"
 ];
 
 /**
