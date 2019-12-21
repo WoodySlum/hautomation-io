@@ -1,7 +1,5 @@
 "use strict";
 
-const fs = require("fs-extra");
-
 /**
  * Loaded function
  *
@@ -29,7 +27,7 @@ function loaded(api) {
          * @param  {boolean} alertOnBatteryLow Alert when battery is low
          * @returns {RadioLightSensorForm}                 The instance
          */
-        constructor(id, plugin, name, dashboard, statistics, dashboardColor, statisticsColor, radio, alertOnBatteryLow = false) {
+        constructor(id, plugin, name, dashboard, statistics, dashboardColor, statisticsColor, radio, alertOnBatteryLow) {
             super(id, plugin, name, dashboard, statistics, dashboardColor, statisticsColor);
 
             /**
@@ -40,6 +38,15 @@ function loaded(api) {
              * @Default([]);
              */
             this.radio = radio;
+
+            /**
+             * @Property("alertOnBatteryLow");
+             * @Type("boolean");
+             * @Cl("RadioForm");
+             * @Title("radio.presence.sensor.alert.on.battery.low");
+             * @Default(true);
+             */
+            this.alertOnBatteryLow = alertOnBatteryLow;
         }
 
         /**
@@ -77,7 +84,7 @@ function loaded(api) {
                             && radioConfiguration.protocol.toString() === radioObject.protocol.toString()
                             && radioConfiguration.deviceId.toString() === radioObject.deviceId.toString()
                             && radioConfiguration.switchId.toString() === radioObject.switchId.toString()) {
-                                this.setValue(parseInt(radioObject.value));
+                            this.setValue(parseInt(radioObject.value));
                         }
                     });
                 }

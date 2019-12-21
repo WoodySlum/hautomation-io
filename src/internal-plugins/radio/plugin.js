@@ -320,7 +320,7 @@ function loaded(api) {
             if (!frequency) {
                 frequency = this.defaultFrequency();
             }
-            let dbObject = new DbRadio(this.dbHelper, this.module, frequency, protocol, deviceId, switchId, null, status);
+            let dbObject = new DbRadio(this.dbHelper, this.module, frequency, protocol, deviceId, switchId, null, status, null);
             this.onRadioEvent(frequency, protocol, deviceId, switchId, null, status, deviceStatus);
             return dbObject;
         }
@@ -335,7 +335,7 @@ function loaded(api) {
          * @param  {string} switchId  The switch ID
          * @param  {number} value  The value
          * @param  {number} status    The status (or enum called through `constants()`)
-         * @param  {string} [status=null]    The sensor type
+         * @param  {string} [sensorType=null]    The sensor type
          * @returns {DbRadio}           A radio  object
          */
         onRadioEvent(frequency, protocol, deviceId, switchId, value, status, sensorType = null) {
