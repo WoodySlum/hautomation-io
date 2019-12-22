@@ -1,5 +1,0 @@
-{
-    "radio.presence.sensor.alert.on.battery.low":"Alerter quand la batterie est faible",
-    "radio.presence.sensor.alert.on.battery.low.message":"Le capteur %@ ne semble plus joignable. Veuillez vérifier ses piles.",
-    "radio.presence.sensor.alert.on.battery.ok": "Le capteur %@ est de nouveau joignable. Vous pouvez ignorer cette alerte."
-}

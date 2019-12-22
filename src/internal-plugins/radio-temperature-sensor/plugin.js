@@ -77,24 +77,7 @@ function loaded(api) {
          */
         constructor(api, id, configuration) {
             super(api, id, configuration);
-            api.radioAPI.register((radioObject) => {
-                if (radioObject && configuration && configuration.radio && configuration.radio.length > 0) {
-                    configuration.radio.forEach((radioConfiguration) => {
-                        if (radioConfiguration.module.toString() === radioObject.module.toString()
-                            && radioConfiguration.protocol.toString() === radioObject.protocol.toString()
-                            && radioConfiguration.deviceId.toString() === radioObject.deviceId.toString()
-                            && radioConfiguration.switchId.toString() === radioObject.switchId.toString()) {
-                            if (radioObject.sensorType) {
-                                if (radioObject.sensorType === this.type) {
-                                    this.setValue(parseFloat(radioObject.value));
-                                }
-                            } else {
-                                this.setValue(parseFloat(radioObject.value));
-                            }
-                        }
-                    });
-                }
-            }, id);
+            api.exported.Radio.registerSensor(api, this);
         }
     }
 

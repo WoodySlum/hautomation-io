@@ -84,22 +84,14 @@ function loaded(api) {
         constructor(api, id, configuration) {
             super(api, id, configuration);
             this.lastEmitted = 0;
-            api.radioAPI.register((radioObject) => {
-                if (radioObject && configuration && configuration.radio && configuration.radio.length > 0) {
-                    configuration.radio.forEach((radioConfiguration) => {
-                        if (radioConfiguration.module.toString() === radioObject.module.toString()
-                            && radioConfiguration.protocol.toString() === radioObject.protocol.toString()
-                            && radioConfiguration.deviceId.toString() === radioObject.deviceId.toString()
-                            && radioConfiguration.switchId.toString() === radioObject.switchId.toString()) {
-                            const timestamp = api.exported.DateUtils.class.timestamp();
-                            if (this.lastEmitted < (timestamp - LOCK_TIME)) {
-                                this.setValue(LOCK_TIME);
-                                this.lastEmitted = timestamp;
-                            }
-                        }
-                    });
+            const self = this;
+            api.exported.Radio.registerSensor(api, this, () => {
+                const timestamp = api.exported.DateUtils.class.timestamp();
+                if (self.lastEmitted < (timestamp - LOCK_TIME)) {
+                    self.setValue(LOCK_TIME);
+                    self.lastEmitted = timestamp;
                 }
-            }, id);
+            });
         }
 
         /**

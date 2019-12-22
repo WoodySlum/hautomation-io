@@ -3,5 +3,8 @@
     "radio.config.clean.every.month": "Données de plus d'un mois",
     "radio.config.clean.every.three.month": "Données de plus de 3 mois",
     "radio.config.clean.every.year": "Données de plus d'un an",
-    "radio.config.clean.no": "Ne rien supprimer"
+    "radio.config.clean.no": "Ne rien supprimer",
+    "radio.presence.sensor.alert.on.battery.low":"Alerter quand la batterie est faible",
+    "radio.presence.sensor.alert.on.battery.low.message":"Le capteur %@ ne semble plus joignable. Veuillez vérifier ses piles.",
+    "radio.presence.sensor.alert.on.battery.ok": "Le capteur %@ est de nouveau joignable. Vous pouvez ignorer cette alerte."
 }

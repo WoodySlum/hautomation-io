@@ -386,6 +386,42 @@ function loaded(api) {
                 this.registered.splice(index, 1);
             }
         }
+
+        /**
+         * Register radio sensor values (static)
+         *
+         * @param  {PluginAPI} api The plugin API
+         * @param  {Sensor} sensorInstance A sensor class inherited object
+         * @param  {Function} [cb=null] A callback such as `(radioObject) => {}`
+         */
+        static registerSensor(api, sensorInstance, cb = null) {
+            api.radioAPI.register((radioObject) => {
+                if (radioObject && sensorInstance.configuration && sensorInstance.configuration.radio && sensorInstance.configuration.radio.length > 0) {
+                    sensorInstance.configuration.radio.forEach((radioConfiguration) => {
+                        if (radioConfiguration.module.toString() === radioObject.module.toString()
+                            && radioConfiguration.protocol.toString() === radioObject.protocol.toString()
+                            && radioConfiguration.deviceId.toString() === radioObject.deviceId.toString()
+                            && radioConfiguration.switchId.toString() === radioObject.switchId.toString()) {
+                            if (radioObject.sensorType) {
+                                if (radioObject.sensorType === sensorInstance.type) {
+                                    if (cb) {
+                                        cb(radioObject);
+                                    } else {
+                                        sensorInstance.setValue(parseFloat(radioObject.value));
+                                    }
+                                }
+                            } else {
+                                if (cb) {
+                                    cb(radioObject);
+                                } else {
+                                    sensorInstance.setValue(parseFloat(radioObject.value));
+                                }
+                            }
+                        }
+                    });
+                }
+            }, sensorInstance.id);
+        }
     }
 
     // Export classes

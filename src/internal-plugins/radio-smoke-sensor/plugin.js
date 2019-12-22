@@ -67,20 +67,9 @@ function loaded(api) {
          */
         constructor(api, id, configuration) {
             super(api, id, configuration);
-            this.lastEmitted = 0;
-            api.radioAPI.register((radioObject) => {
-                if (radioObject && configuration && configuration.radio && configuration.radio.length > 0) {
-                    configuration.radio.forEach((radioConfiguration) => {
-                        if (radioConfiguration.module === radioObject.module
-                            && radioConfiguration.module === radioObject.module
-                            && radioConfiguration.protocol === radioObject.protocol
-                            && radioConfiguration.deviceId === radioObject.deviceId
-                            && radioConfiguration.switchId === radioObject.switchId) {
-                            api.messageAPI.sendMessage("*", api.translateAPI.t("radio.smoke.sensor.message", configuration.name), null, null, null, true);
-                        }
-                    });
-                }
-            }, id);
+            api.exported.Radio.registerSensor(api, this, () => {
+                api.messageAPI.sendMessage("*", api.translateAPI.t("radio.smoke.sensor.message", configuration.name), null, null, null, true);
+            });
         }
     }
 
