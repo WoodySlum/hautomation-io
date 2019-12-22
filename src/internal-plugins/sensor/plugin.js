@@ -1,6 +1,7 @@
 "use strict";
 
 const DEFAULT_HEALTH_INDICATOR_VALUE = 24 * 60 * 60;
+const DB_VERSION = "0.0.1";
 
 /**
  * Loaded function
@@ -46,6 +47,13 @@ function loaded(api) {
              * @Version("0.0.0");
              */
             this.vcc;
+
+            /**
+             * @Property("battery");
+             * @Type("double");
+             * @Version("0.0.1");
+             */
+            this.battery;
         }
     }
 
@@ -205,7 +213,7 @@ function loaded(api) {
          */
         constructor(api, id = null, type = "UNKNOWN", configuration = null, icon = null, round = 0, unit = null, aggregationMode = AGGREGATION_MODE_AVG, dashboardGranularity = DEFAULT_DASHBOARD_AGGREGATION_GRANULARITY, chartType = CHART_TYPE_LINE, cb = null) {
             this.api = api;
-            this.api.databaseAPI.register(DbSensor, cb);
+            this.api.databaseAPI.register(DbSensor, cb, DB_VERSION);
             this.dbHelper = this.api.databaseAPI.dbHelper(DbSensor);
             this.icon = icon;
             this.id = id;
@@ -628,7 +636,7 @@ function loaded(api) {
 module.exports.attributes = {
     loadedCallback: loaded,
     name: "sensor",
-    version: "0.0.0",
+    version: "0.0.1",
     category: "sensor-base",
     description: "Sensor base plugin"
 };

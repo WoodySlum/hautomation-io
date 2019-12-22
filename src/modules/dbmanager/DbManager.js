@@ -153,6 +153,7 @@ class DbManager {
                                         error = Error(ERROR_NO_FIELD_DETECTED);
                                     } else {
                                         if (this.numberVersion(meta.version) > this.numberVersion(oldVersion)) {
+                                            console.log(meta.version + " / " + oldVersion);
                                             //let sqlRemove = "ALTER TABLE `" + table + "` DROP COLUMN `" + field + "`;"
                                             //Logger.verbose(sqlRemove);
                                             //this.db.run(sqlRemove);
@@ -277,7 +278,7 @@ class DbManager {
             let sql = this.RequestBuilder(table, schema)
                 .save(object)
                 .request();
-                
+
             Logger.verbose(sql);
             this.db.run(sql, (err) => {
                 if (err && cb) {

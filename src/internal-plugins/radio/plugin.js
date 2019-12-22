@@ -4,6 +4,7 @@ const STATUS_ON = 1;
 const STATUS_OFF = -1;
 const STATUS_ALL_ON = 100;
 const STATUS_ALL_OFF = -100;
+const DB_VERSION = "0.0.1";
 
 /**
  * Loaded plugin function
@@ -81,10 +82,9 @@ function loaded(api) {
             /**
              * @Property("sensorType");
              * @Type("string");
-             * @Version("0.0.65");
+             * @Version("0.0.1");
              */
             this.sensorType;
-
         }
     }
 
@@ -139,7 +139,7 @@ function loaded(api) {
          */
         constructor(api) {
             this.api = api;
-            this.api.databaseAPI.register(DbRadio);
+            this.api.databaseAPI.register(DbRadio, null, DB_VERSION);
             this.dbHelper = this.api.databaseAPI.dbHelper(DbRadio);
             this.api.timeEventAPI.register((self) => {
                 self.cleanRadioData(self);
@@ -320,7 +320,7 @@ function loaded(api) {
             if (!frequency) {
                 frequency = this.defaultFrequency();
             }
-            let dbObject = new DbRadio(this.dbHelper, this.module, frequency, protocol, deviceId, switchId, null, status, null);
+            let dbObject = new DbRadio(this.dbHelper, this.module, frequency, protocol, deviceId, switchId, null, status, null, null);
             this.onRadioEvent(frequency, protocol, deviceId, switchId, null, status, deviceStatus);
             return dbObject;
         }
@@ -397,11 +397,45 @@ function loaded(api) {
         static registerSensor(api, sensorInstance, cb = null) {
             api.radioAPI.register((radioObject) => {
                 if (radioObject && sensorInstance.configuration && sensorInstance.configuration.radio && sensorInstance.configuration.radio.length > 0) {
+                    // Report battery values
                     sensorInstance.configuration.radio.forEach((radioConfiguration) => {
                         if (radioConfiguration.module.toString() === radioObject.module.toString()
                             && radioConfiguration.protocol.toString() === radioObject.protocol.toString()
                             && radioConfiguration.deviceId.toString() === radioObject.deviceId.toString()
                             && radioConfiguration.switchId.toString() === radioObject.switchId.toString()) {
+                            if (radioObject.sensorType === "BATTERY") {
+                                Object.keys(api.sensorAPI.getSensors()).forEach((sensorKey) => {
+                                    const sensor = api.sensorAPI.getSensor(sensorKey);
+                                    let found = false;
+                                    if (sensor.configuration && sensor.configuration.radio && sensor.configuration.radio.length > 0) {
+                                        sensor.configuration.radio.forEach((radioConfiguration) => {
+                                            if (radioConfiguration.module.toString() === radioObject.module.toString()
+                                                && radioConfiguration.protocol.toString() === radioObject.protocol.toString()
+                                                && radioConfiguration.deviceId.toString() === radioObject.deviceId.toString()
+                                                && radioConfiguration.switchId.toString() === radioObject.switchId.toString()) {
+                                                    found = true;
+                                                }
+                                        });
+                                    }
+
+                                    if (found) {
+                                        sensor.lastObject((err, res) => {
+                                            if (!err) {
+                                                res.battery = radioObject.value;
+                                                res.save((err) => {
+                                                    // console.log(err);
+                                                    // console.log(err);
+                                                    // console.log(err);
+                                                    // console.log(err);
+                                                    // console.log(err);
+                                                });
+                                                console.log(res);
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+
                             if (radioObject.sensorType) {
                                 if (radioObject.sensorType === sensorInstance.type) {
                                     if (cb) {
@@ -433,7 +467,7 @@ module.exports = {STATUS_ON:STATUS_ON, STATUS_OFF:STATUS_OFF, STATUS_ALL_ON:STAT
 module.exports.attributes = {
     loadedCallback: loaded,
     name: "radio",
-    version: "0.0.0",
+    version: "0.0.1",
     category: "radio",
     description: "Parent class for radio devices",
     dependencies:[],

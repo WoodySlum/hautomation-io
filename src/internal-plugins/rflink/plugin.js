@@ -436,7 +436,7 @@ function loaded(api) {
          */
         emit(frequency, protocol, deviceId, switchId, status = null, previousStatus = null) {
             const radioObject = super.emit(frequency, protocol, deviceId, switchId, status, previousStatus);
-            
+
             setTimeout((me) => {
                 me.service.send("rflinkSend", me.formatRadioObjectBeforeSending(radioObject));
 
