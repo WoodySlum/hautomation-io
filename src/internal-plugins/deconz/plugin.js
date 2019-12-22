@@ -563,7 +563,7 @@ function loaded(api) {
 
             // Presence
             if (d && d.state && d.uniqueid && d.r == "sensors" && d.state.hasOwnProperty("presence")) {
-                if (d.state.presence) {
+                if (d.state.presence === true) {
                     this.onRadioEvent(2400, "zigbee", d.uniqueid, 1, (d.state.presence ? 1 : 0), this.constants().STATUS_ON, "PRESENCE");
                 }
             }
@@ -608,7 +608,8 @@ function loaded(api) {
          */
         connectWebSocket() {
             // TEST
-            // const mydata = {"e":"changed","id":"7","r":"sensors","state":{"humidity":4596,"lastupdated":"2019-12-21T12:26:55"},"t":"event","uniqueid":"00:15:8d:00:03:f1:3b:4c-01-0405"};
+            // const mydata = {"e":"changed","id":"5","r":"sensors","state":{"lastupdated":"2019-12-22T01:51:48","presence":false},"t":"event","uniqueid":"00:15:8d:00:04:4d:70:e0-01-0406"};
+            //{"e":"changed","id":"7","r":"sensors","state":{"humidity":4596,"lastupdated":"2019-12-21T12:26:55"},"t":"event","uniqueid":"00:15:8d:00:03:f1:3b:4c-01-0405"};
             // this.processSensor(mydata);
             // process.exit(0);
             if (this.ip) {
@@ -624,7 +625,7 @@ function loaded(api) {
                             this.webSocket.onmessage = (msg) => {
                                 const d = JSON.parse(msg.data);
                                 this.api.exported.Logger.info("Message received");
-                                this.api.exported.Logger.info(msg.data);
+                                this.api.exported.Logger.info(d);
 
                                 this.processSensor(d);
 
