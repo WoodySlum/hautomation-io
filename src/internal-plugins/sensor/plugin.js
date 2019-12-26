@@ -1,7 +1,6 @@
 "use strict";
 
 const DEFAULT_HEALTH_INDICATOR_VALUE = 24 * 60 * 60;
-const DB_VERSION = "0.0.1";
 
 /**
  * Loaded function
@@ -213,7 +212,8 @@ function loaded(api) {
          */
         constructor(api, id = null, type = "UNKNOWN", configuration = null, icon = null, round = 0, unit = null, aggregationMode = AGGREGATION_MODE_AVG, dashboardGranularity = DEFAULT_DASHBOARD_AGGREGATION_GRANULARITY, chartType = CHART_TYPE_LINE, cb = null) {
             this.api = api;
-            this.api.databaseAPI.register(DbSensor, cb, DB_VERSION);
+            this.api.databaseAPI.register(DbSensor, cb);
+
             this.dbHelper = this.api.databaseAPI.dbHelper(DbSensor);
             this.icon = icon;
             this.id = id;

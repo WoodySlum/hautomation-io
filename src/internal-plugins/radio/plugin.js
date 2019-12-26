@@ -4,7 +4,6 @@ const STATUS_ON = 1;
 const STATUS_OFF = -1;
 const STATUS_ALL_ON = 100;
 const STATUS_ALL_OFF = -100;
-const DB_VERSION = "0.0.1";
 
 /**
  * Loaded plugin function
@@ -139,7 +138,7 @@ function loaded(api) {
          */
         constructor(api) {
             this.api = api;
-            this.api.databaseAPI.register(DbRadio, null, DB_VERSION);
+            this.api.databaseAPI.register(DbRadio, null);
             this.dbHelper = this.api.databaseAPI.dbHelper(DbRadio);
             this.api.timeEventAPI.register((self) => {
                 self.cleanRadioData(self);
@@ -201,7 +200,7 @@ function loaded(api) {
         constructor(api) {
             this.api = api;
             this.module = api.identifier;
-            this.api.databaseAPI.register(DbRadio);
+            this.api.databaseAPI.register(DbRadio, null);
             this.dbHelper = this.api.databaseAPI.dbHelper(DbRadio);
             this.api.webAPI.register(this, this.api.webAPI.constants().GET, ":/radio/get/" + this.module + "/protocol/", this.api.webAPI.Authentication().AUTH_ADMIN_LEVEL);
             // Example : http://localhost:8100/api/radio/set/rflink/blyss/134343/123/1/
@@ -427,9 +426,12 @@ function loaded(api) {
                                                     // console.log(err);
                                                     // console.log(err);
                                                     // console.log(err);
-                                                    // console.log(err);
+                                                    console.log(err);
+                                                    process.exit(0);
+
                                                 });
                                                 console.log(res);
+
                                             }
                                         });
                                     }

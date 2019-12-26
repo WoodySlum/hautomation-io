@@ -154,6 +154,7 @@ function loaded(api) {
             this.service = new DeconzService(this, DECONZ_HTTP_PORT);
             api.servicesManagerAPI.add(this.service);
             this.init();
+            this.processSensor({"config":{"battery":100,"on":true,"reachable":true,"temperature":2500,"tholddark":12000,"tholdoffset":7000},"e":"changed","id":"4","r":"sensors","t":"event","uniqueid":"00:15:8d:00:04:4d:70:e0-01-0400"});
 
 
             setTimeout((self) => { // Wait 30s for service start
@@ -571,7 +572,6 @@ function loaded(api) {
             // Battery
             if (d && d.config && d.uniqueid && d.config && d.config.hasOwnProperty("battery")) {
                 this.onRadioEvent(2400, "zigbee", d.uniqueid, 1, d.config.battery, this.constants().STATUS_ON, "BATTERY");
-
             }
 
             // Temperature
@@ -608,13 +608,6 @@ function loaded(api) {
          * Connect web socket
          */
         connectWebSocket() {
-            // TEST
-            // const mydata = {"e":"changed","id":"5","r":"sensors","state":{"lastupdated":"2019-12-22T01:51:48","presence":false},"t":"event","uniqueid":"00:15:8d:00:04:4d:70:e0-01-0406"};
-            //{"e":"changed","id":"7","r":"sensors","state":{"humidity":4596,"lastupdated":"2019-12-21T12:26:55"},"t":"event","uniqueid":"00:15:8d:00:03:f1:3b:4c-01-0405"};
-            this.processSensor({"config":{"battery":100,"on":true,"reachable":true,"temperature":2500,"tholddark":12000,"tholdoffset":7000},"e":"changed","id":"4","r":"sensors","t":"event","uniqueid":"00:15:8d:00:04:4d:70:e0-01-0400"});
-            // process.exit(0);
-            // this.processSensor(mydata);
-            // process.exit(0);
             if (this.ip) {
                 this.getConfig((err, config) => {
                     try {

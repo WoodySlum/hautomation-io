@@ -29,11 +29,10 @@ class DatabaseAPI {
      *
      * @param  {DbObject} dbObjectClass A class extending DbObject
      * @param  {Function} [cb=null] A callback with an error in parameter : `(err) => {}`
-     * @param  {string} [previousVersion=null] The previous plugin version
      */
-    register(dbObjectClass, cb = null, previousVersion = null) {
+    register(dbObjectClass, cb = null) {
         this.registeredSchema = DbSchemaConverter.class.toSchema(dbObjectClass);
-        PrivateProperties.oprivate(this).dbManager.initSchema(this.registeredSchema, (previousVersion ? previousVersion : PrivateProperties.oprivate(this).previousVersion), cb);
+        PrivateProperties.oprivate(this).dbManager.initSchema(this.registeredSchema, PrivateProperties.oprivate(this).previousVersion, cb);
     }
 
     /**
