@@ -582,6 +582,14 @@ function loaded(api) {
                 this.onRadioEvent(2400, "zigbee", d.uniqueid, 1, (d.state.temperature / 100), this.constants().STATUS_ON, "TEMPERATURE");
             }
 
+            // Contact sensors
+            if (d && d.config && d.uniqueid && d.config && d.config.hasOwnProperty("open")) {
+                this.onRadioEvent(2400, "zigbee", d.uniqueid, 1, (d.config.open ? 1 : 0), this.constants().STATUS_ON, "CONTACT");
+            }
+            if (d && d.uniqueid && d.state && d.state.hasOwnProperty("open")) {
+                this.onRadioEvent(2400, "zigbee", d.uniqueid, 1, (d.state.open ? 1 : 0), this.constants().STATUS_ON, "CONTACT");
+            }
+
             // Humidity
             if (d && d.config && d.uniqueid && d.config && d.config.hasOwnProperty("humidity")) {
                 this.onRadioEvent(2400, "zigbee", d.uniqueid, 1, (d.config.humidity / 100), this.constants().STATUS_ON, "HUMIDITY");
