@@ -169,6 +169,7 @@ function loaded(api) {
     const AGGREGATION_MODE_SUM = 1;
     const AGGREGATION_MODE_MIN = 2;
     const AGGREGATION_MODE_MAX = 3;
+    const AGGREGATION_MODE_LAST = 4;
 
     const GRANULARITY_MINUTE = 60;
     const GRANULARITY_HOUR = 60 * 60;
@@ -232,7 +233,7 @@ function loaded(api) {
          * @returns {Object} A list of constants
          */
         static constants() {
-            return {AGGREGATION_MODE_AVG:AGGREGATION_MODE_AVG, AGGREGATION_MODE_SUM:AGGREGATION_MODE_SUM, AGGREGATION_MODE_MIN:AGGREGATION_MODE_MIN, AGGREGATION_MODE_MAX:AGGREGATION_MODE_MAX,
+            return {AGGREGATION_MODE_AVG:AGGREGATION_MODE_AVG, AGGREGATION_MODE_SUM:AGGREGATION_MODE_SUM, AGGREGATION_MODE_MIN:AGGREGATION_MODE_MIN, AGGREGATION_MODE_MAX:AGGREGATION_MODE_MAX, AGGREGATION_MODE_LAST:AGGREGATION_MODE_LAST,
                 GRANULARITY_MINUTE:GRANULARITY_MINUTE, GRANULARITY_HOUR:GRANULARITY_HOUR, GRANULARITY_DAY:GRANULARITY_DAY, GRANULARITY_MONTH:GRANULARITY_MONTH, GRANULARITY_YEAR:GRANULARITY_YEAR,
                 CHART_TYPE_LINE:CHART_TYPE_LINE, CHART_TYPE_BAR:CHART_TYPE_BAR};
         }
@@ -370,6 +371,17 @@ function loaded(api) {
         }
 
         /**
+         * Get the dashboard tile
+         *
+         * @param  {number} convertedValue            The converted value
+         *
+         * @returns {Tile}                  A tile
+         */
+        getTile(convertedValue) {
+            return this.api.dashboardAPI.Tile("sensor-"+this.id, this.api.dashboardAPI.TileType().TILE_INFO_TWO_TEXT, this.icon, null, this.name, convertedValue.value + " " + convertedValue.unit, null, null, null, 800, "statistics");
+        }
+
+        /**
          * Update tile and register to dashboard
          *
          * @param  {Function} [cb=null] A callback without parameters when done. Used for testing only.
@@ -378,8 +390,9 @@ function loaded(api) {
         updateTile(cb = null, value = null) {
             this.lastObject((err, lastObject) => {
                 if (!err && lastObject.value !== null) {
-                    const convertedValue = value ? this.convertValue(value) : this.convertValue(lastObject.value);
-                    const tile = this.api.dashboardAPI.Tile("sensor-"+this.id, this.api.dashboardAPI.TileType().TILE_INFO_TWO_TEXT, this.icon, null, this.name, convertedValue.value + " " + convertedValue.unit, null, null, null, 800, "statistics");
+                    const convertedValue = (value != null) ? this.convertValue(value) : this.convertValue(lastObject.value);
+                    const tile = this.getTile(convertedValue);
+
                     if (this.configuration.dashboardColor) {
                         tile.colors.colorDefault = this.configuration.dashboardColor;
                     }
@@ -434,6 +447,9 @@ function loaded(api) {
                     case AGGREGATION_MODE_SUM:
                         object.value = object.value + value;
                         break;
+                    case AGGREGATION_MODE_LAST:
+                        object.value = value;
+                        break;
                     case AGGREGATION_MODE_MAX:
                         if (value > object.value) {
                             object.value = value;
@@ -444,6 +460,7 @@ function loaded(api) {
                             object.value = value;
                         }
                         break;
+
                     }
 
                     object.save();
@@ -512,6 +529,9 @@ function loaded(api) {
                 aggregationMode = this.dbHelper.Operators().MIN;
                 break;
             case AGGREGATION_MODE_MAX:
+                aggregationMode = this.dbHelper.Operators().MAX;
+                break;
+            case AGGREGATION_MODE_LAST:
                 aggregationMode = this.dbHelper.Operators().MAX;
                 break;
             }

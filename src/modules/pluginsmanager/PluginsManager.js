@@ -101,7 +101,9 @@ const INTERNAL_PLUGINS = [
     "radio-light-sensor",
     "radio-temperature-sensor",
     "radio-humidity-sensor",
-    "radio-pressure-sensor"
+    "radio-pressure-sensor",
+    "radio-contact-sensor",
+    "contact-sensor"
 ];
 
 const CORE_PLUGINS = [
@@ -128,7 +130,9 @@ const CORE_PLUGINS = [
     "radio-light-sensor",
     "radio-temperature-sensor",
     "radio-humidity-sensor",
-    "radio-pressure-sensor"
+    "radio-pressure-sensor",
+    "radio-contact-sensor",
+    "contact-sensor"
 ];
 
 /**
