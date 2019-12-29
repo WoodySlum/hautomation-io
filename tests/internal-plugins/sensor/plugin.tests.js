@@ -152,8 +152,8 @@ describe("Sensor", function() {
         sensor.round = 2;
         sensor.id = "fooavg";
         sensor.aggregationMode = Sensor.constants().AGGREGATION_MODE_AVG;
-        const db1  = new plugin.exported.DbSensor(sensor.dbHelper, 32, "fooavg", 23);
-        const db2  = new plugin.exported.DbSensor(sensor.dbHelper, 21, "fooavg", 21);
+        const db1  = new plugin.exported.DbSensor(sensor.dbHelper, 32, "fooavg", 23, 99);
+        const db2  = new plugin.exported.DbSensor(sensor.dbHelper, 21, "fooavg", 21, 92);
 
         db1.save((error) => {
             db2.save((error) => {
@@ -161,6 +161,7 @@ describe("Sensor", function() {
                     expect(error).to.be.null;
                     expect(res.value).to.be.equal(26.5);
                     expect(res.vcc).to.be.equal(21);
+                    expect(res.battery).to.be.equal(92);
                     done();
                 }, 360);
             });
@@ -173,8 +174,8 @@ describe("Sensor", function() {
         sensor.round = 2;
         sensor.id = "foosum";
         sensor.aggregationMode = Sensor.constants().AGGREGATION_MODE_SUM;
-        const db1  = new plugin.exported.DbSensor(sensor.dbHelper, 32, "foosum", 23);
-        const db2  = new plugin.exported.DbSensor(sensor.dbHelper, 20.3, "foosum", 11);
+        const db1  = new plugin.exported.DbSensor(sensor.dbHelper, 32, "foosum", 23, 99);
+        const db2  = new plugin.exported.DbSensor(sensor.dbHelper, 20.3, "foosum", 11, 99);
 
         db1.save((error) => {
             db2.save((error) => {
@@ -194,8 +195,8 @@ describe("Sensor", function() {
         sensor.round = 2;
         sensor.id = "foomin";
         sensor.aggregationMode = Sensor.constants().AGGREGATION_MODE_MIN;
-        const db1  = new plugin.exported.DbSensor(sensor.dbHelper, 32, "foomin", 23);
-        const db2  = new plugin.exported.DbSensor(sensor.dbHelper, 20.3, "foomin", 11);
+        const db1  = new plugin.exported.DbSensor(sensor.dbHelper, 32, "foomin", 23, 99);
+        const db2  = new plugin.exported.DbSensor(sensor.dbHelper, 20.3, "foomin", 11, 99);
 
         db1.save((error) => {
             db2.save((error) => {
@@ -215,8 +216,8 @@ describe("Sensor", function() {
         sensor.round = 2;
         sensor.id = "foomax";
         sensor.aggregationMode = Sensor.constants().AGGREGATION_MODE_MAX;
-        const db1  = new plugin.exported.DbSensor(sensor.dbHelper, 32, "foomax", 23);
-        const db2  = new plugin.exported.DbSensor(sensor.dbHelper, 20.3, "foomax", 11);
+        const db1  = new plugin.exported.DbSensor(sensor.dbHelper, 32, "foomax", 23, 99);
+        const db2  = new plugin.exported.DbSensor(sensor.dbHelper, 20.3, "foomax", 11, 99);
 
         db1.save((error) => {
             db2.save((error) => {
@@ -236,8 +237,8 @@ describe("Sensor", function() {
         sensor.round = 2;
         sensor.id = "foofoo";
         sensor.aggregationMode = Sensor.constants().AGGREGATION_MODE_MAX;
-        const db1  = new plugin.exported.DbSensor(sensor.dbHelper, 32, "foofoo", 23);
-        const db2  = new plugin.exported.DbSensor(sensor.dbHelper, 20.3, "foofoo", 11);
+        const db1  = new plugin.exported.DbSensor(sensor.dbHelper, 32, "foofoo", 23, 99);
+        const db2  = new plugin.exported.DbSensor(sensor.dbHelper, 20.3, "foofoo", 11, 99);
 
         db1.save((error) => {
             db2.save((error) => {
@@ -291,6 +292,7 @@ describe("Sensor", function() {
             expect(err).to.be.null;
             sensor.updateTile.restore();
             sensor.lastObject((err, res) => {
+
                 expect(res.value).to.be.equal(67);
                 expect(res.vcc).to.be.equal(10);
                 done();
@@ -325,11 +327,11 @@ describe("Sensor", function() {
         sensor.round = 2;
         sensor.id = "foofoofoofoofoo";
         sensor.aggregationMode = Sensor.constants().AGGREGATION_MODE_AVG;
-        const val1  = new plugin.exported.DbSensor(sensor.dbHelper, 32.8, "foofoofoofoofoo", 23);
+        const val1  = new plugin.exported.DbSensor(sensor.dbHelper, 32.8, "foofoofoofoofoo", 23, 99);
         val1.timestamp = "2017-07-13 00:05:24";
-        const val2  = new plugin.exported.DbSensor(sensor.dbHelper, 22.3, "foofoofoofoofoo", 23);
+        const val2  = new plugin.exported.DbSensor(sensor.dbHelper, 22.3, "foofoofoofoofoo", 23, 99);
         val2.timestamp = "2017-07-13 00:17:43";
-        const val3  = new plugin.exported.DbSensor(sensor.dbHelper, 17, "foofoofoofoofoo", 23);
+        const val3  = new plugin.exported.DbSensor(sensor.dbHelper, 17, "foofoofoofoofoo", 23, 99);
         val3.timestamp = "2017-07-13 07:22:04";
 
         val1.save((error) => {
@@ -358,11 +360,11 @@ describe("Sensor", function() {
         sensor.aggregationMode = Sensor.constants().AGGREGATION_MODE_SUM;
         sensor.addUnitAggregation("bar", 20);
 
-        const val1  = new plugin.exported.DbSensor(sensor.dbHelper, 18.945, "foofoofoofoofoofoo", 23);
+        const val1  = new plugin.exported.DbSensor(sensor.dbHelper, 18.945, "foofoofoofoofoofoo", 23, 99);
         val1.timestamp = "2017-07-07 02:05:24";
-        const val2  = new plugin.exported.DbSensor(sensor.dbHelper, 17.312, "foofoofoofoofoofoo", 23);
+        const val2  = new plugin.exported.DbSensor(sensor.dbHelper, 17.312, "foofoofoofoofoofoo", 23, 99);
         val2.timestamp = "2017-07-07 02:17:43";
-        const val3  = new plugin.exported.DbSensor(sensor.dbHelper, 17, "foofoofoofoofoofoo", 23);
+        const val3  = new plugin.exported.DbSensor(sensor.dbHelper, 17, "foofoofoofoofoofoo", 23, 99);
         val3.timestamp = "2017-07-13 07:22:04";
 
         val1.save((error) => {
@@ -391,11 +393,11 @@ describe("Sensor", function() {
         sensor.aggregationMode = Sensor.constants().AGGREGATION_MODE_MIN;
         sensor.addUnitAggregation("bar", 20);
 
-        const val1  = new plugin.exported.DbSensor(sensor.dbHelper, 18.945, "foofoofoofoofoofoofoo", 23);
+        const val1  = new plugin.exported.DbSensor(sensor.dbHelper, 18.945, "foofoofoofoofoofoofoo", 23, 99);
         val1.timestamp = "'2017-03-03 03:05:24'";
-        const val2  = new plugin.exported.DbSensor(sensor.dbHelper, 17.312, "foofoofoofoofoofoofoo", 23);
+        const val2  = new plugin.exported.DbSensor(sensor.dbHelper, 17.312, "foofoofoofoofoofoofoo", 23, 99);
         val2.timestamp = "'2017-03-12 20:17:43'";
-        const val3  = new plugin.exported.DbSensor(sensor.dbHelper, 17, "foofoofoofoofoofoofoo", 23);
+        const val3  = new plugin.exported.DbSensor(sensor.dbHelper, 17, "foofoofoofoofoofoofoo", 23, 99);
         val3.timestamp = "'2017-05-13 07:22:04'";
 
         val1.save((error) => {

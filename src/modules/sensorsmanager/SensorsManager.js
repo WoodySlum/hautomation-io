@@ -366,7 +366,12 @@ class SensorsManager {
                             if (s) {
                                 s.lastObject((err, res) => {
                                     let healthStatus = true;
+                                    let battery = null;
                                     if (!err) {
+                                        if (res.battery != null) {
+                                            battery = res.battery;
+                                        }
+
                                         if (res && res.timestamp) {
                                             const diffTime = DateUtils.class.roundedTimestamp(DateUtils.class.timestamp(), DateUtils.ROUND_TIMESTAMP_DAY) - DateUtils.class.roundedTimestamp(DateUtils.class.dateToUTCTimestamp(res.timestamp), DateUtils.ROUND_TIMESTAMP_DAY);
                                             if (parseInt(diffTime) > parseInt(s.getHealthIndicatorThresholdValue())) {
@@ -385,6 +390,7 @@ class SensorsManager {
                                         icon: (s?s.icon:"E8BC"),
                                         category: (s?s.type:"UNKNOWN"),
                                         healthStatus: healthStatus,
+                                        battery: battery,
                                         form:Object.assign(self.formManager.getForm(sensorPlugin.sensorAPI.form), {data:sensor})
                                     });
 

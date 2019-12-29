@@ -99,7 +99,7 @@ class RadioManager {
     /**
      * Register for radio events
      *
-     * @param  {Function} cb            A callback triggered when radio information is received. Example : `(radioObj) => {}`
+     * @param  {Function} cb            A callback triggered when radio information is received. Example : `(radioObj, radioInstance) => {}`
      * @param  {string} id            An identifier
      */
     register(cb, id = null) {
@@ -171,8 +171,9 @@ class RadioManager {
      * When a new radio information is received, refresh protocols list for forms
      *
      * @param  {DbRadio} radioObject A radio object
+     * @param  {Radio} radioInstance A radio instance inherited object
      */
-    onRadioEvent(radioObject) {
+    onRadioEvent(radioObject, radioInstance) {
         // Trigger scenarios
         this.scenarioManager.getScenarios().forEach((scenario) => {
             if (scenario.RadioScenariosForm) {
@@ -200,7 +201,7 @@ class RadioManager {
 
         // Dispatch callback
         Object.keys(this.registeredElements).forEach((registeredKey) => {
-            this.registeredElements[registeredKey](Cleaner.class.cleanDbObject(radioObject));
+            this.registeredElements[registeredKey](Cleaner.class.cleanDbObject(radioObject), radioInstance);
         });
     }
 

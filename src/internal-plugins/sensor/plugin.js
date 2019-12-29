@@ -351,6 +351,7 @@ function loaded(api) {
                 lastObjectRequest = this.dbHelper.RequestBuilder()
                     .selectOp(operator, "value")
                     .selectOp(this.dbHelper.Operators().MIN, "vcc")
+                    .selectOp(this.dbHelper.Operators().MIN, "battery")
                     .where("sensorId", this.dbHelper.Operators().EQ, this.id)
                     .where(this.dbHelper.Operators().FIELD_TIMESTAMP, this.dbHelper.Operators().GTE, (this.api.exported.DateUtils.class.timestamp() - duration))
                     .where(this.dbHelper.Operators().FIELD_TIMESTAMP, this.dbHelper.Operators().LTE, this.api.exported.DateUtils.class.timestamp())
@@ -480,7 +481,7 @@ function loaded(api) {
                     if (cb) cb(null);
                 } else {
                     if (!error) {
-                        const currentObject = new DbSensor(this.dbHelper, value, this.id, vcc);
+                        const currentObject = new DbSensor(this.dbHelper, value, this.id, vcc, null);
                         currentObject.timestamp = timestamp;
 
                         currentObject.save((err) => {

@@ -319,7 +319,7 @@ function loaded(api) {
             if (!frequency) {
                 frequency = this.defaultFrequency();
             }
-            let dbObject = new DbRadio(this.dbHelper, this.module, frequency, protocol, deviceId, switchId, null, status, null, null);
+            let dbObject = new DbRadio(this.dbHelper, this.module, frequency, protocol, deviceId, switchId, null, status, null);
             this.onRadioEvent(frequency, protocol, deviceId, switchId, null, status, deviceStatus);
             return dbObject;
         }
@@ -341,7 +341,7 @@ function loaded(api) {
             let dbObject = new DbRadio(this.dbHelper, this.module, frequency, protocol, deviceId, switchId, value, status, sensorType);
             this.registered.forEach((register) => {
                 if (register.onRadioEvent instanceof Function) {
-                    register.onRadioEvent(dbObject);
+                    register.onRadioEvent(dbObject, this);
                 }
             });
 
@@ -387,6 +387,21 @@ function loaded(api) {
         }
 
         /**
+         * @override
+         * Compare sensors for battery. By default, compare device id, switch id module and protocol
+         *
+         * @param  {DbRadio} a A db radio or db form object
+         * @param  {DbRadio} b  A db radio or db form object
+         * @returns {boolean}           `true` if equals, `false` otherwise
+         */
+        compareSensorForBattery(a, b) {
+            return (a.module.toString() === b.module.toString()
+                && a.protocol.toString() === b.protocol.toString()
+                && a.deviceId.toString() === b.deviceId.toString()
+                && a.switchId.toString() === b.switchId.toString());
+        }
+
+        /**
          * Register radio sensor values (static)
          *
          * @param  {PluginAPI} api The plugin API
@@ -394,49 +409,41 @@ function loaded(api) {
          * @param  {Function} [cb=null] A callback such as `(radioObject) => {}`
          */
         static registerSensor(api, sensorInstance, cb = null) {
-            api.radioAPI.register((radioObject) => {
+            api.radioAPI.register((radioObject, radioInstance) => {
                 if (radioObject && sensorInstance.configuration && sensorInstance.configuration.radio && sensorInstance.configuration.radio.length > 0) {
                     // Report battery values
                     sensorInstance.configuration.radio.forEach((radioConfiguration) => {
+                        if (radioObject.sensorType === "BATTERY") {
+                            Object.keys(api.sensorAPI.getSensors()).forEach((sensorKey) => {
+                                const sensor = api.sensorAPI.getSensor(sensorKey);
+                                let found = false;
+                                if (sensor.configuration && sensor.configuration.radio && sensor.configuration.radio.length > 0) {
+                                    sensor.configuration.radio.forEach((radioConfiguration) => {
+                                        if (radioInstance.compareSensorForBattery(radioConfiguration, radioObject)) {
+                                            found = true;
+                                        }
+                                    });
+                                }
+
+                                if (found) {
+                                    sensor.lastObject((err, res) => {
+                                        if (!err) {
+                                            res.battery = radioObject.value;
+                                            res.save((err) => {
+                                                if (err) {
+                                                    api.exported.Logger.err(err.message);
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+                        }
+
                         if (radioConfiguration.module.toString() === radioObject.module.toString()
                             && radioConfiguration.protocol.toString() === radioObject.protocol.toString()
                             && radioConfiguration.deviceId.toString() === radioObject.deviceId.toString()
                             && radioConfiguration.switchId.toString() === radioObject.switchId.toString()) {
-                            if (radioObject.sensorType === "BATTERY") {
-                                Object.keys(api.sensorAPI.getSensors()).forEach((sensorKey) => {
-                                    const sensor = api.sensorAPI.getSensor(sensorKey);
-                                    let found = false;
-                                    if (sensor.configuration && sensor.configuration.radio && sensor.configuration.radio.length > 0) {
-                                        sensor.configuration.radio.forEach((radioConfiguration) => {
-                                            if (radioConfiguration.module.toString() === radioObject.module.toString()
-                                                && radioConfiguration.protocol.toString() === radioObject.protocol.toString()
-                                                && radioConfiguration.deviceId.toString() === radioObject.deviceId.toString()
-                                                && radioConfiguration.switchId.toString() === radioObject.switchId.toString()) {
-                                                    found = true;
-                                                }
-                                        });
-                                    }
-
-                                    if (found) {
-                                        sensor.lastObject((err, res) => {
-                                            if (!err) {
-                                                res.battery = radioObject.value;
-                                                res.save((err) => {
-                                                    // console.log(err);
-                                                    // console.log(err);
-                                                    // console.log(err);
-                                                    // console.log(err);
-                                                    console.log(err);
-                                                    process.exit(0);
-
-                                                });
-                                                console.log(res);
-
-                                            }
-                                        });
-                                    }
-                                });
-                            }
 
                             if (radioObject.sensorType) {
                                 if (radioObject.sensorType === sensorInstance.type) {

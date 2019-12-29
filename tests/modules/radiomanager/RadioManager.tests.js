@@ -80,7 +80,7 @@ describe("RadioManager", function() {
 
         const res = radioManager.switchDevice(sampleRadioPluginIdentifier, "foobar", "foo", "bar", 0.2, null, -1);
 
-        expect(radioPlugin.instance.emit.withArgs(null, "foobar", "foo", "bar", 0.2, -1).calledOnce).to.be.true;
+        expect(radioPlugin.instance.emit.withArgs(null, "foobar", "foo", "bar", 0.2, -1, null).calledOnce).to.be.true;
         expect(res.frequency).to.be.equal(radioPlugin.instance.defaultFrequency());
         expect(res.protocol).to.be.equal("foobar");
         expect(res.deviceId).to.be.equal("foo");

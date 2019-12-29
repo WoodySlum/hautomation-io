@@ -552,6 +552,23 @@ function loaded(api) {
         }
 
         /**
+         * @override
+         * Compare sensors for battery. By default, compare device id, switch id module and protocol
+         *
+         * @param  {DbRadio} a A db radio or db form object
+         * @param  {DbRadio} b  A db radio or db form object
+         * @returns {boolean}           `true` if equals, `false` otherwise
+         */
+        compareSensorForBattery(a, b) {
+            const baseLength = 23;
+            return (a.module.toString() === b.module.toString()
+                && a.protocol.toString() === b.protocol.toString()
+                && a.deviceId.toString().length >= baseLength && b.deviceId.toString().length >= baseLength
+                && a.deviceId.toString().substr(0, baseLength) && b.deviceId.toString().substr(0, baseLength)
+                && a.deviceId.toString() === b.deviceId.toString());
+        }
+
+        /**
          * Process sensor data
          *
          * @param  {Object} d Data from conbee usb key
@@ -616,6 +633,7 @@ function loaded(api) {
          * Connect web socket
          */
         connectWebSocket() {
+            this.processSensor({"config":{"battery":85,"offset":0,"on":true,"reachable":true},"e":"changed","id":"7","r":"sensors","t":"event","uniqueid":"00:15:8d:00:03:f1:3b:4c-01-0405"});
             if (this.ip) {
                 this.getConfig((err, config) => {
                     try {

@@ -22,7 +22,7 @@ class RadioAPI {
     /**
      * Register for radio events
      *
-     * @param  {Function} cb            A callback triggered when radio information is received. Example : `(radioObj) => {}`
+     * @param  {Function} cb            A callback triggered when radio information is received. Example : `(radioObj, radioInstance) => {}`
      * @param  {string} id            An identifier
      */
     register(cb, id = null) {
