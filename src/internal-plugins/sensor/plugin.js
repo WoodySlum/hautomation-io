@@ -439,68 +439,79 @@ function loaded(api) {
 
             const existing = {};
             existing[this.dbHelper.Operators().FIELD_TIMESTAMP] = timestamp;
-            const timestampRequest = this.dbHelper.RequestBuilder()
-                .select()
-                .where("CAST(strftime('%s', timestamp) AS NUMERIC)", this.dbHelper.Operators().EQ, timestamp)
-                .where("sensorId", this.dbHelper.Operators().EQ, this.id)
-                .first();
-            this.dbHelper.getObjects(timestampRequest, (error, objects) => {
-                if (objects && objects.length == 1) {
-                    const object = objects[0];
-                    object[this.dbHelper.Operators().FIELD_TIMESTAMP] = timestamp;
 
-                    switch(this.aggregationMode) {
-                    case AGGREGATION_MODE_AVG:
-                        object.value = value;
-                        break;
-                    case AGGREGATION_MODE_SUM:
-                        object.value = object.value + value;
-                        break;
-                    case AGGREGATION_MODE_LAST:
-                        object.value = value;
-                        break;
-                    case AGGREGATION_MODE_MAX:
-                        if (value > object.value) {
-                            object.value = value;
-                        }
-                        break;
-                    case AGGREGATION_MODE_MIN:
-                        if (value < object.value) {
-                            object.value = value;
-                        }
-                        break;
 
-                    }
+            this.lastObject((err, res) => {
+                let battery = null;
 
-                    object.save();
-                    this.updateTile(null, value);
-
-                    // Dispatch
-                    const aggregated = this.convertValue(object.value);
-                    this.api.sensorAPI.onNewSensorValue(this.id, this.type, value, this.unit, vcc, aggregated.value, aggregated.unit);
-                    if (cb) cb(null);
-                } else {
-                    if (!error) {
-                        const currentObject = new DbSensor(this.dbHelper, value, this.id, vcc, null);
-                        currentObject.timestamp = timestamp;
-
-                        currentObject.save((err) => {
-                            if (!err) {
-                                this.updateTile(null, value);
-
-                                // Dispatch
-                                const aggregated = this.convertValue(currentObject.value);
-                                this.api.sensorAPI.onNewSensorValue(this.id, this.type, value, this.unit, vcc, aggregated.value, aggregated.unit);
-
-                                if (cb) cb(null);
-                            } else {
-                                if (cb) cb(err);
-                            }
-                        });
-                    } else {
-                        if (cb) cb(error);
-                    }
+                if (res && res.battery != null) {
+                    battery = res.battery;
                 }
+
+                const timestampRequest = this.dbHelper.RequestBuilder()
+                    .select()
+                    .where("CAST(strftime('%s', timestamp) AS NUMERIC)", this.dbHelper.Operators().EQ, timestamp)
+                    .where("sensorId", this.dbHelper.Operators().EQ, this.id)
+                    .first();
+                this.dbHelper.getObjects(timestampRequest, (error, objects) => {
+                    if (objects && objects.length == 1) {
+                        const object = objects[0];
+                        object[this.dbHelper.Operators().FIELD_TIMESTAMP] = timestamp;
+                        object.battery = battery;
+
+                        switch(this.aggregationMode) {
+                        case AGGREGATION_MODE_AVG:
+                            object.value = value;
+                            break;
+                        case AGGREGATION_MODE_SUM:
+                            object.value = object.value + value;
+                            break;
+                        case AGGREGATION_MODE_LAST:
+                            object.value = value;
+                            break;
+                        case AGGREGATION_MODE_MAX:
+                            if (value > object.value) {
+                                object.value = value;
+                            }
+                            break;
+                        case AGGREGATION_MODE_MIN:
+                            if (value < object.value) {
+                                object.value = value;
+                            }
+                            break;
+
+                        }
+
+                        object.save();
+                        this.updateTile(null, value);
+
+                        // Dispatch
+                        const aggregated = this.convertValue(object.value);
+                        this.api.sensorAPI.onNewSensorValue(this.id, this.type, value, this.unit, vcc, aggregated.value, aggregated.unit);
+                        if (cb) cb(null);
+                    } else {
+                        if (!error) {
+                            const currentObject = new DbSensor(this.dbHelper, value, this.id, vcc, battery);
+                            currentObject.timestamp = timestamp;
+
+                            currentObject.save((err) => {
+                                if (!err) {
+                                    this.updateTile(null, value);
+
+                                    // Dispatch
+                                    const aggregated = this.convertValue(currentObject.value);
+                                    this.api.sensorAPI.onNewSensorValue(this.id, this.type, value, this.unit, vcc, aggregated.value, aggregated.unit);
+
+                                    if (cb) cb(null);
+                                } else {
+                                    if (cb) cb(err);
+                                }
+                            });
+                        } else {
+                            if (cb) cb(error);
+                        }
+                    }
+                });
             });
         }
 
