@@ -341,6 +341,7 @@ describe("Sensor", function() {
                     sensor.getStatistics(1499897104, 1499897104 + (24 * 60 * 60), (60 * 60), (err, results) => {
                         expect(err).to.be.null;
                         expect(results.unit).to.be.equal("foo");
+                        console.log(results.values);
                         expect(Object.keys(results.values).length).to.be.equal(25);
                         expect(results.values["1499896800"]).to.be.equal(27.55);
                         expect(results.values["1499922000"]).to.be.equal(17);
