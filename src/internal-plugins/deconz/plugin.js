@@ -154,8 +154,6 @@ function loaded(api) {
             this.service = new DeconzService(this, DECONZ_HTTP_PORT);
             api.servicesManagerAPI.add(this.service);
             this.init();
-            this.processSensor({"config":{"battery":100,"on":true,"reachable":true,"temperature":2500,"tholddark":12000,"tholdoffset":7000},"e":"changed","id":"4","r":"sensors","t":"event","uniqueid":"00:15:8d:00:04:4d:70:e0-01-0400"});
-
 
             setTimeout((self) => { // Wait 30s for service start
                 self.init();
@@ -633,7 +631,6 @@ function loaded(api) {
          * Connect web socket
          */
         connectWebSocket() {
-            this.processSensor({"config":{"battery":85,"offset":0,"on":true,"reachable":true},"e":"changed","id":"7","r":"sensors","t":"event","uniqueid":"00:15:8d:00:03:f1:3b:4c-01-0405"});
             if (this.ip) {
                 this.getConfig((err, config) => {
                     try {

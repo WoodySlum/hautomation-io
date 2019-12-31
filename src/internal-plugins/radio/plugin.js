@@ -412,34 +412,35 @@ function loaded(api) {
             api.radioAPI.register((radioObject, radioInstance) => {
                 if (radioObject && sensorInstance.configuration && sensorInstance.configuration.radio && sensorInstance.configuration.radio.length > 0) {
                     // Report battery values
+                    if (radioObject.sensorType === "BATTERY") {
+                        sensorInstance.configuration.radio.forEach((sensorInstanceRadioConfiguration) => {
+                            if (radioInstance.compareSensorForBattery(sensorInstanceRadioConfiguration, radioObject)) {
+                                Object.keys(api.sensorAPI.getSensors()).forEach((sensorKey) => {
+
+                                    const sensor = api.sensorAPI.getSensor(sensorKey);
+                                    if (sensor.configuration && sensor.configuration.radio && sensor.configuration.radio.length > 0) {
+                                        sensor.configuration.radio.forEach((radioConfiguration) => {
+                                            if (radioInstance.compareSensorForBattery(radioConfiguration, radioObject)) {
+                                                sensor.lastObject((err, res) => {
+                                                    if (!err) {
+                                                        res.battery = radioObject.value;
+                                                        res.save((err) => {
+                                                            if (err) {
+                                                                api.exported.Logger.err(err.message);
+                                                            }
+                                                        });
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
+
+                    // Set values
                     sensorInstance.configuration.radio.forEach((radioConfiguration) => {
-                        if (radioObject.sensorType === "BATTERY") {
-                            Object.keys(api.sensorAPI.getSensors()).forEach((sensorKey) => {
-                                const sensor = api.sensorAPI.getSensor(sensorKey);
-                                let found = false;
-                                if (sensor.configuration && sensor.configuration.radio && sensor.configuration.radio.length > 0) {
-                                    sensor.configuration.radio.forEach((radioConfiguration) => {
-                                        if (radioInstance.compareSensorForBattery(radioConfiguration, radioObject)) {
-                                            found = true;
-                                        }
-                                    });
-                                }
-
-                                if (found) {
-                                    sensor.lastObject((err, res) => {
-                                        if (!err) {
-                                            res.battery = radioObject.value;
-                                            res.save((err) => {
-                                                if (err) {
-                                                    api.exported.Logger.err(err.message);
-                                                }
-                                            });
-                                        }
-                                    });
-                                }
-                            });
-                        }
-
                         if (radioConfiguration.module.toString() === radioObject.module.toString()
                             && radioConfiguration.protocol.toString() === radioObject.protocol.toString()
                             && radioConfiguration.deviceId.toString() === radioObject.deviceId.toString()

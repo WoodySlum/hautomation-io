@@ -355,10 +355,10 @@ class SensorsManager {
         } else if (apiRequest.route === SENSORS_MANAGER_GET) {
             return new Promise((resolve) => {
                 const sensors = [];
-                let i = 1;
                 if (self.sensorsConfiguration && self.sensorsConfiguration.length === 0) {
                     resolve(new APIResponse.class(true, sensors));
                 } else {
+                    let i = 1;
                     self.sensorsConfiguration.forEach((sensor) => {
                         if (self.pluginsManager.isEnabled(sensor.plugin)) {
                             const sensorPlugin = self.pluginsManager.getPluginByIdentifier(sensor.plugin, false);
@@ -400,7 +400,11 @@ class SensorsManager {
                                     }
                                     i++;
                                 });
+                            } else {
+                                i++;
                             }
+                        } else {
+                            i++;
                         }
                     });
                 }

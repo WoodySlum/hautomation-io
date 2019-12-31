@@ -91,7 +91,7 @@ class DbHelper {
             delete object[this.Operators().FIELD_TIMESTAMP];
         } else {
             if (typeof object[this.Operators().FIELD_TIMESTAMP] == "string") {
-                object[this.Operators().FIELD_TIMESTAMP] = DateUtils.class.dateToUTCTimestamp(object[this.Operators().FIELD_TIMESTAMP].replace(/"/g,"").replace(/'/g,""));
+                object[this.Operators().FIELD_TIMESTAMP] = DateUtils.class.dateToTimestamp(object[this.Operators().FIELD_TIMESTAMP].replace(/"/g,"").replace(/'/g,""));
             }
         }
 

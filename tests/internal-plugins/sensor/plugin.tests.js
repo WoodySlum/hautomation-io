@@ -3,6 +3,7 @@ var chai = require("chai");
 var expect = chai.expect;
 var sinon = require("sinon");
 var GlobalMocks = require("./../../GlobalMocks");
+const moment = require("moment-timezone");
 
 const DateUtils = require("../../../src/utils/DateUtils");
 const HautomationCore = require("../../../src/HautomationCore").class;
@@ -12,7 +13,7 @@ const Sensor = plugin.exported.Sensor;
 
 describe("Sensor", function() {
     before(() => {
-
+        moment.tz.setDefault("UTC+0");
     });
 
     it("constructor should have good parameters", function(done) {
@@ -328,11 +329,11 @@ describe("Sensor", function() {
         sensor.id = "foofoofoofoofoo";
         sensor.aggregationMode = Sensor.constants().AGGREGATION_MODE_AVG;
         const val1  = new plugin.exported.DbSensor(sensor.dbHelper, 32.8, "foofoofoofoofoo", 23, 99);
-        val1.timestamp = "2017-07-13 00:05:24";
+        val1.timestamp = moment("2017-07-13 00:05:24").utc().format("YYYY-MM-DD HH:mm:ss");
         const val2  = new plugin.exported.DbSensor(sensor.dbHelper, 22.3, "foofoofoofoofoo", 23, 99);
-        val2.timestamp = "2017-07-13 00:17:43";
+        val2.timestamp = moment("2017-07-13 00:17:43").utc().format("YYYY-MM-DD HH:mm:ss")
         const val3  = new plugin.exported.DbSensor(sensor.dbHelper, 17, "foofoofoofoofoo", 23, 99);
-        val3.timestamp = "2017-07-13 07:22:04";
+        val3.timestamp = moment("2017-07-13 07:22:04").utc().format("YYYY-MM-DD HH:mm:ss");
 
         val1.save((error) => {
             val2.save((error) => {
