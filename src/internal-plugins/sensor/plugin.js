@@ -469,6 +469,7 @@ function loaded(api) {
                             break;
                         case AGGREGATION_MODE_COUNT:
                             object.value++;
+                            break;
                         case AGGREGATION_MODE_LAST:
                             object.value = value;
                             break;
@@ -555,6 +556,9 @@ function loaded(api) {
                 aggregationMode = this.dbHelper.Operators().MAX;
                 break;
             case AGGREGATION_MODE_LAST:
+                aggregationMode = this.dbHelper.Operators().MAX;
+                break;
+            case AGGREGATION_MODE_COUNT:
                 aggregationMode = this.dbHelper.Operators().MAX;
                 break;
             }
