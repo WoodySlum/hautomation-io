@@ -177,6 +177,7 @@ function loaded(api) {
     const AGGREGATION_MODE_MIN = 2;
     const AGGREGATION_MODE_MAX = 3;
     const AGGREGATION_MODE_LAST = 4;
+    const AGGREGATION_MODE_COUNT = 5;
 
     const GRANULARITY_MINUTE = 60;
     const GRANULARITY_HOUR = 60 * 60;
@@ -241,7 +242,7 @@ function loaded(api) {
          * @returns {Object} A list of constants
          */
         static constants() {
-            return {AGGREGATION_MODE_AVG:AGGREGATION_MODE_AVG, AGGREGATION_MODE_SUM:AGGREGATION_MODE_SUM, AGGREGATION_MODE_MIN:AGGREGATION_MODE_MIN, AGGREGATION_MODE_MAX:AGGREGATION_MODE_MAX, AGGREGATION_MODE_LAST:AGGREGATION_MODE_LAST,
+            return {AGGREGATION_MODE_AVG:AGGREGATION_MODE_AVG, AGGREGATION_MODE_SUM:AGGREGATION_MODE_SUM, AGGREGATION_MODE_MIN:AGGREGATION_MODE_MIN, AGGREGATION_MODE_MAX:AGGREGATION_MODE_MAX, AGGREGATION_MODE_LAST:AGGREGATION_MODE_LAST, AGGREGATION_MODE_COUNT:AGGREGATION_MODE_COUNT,
                 GRANULARITY_MINUTE:GRANULARITY_MINUTE, GRANULARITY_HOUR:GRANULARITY_HOUR, GRANULARITY_DAY:GRANULARITY_DAY, GRANULARITY_MONTH:GRANULARITY_MONTH, GRANULARITY_YEAR:GRANULARITY_YEAR,
                 CHART_TYPE_LINE:CHART_TYPE_LINE, CHART_TYPE_BAR:CHART_TYPE_BAR};
         }
@@ -450,7 +451,7 @@ function loaded(api) {
 
                 const timestampRequest = this.dbHelper.RequestBuilder()
                     .select()
-                    .where("CAST(strftime('%s', timestamp) AS NUMERIC)", this.dbHelper.Operators().EQ, timestamp)
+                    .where("CAST(strftime('%s', datetime(timestamp, 'utc')) AS NUMERIC)", this.dbHelper.Operators().EQ, timestamp)
                     .where("sensorId", this.dbHelper.Operators().EQ, this.id)
                     .first();
                 this.dbHelper.getObjects(timestampRequest, (error, objects) => {
@@ -466,6 +467,8 @@ function loaded(api) {
                         case AGGREGATION_MODE_SUM:
                             object.value = object.value + value;
                             break;
+                        case AGGREGATION_MODE_COUNT:
+                            object.value++;
                         case AGGREGATION_MODE_LAST:
                             object.value = value;
                             break;

@@ -329,23 +329,24 @@ describe("Sensor", function() {
         sensor.id = "foofoofoofoofoo";
         sensor.aggregationMode = Sensor.constants().AGGREGATION_MODE_AVG;
         const val1  = new plugin.exported.DbSensor(sensor.dbHelper, 32.8, "foofoofoofoofoo", 23, 99);
-        val1.timestamp = moment("2017-07-13 00:05:24").format("YYYY-MM-DD HH:mm:ss");
+        val1.timestamp = "2017-07-13 00:05:24";//moment("2017-07-13 00:05:24").format("YYYY-MM-DD HH:mm:ss");
         const val2  = new plugin.exported.DbSensor(sensor.dbHelper, 22.3, "foofoofoofoofoo", 23, 99);
-        val2.timestamp = moment("2017-07-13 00:17:43").format("YYYY-MM-DD HH:mm:ss")
+        val2.timestamp = "2017-07-13 00:17:43";
         const val3  = new plugin.exported.DbSensor(sensor.dbHelper, 17, "foofoofoofoofoo", 23, 99);
-        val3.timestamp = moment("2017-07-13 07:22:04").format("YYYY-MM-DD HH:mm:ss");
+        val3.timestamp = "2017-07-13 07:22:04";
 
         val1.save((error) => {
             val2.save((error) => {
                 val3.save((error) => {
-                    sensor.getStatistics(1499897104, 1499897104 + (24 * 60 * 60), (60 * 60), (err, results) => {
+                    sensor.getStatistics(1499904000, 1499904000 + (24 * 60 * 60), (60 * 60), (err, results) => {
                         expect(err).to.be.null;
                         expect(results.unit).to.be.equal("foo");
                         expect(Object.keys(results.values).length).to.be.equal(25);
-                        expect(results.values["1499896800"]).to.be.equal(27.55);
-                        expect(results.values["1499922000"]).to.be.equal(17);
-                        expect(Object.keys(results.values)[0]).to.be.equal('1499896800');
-                        expect(Object.keys(results.values)[24]).to.be.equal('1499983200');
+                        expect(results.values["1499904000"]).to.be.equal(27.55);
+                        expect(results.values["1499929200"]).to.be.equal(17);
+                        expect(Object.keys(results.values)[0]).to.be.equal('1499904000');
+                        expect(Object.keys(results.values)[24]).to.be.equal('1499990400');
+
                         done();
                     });
                 });
@@ -435,7 +436,7 @@ describe("Sensor", function() {
                 expect(DateUtils.class.dateToTimestamp(res.timestamp)).to.be.equal(1511215200);
                 done();
             });
-        }, 1511216691);
+        }, 1511215200);
     });
 
     it("setValue should add on hour aggregation", function(done) {

@@ -227,7 +227,12 @@ class DbRequestBuilder {
      */
     select(...fields) {
         if (!fields || fields.length === 0) {
-            this.selectList.push("*");
+            this.selectList.push(FIELD_ID);
+            // this.selectList.push(FIELD_TIMESTAMP);
+            this.selectList.push("strftime('%Y-%m-%d %H:%M:%S', datetime(" + FIELD_TIMESTAMP + ", 'utc')) as " + FIELD_TIMESTAMP);
+            this.metas.forEach((meta) => {
+                this.selectList.push(Object.keys(meta)[0]);
+            });
         } else {
             fields.forEach((field) => {
                 this.selectList.push(field);
@@ -513,7 +518,7 @@ class DbRequestBuilder {
             this.valuesList.forEach((value) => {
                 if (this.insertList[i] === FIELD_TIMESTAMP && this.getMetaForField(this.insertList[i]).type === "timestamp") {
                     const tsValue = this.getValueEncapsulated(value, this.getMetaForField(this.insertList[i]));
-                    req += parseInt(tsValue)?"datetime(" + parseInt(tsValue) + ", 'unixepoch'),":tsValue + ",";
+                    req += parseInt(tsValue)?"datetime(" + parseInt(tsValue) + ", 'unixepoch', 'localtime'),":tsValue + ",";
                 } else {
                     req += this.getValueEncapsulated(value, this.getMetaForField(this.insertList[i])) + ",";
                 }
@@ -526,17 +531,17 @@ class DbRequestBuilder {
         if (this.updateList.length > 0 && this.updateList.length === this.valuesList.length) {
             req += "UPDATE `" + this.table + "` SET ";
             let i = 0;
-            this.updateList.forEach((field) => {
 
+            this.updateList.forEach((field) => {
                 if (field === FIELD_ID) {
                     // Add to where clause
                     this.whereList.push(FIELD_ID + EQ + this.valuesList[i]);
-                } if (field === FIELD_TIMESTAMP) {
+                } else if (field === FIELD_TIMESTAMP) {
                     if (!this.valuesList[i]) {
                         req += FIELD_TIMESTAMP + "=" + this.getValueEncapsulated(DateUtils.class.timestamp(), this.getMetaForField(field)) + ",";
                     } else {
                         const tsValue = this.getValueEncapsulated(this.valuesList[i], this.getMetaForField(field));
-                        req += FIELD_TIMESTAMP + "=" + (parseInt(tsValue)?"datetime(" + parseInt(tsValue) + ", 'unixepoch')":tsValue) + ",";
+                        req += FIELD_TIMESTAMP + "=" + (parseInt(tsValue)?"datetime(" + parseInt(tsValue) + ", 'unixepoch', 'localtime')":tsValue) + ",";
                     }
                 } else {
                     req += field + "=" + this.getValueEncapsulated(this.valuesList[i], this.getMetaForField(field)) + ",";
@@ -579,7 +584,7 @@ class DbRequestBuilder {
             req += " LIMIT " + this.limit[0] + "," + this.limit[1];
         }
         req += ";";
-
+        
         return req;
     }
 }
