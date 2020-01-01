@@ -329,11 +329,11 @@ describe("Sensor", function() {
         sensor.id = "foofoofoofoofoo";
         sensor.aggregationMode = Sensor.constants().AGGREGATION_MODE_AVG;
         const val1  = new plugin.exported.DbSensor(sensor.dbHelper, 32.8, "foofoofoofoofoo", 23, 99);
-        val1.timestamp = moment("2017-07-13 00:05:24").utc().format("YYYY-MM-DD HH:mm:ss");
+        val1.timestamp = moment("2017-07-13 00:05:24").format("YYYY-MM-DD HH:mm:ss");
         const val2  = new plugin.exported.DbSensor(sensor.dbHelper, 22.3, "foofoofoofoofoo", 23, 99);
-        val2.timestamp = moment("2017-07-13 00:17:43").utc().format("YYYY-MM-DD HH:mm:ss")
+        val2.timestamp = moment("2017-07-13 00:17:43").format("YYYY-MM-DD HH:mm:ss")
         const val3  = new plugin.exported.DbSensor(sensor.dbHelper, 17, "foofoofoofoofoo", 23, 99);
-        val3.timestamp = moment("2017-07-13 07:22:04").utc().format("YYYY-MM-DD HH:mm:ss");
+        val3.timestamp = moment("2017-07-13 07:22:04").format("YYYY-MM-DD HH:mm:ss");
 
         val1.save((error) => {
             val2.save((error) => {
@@ -341,7 +341,6 @@ describe("Sensor", function() {
                     sensor.getStatistics(1499897104, 1499897104 + (24 * 60 * 60), (60 * 60), (err, results) => {
                         expect(err).to.be.null;
                         expect(results.unit).to.be.equal("foo");
-                        console.log(results.values);
                         expect(Object.keys(results.values).length).to.be.equal(25);
                         expect(results.values["1499896800"]).to.be.equal(27.55);
                         expect(results.values["1499922000"]).to.be.equal(17);

@@ -580,7 +580,7 @@ function loaded(api) {
             }
 
             const statisticsRequest = this.dbHelper.RequestBuilder()
-                .select(roundDateSqlFormat?"CAST(strftime('%s', strftime('" + roundDateSqlFormat + "', date(timestamp, 'utc'))) AS NUMERIC) as aggTimestamp":"CAST(strftime('%s',  timestamp)  AS NUMERIC) - (CAST(strftime('%s',  timestamp)  AS NUMERIC) % " + granularity + ") as aggTimestamp")
+                .select(roundDateSqlFormat?"CAST(strftime('%s', strftime('" + roundDateSqlFormat + "', date(timestamp, 'utc'))) AS NUMERIC) as aggTimestamp":"CAST(strftime('%s',  datetime(timestamp, 'utc'))  AS NUMERIC) - (CAST(strftime('%s',  datetime(timestamp, 'utc'))  AS NUMERIC) % " + granularity + ") as aggTimestamp")
                 .selectOp(aggregationMode, "value")
                 .where("CAST(strftime('%s', timestamp) AS NUMERIC)", this.dbHelper.Operators().GTE, timestampBegin)
                 .where("CAST(strftime('%s', timestamp) AS NUMERIC)", this.dbHelper.Operators().LTE, timestampEnd)
