@@ -608,7 +608,11 @@ function loaded(api) {
 
             // Battery
             if (d && d.config && d.uniqueid && d.config && d.config.hasOwnProperty("battery")) {
-                this.onRadioEvent(2400, "zigbee", d.uniqueid, 1, d.config.battery, this.constants().STATUS_ON, "BATTERY");
+                // Delay for battery - the battery messages comes often when the sensor set a value.
+                // Delaying gives to system more time to store correctly values in database
+                setTimeout((self) => {
+                    self.onRadioEvent(2400, "zigbee", d.uniqueid, 1, d.config.battery, this.constants().STATUS_ON, "BATTERY");
+                }, 10000, this);
             }
 
             // Temperature
