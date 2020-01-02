@@ -741,9 +741,9 @@ function loaded(api) {
         processAPI(apiRequest) {
             const self = this;
             if (apiRequest.route === ":/" + WS_SCAN_ENDPOINT) {
-                return new Promise((resolve, reject) => {
-                    this.startScan(apiRequest.authenticationData.username);
-                    resolve(this.api.webAPI.APIResponse(true, {}));
+                return new Promise((resolve) => {
+                    self.startScan(apiRequest.authenticationData.username);
+                    resolve(self.api.webAPI.APIResponse(true, {}));
                 });
             } else {
                 super.processAPI(apiRequest);
