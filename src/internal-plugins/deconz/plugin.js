@@ -9,6 +9,7 @@ const DECONZ_URL = "https://phoscon.de/";
 const BACKUP_DIR = "/root/.local/share/dresden-elektronik/deCONZ/";
 const LIGHT_PREFIX = "zigbee-light-";
 const WS_SCAN_ENDPOINT = "deconz-scan/set/";
+const DEFAULT_TRANSITION_TIME = 4; // Default was 9
 
 /**
  * Loaded plugin function
@@ -470,7 +471,7 @@ function loaded(api) {
             const data = {
                 on: on,
                 bri: bri,
-                transitiontime: 9
+                transitiontime: DEFAULT_TRANSITION_TIME
             };
             if (deviceStatus.changes.indexOf(this.api.deviceAPI.constants().ITEM_CHANGE_COLOR) >= 0) {
                 const hue = Math.round(parseInt(colorutil.rgb.to.hsv(colorutil.hex.to.rgb("#" + deviceStatus.color)).h * 65534) * colorRound) / colorRound;
