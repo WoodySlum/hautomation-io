@@ -24,10 +24,9 @@ function loaded(api) {
          * @param  {string} dashboardColor  The dashboard color
          * @param  {string} statisticsColor The statistics color
          * @param  {Array} radio The radio objects
-         * @param  {boolean} alertOnBatteryLow Alert when battery is low
          * @returns {RadioTemperatureSensorForm}                 The instance
          */
-        constructor(id, plugin, name, dashboard, statistics, dashboardColor, statisticsColor, radio, alertOnBatteryLow) {
+        constructor(id, plugin, name, dashboard, statistics, dashboardColor, statisticsColor, radio) {
             super(id, plugin, name, dashboard, statistics, dashboardColor, statisticsColor);
 
             /**
@@ -38,15 +37,6 @@ function loaded(api) {
              * @Default([]);
              */
             this.radio = radio;
-
-            /**
-             * @Property("alertOnBatteryLow");
-             * @Type("boolean");
-             * @Cl("RadioForm");
-             * @Title("radio.presence.sensor.alert.on.battery.low");
-             * @Default(true);
-             */
-            this.alertOnBatteryLow = alertOnBatteryLow;
         }
 
         /**

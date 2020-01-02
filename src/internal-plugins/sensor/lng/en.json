@@ -4,5 +4,9 @@
     "sensor.statistics": "Show in statistics",
     "sensor.dashboard.color": "Dashboard color",
     "sensor.statistics.color": "Statistics color",
-    "sensors.health.indicator.threshold": "Health indicator threshold (in days). Add an indicator which allows to know if the sensor has sent a value since this value."
+    "sensors.health.indicator.threshold": "Health indicator threshold (in days). Add an indicator which allows to know if the sensor has sent a value since this value.",
+    "sensor.alert.on.battery.low.message":"Sensor %@ doesn't seem to be reachable. Please check battery.",
+    "sensor.alert.on.battery.low.message.batlevel":"Sensor %@'s battery level is %@. Please change battery.",
+    "sensor.alert.on.battery.ok": "Sensor %@ is now reachable. You can ignore this alert.",
+    "sensor.alert.on.battery.ok.batlevel": "Le capteur %@ is now ok with a battery level of %@%."
 }

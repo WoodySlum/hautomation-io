@@ -4,5 +4,9 @@
     "sensor.statistics": "Afficher dans les statistiques",
     "sensor.dashboard.color": "Couleur de l'élément du tableau de bord",
     "sensor.statistics.color": "Couleur de l'élément dans les statistiques",
-    "sensors.health.indicator.threshold": "Seuil de l'indicateur santé (en jours). Ajoute un indicateur permettant de savoir si le capteur a envoyé une donnée depuis ce temps."
+    "sensors.health.indicator.threshold": "Seuil de l'indicateur santé (en jours). Ajoute un indicateur permettant de savoir si le capteur a envoyé une donnée depuis ce temps.",
+    "sensor.alert.on.battery.low.message":"Le capteur %@ ne semble plus joignable. Veuillez vérifier ses piles.",
+    "sensor.alert.on.battery.low.message.batlevel":"Le capteur %@ a un niveau de batterie de %@%. Veuillez remplacer ses piles.",
+    "sensor.alert.on.battery.ok": "Le capteur %@ est de nouveau joignable. Vous pouvez ignorer cette alerte.",
+    "sensor.alert.on.battery.ok.batlevel": "Le capteur %@ est désormais ok avec un niveau de batterie de %@%."
 }

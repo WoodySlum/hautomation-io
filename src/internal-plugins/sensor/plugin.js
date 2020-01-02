@@ -1,6 +1,11 @@
 "use strict";
 
+const fs = require("fs-extra");
+
 const DEFAULT_HEALTH_INDICATOR_VALUE = 24 * 60 * 60;
+const MAX_BATTERY_HISTORY_TIME = 30 * 24 * 60 * 60;
+const BATTERY_ALERT_THRESHOLD = 15;
+const TMP_FILE_PREFIX = "sensor-notification-sent-";
 
 /**
  * Loaded function
@@ -258,6 +263,9 @@ function loaded(api) {
 
             // Update tile
             this.updateTile();
+
+            // Battery alert
+            this.registerBatteryAlert(this.api, this.configuration, this.dbHelper);
         }
 
         /**
@@ -665,6 +673,61 @@ function loaded(api) {
             }
 
             return healthIndicatorThreshold;
+        }
+
+        /**
+         * Register alert battery
+         *
+         * @param  {PluginAPI} api                                                           A plugin api
+         * @param  {Object} [configuration=null]                                             The configuration for sensor
+         * @param  {DbHelper} dbHelper      A database helper object
+         */
+        registerBatteryAlert(api, configuration, dbHelper) {
+            const mode = api.timeEventAPI.constants().EVERY_HOURS_INACCURATE;
+            api.timeEventAPI.unregister({}, mode, null, null, null, TMP_FILE_PREFIX + configuration.id);
+            api.timeEventAPI.register(() => {
+                this.lastObject((err, res) => {
+                    const fileName = api.coreAPI.cachePath() + TMP_FILE_PREFIX + configuration.id;
+                    if (res.battery != null) {
+                        if (!fs.existsSync(fileName)) {
+                            if (res.battery <= BATTERY_ALERT_THRESHOLD) {
+                                fs.writeFileSync(fileName, "");
+                                api.messageAPI.sendMessage("*", api.translateAPI.t("sensor.alert.on.battery.low.message.batlevel", configuration.name, res.battery));
+                            }
+                        } else {
+                            if (res.battery > BATTERY_ALERT_THRESHOLD) {
+                                fs.unlinkSync(fileName);
+                                api.messageAPI.sendMessage("*", api.translateAPI.t("sensor.alert.on.battery.ok.batlevel", configuration.name));
+                            }
+                        }
+                    } else {
+                        const request = dbHelper.RequestBuilder()
+                            .selectOp(dbHelper.Operators().COUNT, dbHelper.Operators().FIELD_ID)
+                            .where("sensorId", dbHelper.Operators().EQ, configuration.id)
+                            .where(dbHelper.Operators().FIELD_TIMESTAMP, dbHelper.Operators().GTE, (api.exported.DateUtils.class.timestamp() - MAX_BATTERY_HISTORY_TIME));
+                        dbHelper.getObjects(request, (error, objects) => {
+                            if (!error && objects) {
+
+                                const resultsCount = objects[0][dbHelper.Operators().FIELD_ID];
+
+                                if (resultsCount === 0) {
+                                    if (!fs.existsSync(fileName)) {
+                                        fs.writeFileSync(fileName, "");
+                                        api.messageAPI.sendMessage("*", api.translateAPI.t("sensor.alert.on.battery.low.message", configuration.name));
+                                    }
+                                } else {
+                                    if (fs.existsSync(fileName)) {
+                                        fs.unlinkSync(fileName);
+                                        api.messageAPI.sendMessage("*", api.translateAPI.t("sensor.alert.on.battery.ok", configuration.name));
+                                    }
+                                }
+                            } else {
+                                api.exported.Logger.err(error.message);
+                            }
+                        });
+                    }
+                });
+            }, this, mode, null, null, null, TMP_FILE_PREFIX + configuration.id);
         }
     }
 

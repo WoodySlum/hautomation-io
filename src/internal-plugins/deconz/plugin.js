@@ -657,6 +657,7 @@ function loaded(api) {
          * Connect web socket
          */
         connectWebSocket() {
+
             if (this.ip) {
                 this.getConfig((err, config) => {
                     try {
