@@ -589,8 +589,8 @@ function loaded(api) {
             const statisticsRequest = this.dbHelper.RequestBuilder()
                 .select(roundDateSqlFormat?"CAST(strftime('%s', strftime('" + roundDateSqlFormat + "', date(timestamp, 'utc'))) AS NUMERIC) as aggTimestamp":"CAST(strftime('%s',  datetime(timestamp, 'utc'))  AS NUMERIC) - (CAST(strftime('%s',  datetime(timestamp, 'utc'))  AS NUMERIC) % " + granularity + ") as aggTimestamp")
                 .selectOp(aggregationMode, "value")
-                .where("CAST(strftime('%s', timestamp) AS NUMERIC)", this.dbHelper.Operators().GTE, timestampBegin)
-                .where("CAST(strftime('%s', timestamp) AS NUMERIC)", this.dbHelper.Operators().LTE, timestampEnd)
+                .where("CAST(strftime('%s', datetime(timestamp, 'utc')) AS NUMERIC)", this.dbHelper.Operators().GTE, timestampBegin)
+                .where("CAST(strftime('%s', datetime(timestamp, 'utc')) AS NUMERIC)", this.dbHelper.Operators().LTE, timestampEnd)
                 .where("sensorId", this.dbHelper.Operators().EQ, this.id)
                 .group("aggTimestamp")
                 .order(this.dbHelper.Operators().ASC, "aggTimestamp");
