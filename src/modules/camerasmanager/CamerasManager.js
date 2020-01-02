@@ -412,7 +412,7 @@ class CamerasManager {
                         cameras.push({
                             identifier: camera.id,
                             name: camera.name,
-                            icon: "E8BC",
+                            icon: "E908",
                             category:"TEST",
                             form:Object.assign(self.formManager.getForm(cameraPlugin.cameraAPI.form), {data:camera})
                         });

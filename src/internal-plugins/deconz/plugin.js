@@ -8,6 +8,7 @@ const DECONZ_HTTP_PORT = 8053;
 const DECONZ_URL = "https://phoscon.de/";
 const BACKUP_DIR = "/root/.local/share/dresden-elektronik/deCONZ/";
 const LIGHT_PREFIX = "zigbee-light-";
+const WS_SCAN_ENDPOINT = "deconz-scan/set/";
 
 /**
  * Loaded plugin function
@@ -154,6 +155,7 @@ function loaded(api) {
             this.service = new DeconzService(this, DECONZ_HTTP_PORT);
             api.servicesManagerAPI.add(this.service);
             this.init();
+            this.api.webAPI.register(this, this.api.webAPI.constants().POST, ":/" + WS_SCAN_ENDPOINT, this.api.webAPI.Authentication().AUTH_ADMIN_LEVEL);
 
             setTimeout((self) => { // Wait 30s for service start
                 self.init();
@@ -184,21 +186,39 @@ function loaded(api) {
                 }
                 data.associate = false;
                 if (data.scan) {
-                    this.api.messageAPI.sendMessage([username], this.api.translateAPI.t("deconz.scan.start"));
-                    this.scanDevice((err, result) => {
-                        this.api.exported.Logger.verbose(JSON.stringify(result));
-                        if (err) {
-                            this.api.messageAPI.sendMessage([username], this.api.translateAPI.t("deconz.scan.error", err.message));
-                        } else {
-                            this.api.messageAPI.sendMessage([username], this.api.translateAPI.t("deconz.scan.end"));
-                        }
-                    });
+                    this.startScan(username);
                     data.scan = false;
                 }
 
                 api.configurationAPI.saveData(data);
                 this.init();
             });
+        }
+
+        /**
+         * Discover deconz devices
+         *
+         * @param  {string} username The username
+         */
+        startScan(username) {
+            this.api.messageAPI.sendMessage([username], this.api.translateAPI.t("deconz.scan.start"));
+            this.scanDevice((err, result) => {
+                this.api.exported.Logger.verbose(JSON.stringify(result));
+                if (err) {
+                    this.api.messageAPI.sendMessage([username], this.api.translateAPI.t("deconz.scan.error", err.message));
+                } else {
+                    this.api.messageAPI.sendMessage([username], this.api.translateAPI.t("deconz.scan.end"));
+                }
+            });
+        }
+
+        /**
+         * Add tile on dashboard
+         */
+        addTile() {
+            const tile = this.api.dashboardAPI.Tile("deconz-scan", this.api.dashboardAPI.TileType().TILE_GENERIC_ACTION, this.api.exported.Icons.class.list()["rss-1"], null, this.api.translateAPI.t("deconz.tile.scan.zigbee"), null, null, null, 0, 1000100, WS_SCAN_ENDPOINT, this.api.webAPI.Authentication().AUTH_ADMIN_LEVEL);
+            this.api.dashboardAPI.unregisterTile("deconz-scan");
+            this.api.dashboardAPI.registerTile(tile);
         }
 
         /**
@@ -220,6 +240,7 @@ function loaded(api) {
                         if (err) {
                             api.exported.Logger.err("Could not get token for deconz : " + err.message);
                         } else {
+                            this.addTile();
                             this.getLights();
                             this.connectWebSocket();
                         }
@@ -235,6 +256,7 @@ function loaded(api) {
                         if (err) {
                             api.exported.Logger.err("Could not get token for deconz : " + err.message);
                         } else {
+                            this.addTile();
                             this.getLights();
                             this.connectWebSocket();
                         }
@@ -704,6 +726,24 @@ function loaded(api) {
 
                 cb(null, baseList);
             });
+        }
+
+        /**
+         * Process API callback
+         *
+         * @param  {APIRequest} apiRequest An APIRequest
+         * @returns {Promise}  A promise with an APIResponse object
+         */
+        processAPI(apiRequest) {
+            const self = this;
+            if (apiRequest.route === ":/" + WS_SCAN_ENDPOINT) {
+                return new Promise((resolve, reject) => {
+                    this.startScan(apiRequest.authenticationData.username);
+                    resolve(this.api.webAPI.APIResponse(true, {}));
+                });
+            } else {
+                super.processAPI(apiRequest);
+            }
         }
     }
 

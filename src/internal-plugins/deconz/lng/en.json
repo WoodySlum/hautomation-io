@@ -11,5 +11,6 @@
     "deconz.scan.start": "Zigbee scan started",
     "deconz.form.model": "Model",
     "deconz.form.username": "Username",
-    "deconz.form.password": "Password"
+    "deconz.form.password": "Password",
+    "deconz.tile.scan.zigbee": "Scan Zigbee"
 }
