@@ -115,9 +115,10 @@ function loaded(api) {
          * @param  {boolean} statistics      True if display on statistics, otherwise false
          * @param  {string} dashboardColor  The dashboard color
          * @param  {string} statisticsColor The statistics color
+         * @param  {RoomForm} room          The room
          * @returns {SensorForm}                 The instance
          */
-        constructor(id, plugin, name, dashboard, statistics, dashboardColor, statisticsColor) {
+        constructor(id, plugin, name, dashboard, statistics, dashboardColor, statisticsColor, room) {
             super(id);
 
             this.plugin = plugin;
@@ -129,6 +130,14 @@ function loaded(api) {
              * @Required(true);
              */
             this.name = name;
+
+            /**
+             * @Property("room");
+             * @Title("");
+             * @Type("object");
+             * @Cl("RoomForm");
+             */
+            this.room = room;
 
             /**
              * @Property("dashboard");
@@ -170,7 +179,7 @@ function loaded(api) {
          * @returns {SensorForm}      An instance
          */
         json(data) {
-            return new SensorForm(data.id, data.plugin, data.name, data.dashboard, data.statistics, data.dashboardColor, data.statisticsColor);
+            return new SensorForm(data.id, data.plugin, data.name, data.dashboard, data.statistics, data.dashboardColor, data.statisticsColor, data.room);
         }
     }
 

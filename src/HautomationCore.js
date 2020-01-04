@@ -20,6 +20,7 @@ const DbManager = require("./modules/dbmanager/DbManager");
 const TranslateManager = require("./modules/translatemanager/TranslateManager");
 const FormManager = require("./modules/formmanager/FormManager");
 const IconFormManager = require("./forms/IconFormManager");
+const RoomFormManager = require("./forms/RoomFormManager");
 const DashboardManager = require("./modules/dashboardmanager/DashboardManager");
 const ThemeManager = require("./modules/thememanager/ThemeManager");
 const SensorsManager = require("./modules/sensorsmanager/SensorsManager");
@@ -102,6 +103,7 @@ class HautomationCore {
         // Translation
         this.translateManager = new TranslateManager.class(AppConfiguration.lng);
         this.translateManager.addTranslations(__dirname + "/.."); // Base translations
+        this.sensorsManager = null;
 
         // Form
         this.formManager = new FormManager.class(this.translateManager);
@@ -176,6 +178,9 @@ class HautomationCore {
 
         // Plugins manager module
         this.pluginsManager = new PluginsManager.class(this.confManager, this.webServices, this.servicesManager, this.dbManager, this.translateManager, this.formManager, this.timeEventService, this.schedulerService, this.dashboardManager, this.eventBus, this.themeManager, this.sensorsManager, this.installationManager, this.userManager, this.messageManager, this.scenarioManager, this.alarmManager, this.camerasManager, this.radioManager, AppConfiguration, this.environmentManager, this.iotManager, this.botEngine, this.deviceManager, this.backupManager, this.gatewayManager, EVENT_READY);
+
+        // Forms (after all initialized)
+        this.RoomFormManager = new RoomFormManager.class(this.formManager, this.eventBus, EVENT_READY, this.sensorsManager, this.deviceManager, this.translateManager);
 
         // Add services to manager
         this.servicesManager.add(this.webServices);

@@ -494,21 +494,29 @@ class FormManager {
                                 schemaUI[prop]["ui:widget"] = "textarea";
                             } else if (display === "password") {
                                 schemaUI[prop]["ui:widget"] = "password";
-                            } else if (display === "typeahead") {
-                                if (schemaPropertiesProp.enum && schemaPropertiesProp.enumNames && schemaPropertiesProp.enum.length === schemaPropertiesProp.enumNames.length) {
+                            } else if (display === "typeahead" || display === "typeahead-new") {
+                                if ((schemaPropertiesProp.enum && schemaPropertiesProp.enumNames && schemaPropertiesProp.enum.length === schemaPropertiesProp.enumNames.length) || (schemaPropertiesProp.typeheadEnum && schemaPropertiesProp.typeheadEnumNames && schemaPropertiesProp.typeheadEnum.length === schemaPropertiesProp.typeheadEnumNames.length)) {
                                     const typeHeadArray = [];
-                                    for (let l = 0 ; l < schemaPropertiesProp.enum.length ; l++) {
-                                        typeHeadArray.push({key: schemaPropertiesProp.enum[l], label: schemaPropertiesProp.enumNames[l]});
+                                    if (schemaPropertiesProp.enum) {
+                                        for (let l = 0 ; l < schemaPropertiesProp.enum.length ; l++) {
+                                            typeHeadArray.push({key: schemaPropertiesProp.enum[l], label: schemaPropertiesProp.enumNames[l]});
+                                        }
                                     }
+
                                     schemaUI[prop]["ui:field"] = "typeahead";
                                     schemaUI[prop]["typeahead"] = {
-                                        "options": typeHeadArray,
-                                        "labelKey": "label",
                                         "minLength":0,
-                                        "mapping":"key",
-                                        "placeholder": self.translateManager.t("form.typeahead.search", meta.Title ? self.translateManager.t(meta.Title) : "")
-
+                                        "placeholder": self.translateManager.t((display === "typeahead-new" ? "form.typeahead.search.new" : "form.typeahead.search"), meta.Title ? self.translateManager.t(meta.Title) : "")
                                     };
+
+                                    if (display === "typeahead-new") {
+                                        schemaUI[prop]["typeahead"].allowNew = true;
+                                        schemaUI[prop]["typeahead"].options = schemaPropertiesProp.enum;
+                                    } else {
+                                        schemaUI[prop]["typeahead"].options = typeHeadArray;
+                                        schemaUI[prop]["typeahead"].labelKey = "label";
+                                        schemaUI[prop]["typeahead"].mapping = "key";
+                                    }
 
                                     delete schemaPropertiesProp.enum;
                                     delete schemaPropertiesProp.enumNames;

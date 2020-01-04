@@ -29,6 +29,7 @@ const ERROR_NOT_REGISTERED = "Not registered";
 
 const SENSOR_NAME_COMPARE_CONFIDENCE = 0.31;
 const EVENT_SENSORS_READY = "event-sensors-ready";
+const EVENT_UPDATE_CONFIG_SENSORS = "update-config-sensors";
 
 /**
  * This class allows to manage sensors
@@ -421,9 +422,9 @@ class SensorsManager {
                             } else {
                                 apiRequest.data.id = parseInt(apiRequest.data.id);
                             }
-
                             self.sensorsConfiguration = self.confManager.setData(CONF_MANAGER_KEY, apiRequest.data, self.sensorsConfiguration, self.comparator);
                             self.initSensors();
+                            self.eventBus.emit(EVENT_UPDATE_CONFIG_SENSORS, apiRequest.data);
                             resolve(new APIResponse.class(true, {success:true, id:apiRequest.data.id}));
                         } else {
                             reject(new APIResponse.class(false, {}, 8108, "Unexisting plugin found"));
@@ -441,6 +442,7 @@ class SensorsManager {
                 try {
                     self.confManager.removeData(CONF_MANAGER_KEY, {id:parseInt(apiRequest.data.id)}, self.sensorsConfiguration, self.comparator);
                     self.initSensors();
+                    self.eventBus.emit(EVENT_UPDATE_CONFIG_SENSORS, null);
                     resolve(new APIResponse.class(true, {success:true}));
                 } catch(e) {
                     reject(new APIResponse.class(false, {}, 8109, e.message));
@@ -602,4 +604,4 @@ class SensorsManager {
     }
 }
 
-module.exports = {class:SensorsManager, ERROR_ALREADY_REGISTERED:ERROR_ALREADY_REGISTERED, ERROR_NOT_REGISTERED:ERROR_NOT_REGISTERED, EVENT_SENSORS_READY:EVENT_SENSORS_READY};
+module.exports = {class:SensorsManager, ERROR_ALREADY_REGISTERED:ERROR_ALREADY_REGISTERED, ERROR_NOT_REGISTERED:ERROR_NOT_REGISTERED, EVENT_SENSORS_READY:EVENT_SENSORS_READY, EVENT_UPDATE_CONFIG_SENSORS:EVENT_UPDATE_CONFIG_SENSORS};

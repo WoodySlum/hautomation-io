@@ -11,6 +11,7 @@ const TILE_PICTURES = "PicturesIcon"; // Multiple pictures with an icon
 const TILE_GENERIC_ACTION = "GenericAction"; // Extended from ActionOneIcon (action auto mapping on)
 const TILE_GENERIC_ACTION_STATUS = "GenericActionWithStatus"; // One icon, one action, one color, and a status (red / green btn)
 const TILE_DEVICE = "Device"; // One icon, one text, device subinfo items
+const TILE_SUB_TILES = "SubTiles"; // Multiple sub tiles
 
 
 /**
@@ -91,6 +92,26 @@ class Tile {
             this.colors.colorContent = this.themeManager.getColors(username).clearColor;
             this.colors.colorOn = this.themeManager.getColors(username).onColor;
             this.colors.colorOff = this.themeManager.getColors(username).offColor;
+        } else if (this.type === TILE_SUB_TILES) {
+            if (Array.isArray(this.object)) {
+                for (let i = 0 ; i < this.object.length ; i++) {
+                    if (!this.object[i].colorDefault) {
+                        this.object[i].colorDefault = this.themeManager.getColors(username).primaryColor;
+                    } else if (this.themeManager.getColors(username)[this.object[i].colorDefault]){
+                        this.object[i].colorDefault = this.themeManager.getColors(username)[this.object[i].colorDefault];
+                    }
+
+                    if (!this.object[i].colorContent) {
+                        this.object[i].colorContent = this.themeManager.getColors(username).clearColor;
+                    } else if (this.themeManager.getColors(username)[this.object[i].colorContent]) {
+                        this.object[i].colorContent = this.themeManager.getColors(username)[this.object[i].colorContent];
+                    }
+
+                    if (i === (this.object.length - 1)) { // Give last color
+                        this.colors.colorDefault = this.object[i].colorDefault;
+                    }
+                }
+            }
         }
     }
 
@@ -122,5 +143,6 @@ module.exports = {class:Tile,
     TILE_PICTURES:TILE_PICTURES,
     TILE_GENERIC_ACTION:TILE_GENERIC_ACTION,
     TILE_GENERIC_ACTION_STATUS:TILE_GENERIC_ACTION_STATUS,
-    TILE_DEVICE:TILE_DEVICE
+    TILE_DEVICE:TILE_DEVICE,
+    TILE_SUB_TILES:TILE_SUB_TILES
 };

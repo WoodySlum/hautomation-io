@@ -20,9 +20,10 @@ class DeviceForm extends FormObject.class {
      * @param {string}  [color="FFFFFF"]       The device color
      * @param {string}  [colorTemperature=0]       The device color temperature
      * @param {boolean}  [powerOutageRestore=false]       Restore whenpower outage occured
+     * @param  {RoomForm} [room=null]                A room
      * @returns {DeviceForm}                            The instance
      */
-    constructor(id = null, name = null, excludeFromAll = false, visible = true, worksOnlyOnDayNight = 1, icon = {}, radio = [], status = -1, brightness = 1, color = "FFFFFF", colorTemperature = 0, powerOutageRestore = false) {
+    constructor(id = null, name = null, excludeFromAll = false, visible = true, worksOnlyOnDayNight = 1, icon = {}, radio = [], status = -1, brightness = 1, color = "FFFFFF", colorTemperature = 0, powerOutageRestore = false, room = {}) {
         super(id);
         this.radio = radio;
 
@@ -77,6 +78,14 @@ class DeviceForm extends FormObject.class {
         this.icon = icon;
 
         /**
+         * @Property("room");
+         * @Title("");
+         * @Type("object");
+         * @Cl("RoomForm");
+         */
+        this.room = room;
+
+        /**
          * @Property("status");
          * @Type("number");
          * @Hidden(true);
@@ -124,7 +133,7 @@ class DeviceForm extends FormObject.class {
      * @returns {DeviceForm}      A form object
      */
     json(data) {
-        return new DeviceForm(data.id, data.name, data.excludeFromAll, data.visible, data.worksOnlyOnDayNight, data.icon, data.radio, data.status, data.brightness, data.color, data.colorTemperature, data.powerOutageRestore);
+        return new DeviceForm(data.id, data.name, data.excludeFromAll, data.visible, data.worksOnlyOnDayNight, data.icon, data.radio, data.status, data.brightness, data.color, data.colorTemperature, data.powerOutageRestore, data.room);
     }
 }
 
