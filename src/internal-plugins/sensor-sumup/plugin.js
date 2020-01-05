@@ -108,13 +108,13 @@ function loaded(api) {
                             }
 
                             if (i === configuration.sensors.length) {
-                                datas.sort((a,b) => (a.sensor.type > b.sensor.type) ? 1 : ((b.sensor.type > a.sensor.type) ? -1 : 0)); 
+                                datas.sort((a,b) => (a.sensor.type > b.sensor.type) ? ((a.sensor.id > b.sensor.id) ? 1 : ((b.sensor.id > a.sensor.id) ? -1 : 0)) : ((b.sensor.type > a.sensor.type) ? -1 : 0));
                                 const tiles = [];
                                 datas.forEach((data) => {
                                     tiles.push({icon: data.sensor.icon, text: (data.convertValue.value + " " + data.convertValue.unit), colorDefault: context.api.themeAPI.constants().SECONDARY_COLOR_KEY});
                                 });
 
-                                const tile = context.api.dashboardAPI.Tile("sensor-sumup", context.api.dashboardAPI.TileType().TILE_SUB_TILES, null, null, null, null, null, null, 0, 720, null, tiles, context.api.webAPI.Authentication().AUTH_USAGE_LEVEL);
+                                const tile = context.api.dashboardAPI.Tile("sensor-sumup", context.api.dashboardAPI.TileType().TILE_SUB_TILES, null, null, null, null, null, null, 0, 720, "statistics", tiles, context.api.webAPI.Authentication().AUTH_USAGE_LEVEL);
                                 context.api.dashboardAPI.unregisterTile("sensor-sumup");
                                 context.api.dashboardAPI.registerTile(tile);
                             }
