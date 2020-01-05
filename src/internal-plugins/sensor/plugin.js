@@ -697,7 +697,7 @@ function loaded(api) {
             api.timeEventAPI.register(() => {
                 this.lastObject((err, res) => {
                     const fileName = api.coreAPI.cachePath() + TMP_FILE_PREFIX + configuration.id;
-                    if (res.battery != null) {
+                    if (res && res.battery != null) {
                         if (!fs.existsSync(fileName)) {
                             if (res.battery <= BATTERY_ALERT_THRESHOLD) {
                                 fs.writeFileSync(fileName, "");
