@@ -104,7 +104,8 @@ const INTERNAL_PLUGINS = [
     "radio-pressure-sensor",
     "radio-contact-sensor",
     "contact-sensor",
-    "contact-sensor-sumup"
+    "contact-sensor-sumup",
+    "sensor-sumup"
 ];
 
 const CORE_PLUGINS = [

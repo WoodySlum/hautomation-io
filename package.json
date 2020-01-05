@@ -27,7 +27,14 @@
             "**/internal-plugins/huawei*",
             "**/internal-plugins/hue/*",
             "**/internal-plugins/dropbox/*",
-            "**/internal-plugins/tuya-device/*"
+            "**/internal-plugins/tuya-device/*",
+            "**/internal-plugins/*sumup*/*",
+            "**/internal-plugins/philips-tv/*",
+            "**/internal-plugins/pushme/*",
+            "**/internal-plugins/*huawei*/*",
+            "**/internal-plugins/deconz/*",
+            "**/internal-plugins/ifttt/*",
+            "**/internal-plugins/water-plant-alert/*"
         ],
         "ignore-class-method": "stringify",
         "check-coverage": true,
