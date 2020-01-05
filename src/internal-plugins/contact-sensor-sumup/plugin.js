@@ -94,7 +94,7 @@ module.exports.attributes = {
     name: "contact-sensor-sumup",
     version: "0.0.0",
     category: "misc",
-    defaultDisabled: false,
+    defaultDisabled: true,
     description: "Shows a contact sensor sumup tile",
     dependencies:["contact-sensor"]
 };

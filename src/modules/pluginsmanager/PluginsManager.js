@@ -133,8 +133,7 @@ const CORE_PLUGINS = [
     "radio-humidity-sensor",
     "radio-pressure-sensor",
     "radio-contact-sensor",
-    "contact-sensor",
-    "contact-sensor-sumup"
+    "contact-sensor"
 ];
 
 /**

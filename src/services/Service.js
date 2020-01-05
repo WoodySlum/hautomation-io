@@ -135,7 +135,7 @@ class Service {
         const self = this;
         if (self.command) {
             Logger.info("Service " + this.name + " command : " + this.command);
-            const r = cp.exec(this.command, function callback(error, stdout, stderr){
+            const r = cp.exec(this.command, function callback(error, stdout, stderr) {
                 if (error) {
                     if (error.signal !== "SIGKILL" || error.signal !== "SIGTERM" || error.signal !== "SIGINT") {
                         Logger.err(error);
