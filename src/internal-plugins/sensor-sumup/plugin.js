@@ -108,6 +108,7 @@ function loaded(api) {
                             }
 
                             if (i === configuration.sensors.length) {
+                                datas.sort((a,b) => (a.sensor.type > b.sensor.type) ? 1 : ((b.sensor.type > a.sensor.type) ? -1 : 0)); 
                                 const tiles = [];
                                 datas.forEach((data) => {
                                     tiles.push({icon: data.sensor.icon, text: (data.convertValue.value + " " + data.convertValue.unit), colorDefault: context.api.themeAPI.constants().SECONDARY_COLOR_KEY});
