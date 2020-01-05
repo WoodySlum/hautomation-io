@@ -9,7 +9,7 @@ const DECONZ_URL = "https://phoscon.de/";
 const BACKUP_DIR = "/root/.local/share/dresden-elektronik/deCONZ/";
 const LIGHT_PREFIX = "zigbee-light-";
 const WS_SCAN_ENDPOINT = "deconz-scan/set/";
-const DEFAULT_TRANSITION_TIME = 4; // Default was 9
+const DEFAULT_TRANSITION_TIME = 9; // Default was 9
 
 /**
  * Loaded plugin function
