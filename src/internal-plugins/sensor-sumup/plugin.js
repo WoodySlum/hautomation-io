@@ -108,7 +108,20 @@ function loaded(api) {
                             }
 
                             if (i === configuration.sensors.length) {
-                                datas.sort((a,b) => (a.sensor.type > b.sensor.type) ? ((a.sensor.id > b.sensor.id) ? 1 : ((b.sensor.id > a.sensor.id) ? -1 : 0)) : ((b.sensor.type > a.sensor.type) ? -1 : 0));
+                                datas.sort((a,b) => {
+                                    var o1 = a.sensor.type.toLowerCase();
+                                    var o2 = b.sensor.type.toLowerCase();
+
+                                    var p1 = a.sensor.id.toString().toLowerCase();
+                                    var p2 = b.sensor.id.toString().toLowerCase();
+
+                                    if (o1 < o2) return -1;
+                                    if (o1 > o2) return 1;
+                                    if (p1 < p2) return -1;
+                                    if (p1 > p2) return 1;
+
+                                    return 0;
+                                });
                                 const tiles = [];
                                 datas.forEach((data) => {
                                     tiles.push({icon: data.sensor.icon, text: (data.convertValue.value + " " + data.convertValue.unit), colorDefault: context.api.themeAPI.constants().SECONDARY_COLOR_KEY});
