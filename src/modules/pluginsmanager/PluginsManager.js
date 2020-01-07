@@ -86,7 +86,7 @@ const INTERNAL_PLUGINS = [
     "tv",
     "philips-tv",
     "percent-sensor",
-    "cpu-usage-sensor",
+    "cpu-load-sensor",
     "ram-usage-sensor",
     "rom-usage-sensor",
     "esp8266-roomba",

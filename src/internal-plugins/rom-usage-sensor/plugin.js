@@ -53,7 +53,7 @@ function loaded(api) {
                         self.setValue(Math.round((info.total - info.free) / info.total * 100));
                     }
                 });
-            }, this, api.timeEventAPI.constants().EVERY_HOURS);
+            }, this, api.timeEventAPI.constants().EVERY_HOURS_INACCURATE);
         }
     }
 

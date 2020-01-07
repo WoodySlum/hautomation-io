@@ -202,7 +202,7 @@ class TimeEventService extends Service.class {
                         try {
                             // Set timeout generate in a new thread
                             setTimeout(() => {
-                                registeredEl.cb(registeredEl.context);
+                                registeredEl.cb(registeredEl.context, nowHours, nowMinutes, nowSeconds);
                             }, 1);
                         } catch(e) {
                             Logger.err(e.message);

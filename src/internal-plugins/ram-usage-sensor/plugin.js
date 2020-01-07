@@ -44,10 +44,8 @@ function loaded(api) {
             super(api, id, configuration);
             this.icon = api.exported.Icons.class.list()["microchip"];
             api.timeEventAPI.register((self) => {
-                os.cpuUsage((usage) => {
-                    self.setValue(Math.round(usage * 100));
-                });
-            }, this, api.timeEventAPI.constants().EVERY_MINUTES);
+                self.setValue(Math.round(os.freememPercentage() * 100));
+            }, this, api.timeEventAPI.constants().EVERY_HOURS_INACCURATE);
         }
     }
 
