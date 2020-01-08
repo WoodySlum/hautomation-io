@@ -13,7 +13,7 @@ const Sensor = plugin.exported.Sensor;
 
 describe("Sensor", function() {
     before(() => {
-        moment.tz.setDefault("UTC+0");
+
     });
 
     it("constructor should have good parameters", function(done) {
@@ -329,7 +329,7 @@ describe("Sensor", function() {
         sensor.id = "foofoofoofoofoo";
         sensor.aggregationMode = Sensor.constants().AGGREGATION_MODE_AVG;
         const val1  = new plugin.exported.DbSensor(sensor.dbHelper, 32.8, "foofoofoofoofoo", 23, 99);
-        val1.timestamp = "2017-07-13 00:05:24";//moment("2017-07-13 00:05:24").format("YYYY-MM-DD HH:mm:ss");
+        val1.timestamp = "2017-07-13 00:05:24";
         const val2  = new plugin.exported.DbSensor(sensor.dbHelper, 22.3, "foofoofoofoofoo", 23, 99);
         val2.timestamp = "2017-07-13 00:17:43";
         const val3  = new plugin.exported.DbSensor(sensor.dbHelper, 17, "foofoofoofoofoo", 23, 99);
@@ -433,7 +433,7 @@ describe("Sensor", function() {
             expect(err).to.be.null;
             sensor.lastObject((err, res) => {
                 expect(res.value).to.be.equal(128);
-                expect(DateUtils.class.dateToTimestamp(res.timestamp)).to.be.equal(1511215200);
+                expect(DateUtils.class.dateToUTCTimestamp(res.timestamp)).to.be.equal(1511215200);
                 done();
             });
         }, 1511215200);
@@ -448,13 +448,66 @@ describe("Sensor", function() {
             sensor.setValue(22, 19, (err2) => {
                 expect(err).to.be.null;
                 expect(err2).to.be.null;
-                sensor.lastObject((err, res) => {
+                sensor.lastObject((err3, res) => {
                     expect(res.value).to.be.equal(150);
                     expect(DateUtils.class.dateToTimestamp(res.timestamp)).to.be.equal(1511215200);
                     done();
                 });
             }, 1511216710);
         }, 1511216691);
+    });
+
+    it("update battery should work as well", function(done) {
+        let sensor = new Sensor(plugin, 30, "FOOBARBAT", {});
+        sensor.unit = "foo";
+        sensor.round = 2;
+        sensor.id = "foosumbat";
+        sensor.aggregationMode = Sensor.constants().AGGREGATION_MODE_SUM;
+        sensor.setValue(32, null, (err1) => {
+            expect(err1).to.be.null;
+            sensor.setValue(36, null, (err2) => {
+                expect(err2).to.be.null;
+                sensor.lastObject((err3, res) => {
+                    expect(err3).to.be.null;
+                    expect(res.battery).to.be.null;
+                    res.battery = 92;
+                    res.save((err4) => {
+                        expect(err4).to.be.null;
+                        sensor.setValue(41, null, (err5) => {
+                            expect(err5).to.be.null;
+                            sensor.lastObject((err6, res) => {
+                                expect(err6).to.be.null;
+                                expect(res.value).to.be.equal(77);
+                                expect(res.battery).to.be.equal(92);
+                                expect(DateUtils.class.dateToTimestamp(res.timestamp)).to.be.equal(1578600000);
+                                sensor.setValue(27, null, (err7) => {
+                                    expect(err7).to.be.null;
+                                    sensor.lastObject((err8, res) => {
+                                        expect(err8).to.be.null;
+                                        expect(res.value).to.be.equal(27);
+                                        expect(res.battery).to.be.equal(92);
+                                        done();
+                                    });
+                                }, 1578614821);
+                            });
+                        }, 1578602821);
+                    });
+                });
+            }, 1578602721);
+        }, 1578597743);
+
+        // db1.save((error) => {
+        //     db2.save((error) => {
+        //         sensor.lastObject((err, res) => {
+        //             console.log(res);
+        //             process.exit(0);
+        //             expect(error).to.be.null;
+        //             expect(res.battery).to.be.equal(98);
+        //             expect(res.vcc).to.be.equal(11);
+        //             done();
+        //         }, 360);
+        //     });
+        // });
     });
 
     after(() => {

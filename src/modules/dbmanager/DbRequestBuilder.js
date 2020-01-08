@@ -229,7 +229,7 @@ class DbRequestBuilder {
         if (!fields || fields.length === 0) {
             this.selectList.push(FIELD_ID);
             // this.selectList.push(FIELD_TIMESTAMP);
-            this.selectList.push("strftime('%Y-%m-%d %H:%M:%S', datetime(" + FIELD_TIMESTAMP + ", 'utc')) as " + FIELD_TIMESTAMP);
+            this.selectList.push("strftime('%Y-%m-%d %H:%M:%S', " + FIELD_TIMESTAMP + ") as " + FIELD_TIMESTAMP);
             this.metas.forEach((meta) => {
                 this.selectList.push(Object.keys(meta)[0]);
             });
@@ -359,7 +359,7 @@ class DbRequestBuilder {
     where(field, operator, value) {
         const meta = this.getMetaForField(field);
         if (meta && meta.type === "timestamp" && field === FIELD_TIMESTAMP) {
-            this.whereList.push("CAST(strftime('%s', " + field + ") AS NUMERIC) " + operator + " " + this.getValueEncapsulated(value, meta));
+            this.whereList.push("CAST(strftime('%s', " + FIELD_TIMESTAMP + ") AS NUMERIC) " + operator + " " + this.getValueEncapsulated(value, meta));
         } else {
             this.whereList.push(field + " " + operator + " " + this.getValueEncapsulated(value, meta));
         }
@@ -518,7 +518,7 @@ class DbRequestBuilder {
             this.valuesList.forEach((value) => {
                 if (this.insertList[i] === FIELD_TIMESTAMP && this.getMetaForField(this.insertList[i]).type === "timestamp") {
                     const tsValue = this.getValueEncapsulated(value, this.getMetaForField(this.insertList[i]));
-                    req += parseInt(tsValue)?"datetime(" + parseInt(tsValue) + ", 'unixepoch', 'localtime'),":tsValue + ",";
+                    req += parseInt(tsValue)?"datetime(" + parseInt(tsValue) + ", 'unixepoch'),":tsValue + ",";
                 } else {
                     req += this.getValueEncapsulated(value, this.getMetaForField(this.insertList[i])) + ",";
                 }
@@ -541,7 +541,7 @@ class DbRequestBuilder {
                         req += FIELD_TIMESTAMP + "=" + this.getValueEncapsulated(DateUtils.class.timestamp(), this.getMetaForField(field)) + ",";
                     } else {
                         const tsValue = this.getValueEncapsulated(this.valuesList[i], this.getMetaForField(field));
-                        req += FIELD_TIMESTAMP + "=" + (parseInt(tsValue)?"datetime(" + parseInt(tsValue) + ", 'unixepoch', 'localtime')":tsValue) + ",";
+                        req += FIELD_TIMESTAMP + "=" + (parseInt(tsValue)?"datetime(" + parseInt(tsValue) + ", 'unixepoch')":tsValue) + ",";
                     }
                 } else {
                     req += field + "=" + this.getValueEncapsulated(this.valuesList[i], this.getMetaForField(field)) + ",";
@@ -584,7 +584,7 @@ class DbRequestBuilder {
             req += " LIMIT " + this.limit[0] + "," + this.limit[1];
         }
         req += ";";
-        
+
         return req;
     }
 }

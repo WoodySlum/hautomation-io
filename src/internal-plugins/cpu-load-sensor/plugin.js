@@ -43,9 +43,17 @@ function loaded(api) {
         constructor(api, id, configuration) {
             super(api, id, configuration);
             this.icon = api.exported.Icons.class.list()["microchip"];
+            this.value = 0;
+            this.count = 4;
             api.timeEventAPI.register((self, hour, minute) => {
                 if (minute % 15 === 0) {
-                    self.setValue(Math.round((os.loadavg(15) / os.cpuCount()) * 100));
+                    this.count++;
+                    this.value += Math.round((os.loadavg(15) / os.cpuCount()) * 100);
+                }
+                if (minute == 0 && this.count > 0) {
+                    self.setValue(Math.round(this.value / this.count));
+                    this.value = 0;
+                    this.count = 0;
                 }
             }, this, api.timeEventAPI.constants().EVERY_MINUTES);
         }

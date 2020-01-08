@@ -40,7 +40,7 @@ describe("DbRequestBuilder", function() {
         let sql = new DbRequestBuilder.class(table, schema)
                     .get(obj2)
                     .request();
-        expect(sql).to.be.equal("SELECT id,strftime('%Y-%m-%d %H:%M:%S', datetime(timestamp, 'utc')) as timestamp,foo,bar FROM `foobar` WHERE 1=1 AND id = 2 AND foo = 'foo''bar' AND bar = 200;");
+        expect(sql).to.be.equal("SELECT id,strftime('%Y-%m-%d %H:%M:%S', timestamp) as timestamp,foo,bar FROM `foobar` WHERE 1=1 AND id = 2 AND foo = 'foo''bar' AND bar = 200;");
     });
 
     it("should delete existing object", function() {
@@ -71,7 +71,7 @@ describe("DbRequestBuilder", function() {
                     .select()
                     .where("foo", DbRequestBuilder.EQ, "test")
                     .request();
-        expect(sql).to.be.equal("SELECT id,strftime('%Y-%m-%d %H:%M:%S', datetime(timestamp, 'utc')) as timestamp,foo,bar FROM `foobar` WHERE 1=1 AND foo = 'test';");
+        expect(sql).to.be.equal("SELECT id,strftime('%Y-%m-%d %H:%M:%S', timestamp) as timestamp,foo,bar FROM `foobar` WHERE 1=1 AND foo = 'test';");
     });
 
     it("insert some fields should be well played", function() {
@@ -131,7 +131,7 @@ describe("DbRequestBuilder", function() {
                     .where(DbRequestBuilder.FIELD_ID, DbRequestBuilder.EQ, 15)
                     .complexWhere("((" + DbRequestBuilder.FIELD_TIMESTAMP + " BETWEEN 0 AND 999) OR " + DbRequestBuilder.FIELD_ID + DbRequestBuilder.GT + "2))")
                     .request();
-        expect(sql).to.be.equal("SELECT id,strftime('%Y-%m-%d %H:%M:%S', datetime(timestamp, 'utc')) as timestamp,foo,bar FROM `foobar` WHERE 1=1 AND id = 15 AND ((timestamp BETWEEN 0 AND 999) OR id>2));");
+        expect(sql).to.be.equal("SELECT id,strftime('%Y-%m-%d %H:%M:%S', timestamp) as timestamp,foo,bar FROM `foobar` WHERE 1=1 AND id = 15 AND ((timestamp BETWEEN 0 AND 999) OR id>2));");
     });
 
 
@@ -158,7 +158,7 @@ describe("DbRequestBuilder", function() {
                     .get(obj3)
                     .order(DbRequestBuilder.DESC, DbRequestBuilder.FIELD_ID)
                     .request();
-        expect(sql).to.be.equal("SELECT id,strftime('%Y-%m-%d %H:%M:%S', datetime(timestamp, 'utc')) as timestamp,foo,bar FROM `foobar` WHERE 1=1 AND bar = 100 ORDER BY id DESC;");
+        expect(sql).to.be.equal("SELECT id,strftime('%Y-%m-%d %H:%M:%S', timestamp) as timestamp,foo,bar FROM `foobar` WHERE 1=1 AND bar = 100 ORDER BY id DESC;");
     });
 
     it("should limit the results", function() {
@@ -167,7 +167,7 @@ describe("DbRequestBuilder", function() {
                     .order(DbRequestBuilder.DESC, DbRequestBuilder.FIELD_ID)
                     .lim(5,10)
                     .request();
-        expect(sql).to.be.equal("SELECT id,strftime('%Y-%m-%d %H:%M:%S', datetime(timestamp, 'utc')) as timestamp,foo,bar FROM `foobar` WHERE 1=1 AND bar = 100 ORDER BY id DESC LIMIT 5,10;");
+        expect(sql).to.be.equal("SELECT id,strftime('%Y-%m-%d %H:%M:%S', timestamp) as timestamp,foo,bar FROM `foobar` WHERE 1=1 AND bar = 100 ORDER BY id DESC LIMIT 5,10;");
     });
 
     it("should take 5 first items", function() {
@@ -176,7 +176,7 @@ describe("DbRequestBuilder", function() {
                     .order(DbRequestBuilder.DESC, DbRequestBuilder.FIELD_ID)
                     .first(5)
                     .request();
-        expect(sql).to.be.equal("SELECT id,strftime('%Y-%m-%d %H:%M:%S', datetime(timestamp, 'utc')) as timestamp,foo,bar FROM `foobar` WHERE 1=1 AND bar = 100 ORDER BY id DESC LIMIT 0,5;");
+        expect(sql).to.be.equal("SELECT id,strftime('%Y-%m-%d %H:%M:%S', timestamp) as timestamp,foo,bar FROM `foobar` WHERE 1=1 AND bar = 100 ORDER BY id DESC LIMIT 0,5;");
     });
 
     it("clean select should be correctly processed", function() {
@@ -212,7 +212,7 @@ describe("DbRequestBuilder", function() {
         let sql = new DbRequestBuilder.class(table, schema)
                     .save(obj2)
                     .request();
-        expect(sql).to.be.equal("UPDATE `foobar` SET foo='foo''bar',bar=200,timestamp=datetime(1511216868, 'unixepoch', 'localtime') WHERE 1=1 AND id=2;");
+        expect(sql).to.be.equal("UPDATE `foobar` SET foo='foo''bar',bar=200,timestamp=datetime(1511216868, 'unixepoch') WHERE 1=1 AND id=2;");
     });
 
     it("should save a new object with timestamp", function() {
@@ -220,7 +220,7 @@ describe("DbRequestBuilder", function() {
         let sql = new DbRequestBuilder.class(table, schema)
                     .save(obj1)
                     .request();
-        expect(sql).to.be.equal("INSERT INTO `foobar` (foo,bar,timestamp) VALUES ('foo''bar',200,datetime(1511216869, 'unixepoch', 'localtime'));");
+        expect(sql).to.be.equal("INSERT INTO `foobar` (foo,bar,timestamp) VALUES ('foo''bar',200,datetime(1511216869, 'unixepoch'));");
     });
 
     after(function () {

@@ -93,6 +93,7 @@ class DbHelper {
             if (typeof object[this.Operators().FIELD_TIMESTAMP] == "string") {
                 object[this.Operators().FIELD_TIMESTAMP] = DateUtils.class.dateToTimestamp(object[this.Operators().FIELD_TIMESTAMP].replace(/"/g,"").replace(/'/g,""));
             }
+
         }
 
         PrivateProperties.oprivate(this).dbManager.saveObject(this.table, this.schema, object, cb);

@@ -415,23 +415,25 @@ function loaded(api) {
          * @param  {number} [value=null] A value. If not provided, take the last inserted in database
          */
         updateTile(cb = null, value = null) {
+
+            const self = this;
             this.lastObject((err, lastObject) => {
                 if (!err && lastObject.value !== null) {
-                    const convertedValue = (value != null) ? this.convertValue(value) : this.convertValue(lastObject.value);
-                    const tile = this.getTile(convertedValue);
+                    const convertedValue = (value != null) ? self.convertValue(value) : self.convertValue(lastObject.value);
+                    const tile = self.getTile(convertedValue);
 
-                    if (this.configuration.dashboardColor) {
-                        tile.colors.colorDefault = this.configuration.dashboardColor;
+                    if (self.configuration.dashboardColor) {
+                        tile.colors.colorDefault = self.configuration.dashboardColor;
                     }
 
-                    if (this.configuration.dashboard) {
-                        this.api.dashboardAPI.registerTile(tile);
+                    if (self.configuration.dashboard) {
+                        self.api.dashboardAPI.registerTile(tile);
                     } else {
-                        this.api.dashboardAPI.unregisterTile("sensor-"+this.id);
+                        self.api.dashboardAPI.unregisterTile("sensor-" + self.id);
                     }
                     if (cb) cb();
                 } else {
-                    this.api.dashboardAPI.unregisterTile("sensor-"+this.id);
+                    self.api.dashboardAPI.unregisterTile("sensor-" + self.id);
                     if (cb) cb();
                 }
             }, this.dashboardGranularity);
@@ -452,12 +454,11 @@ function loaded(api) {
             if (timestamp) {
                 timestamp = this.api.exported.DateUtils.class.roundedTimestamp(timestamp, this.api.exported.DateUtils.ROUND_TIMESTAMP_HOUR);
             } else {
-                timestamp = this.api.exported.DateUtils.class.roundedTimestamp(this.api.exported.DateUtils.class.timestamp(), this.api.exported.DateUtils.ROUND_TIMESTAMP_HOUR);
+                timestamp = this.api.exported.DateUtils.class.roundedTimestamp(this.api.exported.DateUtils.class.timestamp(), this.api.exported.DateUtils.ROUND_TIMESTAMP_HOUR);// + ((new Date()).getTimezoneOffset() * 60);
             }
 
             const existing = {};
             existing[this.dbHelper.Operators().FIELD_TIMESTAMP] = timestamp;
-
 
             this.lastObject((err, res) => {
                 let battery = null;
@@ -468,9 +469,10 @@ function loaded(api) {
 
                 const timestampRequest = this.dbHelper.RequestBuilder()
                     .select()
-                    .where("CAST(strftime('%s', datetime(timestamp, 'utc')) AS NUMERIC)", this.dbHelper.Operators().EQ, timestamp)
+                    .where("CAST(strftime('%s', " + this.dbHelper.Operators().FIELD_TIMESTAMP + ") AS NUMERIC)", this.dbHelper.Operators().EQ, timestamp)
                     .where("sensorId", this.dbHelper.Operators().EQ, this.id)
                     .first();
+
                 this.dbHelper.getObjects(timestampRequest, (error, objects) => {
                     if (objects && objects.length == 1) {
                         const object = objects[0];
@@ -604,10 +606,10 @@ function loaded(api) {
             }
 
             const statisticsRequest = this.dbHelper.RequestBuilder()
-                .select(roundDateSqlFormat?"CAST(strftime('%s', strftime('" + roundDateSqlFormat + "', date(timestamp, 'utc'))) AS NUMERIC) as aggTimestamp":"CAST(strftime('%s',  datetime(timestamp, 'utc'))  AS NUMERIC) - (CAST(strftime('%s',  datetime(timestamp, 'utc'))  AS NUMERIC) % " + granularity + ") as aggTimestamp")
+                .select(roundDateSqlFormat?"CAST(strftime('%s', strftime('" + roundDateSqlFormat + "', date(" + this.dbHelper.Operators().FIELD_TIMESTAMP + "))) AS NUMERIC) as aggTimestamp":"CAST(strftime('%s', " + this.dbHelper.Operators().FIELD_TIMESTAMP + ")  AS NUMERIC) - (CAST(strftime('%s', " + this.dbHelper.Operators().FIELD_TIMESTAMP + ")  AS NUMERIC) % " + granularity + ") as aggTimestamp")
                 .selectOp(aggregationMode, "value")
-                .where("CAST(strftime('%s', datetime(timestamp, 'utc')) AS NUMERIC)", this.dbHelper.Operators().GTE, timestampBegin)
-                .where("CAST(strftime('%s', datetime(timestamp, 'utc')) AS NUMERIC)", this.dbHelper.Operators().LTE, timestampEnd)
+                .where("CAST(strftime('%s', " + this.dbHelper.Operators().FIELD_TIMESTAMP + ") AS NUMERIC)", this.dbHelper.Operators().GTE, timestampBegin)
+                .where("CAST(strftime('%s', " + this.dbHelper.Operators().FIELD_TIMESTAMP + ") AS NUMERIC)", this.dbHelper.Operators().LTE, timestampEnd)
                 .where("sensorId", this.dbHelper.Operators().EQ, this.id)
                 .group("aggTimestamp")
                 .order(this.dbHelper.Operators().ASC, "aggTimestamp");

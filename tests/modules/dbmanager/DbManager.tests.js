@@ -127,7 +127,7 @@ describe("DbManager", function() {
     it("get object should do correct stuff", function(done) {
         sinon.spy(sqlite3ob, "get");
         dbManager.getObject(table, schema, {foo:"bar"}, (err, obj) => {
-            expect(sqlite3ob.get.withArgs("SELECT id,strftime(\'%Y-%m-%d %H:%M:%S\', datetime(timestamp, \'utc\')) as timestamp,foo,bar FROM `" + table + "` WHERE 1=1 AND foo = \'bar\' LIMIT 0,1;", sinon.match.any).calledOnce).to.be.true;
+            expect(sqlite3ob.get.withArgs("SELECT id,strftime(\'%Y-%m-%d %H:%M:%S\', timestamp) as timestamp,foo,bar FROM `" + table + "` WHERE 1=1 AND foo = \'bar\' LIMIT 0,1;", sinon.match.any).calledOnce).to.be.true;
             expect(err).to.be.null;
             sqlite3ob.get.restore();
             done();
@@ -148,7 +148,7 @@ describe("DbManager", function() {
         sinon.spy(request, "cleanForSelect");
 
         dbManager.getObjects(table, schema, request, (err, obj) => {
-            expect(sqlite3ob.all.withArgs("SELECT id,strftime(\'%Y-%m-%d %H:%M:%S\', datetime(timestamp, \'utc\')) as timestamp,foo,bar FROM `" + table + "` WHERE 1=1 AND foo LIKE \'foobar\';", sinon.match.any).calledOnce).to.be.true;
+            expect(sqlite3ob.all.withArgs("SELECT id,strftime(\'%Y-%m-%d %H:%M:%S\', timestamp) as timestamp,foo,bar FROM `" + table + "` WHERE 1=1 AND foo LIKE \'foobar\';", sinon.match.any).calledOnce).to.be.true;
 
             expect(request.cleanForSelect.calledOnce).to.be.true;
             expect(err).to.be.null;
@@ -169,7 +169,7 @@ describe("DbManager", function() {
     it("get last object should do correct stuff", function(done) {
         sinon.spy(sqlite3ob, "get");
         dbManager.getLastObject(table, schema, (err, obj) => {
-            expect(sqlite3ob.get.withArgs("SELECT id,strftime('%Y-%m-%d %H:%M:%S', datetime(timestamp, 'utc')) as timestamp,foo,bar FROM `" + table + "` ORDER BY timestamp DESC LIMIT 0,1;", sinon.match.any).calledOnce).to.be.true;
+            expect(sqlite3ob.get.withArgs("SELECT id,strftime('%Y-%m-%d %H:%M:%S', timestamp) as timestamp,foo,bar FROM `" + table + "` ORDER BY timestamp DESC LIMIT 0,1;", sinon.match.any).calledOnce).to.be.true;
             expect(err).to.be.null;
             sqlite3ob.get.restore();
             done();
