@@ -127,12 +127,12 @@ function loaded(api) {
     api.configurationAPI.register(DeconzForm);
 
 
-    api.installerAPI.register(["arm", "arm64", "docker"], "apt-get install lsb", true, true);
+    api.installerAPI.register(["arm", "arm64", "docker"], "apt-get install -y --allow-unauthenticated lsb", true, true);
     api.installerAPI.register(["arm", "arm64", "docker"], "sudo gpasswd -a $USER dialout", true, true);
     api.installerAPI.register(["arm", "arm64", "docker"], "wget -O - http://phoscon.de/apt/deconz.pub.key | sudo apt-key add -", true, true);
     api.installerAPI.register(["arm", "arm64", "docker"], "sudo sh -c \"echo 'deb http://phoscon.de/apt/deconz $(lsb_release -cs) main' > /etc/apt/sources.list.d/deconz.list\"", true, true);
     api.installerAPI.register(["arm", "arm64", "docker"], "apt-get update", true, true);
-    api.installerAPI.register(["arm", "arm64", "docker"], "apt-get install deconz", true, true);
+    api.installerAPI.register(["arm", "arm64", "docker"], "apt-get install -y --allow-unauthenticated deconz", true, true);
 
     /**
      * This class manage Deconz devices
