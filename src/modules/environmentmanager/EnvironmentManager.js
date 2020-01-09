@@ -450,7 +450,7 @@ class EnvironmentManager {
      */
     updateCore() {
         // For apt linux
-        if (os.platform() === "linux") {
+        if (os.platform() === "linux" && !process.env.DOCKER) {
             Logger.info("Trying au update core");
             try {
                 const req = https.get(DEBIAN_REPOSITORY + DEBIAN_REPOSITORY_LAST_VERSION, (response) => {

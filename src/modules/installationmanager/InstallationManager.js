@@ -40,7 +40,7 @@ class InstallationManager {
      * Register a command to be executed for a specific version
      *
      * @param  {string}  currentVersion The module's version
-     * @param  {string|Array}  [arch="*"]     The architecture ('arm', 'arm64', 'ia32', 'mips', 'mipsel', 'ppc', 'ppc64', 's390', 's390x', 'x32', 'x64', and 'x86'). Can be `*` for all arch, or an array of architectures
+     * @param  {string|Array}  [arch="*"]     The architecture ('docker', 'arm', 'arm64', 'ia32', 'mips', 'mipsel', 'ppc', 'ppc64', 's390', 's390x', 'x32', 'x64', and 'x86'). Can be `*` for all arch, or an array of architectures
      * @param  {string}  command        A command
      * @param  {boolean} [sudo=false]    True if command should be executed as sudo, false otherwise. The Hautomation process owner user should be in `sudo` group without password.
      * @param  {boolean} [wait=true]    True if command is executed synchronously, false otherwise
@@ -166,7 +166,9 @@ class InstallationManager {
         let r = false;
         if (arch instanceof Array) {
             arch.forEach((dArch) => {
-                if (dArch.toLowerCase() === currentArch.toLowerCase()) {
+                if (process.env.DOCKER && dArch.toLowerCase() === "docker") {
+                    r = true;
+                } else if (dArch.toLowerCase() === currentArch.toLowerCase()) {
                     r = true;
                 }
             });
