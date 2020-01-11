@@ -217,17 +217,17 @@ function loaded(api) {
          * @param  {Function} cb A callback with the list of devices `(devices) => {}`
          */
         getAvailableDevices(cb) {
-            SerialPort.list(function (err, ports) {
+            SerialPort.list().then(ports => {
                 const results = [];
-                if (!err && ports) {
-                    ports.forEach((port) => {
-                        results.push({
-                            port: port.comName,
-                            name: port.productId + " (" + port.comName + ")"
-                        });
+                ports.forEach(function(port) {
+                    results.push({
+                        port: port.path,
+                        name: port.pnpId + " (" + port.path + ")"
                     });
-                }
+                });
                 cb(results);
+            }).catch((e) => {
+                api.exported.Logger.err(e.message);
             });
         }
 

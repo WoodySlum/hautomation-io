@@ -260,15 +260,13 @@ function loaded(api) {
 
                 this.getPorts = () => {
                     const detectedPorts = [];
-                    SerialPort.list(function (err, ports) {
-                        if (!err && ports) {
-                            ports.forEach(function(port) {
-                                detectedPorts.push({endpoint:port.comName, manufacturer:port.manufacturer});
-                            });
-                            send({method:"detectedPorts", data:detectedPorts});
-                        } else {
-                            Logger.err("Error on serial ports detection : " + err.message);
-                        }
+                    SerialPort.list().then(ports => {
+                        ports.forEach(function(port) {
+                            detectedPorts.push({endpoint:port.path, manufacturer:port.path});
+                        });
+                        send({method:"detectedPorts", data:detectedPorts});
+                    }).catch((e) => {
+                        Logger.err(e.message);
                     });
                 };
 

@@ -134,7 +134,7 @@ class DashboardManager {
 
             // Sort
             this.tiles.sort((tile1, tile2) => {
-                return tile2.order < tile1.order;
+                return tile1.order - tile2.order;
             });
 
             Logger.verbose("Tile " + tile.identifier + " registered");
