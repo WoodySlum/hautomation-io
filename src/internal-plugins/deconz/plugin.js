@@ -395,11 +395,7 @@ function loaded(api) {
                         const keys = Object.keys(data);
                         const key = keys[0];
                         const name = data[key].name;
-                        this.addDevice(key, name, (err, device) => {
-                            if (!err && cb) {
-                                cb(null, device);
-                            }
-                        });
+                        this.addDevice(key, name, () => {});
                     } else if (data && data.lastscan && data.lastscan !== "active" && Object.keys(data).length === 1) {
                         if (cb) {
                             cb(null, null);
