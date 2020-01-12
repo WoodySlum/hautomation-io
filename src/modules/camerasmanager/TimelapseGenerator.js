@@ -54,7 +54,7 @@ class TimelapseGenerator {
         this.prepareFiles((err, pictureList, cacheImages, folder) => {
             if (!err) {
                 self.status = STATUS_RUNNING;
-                self.installationManager.executeCommand("avconv -y -i " + cacheImages + PICTURE_PREFIX + "%5d"+ require("./CamerasManager").CAMERA_FILE_EXTENSION + " -r " + FRAMERATE + " -vcodec libx264 -qscale 1 -aq 1 -s 1024x768 -threads auto " + folder + self.token + VIDEO_EXTENSION, false, (error, stdout, stderr) => {
+                self.installationManager.executeCommand("ffmpeg -y -i " + cacheImages + PICTURE_PREFIX + "%5d"+ require("./CamerasManager").CAMERA_FILE_EXTENSION + " -r " + FRAMERATE + " -vcodec libx264 -qscale 1 -aq 1 -s 1024x768 -threads auto " + folder + self.token + VIDEO_EXTENSION, false, (error, stdout, stderr) => {
                     Logger.info("Timelapse generation done for camera " + self.camera.id);
                     Logger.verbose(stdout);
                     if (error) {

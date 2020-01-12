@@ -1,8 +1,8 @@
 FROM node:12.14-buster
 
 RUN apt-get update
-RUN apt-get install -y --allow-unauthenticated sqlite3 libmagic-dev libatlas-base-dev libudev-dev apt-utils net-tools imagemagick graphicsmagick libav-tools git sudo
-RUN apt-get install -y --allow-unauthenticated python-pip python3-pip alsa-utils libasound2-dev python-pyaudio python3-pyaudio sox mplayer festival festvox-kallpc16k at lsb avrdude socat gammu gammu-smsd && apt-get clean
+RUN apt-get install -y --allow-unauthenticated sqlite3 libmagic-dev libatlas-base-dev libudev-dev apt-utils net-tools imagemagick graphicsmagick ffmpeg git sudo
+RUN apt-get install -y --allow-unauthenticated python-pip python3-pip alsa-utils libasound2-dev python-pyaudio python3-pyaudio sox mplayer festival festvox-kallpc16k at lsb-release avrdude socat gammu gammu-smsd && apt-get clean
 
 # Deconz
 RUN apt-get install -y curl kmod libcap2-bin libqt5core5a libqt5gui5 libqt5network5 libqt5serialport5 libqt5sql5 libqt5websockets5 libqt5widgets5 lsof
@@ -23,7 +23,6 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 # Install sources
 RUN git clone https://github.com/WoodySlum/Hautomation-io.git /var/hautomation
 RUN mkdir -p /var/log/hautomation && cd /var/hautomation && npm install >> /var/log/hautomation/npm.log
-
 
 # Install start
 #cd /var/hautomation && npm run start-docker
