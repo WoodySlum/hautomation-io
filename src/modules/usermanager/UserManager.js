@@ -154,7 +154,7 @@ class UserManager {
         if (user && user.theme && user.theme.length > 0) {
             const base64Array = user.theme.split("base64,");
             if (base64Array.length === 2) {
-                const buf = new Buffer(base64Array[1], "base64");
+                const buf = Buffer.from(base64Array[1], "base64");
                 const themeStr = buf.toString("ascii");
                 try {
                     const theme = JSON.parse(themeStr);

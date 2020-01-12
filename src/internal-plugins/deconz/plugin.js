@@ -308,9 +308,8 @@ function loaded(api) {
             const login = data.username;
             const password = data.password;
             const model = data.model;
-
             request.post({
-                headers: {"content-type" : "application/x-www-form-urlencoded", "Authorization":"Basic " + (new Buffer(login + ":" + password)).toString("base64")},
+                headers: {"content-type" : "application/x-www-form-urlencoded", "Authorization":"Basic " + (Buffer.from(login + ":" + password)).toString("base64")},
                 url:     "http://" + (this.ip ? this.ip : this.api.environmentAPI.getLocalIp()) + ":" + DECONZ_HTTP_PORT + "/api",
                 body:    JSON.stringify({devicetype: model,login: login})
             }, (error, response, body) => {
