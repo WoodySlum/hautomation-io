@@ -73,6 +73,11 @@ Basic IFTTT usage with scenario triggering URL (both way).
 
 ## Installation on Debian ARM (rpi binaries)
 
+### Requirements
+
+- Raspberry PI 2 or 3 (armv7+ arch)
+- Raspbian buster and above
+
 Installation for Debian arm :
 
     wget -qO - https://deb.hautomation-io.com/archive.key | sudo apt-key add -
