@@ -3,6 +3,7 @@ image: woodyslum/hautomation-ci:12.14-1
 stages:
   - build
   
+
 cache:
   paths:
     - node_modules/
