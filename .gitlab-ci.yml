@@ -7,10 +7,6 @@ stages:
   - doc
   - deploy
 
-cache:
-  paths:
-    - node_modules/
-
 test:
   stage: test
   except:
