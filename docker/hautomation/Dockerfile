@@ -1,4 +1,4 @@
-FROM node:13.6-buster
+FROM node:12.14-buster
 
 RUN apt-get update
 RUN apt-get install -y --allow-unauthenticated sqlite3 libmagic-dev libatlas-base-dev libudev-dev apt-utils net-tools imagemagick graphicsmagick libav-tools git sudo

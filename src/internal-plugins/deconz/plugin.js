@@ -162,7 +162,6 @@ function loaded(api) {
                 self.init();
             }, 30000, this);
 
-
             this.api.backupAPI.addBackupFolder(BACKUP_DIR);
 
             api.configurationAPI.setUpdateCb((data, username) => {

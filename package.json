@@ -51,7 +51,7 @@
         ]
     },
     "scripts": {
-        "dev": "nodemon --config .nodemon.json  HautomationRunner.js",
+        "dev": "nodemon --config .nodemon.json --signal SIGINT HautomationRunner.js",
         "start": "node HautomationRunner.js",
         "start-docker": "env DOCKER=true node HautomationRunner.js",
         "pre-test": "rm -Rf /tmp/data && mkdir /tmp/data && cp -f ./data/config.json.default /tmp/data/config.json",
