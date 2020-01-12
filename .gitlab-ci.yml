@@ -2,11 +2,7 @@ image: woodyslum/hautomation-ci:12.14-1
 
 stages:
   - build
-  - lint
-  - test
-  - doc
-  - deploy
-
+  
 cache:
   paths:
     - node_modules/
