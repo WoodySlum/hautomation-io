@@ -14,7 +14,7 @@ test:
   script:
   - export NODE_TLS_REJECT_UNAUTHORIZED=0
   - npm config set strict-ssl false
-  - npm rebuild
+  - npm install
   - npm run --verbose cov
   coverage: '/Statements   : \d+\.\d+/'
 
@@ -27,6 +27,7 @@ lint:
   script:
   - export NODE_TLS_REJECT_UNAUTHORIZED=0
   - npm config set strict-ssl false
+  - npm install
   - npm run --verbose lint
 
 build:
