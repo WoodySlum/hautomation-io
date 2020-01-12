@@ -646,9 +646,7 @@ function loaded(api) {
 
             // Flood
             if (d && d.state && d.uniqueid && d.r == "sensors" && d.state.hasOwnProperty("water")) {
-                if (d.state.water === true) {
-                    this.onRadioEvent(2400, "zigbee", d.uniqueid, 1, (d.state.water ? 1 : 0), this.constants().STATUS_ON, "FLOOD");
-                }
+                this.onRadioEvent(2400, "zigbee", d.uniqueid, 1, (d.state.water ? 1 : 0), this.constants().STATUS_ON, "FLOOD");
             }
 
             // Switch
@@ -661,7 +659,6 @@ function loaded(api) {
          * Connect web socket
          */
         connectWebSocket() {
-
             if (this.ip) {
                 this.getConfig((err, config) => {
                     try {

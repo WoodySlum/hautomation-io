@@ -67,8 +67,11 @@ function loaded(api) {
          */
         constructor(api, id, configuration) {
             super(api, id, configuration);
-            api.exported.Radio.registerSensor(api, this, () => {
-                api.messageAPI.sendMessage("*", api.translateAPI.t("radio.flood.sensor.message", configuration.name), null, null, null, true);
+            api.exported.Radio.registerSensor(api, this, (radioObject) => {
+                console.log(radioObject);
+                if (radioObject.value === 1) {
+                    api.messageAPI.sendMessage("*", api.translateAPI.t("radio.flood.sensor.message", configuration.name), null, null, null, true);
+                }
             });
         }
     }
