@@ -644,6 +644,13 @@ function loaded(api) {
                 this.onRadioEvent(2400, "zigbee", d.uniqueid, 1, (d.state.pressure * 100), this.constants().STATUS_ON, "PRESSURE");
             }
 
+            // Flood
+            if (d && d.state && d.uniqueid && d.r == "sensors" && d.state.hasOwnProperty("water")) {
+                if (d.state.water === true) {
+                    this.onRadioEvent(2400, "zigbee", d.uniqueid, 1, (d.state.water ? 1 : 0), this.constants().STATUS_ON, "FLOOD");
+                }
+            }
+
             // Switch
             if (d && d.state && d.state.buttonevent && d.uniqueid) {
                 this.onRadioEvent(2400, "zigbee", d.uniqueid, d.state.buttonevent, d.state.buttonevent, this.constants().STATUS_ON);
