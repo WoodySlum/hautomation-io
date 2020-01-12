@@ -7,12 +7,18 @@ RUN apt-get install -y --allow-unauthenticated python-pip python3-pip alsa-utils
 # Deconz
 RUN apt-get install -y curl kmod libcap2-bin libqt5core5a libqt5gui5 libqt5network5 libqt5serialport5 libqt5sql5 libqt5websockets5 libqt5widgets5 lsof
 ADD https://project-downloads.drogon.net/wiringpi-latest.deb /wiringpi.deb
-RUN dpkg -i /wiringpi.deb && rm -f /wiringpi.deb
+RUN dpkg -i /wiringpi.deb && rm -f /wiringpi.deb; exit 0
+    # ARM
 ADD http://deconz.dresden-elektronik.de/raspbian/stable/deconz-latest.deb /deconz.deb
 RUN dpkg -i /deconz.deb && \
     rm -f /deconz.deb && \
     mkdir /root/otau && \
-    chown root:root /usr/bin/deCONZ*
+    chown root:root /usr/bin/deCONZ*; exit 0
+    # x86
+ADD http://deconz.dresden-elektronik.de/ubuntu/beta/deconz-dev-2.05.72.deb /deconz-x86.deb
+RUN dpkg -i /decon-x86z.deb && \
+    rm -f /deconz-x86.deb && \
+    chown root:root /usr/bin/deCONZ*; exit 0
 
 # Platformio
 RUN pip install -U platformio
