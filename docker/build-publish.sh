@@ -4,5 +4,11 @@ DOCKER_ACC="woodyslum"
 DOCKER_REPO="hautomation-ci"
 IMG_TAG="12.14-1"
 
-docker build -t $DOCKER_ACC/$DOCKER_REPO:$IMG_TAG .
-sudo docker push $DOCKER_ACC/$DOCKER_REPO:$IMG_TAG
+
+# Kill Containers
+docker kill $(docker ps -q)
+# Clean images
+docker image rm -f $(docker image ls -a -q "*/hautomation-ci")
+
+docker buildx create --use --append --name hautomation-ci
+docker buildx build --platform linux/amd64,linux/arm/v7 --push -t $DOCKER_ACC/$DOCKER_REPO:$IMG_TAG -f Dockerfile .
