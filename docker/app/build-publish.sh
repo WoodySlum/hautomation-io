@@ -18,6 +18,7 @@ IMG_TAG="$PACKAGE_VERSION"
 docker kill $(docker ps -q)
 # Clean images
 docker image rm -f $(docker image ls -a -q "*/hautomation")
-
+docker system prune --all -f
 docker buildx create --use --append --name hautomation
 docker buildx build --platform linux/amd64,linux/arm/v7 --push -t $DOCKER_ACC/$DOCKER_REPO:$IMG_TAG -f Dockerfile .
+docker system prune --all -f
