@@ -56,9 +56,10 @@ class WebServices extends Service.class {
      * @param  {string} [sslCert=null]  The path for sslCert key
      * @param  {string} [enableCompression=true]  Enable gzip data compression
      * @param  {string} [cachePath=null]  The cache path
+     * @param  {string} [ngrokAuthToken=null]  The ngrok auth token
      * @returns {WebServices}            The instance
      */
-    constructor(translateManager, port = 8080, sslPort = 8043, sslKey = null, sslCert = null, enableCompression = true, cachePath = null) {
+    constructor(translateManager, port = 8080, sslPort = 8043, sslKey = null, sslCert = null, enableCompression = true, cachePath = null, ngrokAuthToken = null) {
         super("webservices");
         this.translateManager = translateManager;
         this.port = port;
@@ -69,6 +70,7 @@ class WebServices extends Service.class {
         this.sslCert = sslCert;
         this.fs = fs;
         this.cachePath = cachePath;
+        this.ngrokAuthToken = ngrokAuthToken;
         this.enableCompression = enableCompression;
         this.gatewayManager = null;
         this.tokenAuthParameters = {};
@@ -210,7 +212,12 @@ class WebServices extends Service.class {
                     binContent = null; // Clear variable
                 }
 
-                ngrok.connect({addr: self.port, protocol:"http", region: "eu", inspect:false, binPath: () => self.cachePath}).then((url) => {
+                const ngrokOptions = {addr: self.port, protocol:"http", region: "eu", inspect:false, binPath: () => self.cachePath};
+                if (this.ngrokAuthToken) {
+                    ngrokOptions.authtoken = this.ngrokAuthToken;
+                }
+                
+                ngrok.connect(ngrokOptions).then((url) => {
                     Logger.info("HTTP tunnel URL : " + url);
 
                     // Auto restart tunnel every 6 hours (expiration)

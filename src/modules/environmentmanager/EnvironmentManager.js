@@ -352,6 +352,11 @@ class EnvironmentManager {
             }
         }
 
+        // Ngrok part
+        if (data.ngrokAuthToken) {
+            mainConfiguration.ngrokAuthToken = data.ngrokAuthToken;
+        }
+
         // Home part
         if (data.home) {
             if (data.home.longitude) {
