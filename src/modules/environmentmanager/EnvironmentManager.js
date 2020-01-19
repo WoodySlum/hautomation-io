@@ -74,14 +74,14 @@ class EnvironmentManager {
         this.registerTile();
         this.formManager.register(DayNightScenarioTriggerForm.class);
         this.scenarioManager.register(DayNightScenarioTriggerForm.class, null, "daynight.scenario.trigger.title", 200);
-        this.scenarioManager.register(DayNightScenarioForm.class, (scenario, additionalInfos) => {
-                if (scenario && scenario.DayNightScenarioForm && scenario.DayNightScenarioForm.mode) {
-                    if (scenario.DayNightScenarioForm.mode === "1") {
-                        this.setDay();
-                    } else if (scenario.DayNightScenarioForm.mode === "2") {
-                        this.setNight();
-                    }
+        this.scenarioManager.register(DayNightScenarioForm.class, (scenario) => {
+            if (scenario && scenario.DayNightScenarioForm && scenario.DayNightScenarioForm.mode) {
+                if (scenario.DayNightScenarioForm.mode === "1") {
+                    this.setDay();
+                } else if (scenario.DayNightScenarioForm.mode === "2") {
+                    this.setNight();
                 }
+            }
         }, "daynight.scenario.title");
 
         this.version = version;
@@ -110,7 +110,7 @@ class EnvironmentManager {
         // Set timezone
         if (!process.env.TEST) {
             this.setTimezone(this.appConfiguration);
-        }this.scenarioManager
+        }
 
         this.startIpScan();
     }

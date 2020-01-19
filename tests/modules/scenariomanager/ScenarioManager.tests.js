@@ -302,7 +302,7 @@ describe("ScenarioManager", function() {
 
     it("setDay should trigger a scenario", function() {
         const scenarioManager = core.scenarioManager;
-        scenarioManager.formConfiguration.data = [{id:1503304879528,name:"Test multi radio",UserScenarioForm:{mode:3},enabled:true,icon:{icon:"e806"},DayNightScenarioForm:{day:true},DevicesListScenarioForm:{devices:[{identifier:1981,status:"on"}]}}];
+        scenarioManager.formConfiguration.data = [{id:1503304879528,name:"Test multi radio",UserScenarioForm:{mode:3},enabled:true,icon:{icon:"e806"},DayNightScenarioTriggerForm:{day:true},DevicesListScenarioForm:{devices:[{identifier:1981,status:"on"}]}}];
         sinon.spy(core.deviceManager, "switchDevice");
         core.environmentManager.formConfiguration.data = {id:1507041316686,day:false};
         core.environmentManager.setDay();
@@ -312,7 +312,7 @@ describe("ScenarioManager", function() {
 
     it("setNight should trigger a scenario", function() {
         const scenarioManager = core.scenarioManager;
-        scenarioManager.formConfiguration.data = [{id:1503304879528,name:"Test multi radio",UserScenarioForm:{mode:3},enabled:true,icon:{icon:"e806"},DayNightScenarioForm:{night:true},DevicesListScenarioForm:{devices:[{identifier:1981,status:"on"}]}}];
+        scenarioManager.formConfiguration.data = [{id:1503304879528,name:"Test multi radio",UserScenarioForm:{mode:3},enabled:true,icon:{icon:"e806"},DayNightScenarioTriggerForm:{night:true},DevicesListScenarioForm:{devices:[{identifier:1981,status:"on"}]}}];
         sinon.spy(core.deviceManager, "switchDevice");
         core.environmentManager.formConfiguration.data = {id:1507041316686,day:true};
         core.environmentManager.setNight();
@@ -322,7 +322,7 @@ describe("ScenarioManager", function() {
 
     it("setNight should NOT trigger a scenario because triggers are not configured", function() {
         const scenarioManager = core.scenarioManager;
-        scenarioManager.formConfiguration.data = [{id:1503304879528,name:"Test multi radio",UserScenarioForm:{mode:3},enabled:true,icon:{icon:"e806"},DayNightScenarioForm:{night:false, day:false},DevicesListScenarioForm:{devices:[{identifier:1981,status:"on"}]}}];
+        scenarioManager.formConfiguration.data = [{id:1503304879528,name:"Test multi radio",UserScenarioForm:{mode:3},enabled:true,icon:{icon:"e806"},DayNightScenarioTriggerForm:{night:false, day:false},DevicesListScenarioForm:{devices:[{identifier:1981,status:"on"}]}}];
         sinon.spy(core.deviceManager, "switchDevice");
         core.environmentManager.formConfiguration.data = [{id:1507041316686,day:true}];
         core.environmentManager.setNight();
