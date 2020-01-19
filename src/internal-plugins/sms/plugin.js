@@ -168,7 +168,6 @@ function loaded(api) {
             this.api.exported.Logger.info("Initializing SMS module");
             // Check serial ports
             this.getAvailableDevices((results) => {
-                //console.log(results);
                 const ports = [];
                 const portsLabels = [];
                 results.forEach((result) => {

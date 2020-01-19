@@ -495,19 +495,6 @@ describe("Sensor", function() {
                 });
             }, 1578602721);
         }, 1578597743);
-
-        // db1.save((error) => {
-        //     db2.save((error) => {
-        //         sensor.lastObject((err, res) => {
-        //             console.log(res);
-        //             process.exit(0);
-        //             expect(error).to.be.null;
-        //             expect(res.battery).to.be.equal(98);
-        //             expect(res.vcc).to.be.equal(11);
-        //             done();
-        //         }, 360);
-        //     });
-        // });
     });
 
     after(() => {
