@@ -159,7 +159,7 @@
     "message.scenario.recipient.all": "Tous",
     "message.scenario.recipient.provided": "Destinataire fourni dans la requête",
     "message.scenario.trigger.title": "Déclencher ce scénario avec un message",
-    "message.scenario.trigger.keyword": "Mot clé magique",
+    "message.scenario.trigger.keyword": "Mot magique",
     "alarm.scenario.form.title": "Alarme",
     "alarm.scenario.form.action.none": "Aucune action",
     "alarm.scenario.form.action.enable": "Armer l'alarme",
