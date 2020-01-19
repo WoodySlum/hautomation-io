@@ -9,26 +9,22 @@ class DayNightScenarioForm extends FormObject.class {
      * Constructor
      *
      * @param  {number} [id=null]                  An identifier
-     * @param  {boolean} [day=false]                  Day falling
-     * @param  {boolean} [night=false]                Night falling
+     * @param  {string} [mode="0"]                  Mode : 0 => none, 1 => day, 2 => night
      * @returns {DayNightScenarioForm} The instance
      */
-    constructor(id = null, day = false, night = false) {
+    constructor(id = null, mode) {
         super(id);
 
         /**
-         * @Property("day");
-         * @Title("daynight.scenario.trigger.day");
-         * @Type("boolean");
+         * @Property("mode");
+         * @Type("string");
+         * @Enum(["0", "1", "2"]);
+         * @EnumNames(["environment.none", "environment.day", "environment.night"]);
+         * @Display("radio");
+         * @Default("0");
+         * @Title(" ");
          */
-        this.day = day;
-
-        /**
-         * @Property("night");
-         * @Title("daynight.scenario.trigger.night");
-         * @Type("boolean");
-         */
-        this.night = night;
+        this.mode = mode;
     }
 
     /**
@@ -38,7 +34,7 @@ class DayNightScenarioForm extends FormObject.class {
      * @returns {DayNightScenarioForm}      A form object
      */
     json(data) {
-        return new DayNightScenarioForm(data.id, data.day, data.night);
+        return new DayNightScenarioForm(data.id, data.mode);
     }
 }
 
