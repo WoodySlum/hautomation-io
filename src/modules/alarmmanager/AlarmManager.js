@@ -88,8 +88,8 @@ class AlarmManager {
             self.formConfiguration.save();
         });
 
-        this.sensorsManager.registerSensorEvent((id) => {
-            if (self.alarmStatus() && self.formConfiguration.data && self.formConfiguration.data.armed && self.formConfiguration.data.sensors && self.formConfiguration.data.sensors.length > 0) {
+        this.sensorsManager.registerSensorEvent((id, type, value) => {
+            if (value > 0 && self.alarmStatus() && self.formConfiguration.data && self.formConfiguration.data.armed && self.formConfiguration.data.sensors && self.formConfiguration.data.sensors.length > 0) {
                 self.formConfiguration.data.sensors.forEach((sensorConfiguration) => {
                     if (id === sensorConfiguration.sensor.identifier) {
                         const sensor = self.sensorsManager.getSensorConfiguration(sensorConfiguration.sensor.identifier);

@@ -254,7 +254,7 @@ describe("AlarmManager", function() {
         sinon.spy(messageManager, "sendMessage");
         sinon.spy(alarmManager, "triggerAlarm");
         sinon.spy(alarmManager, "sensorReadyForTriggering");
-        sensorsManager.onNewSensorValue(1501240500, "foobar", 0, 0, 0, 0, "bar");
+        sensorsManager.onNewSensorValue(1501240500, "foobar", 1, 0, 0, 0, "bar");
         expect(alarmManager.alarmTriggered).to.be.false;
         expect(messageManager.sendMessage.calledOnce).to.be.true;
         expect(alarmManager.triggerAlarm.calledOnce).to.be.false;
@@ -286,11 +286,27 @@ describe("AlarmManager", function() {
         sinon.spy(messageManager, "sendMessage");
         sinon.spy(alarmManager, "triggerAlarm");
         sinon.spy(alarmManager, "sensorReadyForTriggering");
-        sensorsManager.onNewSensorValue(1501240500, "foobar", 0, 0, 0, 0, "bar");
+        sensorsManager.onNewSensorValue(1501240500, "foobar", 1, 0, 0, 0, "bar");
         expect(alarmManager.alarmTriggered).to.be.true;
         expect(messageManager.sendMessage.calledTwice).to.be.true;
         expect(alarmManager.triggerAlarm.calledOnce).to.be.true;
         expect(alarmManager.sensorReadyForTriggering.calledOnce).to.be.true;
+        messageManager.sendMessage.restore();
+        alarmManager.triggerAlarm.restore();
+        alarmManager.sensorReadyForTriggering.restore();
+    });
+
+    it("sensor signal should trigger alarm", function() {
+        alarmManager = new AlarmManager.class(confManager, formManager, webServices, dashboardManager, userManager, sensorsManager, translateManager, deviceManager, messageManager, schedulerService, camerasManager, botEngine, scenarioManager);
+        alarmManager.formConfiguration.data = {id:1503493095302,enabled:true,armed:true,userLocationTrigger:true,sensors:[{sensor:{identifier:1501240500},triggerAlarm:true}],devicesOnEnable:[{identifier:1981,status:"on"}],devicesOnDisable:[{identifier:1982,status:"off"}]};
+        sinon.spy(messageManager, "sendMessage");
+        sinon.spy(alarmManager, "triggerAlarm");
+        sinon.spy(alarmManager, "sensorReadyForTriggering");
+        sensorsManager.onNewSensorValue(1501240500, "foobar", 0, 0, 0, 0, "bar");
+        expect(alarmManager.alarmTriggered).to.be.false;
+        expect(messageManager.sendMessage.calledTwice).to.be.false;
+        expect(alarmManager.triggerAlarm.calledOnce).to.be.false;
+        expect(alarmManager.sensorReadyForTriggering.calledOnce).to.be.false;
         messageManager.sendMessage.restore();
         alarmManager.triggerAlarm.restore();
         alarmManager.sensorReadyForTriggering.restore();

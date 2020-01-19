@@ -657,9 +657,6 @@ function loaded(api) {
          * Connect web socket
          */
         connectWebSocket() {
-            this.processSensor({"e":"changed","id":"23","r":"sensors","state":{"lastupdated":"2020-01-19T10:49:
-59","presence":true},"t":"event","uniqueid":"00:15:8d:00:04:4c:b5:4a-01-0406"});
-process.exit(0);
             if (this.ip) {
                 this.getConfig((err, config) => {
                     try {
