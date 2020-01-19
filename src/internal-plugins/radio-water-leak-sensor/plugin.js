@@ -12,7 +12,7 @@ function loaded(api) {
      * Radio presence form sensor
      * @class
      */
-    class RadioFloodSensorForm extends api.exported.FloodSensorForm {
+    class RadioWaterLeakSensorForm extends api.exported.WaterLeakSensorForm {
         /**
          * Radio presence sensor form
          *
@@ -24,7 +24,7 @@ function loaded(api) {
          * @param  {string} dashboardColor  The dashboard color
          * @param  {string} statisticsColor The statistics color
          * @param  {Array} radio The radio objects
-         * @returns {RadioFloodSensorForm}                 The instance
+         * @returns {RadioWaterLeakSensorForm}                 The instance
          */
         constructor(id, plugin, name, dashboard, statistics, dashboardColor, statisticsColor, radio) {
             super(id, plugin, name, dashboard, statistics, dashboardColor, statisticsColor);
@@ -43,27 +43,27 @@ function loaded(api) {
          * Convert JSON data to object
          *
          * @param  {Object} data Some data
-         * @returns {RadioFloodSensorForm}      An instance
+         * @returns {RadioWaterLeakSensorForm}      An instance
          */
         json(data) {
             super.json(data);
         }
     }
 
-    api.sensorAPI.registerForm(RadioFloodSensorForm);
+    api.sensorAPI.registerForm(RadioWaterLeakSensorForm);
 
     /**
      * This class is overloaded by sensors
      * @class
      */
-    class RadioFloodSensor extends api.exported.FloodSensor {
+    class RadioWaterLeakSensor extends api.exported.WaterLeakSensor {
         /**
-         * Radio flood sensor class
+         * Radio waterLeak sensor class
          *
          * @param  {PluginAPI} api                                                           A plugin api
          * @param  {number} [id=null]                                                        An id
          * @param  {Object} [configuration=null]                                             The configuration for sensor
-         * @returns {RadioFloodSensor}                                                       The instance
+         * @returns {RadioWaterLeakSensor}                                                       The instance
          */
         constructor(api, id, configuration) {
             super(api, id, configuration);
@@ -71,20 +71,20 @@ function loaded(api) {
             api.exported.Radio.registerSensor(api, this, (radioObject) => {
                 self.setValue(parseFloat(radioObject.value));
                 if (radioObject.value === 1) {
-                    api.messageAPI.sendMessage("*", api.translateAPI.t("radio.flood.sensor.message", configuration.name), null, null, null, true);
+                    api.messageAPI.sendMessage("*", api.translateAPI.t("radio.waterLeak.sensor.message", configuration.name), null, null, null, true);
                 }
             });
         }
     }
 
-    api.sensorAPI.registerClass(RadioFloodSensor);
+    api.sensorAPI.registerClass(RadioWaterLeakSensor);
 }
 
 module.exports.attributes = {
     loadedCallback: loaded,
-    name: "radio-flood-sensor",
+    name: "radio-water-leak-sensor",
     version: "0.0.0",
     category: "sensor",
-    description: "Radio flood sensor",
-    dependencies:["flood-sensor"]
+    description: "Radio water leak sensor",
+    dependencies:["water-leak-sensor"]
 };

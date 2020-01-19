@@ -642,9 +642,9 @@ function loaded(api) {
                 this.onRadioEvent(2400, "zigbee", d.uniqueid, 1, (d.state.pressure * 100), this.constants().STATUS_ON, "PRESSURE");
             }
 
-            // Flood
+            // Water leak
             if (d && d.state && d.uniqueid && d.r == "sensors" && d.state.hasOwnProperty("water")) {
-                this.onRadioEvent(2400, "zigbee", d.uniqueid, 1, (d.state.water ? 1 : 0), this.constants().STATUS_ON, "FLOOD");
+                this.onRadioEvent(2400, "zigbee", d.uniqueid, 1, (d.state.water ? 1 : 0), this.constants().STATUS_ON, "WATER-LEAK");
             }
 
             // Switch
