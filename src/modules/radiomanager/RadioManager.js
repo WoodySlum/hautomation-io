@@ -351,7 +351,6 @@ class RadioManager {
 
         // Sensor part
         if (this.sensorsManager) {
-            //console.log(this.sensorsManager.getSensorConfiguration());process.exit(0);
             this.sensorsManager.getSensorConfiguration().forEach((sensor) => {
                 if (sensor.radio) {
                     sensor.radio.forEach((sensorRadio) => {

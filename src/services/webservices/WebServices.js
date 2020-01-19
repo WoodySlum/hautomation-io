@@ -216,7 +216,7 @@ class WebServices extends Service.class {
                 if (this.ngrokAuthToken) {
                     ngrokOptions.authtoken = this.ngrokAuthToken;
                 }
-                
+
                 ngrok.connect(ngrokOptions).then((url) => {
                     Logger.info("HTTP tunnel URL : " + url);
 
@@ -527,7 +527,6 @@ class WebServices extends Service.class {
                             try {
                                 p = registeredEl.delegate.processAPI(apiRequest);
                             } catch(e) {
-                                console.log(e);
                                 Logger.err(e.message);
                                 p = new Promise((resolve, reject) => {
                                     reject(new APIResponse.class(false, {}, 7298, "Oops something wrong occurred"));

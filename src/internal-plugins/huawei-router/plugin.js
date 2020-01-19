@@ -252,7 +252,6 @@ function loaded(api) {
                             router.login(token, conf.username, conf.password, () => {
                                 router.getAllSms(token, true, (err, messages) => {
                                     if (err) {
-                                        console.log(err);
                                         self.api.exported.Logger.warn(err.message);
                                     } else if (messages.length > 0) {
                                         messages.forEach((message) => {
