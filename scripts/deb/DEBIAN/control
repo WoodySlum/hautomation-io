@@ -2,7 +2,7 @@ Package: hautomation
 Version: {VERSION}
 Section: base
 Priority: optional
-Architecture: armhf
+Architecture: {ARCH}
 Depends: libatlas-base-dev, sudo, at
 Maintainer: WoodySlum <woodyslum@hautomation-io.com>
 Description: Home Automation for everyone
