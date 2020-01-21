@@ -2,6 +2,7 @@ Package: hautomation
 Version: {VERSION}
 Section: base
 Priority: optional
+Codename: {DISTRIB}
 Architecture: {ARCH}
 Depends: libatlas-base-dev, sudo, at
 Maintainer: WoodySlum <woodyslum@hautomation-io.com>

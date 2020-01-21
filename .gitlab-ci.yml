@@ -1,7 +1,7 @@
 image: woodyslum/hautomation-ci:12.14-1
 
 stages:
-  - build-x86
+  - build-x8664
   - build-armv7
   - lint
   - test
@@ -12,8 +12,8 @@ cache:
   paths:
     - node_modules/
 
-build-x86:
-  stage: build-x86
+build-x8664:
+  stage: build-x8664
   tags:
   - ci
   - x86
