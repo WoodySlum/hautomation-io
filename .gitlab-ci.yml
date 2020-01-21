@@ -13,6 +13,9 @@ cache:
 
 test:
   stage: test
+  tags:
+  - ci
+  - armv7
   except:
   - tags
   script:
@@ -23,6 +26,9 @@ test:
 
 lint:
   stage: lint
+  tags:
+  - ci
+  - armv7
   only:
     - master
   except:
@@ -34,6 +40,10 @@ lint:
 
 build:
   stage: build
+  tags:
+  - ci
+  - x86
+  - armv7
   script:
   - export NODE_TLS_REJECT_UNAUTHORIZED=0
   - npm config set strict-ssl false
