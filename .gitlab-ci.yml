@@ -1,7 +1,8 @@
 image: woodyslum/hautomation-ci:12.14-1
 
 stages:
-  - build
+  - build-x86
+  - build-armv7
   - lint
   - test
   - doc
@@ -10,6 +11,42 @@ stages:
 cache:
   paths:
     - node_modules/
+
+build-x86:
+  stage: build-x86
+  tags:
+  - ci
+  - x86
+  script:
+  - export NODE_TLS_REJECT_UNAUTHORIZED=0
+  - npm config set strict-ssl false
+  - rm -Rf package-lock.json
+  - npm install
+  - npm rebuild
+  - echo "{\"commit\":\"$(echo $CI_COMMIT_SHA | head -c8)\"}" > version.json
+  - npm run --verbose build
+  - npm run --verbose build-deb
+  artifacts:
+    paths:
+    - build/*.deb
+
+build-armv7:
+  stage: build-armv7
+  tags:
+  - ci
+  - armv7
+  script:
+  - export NODE_TLS_REJECT_UNAUTHORIZED=0
+  - npm config set strict-ssl false
+  - rm -Rf package-lock.json
+  - npm install
+  - npm rebuild
+  - echo "{\"commit\":\"$(echo $CI_COMMIT_SHA | head -c8)\"}" > version.json
+  - npm run --verbose build
+  - npm run --verbose build-deb
+  artifacts:
+    paths:
+    - build/*
 
 test:
   stage: test
@@ -38,21 +75,22 @@ lint:
   - npm config set strict-ssl false
   - npm run --verbose lint
 
-build:
-  stage: build
+deploy:
+  stage: deploy
   tags:
   - ci
-  - x86
   - armv7
+  only:
+    - master
+  except:
+  - tags
   script:
-  - export NODE_TLS_REJECT_UNAUTHORIZED=0
-  - npm config set strict-ssl false
-  - rm -Rf package-lock.json
-  - npm install
-  - npm rebuild
-  - echo "{\"commit\":\"$(echo $CI_COMMIT_SHA | head -c8)\"}" > version.json
-  - npm run --verbose build
-  - npm run --verbose build-deb
-  artifacts:
-    paths:
-    - build/*
+  - eval `ssh-agent -s`
+  - ssh-add <(echo "$STAGING_PRIVATE_KEY" | base64 --decode)
+  - ssh -oStrictHostKeyChecking=no -p$STAGING_SSH_PORT $STAGING_USER@$STAGING_IP "rm -Rf $STAGING_TMP_FOLDER/hautomation-core-deploy"
+  - ssh -oStrictHostKeyChecking=no -p$STAGING_SSH_PORT $STAGING_USER@$STAGING_IP "mkdir $STAGING_TMP_FOLDER/hautomation-core-deploy"
+  - scp -oStrictHostKeyChecking=no -P$STAGING_SSH_PORT -r build/* pi@$STAGING_IP:$STAGING_TMP_FOLDER/hautomation-core-deploy/
+  - ssh -oStrictHostKeyChecking=no -p$STAGING_SSH_PORT $STAGING_USER@$STAGING_IP "cd $STAGING_TMP_FOLDER/hautomation-core-deploy/scripts && sh install.sh $STAGING_USER $STAGING_GROUP $STAGING_INSTALLATION_FOLDER"
+  environment:
+    name: staging
+    url: $STAGING_URL
