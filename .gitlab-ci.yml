@@ -3,8 +3,7 @@ default:
     name: woodyslum/hautomation-ci:12.14-buster-1
 
 stages:
-  - build-amd64
-  - build-armhf
+  - build
   - lint
   - test
   - doc
@@ -28,8 +27,9 @@ cache:
 
 
 
-build-amd64:
-  stage: build-amd64
+build:amd64:stretch:
+  image: woodyslum/hautomation-ci:12.14-stretch-1
+  stage: build
   only:
   - tags
   tags:
@@ -40,23 +40,38 @@ build-amd64:
     paths:
     - build/*.deb
 
-build-armhf:stretch:
-  image: woodyslum/hautomation-ci:12.14-stretch-1
-  stage: build-armhf
+build:amd64:buster:
+  image: woodyslum/hautomation-ci:12.14-buster-1
+  stage: build
+  only:
+  - tags
   tags:
   - ci
-  - armhf
+  - amd64
   <<: *build_definition
   artifacts:
     paths:
     - build/*.deb
 
-build-armhf:buster:
-  image: woodyslum/hautomation-ci:12.14-buster-1
-  stage: build-armhf
+build:armhf:stretch:
+  image: woodyslum/hautomation-ci:12.14-stretch-1
+  stage: build
   tags:
   - ci
   - armhf
+  - stretch
+  <<: *build_definition
+  artifacts:
+    paths:
+    - build/*.deb
+
+build:armhf:buster:
+  image: woodyslum/hautomation-ci:12.14-buster-1
+  stage: build
+  tags:
+  - ci
+  - armhf
+  - buster
   <<: *build_definition
   artifacts:
     paths:

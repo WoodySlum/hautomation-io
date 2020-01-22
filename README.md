@@ -21,7 +21,7 @@ The most important informations are presented with **tiles on dashboard**.
 
 ## Supported features
 
-#### Radio communication devices (Chacon, Zigbee, ...)
+#### Radio communication devices (433.92 - Chacon, Zigbee - Philips, Xiaomi aqara, Ikea Tråfri, ...)
 
 Using a RFLink will allow you to control lights and sensors for a really interesting price. Note that you'll need to buy a USB Gateway (http://www.rflink.nl) to access this feature.
 
@@ -33,7 +33,7 @@ Control Philips Hue lights, state and colors, for example in combination with 43
 
 ##### Tuya
 
-Control Tuya Outlets
+Control Tuya outlets and lights
 
 ##### Cameras
 
@@ -62,6 +62,7 @@ Send a message if the wind blows above 35 mph.
 ##### IOTs
 
 Create your own cheap sensors or anything else using ESP8266 or Arduino. An Arduino framework is provided and is very easy to use.
+Over The Air updates available.
 
 ##### HomeKit Siri and Alexa support
 
@@ -71,19 +72,19 @@ Use voice command to control home devices.
 
 Basic IFTTT usage with scenario triggering URL (both way).
 
-## Installation on Debian ARM (rpi binaries)
+## Installation on Linux Debian / Raspbian
 
 ### Requirements
 
-- Raspberry PI 2 or 3 (armv7+ arch)
-- Raspbian buster and above
+- Linux Raspberry PI 2 or 3 (armv7+ arch) or a x86_64 PC
+- Debian / Raspbian stretch and above
 
-Installation for Debian arm :
+Installation for Debian :
 
     wget -qO - https://deb.hautomation-io.com/archive.key | sudo apt-key add -
     sudo sh -c "echo 'deb https://deb.hautomation-io.com $(dpkg --status tzdata|grep Provides|cut -f2 -d'-') main' >> /etc/apt/sources.list"
     sudo apt-get update
-    sudo apt-get install hautomation
+    sudo apt-get install -y hautomation
 
 ## Environment
 
