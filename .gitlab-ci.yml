@@ -91,6 +91,7 @@ test:
   tags:
   - ci
   - armv7
+  - buster
   except:
   - tags
   script:
@@ -104,6 +105,7 @@ lint:
   tags:
   - ci
   - armv7
+  - buster
   only:
     - master
   except:
@@ -118,6 +120,7 @@ deploy:
   tags:
   - ci
   - armv7
+  - buster
   only:
     - master
   except:
