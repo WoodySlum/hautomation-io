@@ -1,8 +1,10 @@
-image: woodyslum/hautomation-ci:12.14-1
+default:
+  image:
+    name: woodyslum/hautomation-ci:12.14-buster-1
 
 stages:
-  - build-x8664
-  - build-armv7
+  - build-amd64
+  - build-armhf
   - lint
   - test
   - doc
@@ -12,11 +14,8 @@ cache:
   paths:
     - node_modules/
 
-build-x8664:
-  stage: build-x8664
-  tags:
-  - ci
-  - x86
+
+.build_template: &build_definition
   script:
   - export NODE_TLS_REJECT_UNAUTHORIZED=0
   - npm config set strict-ssl false
@@ -26,27 +25,51 @@ build-x8664:
   - echo "{\"commit\":\"$(echo $CI_COMMIT_SHA | head -c8)\"}" > version.json
   - npm run --verbose build
   - npm run --verbose build-deb
+
+
+
+build-amd64:
+  stage: build-amd64
+  only:
+  - tags
+  tags:
+  - ci
+  - amd64
+  <<: *build_definition
   artifacts:
     paths:
     - build/*.deb
 
-build-armv7:
-  stage: build-armv7
+build-armhf:stretch:
+  image: woodyslum/hautomation-ci:12.14-stretch-1
+  stage: build-armhf
   tags:
   - ci
-  - armv7
-  script:
-  - export NODE_TLS_REJECT_UNAUTHORIZED=0
-  - npm config set strict-ssl false
-  - rm -Rf package-lock.json
-  - npm install
-  - npm rebuild
-  - echo "{\"commit\":\"$(echo $CI_COMMIT_SHA | head -c8)\"}" > version.json
-  - npm run --verbose build
-  - npm run --verbose build-deb
+  - armhf
+  <<: *build_definition
+  artifacts:
+    paths:
+    - build/*.deb
+
+build-armhf:buster:
+  image: woodyslum/hautomation-ci:12.14-buster-1
+  stage: build-armhf
+  tags:
+  - ci
+  - armhf
+  <<: *build_definition
   artifacts:
     paths:
     - build/*
+
+
+
+
+
+
+
+
+
 
 test:
   stage: test

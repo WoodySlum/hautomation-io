@@ -1,6 +1,6 @@
 {
     "name": "hautomation-core",
-    "version": "0.0.68",
+    "version": "0.0.69",
     "description": "Hautomation core module",
     "main": "HautomationRunner.js",
     "engines": {
@@ -62,7 +62,7 @@
         "doc": "documentation build ./src/** -f md -o ./doc/DOCUMENTATION.md && documentation build ./src/modules/pluginsmanager/publicapis/** -f md -o ./doc/PUBLIC-APIS.md",
         "pre-build": "npm run doc && rm -Rf ./build/* && mkdir -p ./build/plugins && mkdir -p ./build/doc && mkdir -p ./build/data && cp ./data/config.json.default ./build/data/config.json && cp -R ./data/ssl ./build/data/ && cp ./doc/PLUGIN.md ./build/doc/ && cp ./doc/PUBLIC-APIS.md ./build/doc/ && cp -R ./scripts ./build/ && cp -R ./res ./build/",
         "build": "npm run pre-build && node node_modules/pkg/lib-es5/bin.js -o ./build/hautomation . && rm -Rf build/*.node && find ./node_modules -name '*.node'| grep lib | xargs cp -Rf -t ./build/ && find ./node_modules -name '*.node'| grep target | xargs cp -Rf -t ./build/",
-        "build-deb": "rm -Rf ./build/deb && rm -Rf /tmp/deb && cp -R ./scripts/deb /tmp/deb && sed -e s@{VERSION}@$npm_package_version@ -e s@{ARCH}@$(dpkg --print-architecture)@ -e s@{DISTRIB}@buster@ ./scripts/deb/DEBIAN/control > /tmp/deb/DEBIAN/control && cp -R ./build/* /tmp/deb/var/hautomation/ && chmod 755 /tmp/deb/DEBIAN/pre* && chmod 755 /tmp/deb/DEBIAN/post* && dpkg-deb --build /tmp/deb ./build/hautomation-$(dpkg --print-architecture).deb && rm -Rf /tmp/deb"
+        "build-deb": "rm -Rf ./build/deb && rm -Rf /tmp/deb && cp -R ./scripts/deb /tmp/deb && sed -e s@{VERSION}@$npm_package_version@ -e s@{ARCH}@$(dpkg --print-architecture)@ -e s@{DISTRIB}@$(dpkg --status tzdata|grep Provides|cut -f2 -d'-')@ ./scripts/deb/DEBIAN/control > /tmp/deb/DEBIAN/control && cp -R ./build/* /tmp/deb/var/hautomation/ && chmod 755 /tmp/deb/DEBIAN/pre* && chmod 755 /tmp/deb/DEBIAN/post* && dpkg-deb --build /tmp/deb ./build/hautomation-$(dpkg --status tzdata|grep Provides|cut -f2 -d'-')-$(dpkg --print-architecture).deb && rm -Rf /tmp/deb"
     },
     "bin": "HautomationRunner.js",
     "pkg": {

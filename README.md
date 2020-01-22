@@ -81,7 +81,7 @@ Basic IFTTT usage with scenario triggering URL (both way).
 Installation for Debian arm :
 
     wget -qO - https://deb.hautomation-io.com/archive.key | sudo apt-key add -
-    sudo sh -c "echo 'deb https://deb.hautomation-io.com trusty main' >> /etc/apt/sources.list"
+    sudo sh -c "echo 'deb https://deb.hautomation-io.com $(dpkg --status tzdata|grep Provides|cut -f2 -d'-') main' >> /etc/apt/sources.list"
     sudo apt-get update
     sudo apt-get install hautomation
 

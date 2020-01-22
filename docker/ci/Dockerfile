@@ -1,5 +1,0 @@
-FROM node:12.14-buster
-
-RUN apt-get update
-RUN apt-get install -y --allow-unauthenticated vim sqlite3 libmagic-dev libatlas-base-dev libudev-dev
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*

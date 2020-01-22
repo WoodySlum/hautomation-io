@@ -4,7 +4,7 @@ Section: base
 Priority: optional
 Codename: {DISTRIB}
 Architecture: {ARCH}
-Depends: libatlas-base-dev, sudo, at
+Depends: libatlas-base-dev, sudo, at, systemd
 Maintainer: WoodySlum <woodyslum@hautomation-io.com>
 Description: Home Automation for everyone
 Homepage: https://www.hautomation-io.com
