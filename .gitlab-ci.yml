@@ -1,6 +1,6 @@
 default:
   image:
-    name: woodyslum/hautomation-ci:12.14-buster-1
+    name: woodyslum/hautomation-ci:$NODE_VERSION-buster-1
 
 stages:
   - build
@@ -12,7 +12,6 @@ stages:
 cache:
   paths:
     - node_modules/
-
 
 .build_template: &build_definition
   script:
@@ -28,8 +27,10 @@ cache:
 
 
 build:amd64:stretch:
-  image: woodyslum/hautomation-ci:12.14-stretch-1
+  image: woodyslum/hautomation-ci:$NODE_VERSION-stretch-1
   stage: build
+  only:
+  - tags
   tags:
   - ci
   - amd64
@@ -40,8 +41,10 @@ build:amd64:stretch:
     - build/*.deb
 
 build:amd64:buster:
-  image: woodyslum/hautomation-ci:12.14-buster-1
+  image: woodyslum/hautomation-ci:$NODE_VERSION-buster-1
   stage: build
+  only:
+  - tags
   tags:
   - ci
   - amd64
@@ -52,8 +55,10 @@ build:amd64:buster:
     - build/*.deb
 
 build:armhf:stretch:
-  image: woodyslum/hautomation-ci:12.14-stretch-1
+  image: woodyslum/hautomation-ci:$NODE_VERSION-stretch-1
   stage: build
+  only:
+  - tags
   tags:
   - ci
   - armhf
@@ -63,8 +68,7 @@ build:armhf:stretch:
     paths:
     - build/*.deb
 
-build:armhf:buster:
-  image: woodyslum/hautomation-ci:12.14-buster-1
+build:armhf:
   stage: build
   tags:
   - ci
@@ -75,16 +79,7 @@ build:armhf:buster:
     paths:
     - build/*
 
-
-
-
-
-
-
-
-
-
-test:
+test:armhf:
   stage: test
   tags:
   - ci
@@ -98,7 +93,7 @@ test:
   - npm run --verbose cov
   coverage: '/Statements   : \d+\.\d+/'
 
-lint:
+lint:armhf:
   stage: lint
   tags:
   - ci
@@ -113,7 +108,7 @@ lint:
   - npm config set strict-ssl false
   - npm run --verbose lint
 
-deploy:
+deploy:armhf:
   stage: deploy
   tags:
   - ci
