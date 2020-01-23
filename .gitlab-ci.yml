@@ -68,7 +68,7 @@ build:armhf:stretch:
     paths:
     - build/*.deb
 
-build:armhf:
+build:armhf:buster:
   stage: build
   tags:
   - ci
