@@ -79,12 +79,7 @@ Basic IFTTT usage with scenario triggering URL (both way).
 - Linux Raspberry PI 2 or 3 (armv7+ arch) or a x86_64 PC
 - Debian / Raspbian stretch and above
 
-Installation for Debian :
-
-    wget -qO - https://deb.hautomation-io.com/archive.key | sudo apt-key add -
-    sudo sh -c "echo 'deb https://deb.hautomation-io.com $(dpkg --status tzdata|grep Provides|cut -f2 -d'-') main' >> /etc/apt/sources.list"
-    sudo apt-get update
-    sudo apt-get install -y hautomation
+    curl -sSL https://www.hautomation-io.com/install-rep.sh | bash
 
 ## Environment
 
