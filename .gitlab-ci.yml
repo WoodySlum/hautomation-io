@@ -30,11 +30,10 @@ cache:
 build:amd64:stretch:
   image: woodyslum/hautomation-ci:12.14-stretch-1
   stage: build
-  only:
-  - tags
   tags:
   - ci
   - amd64
+  - stretch
   <<: *build_definition
   artifacts:
     paths:
@@ -43,11 +42,10 @@ build:amd64:stretch:
 build:amd64:buster:
   image: woodyslum/hautomation-ci:12.14-buster-1
   stage: build
-  only:
-  - tags
   tags:
   - ci
   - amd64
+  - buster
   <<: *build_definition
   artifacts:
     paths:
