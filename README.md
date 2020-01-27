@@ -88,6 +88,7 @@ Basic IFTTT usage with scenario triggering URL (both way).
 ### Requirements
 
 #### If you need to run / compile
+
 * Node.js 10.14.1 or upper version
 * Mac or Linux. *Windows is not yet supported.*
     - On Mac, brew mlust be installed
