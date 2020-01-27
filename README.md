@@ -79,7 +79,9 @@ Basic IFTTT usage with scenario triggering URL (both way).
 - Linux Raspberry PI 2 or 3 (armv7+ arch) or a x86_64 PC
 - Debian / Raspbian stretch and above
 
+
     curl -sSL https://www.hautomation-io.com/install-rep.sh | bash
+
 
 ## Environment
 
