@@ -20,8 +20,8 @@ const ROUTE_RECEIVE_POST = ":/" + ROUTE_RECEIVE;
  * @param  {PluginAPI} api The api
  */
 function loaded(api) {
-    api.installerAPI.register(["x32", "x64"], "brew install gammu", false, true, true);
-    api.installerAPI.register(["arm", "arm64", "docker"], "apt-get install -y --allow-unauthenticated gammu gammu-smsd", true, true);
+    api.installerAPI.register(["darwin-x32", "darwin-x64"], "brew install gammu", false, true, true);
+    api.installerAPI.register(["linux-arm", "linux-arm64", "linux-x32", "linux-x64", "docker"], "apt-get install -y --allow-unauthenticated gammu gammu-smsd", true, true);
     api.init();
 
     /**

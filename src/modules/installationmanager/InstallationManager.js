@@ -89,7 +89,7 @@ class InstallationManager {
     execute() {
         const needed = [];
         this.commandList.forEach((command) => {
-            if (!this.isAlreadyExecuted(command.key) && this.isValidForArchitecture(command.arch, os.arch())) {
+            if (!this.isAlreadyExecuted(command.key) && this.isValidForArchitecture(command.arch, os.platform() + "-" + os.arch())) {
                 needed.push(command);
             }
         });

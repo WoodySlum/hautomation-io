@@ -19,8 +19,8 @@ const SEND_BUFFER_IN_MS = 500;
  */
 function loaded(api) {
     api.init();
-    api.installerAPI.register(["x32", "x64"], "brew install avrdude socat", false, true, true);
-    api.installerAPI.register(["arm", "arm64", "docker"], "apt-get install -y --allow-unauthenticated avrdude socat", true, true);
+    api.installerAPI.register(["darwin-x32", "darwin-x64"], "brew install avrdude socat", false, true, true);
+    api.installerAPI.register(["linux-arm", "linux-arm64", "linux-x32", "linux-x64", "docker"], "apt-get install -y --allow-unauthenticated avrdude socat", true, true);
 
     const espPlugin = api.getPluginInstance("esp8266");
     const wiringSchema = api.iotAPI.getWiringSchemaForLib("esp8266");
