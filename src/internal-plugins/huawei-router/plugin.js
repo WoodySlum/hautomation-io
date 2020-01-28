@@ -73,6 +73,41 @@ function loaded(api) {
     api.configurationAPI.register(HuaweiRouterForm);
 
     /**
+    * This class is used for Huawei Router form
+    * @class
+    */
+    class HuaweiRouterScenarioForm extends api.exported.FormObject.class {
+        /**
+         * Constructor
+         *
+         * @param  {number} id           Identifier
+         * @param  {boolean} reboot       Reboot router
+         * @returns {HuaweiRouterScenarioForm}              The instance
+         */
+        constructor(id, reboot = false) {
+            super(id);
+
+            /**
+             * @Property("reboot");
+             * @Type("boolean");
+             * @Default(false);
+             * @Title("huawei.router.scenario.reboot");
+             */
+            this.reboot = reboot;
+        }
+
+        /**
+         * Convert json data
+         *
+         * @param  {Object} data Some key / value data
+         * @returns {HuaweiRouterScenarioForm}      A form object
+         */
+        json(data) {
+            return new HuaweiRouterScenarioForm(data.id, data.reboot);
+        }
+    }
+
+    /**
      * This class manage huawei routers
      * @class
      */
@@ -97,7 +132,7 @@ function loaded(api) {
             });
 
             // Save box api call every hour and dispatch
-            api.timeEventAPI.register((self) => {
+            this.api.timeEventAPI.register((self) => {
                 const d = new Date();
                 const m = d.getMinutes();
                 if ((m % 17) === 0) { // 17 for dispatching more randomly
@@ -109,7 +144,13 @@ function loaded(api) {
                         self.getSMS();
                     }, 100);
                 }
-            }, this, api.timeEventAPI.constants().EVERY_MINUTES);
+            }, this, this.api.timeEventAPI.constants().EVERY_MINUTES);
+
+            this.api.scenarioAPI.register(HuaweiRouterScenarioForm, (scenario) => {
+                if (scenario && scenario.HuaweiRouterScenarioForm && scenario.HuaweiRouterScenarioForm.reboot) {
+                    this.reboot();
+                }
+            }, this.api.translateAPI.t("huawei.router.scenario.title"));
 
         }
 
@@ -229,6 +270,40 @@ function loaded(api) {
                     self.api.exported.Logger.err(e.message);
                 }
 
+            }
+        }
+
+        /**
+         * Reboot box
+         */
+        reboot() {
+            const conf = this.api.configurationAPI.getConfiguration();
+            const self = this;
+            if (conf && conf.ip && conf.username && conf.password) {
+                api.exported.Logger.info("Rebooting router SMS");
+                const router = routerBridge.create({
+                    gateway: conf.ip
+                });
+
+                try {
+                    router.getToken((error, token) => {
+                        if (error) {
+                            self.api.exported.Logger.err(error.message);
+                        } else {
+                            router.login(token, conf.username, conf.password, () => {
+                                router.reboot(token, (err) => {
+                                    if (err) {
+                                        self.api.exported.Logger.warn(err.message);
+                                    } else  {
+                                        self.api.exported.Logger.warn("Router rebooted !");
+                                    }
+                                });
+                            });
+                        }
+                    });
+                } catch(e) {
+                    api.exported.Logger.err(e.message);
+                }
             }
         }
 

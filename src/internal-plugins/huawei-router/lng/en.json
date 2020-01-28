@@ -3,5 +3,7 @@
     "huawei.router.username": "Username",
     "huawei.router.password": "Password",
     "huawei.router.techno.tile": "Display technology dashboard's tile (2G, 3G, 4G)",
-    "huawei.router.router.title": "Router"
+    "huawei.router.router.title": "Router",
+    "huawei.router.scenario.title": "Huawei router",
+    "huawei.router.scenario.reboot": "Reboot"
 }
