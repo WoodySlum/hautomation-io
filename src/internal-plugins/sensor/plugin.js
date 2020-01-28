@@ -703,7 +703,7 @@ function loaded(api) {
                         if (!fs.existsSync(fileName)) {
                             if (res.battery <= BATTERY_ALERT_THRESHOLD) {
                                 fs.writeFileSync(fileName, "");
-                                api.messageAPI.sendMessage("*", api.translateAPI.t("sensor.alert.on.battery.low.message.batlevel", configuration.name, res.battery));
+                                // api.messageAPI.sendMessage("*", api.translateAPI.t("sensor.alert.on.battery.low.message.batlevel", configuration.name, res.battery));
                             }
                         } else {
                             if (res.battery > BATTERY_ALERT_THRESHOLD) {
