@@ -488,8 +488,8 @@ class EnvironmentManager {
                         response.on("end", () => {
                             if (response.statusCode === 200 && body.length > 0) {
                                 const splitBody = body.split("\n\n");
-                                if (splitBody.length > 0) {
-                                    const lastElement = splitBody[splitBody.length - 1];
+                                if (splitBody.length > 1) {
+                                    const lastElement = splitBody[splitBody.length - 2];
 
                                     const versionRegex = /Version: ([0-9.]+)/gm;
                                     const rRegex = versionRegex.exec(lastElement);
@@ -504,7 +504,7 @@ class EnvironmentManager {
                                         // Compare version
                                         const splitCurrentVersion = this.version.split(".");
                                         const splitNewVersion = version.split(".");
-                                        
+
                                         if (splitCurrentVersion.length === 3 && splitNewVersion.length === 3) {
                                             const currentVersion = 100000 * parseInt(splitCurrentVersion[0]) + 1000 * parseInt(splitCurrentVersion[1]) + 1 * parseInt(splitCurrentVersion[2]);
                                             const serverVersion = 100000 * parseInt(splitNewVersion[0]) + 1000 * parseInt(splitNewVersion[1]) + 1 * parseInt(splitNewVersion[2]);
