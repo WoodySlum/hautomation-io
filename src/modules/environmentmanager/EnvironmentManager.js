@@ -27,7 +27,7 @@ const ROUTE_APP_SET_CONFIGURATION = "/environment/conf/set/";
 const ROUTE_APP_GET_CONFIGURATION = "/environment/conf/get/";
 const MAIN_CONFIG_PATH = "./data/config.json";
 const DEBIAN_REPOSITORY = "https://deb.hautomation-io.com/";
-const DEBIAN_REPOSITORY_LAST_VERSION = "dists/{dist}-{arch}/main/binary-{arch}/Packages";
+const DEBIAN_REPOSITORY_LAST_VERSION = "dists/{dist}/main/binary-{arch}/Packages";
 const EVENT_SCAN_IP_CHANGES = "scan-ip-change";
 const EVENT_SCAN_IP_UPDATE = "scan-ip-update";
 const UPTIME_FILE = ".uptime";
@@ -470,6 +470,7 @@ class EnvironmentManager {
         // For apt linux
         if (os.platform() === "linux" && !process.env.DOCKER) {
             Logger.info("Looking for linux core update");
+
             try {
                 this.arch = childProcess.execSync("dpkg --print-architecture").toString();
                 this.dist = childProcess.execSync("dpkg --status tzdata|grep Provides|cut -f2 -d'-'").toString();
@@ -486,40 +487,49 @@ class EnvironmentManager {
                         });
                         response.on("end", () => {
                             if (response.statusCode === 200 && body.length > 0) {
-                                const versionRegex = /Version: ([0-9.]+)/gm;
-                                const rRegex = versionRegex.exec(body);
-                                const hashRegex = /SHA256: ([0-9a-z]+)/gm;
-                                const rhashRegex = hashRegex.exec(body);
-                                const fileRegex = /Filename: ([a-zA-Z/\-._0-9]+)/gm;
-                                const rfileRegex = fileRegex.exec(body);
+                                const splitBody = body.split("\n\n");
+                                if (splitBody.length > 0) {
+                                    const lastElement = splitBody[splitBody.length - 1];
 
-                                if (rRegex && rRegex.length > 1 && rhashRegex && rhashRegex.length > 1 && rfileRegex && rfileRegex.length > 1) {
-                                    const version = rRegex[1];
-                                    // Compare version
-                                    const splitCurrentVersion = this.version.split(".");
-                                    const splitNewVersion = version.split(".");
-                                    if (splitCurrentVersion.length === 3 && splitNewVersion.length === 3) {
-                                        const currentVersion = 100000 * parseInt(splitCurrentVersion[0]) + 1000 * parseInt(splitCurrentVersion[1]) + 1 * parseInt(splitCurrentVersion[2]);
-                                        const serverVersion = 100000 * parseInt(splitNewVersion[0]) + 1000 * parseInt(splitNewVersion[1]) + 1 * parseInt(splitNewVersion[2]);
-                                        if (serverVersion > currentVersion) {
-                                            Logger.info("Core update available");
-                                            this.messageManager.sendMessage("*", this.translateManager.t("core.update.available", version));
-                                            const updateScript = this.appConfiguration.cachePath + "core-update-" + version + ".sh";
+                                    const versionRegex = /Version: ([0-9.]+)/gm;
+                                    const rRegex = versionRegex.exec(lastElement);
+                                    const hashRegex = /SHA256: ([0-9a-z]+)/gm;
+                                    const rhashRegex = hashRegex.exec(lastElement);
+                                    const fileRegex = /Filename: ([a-zA-Z/\-._0-9]+)/gm;
+                                    const rfileRegex = fileRegex.exec(lastElement);
 
-                                            if (fs.existsSync(updateScript)) {
-                                                fs.unlinkSync(updateScript);
+
+                                    if (rRegex && rRegex.length > 1 && rhashRegex && rhashRegex.length > 1 && rfileRegex && rfileRegex.length > 1) {
+                                        const version = rRegex[1];
+                                        // Compare version
+                                        const splitCurrentVersion = this.version.split(".");
+                                        const splitNewVersion = version.split(".");
+                                        
+                                        if (splitCurrentVersion.length === 3 && splitNewVersion.length === 3) {
+                                            const currentVersion = 100000 * parseInt(splitCurrentVersion[0]) + 1000 * parseInt(splitCurrentVersion[1]) + 1 * parseInt(splitCurrentVersion[2]);
+                                            const serverVersion = 100000 * parseInt(splitNewVersion[0]) + 1000 * parseInt(splitNewVersion[1]) + 1 * parseInt(splitNewVersion[2]);
+                                            if (serverVersion > currentVersion) {
+                                                Logger.info("Core update available");
+                                                this.messageManager.sendMessage("*", this.translateManager.t("core.update.available", version));
+                                                const updateScript = this.appConfiguration.cachePath + "core-update-" + version + ".sh";
+
+                                                if (fs.existsSync(updateScript)) {
+                                                    fs.unlinkSync(updateScript);
+                                                }
+                                                fs.writeFileSync(updateScript, "service hautomation stop && apt-get update && apt-get install --reinstall -y --allow-unauthenticated hautomation && service hautomation start");
+                                                fs.chmodSync(updateScript, 0o555);
+                                                childProcess.execSync("echo \"/bin/sh " + updateScript + "\" | at now + 1 minute");
+                                            } else {
+                                                Logger.info("No core update available");
                                             }
-                                            fs.writeFileSync(updateScript, "service hautomation stop && apt-get update && apt-get install --reinstall -y --allow-unauthenticated hautomation && service hautomation start");
-                                            fs.chmodSync(updateScript, 0o555);
-                                            childProcess.execSync("echo \"/bin/sh " + updateScript + "\" | at now + 1 minute");
                                         } else {
-                                            Logger.info("No core update available");
+                                            Logger.err("Error in version calculation");
                                         }
                                     } else {
-                                        Logger.err("Error in version calculation");
+                                        Logger.err("Could not find version on deb repo");
                                     }
                                 } else {
-                                    Logger.err("Could not find version on deb repo");
+                                    Logger.err("No version split found in rep");
                                 }
                             } else {
                                 Logger.err("Could not contact deb repo : HTTP error " + response.statusCode);
