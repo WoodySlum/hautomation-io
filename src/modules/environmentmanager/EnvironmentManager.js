@@ -27,7 +27,7 @@ const ROUTE_APP_SET_CONFIGURATION = "/environment/conf/set/";
 const ROUTE_APP_GET_CONFIGURATION = "/environment/conf/get/";
 const MAIN_CONFIG_PATH = "./data/config.json";
 const DEBIAN_REPOSITORY = "https://deb.hautomation-io.com/";
-const DEBIAN_REPOSITORY_LAST_VERSION = "dists/{dist}/main/binary-{arch}/Packages";
+const DEBIAN_REPOSITORY_LAST_VERSION = "dists/{dist}-{arch}/main/binary-{arch}/Packages";
 const EVENT_SCAN_IP_CHANGES = "scan-ip-change";
 const EVENT_SCAN_IP_UPDATE = "scan-ip-update";
 const UPTIME_FILE = ".uptime";
@@ -479,7 +479,7 @@ class EnvironmentManager {
 
             if (this.arch && this.dist) {
                 try {
-                    const req = https.get(DEBIAN_REPOSITORY + DEBIAN_REPOSITORY_LAST_VERSION.replace("{arch}", this.arch).replace("{dist}", this.dist), (response) => {
+                    const req = https.get(DEBIAN_REPOSITORY + DEBIAN_REPOSITORY_LAST_VERSION.replace("{arch}", this.arch).replace("{arch}", this.arch).replace("{dist}", this.dist), (response) => {
                         let body = "";
                         response.on("data", (d) => {
                             body += d;
