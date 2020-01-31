@@ -6,10 +6,10 @@ module.exports = function(homebridge) {
   Service = homebridge.hap.Service;
   Characteristic = homebridge.hap.Characteristic;
 
-  homebridge.registerAccessory("homebridge-hautomation-lights", "Hautomation lights", HautomationAccessory);
+  homebridge.registerAccessory("homebridge-smarties-lights", "Smarties lights", SmartiesAccessory);
 }
 
-function HautomationAccessory(log, config) {
+function SmartiesAccessory(log, config) {
   this.log = log;
 
   this.service = new Service.Lightbulb(this.name);
@@ -45,11 +45,11 @@ function HautomationAccessory(log, config) {
   }
 }
 
-HautomationAccessory.prototype.getState = function(callback) {
+SmartiesAccessory.prototype.getState = function(callback) {
     callback(null, this.coreApi.deviceAPI.getDeviceStatus(this.identifier));
 }
 
-HautomationAccessory.prototype.setState = function(state, callback) {
+SmartiesAccessory.prototype.setState = function(state, callback) {
     const device = this.coreApi.deviceAPI.getDeviceById(this.device.id);
     device.status = this.coreApi.deviceAPI.constants().STATUS_OFF;
     if (state) {
@@ -61,7 +61,7 @@ HautomationAccessory.prototype.setState = function(state, callback) {
     callback(null); // success
 }
 
-HautomationAccessory.prototype.getBrightness = function(callback) {
+SmartiesAccessory.prototype.getBrightness = function(callback) {
     const device = this.coreApi.deviceAPI.getDeviceById(this.device.id);
     if (device && device.brightness) {
         callback(null, (device.brightness * 100));
@@ -70,7 +70,7 @@ HautomationAccessory.prototype.getBrightness = function(callback) {
     }
 }
 
-HautomationAccessory.prototype.setBrightness = function(brightness, callback) {
+SmartiesAccessory.prototype.setBrightness = function(brightness, callback) {
     const device = this.coreApi.deviceAPI.getDeviceById(this.device.id);
     device.brightness = parseFloat(brightness / 100);
 
@@ -78,7 +78,7 @@ HautomationAccessory.prototype.setBrightness = function(brightness, callback) {
     callback(null);
 }
 
-HautomationAccessory.prototype.getHue = function(callback) {
+SmartiesAccessory.prototype.getHue = function(callback) {
     const device = this.coreApi.deviceAPI.getDeviceById(this.device.id);
     if (device.color) {
         const rgbColor = colorutil.hex.to.rgb("#" + device.color);
@@ -89,7 +89,7 @@ HautomationAccessory.prototype.getHue = function(callback) {
     }
 }
 
-HautomationAccessory.prototype.setHue = function(hue, callback) {
+SmartiesAccessory.prototype.setHue = function(hue, callback) {
     const device = this.coreApi.deviceAPI.getDeviceById(this.device.id);
     let rgbColor = colorutil.hex.to.rgb("#" + device.color);
     if (rgbColor) {
@@ -105,7 +105,7 @@ HautomationAccessory.prototype.setHue = function(hue, callback) {
     callback(null);
 }
 
-HautomationAccessory.prototype.getSaturation = function(callback) {
+SmartiesAccessory.prototype.getSaturation = function(callback) {
     const device = this.coreApi.deviceAPI.getDeviceById(this.device.id);
     if (device.color) {
         const rgbColor = colorutil.hex.to.rgb("#" + device.color);
@@ -116,7 +116,7 @@ HautomationAccessory.prototype.getSaturation = function(callback) {
     }
 }
 
-HautomationAccessory.prototype.setSaturation = function(sat, callback) {
+SmartiesAccessory.prototype.setSaturation = function(sat, callback) {
     const device = this.coreApi.deviceAPI.getDeviceById(this.device.id);
     let rgbColor = colorutil.hex.to.rgb("#" + device.color);
     if (rgbColor) {
@@ -132,6 +132,6 @@ HautomationAccessory.prototype.setSaturation = function(sat, callback) {
     callback(null);
 }
 
-HautomationAccessory.prototype.getServices = function() {
+SmartiesAccessory.prototype.getServices = function() {
   return [this.service];
 }

@@ -6,9 +6,9 @@ var GlobalMocks = require("./../../GlobalMocks");
 
 const IotManager = require("./../../../src/modules/iotmanager/IotManager");
 const FormObject = require("./../../../src/modules/formmanager/FormObject");
-const HautomationCore = require("./../../../src/HautomationCore").class;
+const SmartiesCore = require("./../../../src/SmartiesCore").class;
 const DateUtils = require("./../../../src/utils/DateUtils");
-const core = new HautomationCore();
+const core = new SmartiesCore();
 
 
 

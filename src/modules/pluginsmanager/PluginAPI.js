@@ -35,7 +35,7 @@ const DateUtils = require("./../../utils/DateUtils");
 const Icons = require("./../../utils/Icons");
 const ImageUtils = require("./../../utils/ImageUtils");
 const Cleaner = require("./../../utils/Cleaner");
-const HautomationRunnerConstants = require("./../../../HautomationRunnerConstants");
+const SmartiesRunnerConstants = require("./../../../SmartiesRunnerConstants");
 
 /**
  * This class is an interface for plugins
@@ -105,7 +105,7 @@ class PluginsAPI {
             {Cleaner: Cleaner},
             {cachePath:appConfiguration.cachePath},
             {IotForm:IotForm.class},
-            {HautomationRunnerConstants:HautomationRunnerConstants}
+            {SmartiesRunnerConstants:SmartiesRunnerConstants}
         );
 
         // API part

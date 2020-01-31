@@ -169,7 +169,7 @@ function loaded(api) {
                     request.post({
                         headers: {"content-type" : "application/x-www-form-urlencoded"},
                         url:     "http://" + (this.ip ? this.ip : this.api.environmentAPI.getLocalIp()) + ":" + DECONZ_HTTP_PORT + "/api",
-                        body:    JSON.stringify({devicetype: "hautomation-" + api.environmentAPI.getHautomationId()})
+                        body:    JSON.stringify({devicetype: "smarties-" + api.environmentAPI.getSmartiesId()})
                     }, (error, response, body) => {
                         if (error) {
                             api.exported.Logger.err("Could not get token for deconz : " + error.message);

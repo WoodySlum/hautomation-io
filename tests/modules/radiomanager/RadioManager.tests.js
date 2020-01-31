@@ -4,8 +4,8 @@ var expect = chai.expect;
 var sinon = require("sinon");
 var GlobalMocks = require("./../../GlobalMocks");
 
-const HautomationCore = require("../../../src/HautomationCore").class;
-const core = new HautomationCore();
+const SmartiesCore = require("../../../src/SmartiesCore").class;
+const core = new SmartiesCore();
 const RadioManager = require("./../../../src/modules/radiomanager/RadioManager");
 const PluginsManager = require("./../../../src/modules/pluginsmanager/PluginsManager");
 let radioManager = core.radioManager;

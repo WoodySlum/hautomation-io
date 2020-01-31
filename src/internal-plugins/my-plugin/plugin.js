@@ -48,7 +48,7 @@ module.exports.attributes = {
     name: "my-plugin",
     version: "0.0.1",
     category: "misc",
-    description: "My first hautomation plugin",
+    description: "My first smarties plugin",
     dependencies:[],
     classes:[]
 };

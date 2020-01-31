@@ -8,7 +8,7 @@ const extractzip = require("extract-zip");
 const DateUtils = require("./../../utils/DateUtils");
 const Logger = require("./../../logger/Logger");
 const ConfManager = require("./../confmanager/ConfManager");
-const HautomationRunnerConstants = require("./../../../HautomationRunnerConstants");
+const SmartiesRunnerConstants = require("./../../../SmartiesRunnerConstants");
 const DATA_TYPE_CONF = 0;
 const DATA_TYPE_DB = 1;
 const DATA_TYPE_CAMERA = 2;
@@ -298,7 +298,7 @@ class BackupManager {
                             Logger.info("Files restored : " + fileRestored + " / " + descriptor.length);
                             Logger.info("Restarting system in " + RESTART_TIMER + " seconds ...");
                             setTimeout((self) => {
-                                self.eventBus.emit(HautomationRunnerConstants.RESTART);
+                                self.eventBus.emit(SmartiesRunnerConstants.RESTART);
                             }, RESTART_TIMER * 1000, this);
 
                             cb();

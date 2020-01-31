@@ -1,8 +1,8 @@
-var HautomationCore = require("./src/HautomationCore");
+var SmartiesCore = require("./src/SmartiesCore");
 const events = require("events");
 
 var core = null;
-const HautomationRunnerConstants = require("./HautomationRunnerConstants");
+const SmartiesRunnerConstants = require("./SmartiesRunnerConstants");
 const os = require("os");
 const childProcess = require("child_process");
 const RESTART_DELAY = 5; // In seconds
@@ -11,18 +11,18 @@ const RESTART_DELAY = 5; // In seconds
  * The runner class.
  * @class
  */
-class HautomationRunner {
+class SmartiesRunner {
     /**
      * Constructor
      *
-     * @returns {HautomationRunner} The instance
+     * @returns {SmartiesRunner} The instance
      */
     constructor() {
         this.core = null;
         this.runnerEventBus = new events.EventEmitter();
 
         const self = this;
-        this.runnerEventBus.on(HautomationRunnerConstants.RESTART, () => {
+        this.runnerEventBus.on(SmartiesRunnerConstants.RESTART, () => {
             setTimeout((me) => {
                 me.restart(me);
             }, RESTART_DELAY * 1000, self);
@@ -34,12 +34,12 @@ class HautomationRunner {
     /**
      * Start core
      *
-     * @param  {HautomationRunner} self The instance
+     * @param  {SmartiesRunner} self The instance
      */
     start(self) {
         if (!self.core) {
             console.log("Starting runner");
-            self.core = new HautomationCore.class(self.runnerEventBus);
+            self.core = new SmartiesCore.class(self.runnerEventBus);
             self.core.start();
         }
     }
@@ -47,13 +47,13 @@ class HautomationRunner {
     /**
      * Stop core
      *
-     * @param  {HautomationRunner} self The instance
+     * @param  {SmartiesRunner} self The instance
      */
     stop(self) {
         if (self.core) {
             self.core.stop();
             self.runnerEventBus.eventNames().forEach((eventName) => {
-                if (eventName !== HautomationRunnerConstants.RESTART) {
+                if (eventName !== SmartiesRunnerConstants.RESTART) {
                     self.runnerEventBus.removeAllListeners(eventName);
                 }
             });
@@ -65,7 +65,7 @@ class HautomationRunner {
     /**
      * Restart core
      *
-     * @param  {HautomationRunner} self The instance
+     * @param  {SmartiesRunner} self The instance
      */
     restart(self) {
         self.stop(self);
@@ -73,7 +73,7 @@ class HautomationRunner {
     }
 }
 
-const runner = new HautomationRunner();
+const runner = new SmartiesRunner();
 
 process.on("SIGINT", () => {
     console.log("Received SIGINT");

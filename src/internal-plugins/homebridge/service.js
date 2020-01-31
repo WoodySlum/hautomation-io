@@ -47,13 +47,13 @@ function loaded(api) {
          */
         init(devices, sensors, alarm) {
             const insecureAccess = true;
-            Plugin.addPluginPath(__dirname + "/homebridge-plugins/homebridge-hautomation-lights");
-            Plugin.addPluginPath(__dirname + "/homebridge-plugins/homebridge-hautomation-temperature");
-            Plugin.addPluginPath(__dirname + "/homebridge-plugins/homebridge-hautomation-humidity");
-            Plugin.addPluginPath(__dirname + "/homebridge-plugins/homebridge-hautomation-alarm");
+            Plugin.addPluginPath(__dirname + "/homebridge-plugins/homebridge-smarties-lights");
+            Plugin.addPluginPath(__dirname + "/homebridge-plugins/homebridge-smarties-temperature");
+            Plugin.addPluginPath(__dirname + "/homebridge-plugins/homebridge-smarties-humidity");
+            Plugin.addPluginPath(__dirname + "/homebridge-plugins/homebridge-smarties-alarm");
             const conf = api.configurationAPI.getConfiguration() ? api.configurationAPI.getConfiguration() : {};
             if (!conf.homebridgeIdentifier) {
-                const hid = api.environmentAPI.getFullHautomationId();
+                const hid = api.environmentAPI.getFullSmartiesId();
                 conf.homebridgeIdentifier = hid.substr(0,2) + ":" + hid.substr(2,2)  + ":" + hid.substr(4,2)  + ":" + sha256(Math.floor(Math.random() * 100000000).toString()).substr(0,2) + ":" + sha256(Math.floor(Math.random() * 100000000).toString()).substr(0,2) + ":" + sha256(Math.floor(Math.random() * 100000000).toString()).substr(0,2);
                 api.configurationAPI.saveData(conf);
             }
@@ -74,7 +74,7 @@ function loaded(api) {
                 this.server = new Server({insecureAccess:insecureAccess});
                 this.server._config = {
                     bridge: {
-                        name: "Hautomation",
+                        name: "Smarties",
                         username: conf.homebridgeIdentifier.toUpperCase(),
                         port: port,
                         pin: pin

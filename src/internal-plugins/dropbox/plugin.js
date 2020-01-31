@@ -2,7 +2,7 @@
 const fetch = require("isomorphic-fetch");
 const DropboxApi = require("dropbox").Dropbox;
 const fs = require("fs-extra");
-const BACKUP_FILE_NAME = "hautomation-backup.zip";
+const BACKUP_FILE_NAME = "smarties-backup.zip";
 const TIME_EVENT_KEY = "dropbox-backup";
 
 /**

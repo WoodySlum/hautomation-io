@@ -1,5 +1,5 @@
-#ifndef Hautomation_h
-#define Hautomation_h
+#ifndef Smarties_h
+#define Smarties_h
 
 #if ARDUINO >= 100
   #include "Arduino.h"
@@ -21,9 +21,9 @@ extern "C" {
 #include "user_interface.h"
 }
 
-class Hautomation {
+class Smarties {
   public:
-    Hautomation();
+    Smarties();
     ESP8266WebServer &getWebServer();
     JsonObject &parseJson(DynamicJsonBuffer &jsonBuffer, String json);
     void setup(String jsonConfiguration);

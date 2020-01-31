@@ -1,4 +1,4 @@
-#include "Hautomation.h"
+#include "Smarties.h"
 
 int MAX_TIME_CONNECTION_ATTEMPT = 30; // In seconds
 int MAX_TIME_CONNECTION_RETRY = 30; // In seconds
@@ -30,23 +30,23 @@ int sleepTime = 60;
 // ADC_MODE(ADC_TOUT); // For analog read
 // #endif
 
-Hautomation::Hautomation()
+Smarties::Smarties()
 {
 
 }
 
-ESP8266WebServer &Hautomation::getWebServer() {
+ESP8266WebServer &Smarties::getWebServer() {
   return httpServer;
 }
 
-void Hautomation::enableVccPin(int pin) {
+void Smarties::enableVccPin(int pin) {
     Serial.println("Enable VCC pin");
     pinMode(pin, OUTPUT);
     digitalWrite(pin, HIGH);
     delay(200);
 }
 
-void Hautomation::disableVccPin(int pin) {
+void Smarties::disableVccPin(int pin) {
     Serial.println("Disable VCC pin");
     pinMode(pin, OUTPUT);
     digitalWrite(pin, LOW);
@@ -54,12 +54,12 @@ void Hautomation::disableVccPin(int pin) {
     pinMode(pin, INPUT);
 }
 
-void Hautomation::setup(String jsonConfiguration)
+void Smarties::setup(String jsonConfiguration)
 {
     Serial.begin(115200);
     config = NULL;
     parseConfig(jsonConfiguration);
-    Serial.println("Hautomation ESP8266 library");
+    Serial.println("Smarties ESP8266 library");
     Serial.println("Configuration : ");
     Serial.println(jsonConfiguration);
 
@@ -80,7 +80,7 @@ void Hautomation::setup(String jsonConfiguration)
     enableVccPin(SENSOR_VCC_PIN);
 }
 
-JsonObject &Hautomation::parseJson(DynamicJsonBuffer &jsonBuffer, String json) {
+JsonObject &Smarties::parseJson(DynamicJsonBuffer &jsonBuffer, String json) {
     JsonObject &root = jsonBuffer.parseObject(json);
     if (!root.success()) {
         Serial.println("Error : parseObject() failed");
@@ -89,15 +89,15 @@ JsonObject &Hautomation::parseJson(DynamicJsonBuffer &jsonBuffer, String json) {
     return root;
 }
 
-void Hautomation::parseConfig(String jsonConfiguration) {
+void Smarties::parseConfig(String jsonConfiguration) {
     config = parseJson(configBuffer, jsonConfiguration);
 }
 
-JsonVariant &Hautomation::getConfig() {
+JsonVariant &Smarties::getConfig() {
     return config;
 }
 
-void Hautomation::connect() {
+void Smarties::connect() {
     if (WiFi.status() != WL_CONNECTED) {
         #ifdef ESP8266
             const char* iotApp = config["iotApp"];
@@ -141,7 +141,7 @@ void Hautomation::connect() {
     ping();
 }
 
-int Hautomation::getResetReason() {
+int Smarties::getResetReason() {
   rst_info* ri = system_get_rst_info();
   if (ri == NULL)
     return -1;
@@ -149,7 +149,7 @@ int Hautomation::getResetReason() {
   return ri->reason;
 }
 
-void Hautomation::checkRun() {
+void Smarties::checkRun() {
     Serial.println("Reset reason => " + String(getResetReason()));
     // REASON_DEFAULT_RST = 0, // normal startup by power on
     // REASON_WDT_RST = 1, // hardware watch dog reset
@@ -190,13 +190,13 @@ void Hautomation::checkRun() {
     }
 }
 
-String Hautomation::baseUrl() {
+String Smarties::baseUrl() {
     const char* apiUrl = config["apiUrl"];
 
     return apiUrl;
 }
 
-void Hautomation::httpUpdateServer() {
+void Smarties::httpUpdateServer() {
 
     httpUpdater.setup(&httpServer);
     httpServer.begin();
@@ -228,7 +228,7 @@ void Hautomation::httpUpdateServer() {
     Serial.println("HTTP server ready");
 }
 
-void Hautomation::ping() {
+void Smarties::ping() {
     if (!shouldFirmwareUpdate()) {
         const char* id = config["id"];
         String ip = WiFi.localIP().toString();
@@ -261,7 +261,7 @@ void Hautomation::ping() {
     }
 }
 
-void Hautomation::updateFirmware() {
+void Smarties::updateFirmware() {
     const char* id = config["id"];
     Serial.println("Updating ...");
     resetFirmwareUpdate();
@@ -287,7 +287,7 @@ void Hautomation::updateFirmware() {
      }
 }
 
-String Hautomation::transmit(String url, JsonObject& jsonObject, int timeout) {
+String Smarties::transmit(String url, JsonObject& jsonObject, int timeout) {
     String data;
     String payload;
     jsonObject.printTo(data);
@@ -313,7 +313,7 @@ String Hautomation::transmit(String url, JsonObject& jsonObject, int timeout) {
     return payload;
 }
 
-void Hautomation::postSensorValue(String sensorType, float value) {
+void Smarties::postSensorValue(String sensorType, float value) {
     if (!shouldFirmwareUpdate()) {
         String id = config["id"];
         // ADC_MODE(ADC_VCC);
@@ -335,7 +335,7 @@ void Hautomation::postSensorValue(String sensorType, float value) {
     }
 }
 
-void Hautomation::loop() {
+void Smarties::loop() {
     Serial.println("+> Connecting");
     if (WiFi.status() != WL_CONNECTED) {
         Serial.println("+> Connect");
@@ -358,7 +358,7 @@ void Hautomation::loop() {
     rest(poweredMode, _min(MAX_TIME_SLEEP, sleepTime));
 }
 
-void Hautomation::saveCounter(int value) {
+void Smarties::saveCounter(int value) {
     EEPROM.begin(512);
     EEPROM.put(0, value);
     EEPROM.put(10, 1);
@@ -366,7 +366,7 @@ void Hautomation::saveCounter(int value) {
     EEPROM.end();
 }
 
-void Hautomation::cleanCounter() {
+void Smarties::cleanCounter() {
     EEPROM.begin(512);
     EEPROM.put(0, 1);
     EEPROM.put(10, 0);
@@ -374,7 +374,7 @@ void Hautomation::cleanCounter() {
     EEPROM.end();
 }
 
-int Hautomation::loadCounter() {
+int Smarties::loadCounter() {
     int value = 1;
     int hasBeenWritten = 0;
 
@@ -391,7 +391,7 @@ int Hautomation::loadCounter() {
     return value;
 }
 
-void Hautomation::resetFirmwareUpdate() {
+void Smarties::resetFirmwareUpdate() {
     Serial.println("Resetting firwmare indicator");
     EEPROM.begin(512);
     EEPROM.put(20, 100);
@@ -399,14 +399,14 @@ void Hautomation::resetFirmwareUpdate() {
     EEPROM.end();
 }
 
-void Hautomation::setFirmwareUpdate() {
+void Smarties::setFirmwareUpdate() {
     EEPROM.begin(512);
     EEPROM.put(20, 102);
     EEPROM.commit();
     EEPROM.end();
 }
 
-boolean Hautomation::shouldFirmwareUpdate() {
+boolean Smarties::shouldFirmwareUpdate() {
     int value = 0;
 
     EEPROM.begin(512);
@@ -421,7 +421,7 @@ boolean Hautomation::shouldFirmwareUpdate() {
     return false;
 }
 
-boolean Hautomation::canRunHttpServer() {
+boolean Smarties::canRunHttpServer() {
     if ((poweredMode == POWER_MODE_SLEEP || poweredMode == POWER_MODE_ALWAYS) && !shouldFirmwareUpdate()) {
         return true;
     } else {
@@ -431,7 +431,7 @@ boolean Hautomation::canRunHttpServer() {
 
 // Mode : 0 - Deep sleep mode, 1 - always powered but sleep, 2 - always powered, 3 - light sleep mode
 // Duration in seconds
-void Hautomation::rest(int mode, long duration) {
+void Smarties::rest(int mode, long duration) {
     if (!updating) {
         disableVccPin(SENSOR_VCC_PIN);
 

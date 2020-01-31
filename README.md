@@ -4,13 +4,13 @@
 <img src="res/icons/logo-gitlab.png" style="" width="150" height="145" />
 </p>
 
-# Hautomation-IO
+# Smarties-IO
 
-Hautomation is a **complete home automation system**. It allows you to **use multiple devices brands and orchestrate them together**, *for example you can turn on your Philips Hue lights with a Chacon switch*.
+Smarties is a **complete home automation system**. It allows you to **use multiple devices brands and orchestrate them together**, *for example you can turn on your Philips Hue lights with a Chacon switch*.
 
-Hautomation use Ngrok secured tunnel and can be accessed from everywhere without configuring your router, even over a 4G router !
+Smarties use Ngrok secured tunnel and can be accessed from everywhere without configuring your router, even over a 4G router !
 
-**All data is stored on the local device** ! Yes, your privacy is very important. The system will only transmit hautomation ID, boot date and tunnel url to a gateway. Those informations are needed to access system anywhere around the world.
+**All data is stored on the local device** ! Yes, your privacy is very important. The system will only transmit smarties ID, boot date and tunnel url to a gateway. Those informations are needed to access system anywhere around the world.
 
 The application can easily run on a **Raspberry PI** which implies a **really cheap home automation system**.
 
@@ -53,7 +53,7 @@ Get daily / monthly / yearly statistics on your sensors : temperature, humidity,
 
 ##### Alarm
 
-Stay cool in holidays, Hautomation will keep housebreakers out.
+Stay cool in holidays, Smarties will keep housebreakers out.
 
 ##### Scenarios
 
@@ -81,7 +81,7 @@ Basic IFTTT usage with scenario triggering URL (both way).
 - Debian or Raspbian stretch and above
 
 
-		curl -sSL https://www.hautomation-io.com/install-rep.sh | bash
+		curl -sSL https://www.smarties.io/install-rep.sh | bash
 
 
 ## Environment
@@ -107,19 +107,19 @@ In console, type `npm install` and everything should go on.
 
 `npm start`
 
-Once app is started, open your browser and type https://me.hautomation-io.com/.
+Once app is started, open your browser and type https://me.smarties.io/.
 Then, you have to login with default username `admin` and default password `admin`.
 
-*Note : If you can't log in, check logs - If dependencies installation is finished, you may retrieve your `Hautomation ID` which is a 4 hexadecimal code. This information is logged just after starting. Then open browser and type https://me.hautomation-io.com/XXXX/ where `XXXX` is your hautomation ID.*
+*Note : If you can't log in, check logs - If dependencies installation is finished, you may retrieve your `Smarties ID` which is a 4 hexadecimal code. This information is logged just after starting. Then open browser and type https://me.smarties.io/XXXX/ where `XXXX` is your smarties ID.*
 
 ### Rest API access
 
-You can list the available rest APIS with https://me.hautomation-io.com/XXXX/api/infos/ where `XXXX` is your hautomation ID.
+You can list the available rest APIS with https://me.smarties.io/XXXX/api/infos/ where `XXXX` is your smarties ID.
 
 ### Dev commands
 
 * `npm update` : Update dependencies
-* `npm run start` : Start Hautomation
+* `npm run start` : Start Smarties
 * `npm run dev` : Run dev server with lint
 * `npm run test` : Run all unit test
 * `npm run lint` : Check code issues
@@ -203,13 +203,13 @@ Except as contained in this notice, the name of the WoodySlum shall not be used 
 <img src="res/icons/logo-gitlab.png" style="" width="150" height="145" />
 </p>
 
-# Hautomation-IO
+# Smarties-IO
 
-Hautomation is a **complete home automation system**. It allows you to **use multiple devices brands and orchestrate them together**, *for example you can turn on your Philips Hue lights with a Chacon switch*.
+Smarties is a **complete home automation system**. It allows you to **use multiple devices brands and orchestrate them together**, *for example you can turn on your Philips Hue lights with a Chacon switch*.
 
-Hautomation use Ngrok secured tunnel and can be accessed from everywhere without configuring your router, even over a 4G router !
+Smarties use Ngrok secured tunnel and can be accessed from everywhere without configuring your router, even over a 4G router !
 
-**All data is stored on the local device** ! Yes, your privacy is very important. The system will only transmit hautomation ID, boot date and tunnel url to a gateway. Those informations are needed to access system anywhere around the world.
+**All data is stored on the local device** ! Yes, your privacy is very important. The system will only transmit smarties ID, boot date and tunnel url to a gateway. Those informations are needed to access system anywhere around the world.
 
 The application can easily run on a **Raspberry PI** which implies a **really cheap home automation system**.
 
@@ -252,7 +252,7 @@ Get daily / monthly / yearly statistics on your sensors : temperature, humidity,
 
 ##### Alarm
 
-Stay cool in holidays, Hautomation will keep housebreakers out.
+Stay cool in holidays, Smarties will keep housebreakers out.
 
 ##### Scenarios
 
@@ -280,7 +280,7 @@ Basic IFTTT usage with scenario triggering URL (both way).
 - Debian / Raspbian stretch and above
 
 
-    curl -sSL https://www.hautomation-io.com/install-rep.sh | bash
+    curl -sSL https://www.smarties.io/install-rep.sh | bash
 
 
 ## Environment
@@ -306,19 +306,19 @@ In console, type `npm install` and everything should go on.
 
 `npm start`
 
-Once app is started, open your browser and type https://me.hautomation-io.com/.
+Once app is started, open your browser and type https://me.smarties.io/.
 Then, you have to login with default username `admin` and default password `admin`.
 
-*Note : If you can't log in, check logs - If dependencies installation is finished, you may retrieve your `Hautomation ID` which is a 4 hexadecimal code. This information is logged just after starting. Then open browser and type https://me.hautomation-io.com/XXXX/ where `XXXX` is your hautomation ID.*
+*Note : If you can't log in, check logs - If dependencies installation is finished, you may retrieve your `Smarties ID` which is a 4 hexadecimal code. This information is logged just after starting. Then open browser and type https://me.smarties.io/XXXX/ where `XXXX` is your smarties ID.*
 
 ### Rest API access
 
-You can list the available rest APIS with https://me.hautomation-io.com/XXXX/api/infos/ where `XXXX` is your hautomation ID.
+You can list the available rest APIS with https://me.smarties.io/XXXX/api/infos/ where `XXXX` is your smarties ID.
 
 ### Dev commands
 
 * `npm update` : Update dependencies
-* `npm run start` : Start Hautomation
+* `npm run start` : Start Smarties
 * `npm run dev` : Run dev server with lint
 * `npm run test` : Run all unit test
 * `npm run lint` : Check code issues

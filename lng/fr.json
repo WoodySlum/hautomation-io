@@ -135,7 +135,7 @@
     "iot.form.name": "Nom",
     "iots.list.form.title": "Sélectionnez une application objet connecté (OC)",
     "cameras.list.form.title":"Caméra",
-    "core.update.available": "Une nouvelle version %@ d'Hautomation est disponible. Mise à jour automatique.",
+    "core.update.available": "Une nouvelle version %@ d'Smarties est disponible. Mise à jour automatique.",
     "sensors.list.scenario.sensors": "Déclencher ce scénario sur lorsqu'un capteur envoie une valeur",
     "sensors.manager.scenario.operator": "Opérateur",
     "sensors.manager.scenario.threshold": "Seuil (valeur brute)",

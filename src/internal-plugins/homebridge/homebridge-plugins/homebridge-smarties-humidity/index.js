@@ -5,10 +5,10 @@ module.exports = function(homebridge) {
   Service = homebridge.hap.Service;
   Characteristic = homebridge.hap.Characteristic;
 
-  homebridge.registerAccessory("homebridge-hautomation-humidity", "Hautomation humidity sensor", HautomationHumidityAccessory);
+  homebridge.registerAccessory("homebridge-smarties-humidity", "Smarties humidity sensor", SmartiesHumidityAccessory);
 }
 
-function HautomationHumidityAccessory(log, config) {
+function SmartiesHumidityAccessory(log, config) {
   this.log = log;
 
   this.service = new Service.HumiditySensor(this.name);
@@ -23,7 +23,7 @@ function HautomationHumidityAccessory(log, config) {
     .setProps({ minValue: 0 , maxValue: 100});
 }
 
-HautomationHumidityAccessory.prototype.getHumidity = function(callback) {
+SmartiesHumidityAccessory.prototype.getHumidity = function(callback) {
     this.coreApi.sensorAPI.getValue(this.identifier, (err, res) => {
         if (!err && res) {
             callback(null, parseFloat(res.value));
@@ -34,6 +34,6 @@ HautomationHumidityAccessory.prototype.getHumidity = function(callback) {
 }
 
 
-HautomationHumidityAccessory.prototype.getServices = function() {
+SmartiesHumidityAccessory.prototype.getServices = function() {
   return [this.service];
 }

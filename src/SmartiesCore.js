@@ -67,22 +67,21 @@ const EVENT_INSTALL = "install";
  * The main class for core.
  * @class
  */
-class HautomationCore {
+class SmartiesCore {
     /**
      * Constructor
      *
      * @param  {EventEmitter} runnerEventBus Runner event bus, used for restart
-     * @returns {HautomationCore} The instance
+     * @returns {SmartiesCore} The instance
      */
     constructor(runnerEventBus) {
 
-        Logger.info("░░░░░░░░__  __            __                        __  _           ");
-        Logger.info("░░░░░░░/ / / /___ ___  __/ /_____  ____ ___  ____ _/ /_(_)___  ____ ");
-        Logger.info("░░░░░░/ /_/ / __ `/ / / / __/ __ \\/ __ `__ \\/ __ `/ __/ / __ \\/ __ \\");
-        Logger.info("░░░░░/ __  / /_/ / /_/ / /_/ /_/ / / / / / / /_/ / /_/ / /_/ / / / /");
-        Logger.info("░░░░/_/ /_/\\__,_/\\__,_/\\__/\\____/_/ /_/ /_/\\__,_/\\__/_/\\____/_/ /_/ ");
-        Logger.info("░░░");
-        Logger.info("░                                     Version : " + NpmPackage.version + "-" + commit);
+        Logger.info("░   __                      _   _           ");
+        Logger.info("░  / _\\_ __ ___   __ _ _ __| |_(░) ___  ___ ");
+        Logger.info("░  \\ \\| '_ ` _ \\ / _` | '__| __| |/ _ \\/ __|");
+        Logger.info("░  _\\ \\ | | | | | (_| | |  | |_| |  __/\\__ \\");
+        Logger.info("░  \\__/_| |_| |_|\\__,_|_|   \\__|_|\\___||___/");
+        Logger.info("░                       Version : " + NpmPackage.version + "-" + commit);
         Logger.info(" ");
 
         // Create dirs if needed
@@ -197,7 +196,7 @@ class HautomationCore {
     }
 
     /**
-     * Start Hautomation core
+     * Start Smarties core
      */
     start() {
         Logger.info("Starting core");
@@ -252,4 +251,4 @@ class HautomationCore {
     }
 }
 
-module.exports = {class:HautomationCore, EVENT_STOP:EVENT_STOP, EVENT_RESTART:EVENT_RESTART, EVENT_READY:EVENT_READY};
+module.exports = {class:SmartiesCore, EVENT_STOP:EVENT_STOP, EVENT_RESTART:EVENT_RESTART, EVENT_READY:EVENT_READY};

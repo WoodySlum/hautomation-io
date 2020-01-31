@@ -1,12 +1,12 @@
 #######################################
-# Syntax Coloring Hautomation
+# Syntax Coloring Smarties
 #######################################
 
 #######################################
 # Datatypes (KEYWORD1)
 #######################################
 
-Hautomation	KEYWORD1
+Smarties	KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)

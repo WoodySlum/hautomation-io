@@ -6,7 +6,7 @@ const sha256 = require("sha256");
 
 const Logger = require("./../../logger/Logger");
 const DateUtils = require("./../../utils/DateUtils");
-const HautomationCore = require("./../../HautomationCore");
+const SmartiesCore = require("./../../SmartiesCore");
 
 const CONF_KEY = "installer";
 
@@ -42,7 +42,7 @@ class InstallationManager {
      * @param  {string}  currentVersion The module's version
      * @param  {string|Array}  [arch="*"]     The architecture ('docker', 'arm', 'arm64', 'ia32', 'mips', 'mipsel', 'ppc', 'ppc64', 's390', 's390x', 'x32', 'x64', and 'x86'). Can be `*` for all arch, or an array of architectures
      * @param  {string}  command        A command
-     * @param  {boolean} [sudo=false]    True if command should be executed as sudo, false otherwise. The Hautomation process owner user should be in `sudo` group without password.
+     * @param  {boolean} [sudo=false]    True if command should be executed as sudo, false otherwise. The Smarties process owner user should be in `sudo` group without password.
      * @param  {boolean} [wait=true]    True if command is executed synchronously, false otherwise
      * @param  {boolean} [skipError=false]    True if command fails should continue, false for retrying
      */
@@ -181,7 +181,7 @@ class InstallationManager {
     }
 
     /**
-     * Process Hautomation when all commands has been done
+     * Process Smarties when all commands has been done
      *
      * @param  {number} i  The current comment indice
      * @param  {number} nb The max number of commands to execute
@@ -194,7 +194,7 @@ class InstallationManager {
         if (i === nb) {
             // Dispatch event
             if (this.eventBus) {
-                this.eventBus.emit(HautomationCore.EVENT_RESTART, this);
+                this.eventBus.emit(SmartiesCore.EVENT_RESTART, this);
             }
         }
     }

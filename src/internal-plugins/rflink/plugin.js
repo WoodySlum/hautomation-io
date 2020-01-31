@@ -300,10 +300,10 @@ function loaded(api) {
         }
 
         /**
-         * Convert RFLink radio status to hautomation radio statuses
+         * Convert RFLink radio status to smarties radio statuses
          *
          * @param  {string} rflinkStatus RFLink status
-         * @returns {number}              Hautomationr adio status
+         * @returns {number}              Smartiesr adio status
          */
         rflinkStatusToRadioStatus(rflinkStatus) {
             let status;
@@ -329,9 +329,9 @@ function loaded(api) {
         }
 
         /**
-         * Convert Hautomation radio status to reflink format
+         * Convert Smarties radio status to reflink format
          *
-         * @param  {number} status Hautomation radio status
+         * @param  {number} status Smarties radio status
          * @returns {string}              RFLink format status
          */
         radioStatusToRflinkStatus(status) {

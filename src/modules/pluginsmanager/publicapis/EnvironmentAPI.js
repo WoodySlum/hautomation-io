@@ -83,21 +83,21 @@ class EnvironmentAPI {
     }
 
     /**
-     * Returns the hautomation ID
+     * Returns the smarties ID
      *
-     * @returns {string} Hautomation identifier
+     * @returns {string} Smarties identifier
      */
-    getHautomationId() {
-        return PrivateProperties.oprivate(this).environmentManager.getHautomationId();
+    getSmartiesId() {
+        return PrivateProperties.oprivate(this).environmentManager.getSmartiesId();
     }
 
     /**
-     * Returns the full hautomation ID
+     * Returns the full smarties ID
      *
-     * @returns {string} Hautomation full identifier
+     * @returns {string} Smarties full identifier
      */
-    getFullHautomationId() {
-        return PrivateProperties.oprivate(this).environmentManager.getFullHautomationId();
+    getFullSmartiesId() {
+        return PrivateProperties.oprivate(this).environmentManager.getFullSmartiesId();
     }
 
     /**

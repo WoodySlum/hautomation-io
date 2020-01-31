@@ -25,9 +25,9 @@ RUN if [ "$TARGETPLATFORM" = "linux/arm/v7" ] ; then dpkg -i /deconz.deb && rm -
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install sources
-RUN git clone https://github.com/WoodySlum/Hautomation-io.git /var/hautomation
-RUN rm -Rf /root/.ngrok && mkdir -p /var/log/hautomation && cd /var/hautomation && npm install
+RUN git clone https://github.com/WoodySlum/Smarties-io.git /var/smarties
+RUN rm -Rf /root/.ngrok && mkdir -p /var/log/smarties && cd /var/smarties && npm install
 
 # Install start
-#cd /var/hautomation && npm run start-docker
-RUN echo '#!/bin/bash\nwhile true\ndo\n\tcd /var/hautomation\n\tnpm run start-docker >> /var/log/hautomation/hautomation.log\n\tsleep 1\ndone' > /bin/hautomation && chmod +x /bin/hautomation
+#cd /var/smarties && npm run start-docker
+RUN echo '#!/bin/bash\nwhile true\ndo\n\tcd /var/smarties\n\tnpm run start-docker >> /var/log/smarties/smarties.log\n\tsleep 1\ndone' > /bin/smarties && chmod +x /bin/smarties

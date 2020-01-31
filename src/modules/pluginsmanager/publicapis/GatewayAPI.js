@@ -20,7 +20,7 @@ class GatewayAPI {
     /* eslint-enable */
 
     /**
-     * Get full hautomation URL
+     * Get full smarties URL
      * 
      * @returns {string} The URL
      */
@@ -29,7 +29,7 @@ class GatewayAPI {
     }
 
     /**
-     * Get full hautomation API URL
+     * Get full smarties API URL
      *
      * @returns {string} The URL
      */

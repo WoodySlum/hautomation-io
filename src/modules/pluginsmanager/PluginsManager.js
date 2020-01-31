@@ -11,7 +11,7 @@ var PluginConf = require("./PluginConf");
 var Authentication = require("./../authentication/Authentication");
 var WebServices = require("./../../services/webservices/WebServices");
 var APIResponse = require("./../../services/webservices/APIResponse");
-var HautomationRunnerConstants = require("./../../../HautomationRunnerConstants");
+var SmartiesRunnerConstants = require("./../../../SmartiesRunnerConstants");
 
 const CONF_KEY = "plugins";
 const EVENT_LOADED = "pluginLoaded";
@@ -606,7 +606,7 @@ class PluginsManager {
             pluginConf.enable = status;
             this.pluginsConf = this.confManager.setData(CONF_KEY, pluginConf, this.pluginsConf, PluginConf.comparator);
             if (restart) {
-                this.eventBus.emit(HautomationRunnerConstants.RESTART);
+                this.eventBus.emit(SmartiesRunnerConstants.RESTART);
             }
         } else {
             throw Error(ERROR_DISABLE_CORE_PLUGIN);
@@ -703,7 +703,7 @@ class PluginsManager {
                         }
                     });
                     if (!rejected) {
-                        this.eventBus.emit(HautomationRunnerConstants.RESTART);
+                        this.eventBus.emit(SmartiesRunnerConstants.RESTART);
                         resolve(new APIResponse.class(true, {success:true}));
                     }
                 } else {

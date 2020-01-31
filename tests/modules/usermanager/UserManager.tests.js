@@ -7,10 +7,10 @@ var GlobalMocks = require("./../../GlobalMocks");
 var ConfManager = require("./../../../src/modules/confmanager/ConfManager");
 var UserManager = require("./../../../src/modules/usermanager/UserManager");
 var Authentication = require("./../../../src/modules/authentication/Authentication");
-var HautomationCore = require("./../../../src/HautomationCore");
+var SmartiesCore = require("./../../../src/SmartiesCore");
 var UserForm = require("./../../../src/modules/usermanager/UserForm");
 
-const core = new HautomationCore.class();
+const core = new SmartiesCore.class();
 describe("UserManager", function() {
     const userA = new UserForm.class(1, "userA", null, Authentication.AUTH_USAGE_LEVEL);
     const userB = new UserForm.class(2, "userB", null, Authentication.AUTH_USAGE_LEVEL);

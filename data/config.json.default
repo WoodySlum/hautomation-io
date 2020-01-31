@@ -1,7 +1,7 @@
 {
     "defaultConfig": true,
     "configurationPath":"./data/",
-    "cachePath":"/tmp/hautomation/",
+    "cachePath":"/tmp/smarties/",
     "port":8100,
     "logLevel": 2,
     "ssl": {

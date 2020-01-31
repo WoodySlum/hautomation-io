@@ -12,10 +12,10 @@
 #include <WiFiClient.h>
 
 #include "esp8266_pwm.h"
-#include <Hautomation.h>
+#include <Smarties.h>
 
 String JSON_CONFIG = "%config%";
-Hautomation hautomation = Hautomation();
+Smarties smarties = Smarties();
 
 // application config
 
@@ -133,7 +133,7 @@ void error() {
 
 void setup(void)
 {
-    hautomation.setup(JSON_CONFIG);
+    smarties.setup(JSON_CONFIG);
 
 
 
@@ -191,7 +191,7 @@ void loop(void)
   wdt_reset();
 #endif
 
-  hautomation.loop();
+  smarties.loop();
 
   pulse_counter--;
   if(pulse_counter == 0) {

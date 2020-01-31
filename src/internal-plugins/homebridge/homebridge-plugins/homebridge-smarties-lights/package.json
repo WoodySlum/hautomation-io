@@ -1,7 +1,7 @@
 {
-  "name": "homebridge-hautomation-temperature",
+  "name": "homebridge-smarties-lights",
   "version": "0.0.1",
-  "description": "Hautomation plugin for homebridge: https://github.com/nfarina/homebridge",
+  "description": "Smarties plugin for homebridge: https://github.com/nfarina/homebridge",
   "license": "ISC",
   "keywords": [
     "homebridge-plugin"

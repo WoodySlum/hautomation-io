@@ -2,12 +2,12 @@
 const Logger = require("./../../logger/Logger");
 const TimeEventService = require("./../../services/timeeventservice/TimeEventService");
 const DateUtils = require("./../../utils/DateUtils");
-const HautomationRunnerConstants = require("./../../../HautomationRunnerConstants");
+const SmartiesRunnerConstants = require("./../../../SmartiesRunnerConstants");
 
 const GATEWAY_MODE = 1;
-const GATEWAY_URL = "https://api.hautomation-io.com/ping/";
+const GATEWAY_URL = "https://api.smarties.io/ping/";
 // const GATEWAY_URL = "http://api.domain.net:8081/ping/";
-const UI_URL = "https://me.hautomation-io.com/";
+const UI_URL = "https://me.smarties.io/";
 const BOOT_MODE_BOOTING = "BOOTING";
 const BOOT_MODE_INSTALL = "INSTALL";
 const BOOT_MODE_READY = "READY";
@@ -21,8 +21,8 @@ class GatewayManager {
      * Constructor
      *
      * @param  {EnvironmentManager} environmentManager The environment manager
-     * @param  {string} version Hautomation version
-     * @param  {string} hash Hautomation commit hash
+     * @param  {string} version Smarties version
+     * @param  {string} hash Smarties commit hash
      * @param  {TimeEventService} timeEventService Time event service
      * @param  {Object} appConfiguration App configuration
      * @param  {WebServices} webServices The web services
@@ -56,7 +56,7 @@ class GatewayManager {
         this.customIdentifierMessageSent = false;
         this.installationState = {};
         Logger.flog("+-----------------------+");
-        Logger.flog("| Hautomation ID : " + this.environmentManager.getHautomationId() + " |");
+        Logger.flog("| Smarties ID : " + this.environmentManager.getSmartiesId() + " |");
         Logger.flog("+-----------------------+");
         Logger.flog("Your access : " + this.getDistantUrl());
 
@@ -75,7 +75,7 @@ class GatewayManager {
             }, 2000);
         });
 
-        this.eventBus.on(HautomationRunnerConstants.RESTART, () => {
+        this.eventBus.on(SmartiesRunnerConstants.RESTART, () => {
             self.bootMode = BOOT_MODE_BOOTING;
             self.transmit();
         });
@@ -91,21 +91,21 @@ class GatewayManager {
     }
 
     /**
-     * Get full hautomation URL
+     * Get full smarties URL
      *
      * @returns {string} The URL
      */
     getDistantUrl() {
-        return UI_URL + this.environmentManager.getHautomationId() + "/";
+        return UI_URL + this.environmentManager.getSmartiesId() + "/";
     }
 
     /**
-     * Get full hautomation API URL
+     * Get full smarties API URL
      *
      * @returns {string} The URL
      */
     getDistantApiUrl() {
-        return UI_URL + ((this.appConfiguration.customIdentifier && this.appConfiguration.customIdentifier.length > 0) ? this.appConfiguration.customIdentifier : this.environmentManager.getHautomationId()) + this.webServices.getEndpointApi();
+        return UI_URL + ((this.appConfiguration.customIdentifier && this.appConfiguration.customIdentifier.length > 0) ? this.appConfiguration.customIdentifier : this.environmentManager.getSmartiesId()) + this.webServices.getEndpointApi();
     }
 
 
@@ -167,7 +167,7 @@ class GatewayManager {
         if (!process.env.TEST) {
             Logger.info("Transmitting informations to gateway ...");
             const bootInfos = {
-                hautomationId: this.environmentManager.getHautomationId(),
+                smartiesId: this.environmentManager.getSmartiesId(),
                 sslPort: (this.appConfiguration.ssl && this.appConfiguration.ssl.port)?this.appConfiguration.ssl.port:null,
                 port: this.appConfiguration.port,
                 version: this.version,
