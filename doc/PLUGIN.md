@@ -4,7 +4,7 @@
 
 **Note : The plugin can be written in ES6** as the core supports it.
 
-1. Create a `node_modules` if not existing folder where the `hautomation` binary is.
+1. Create a `plugins` if not existing folder where the `hautomation` binary is.
 2. The create a `my-plugin` folder.
 3. Create a `plugin.js` file into this folder
 4. Create a `lng` folder with an `en.json` file inside
