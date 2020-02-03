@@ -5,7 +5,7 @@ var sinon = require("sinon");
 var GlobalMocks = require("./../../GlobalMocks");
 
 const FormObject = require("./../../../src/modules/formmanager/FormObject");
-const HautomationCore = require("./../../../src/HautomationCore").class;
+const SmartiesCore = require("./../../../src/SmartiesCore").class;
 const DateUtils = require("../../../src/utils/DateUtils");
 const RadioScenarioForm = require("./../../../src/modules/radiomanager/RadioScenarioForm");
 let core;
@@ -37,7 +37,7 @@ class ScenarioSampleForm extends FormObject.class {
 
 describe("ScenarioManager", function() {
     beforeEach(() => {
-        core = new HautomationCore();
+        core = new SmartiesCore();
         confManager = core.confManager;
         formManager = core.formManager;
         webServices = core.webServices;

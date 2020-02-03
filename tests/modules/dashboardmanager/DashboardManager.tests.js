@@ -5,9 +5,9 @@ var sinon = require("sinon");
 var GlobalMocks = require("./../../GlobalMocks");
 
 var DashboardManager = require("./../../../src/modules/dashboardmanager/DashboardManager");
-const HautomationCore = require("./../../../src/HautomationCore").class;
+const SmartiesCore = require("./../../../src/SmartiesCore").class;
 const Tile = require("./../../../src/modules/dashboardmanager/Tile");
-const core = new HautomationCore();
+const core = new SmartiesCore();
 const webServices = core.webServices;
 const translateManager = core.translateManager;
 const themeManager = core.themeManager;

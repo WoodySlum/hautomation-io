@@ -22,9 +22,9 @@ USER=$1
 GROUP=$2
 INSTALLATION_FOLDER=$3
 
-sed -e "s@{INSTALLATION_FOLDER}@$INSTALLATION_FOLDER@" ./hautomation.service.tpl > ./hautomation.service
-sudo systemctl stop hautomation
-sudo cp -f ./hautomation.service /etc/systemd/system
+sed -e "s@{INSTALLATION_FOLDER}@$INSTALLATION_FOLDER@" ./smarties.service.tpl > ./smarties.service
+sudo systemctl stop smarties
+sudo cp -f ./smarties.service /etc/systemd/system
 sudo systemctl daemon-reload
 sudo rm -Rf /tmp/saved-data
 sudo mv "$INSTALLATION_FOLDER/data" /tmp/saved-data
@@ -32,7 +32,7 @@ sudo cp -Rf ../* $INSTALLATION_FOLDER
 sudo mv -f /tmp/saved-data/* $INSTALLATION_FOLDER/data/
 sudo chown -R $USER:$GROUP $INSTALLATION_FOLDER
 sudo chmod -R 0660 $INSTALLATION_FOLDER
-sudo chmod +x ${INSTALLATION_FOLDER}hautomation
-sudo systemctl enable hautomation
-sudo systemctl start hautomation
+sudo chmod +x ${INSTALLATION_FOLDER}smarties
+sudo systemctl enable smarties
+sudo systemctl start smarties
 sudo rm -Rf $INSTALLATION_FOLDER/scripts

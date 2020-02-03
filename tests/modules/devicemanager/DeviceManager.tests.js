@@ -6,9 +6,9 @@ var GlobalMocks = require("./../../GlobalMocks");
 var FormObject = require("../../../src/modules/formmanager/FormObject");
 var DeviceManager = require("../../../src/modules/devicemanager/DeviceManager");
 
-const HautomationCore = require("./../../../src/HautomationCore").class;
+const SmartiesCore = require("./../../../src/SmartiesCore").class;
 
-const core = new HautomationCore();
+const core = new SmartiesCore();
 const deviceManager = core.deviceManager;
 const radioManager = core.radioManager;
 const sampleRadioPluginIdentifier = "rflink";

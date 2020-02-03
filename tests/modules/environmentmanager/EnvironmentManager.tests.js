@@ -4,10 +4,10 @@ var expect = chai.expect;
 var sinon = require("sinon");
 var GlobalMocks = require("./../../GlobalMocks");
 
-const HautomationCore = require("./../../../src/HautomationCore").class;
+const SmartiesCore = require("./../../../src/SmartiesCore").class;
 const EnvironmentManager = require("./../../../src/modules/environmentmanager/EnvironmentManager");
 
-const core = new HautomationCore();
+const core = new SmartiesCore();
 describe("EnvironmentManager", function() {
     before(() => {
 
@@ -17,7 +17,7 @@ describe("EnvironmentManager", function() {
         sinon.spy(core.confManager, "readFile");
         sinon.spy(core.formManager, "register");
         sinon.spy(core.dashboardManager, "registerTile");
-        const environmentManager = new EnvironmentManager.class({home:{foo:"bar"}}, core.confManager, core.formManager, core.webServices, core.dashboardManager, core.translateManager, core.scenarioManager, 0, 0, core.installationManager, core.timeEventService, core.eventBus, core.messageManager, HautomationCore.EVENT_STOP, HautomationCore.EVENT_READY, core.userManager);
+        const environmentManager = new EnvironmentManager.class({home:{foo:"bar"}}, core.confManager, core.formManager, core.webServices, core.dashboardManager, core.translateManager, core.scenarioManager, 0, 0, core.installationManager, core.timeEventService, core.eventBus, core.messageManager, SmartiesCore.EVENT_STOP, SmartiesCore.EVENT_READY, core.userManager);
         expect(core.confManager.readFile.calledOnce).to.be.true;
         expect(core.formManager.register.calledThrice).to.be.true;
         expect(core.dashboardManager.registerTile.calledOnce).to.be.true;
@@ -30,12 +30,12 @@ describe("EnvironmentManager", function() {
     });
 
     it("getCoordinates should return the coordinates", function() {
-        const environmentManager = new EnvironmentManager.class({home:{foo:"bar"}}, core.confManager, core.formManager, core.webServices, core.dashboardManager, core.translateManager, core.scenarioManager, 0, 0, core.installationManager, core.timeEventService, core.eventBus, core.messageManager, HautomationCore.EVENT_STOP, HautomationCore.EVENT_READY, core.userManager);
+        const environmentManager = new EnvironmentManager.class({home:{foo:"bar"}}, core.confManager, core.formManager, core.webServices, core.dashboardManager, core.translateManager, core.scenarioManager, 0, 0, core.installationManager, core.timeEventService, core.eventBus, core.messageManager, SmartiesCore.EVENT_STOP, SmartiesCore.EVENT_READY, core.userManager);
         expect(environmentManager.getCoordinates().foo).to.be.equal("bar");
     });
 
     it("setDay should well set day", function() {
-        const environmentManager = new EnvironmentManager.class({home:{foo:"bar"}}, core.confManager, core.formManager, core.webServices, core.dashboardManager, core.translateManager, core.scenarioManager, 0, 0, core.installationManager, core.timeEventService, core.eventBus, core.messageManager, HautomationCore.EVENT_STOP, HautomationCore.EVENT_READY, core.userManager);
+        const environmentManager = new EnvironmentManager.class({home:{foo:"bar"}}, core.confManager, core.formManager, core.webServices, core.dashboardManager, core.translateManager, core.scenarioManager, 0, 0, core.installationManager, core.timeEventService, core.eventBus, core.messageManager, SmartiesCore.EVENT_STOP, SmartiesCore.EVENT_READY, core.userManager);
         environmentManager.formConfiguration.data.day = false;
         sinon.spy(environmentManager, "registerTile");
         environmentManager.setDay();
@@ -45,7 +45,7 @@ describe("EnvironmentManager", function() {
     });
 
     it("setNight should well set night", function() {
-        const environmentManager = new EnvironmentManager.class({home:{foo:"bar"}}, core.confManager, core.formManager, core.webServices, core.dashboardManager, core.translateManager, core.scenarioManager, 0, 0, core.installationManager, core.timeEventService, core.eventBus, core.messageManager, HautomationCore.EVENT_STOP, HautomationCore.EVENT_READY, core.userManager);
+        const environmentManager = new EnvironmentManager.class({home:{foo:"bar"}}, core.confManager, core.formManager, core.webServices, core.dashboardManager, core.translateManager, core.scenarioManager, 0, 0, core.installationManager, core.timeEventService, core.eventBus, core.messageManager, SmartiesCore.EVENT_STOP, SmartiesCore.EVENT_READY, core.userManager);
         environmentManager.formConfiguration.data.day = true;
         sinon.spy(environmentManager, "registerTile");
         environmentManager.setNight();
@@ -55,7 +55,7 @@ describe("EnvironmentManager", function() {
     });
 
     it("registerTile should call dashboard manager", function() {
-        const environmentManager = new EnvironmentManager.class({home:{foo:"bar"}}, core.confManager, core.formManager, core.webServices, core.dashboardManager, core.translateManager, core.scenarioManager, 0, 0, core.installationManager, core.timeEventService, core.eventBus, core.messageManager, HautomationCore.EVENT_STOP, HautomationCore.EVENT_READY, core.userManager);
+        const environmentManager = new EnvironmentManager.class({home:{foo:"bar"}}, core.confManager, core.formManager, core.webServices, core.dashboardManager, core.translateManager, core.scenarioManager, 0, 0, core.installationManager, core.timeEventService, core.eventBus, core.messageManager, SmartiesCore.EVENT_STOP, SmartiesCore.EVENT_READY, core.userManager);
         sinon.spy(core.dashboardManager, "registerTile");
         environmentManager.registerTile();
         expect(core.dashboardManager.registerTile.calledOnce).to.be.true;

@@ -4,9 +4,9 @@ var expect = chai.expect;
 var sinon = require("sinon");
 var GlobalMocks = require("./../../GlobalMocks");
 
-const HautomationCore = require("./../../../src/HautomationCore");
+const SmartiesCore = require("./../../../src/SmartiesCore");
 const InstallationManager = require("./../../../src/modules/installationmanager/InstallationManager");
-const core = new HautomationCore.class();
+const core = new SmartiesCore.class();
 describe("InstallationManager", function() {
     before(() => {
 

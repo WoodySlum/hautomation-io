@@ -26,7 +26,7 @@ class InstallerAPI {
      *
      * @param  {string|Array}  [arch="*"]     The architecture ('arm', 'arm64', 'ia32', 'mips', 'mipsel', 'ppc', 'ppc64', 's390', 's390x', 'x32', 'x64', and 'x86'). Can be `*` for all arch, or an array of architectures
      * @param  {string}  command        A command
-     * @param  {boolean} [sudo=false]    True if command should be executed as sudo, false otherwise. The Hautomation process owner user should be in `sudo` group without password.
+     * @param  {boolean} [sudo=false]    True if command should be executed as sudo, false otherwise. The Smarties process owner user should be in `sudo` group without password.
      * @param  {boolean} [wait=true]    True if command is executed synchronously, false otherwise
      * @param  {boolean} [skipError=false]    True if command fails should continue, false for retrying
      */

@@ -51,7 +51,7 @@ function loaded(api) {
             if (apiRequest.route === ":" + SOFT_REBOOT_ACTION) {
                 return new Promise((resolve, reject) => {
                     setTimeout((me) => {
-                        me.api.coreAPI.dispatchEvent(me.api.exported.HautomationRunnerConstants.RESTART);
+                        me.api.coreAPI.dispatchEvent(me.api.exported.SmartiesRunnerConstants.RESTART);
                     }, 1000, self);
                     resolve(self.api.webAPI.APIResponse(true, {success:true}));
                 });

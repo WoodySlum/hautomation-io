@@ -140,7 +140,7 @@ function loaded(api) {
             this.api.deviceAPI.getDevices().forEach((device) => {
                 if (device.visible) {
                     this.devices.push({
-                        accessory: "Hautomation lights",
+                        accessory: "Smarties lights",
                         identifier: device.id,
                         name: device.name,
                         coreApi:api,
@@ -157,7 +157,7 @@ function loaded(api) {
         generateHapAlarm() {
             this.alarm = [];
             this.alarm.push({
-                accessory: "Hautomation alarm",
+                accessory: "Smarties alarm",
                 name: api.translateAPI.t("alarm.tile.title"),
                 coreApi:api
             });
@@ -171,7 +171,7 @@ function loaded(api) {
             const temperatureSensors = this.api.sensorAPI.getSensors("TEMPERATURE");
             Object.keys(temperatureSensors).forEach((sensorKey) => {
                 this.sensors.push({
-                    accessory: "Hautomation temperature sensor",
+                    accessory: "Smarties temperature sensor",
                     identifier: sensorKey,
                     name: temperatureSensors[sensorKey],
                     coreApi:api
@@ -181,7 +181,7 @@ function loaded(api) {
             const humiditySensors = this.api.sensorAPI.getSensors("HUMIDITY");
             Object.keys(humiditySensors).forEach((sensorKey) => {
                 this.sensors.push({
-                    accessory: "Hautomation humidity sensor",
+                    accessory: "Smarties humidity sensor",
                     identifier: sensorKey,
                     name: humiditySensors[sensorKey],
                     coreApi:api

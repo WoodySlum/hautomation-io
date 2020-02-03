@@ -11,9 +11,12 @@ const sha256 = require("sha256");
 const USERNAME = "u";
 const PASSWORD = "p";
 const TOKEN    = "t";
-const HEADER_USERNAME = "X-HAUTOMATION-USERNAME";
-const HEADER_PASSWORD = "X-HAUTOMATION-PASSWORD";
-const HEADER_TOKEN = "X-HAUTOMATION-TOKEN";
+const HEADER_OLD_USERNAME = "X-HAUTOMATION-USERNAME";
+const HEADER_OLD_PASSWORD = "X-HAUTOMATION-PASSWORD";
+const HEADER_OLD_TOKEN = "X-HAUTOMATION-TOKEN";
+const HEADER_USERNAME = "X-SMARTIES-USERNAME";
+const HEADER_PASSWORD = "X-SMARTIES-PASSWORD";
+const HEADER_TOKEN = "X-SMARTIES-TOKEN";
 const AUTH_NO_LEVEL = 0;
 const AUTH_LOCAL_NETWORK_LEVEL = 5;
 const AUTH_GUEST_LEVEL = 7;
@@ -169,9 +172,9 @@ class Authentication {
      * @param  {Function} reject     The reject function
      */
     processAuthentication(apiRequest, resolve, reject) {
-        let u = apiRequest.params[USERNAME]?apiRequest.params[USERNAME]:(apiRequest.req.headers[HEADER_USERNAME.toLowerCase()]?apiRequest.req.headers[HEADER_USERNAME.toLowerCase()]:null);
-        let p = apiRequest.params[PASSWORD]?apiRequest.params[PASSWORD]:(apiRequest.req.headers[HEADER_PASSWORD.toLowerCase()]?apiRequest.req.headers[HEADER_PASSWORD.toLowerCase()]:null);
-        let t = apiRequest.params[TOKEN]?apiRequest.params[TOKEN]:(apiRequest.req.headers[HEADER_TOKEN.toLowerCase()]?apiRequest.req.headers[HEADER_TOKEN.toLowerCase()]:null);
+        let u = apiRequest.params[USERNAME]?apiRequest.params[USERNAME]:(apiRequest.req.headers[HEADER_USERNAME.toLowerCase()]?apiRequest.req.headers[HEADER_USERNAME.toLowerCase()]:(apiRequest.req.headers[HEADER_OLD_USERNAME.toLowerCase()]?apiRequest.req.headers[HEADER_OLD_USERNAME.toLowerCase()]:null));
+        let p = apiRequest.params[PASSWORD]?apiRequest.params[PASSWORD]:(apiRequest.req.headers[HEADER_PASSWORD.toLowerCase()]?apiRequest.req.headers[HEADER_PASSWORD.toLowerCase()]:(apiRequest.req.headers[HEADER_OLD_PASSWORD.toLowerCase()]?apiRequest.req.headers[HEADER_OLD_PASSWORD.toLowerCase()]:null));
+        let t = apiRequest.params[TOKEN]?apiRequest.params[TOKEN]:(apiRequest.req.headers[HEADER_TOKEN.toLowerCase()]?apiRequest.req.headers[HEADER_TOKEN.toLowerCase()]:(apiRequest.req.headers[HEADER_OLD_TOKEN.toLowerCase()]?apiRequest.req.headers[HEADER_OLD_TOKEN.toLowerCase()]:null));
 
         //let t = apiRequest.params[TOKEN];
         let admin = this.userManager.getAdminUser();
@@ -248,4 +251,4 @@ class Authentication {
     }
 }
 
-module.exports = {class:Authentication, AUTH_NO_LEVEL:AUTH_NO_LEVEL, AUTH_GUEST_LEVEL:AUTH_GUEST_LEVEL, AUTH_USAGE_LEVEL:AUTH_USAGE_LEVEL, AUTH_ADMIN_LEVEL:AUTH_ADMIN_LEVEL, AUTH_MAX_LEVEL:AUTH_MAX_LEVEL, AUTH_LOCAL_NETWORK_LEVEL:AUTH_LOCAL_NETWORK_LEVEL, AUTH_DEV_LEVEL:AUTH_DEV_LEVEL, HEADER_USERNAME:HEADER_USERNAME, HEADER_PASSWORD:HEADER_PASSWORD, HEADER_TOKEN:HEADER_TOKEN};
+module.exports = {class:Authentication, AUTH_NO_LEVEL:AUTH_NO_LEVEL, AUTH_GUEST_LEVEL:AUTH_GUEST_LEVEL, AUTH_USAGE_LEVEL:AUTH_USAGE_LEVEL, AUTH_ADMIN_LEVEL:AUTH_ADMIN_LEVEL, AUTH_MAX_LEVEL:AUTH_MAX_LEVEL, AUTH_LOCAL_NETWORK_LEVEL:AUTH_LOCAL_NETWORK_LEVEL, AUTH_DEV_LEVEL:AUTH_DEV_LEVEL, HEADER_USERNAME:HEADER_USERNAME, HEADER_PASSWORD:HEADER_PASSWORD, HEADER_TOKEN:HEADER_TOKEN, HEADER_OLD_USERNAME:HEADER_OLD_USERNAME, HEADER_OLD_PASSWORD:HEADER_OLD_PASSWORD, HEADER_OLD_TOKEN:HEADER_OLD_TOKEN};

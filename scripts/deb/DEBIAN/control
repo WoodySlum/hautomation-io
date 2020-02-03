@@ -1,10 +1,10 @@
-Package: hautomation
+Package: smarties
 Version: {VERSION}
 Section: base
 Priority: optional
 Codename: {DISTRIB}
 Architecture: {ARCH}
 Depends: sqlite3, libmagic-dev, libatlas-base-dev, libudev-dev, net-tools, imagemagick, graphicsmagick, ffmpeg, sudo, python-pip, python3-pip, alsa-utils, libasound2-dev, python-pyaudio, python3-pyaudio, sox, mplayer, festival, festvox-kallpc16k, at, lsb-release, avrdude, socat, systemd
-Maintainer: WoodySlum <woodyslum@hautomation-io.com>
+Maintainer: WoodySlum <woodyslum@smarties.io>
 Description: Home Automation for everyone
-Homepage: https://www.hautomation-io.com
+Homepage: https://www.smarties.io

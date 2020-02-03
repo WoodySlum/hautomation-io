@@ -1,9 +1,9 @@
-#include <Hautomation.h>
+#include <Smarties.h>
 #include <string>
 #include <memory>
 
 String JSON_CONFIG = "%config%";
-Hautomation hautomation = Hautomation();
+Smarties smarties = Smarties();
 
 #define SERIAL_RX     D5  // pin for SoftwareSerial RX
 #define SERIAL_TX     D6  // pin for SoftwareSerial TX
@@ -55,7 +55,7 @@ void startRoomba() {
     Serial.write(135);
     delay(50);
     Serial.write(128);
-    hautomation.getWebServer().send(200, "application/json", "{\"success\":true}");
+    smarties.getWebServer().send(200, "application/json", "{\"success\":true}");
 }
 
 void stopRoomba() {
@@ -65,7 +65,7 @@ void stopRoomba() {
     Serial.write(133);
     delay(50);
     Serial.write(128);
-    hautomation.getWebServer().send(200, "application/json", "{\"success\":true}");
+    smarties.getWebServer().send(200, "application/json", "{\"success\":true}");
 }
 
 void spotRoomba() {
@@ -76,7 +76,7 @@ void spotRoomba() {
     delay(25);
     Serial.write(128);
     delay(25);
-    hautomation.getWebServer().send(200, "application/json", "{\"success\":true}");
+    smarties.getWebServer().send(200, "application/json", "{\"success\":true}");
 }
 
 void dockRoomba() {
@@ -87,12 +87,12 @@ void dockRoomba() {
     delay(25);
     Serial.write(128);
     delay(25);
-    hautomation.getWebServer().send(200, "application/json", "{\"success\":true}");
+    smarties.getWebServer().send(200, "application/json", "{\"success\":true}");
 }
 
 void ping() {
-    hautomation.ping();
-    hautomation.getWebServer().send(200, "application/json", "{\"success\":true}");
+    smarties.ping();
+    smarties.getWebServer().send(200, "application/json", "{\"success\":true}");
 }
 
 void statusRoomba() {
@@ -158,26 +158,26 @@ void statusRoomba() {
 		status_log += " bytes.\n";
 	}*/
 
-    hautomation.getWebServer().send(200, "application/json", "{\"success\":true, \"level\":\"" + String(batteryValue) + "\"}");
+    smarties.getWebServer().send(200, "application/json", "{\"success\":true, \"level\":\"" + String(batteryValue) + "\"}");
 }
 
 
 void setup() {
-    hautomation.setup(JSON_CONFIG);
+    smarties.setup(JSON_CONFIG);
 
     pinMode(BRC_PIN, OUTPUT);
     digitalWrite(BRC_PIN, HIGH);
     delay(25);
 
-    hautomation.getWebServer().on("/reset", resetRoomba);
-    hautomation.getWebServer().on("/start", startRoomba);
-    hautomation.getWebServer().on("/stop", stopRoomba);
-    hautomation.getWebServer().on("/spot", spotRoomba);
-    hautomation.getWebServer().on("/dock", dockRoomba);
-    hautomation.getWebServer().on("/status", statusRoomba);
-    hautomation.getWebServer().on("/ping", ping);
+    smarties.getWebServer().on("/reset", resetRoomba);
+    smarties.getWebServer().on("/start", startRoomba);
+    smarties.getWebServer().on("/stop", stopRoomba);
+    smarties.getWebServer().on("/spot", spotRoomba);
+    smarties.getWebServer().on("/dock", dockRoomba);
+    smarties.getWebServer().on("/status", statusRoomba);
+    smarties.getWebServer().on("/ping", ping);
 }
 
 void loop() {
-    hautomation.getWebServer().handleClient();
+    smarties.getWebServer().handleClient();
 }

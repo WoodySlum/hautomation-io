@@ -6,8 +6,8 @@ var GlobalMocks = require("./../../GlobalMocks");
 const moment = require("moment-timezone");
 
 const DateUtils = require("../../../src/utils/DateUtils");
-const HautomationCore = require("../../../src/HautomationCore").class;
-const core = new HautomationCore();
+const SmartiesCore = require("../../../src/SmartiesCore").class;
+const core = new SmartiesCore();
 const plugin = core.pluginsManager.getPluginByIdentifier("sensor", false);
 const Sensor = plugin.exported.Sensor;
 

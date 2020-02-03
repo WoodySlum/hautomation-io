@@ -5,7 +5,7 @@ var sinon = require("sinon");
 var GlobalMocks = require("./../../GlobalMocks");
 
 const FormObject = require("./../../../src/modules/formmanager/FormObject");
-const HautomationCore = require("./../../../src/HautomationCore").class;
+const SmartiesCore = require("./../../../src/SmartiesCore").class;
 const DateUtils = require("../../../src/utils/DateUtils");
 let core;
 const AlarmManager = require("./../../../src/modules/alarmmanager/AlarmManager");
@@ -25,7 +25,7 @@ let scenarioManager;
 
 describe("AlarmManager", function() {
     beforeEach(() => {
-        core = new HautomationCore();
+        core = new SmartiesCore();
         confManager = core.confManager;
         formManager = core.formManager;
         webServices = core.webServices;

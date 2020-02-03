@@ -5,8 +5,8 @@ var sinon = require("sinon");
 var GlobalMocks = require("./../../GlobalMocks");
 
 const Authentication = require("./../../../src/modules/authentication/Authentication");
-const HautomationCore = require("./../../../src/HautomationCore").class;
-const core = new HautomationCore();
+const SmartiesCore = require("./../../../src/SmartiesCore").class;
+const core = new SmartiesCore();
 const environmentManager = core.environmentManager;
 const webServices = core.webServices;
 const userManager = core.userManager;

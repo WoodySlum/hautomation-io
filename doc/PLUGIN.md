@@ -4,7 +4,7 @@
 
 **Note : The plugin can be written in ES6** as the core supports it.
 
-1. Create a `plugins` if not existing folder where the `hautomation` binary is.
+1. Create a `plugins` if not existing folder where the `smarties` binary is.
 2. The create a `my-plugin` folder.
 3. Create a `plugin.js` file into this folder
 4. Create a `lng` folder with an `en.json` file inside
@@ -13,7 +13,7 @@
 Tree structure :
 
 	|
-	|-hautomation (main binary)
+	|-smarties (main binary)
 	|-plugins
 		|-my-plugin
 			|-plugin.js
@@ -40,7 +40,7 @@ Here is a simple plugin template :
 	    name: "my-plugin",
 	    version: "0.0.1",
 	    category: "misc",
-	    description: "My first hautomation plugin",
+	    description: "My first smarties plugin",
 		dependencies:[],
 	    classes:[]
 	};
@@ -134,7 +134,7 @@ The method will be called every hour, when minutes will be equals to 10 and seco
 ### Schedule an operation
 
 Core gives you the possibility to schedule a single operation in the future. For example, of you want to turn lights after a certain delay, this API is the one.
-Operations are resumed if Hautomation restarts.
+Operations are resumed if Smarties restarts.
 
 You need first to register with a unique id the callback :
 
@@ -213,7 +213,7 @@ The class must implement :
 	    name: "my-plugin",
 	    version: "0.0.1",
 	    category: "misc",
-	    description: "My first hautomation plugin",
+	    description: "My first smarties plugin",
 		dependencies:[],
 	    classes:[]
 	};
@@ -297,7 +297,7 @@ On the annotations, you have to specify on wich version field is introduced. The
 	    name: "my-plugin",
 	    version: "0.0.1",
 	    category: "misc",
-	    description: "My first hautomation plugin",
+	    description: "My first smarties plugin",
 		dependencies:[],
 	    classes:[]
 	};
@@ -687,12 +687,12 @@ Here is a plugin sample for new message provider :
 	                if (recipients === "*" || (recipients instanceof Array && recipients.indexOf(user.username) !== -1)) {
 	                    try {
 	                        var notification = new Prowler.connection(user.prowlApiKey);
-	                        let actionprefixed = "hautomation://";
+	                        let actionprefixed = "smarties://";
 	                        if (action) {
 	                            actionprefixed += action;
 	                        }
 	                        notification.send({
-	                            "application": 'Hautomation',
+	                            "application": 'Smarties',
 	                            "event": message,
 	                            "description": ""
 	                        });
@@ -961,7 +961,7 @@ Build tools uses `platform.io` tools to build the library / application.
 Your plugin folder should look as this :
 
 	|
-	|-hautomation
+	|-smarties
 	|-node_modules
 		|-my-plugin
 			|-plugin.js
@@ -1065,7 +1065,7 @@ Build tools uses `platform.io` tools to build the library / application.
 Your plugin folder should look as this :
 
 	|
-	|-hautomation
+	|-smarties
 	|-node_modules
 		|-my-plugin
 			|-plugin.js
@@ -1114,8 +1114,8 @@ In this example, the intent *turnOn* with the value *bedroom's light* will be pr
 
 To create new intents and improve model, create a [Wit.ai](href "https://wit.ai") account with your Github dev account, and open the model :
 
-- English : [https://wit.ai/WoodySlum/Hautomation_EN](href "https://wit.ai/WoodySlum/Hautomation_EN")
-- French : [https://wit.ai/WoodySlum/Hautomation_FR](href "https://wit.ai/WoodySlum/Hautomation_FR")
+- English : [https://wit.ai/WoodySlum/Smarties_EN](href "https://wit.ai/WoodySlum/Smarties_EN")
+- French : [https://wit.ai/WoodySlum/Smarties_FR](href "https://wit.ai/WoodySlum/Smarties_FR")
 - ...
 
 Read [documentation](href "https://wit.ai/docs/recipes") to learn how Wit.ai works.

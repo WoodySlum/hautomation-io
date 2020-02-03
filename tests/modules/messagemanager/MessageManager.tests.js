@@ -5,8 +5,8 @@ var sinon = require("sinon");
 var GlobalMocks = require("./../../GlobalMocks");
 
 const MessageManager = require("./../../../src/modules/messagemanager/MessageManager");
-const HautomationCore = require("./../../../src/HautomationCore").class;
-const core = new HautomationCore();
+const SmartiesCore = require("./../../../src/SmartiesCore").class;
+const core = new SmartiesCore();
 const eventBus = {on:()=>{}};
 
 const userManager = core.userManager;

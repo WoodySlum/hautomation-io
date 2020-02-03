@@ -1,4 +1,4 @@
-#include <Hautomation.h>
+#include <Smarties.h>
 #include <dht.h>
 #include <Wire.h>
 #include <Adafruit_BMP085.h>
@@ -18,7 +18,7 @@ Adafruit_BMP085 bmp;
 
 
 String JSON_CONFIG = "%config%";
-Hautomation hautomation = Hautomation();
+Smarties smarties = Smarties();
 
 void transmitSensor() {
     // DHT
@@ -83,21 +83,21 @@ void transmitSensor() {
     }
 
 
-    hautomation.postSensorValue("TEMPERATURE", temperature);
+    smarties.postSensorValue("TEMPERATURE", temperature);
     if (hDHT >= 0) {
-        hautomation.postSensorValue("HUMIDITY", hDHT);
+        smarties.postSensorValue("HUMIDITY", hDHT);
     }
-    hautomation.postSensorValue("RAIN-TIME", rainValue);
-    hautomation.postSensorValue("ALTITUDE", aBMP);
-    hautomation.postSensorValue("PRESSURE", pBMP);
-    // hautomation.postSensorValue("PRESSURE", sBMP);
+    smarties.postSensorValue("RAIN-TIME", rainValue);
+    smarties.postSensorValue("ALTITUDE", aBMP);
+    smarties.postSensorValue("PRESSURE", pBMP);
+    // smarties.postSensorValue("PRESSURE", sBMP);
 }
 
 void setup() {
-  hautomation.setup(JSON_CONFIG);
+  smarties.setup(JSON_CONFIG);
 }
 
 void loop() {
     transmitSensor();
-    hautomation.loop();
+    smarties.loop();
 }

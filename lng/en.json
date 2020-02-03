@@ -137,7 +137,7 @@
     "iot.form.name": "Name",
     "iots.list.form.title": "Pick an IoT application",
     "cameras.list.form.title":"Camera",
-    "core.update.available": "A new Hautomation version %@ is available. Updating.",
+    "core.update.available": "A new Smarties version %@ is available. Updating.",
     "sensors.list.scenario.sensors": "Trigger scenario on sensor value",
     "sensors.manager.scenario.operator": "Operator",
     "sensors.manager.scenario.threshold": "Threshold (raw value)",

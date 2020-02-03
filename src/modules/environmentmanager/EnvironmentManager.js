@@ -19,14 +19,14 @@ const WebServices = require("./../../services/webservices/WebServices");
 const Authentication = require("./../authentication/Authentication");
 const APIResponse = require("./../../services/webservices/APIResponse");
 const TimeEventService = require("./../../services/timeeventservice/TimeEventService");
-const HautomationRunnerConstants = require("./../../../HautomationRunnerConstants");
+const SmartiesRunnerConstants = require("./../../../SmartiesRunnerConstants");
 const IpScanForm = require("./IpScanForm");
 const DateUtils = require("../../utils/DateUtils");
 const ROUTE_APP_ENVIRONMENT_INFORMATION = "/environment/app/get/";
 const ROUTE_APP_SET_CONFIGURATION = "/environment/conf/set/";
 const ROUTE_APP_GET_CONFIGURATION = "/environment/conf/get/";
 const MAIN_CONFIG_PATH = "./data/config.json";
-const DEBIAN_REPOSITORY = "https://deb.hautomation-io.com/";
+const DEBIAN_REPOSITORY = "https://deb.smarties.io/";
 const DEBIAN_REPOSITORY_LAST_VERSION = "dists/{dist}/main/binary-{arch}/Packages";
 const EVENT_SCAN_IP_CHANGES = "scan-ip-change";
 const EVENT_SCAN_IP_UPDATE = "scan-ip-update";
@@ -260,7 +260,7 @@ class EnvironmentManager {
     /**
      * Get the local HTTP port
      *
-     * @returns {number} The local hautomation HTTP port
+     * @returns {number} The local smarties HTTP port
      */
     getLocalPort() {
         return this.appConfiguration.port;
@@ -432,7 +432,7 @@ class EnvironmentManager {
 
         // Restart
         setTimeout((self) => {
-            self.eventBus.emit(HautomationRunnerConstants.RESTART);
+            self.eventBus.emit(SmartiesRunnerConstants.RESTART);
         }, 2000, this);
     }
 
@@ -445,7 +445,7 @@ class EnvironmentManager {
     processAPI(apiRequest) {
         if (apiRequest.route.startsWith( ":" + ROUTE_APP_ENVIRONMENT_INFORMATION)) {
             return new Promise((resolve) => {
-                resolve(new APIResponse.class(true, {version:this.version, hash:this.hash, hautomationId: this.getHautomationId(), customIdentifier:this.appConfiguration.customIdentifier}));
+                resolve(new APIResponse.class(true, {version:this.version, hash:this.hash, smartiesId: this.getSmartiesId(), customIdentifier:this.appConfiguration.customIdentifier}));
             });
         } else if (apiRequest.route === ":" + ROUTE_APP_SET_CONFIGURATION) {
             return new Promise((resolve, reject) => {
@@ -516,7 +516,7 @@ class EnvironmentManager {
                                                 if (fs.existsSync(updateScript)) {
                                                     fs.unlinkSync(updateScript);
                                                 }
-                                                fs.writeFileSync(updateScript, "service hautomation stop && apt-get update && apt-get install --reinstall -y --allow-unauthenticated hautomation && service hautomation start");
+                                                fs.writeFileSync(updateScript, "service smarties stop && apt-get update && apt-get install --reinstall -y --allow-unauthenticated smarties && service smarties start");
                                                 fs.chmodSync(updateScript, 0o555);
                                                 childProcess.execSync("echo \"/bin/sh " + updateScript + "\" | at now + 1 minute");
                                             } else {
@@ -559,20 +559,20 @@ class EnvironmentManager {
     }
 
     /**
-     * Returns the hautomation ID
+     * Returns the smarties ID
      *
-     * @returns {string} Hautomation identifier
+     * @returns {string} Smarties identifier
      */
-    getHautomationId() {
+    getSmartiesId() {
         return machineId.machineIdSync().substr(0,4);
     }
 
     /**
-     * Returns the full hautomation ID
+     * Returns the full smarties ID
      *
-     * @returns {string} Hautomation full identifier
+     * @returns {string} Smarties full identifier
      */
-    getFullHautomationId() {
+    getFullSmartiesId() {
         return machineId.machineIdSync();
     }
 

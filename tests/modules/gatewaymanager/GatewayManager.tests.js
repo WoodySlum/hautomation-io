@@ -4,12 +4,12 @@ var expect = chai.expect;
 var sinon = require("sinon");
 var GlobalMocks = require("./../../GlobalMocks");
 
-const HautomationCore = require("./../../../src/HautomationCore").class;
+const SmartiesCore = require("./../../../src/SmartiesCore").class;
 const GatewayManager = require("./../../../src/modules/gatewaymanager/GatewayManager");
 const TimeEventService = require("./../../../src/services/timeeventservice/TimeEventService");
-const HautomationRunnerConstants = require("./../../../HautomationRunnerConstants");
+const SmartiesRunnerConstants = require("./../../../SmartiesRunnerConstants");
 
-const core = new HautomationCore();
+const core = new SmartiesCore();
 describe("GatewayManager", function() {
     before(() => {
 
@@ -23,7 +23,7 @@ describe("GatewayManager", function() {
         expect(tesSpy.withArgs(sinon.match.any, gatewayManager, TimeEventService.EVERY_HOURS_INACCURATE).calledOnce).to.be.true;
         expect(eventSpy.withArgs("FOOBAR", sinon.match.any).calledOnce).to.be.true;
         expect(eventSpy.withArgs("BARFOO", sinon.match.any).calledOnce).to.be.true;
-        expect(eventSpy.withArgs(HautomationRunnerConstants.RESTART, sinon.match.any).calledOnce).to.be.true;
+        expect(eventSpy.withArgs(SmartiesRunnerConstants.RESTART, sinon.match.any).calledOnce).to.be.true;
         expect(GatewayManager.class.prototype.transmit.calledOnce).to.be.true;
 
         core.timeEventService.register.restore();

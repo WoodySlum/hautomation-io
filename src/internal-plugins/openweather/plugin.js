@@ -465,7 +465,7 @@ function loaded(api) {
          * Transform Openweather icon to good icon
          *
          * @param  {string} weatherIcon Openweather icon
-         * @returns {string}             The hautomation icon's string name
+         * @returns {string}             The smarties icon's string name
          */
         weatherIcon(weatherIcon) {
             let icon = "question_sign";

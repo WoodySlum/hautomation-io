@@ -1,4 +1,4 @@
-#include <Hautomation.h>
+#include <Smarties.h>
 #include <dht.h>
 
 #define SOIL_MOISTURE_SENSOR_PIN  A0
@@ -7,7 +7,7 @@ dht DHT;
 #define DHT_PIN 12
 
 String JSON_CONFIG = "%config%";
-Hautomation hautomation = Hautomation();
+Smarties smarties = Smarties();
 
 void transmitSensor() {
     float soilMoistureValue = 0;
@@ -20,7 +20,7 @@ void transmitSensor() {
         soilMoistureValue = 0.0;
     }
 
-    hautomation.postSensorValue("PLANT-SENSOR", soilMoistureValue);
+    smarties.postSensorValue("PLANT-SENSOR", soilMoistureValue);
 
     int chk = DHT.read22(DHT_PIN);
     switch (chk)
@@ -43,18 +43,18 @@ void transmitSensor() {
     float t = DHT.temperature;
 
     if (t <= 100 || t >= -100) {
-        hautomation.postSensorValue("TEMPERATURE", t);
+        smarties.postSensorValue("TEMPERATURE", t);
     }
     if (h > 0) {
-        hautomation.postSensorValue("HUMIDITY", h);
+        smarties.postSensorValue("HUMIDITY", h);
     }
 }
 
 void setup() {
-  hautomation.setup(JSON_CONFIG);
+  smarties.setup(JSON_CONFIG);
 }
 
 void loop() {
     transmitSensor();
-    hautomation.loop();
+    smarties.loop();
 }

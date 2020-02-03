@@ -72,12 +72,12 @@ function loaded(api) {
                 if (recipients === "*" || (recipients instanceof Array && recipients.indexOf(user.username) !== -1)) {
                     try {
                         var notification = new Prowler.connection(user.ProwlForm.prowlApiKey);
-                        // let actionprefixed = "hautomation://";
+                        // let actionprefixed = "smarties://";
                         // if (action) {
                         //     actionprefixed += action;
                         // }
                         notification.send({
-                            "application": "Hautomation",
+                            "application": "Smarties",
                             "event": message,
                             "description": ""
                         });

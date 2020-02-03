@@ -154,7 +154,7 @@ function loaded(api) {
                                 const user = new this.client.users.User;
 
                                 // Optionally configure a device type / agent on the user
-                                user.deviceType = "hautomation"; // Default is 'huejay'
+                                user.deviceType = "smarties"; // Default is 'huejay'
 
                                 this.client.users.create(user)
                                     .then(user => {

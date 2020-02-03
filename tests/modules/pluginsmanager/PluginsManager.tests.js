@@ -3,7 +3,7 @@ var chai = require("chai");
 var expect = chai.expect;
 var sinon = require("sinon");
 var GlobalMocks = require("./../../GlobalMocks");
-var HautomationRunnerConstants = require("./../../../HautomationRunnerConstants");
+var SmartiesRunnerConstants = require("./../../../SmartiesRunnerConstants");
 var PluginsManager = require("./../../../src/modules/pluginsmanager/PluginsManager");
 var PluginAPI = require("./../../../src/modules/pluginsmanager/PluginAPI");
 var WebServices = require("./../../../src/services/webservices/WebServices");
@@ -183,7 +183,7 @@ describe("PluginsManager", function() {
         ];
         pluginsManager.confManager = {setData:(key, object, datas, comparator) => {return datas;}};
         pluginsManager.eventBus = {emit:(event) => {
-            expect(event).to.be.equal(HautomationRunnerConstants.RESTART);
+            expect(event).to.be.equal(SmartiesRunnerConstants.RESTART);
         }};
         sinon.spy(pluginsManager.eventBus, "emit");
 

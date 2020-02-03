@@ -26,7 +26,7 @@ const ROUTE_BOT_VOCAL = "/bot/vocal/";
 const ERROR_MIC_IS_NOT_DEFINED = "Could not execute action : mic is not defined";
 
 /**
- * This class manage the Hautomation bot
+ * This class manage the Smarties bot
  * @class
  */
 class BotEngine {
