@@ -10,8 +10,8 @@ systemctl daemon-reload
 systemctl enable smarties
 systemctl restart smarties
 echo ""
-echo "Smarties has been successfully installed !"
+echo "smarties.io has been successfully installed !"
 echo ""
 echo "How to use ?"
-echo "Open a web browser on your computer and go to https://me.smarties.io/ to start, with the username 'admin' and password 'admin' ! (on first installation, start can take some times to install dependencies, wait for some minutes if it dosen't works)"
+echo "Open a web browser on your computer and go to https://me.smarties.io/ to start, with the username 'admin' and password 'admin' !"
 echo ""
