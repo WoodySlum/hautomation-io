@@ -1,6 +1,6 @@
 {
     "name": "smarties-core",
-    "version": "0.0.79",
+    "version": "0.1.0",
     "description": "Smarties core module",
     "main": "SmartiesRunner.js",
     "engines": {
