@@ -1,7 +1,7 @@
 
 
 <p align="center">
-<img src="doc/logo.png" style="" width="500" height="145" />
+<img src="doc/logo-gitlab.png" style="" width="500" height="134" />
 </p>
 
 # smarties.io
