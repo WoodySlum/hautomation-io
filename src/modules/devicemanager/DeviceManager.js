@@ -233,12 +233,17 @@ class DeviceManager {
 
             if (scenario.DevicesListScenarioForm.devices && scenario.DevicesListScenarioForm.devices.length > 0) {
                 scenario.DevicesListScenarioForm.devices.forEach((scenarioDevice) => {
+                    let adjustBrightness = 0;
+                    if (typeof scenarioDevice.updateBrightness !== "undefined") {
+                        adjustBrightness = parseFloat(scenarioDevice.updateBrightness);
+                    }
+                    
                     if (!scenarioDevice.keepParams) {
-                        context.switchDevice(scenarioDevice.identifier, scenarioDevice.status, scenarioDevice.brightness, scenarioDevice.color, scenarioDevice.colorTemperature);
+                        context.switchDevice(scenarioDevice.identifier, scenarioDevice.status, (parseFloat(scenarioDevice.brightness) + adjustBrightness), scenarioDevice.color, scenarioDevice.colorTemperature);
                     } else {
                         const device = context.getDeviceById(scenarioDevice.identifier);
                         if (device) {
-                            context.switchDevice(scenarioDevice.identifier, scenarioDevice.status, device.brightness, device.color, device.colorTemperature);
+                            context.switchDevice(scenarioDevice.identifier, scenarioDevice.status, (parseFloat(device.brightness) + adjustBrightness), device.color, device.colorTemperature);
                         }
                     }
                 });

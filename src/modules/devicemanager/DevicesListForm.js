@@ -75,7 +75,7 @@ class DevicesListForm extends FormObject.class {
          * @Property("updateBrightness");
          * @Type("number");
          * @Title("devices.list.form.color.update.brightness");
-         * @Range([-100, 100, 1]);
+         * @Range([-1, 1, 0.1]);
          */
         this.updateBrightness = updateBrightness;
     }
