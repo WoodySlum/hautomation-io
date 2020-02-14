@@ -117,6 +117,7 @@
         "ajv": "^6.10",
         "annotation": "git://github.com/WoodySlum/node-annotation.git#master",
         "audiohub": "git://github.com/WoodySlum/audiohub.git#master",
+        "bayes": "^1.0.0",
         "body-parser": "^1.19.0",
         "callsite": "^1.0",
         "cloudtuya": "git://github.com/unparagoned/cloudtuya.git#master",

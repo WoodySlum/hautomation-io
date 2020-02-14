@@ -23,6 +23,7 @@ data/*.conf.json
 data/*.json
 data/.uptime
 data/config.json
+data/*.ai
 
 # Camera files
 data/cameras/

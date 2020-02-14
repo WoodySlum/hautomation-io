@@ -35,6 +35,7 @@ const GatewayManager = require("./modules/gatewaymanager/GatewayManager");
 const BotEngine = require("./modules/botengine/BotEngine");
 const LogManager = require("./modules/logmanager/LogManager");
 const BackupManager = require("./modules/backupmanager/BackupManager");
+const AiManager = require("./modules/aimanager/AiManager");
 const CONFIGURATION_FILE = "data/config.json";
 var AppConfiguration = {};
 
@@ -118,6 +119,9 @@ class SmartiesCore {
 
         //  Time event service
         this.timeEventService = new TimeEventService.class();
+
+        // Ai
+        this.aiManager = new AiManager.class(AppConfiguration.configurationPath, this.eventBus, EVENT_STOP, this.timeEventService);
 
         // Init modules
         // Logs
