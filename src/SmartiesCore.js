@@ -120,9 +120,6 @@ class SmartiesCore {
         //  Time event service
         this.timeEventService = new TimeEventService.class();
 
-        // Ai
-        this.aiManager = new AiManager.class(AppConfiguration.configurationPath, this.eventBus, EVENT_STOP, this.timeEventService);
-
         // Init modules
         // Logs
         this.logManager = new LogManager.class(this.webServices);
@@ -155,6 +152,8 @@ class SmartiesCore {
         this.messageManager = new MessageManager.class(this.pluginsManager, this.eventBus, this.userManager, this.dbManager, this.webServices, this.translateManager, this.dashboardManager, this.scenarioManager, AppConfiguration.cachePath);
         // Environment manager
         this.environmentManager = new EnvironmentManager.class(AppConfiguration, this.confManager, this.formManager, this.webServices, this.dashboardManager, this.translateManager, this.scenarioManager, NpmPackage.version, commit, this.installationManager, this.timeEventService, this.eventBus, this.messageManager, EVENT_STOP, EVENT_READY, this.userManager);
+        // Ai
+        this.aiManager = new AiManager.class(AppConfiguration.configurationPath, this.eventBus, EVENT_STOP, this.timeEventService, this.environmentManager);
         // Authentication module
         this.authentication = new Authentication.class(this.webServices, this.userManager, this.environmentManager);
         // Gateway manager module
@@ -169,7 +168,7 @@ class SmartiesCore {
         // IoT manager
         this.iotManager = new IotManager.class(AppConfiguration, this.webServices, this.installationManager, this.formManager, this.environmentManager, this.confManager, this.translateManager, this.messageManager);
         // Sensors manager module
-        this.sensorsManager = new SensorsManager.class(this.pluginsManager, this.eventBus, this.webServices, this.formManager, this.confManager, this.translateManager, this.themeManager, this.botEngine, this.timeEventService, this.scenarioManager);
+        this.sensorsManager = new SensorsManager.class(this.pluginsManager, this.eventBus, this.webServices, this.formManager, this.confManager, this.translateManager, this.themeManager, this.botEngine, this.timeEventService, this.scenarioManager, this.aiManager);
         // RadioManager. The plugins manager will be set later, when the pluginsLoaded event will be triggered
         this.radioManager = new RadioManager.class(this.pluginsManager, this.formManager, this.eventBus, this.scenarioManager, this.webServices, this.translateManager, this.sensorsManager);
         // Device manager module

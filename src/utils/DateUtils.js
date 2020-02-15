@@ -1,5 +1,6 @@
 "use strict";
 const moment = require("moment-timezone");
+const holidays = require("date-holidays");
 const ROUND_TIMESTAMP_MINUTE = 0;
 const ROUND_TIMESTAMP_HOUR = 1;
 const ROUND_TIMESTAMP_DAY = 2;
@@ -101,6 +102,17 @@ class DateUtils {
     static secondsElapsedSinceMidnight(timestamp) {
         const date = new Date(timestamp * 1000);
         return date.getUTCHours() * 3600 + date.getUTCMinutes() * 60 + date.getUTCMinutes();
+    }
+
+    /**
+     * Return the number of seconds elapsed since midnight in UTC format
+     *
+     * @param  {string} country The ISO-3166-3 country code
+     * @param  {number} [timestamp=null] A timestamp in seconds. If null current timestamp provided.
+     * @returns {boolean|Object}           The result
+     */
+    static isHoliday(country, timestamp = null) {
+        return (new holidays(country.substr(0, 2))).isHoliday(new Date(this.dateFormatted("YYYY-MM-DD HH:mm:ss", timestamp)));
     }
 }
 

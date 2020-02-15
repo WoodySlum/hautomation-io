@@ -8,6 +8,8 @@ const { MacScanner } = require("mac-scanner");
 const dns = require("dns");
 const childProcess = require("child_process");
 const machineId = require("node-machine-id");
+const wc = require("which-country");
+const season = require("month-season");
 const Logger = require("./../../logger/Logger");
 const FormConfiguration = require("./../formconfiguration/FormConfiguration");
 const EnvironmentForm = require("./EnvironmentForm");
@@ -197,6 +199,35 @@ class EnvironmentManager {
      */
     getCoordinates() {
         return this.appConfiguration.home;
+    }
+
+    /**
+     * Get ISO-3166-3 country code
+     *
+     * @returns {string} The ISO-3166-3 country code
+     */
+    getCountry() {
+        if (this.getCoordinates()) {
+            return wc([this.getCoordinates().longitude, this.getCoordinates().latitude]);
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the season
+     *
+     * @param  {number} [timestamp=null]      A timestamp
+     *
+     * @returns {string} The ISO-3166-3 country code
+     */
+    getSeason(timestamp = null) {
+        if (!timestamp) {
+            timestamp = DateUtils.class.timestamp();
+        }
+        const date = new Date(DateUtils.class.dateFormatted("YYYY-MM-DD HH:mm:ss", timestamp));
+
+        return season(date.getMonth(), "en");
     }
 
     /**

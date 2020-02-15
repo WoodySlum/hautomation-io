@@ -31,6 +31,8 @@ const SENSOR_NAME_COMPARE_CONFIDENCE = 0.31;
 const EVENT_SENSORS_READY = "event-sensors-ready";
 const EVENT_UPDATE_CONFIG_SENSORS = "update-config-sensors";
 
+const AI_KEY = "sensors";
+
 /**
  * This class allows to manage sensors
  * @class
@@ -49,9 +51,10 @@ class SensorsManager {
      * @param  {BotEngine} botEngine    The bot engine
      * @param  {TimeEventService} timeEventService    The time event service
      * @param  {ScenarioManager} scenarioManager    The scenario manager
+     * @param  {AiManager} aiManager    The ai manager
      * @returns {SensorsManager}                       The instance
      */
-    constructor(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager, botEngine, timeEventService, scenarioManager) {
+    constructor(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager, botEngine, timeEventService, scenarioManager, aiManager) {
         this.pluginsManager = pluginsManager;
         this.webServices = webServices;
         this.formManager = formManager;
@@ -65,6 +68,7 @@ class SensorsManager {
         this.statisticsCache = {};
         this.eventBus = eventBus;
         this.scenarioManager = scenarioManager;
+        this.aiManager = aiManager;
 
         try {
             this.sensorsConfiguration = this.confManager.loadData(Object, CONF_MANAGER_KEY, true);
@@ -116,6 +120,9 @@ class SensorsManager {
                 cb(this.translateManager.t("sensor.bot.notfound"));
             }
         });
+
+        // Machine learning
+        this.aiManager.register(AI_KEY);
     }
 
     /**
@@ -303,6 +310,21 @@ class SensorsManager {
                 }
             }
         });
+
+        // Machine learning
+        if (!process.env.TEST) {
+            const aiClassifiers = [type];
+            const conf = this.getSensorConfiguration(id);
+            if (conf && conf.room && conf.room.room) {
+                aiClassifiers.push(conf.room.room);
+            }
+
+            this.aiManager.learnWithTime(AI_KEY, aiClassifiers, value).then(() => {
+                Logger.verbose("Learned new value for " + id);
+            }).catch((e) => {
+                Logger.err("Error while learning sensor : " + e.message);
+            });
+        }
     }
 
     /**

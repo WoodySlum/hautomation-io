@@ -15,6 +15,7 @@ const eventBus = {on:()=>{}, emit:()=>{}};
 const webServices = {registerAPI:()=>{}};
 const botEngine = {registerBotAction:()=>{}};
 const timeEventService = {register:()=>{}};
+const aiManager = {register:()=>{}};
 const scenarioManager = {register:()=>{}, unregister:()=>{}, triggerScenario:()=>{}, getScenarios:() => {
     return [{
         id:1,
@@ -93,7 +94,7 @@ describe("SensorsManager", function() {
         sinon.spy(eventBus, "on");
         sinon.spy(webServices, "registerAPI");
 
-        const sensorsManager = new SensorsManager.class(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager, botEngine, timeEventService, scenarioManager);
+        const sensorsManager = new SensorsManager.class(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager, botEngine, timeEventService, scenarioManager, aiManager);
         expect(sensorsManager).to.have.property("pluginsManager");
         expect(sensorsManager).to.have.property("webServices");
         expect(sensorsManager).to.have.property("formManager");
@@ -119,7 +120,7 @@ describe("SensorsManager", function() {
     });
 
     it("pluginsLoaded should call initSensors and set pluginsManager", function() {
-        const sensorsManager = new SensorsManager.class(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager, botEngine, timeEventService, scenarioManager);
+        const sensorsManager = new SensorsManager.class(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager, botEngine, timeEventService, scenarioManager, aiManager);
         sinon.stub(sensorsManager, "initSensors");
 
         sensorsManager.pluginsLoaded("foo", sensorsManager);
@@ -130,7 +131,7 @@ describe("SensorsManager", function() {
     });
 
     it("initSensors should call initSensor 2 times", function() {
-        const sensorsManager = new SensorsManager.class(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager, botEngine, timeEventService, scenarioManager);
+        const sensorsManager = new SensorsManager.class(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager, botEngine, timeEventService, scenarioManager, aiManager);
         sensorsManager.sensorsConfiguration = [{id:"foo", name:"foo"}, {id:"bar", name:"bar"}];
         sinon.stub(sensorsManager, "initSensor");
 
@@ -142,14 +143,14 @@ describe("SensorsManager", function() {
 
     it("initSensor should instantiate an object", function() {
         initIndicator = false;
-        const sensorsManager = new SensorsManager.class(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager, botEngine, timeEventService, scenarioManager);
+        const sensorsManager = new SensorsManager.class(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager, botEngine, timeEventService, scenarioManager, aiManager);
         sensorsManager.initSensor({plugin:"foo"});
         expect(sensorsManager.sensors.length).to.be.equal(1);
         expect(initIndicator).to.be.true;
     });
 
     it("statisticsWsResponse should raise an error due to empty statistics", function() {
-        const sensorsManager = new SensorsManager.class(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager, botEngine, timeEventService, scenarioManager);
+        const sensorsManager = new SensorsManager.class(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager, botEngine, timeEventService, scenarioManager, aiManager);
         const p = sensorsManager.statisticsWsResponse(1501754581, 31 * 24 * 60 * 60, 60 * 60, "Y");
 
         p.then((msg) => {
@@ -162,7 +163,7 @@ describe("SensorsManager", function() {
     });
 
     it("statisticsWsResponse should send correct parameters to getStatistics", function() {
-        const sensorsManager = new SensorsManager.class(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager, botEngine, timeEventService, scenarioManager);
+        const sensorsManager = new SensorsManager.class(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager, botEngine, timeEventService, scenarioManager, aiManager);
         sensorsManager.initSensor({plugin:"foo"});
         statisticsParameters = null;
         const p = sensorsManager.statisticsWsResponse(1501754581, 31 * 24 * 60 * 60, 60 * 60, "foo", "bar", "foobar");
@@ -182,7 +183,7 @@ describe("SensorsManager", function() {
     });
 
     it("register for sensor events should work as well", function() {
-        const sensorsManager = new SensorsManager.class(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager, botEngine, timeEventService, scenarioManager);
+        const sensorsManager = new SensorsManager.class(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager, botEngine, timeEventService, scenarioManager, aiManager);
         sensorsManager.registerSensorEvent((id, type, value, unit, vcc, aggValue, aggUnit) => { });
         expect(Object.keys(sensorsManager.delegates).length).to.be.equal(1);
         sensorsManager.registerSensorEvent((id, type, value, unit, vcc, aggValue, aggUnit) => { }, 22, "FOO");
@@ -190,7 +191,7 @@ describe("SensorsManager", function() {
     });
 
     it("unregister for sensor events should work as well", function() {
-        const sensorsManager = new SensorsManager.class(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager, botEngine, timeEventService, scenarioManager);
+        const sensorsManager = new SensorsManager.class(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager, botEngine, timeEventService, scenarioManager, aiManager);
         const cb = (id, type, value, unit, vcc, aggValue, aggUnit) => {};
         sensorsManager.registerSensorEvent(cb);
         expect(Object.keys(sensorsManager.delegates).length).to.be.equal(1);
@@ -201,7 +202,7 @@ describe("SensorsManager", function() {
     });
 
     it("unregister for sensor should throw an error due to unexisting element", function() {
-        const sensorsManager = new SensorsManager.class(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager, botEngine, timeEventService, scenarioManager);
+        const sensorsManager = new SensorsManager.class(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager, botEngine, timeEventService, scenarioManager, aiManager);
         const cb = (id, type, value, unit, vcc, aggValue, aggUnit) => {};
         sensorsManager.registerSensorEvent(cb);
         expect(Object.keys(sensorsManager.delegates).length).to.be.equal(1);
@@ -214,7 +215,7 @@ describe("SensorsManager", function() {
     });
 
     it("getAllSensors should return a list of sensors", function() {
-        const sensorsManager = new SensorsManager.class(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager, botEngine, timeEventService, scenarioManager);
+        const sensorsManager = new SensorsManager.class(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager, botEngine, timeEventService, scenarioManager, aiManager);
         sensorsManager.sensors.push({id:22,name:"foo"});
         sensorsManager.sensors.push({id:27, name:"bar"});
         expect(Object.keys(sensorsManager.getAllSensors()).length).to.be.equal(2);
@@ -223,7 +224,7 @@ describe("SensorsManager", function() {
     });
 
     it("onNewSensorValue should trigger a scenario when equals", function() {
-        const sensorsManager = new SensorsManager.class(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager, botEngine, timeEventService, scenarioManager);
+        const sensorsManager = new SensorsManager.class(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager, botEngine, timeEventService, scenarioManager, aiManager);
         sinon.spy(scenarioManager, "triggerScenario");
         sensorsManager.onNewSensorValue(100, null, 30, null, 0, null, null);
         expect(scenarioManager.triggerScenario.calledOnce).to.be.true;
@@ -231,7 +232,7 @@ describe("SensorsManager", function() {
     });
 
     it("onNewSensorValue should trigger a scenario when above", function() {
-        const sensorsManager = new SensorsManager.class(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager, botEngine, timeEventService, scenarioManager);
+        const sensorsManager = new SensorsManager.class(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager, botEngine, timeEventService, scenarioManager, aiManager);
         sinon.spy(scenarioManager, "triggerScenario");
         sensorsManager.onNewSensorValue(101, null, 30, null, 0, null, null);
         expect(scenarioManager.triggerScenario.calledOnce).to.be.true;
@@ -239,7 +240,7 @@ describe("SensorsManager", function() {
     });
 
     it("onNewSensorValue should trigger a scenario when below", function() {
-        const sensorsManager = new SensorsManager.class(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager, botEngine, timeEventService, scenarioManager);
+        const sensorsManager = new SensorsManager.class(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager, botEngine, timeEventService, scenarioManager, aiManager);
         sinon.spy(scenarioManager, "triggerScenario");
         sensorsManager.onNewSensorValue(101, null, 1, null, 0, null, null);
         expect(scenarioManager.triggerScenario.calledOnce).to.be.true;
@@ -247,7 +248,7 @@ describe("SensorsManager", function() {
     });
 
     it("onNewSensorValue should not trigger a scenario", function() {
-        const sensorsManager = new SensorsManager.class(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager, botEngine, timeEventService, scenarioManager);
+        const sensorsManager = new SensorsManager.class(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager, botEngine, timeEventService, scenarioManager, aiManager);
         sinon.spy(scenarioManager, "triggerScenario");
         sensorsManager.onNewSensorValue(100, null, 1, null, 0, null, null);
         expect(scenarioManager.triggerScenario.notCalled).to.be.true;
@@ -255,7 +256,7 @@ describe("SensorsManager", function() {
     });
 
     it("onNewSensorValue should trigger a scenario when any value is sent", function() {
-        const sensorsManager = new SensorsManager.class(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager, botEngine, timeEventService, scenarioManager);
+        const sensorsManager = new SensorsManager.class(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager, botEngine, timeEventService, scenarioManager, aiManager);
         sinon.spy(scenarioManager, "triggerScenario");
         sensorsManager.onNewSensorValue(102, null, null, null, 0, null, null);
         expect(scenarioManager.triggerScenario.calledOnce).to.be.true;

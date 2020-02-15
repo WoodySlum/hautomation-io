@@ -3,9 +3,15 @@
 const bayes = require("bayes");
 const fs = require("fs");
 const Logger = require("./../../logger/Logger");
+const DateUtils = require("./../../utils/DateUtils");
 const TimeEventService = require("./../../services/timeeventservice/TimeEventService");
 
 const ERROR_NO_CLASSIFIER = "No classifier registered";
+const CLASS_DAYS = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+const CLASS_MONTHS = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
+const CLASS_DAYOFF = ["workon", "workoff"];
+const CLASS_DAYNIGHT = ["day", "night"];
+const CLASS_TIME = "time";
 
 /**
  * This class is used for artificial intelligence and machine learning
@@ -19,12 +25,14 @@ class AiManager {
      * @param  {EventEmitter} eventBus    The global event bus
      * @param  {string} stopEventName    The stop event name
      * @param  {TimeEventService} timeEventService    The time event service
+     * @param  {EnvironmentManager} environmentManager    The environment manager
      *
      * @returns {AiManager} The instance
      */
-    constructor(configurationPath, eventBus, stopEventName, timeEventService) {
+    constructor(configurationPath, eventBus, stopEventName, timeEventService, environmentManager) {
         this.databaseFile = configurationPath + "data.ai";
         this.timeEventService = timeEventService;
+        this.environmentManager = environmentManager;
         this.classifiers = {};
 
         try {
@@ -67,6 +75,32 @@ class AiManager {
         } else {
             throw Error(ERROR_NO_CLASSIFIER + " " + key);
         }
+    }
+
+    /**
+     * Learn time data to ai engine
+     *
+     * @param  {string} key A key
+     * @param  {Array} data    The data
+     * @param  {string} classification    The classification
+     *
+     * @returns {Promise} The promise
+     */
+    learnWithTime(key, data, classification) {
+        const timestamp = DateUtils.class.timestamp();
+        const date = new Date(DateUtils.class.dateFormatted("YYYY-MM-DD HH:mm:ss", timestamp));
+
+        data.push(CLASS_DAYS[date.getDay()]);
+
+        data.push(CLASS_MONTHS[date.getMonth()]);
+        if (this.environmentManager.getCoordinates()) {
+            data.push(CLASS_DAYOFF[(DateUtils.class.isHoliday(this.environmentManager.getCountry(), timestamp) ? 0 : 1)]);
+        }
+        data.push(CLASS_DAYNIGHT[(this.environmentManager.isNight() ? 1 : 0)]);
+        data.push(this.environmentManager.getSeason(timestamp));
+        data.push(CLASS_TIME + date.getHours());
+
+        return this.learn(key, data, classification);
     }
 
     /**
