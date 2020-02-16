@@ -596,9 +596,7 @@ function loaded(api) {
 
             // Presence
             if (d && d.state && d.uniqueid && d.r == "sensors" && d.state.hasOwnProperty("presence")) {
-                if (d.state.presence === true) {
-                    this.onRadioEvent(2400, "zigbee", d.uniqueid, 1, (d.state.presence ? 1 : 0), this.constants().STATUS_ON, "PRESENCE");
-                }
+                this.onRadioEvent(2400, "zigbee", d.uniqueid, 1, (d.state.presence ? 1 : 0), this.constants().STATUS_ON, "PRESENCE");
             }
 
             // Battery
