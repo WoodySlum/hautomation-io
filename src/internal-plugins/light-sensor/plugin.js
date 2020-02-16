@@ -43,6 +43,11 @@ function loaded(api) {
             this.chartType = api.exported.Sensor.constants().CHART_TYPE_BAR;
             this.aggregationMode = api.exported.Sensor.constants().AGGREGATION_MODE_AVG;
             this.unit = api.translateAPI.t("light.unit.lux");
+            this.addClassifier(null, 100, 100);
+            this.addClassifier(101, 500, 500);
+            this.addClassifier(501, 1000, 1000);
+            this.addClassifier(1001, 3000, 3000);
+            this.addClassifier(3001, null, 5000);
         }
     }
 

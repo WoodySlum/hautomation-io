@@ -57,6 +57,11 @@ function loaded(api) {
         constructor(api, id, configuration) {
             super(api, id, "PERCENT", configuration, api.exported.Icons.class.list()["percent"], 0, null, api.exported.Sensor.constants().AGGREGATION_MODE_AVG);
             this.unit = "%";
+            this.addClassifier(null, 10, 10);
+            this.addClassifier(11, 30, 30);
+            this.addClassifier(31, 50, 50);
+            this.addClassifier(51, 80, 80);
+            this.addClassifier(81, null, 100);
         }
     }
 

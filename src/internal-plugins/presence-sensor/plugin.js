@@ -47,6 +47,9 @@ function loaded(api) {
             this.addUnitAggregation(api.translateAPI.t("presence.unit.hours"), 1 * 60 * 60);
             this.addUnitAggregation(api.translateAPI.t("presence.unit.days"), 1 * 60 * 60 * 24);
             this.addUnitAggregation(api.translateAPI.t("presence.unit.months"), 1 * 60 * 60 * 24 * 30);
+
+            this.addClassifier(null, 0.99, 0);
+            this.addClassifier(1, null, 1);
         }
     }
 

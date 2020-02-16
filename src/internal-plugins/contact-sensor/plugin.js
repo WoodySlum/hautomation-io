@@ -43,6 +43,8 @@ function loaded(api) {
             this.chartType = api.exported.Sensor.constants().CHART_TYPE_BAR;
             this.aggregationMode = api.exported.Sensor.constants().AGGREGATION_MODE_LAST;
             this.unit = api.translateAPI.t("contact.unit.state");
+            this.addClassifier(null, 0.99, 0);
+            this.addClassifier(1, null, 1);
         }
 
         /**

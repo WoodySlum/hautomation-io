@@ -44,6 +44,11 @@ function loaded(api) {
             super(api, id, configuration);
             this.icon = api.exported.Icons.class.list()["envira"];
             this.type = "PLANT-SENSOR";
+            this.addClassifier(null, 10, 10);
+            this.addClassifier(11, 30, 30);
+            this.addClassifier(31, 50, 50);
+            this.addClassifier(51, 80, 80);
+            this.addClassifier(81, null, 100);
         }
 
         /**

@@ -73,6 +73,18 @@ function loaded(api) {
         constructor(api, id, configuration) {
             super(api, id, "TEMPERATURE", configuration, api.exported.Icons.class.list()["uniF2C8"], 0);
             this.setUnit(configuration.unit);
+            this.addClassifier(null, -30, -30);
+            this.addClassifier(-29, -20, -20);
+            this.addClassifier(-19, -10, -10);
+            this.addClassifier(-9, -5, -5);
+            this.addClassifier(-4, 0, -4);
+            this.addClassifier(1, 5, 5);
+            this.addClassifier(6, 10, 10);
+            this.addClassifier(11, 20, 20);
+            this.addClassifier(21, 30, 30);
+            this.addClassifier(31, 40, 40);
+            this.addClassifier(41, 50, 50);
+            this.addClassifier(50, null, 60);
         }
 
         /**

@@ -57,7 +57,16 @@ function loaded(api) {
         constructor(api, id, configuration) {
             super(api, id, "PRESSURE", configuration, api.exported.Icons.class.list()["_481"], 0);
             this.unit = "Pa";
+
             this.addUnitAggregation("hPa", 100);
+            this.addClassifier(null, 99000, 99000);
+            this.addClassifier(99001, 99600, 99600);
+            this.addClassifier(99601, 99800, 99800);
+            this.addClassifier(99801, 100000, 100000);
+            this.addClassifier(100001, 101000, 101000);
+            this.addClassifier(101001, 102000, 102000);
+            this.addClassifier(102001, 103000, 103000);
+            this.addClassifier(103001, null, 104000);
         }
     }
 

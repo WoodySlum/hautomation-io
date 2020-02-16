@@ -69,6 +69,14 @@ function loaded(api) {
         constructor(api, id, configuration) {
             super(api, id, "WIND", configuration, api.exported.Icons.class.list()["wind"], 0);
             this.setUnit(configuration.unit);
+            this.addClassifier(null, 30, 30);
+            this.addClassifier(31, 60, 60);
+            this.addClassifier(61, 90, 90);
+            this.addClassifier(91, 120, 120);
+            this.addClassifier(121, 150, 150);
+            this.addClassifier(151, 180, 180);
+            this.addClassifier(181, 200, 200);
+            this.addClassifier(201, null, 220);
         }
 
         /**

@@ -238,6 +238,7 @@ function loaded(api) {
             this.dashboardGranularity = dashboardGranularity;
             this.chartType = chartType;
             this.type = type;
+            this.classifiers = [];
 
             if (!this.id || !this.configuration || !this.type) {
                 throw Error("Sensor does not have configuration or identifier or type !");
@@ -739,6 +740,45 @@ function loaded(api) {
                     }
                 });
             }, this, mode, null, null, null, TMP_FILE_PREFIX + configuration.id);
+        }
+
+        /**
+         * Add a classifier for ai
+         *
+         * @param  {number} thresholdMin      Threshold min
+         * @param  {number} thresholdMax      Threshold max
+         * @param  {number|string} classifier      Classifier
+         */
+        addClassifier(thresholdMin, thresholdMax, classifier) {
+            this.classifiers.push({thresholdMin: thresholdMin, thresholdMax: thresholdMax, classifier:classifier});
+            this.classifiers.sort((a, b) => (a.thresholdMin == null ? -1 : (a.thresholdMin > b.thresholdMin) ? 1 : ((b.thresholdMin > a.thresholdMin) ? -1 : 0)));
+        }
+
+        /**
+         * Get the classifier
+         *
+         * @param  {number} value      The value
+         *
+         * @returns {number|string} The classifier. If null no classifier match
+         */
+        getClassifierForValue(value) {
+            let classifierResult = null;
+            this.classifiers.forEach((classifier) => {
+                if (classifier.thresholdMin == null && value <= classifier.thresholdMax) {
+                    classifierResult = classifier.classifier;
+                }
+
+                if (classifier.thresholdMin != null && classifier.thresholdMax != null && value >= classifier.thresholdMin && value <= classifier.thresholdMax) {
+                    classifierResult = classifier.classifier;
+                }
+
+                if (classifier.thresholdMax == null && value >= classifier.thresholdMin) {
+                    classifierResult = classifier.classifier;
+                }
+            });
+
+
+            return classifierResult;
         }
     }
 

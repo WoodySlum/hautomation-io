@@ -57,6 +57,12 @@ function loaded(api) {
         constructor(api, id, configuration) {
             super(api, id, "SIGNAL-DB", configuration, api.exported.Icons.class.list()["signal"], 0);
             this.unit = "dBm";
+            this.addClassifier(null, -120, -120);
+            this.addClassifier(-119, -100, -100);
+            this.addClassifier(-99, -80, -80);
+            this.addClassifier(-79, -60, -60);
+            this.addClassifier(-59, -40, -40);
+            this.addClassifier(-39, null, -30);
         }
     }
 

@@ -313,17 +313,20 @@ class SensorsManager {
 
         // Machine learning
         if (!process.env.TEST) {
-            const aiClassifiers = [type];
-            const conf = this.getSensorConfiguration(id);
-            if (conf && conf.room && conf.room.room) {
-                aiClassifiers.push(conf.room.room);
-            }
+            const classifiedValue = this.getSensor(id).getClassifierForValue(value);
+            if (classifiedValue) {
+                const aiClassifiers = [type];
+                const conf = this.getSensorConfiguration(id);
+                if (conf && conf.room && conf.room.room) {
+                    aiClassifiers.push(conf.room.room);
+                }
 
-            this.aiManager.learnWithTime(AI_KEY, aiClassifiers, value).then(() => {
-                Logger.verbose("Learned new value for " + id);
-            }).catch((e) => {
-                Logger.err("Error while learning sensor : " + e.message);
-            });
+                this.aiManager.learnWithTime(AI_KEY, aiClassifiers, classifiedValue).then(() => {
+                    Logger.verbose("Learned new value for " + id);
+                }).catch((e) => {
+                    Logger.err("Error while learning sensor : " + e.message);
+                });
+            }
         }
     }
 

@@ -58,6 +58,15 @@ function loaded(api) {
             super(api, id, "ELECTRICITY", configuration, api.exported.Icons.class.list()["bolt"], 0);
             this.unit = "wH";
             this.addUnitAggregation("kwH", 1000);
+            this.addClassifier(null, 1000, 1000);
+            this.addClassifier(1001, 2000, 2000);
+            this.addClassifier(2001, 5000, 5000);
+            this.addClassifier(5001, 8000, 8000);
+            this.addClassifier(8001, 11000, 11000);
+            this.addClassifier(11001, 13000, 13000);
+            this.addClassifier(13001, 16000, 16000);
+            this.addClassifier(16001, 20000, 20000);
+            this.addClassifier(20001, null, 21000);
         }
     }
 

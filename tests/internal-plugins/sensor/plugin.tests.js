@@ -497,6 +497,25 @@ describe("Sensor", function() {
         }, 1578597743);
     });
 
+    it("classifier should return good value", function() {
+        let sensor = new Sensor(plugin, 90, "FOOBARCLASSIFIER", {});
+        let sensor2 = new Sensor(plugin, 91, "FOOBARCLASSIFIER2", {});
+        let sensor3 = new Sensor(plugin, 92, "FOOBARCLASSIFIER3", {});
+        sensor.addClassifier(100, 200, 100);
+        sensor.addClassifier(201, 300, 200);
+        sensor.addClassifier(null, 99, 50);
+        sensor.addClassifier(301, null, 300);
+        sensor3.addClassifier(null, 0.99, 0);
+        sensor3.addClassifier(1, null, 1);
+
+        expect(sensor.getClassifierForValue(30)).to.be.equal(50);
+        expect(sensor.getClassifierForValue(250)).to.be.equal(200);
+        expect(sensor.getClassifierForValue(800)).to.be.equal(300);
+        expect(sensor2.getClassifierForValue(800)).to.be.null;
+        expect(sensor3.getClassifierForValue(0)).to.be.equal(0);
+        expect(sensor3.getClassifierForValue(1)).to.be.equal(1);
+    });
+
     after(() => {
 
     });

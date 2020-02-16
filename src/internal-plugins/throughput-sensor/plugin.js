@@ -58,6 +58,12 @@ function loaded(api) {
             super(api, id, "THROUGHPUT", configuration, api.exported.Icons.class.list()["_578"], 0);
             this.unit = "kBs";
             this.addUnitAggregation("mB/s", 1024);
+            this.addClassifier(null, 1024, 1024);
+            this.addClassifier(1025, 10240, 10240);
+            this.addClassifier(10241, 30720, 30720);
+            this.addClassifier(30721, 81920, 81920);
+            this.addClassifier(81921, 122880, 122880);
+            this.addClassifier(122881, null, 204800);
         }
     }
 

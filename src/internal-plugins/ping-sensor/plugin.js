@@ -71,6 +71,15 @@ function loaded(api) {
         constructor(api, id, configuration) {
             super(api, id, "PING", configuration, api.exported.Icons.class.list()["gamepad"], 0);
             this.unit = "ms";
+            this.addClassifier(null, 10, 10);
+            this.addClassifier(11, 30, 30);
+            this.addClassifier(31, 50, 50);
+            this.addClassifier(51, 80, 80);
+            this.addClassifier(81, 100, 100);
+            this.addClassifier(101, 300, 300);
+            this.addClassifier(301, 800, 800);
+            this.addClassifier(801, 1500, 1500);
+            this.addClassifier(1501, null, 3000);
         }
 
         /**
