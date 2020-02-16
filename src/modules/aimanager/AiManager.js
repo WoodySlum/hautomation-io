@@ -120,6 +120,31 @@ class AiManager {
     }
 
     /**
+     * Guess time data to ai engine
+     *
+     * @param  {string} key A key
+     * @param  {Array} data    The data
+     * @param  {number} timestamp    The desired timestamp
+     *
+     * @returns {Promise} The promise
+     */
+    guessWithTime(key, data, timestamp) {
+        const date = new Date(DateUtils.class.dateFormatted("YYYY-MM-DD HH:mm:ss", timestamp));
+
+        data.push(CLASS_DAYS[date.getDay()]);
+
+        data.push(CLASS_MONTHS[date.getMonth()]);
+        if (this.environmentManager.getCoordinates()) {
+            data.push(CLASS_DAYOFF[(DateUtils.class.isHoliday(this.environmentManager.getCountry(), timestamp) ? 0 : 1)]);
+        }
+
+        data.push(this.environmentManager.getSeason(timestamp));
+        data.push(CLASS_TIME + date.getHours());
+
+        return this.guess(key, data);
+    }
+
+    /**
      * Register
      *
      * @param  {string} key A key
