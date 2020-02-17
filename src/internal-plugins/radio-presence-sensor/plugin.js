@@ -71,11 +71,15 @@ function loaded(api) {
             super(api, id, configuration);
             this.lastEmitted = 0;
             const self = this;
-            api.exported.Radio.registerSensor(api, this, () => {
+            api.exported.Radio.registerSensor(api, this, (radioObj) => {
                 const timestamp = api.exported.DateUtils.class.timestamp();
                 if (self.lastEmitted < (timestamp - LOCK_TIME)) {
-                    self.setValue(LOCK_TIME);
-                    self.lastEmitted = timestamp;
+                    if (radioObj.value > 0) {
+                        self.setValue(LOCK_TIME);
+                        self.lastEmitted = timestamp;
+                    } else {
+                        self.setValue(0);
+                    }
                 }
             });
         }
