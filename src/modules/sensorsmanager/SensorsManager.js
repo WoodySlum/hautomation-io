@@ -320,6 +320,9 @@ class SensorsManager {
                 if (conf && conf.room && conf.room.room) {
                     aiClassifiers.push(conf.room.room);
                 }
+                if (conf.name) {
+                    aiClassifiers.push(conf.name);
+                }
 
                 this.aiManager.learnWithTime(AI_KEY, aiClassifiers, classifiedValue).then(() => {
                     Logger.verbose("Learned new value for " + id);
