@@ -750,7 +750,7 @@ function loaded(api) {
          * @param  {number|string} classifier      Classifier
          */
         addClassifier(thresholdMin, thresholdMax, classifier) {
-            this.classifiers.push({thresholdMin: thresholdMin, thresholdMax: thresholdMax, classifier:classifier});
+            this.classifiers.push({thresholdMin: thresholdMin, thresholdMax: thresholdMax, classifier:(this.type + "@" + classifier)});
             this.classifiers.sort((a, b) => (a.thresholdMin == null ? -1 : (a.thresholdMin > b.thresholdMin) ? 1 : ((b.thresholdMin > a.thresholdMin) ? -1 : 0)));
         }
 

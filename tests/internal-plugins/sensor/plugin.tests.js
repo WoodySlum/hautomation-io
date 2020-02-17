@@ -508,12 +508,12 @@ describe("Sensor", function() {
         sensor3.addClassifier(null, 0.99, 0);
         sensor3.addClassifier(1, null, 1);
 
-        expect(sensor.getClassifierForValue(30)).to.be.equal(50);
-        expect(sensor.getClassifierForValue(250)).to.be.equal(200);
-        expect(sensor.getClassifierForValue(800)).to.be.equal(300);
+        expect(sensor.getClassifierForValue(30)).to.be.equal("FOOBARCLASSIFIER@" + 50);
+        expect(sensor.getClassifierForValue(250)).to.be.equal("FOOBARCLASSIFIER@" + 200);
+        expect(sensor.getClassifierForValue(800)).to.be.equal("FOOBARCLASSIFIER@" + 300);
         expect(sensor2.getClassifierForValue(800)).to.be.null;
-        expect(sensor3.getClassifierForValue(0)).to.be.equal(0);
-        expect(sensor3.getClassifierForValue(1)).to.be.equal(1);
+        expect(sensor3.getClassifierForValue(0)).to.be.equal("FOOBARCLASSIFIER3@" + 0);
+        expect(sensor3.getClassifierForValue(1)).to.be.equal("FOOBARCLASSIFIER3@" + 1);
     });
 
     after(() => {
