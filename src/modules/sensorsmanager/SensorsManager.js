@@ -313,12 +313,18 @@ class SensorsManager {
 
         // Machine learning
         if (!process.env.TEST) {
-            const classifiedValue = this.getSensor(id).getClassifierForValue(value);
+            const sensor = this.getSensor(id);
+            const classifiedValue = sensor.getClassifierForValue(value);
             if (classifiedValue) {
                 const aiClassifiers = [type];
                 const conf = this.getSensorConfiguration(id);
+
                 if (conf && conf.room && conf.room.room) {
                     aiClassifiers.push(conf.room.room);
+                }
+
+                if (sensor.name) {
+                    aiClassifiers.push(sensor.name);
                 }
 
                 this.aiManager.learnWithTime(AI_KEY, aiClassifiers, classifiedValue).then(() => {
@@ -334,14 +340,15 @@ class SensorsManager {
      * Guess a sensor value with machine learning
      *
      * @param  {number} timestamp   The projected timestamp
-     * @param  {string} [identifier=null]     A sensor identifier. If this parameter is set, there is no need to set `room` and `type`
+     * @param  {string} [identifier=null]     A sensor identifier. If this parameter is set, there is no need to set `room`, `type` and `name`
      * @param  {string} [room=null]     A room
      * @param  {string} [type=null]     A sensor type
+     * @param  {string} [name=null]     A sensor name
      * @param  {Function} [cb=null]    A callback. If not provided, a promise will be returned. Example : `(err, value, sensorType) => {}`
      *
      * @returns {Promise|null} If cb is not provided, a promise will be returned.
      */
-    guessSensorValue(timestamp, identifier = null, room = null, type = null, cb = null) {
+    guessSensorValue(timestamp, identifier = null, room = null, type = null, name = null, cb = null) {
         const aiClassifiers = [];
         if (identifier) {
             const conf = this.getSensorConfiguration(identifier);
@@ -350,14 +357,22 @@ class SensorsManager {
             if (conf && conf.room && conf.room.room) {
                 aiClassifiers.push(conf.room.room);
             }
-        }
 
-        if (room) {
-            aiClassifiers.push(room);
-        }
+            if (sensor.name) {
+                aiClassifiers.push(sensor.name);
+            }
+        } else {
+            if (room) {
+                aiClassifiers.push(room);
+            }
 
-        if (type) {
-            aiClassifiers.push(type);
+            if (type) {
+                aiClassifiers.push(type);
+            }
+
+            if (name) {
+                aiClassifiers.push(name);
+            }
         }
 
         if (cb) {

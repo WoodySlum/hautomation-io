@@ -148,15 +148,16 @@ class SensorAPI {
      * Guess a sensor value with machine learning
      *
      * @param  {number} timestamp   The projected timestamp
-     * @param  {string} [identifier=null]     A sensor identifier. If this parameter is set, there is no need to set `room` and `type`
+     * @param  {string} [identifier=null]     A sensor identifier. If this parameter is set, there is no need to set `room`, `type` and `name`
      * @param  {string} [room=null]     A room
      * @param  {string} [type=null]     A sensor type
+     * @param  {string} [name=null]     A sensor name
      * @param  {Function} [cb=null]    A callback. If not provided, a promise will be returned. Example : `(err, value, sensorType) => {}`
      *
      * @returns {Promise|null} If cb is not provided, a promise will be returned.
      */
-    guessSensorValue(timestamp, identifier = null, room = null, type = null, cb = null) {
-        return PrivateProperties.oprivate(this).sensorsManager.guessSensorValue(timestamp, identifier, room, type, cb);
+    guessSensorValue(timestamp, identifier = null, room = null, type = null, name = null, cb = null) {
+        return PrivateProperties.oprivate(this).sensorsManager.guessSensorValue(timestamp, identifier, room, type, name, cb);
     }
 }
 
