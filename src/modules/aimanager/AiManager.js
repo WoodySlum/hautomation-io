@@ -7,6 +7,7 @@ const DateUtils = require("./../../utils/DateUtils");
 const TimeEventService = require("./../../services/timeeventservice/TimeEventService");
 
 const ERROR_NO_CLASSIFIER = "No classifier registered";
+const DB_FILE_EXTENSION = ".ai";
 const CLASS_DAYS = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
 const CLASS_MONTHS = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
 const CLASS_DAYOFF = ["workon", "workoff"];
@@ -30,7 +31,7 @@ class AiManager {
      * @returns {AiManager} The instance
      */
     constructor(configurationPath, eventBus, stopEventName, timeEventService, environmentManager) {
-        this.databaseFile = configurationPath + "data.ai";
+        this.databaseFile = configurationPath + "data" + DB_FILE_EXTENSION;
         this.timeEventService = timeEventService;
         this.environmentManager = environmentManager;
         this.classifiers = {};
@@ -198,4 +199,4 @@ class AiManager {
 
 }
 
-module.exports = {class:AiManager, ERROR_NO_CLASSIFIER:ERROR_NO_CLASSIFIER};
+module.exports = {class:AiManager, ERROR_NO_CLASSIFIER:ERROR_NO_CLASSIFIER, DB_FILE_EXTENSION:DB_FILE_EXTENSION};

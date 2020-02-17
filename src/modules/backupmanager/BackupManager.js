@@ -8,6 +8,7 @@ const extractzip = require("extract-zip");
 const DateUtils = require("./../../utils/DateUtils");
 const Logger = require("./../../logger/Logger");
 const ConfManager = require("./../confmanager/ConfManager");
+const AiManager = require("./../aimanager/AiManager");
 const SmartiesRunnerConstants = require("./../../../SmartiesRunnerConstants");
 const DATA_TYPE_CONF = 0;
 const DATA_TYPE_DB = 1;
@@ -119,7 +120,7 @@ class BackupManager {
         if (saveConfig) {
             const files = fs.readdirSync(this.appConfiguration.configurationPath);
             files.forEach((file) => {
-                if (path.extname(file) && path.extname(file) === ConfManager.CONF_FILE_EXTENSION) {
+                if (path.extname(file) && (path.extname(file) === ConfManager.CONF_FILE_EXTENSION || path.extname(file) === AiManager.DB_FILE_EXTENSION)) {
                     backupFiles.push(this.formatFileEntry(this.appConfiguration.configurationPath + file, backupDirPath + file, file, DATA_TYPE_CONF));
                 }
             });
