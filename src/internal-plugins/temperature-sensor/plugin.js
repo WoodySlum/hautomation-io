@@ -80,10 +80,18 @@ function loaded(api) {
             this.addClassifier(-4, 0, -4);
             this.addClassifier(1, 5, 5);
             this.addClassifier(6, 10, 10);
-            this.addClassifier(11, 20, 20);
-            this.addClassifier(21, 30, 30);
-            this.addClassifier(31, 40, 40);
-            this.addClassifier(41, 50, 50);
+            this.addClassifier(11, 12, 12);
+            this.addClassifier(13, 15, 15);
+            this.addClassifier(16, 18, 18);
+            this.addClassifier(19, 20, 20);
+            this.addClassifier(21, 23, 23);
+            this.addClassifier(24, 26, 26);
+            this.addClassifier(27, 29, 29);
+            this.addClassifier(30, 32, 32);
+            this.addClassifier(33, 35, 35);
+            this.addClassifier(36, 38, 38);
+            this.addClassifier(39, 42, 42);
+            this.addClassifier(43, 50, 50);
             this.addClassifier(50, null, 60);
         }
 

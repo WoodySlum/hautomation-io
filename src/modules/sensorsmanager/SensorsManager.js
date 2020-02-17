@@ -320,9 +320,6 @@ class SensorsManager {
                 if (conf && conf.room && conf.room.room) {
                     aiClassifiers.push(conf.room.room);
                 }
-                if (conf.name) {
-                    aiClassifiers.push(conf.name);
-                }
 
                 this.aiManager.learnWithTime(AI_KEY, aiClassifiers, classifiedValue).then(() => {
                     Logger.verbose("Learned new value for " + id);
@@ -330,6 +327,65 @@ class SensorsManager {
                     Logger.err("Error while learning sensor : " + e.message);
                 });
             }
+        }
+    }
+
+    /**
+     * Guess a sensor value with machine learning
+     *
+     * @param  {number} timestamp   The projected timestamp
+     * @param  {string} [identifier=null]     A sensor identifier. If this parameter is set, there is no need to set `room` and `type`
+     * @param  {string} [room=null]     A room
+     * @param  {string} [type=null]     A sensor type
+     * @param  {Function} [cb=null]    A callback. If not provided, a promise will be returned. Example : `(err, value, sensorType) => {}`
+     *
+     * @returns {Promise|null} If cb is not provided, a promise will be returned.
+     */
+    guessSensorValue(timestamp, identifier = null, room = null, type = null, cb = null) {
+        const aiClassifiers = [];
+        if (identifier) {
+            const conf = this.getSensorConfiguration(identifier);
+            const sensor = this.getSensor(identifier);
+            aiClassifiers.push(sensor.type);
+            if (conf && conf.room && conf.room.room) {
+                aiClassifiers.push(conf.room.room);
+            }
+        }
+
+        if (room) {
+            aiClassifiers.push(room);
+        }
+
+        if (type) {
+            aiClassifiers.push(type);
+        }
+
+        if (cb) {
+            this.aiManager.guessWithTime(AI_KEY, aiClassifiers, timestamp).then((res) => {
+                if (res && res.indexOf("@") > 0) {
+                    const resSplit = res.split("@");
+                    cb(null, parseFloat(resSplit[1]), resSplit[0]);
+                } else {
+                    cb(Error("No value"), null, null);
+                }
+            }).catch((err) => {
+                cb(err, null, null);
+            });
+
+            return null;
+        } else {
+            return new Promise((resolve, reject) => {
+                this.aiManager.guessWithTime(AI_KEY, aiClassifiers, timestamp).then((res) => {
+                    if (res && res.indexOf("@") > 0) {
+                        const resSplit = res.split("@");
+                        resolve(parseFloat(resSplit[1]), resSplit[0]);
+                    } else {
+                        reject(Error("No value"));
+                    }
+                }).catch((err) => {
+                    reject(err, null, null);
+                });
+            });
         }
     }
 
