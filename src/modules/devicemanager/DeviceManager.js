@@ -61,6 +61,9 @@ const DEVICE_COLORS = [
     "607d8b",
 ];
 
+const AI_KEY = "devices";
+const AI_STATUS_CLASSIFIER = "STATUS@";
+
 /**
  * This class allows to manage devices
  * @class
@@ -81,9 +84,10 @@ class DeviceManager {
      * @param  {SensorsManager} sensorsManager    The sensrsManager
      * @param  {EventEmitter} eventBus    The global event bus
      * @param  {DbManager} dbManager    The database manager
+     * @param  {AiManager} aiManager    The ai manager
      * @returns {DeviceManager}              The instance
      */
-    constructor(confManager, formManager, webServices, radioManager, dashboardManager, scenarioManager, translateManager, environmentManager, botEngine, sensorsManager, eventBus, dbManager) {
+    constructor(confManager, formManager, webServices, radioManager, dashboardManager, scenarioManager, translateManager, environmentManager, botEngine, sensorsManager, eventBus, dbManager, aiManager) {
         this.formConfiguration = new FormConfiguration.class(confManager, formManager, webServices, "devices", true, DeviceForm.class);
         this.radioManager = radioManager;
         this.dashboardManager = dashboardManager;
@@ -95,6 +99,7 @@ class DeviceManager {
         this.sensorsManager = sensorsManager;
         this.eventBus = eventBus;
         this.dbManager = dbManager;
+        this.aiManager = aiManager;
         this.switchDeviceModules = {};
 
         this.radioManager.deviceManager = this; // Set the device manager. used to associate devices to received radio objects
@@ -179,6 +184,9 @@ class DeviceManager {
                 }
             });
         });
+
+        // Machine learning
+        this.aiManager.register(AI_KEY);
     }
 
     /**
@@ -237,7 +245,7 @@ class DeviceManager {
                     if (typeof scenarioDevice.updateBrightness !== "undefined") {
                         adjustBrightness = parseFloat(scenarioDevice.updateBrightness);
                     }
-                    
+
                     if (!scenarioDevice.keepParams) {
                         context.switchDevice(scenarioDevice.identifier, scenarioDevice.status, (parseFloat(scenarioDevice.brightness) + adjustBrightness), scenarioDevice.color, scenarioDevice.colorTemperature);
                     } else {
@@ -468,6 +476,84 @@ class DeviceManager {
         // Save device to database
         const dbDevice = new DbDevice.class(this.dbHelper, id, status, brightness, color, colorTemperature);
         dbDevice.save();
+
+        // Machine learning
+        if (!process.env.TEST) {
+            const device = this.getDeviceById(id);
+            const aiClassifiers = [device.id, (AI_STATUS_CLASSIFIER + status)];
+            if (device && device.room && device.room.room) {
+                aiClassifiers.push(device.room.room);
+            }
+
+            if (device.name) {
+                aiClassifiers.push(device.name);
+            }
+            const classifiedValue = device.status + "@" + device.brightness;
+            this.aiManager.learnWithTime(AI_KEY, aiClassifiers, classifiedValue).then(() => {
+                Logger.verbose("Learned new value for " + device.id);
+            }).catch((e) => {
+                Logger.err("Error while learning sensor : " + e.message);
+            });
+        }
+    }
+
+    /**
+     * Guess a device status and brightness with machine learning
+     *
+     * @param  {number} timestamp   The projected timestamp
+     * @param  {string} [identifier=null]     A device identifier. If this parameter is set, there is no need to set `room` and `name`
+     * @param  {string} [status=null]     A status (INT_STATUS_ON or INT_STATUS_OFF)
+     * @param  {string} [room=null]     A room
+     * @param  {string} [name=null]     A sensor name
+     * @param  {Function} [cb=null]    A callback. If not provided, a promise will be returned. Example : `(err, status, brightness) => {}`
+     *
+     * @returns {Promise|null} If cb is not provided, a promise will be returned.
+     */
+    guessDeviceStatus(timestamp, identifier = null, status = null, room = null, name = null, cb = null) {
+        const aiClassifiers = [];
+        if (identifier) {
+            aiClassifiers.push(identifier);
+        } else {
+            if (room) {
+                aiClassifiers.push(room);
+            }
+
+            if (name) {
+                aiClassifiers.push(name);
+            }
+        }
+
+        if (status != null) {
+            aiClassifiers.push((AI_STATUS_CLASSIFIER + status));
+        }
+
+        if (cb) {
+            this.aiManager.guessWithTime(AI_KEY, aiClassifiers, timestamp).then((res) => {
+                if (res && res.indexOf("@") > 0) {
+                    const resSplit = res.split("@");
+                    cb(null, parseInt(resSplit[0]), parseFloat(resSplit[1]));
+                } else {
+                    cb(Error("No value"), null, null);
+                }
+            }).catch((err) => {
+                cb(err, null, null);
+            });
+
+            return null;
+        } else {
+            return new Promise((resolve, reject) => {
+                this.aiManager.guessWithTime(AI_KEY, aiClassifiers, timestamp).then((res) => {
+                    if (res && res.indexOf("@") > 0) {
+                        const resSplit = res.split("@");
+                        cb(null, parseInt(resSplit[0]), parseFloat(resSplit[1]));
+                    } else {
+                        reject(Error("No value"));
+                    }
+                }).catch((err) => {
+                    reject(err, null, null);
+                });
+            });
+        }
     }
 
     /**

@@ -134,6 +134,22 @@ class DeviceAPI {
     getDbHelper() {
         return PrivateProperties.oprivate(this).deviceManager.getDbHelper();
     }
+
+    /**
+     * Guess a device status and brightness with machine learning
+     *
+     * @param  {number} timestamp   The projected timestamp
+     * @param  {string} [identifier=null]     A device identifier. If this parameter is set, there is no need to set `room` and `name`
+     * @param  {string} [status=null]     A status (INT_STATUS_ON or INT_STATUS_OFF)
+     * @param  {string} [room=null]     A room
+     * @param  {string} [name=null]     A sensor name
+     * @param  {Function} [cb=null]    A callback. If not provided, a promise will be returned. Example : `(err, status, brightness) => {}`
+     *
+     * @returns {Promise|null} If cb is not provided, a promise will be returned.
+     */
+    guessDeviceStatus(timestamp, identifier = null, status = null, room = null, name = null, cb = null) {
+        return PrivateProperties.oprivate(this).deviceManager.guessDeviceStatus(timestamp, identifier, status, room, name, cb);
+    }
 }
 
 module.exports = {class:DeviceAPI};

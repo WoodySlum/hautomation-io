@@ -178,7 +178,11 @@ class AiManager {
      */
     tokenizer(data) {
         if (Array.isArray(data)) {
-            return data;
+            const d = [];
+            data.forEach((token) => {
+                d.push(token.toString());
+            });
+            return d;
         } else {
             return data.split(" ");
         }
