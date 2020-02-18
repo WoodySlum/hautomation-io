@@ -1126,7 +1126,6 @@ In your plugin, use `BotEngineAPI` to register a new action.
 
 Sample code :
 
-
 	"use strict";
 
 	function loaded(api) {
@@ -1145,3 +1144,38 @@ Sample code :
 		}
 
 	}
+
+### Machine learning
+
+`AiAPI` gives capability to learn and train a model, and guess a value.
+
+Sample code :
+
+	"use strict";
+
+	function loaded(api) {
+	    api.init();
+
+		class Sample() {
+			constructor(api) {
+				api.aiAPI.register();
+				api.aiAPI.learn(["outside", "door"], "OPEN").then(() => {
+					api.exported.Logger.info("Data learned");
+					// Query
+					api.aiAPI.guess(["door"]).then((classification) => {
+						api.exported.Logger.info("Classification : " + classification);
+					})
+					.catch((e) => {
+						api.exported.Logger.err(e.message);
+					});
+				})
+				.catch((e) => {
+					api.exported.Logger.err(e.message);
+				});
+			}
+
+		}
+
+	}
+
+There are also time wrappers functions `learnWithTime` and `guessWithTime` that learn with hour aggregation depending on several stuff (season, day, holidays, ...).

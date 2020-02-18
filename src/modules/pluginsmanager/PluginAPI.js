@@ -30,6 +30,7 @@ const CoreAPI = require("./publicapis/CoreAPI");
 const DeviceAPI = require("./publicapis/DeviceAPI");
 const BackupAPI = require("./publicapis/BackupAPI");
 const GatewayAPI = require("./publicapis/GatewayAPI");
+const AiAPI = require("./publicapis/AiAPI");
 
 const DateUtils = require("./../../utils/DateUtils");
 const Icons = require("./../../utils/Icons");
@@ -74,10 +75,11 @@ class PluginsAPI {
     //  * @param  {DeviceManager} deviceManager The device manager
     //  * @param  {BackupManager} backupManager The backup manager
     //  * @param  {GatewayManager} gatewayManager The gateway manager
+    //  * @param  {AiManager} aiManager The ai manager
     //  * @param  {string} CORE_EVENT_READY The core event ready identifier
     //  * @returns {PluginAPI}                  Instance
     //  */
-    constructor(previousVersion, p, webServices, appConfiguration, servicesManager, dbManager, translateManager, formManager, confManager, timeEventService, schedulerService, dashboardManager, themeManager, sensorsManager, installationManager, userManager, messageManager, scenarioManager, alarmManager, camerasManager, radioManager, environmentManager, pluginsManager, iotManager, botEngine, eventBus, deviceManager, backupManager, gatewayManager, CORE_EVENT_READY) {
+    constructor(previousVersion, p, webServices, appConfiguration, servicesManager, dbManager, translateManager, formManager, confManager, timeEventService, schedulerService, dashboardManager, themeManager, sensorsManager, installationManager, userManager, messageManager, scenarioManager, alarmManager, camerasManager, radioManager, environmentManager, pluginsManager, iotManager, botEngine, eventBus, deviceManager, backupManager, gatewayManager, aiManager, CORE_EVENT_READY) {
         PrivateProperties.createPrivateState(this);
         this.previousVersion = previousVersion;
         this.p = p;
@@ -133,6 +135,8 @@ class PluginsAPI {
         this.deviceAPI = new DeviceAPI.class(deviceManager);
         this.backupAPI = new BackupAPI.class(backupManager);
         this.gatewayAPI = new GatewayAPI.class(gatewayManager);
+        this.aiAPI = new AiAPI.class(this.identifier, aiManager);
+
         PrivateProperties.oprivate(this).pluginsManager = pluginsManager;
     }
 

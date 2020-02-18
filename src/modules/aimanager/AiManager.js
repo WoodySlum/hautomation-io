@@ -164,6 +164,7 @@ class AiManager {
 
     /**
      * Unregister. Thus will destroy the learned data.
+     * /!\ THIS WILL DELETE HISTORY DATA !
      *
      * @param  {string} key A key
      */
