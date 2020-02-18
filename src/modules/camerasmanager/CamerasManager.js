@@ -1091,7 +1091,7 @@ class CamerasManager {
                             }
                         });
                     }, timer * 1000, wstream, req, this);
-                } catch(e) {
+                } catch(err) {
                     cb(err);
                 }
             } else {
