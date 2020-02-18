@@ -1044,48 +1044,56 @@ class CamerasManager {
             this.currentRecording[parseInt(id)] = {};
             const camera = this.getCamera(id);
             if (camera.mjpegUrl) {
-                const recordSessionFile = this.cachePath + id + "-" + DateUtils.class.timestamp() + "-record";
-                Logger.info("Recording video for camera " + id + " for " + timer + " seconds");
-                let frameCount = 0;
-                const wstream = fs.createWriteStream(recordSessionFile + ".mjpg");
-                const req = request(camera.mjpegUrl);
-                const PassThrough = require("stream").PassThrough;
-                const pt = new PassThrough();
-                req.pipe(pt).pipe(wstream);
-                pt.on("data", (chunk) => {
-                    if (chunk.toString("utf8").indexOf("JFIF")!==-1) {
-                        frameCount++;
-                    }
-                });
-                setTimeout((vwstream, vreq, self) => {
-                    vwstream.end();
-                    vreq.abort();
-                    const frameRate = Math.round(frameCount / timer);
-                    Logger.info("Record session stop");
-                    delete this.currentRecording[parseInt(id)];
-                    Logger.info("Detected frames : " + frameCount);
-                    Logger.info("Detected framerate : " + frameRate);
-                    Logger.info("Converting video session");
-
-                    this.installationManager.executeCommand("avconv -r " + ((frameRate < 1) ? 1:frameRate) + " -i " + recordSessionFile + ".mjpg -vcodec libx264 " + recordSessionFile + TimelapseGenerator.VIDEO_EXTENSION, false, (error, stdout, stderr) => {
-                        // Clean mjpg stream
-                        fs.remove(recordSessionFile + ".mjpg");
-                        if (error) {
-                            Logger.err(stderr);
-                            cb(error);
-                        } else {
-                            Logger.info("Video session encoding terminated.");
-                            const key = sha256(recordSessionFile).substr(1, 6);
-                            this.recordedFiles[key] = recordSessionFile + TimelapseGenerator.VIDEO_EXTENSION;
-                            const link = self.gatewayManager.getDistantApiUrl() + CAMERAS_MANAGER_RECORD_GET_BASE.replace(":/", "") + key + "/?t=" + self.webServices.getToken(CAMERAS_MANAGER_RECORD_GET, CAMERAS_MANAGER_RECORD_GET_TOKEN_DURATION);
-                            if (sendMessage) {
-                                self.messageManager.sendMessage("*",  self.translateManager.t("camera.record.download.message", this.getCamera(id).configuration.name, link));
-                            }
-
-                            cb(null, this.recordedFiles[key], key, link);
+                try {
+                    const recordSessionFile = this.cachePath + id + "-" + DateUtils.class.timestamp() + "-record";
+                    Logger.info("Recording video for camera " + id + " for " + timer + " seconds");
+                    let frameCount = 0;
+                    const wstream = fs.createWriteStream(recordSessionFile + ".mjpg");
+                    const req = request(camera.mjpegUrl);
+                    const PassThrough = require("stream").PassThrough;
+                    const pt = new PassThrough();
+                    req.pipe(pt).pipe(wstream);
+                    pt.on("data", (chunk) => {
+                        if (chunk.toString("utf8").indexOf("JFIF")!==-1) {
+                            frameCount++;
                         }
                     });
-                }, timer * 1000, wstream, req, this);
+                    req.on("error", (err) => {
+                        cb(err);
+                    });
+
+                    setTimeout((vwstream, vreq, self) => {
+                        vwstream.end();
+                        vreq.abort();
+                        const frameRate = Math.round(frameCount / timer);
+                        Logger.info("Record session stop");
+                        delete this.currentRecording[parseInt(id)];
+                        Logger.info("Detected frames : " + frameCount);
+                        Logger.info("Detected framerate : " + frameRate);
+                        Logger.info("Converting video session");
+
+                        this.installationManager.executeCommand("avconv -r " + ((frameRate < 1) ? 1:frameRate) + " -i " + recordSessionFile + ".mjpg -vcodec libx264 " + recordSessionFile + TimelapseGenerator.VIDEO_EXTENSION, false, (error, stdout, stderr) => {
+                            // Clean mjpg stream
+                            fs.remove(recordSessionFile + ".mjpg");
+                            if (error) {
+                                Logger.err(stderr);
+                                cb(error);
+                            } else {
+                                Logger.info("Video session encoding terminated.");
+                                const key = sha256(recordSessionFile).substr(1, 6);
+                                this.recordedFiles[key] = recordSessionFile + TimelapseGenerator.VIDEO_EXTENSION;
+                                const link = self.gatewayManager.getDistantApiUrl() + CAMERAS_MANAGER_RECORD_GET_BASE.replace(":/", "") + key + "/?t=" + self.webServices.getToken(CAMERAS_MANAGER_RECORD_GET, CAMERAS_MANAGER_RECORD_GET_TOKEN_DURATION);
+                                if (sendMessage) {
+                                    self.messageManager.sendMessage("*",  self.translateManager.t("camera.record.download.message", this.getCamera(id).configuration.name, link));
+                                }
+
+                                cb(null, this.recordedFiles[key], key, link);
+                            }
+                        });
+                    }, timer * 1000, wstream, req, this);
+                } catch(e) {
+                    cb(err);
+                }
             } else {
                 cb(Error(ERROR_UNSUPPORTED_MODE));
             }
