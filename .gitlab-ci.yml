@@ -19,7 +19,6 @@ cache:
   - npm config set strict-ssl false
   - rm -Rf package-lock.json
   - npm install
-  - npm rebuild
   - echo "{\"commit\":\"$(echo $CI_COMMIT_SHA | head -c8)\"}" > version.json
   - npm run --verbose build
   - npm run --verbose build-deb
