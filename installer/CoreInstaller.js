@@ -20,6 +20,7 @@ module.exports = {install:(installationManager) => {
     installationManager.register("0.0.3", ["linux-arm", "linux-arm64", "linux-x32", "linux-x64", "docker"], "apt-get install -y --allow-unauthenticated alsa-utils libasound2-dev python-pyaudio python3-pyaudio sox", true, true); // Bot engine
     installationManager.register("0.0.3", ["linux-arm", "linux-arm64", "linux-x32", "linux-x64", "docker"], "apt-get install -y --allow-unauthenticated mplayer festival festvox-kallpc16k", true, true); // Bot engine
     installationManager.register("0.0.50", ["linux-arm", "linux-arm64", "linux-x32", "linux-x64", "docker"], "apt-get install -y --allow-unauthenticated at", true, true); // Auto updater
+    installationManager.register("0.1.0", ["linux-arm", "linux-arm64", "linux-x32", "linux-x64", "docker"], "apt-get install -y --allow-unauthenticated arp-scan", true, true); // Arp ip pscan
 
     // Global
     installationManager.register("0.0.3", "*", "pip install pyaudio", true, true);
