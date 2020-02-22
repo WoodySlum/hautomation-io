@@ -177,8 +177,16 @@ function loaded(api) {
                 ip = this.api.configurationAPI.getConfiguration().ip.freetext;
             }
             request("http://" + ip + ":1925/" + this.getApiVersion() + route, (error, response, body) => {
-              if (cb) {
-                  cb(error, !error ? JSON.parse(body) : null);
+              if (!error && cb) {
+                  try {
+                      const json = JSON.parse(body);
+                      cb(error, !error ? json : null);
+                  } catch (e) {
+                      this.api.exported.Logger.err(body);
+                      this.api.exported.Logger.err(e.message);
+                  }
+              } else if (error) {
+                  this.api.exported.Logger.err(error.message);
               }
             });
         }
