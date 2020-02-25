@@ -334,7 +334,7 @@ class CamerasManager {
             this.ocvCaps[camera.id.toString()].set(cv.CAP_PROP_FRAME_WIDTH, 1280);
             this.ocvCaps[camera.id.toString()].set(cv.CAP_PROP_FRAME_HEIGHT, 720);
 
-            this.grabFrames(this.ocvCaps[camera.id.toString()], 50, (frame) => {
+            this.grabFrames(this.ocvCaps[camera.id.toString()], 100, (frame) => {
                 let tmpFrame = frame.copy();
                 if (previousFrame) {
                     const diff = previousFrame.absdiff(frame);
