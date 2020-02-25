@@ -147,7 +147,7 @@ function loaded(api) {
             this.downCb = downCb;
             this.snapshotUrl = this.generateUrlFromTemplate(snapshotUrl);
             this.mjpegUrl = this.generateUrlFromTemplate(mjpegUrl);
-            this.rtspUrl = this.generateUrlFromTemplate(rtspUrl);
+            this.rtspUrl = this.generateUrlFromTemplate(rtspUrl, true);
             this.archive = (this.configuration.archive ? true : false);
         }
 
@@ -189,15 +189,19 @@ function loaded(api) {
          * Generate an URL from the template
          *
          * @param  {string} [url=null] An URL template (Parameters : %port%, %ip%, %username%, %password%), without protocol and ip. For example, `cgi-bin/videostream.cgi?username=%username%&password=%password%`
+         * @param  {Boolean} [rtsp=false] An URL template (Parameters : %port%, %ip%, %username%, %password%), without protocol and ip. For example, `cgi-bin/videostream.cgi?username=%username%&password=%password%`
          * @returns {string}            The complete URL
          */
-        generateUrlFromTemplate(url = null) {
+        generateUrlFromTemplate(url = null, rtsp = false) {
             if (url && url.length > 0) {
                 let pUrl = "http://";
                 if (this.configuration.port) {
                     if (this.configuration.port === 443) {
                         pUrl = "https://";
                     }
+                }
+                if (rtsp) {
+                    pUrl = "rtsp://";
                 }
 
                 pUrl += ((this.configuration.ip.ip === "freetext") ? this.configuration.ip.freetext : this.configuration.ip.ip) + ":" + this.configuration.port;

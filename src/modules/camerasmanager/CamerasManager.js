@@ -3,6 +3,7 @@ const request = require("request");
 const MjpegProxy = require("mjpeg-proxy").MjpegProxy;
 const fs = require("fs-extra");
 const sha256 = require("sha256");
+const cv = require("opencv4nodejs");
 const Logger = require("./../../logger/Logger");
 const PluginsManager = require("./../pluginsmanager/PluginsManager");
 const WebServices = require("./../../services/webservices/WebServices");
@@ -125,6 +126,7 @@ class CamerasManager {
         this.currentRecording = {};
         this.generatedTimelapses = {};
         this.recordedFiles = [];
+        this.ocvCb = {};
 
         try {
             this.camerasConfiguration = this.confManager.loadData(Object, CONF_MANAGER_KEY, true);
@@ -178,6 +180,29 @@ class CamerasManager {
             self.generateSeasonTimeLapses(self);
         }, this, TimeEventService.EVERY_DAYS);
     }
+
+    grabFrames(videoFile, delay, onFrame) {
+        const cap = new cv.VideoCapture(videoFile);
+        cap.set(cv.CAP_PROP_FOURCC, cv.VideoWriter.fourcc("MJPG"));
+        cap.set(cv.CAP_PROP_FRAME_WIDTH, 1280);
+        cap.set(cv.CAP_PROP_FRAME_HEIGHT, 720);
+        let done = false;
+        const intvl = setInterval(() => {
+            let frame = cap.read();
+            // loop back to start on end of stream reached
+            if (frame.empty) {
+              cap.reset();
+              frame = cap.read();
+            }
+            onFrame(frame);
+
+            const key = cv.waitKey(delay);
+            done = key !== -1 && key !== 255;
+            if (done) {
+              clearInterval(intvl);
+            }
+        }, 0);
+    };
 
     /**
      * Called automatically when plugins are loaded. Used in separate methods for testing.
@@ -291,9 +316,68 @@ class CamerasManager {
         // Register forms
         const ids = [];
         const names = [];
+
+        const delay = 500;
+        const areaSize = 900;
+        const maxElementsFilter = 5;
+        const rectProportionsRate = 0; // 1.5 or 2 for vertical rectangles. 0 tsiable
+
         this.cameras.forEach((camera) => {
             ids.push(parseInt(camera.id));
             names.push(camera.name);
+            this.ocvCb[camera.id.toString()] = null;
+
+            // Tests ia
+            // const writer = new cv.VideoWriter(this.ocvBuffer, cv.VideoWriter.fourcc("MJPG"), 24, new cv.Size(1280, 720));
+            let previousFrame = null;
+            this.grabFrames(0, 20, (frame) => {
+                let tmpFrame = frame.copy();
+                if (previousFrame) {
+                    const diff = previousFrame.absdiff(frame);
+                    const gray = diff.cvtColor(cv.COLOR_BGR2GRAY);
+                    const blur = gray.gaussianBlur(new cv.Size(5, 5), 0);
+                    // const thresh = blur.threshold(20, 255, cv.THRESH_BINARY);
+                    const thresh = blur.threshold(20, 255, cv.THRESH_BINARY);
+                    const dilated = thresh.dilate(new cv.Mat([[0, 0],[0, 0]], cv.CV_8U), new cv.Point(-1, -1), 3); // To be checked
+                    const contours = dilated.findContours(cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE);
+
+                    if (contours) {
+                        const points = contours.sort((c0, c1) => c1.area - c0.area)[0];
+                        if (points) {
+                            const edgePoints = points.getPoints();
+                            let rects = [];
+                            for (let i = 0 ; i < contours.length ; i++) {
+                                let rect = contours[i].boundingRect();
+                                if (contours[i].area > areaSize && rect.height > (rectProportionsRate * rect.width)) {
+                                    rects.push(rect);
+                                }
+                            }
+
+                            if (rects.length < maxElementsFilter) {
+                                for (let i = 0 ; i < rects.length ; i++) {
+                                    tmpFrame.drawRectangle(
+                                        rects[i],
+                                        new cv.Vec(0, 255, 0),
+                                        2,
+                                        cv.LINE_8
+                                    );
+                                }
+
+                            }
+
+                            cv.imshow('tmpFrame', tmpFrame);
+                        }
+
+                    }
+
+                }
+
+                previousFrame = frame.copy();
+
+                if (this.ocvCb[camera.id.toString()] != null) {
+                    this.ocvCb[camera.id.toString()](cv.imencode('.jpg', tmpFrame));
+                }
+            });
         });
         this.formManager.register(CamerasForm.class, ids, names);
         this.registerTile(this);
@@ -476,18 +560,65 @@ class CamerasManager {
                         }
                     }, apiRequest.data.timestamp?apiRequest.data.timestamp:null);
                 } else if (mode === MODE_MJPEG) {
-                    const camera = this.getCamera(id);
-                    if (camera) {
-                        if (camera.mjpegUrl) {
-                            if (apiRequest.authenticationData) {
-                                apiRequest.res  = new MjpegProxy(camera.mjpegUrl).proxyRequest(apiRequest.req, apiRequest.res);
-                            }
-                        } else {
-                            reject(new APIResponse.class(false, {}, 766, ERROR_UNSUPPORTED_MODE));
-                        }
-                    } else {
-                        reject(new APIResponse.class(false, {}, 766, ERROR_UNKNOWN_IDENTIFIER));
+
+                    // apiRequest.res  = new MjpegProxy(this.ocvBuffer).proxyRequestBuffer(apiRequest.req, apiRequest.res);
+                    // // apiRequest.res.contentType('image/jpeg');
+                    // // apiRequest.res.end(this.ocvBuffer, 'binary');
+                    apiRequest.res.writeHead(200, {
+                		'Cache-Control': 'no-store, no-cache, must-revalidate, pre-check=0, post-check=0, max-age=0',
+                		Pragma: 'no-cache',
+                		Connection: 'close',
+                		'Content-Type': 'multipart/x-mixed-replace; boundary=--myboundary'
+                	});
+
+                    this.ocvCb[id.toString()] = (pic) => {
+                        apiRequest.res.write(`--myboundary\nContent-Type: image/jpg\nContent-length: ${pic.length}\n\n`);
+                        apiRequest.res.write(pic);
                     }
+
+                    apiRequest.req.on("close", () => {
+                        Logger.info("Closed mjpeg connection");
+                        if (this.ocvCb && this.ocvCb[id.toString()]) {
+                            this.ocvCb[id.toString()] = null;
+                        }
+                    });
+                    //
+                    // const writeFrame = () => {
+                	// 	const buffer = this.ocvBuffer;
+                	// 	apiRequest.res.write(`--myboundary\nContent-Type: image/jpg\nContent-length: ${buffer.length}\n\n`);
+                	// 	apiRequest.res.write(buffer);
+                	// };
+                    //
+                    // for (let i = 0 ; i < 10 ; i++) {
+                    //     writeFrame();
+                    // }
+
+                    // const r = fs.createReadStream(this.ocvBuffer) // or any other way to get a readable stream
+                    //   const ps = new stream.PassThrough() // <---- this makes a trick with stream error handling
+                    //   stream.pipeline(
+                    //    r,
+                    //    ps, // <---- this makes a trick with stream error handling
+                    //    (err) => {
+                    //     if (err) {
+                    //       console.log(err) // No such file or any other kind of error
+                    //       return apiRequest.res.sendStatus(400);
+                    //     }
+                    //   })
+                    //   ps.pipe(apiRequest.res)
+
+
+                    // const camera = this.getCamera(id);
+                    // if (camera) {
+                    //     if (camera.mjpegUrl) {
+                    //         if (apiRequest.authenticationData) {
+                    //             apiRequest.res  = new MjpegProxy(camera.mjpegUrl).proxyRequest(apiRequest.req, apiRequest.res);
+                    //         }
+                    //     } else {
+                    //         reject(new APIResponse.class(false, {}, 766, ERROR_UNSUPPORTED_MODE));
+                    //     }
+                    // } else {
+                    //     reject(new APIResponse.class(false, {}, 766, ERROR_UNKNOWN_IDENTIFIER));
+                    // }
                 } else if (mode === MODE_RTSP) {
                     const camera = this.getCamera(id);
                     if (camera) {

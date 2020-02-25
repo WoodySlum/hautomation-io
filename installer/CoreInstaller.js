@@ -8,6 +8,7 @@ module.exports = {install:(installationManager) => {
     installationManager.register("0.0.3", ["darwin-x32", "darwin-x64"], "pip install -U platformio", false, true, true);
     installationManager.register("0.0.3", ["darwin-x32", "darwin-x64"], "pio platform install https://github.com/platformio/platform-espressif8266.git#feature/stage", false, true, true);
     installationManager.register("0.0.3", ["darwin-x32", "darwin-x64"], "brew install portaudio sox mplayer", false, true, true);
+    installationManager.register("0.1.2", ["darwin-x32", "darwin-x64"], "brew install opencv3", false, true, true);
 
     // Raspberry Pi
     installationManager.register("0.0.3", ["linux-arm", "linux-arm64", "linux-x32", "linux-x64", "docker"], "apt-get update", true, true);
@@ -20,6 +21,7 @@ module.exports = {install:(installationManager) => {
     installationManager.register("0.0.3", ["linux-arm", "linux-arm64", "linux-x32", "linux-x64", "docker"], "apt-get install -y --allow-unauthenticated alsa-utils libasound2-dev python-pyaudio python3-pyaudio sox", true, true); // Bot engine
     installationManager.register("0.0.3", ["linux-arm", "linux-arm64", "linux-x32", "linux-x64", "docker"], "apt-get install -y --allow-unauthenticated mplayer festival festvox-kallpc16k", true, true); // Bot engine
     installationManager.register("0.0.50", ["linux-arm", "linux-arm64", "linux-x32", "linux-x64", "docker"], "apt-get install -y --allow-unauthenticated at", true, true); // Auto updater
+    installationManager.register("0.1.2", ["linux-arm", "linux-arm64", "linux-x32", "linux-x64", "docker"], "apt-get install -y --allow-unauthenticated libopencv-dev python3-opencv", true, true); // Open CV
 
     // Global
     installationManager.register("0.0.3", "*", "pip install pyaudio", true, true);
