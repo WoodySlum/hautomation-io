@@ -94,7 +94,7 @@ class AiManager {
         data.push(CLASS_DAYS[date.getDay()]);
 
         data.push(CLASS_MONTHS[date.getMonth()]);
-        if (this.environmentManager.getCoordinates()) {
+        if (this.environmentManager.getCoordinates() && this.environmentManager.getCountry()) {
             data.push(CLASS_DAYOFF[(DateUtils.class.isHoliday(this.environmentManager.getCountry(), timestamp) ? 0 : 1)]);
         }
         data.push(CLASS_DAYNIGHT[(this.environmentManager.isNight() ? 1 : 0)]);
@@ -135,7 +135,7 @@ class AiManager {
         data.push(CLASS_DAYS[date.getDay()]);
 
         data.push(CLASS_MONTHS[date.getMonth()]);
-        if (this.environmentManager.getCoordinates()) {
+        if (this.environmentManager.getCoordinates() && this.environmentManager.getCountry()) {
             data.push(CLASS_DAYOFF[(DateUtils.class.isHoliday(this.environmentManager.getCountry(), timestamp) ? 0 : 1)]);
         }
 

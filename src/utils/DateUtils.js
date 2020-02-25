@@ -112,7 +112,11 @@ class DateUtils {
      * @returns {boolean|Object}           The result
      */
     static isHoliday(country, timestamp = null) {
-        return (new holidays(country.substr(0, 2))).isHoliday(new Date(this.dateFormatted("YYYY-MM-DD HH:mm:ss", timestamp)));
+        if (country) {
+            return (new holidays(country.substr(0, 2))).isHoliday(new Date(this.dateFormatted("YYYY-MM-DD HH:mm:ss", timestamp)));
+        } else {
+            return null;
+        }
     }
 }
 
