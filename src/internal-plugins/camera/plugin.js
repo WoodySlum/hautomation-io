@@ -204,7 +204,7 @@ function loaded(api) {
                     pUrl = "rtsp://";
                 }
 
-                pUrl += ((this.configuration.ip.ip === "freetext") ? this.configuration.ip.freetext : this.configuration.ip.ip) + ":" + this.configuration.port;
+                pUrl += ((this.configuration.ip.ip === "freetext") ? this.configuration.ip.freetext : this.configuration.ip.ip) + (rtsp ? "" : ":" + this.configuration.port);
                 pUrl += "/" + url;
 
                 pUrl = pUrl.replace("%username%", this.configuration.username);

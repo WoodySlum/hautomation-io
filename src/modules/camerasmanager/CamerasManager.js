@@ -369,7 +369,7 @@ class CamerasManager {
 
                             }
 
-                            cv.imshow('tmpFrame', tmpFrame);
+                            // cv.imshow('tmpFrame', tmpFrame);
                         }
 
                     }
