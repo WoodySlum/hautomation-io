@@ -126,6 +126,7 @@ class CamerasManager {
         this.currentRecording = {};
         this.generatedTimelapses = {};
         this.recordedFiles = [];
+        this.ocvCaps = {};
         this.ocvCb = {};
 
         try {
@@ -181,11 +182,7 @@ class CamerasManager {
         }, this, TimeEventService.EVERY_DAYS);
     }
 
-    grabFrames(videoFile, delay, onFrame) {
-        const cap = new cv.VideoCapture(videoFile);
-        cap.set(cv.CAP_PROP_FOURCC, cv.VideoWriter.fourcc("MJPG"));
-        cap.set(cv.CAP_PROP_FRAME_WIDTH, 1280);
-        cap.set(cv.CAP_PROP_FRAME_HEIGHT, 720);
+    grabFrames(cap, delay, onFrame) {
         let done = false;
         const intvl = setInterval(() => {
             let frame = cap.read();
@@ -330,7 +327,14 @@ class CamerasManager {
             // Tests ia
             // const writer = new cv.VideoWriter(this.ocvBuffer, cv.VideoWriter.fourcc("MJPG"), 24, new cv.Size(1280, 720));
             let previousFrame = null;
-            this.grabFrames(0, 20, (frame) => {
+
+
+            this.ocvCaps[camera.id.toString()] = new cv.VideoCapture(camera.rtspUrl);
+            this.ocvCaps[camera.id.toString()].set(cv.CAP_PROP_FOURCC, cv.VideoWriter.fourcc("MJPG"));
+            this.ocvCaps[camera.id.toString()].set(cv.CAP_PROP_FRAME_WIDTH, 1280);
+            this.ocvCaps[camera.id.toString()].set(cv.CAP_PROP_FRAME_HEIGHT, 720);
+
+            this.grabFrames(this.ocvCaps[camera.id.toString()], 50, (frame) => {
                 let tmpFrame = frame.copy();
                 if (previousFrame) {
                     const diff = previousFrame.absdiff(frame);

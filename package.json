@@ -84,6 +84,12 @@
             "./src/modules/botengine/linux/asoundrc"
         ]
     },
+    "opencv4nodejs": {
+        "disableAutoBuild": 1,
+        "opencvIncludeDir": "/usr/include/opencv2/",
+        "opencvLibDir": "/usr/lib/arm-linux-gnueabihf/",
+        "opencvBinDir": "/usr/bin/"
+  	},
     "repository": {
         "type": "git",
         "url": "git@honey.hd.free.fr:smarties/core-node.git"
