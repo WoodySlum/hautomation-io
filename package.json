@@ -81,7 +81,8 @@
             "./src/**/lib/*",
             "./src/**/global_lib/*",
             "./**/*.py",
-            "./src/modules/botengine/linux/asoundrc"
+            "./src/modules/botengine/linux/asoundrc",
+            "./res/ai/*"
         ]
     },
     "opencv4nodejs": {

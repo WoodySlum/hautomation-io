@@ -75,7 +75,6 @@ const ERROR_UNEXISTING_PICTURE = "Unexisting picture";
 const ERROR_RECORD_ALREADY_RUNNING = "Already recording camera";
 const ERROR_RECORD_UNKNOWN = "Unknown record";
 
-
 /**
  * This class allows to manage cameras
  * @class
@@ -182,22 +181,56 @@ class CamerasManager {
         }, this, TimeEventService.EVERY_DAYS);
     }
 
+
+    extractResults(outputBlob, imgDimensions) {
+      return Array(outputBlob.rows).fill(0)
+        .map((res, i) => {
+          const classLabel = outputBlob.at(i, 1);
+          const confidence = outputBlob.at(i, 2);
+          const bottomLeft = new cv.Point(
+            outputBlob.at(i, 3) * imgDimensions.cols,
+            outputBlob.at(i, 6) * imgDimensions.rows
+          );
+          const topRight = new cv.Point(
+            outputBlob.at(i, 5) * imgDimensions.cols,
+            outputBlob.at(i, 4) * imgDimensions.rows
+          );
+          const rect = new cv.Rect(
+            bottomLeft.x,
+            topRight.y,
+            topRight.x - bottomLeft.x,
+            bottomLeft.y - topRight.y
+          );
+
+          return ({
+            classLabel,
+            confidence,
+            rect
+          });
+        });
+    }
+
     grabFrames(cap, delay, onFrame) {
         let done = false;
+        let running = false;
         const intvl = setInterval(() => {
-            let frame = cap.read();
-            // loop back to start on end of stream reached
-            if (frame.empty) {
-              cap.reset();
-              frame = cap.read();
-            }
-            onFrame(frame);
+            if (!running) {
+                running = true;
+                let frame = cap.read();
+                // loop back to start on end of stream reached
+                if (frame.empty) {
+                  cap.reset();
+                  frame = cap.read();
+                }
+                onFrame(frame);
 
-            // const key = cv.waitKey(delay);
-            // done = key !== -1 && key !== 255;
-            // if (done) {
-            //   clearInterval(intvl);
-            // }
+                // const key = cv.waitKey(delay);
+                // done = key !== -1 && key !== 255;
+                // if (done) {
+                //   clearInterval(intvl);
+                // }
+                running = false;
+            }
         }, delay);
     };
 
@@ -317,7 +350,15 @@ class CamerasManager {
         const delay = 500;
         const areaSize = 900;
         const maxElementsFilter = 5;
-        const rectProportionsRate = 0; // 1.5 or 2 for vertical rectangles. 0 tsiable
+        const rectProportionsRate = 0; // 1.5 or 2 for vertical rectangles. 0 disable
+
+        const protoMapper = ["background", "plane", "bike", "bird", "boat", "bottle", "autobus", "car", "cat", "chair", "cow", "table", "dof", "horse", "bike", "people", "plant", "sheep", "sofa", "train", "monitor"];
+        const protoTxt = "./res/ai/model/MobileNetSSD_deploy.prototxt.txt";
+        const modelFile = "./res/ai/model/MobileNetSSD_deploy.caffemodel";
+        const net = cv.readNetFromCaffe(protoTxt, modelFile);
+        const frameRate = 100;// in ms
+        const recognitionFrame = 500;// in ms
+        const confidenceThreshold = 0.2;// in ms
 
         this.cameras.forEach((camera) => {
             ids.push(parseInt(camera.id));
@@ -330,57 +371,97 @@ class CamerasManager {
 
 
             this.ocvCaps[camera.id.toString()] = new cv.VideoCapture(camera.mjpegUrl);
-            this.ocvCaps[camera.id.toString()].set(cv.CAP_PROP_FOURCC, cv.VideoWriter.fourcc("MJPG"));
-            // this.ocvCaps[camera.id.toString()].set(cv.CAP_PROP_FRAME_WIDTH, 1280);
-            // this.ocvCaps[camera.id.toString()].set(cv.CAP_PROP_FRAME_HEIGHT, 720);
+            // this.ocvCaps[camera.id.toString()].set(cv.CAP_PROP_FOURCC, cv.VideoWriter.fourcc("MJPG"));
+        //     // this.ocvCaps[camera.id.toString()].set(cv.CAP_PROP_FRAME_WIDTH, 1280);
+        //     // this.ocvCaps[camera.id.toString()].set(cv.CAP_PROP_FRAME_HEIGHT, 720);
+        //
 
-            this.grabFrames(this.ocvCaps[camera.id.toString()], 500, (frame) => {
-                let tmpFrame = frame.copy();
-                if (previousFrame) {
-                    const diff = previousFrame.absdiff(frame);
-                    const gray = diff.cvtColor(cv.COLOR_BGR2GRAY);
-                    const blur = gray.gaussianBlur(new cv.Size(5, 5), 0);
-                    // const thresh = blur.threshold(20, 255, cv.THRESH_BINARY);
-                    const thresh = blur.threshold(20, 255, cv.THRESH_BINARY);
-                    const dilated = thresh.dilate(new cv.Mat([[0, 0],[0, 0]], cv.CV_8U), new cv.Point(-1, -1), 3); // To be checked
-                    const contours = dilated.findContours(cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE);
 
-                    if (contours) {
-                        const points = contours.sort((c0, c1) => c1.area - c0.area)[0];
-                        if (points) {
-                            const edgePoints = points.getPoints();
-                            let rects = [];
-                            for (let i = 0 ; i < contours.length ; i++) {
-                                let rect = contours[i].boundingRect();
-                                if (contours[i].area > areaSize && rect.height > (rectProportionsRate * rect.width)) {
-                                    rects.push(rect);
-                                }
-                            }
+            let currentRecognitionFrame = 0;
+            let rectangles = [];
+            this.grabFrames(this.ocvCaps[camera.id.toString()], frameRate, (frame) => {
+                if (currentRecognitionFrame >= recognitionFrame) {
+                    const inputBlob = cv.blobFromImage(frame.resizeToMax(300), 0.007843, new cv.Size(300, 300), new cv.Vec3(127.5, 0, 0));
+                    net.setInput(inputBlob);
+                    let outputBlob = net.forward();
 
-                            if (rects.length < maxElementsFilter) {
-                                for (let i = 0 ; i < rects.length ; i++) {
-                                    tmpFrame.drawRectangle(
-                                        rects[i],
-                                        new cv.Vec(0, 255, 0),
-                                        2,
-                                        cv.LINE_8
-                                    );
-                                }
+                    outputBlob = outputBlob.flattenFloat(outputBlob.sizes[2], outputBlob.sizes[3]);
+                    const results = this.extractResults(outputBlob, frame);
 
-                            }
-
-                            // cv.imshow('tmpFrame', tmpFrame);
+                    rectangles = [];
+                    for (let i = 0 ; i < results.length ; i++) {
+                        if (results[i].confidence > confidenceThreshold) {
+                            Logger.info("Detected on camera : " + protoMapper[results[i].classLabel] + " / confidence : " + parseInt(results[i].confidence * 100) + "%");
+                            rectangles.push(results[i].rect);
                         }
-
                     }
 
+                    currentRecognitionFrame = 0;
                 }
 
-                previousFrame = frame.copy();
+                currentRecognitionFrame += frameRate;
 
                 if (this.ocvCb[camera.id.toString()] != null) {
-                    this.ocvCb[camera.id.toString()](cv.imencode('.jpg', tmpFrame));
+                    for (let i = 0 ; i < rectangles.length ; i++) {
+                        frame.drawRectangle(
+                            rectangles[i],
+                            new cv.Vec(0, 255, 0),
+                            2,
+                            cv.LINE_8
+                        );
+                    }
+                    this.ocvCb[camera.id.toString()](cv.imencode('.jpg', frame));
                 }
+
+
+
+
+
+        //         // if (previousFrame) {
+        //         //     const diff = previousFrame.absdiff(frame);
+        //         //     const gray = diff.cvtColor(cv.COLOR_BGR2GRAY);
+        //         //     const blur = gray.gaussianBlur(new cv.Size(5, 5), 0);
+        //         //     // const thresh = blur.threshold(20, 255, cv.THRESH_BINARY);
+        //         //     const thresh = blur.threshold(20, 255, cv.THRESH_BINARY);
+        //         //     const dilated = thresh.dilate(new cv.Mat([[0, 0],[0, 0]], cv.CV_8U), new cv.Point(-1, -1), 3); // To be checked
+        //         //     const contours = dilated.findContours(cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE);
+        //         //
+        //         //     if (contours) {
+        //         //         const points = contours.sort((c0, c1) => c1.area - c0.area)[0];
+        //         //         if (points) {
+        //         //             const edgePoints = points.getPoints();
+        //         //             let rects = [];
+        //         //             for (let i = 0 ; i < contours.length ; i++) {
+        //         //                 let rect = contours[i].boundingRect();
+        //         //                 if (contours[i].area > areaSize && rect.height > (rectProportionsRate * rect.width)) {
+        //         //                     rects.push(rect);
+        //         //                 }
+        //         //             }
+        //         //
+        //         //             if (rects.length < maxElementsFilter) {
+        //         //                 for (let i = 0 ; i < rects.length ; i++) {
+        //         //                     tmpFrame.drawRectangle(
+        //         //                         rects[i],
+        //         //                         new cv.Vec(0, 255, 0),
+        //         //                         2,
+        //         //                         cv.LINE_8
+        //         //                     );
+        //         //                 }
+        //         //
+        //         //             }
+        //         //
+        //         //             // cv.imshow('tmpFrame', tmpFrame);
+        //         //         }
+        //         //
+        //         //     }
+        //         //
+        //         // }
+        //         //
+        //         // previousFrame = frame.copy();
+        //         //
+                // if (this.ocvCb[camera.id.toString()] != null) {
+                //     this.ocvCb[camera.id.toString()](cv.imencode('.jpg', tmpFrame));
+                // }
             });
         });
         this.formManager.register(CamerasForm.class, ids, names);
