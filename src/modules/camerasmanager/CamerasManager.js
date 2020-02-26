@@ -379,6 +379,7 @@ class CamerasManager {
 
             let currentRecognitionFrame = 0;
             let rectangles = [];
+            let detectedElement = [];
             this.grabFrames(this.ocvCaps[camera.id.toString()], frameRate, (frame) => {
                 if (currentRecognitionFrame >= recognitionFrame) {
                     const inputBlob = cv.blobFromImage(frame.resizeToMax(300), 0.007843, new cv.Size(300, 300), new cv.Vec3(127.5, 0, 0));
@@ -389,9 +390,11 @@ class CamerasManager {
                     const results = this.extractResults(outputBlob, frame);
 
                     rectangles = [];
+                    detectedElement = [];
                     for (let i = 0 ; i < results.length ; i++) {
                         if (results[i].confidence > confidenceThreshold) {
                             Logger.info("Detected on camera : " + protoMapper[results[i].classLabel] + " / confidence : " + parseInt(results[i].confidence * 100) + "%");
+                            detectedElement.push(protoMapper[results[i].classLabel] + " - " + parseInt(results[i].confidence * 100) + "%");
                             rectangles.push(results[i].rect);
                         }
                     }
@@ -408,6 +411,12 @@ class CamerasManager {
                             new cv.Vec(0, 255, 0),
                             2,
                             cv.LINE_8
+                        );
+                        cv.drawTextBox(
+                            frame,
+                            { x: rectangles[i].x, y: rectangles[i].y },
+                            [{ text: detectedElement[i], fontSize: 0.5, thickness: 1, color: new cv.Vec(0, 255, 0) }],
+                            0.6
                         );
                     }
                     this.ocvCb[camera.id.toString()](cv.imencode('.jpg', frame));
