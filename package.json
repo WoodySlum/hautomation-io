@@ -86,7 +86,7 @@
         ]
     },
     "opencv4nodejs": {
-        "disableAutoBuild": 1,
+        "disableAutoBuild": 0,
         "opencvIncludeDir": "/usr/include/opencv2/",
         "opencvLibDir": "/usr/lib/arm-linux-gnueabihf/",
         "opencvBinDir": "/usr/bin/"

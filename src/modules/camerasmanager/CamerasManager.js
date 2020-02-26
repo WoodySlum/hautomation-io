@@ -352,7 +352,7 @@ class CamerasManager {
         const maxElementsFilter = 5;
         const rectProportionsRate = 0; // 1.5 or 2 for vertical rectangles. 0 disable
 
-        const protoMapper = ["background", "plane", "bike", "bird", "boat", "bottle", "autobus", "car", "cat", "chair", "cow", "table", "dof", "horse", "bike", "people", "plant", "sheep", "sofa", "train", "monitor"];
+        const protoMapper = ["background", "plane", "bike", "bird", "boat", "bottle", "autobus", "car", "cat", "chair", "cow", "table", "dog", "horse", "bike", "people", "plant", "sheep", "sofa", "train", "monitor"];
         const protoTxt = "./res/ai/model/MobileNetSSD_deploy.prototxt.txt";
         const modelFile = "./res/ai/model/MobileNetSSD_deploy.caffemodel";
         const net = cv.readNetFromCaffe(protoTxt, modelFile);
