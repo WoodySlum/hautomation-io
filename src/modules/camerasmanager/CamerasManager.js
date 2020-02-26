@@ -193,12 +193,12 @@ class CamerasManager {
             }
             onFrame(frame);
 
-            const key = cv.waitKey(delay);
-            done = key !== -1 && key !== 255;
-            if (done) {
-              clearInterval(intvl);
-            }
-        }, 0);
+            // const key = cv.waitKey(delay);
+            // done = key !== -1 && key !== 255;
+            // if (done) {
+            //   clearInterval(intvl);
+            // }
+        }, delay);
     };
 
     /**
@@ -329,12 +329,12 @@ class CamerasManager {
             let previousFrame = null;
 
 
-            this.ocvCaps[camera.id.toString()] = new cv.VideoCapture(camera.rtspUrl);
+            this.ocvCaps[camera.id.toString()] = new cv.VideoCapture(camera.mjpegUrl);
             this.ocvCaps[camera.id.toString()].set(cv.CAP_PROP_FOURCC, cv.VideoWriter.fourcc("MJPG"));
-            this.ocvCaps[camera.id.toString()].set(cv.CAP_PROP_FRAME_WIDTH, 1280);
-            this.ocvCaps[camera.id.toString()].set(cv.CAP_PROP_FRAME_HEIGHT, 720);
+            // this.ocvCaps[camera.id.toString()].set(cv.CAP_PROP_FRAME_WIDTH, 1280);
+            // this.ocvCaps[camera.id.toString()].set(cv.CAP_PROP_FRAME_HEIGHT, 720);
 
-            this.grabFrames(this.ocvCaps[camera.id.toString()], 100, (frame) => {
+            this.grabFrames(this.ocvCaps[camera.id.toString()], 500, (frame) => {
                 let tmpFrame = frame.copy();
                 if (previousFrame) {
                     const diff = previousFrame.absdiff(frame);
