@@ -63,7 +63,7 @@
         "pre-build": "npm run doc && rm -Rf ./build/* && mkdir -p ./build/plugins && mkdir -p ./build/doc && mkdir -p ./build/data && cp ./data/config.json.default ./build/data/config.json && cp -R ./data/ssl ./build/data/ && cp ./doc/PLUGIN.md ./build/doc/ && cp ./doc/PUBLIC-APIS.md ./build/doc/ && cp -R ./scripts ./build/ && cp -R ./res ./build/",
         "build": "npm run pre-build && node node_modules/pkg/lib-es5/bin.js -o ./build/smarties . && rm -Rf build/*.node && find ./node_modules -name '*.node'| grep lib | xargs cp -Rfn -t ./build/ && find ./node_modules -name '*.node'| grep target | xargs cp -Rfn -t ./build/ && find ./node_modules -name '*.node'| grep Release | xargs cp -Rfn -t ./build/",
         "build-deb": "rm -Rf ./build/deb && rm -Rf /tmp/deb && cp -R ./scripts/deb /tmp/deb && sed -e s@{VERSION}@$npm_package_version@ -e s@{ARCH}@$(dpkg --print-architecture)@ -e s@{DISTRIB}@$(dpkg --status tzdata|grep Provides|cut -f2 -d'-')@ ./scripts/deb/DEBIAN/control > /tmp/deb/DEBIAN/control && cp -R ./build/* /tmp/deb/var/smarties/ && chmod 755 /tmp/deb/DEBIAN/pre* && chmod 755 /tmp/deb/DEBIAN/post* && dpkg-deb --build /tmp/deb ./build/smarties-$(dpkg --status tzdata|grep Provides|cut -f2 -d'-')-$(dpkg --print-architecture)-$npm_package_version.deb && rm -Rf /tmp/deb",
-        "postinstall": "rm -Rf ./res/ai/opencv && mkdir ./res/ai/opencv && cp -R ./node_modules/opencv-build/opencv/build/bin ./res/ai/opencv && cp -R ./node_modules/opencv-build/opencv/build/lib ./res/ai/opencv && cp -R ./node_modules/opencv-build/opencv/build/include ./res/ai/opencv "
+        "postinstall": "rm -Rf ./res/ai/opencv && mkdir ./res/ai/opencv && cp -R ./node_modules/opencv-build/opencv/build/bin ./res/ai/opencv && cp -R ./node_modules/opencv-build/opencv/build/lib ./res/ai/opencv && cp -R ./node_modules/opencv-build/opencv/build/include ./res/ai/opencv"
     },
     "bin": "SmartiesRunner.js",
     "pkg": {
@@ -168,7 +168,7 @@
         "node-record-lpcm16": "^0.3",
         "node-wit": "^4.3",
         "node-witai-speech": "^1.0",
-        "opencv4nodejs": "^5.5.0",
+        "opencv4nodejs": "git://github.com/WoodySlum/opencv4nodejs#master",
         "os-utils": "^0.0.14",
         "prowler": "^0.0",
         "qrcode": "^1.4.4",
