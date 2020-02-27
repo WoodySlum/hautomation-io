@@ -87,6 +87,8 @@
     },
     "opencv4nodejs": {
         "disableAutoBuild": 0,
+        "autoBuildOpencvVersion": "3.2.0"
+        "opencvBinDir": "./res/ai/opencv/bin/",
         "opencvIncludeDir": "./res/ai/opencv/include/",
         "opencvLibDir": "./res/ai/opencv/lib/"
     },

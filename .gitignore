@@ -94,4 +94,4 @@ typings/
 .env
 
 # OpenCV
-./res/ai/opencv
+res/ai/opencv
