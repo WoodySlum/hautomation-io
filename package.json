@@ -82,8 +82,7 @@
             "./**/*.py",
             "./src/modules/botengine/linux/asoundrc",
             "./res/ai/*",
-            "./node_modules/opencv-build/opencv/build/include",
-            "./node_modules/opencv-build/opencv/build/lib"
+            "./node_modules/opencv-build/opencv/build/*"
         ]
     },
     "opencv4nodejs": {
