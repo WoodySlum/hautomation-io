@@ -91,7 +91,7 @@
         "disableAutoBuild": 0,
         "opencvIncludeDir": "./node_modules/opencv-build/opencv/build/include/",
         "opencvLibDir": "./node_modules/opencv-build/opencv/build/lib/"
-  	},
+    },
     "repository": {
         "type": "git",
         "url": "git@honey.hd.free.fr:smarties/core-node.git"

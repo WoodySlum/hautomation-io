@@ -370,7 +370,7 @@ class CamerasManager {
             let previousFrame = null;
 
 
-            this.ocvCaps[camera.id.toString()] = new cv.VideoCapture(0);
+            this.ocvCaps[camera.id.toString()] = new cv.VideoCapture(camera.mjpegUrl);
             // this.ocvCaps[camera.id.toString()].set(cv.CAP_PROP_FOURCC, cv.VideoWriter.fourcc("MJPG"));
         //     // this.ocvCaps[camera.id.toString()].set(cv.CAP_PROP_FRAME_WIDTH, 1280);
         //     // this.ocvCaps[camera.id.toString()].set(cv.CAP_PROP_FRAME_HEIGHT, 720);
