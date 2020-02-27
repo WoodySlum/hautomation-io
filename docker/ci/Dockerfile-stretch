@@ -1,5 +1,5 @@
 FROM node:12.14-stretch
 
 RUN apt-get update
-RUN apt-get install -y --allow-unauthenticated systemd vim sqlite3 libmagic-dev libatlas-base-dev libudev-dev apt-transport-https net-tools cmake libopencv-dev
+RUN apt-get install -y --allow-unauthenticated systemd vim sqlite3 libmagic-dev libatlas-base-dev libudev-dev apt-transport-https net-tools cmake
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
