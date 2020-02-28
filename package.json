@@ -82,10 +82,7 @@
             "./src/**/global_lib/*",
             "./**/*.py",
             "./src/modules/botengine/linux/asoundrc",
-            "./res/ai/*",
-            "./node_modules/opencv-build/opencv/build/bin/",
-            "./node_modules/opencv-build/opencv/build/include/",
-            "./node_modules/opencv-build/opencv/build/lib/"
+            "./res/ai/*"
         ]
     },
     "opencv4nodejs": {
@@ -168,7 +165,7 @@
         "node-record-lpcm16": "^0.3",
         "node-wit": "^4.3",
         "node-witai-speech": "^1.0",
-        "opencv4nodejs": "git://github.com/WoodySlum/opencv4nodejs#master",
+        "opencv4nodejs": "^5.5.0",
         "os-utils": "^0.0.14",
         "prowler": "^0.0",
         "qrcode": "^1.4.4",

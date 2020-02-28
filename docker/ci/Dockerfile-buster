@@ -1,5 +1,5 @@
 FROM node:12.14-buster
 
 RUN apt-get update
-RUN apt-get install -y --allow-unauthenticated systemd vim sqlite3 libmagic-dev libatlas-base-dev libudev-dev apt-transport-https net-tools cmake
+RUN apt-get install -y --allow-unauthenticated systemd vim sqlite3 libmagic-dev libatlas-base-dev libudev-dev apt-transport-https net-tools cmake libavcodec-dev libavformat-dev libavutil-dev libswscale-dev gstreamer-1.0 libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamermm-1.0-dev libdc1394-22-dev libharfbuzz-dev libtesseract-dev ffmpeg libavcodec-dev libavdevice-dev libavdevice58 libavfilter-dev libavformat-dev libavresample-dev libavutil-dev libpostproc-dev libswresample-dev libswscale-dev libffmpegthumbnailer-dev libsdl-kitchensink-dev
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*

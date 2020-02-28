@@ -5,5 +5,6 @@
     "camera.form.port": "Port",
     "camera.form.username": "Nom d'utilisateur",
     "camera.form.password": "Mot de passe",
-    "camera.form.archive": "Archiver les images (concerne l'historique et les timelapse)"
+    "camera.form.archive": "Archiver les images (concerne l'historique et les timelapse)",
+    "camera.form.cv": "Computer vision (beta) : Reconnaissance automatique des objets"
 }
