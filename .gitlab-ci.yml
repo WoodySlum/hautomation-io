@@ -28,8 +28,6 @@ cache:
 build:amd64:stretch:
   image: woodyslum/smarties-ci:$NODE_VERSION-stretch-1
   stage: build
-  only:
-  - tags
   tags:
   - ci
   - amd64
@@ -42,8 +40,6 @@ build:amd64:stretch:
 build:amd64:buster:
   image: woodyslum/smarties-ci:$NODE_VERSION-buster-1
   stage: build
-  only:
-  - tags
   tags:
   - ci
   - amd64
@@ -56,8 +52,6 @@ build:amd64:buster:
 build:armhf:stretch:
   image: woodyslum/smarties-ci:$NODE_VERSION-stretch-1
   stage: build
-  only:
-  - tags
   tags:
   - ci
   - armhf
