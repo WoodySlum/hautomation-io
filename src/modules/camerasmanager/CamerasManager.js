@@ -384,24 +384,26 @@ class CamerasManager {
                 let detectedElement = [];
                 this.grabFrames(this.ocvCaps[camera.id.toString()], frameRate, (frame) => {
                     if (currentRecognitionFrame >= recognitionFrame) {
-                        const inputBlob = cv.blobFromImage(frame.resizeToMax(300), 0.007843, new cv.Size(300, 300), new cv.Vec3(127.5, 0, 0));
-                        net.setInput(inputBlob);
-                        let outputBlob = net.forward();
+                        setTimeout(() => {
+                            const inputBlob = cv.blobFromImage(frame.resizeToMax(300), 0.007843, new cv.Size(300, 300), new cv.Vec3(127.5, 0, 0));
+                            net.setInput(inputBlob);
+                            let outputBlob = net.forward();
 
-                        outputBlob = outputBlob.flattenFloat(outputBlob.sizes[2], outputBlob.sizes[3]);
-                        const results = this.extractResults(outputBlob, frame);
+                            outputBlob = outputBlob.flattenFloat(outputBlob.sizes[2], outputBlob.sizes[3]);
+                            const results = this.extractResults(outputBlob, frame);
 
-                        rectangles = [];
-                        detectedElement = [];
-                        for (let i = 0 ; i < results.length ; i++) {
-                            if (results[i].confidence > confidenceThreshold && autorizedCategories.indexOf(protoMapper[results[i].classLabel]) >= 0) {
-                                Logger.info("Detected on camera " + camera.name + " : " + protoMapper[results[i].classLabel] + " / confidence : " + parseInt(results[i].confidence * 100) + "%");
-                                detectedElement.push(protoMapper[results[i].classLabel] + " - " + parseInt(results[i].confidence * 100) + "%");
-                                rectangles.push(results[i].rect);
+                            rectangles = [];
+                            detectedElement = [];
+                            for (let i = 0 ; i < results.length ; i++) {
+                                if (results[i].confidence > confidenceThreshold && autorizedCategories.indexOf(protoMapper[results[i].classLabel]) >= 0) {
+                                    Logger.info("Detected on camera " + camera.name + " : " + protoMapper[results[i].classLabel] + " / confidence : " + parseInt(results[i].confidence * 100) + "%");
+                                    detectedElement.push(protoMapper[results[i].classLabel] + " - " + parseInt(results[i].confidence * 100) + "%");
+                                    rectangles.push(results[i].rect);
+                                }
                             }
-                        }
 
-                        currentRecognitionFrame = 0;
+                            currentRecognitionFrame = 0;
+                        }, 0);
                     }
 
                     currentRecognitionFrame += frameRate;
