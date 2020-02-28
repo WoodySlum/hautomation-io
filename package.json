@@ -82,11 +82,16 @@
             "./src/**/global_lib/*",
             "./**/*.py",
             "./src/modules/botengine/linux/asoundrc",
-            "./res/ai/*"
+            "./res/ai/*",
+            "./node_modules/opencv-build/opencv/build/bin/",
+            "./node_modules/opencv-build/opencv/build/include/",
+            "./node_modules/opencv-build/opencv/build/lib/"
         ]
     },
     "opencv4nodejs": {
         "disableAutoBuild": 0,
+        "autoBuildOpencvVersion": "4.1.2",
+        "opencvBinDir": "./res/ai/opencv/bin/",
         "opencvIncludeDir": "./res/ai/opencv/include/",
         "opencvLibDir": "./res/ai/opencv/lib/"
     },
