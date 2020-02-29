@@ -357,8 +357,8 @@ class CamerasManager {
         const protoTxt = "./res/ai/model/MobileNetSSD_deploy.prototxt.txt";
         const modelFile = "./res/ai/model/MobileNetSSD_deploy.caffemodel";
         const net = cv.readNetFromCaffe(protoTxt, modelFile);
-        const frameRate = 300;// in ms
-        const recognitionFrame = 1000;// in ms
+
+        const recognitionFrame = 2000;// in ms
         const confidenceThreshold = 0.1;// in ms
 
         this.cameras.forEach((camera) => {
@@ -374,11 +374,12 @@ class CamerasManager {
                 let currentRecognitionFrame = 0;
                 let rectangles = [];
                 let detectedElement = [];
+                let timerLast = Date.now();
 
-                var request = require("request");
-                var MjpegConsumer = require("mjpeg-consumer");
-                var util = require("util");
-                var Stream = require("stream");
+                const request = require("request");
+                const MjpegConsumer = require("mjpeg-consumer");
+                const util = require("util");
+                const Stream = require("stream");
 
                 function ImageProcessor(options) {
                     options = options || {};
@@ -387,36 +388,39 @@ class CamerasManager {
 
                 ImageProcessor.prototype.write = (data) => {
                     if (data) {
+                        // Evaluate framerate
+                        const timerLastTmp = Date.now();
+                        const diff = timerLastTmp - timerLast;
+                        timerLast = timerLastTmp;
                         const frame = cv.imdecode(data);
+
                         if (currentRecognitionFrame >= recognitionFrame) {
-                            setTimeout(() => {
-                                try {
-                                    const inputBlob = cv.blobFromImage(frame.resizeToMax(300), 0.007843, new cv.Size(300, 300), new cv.Vec3(127.5, 0, 0));
-                                    net.setInput(inputBlob);
-                                    let outputBlob = net.forward();
 
-                                    outputBlob = outputBlob.flattenFloat(outputBlob.sizes[2], outputBlob.sizes[3]);
-                                    const results = this.extractResults(outputBlob, frame);
+                            try {
+                                const inputBlob = cv.blobFromImage(frame.resizeToMax(300), 0.007843, new cv.Size(300, 300), new cv.Vec3(127.5, 0, 0));
+                                net.setInput(inputBlob);
+                                let outputBlob = net.forward();
 
-                                    rectangles = [];
-                                    detectedElement = [];
-                                    for (let i = 0 ; i < results.length ; i++) {
-                                        if (results[i].confidence > confidenceThreshold && autorizedCategories.indexOf(protoMapper[results[i].classLabel]) >= 0) {
-                                            Logger.info("Detected on camera " + camera.name + " : " + protoMapper[results[i].classLabel] + " / confidence : " + parseInt(results[i].confidence * 100) + "%");
-                                            detectedElement.push(protoMapper[results[i].classLabel] + " - " + parseInt(results[i].confidence * 100) + "%");
-                                            rectangles.push(results[i].rect);
-                                        }
+                                outputBlob = outputBlob.flattenFloat(outputBlob.sizes[2], outputBlob.sizes[3]);
+                                const results = this.extractResults(outputBlob, frame);
+
+                                rectangles = [];
+                                detectedElement = [];
+                                for (let i = 0 ; i < results.length ; i++) {
+                                    if (results[i].confidence > confidenceThreshold && autorizedCategories.indexOf(protoMapper[results[i].classLabel]) >= 0) {
+                                        Logger.info("Detected on camera " + camera.name + " : " + protoMapper[results[i].classLabel] + " / confidence : " + parseInt(results[i].confidence * 100) + "%");
+                                        detectedElement.push(protoMapper[results[i].classLabel] + " - " + parseInt(results[i].confidence * 100) + "%");
+                                        rectangles.push(results[i].rect);
                                     }
-
-                                    currentRecognitionFrame = 0;
-                                } catch(e) {
-
                                 }
 
-                            }, 0);
+                                currentRecognitionFrame = 0;
+                            } catch(e) {
+
+                            }
                         }
 
-                        currentRecognitionFrame += frameRate;
+                        currentRecognitionFrame += diff;
 
                         if (this.ocvCb[camera.id.toString()] != null) {
                             try {
