@@ -358,7 +358,7 @@ class CamerasManager {
         const modelFile = "./res/ai/model/MobileNetSSD_deploy.caffemodel";
         const net = cv.readNetFromCaffe(protoTxt, modelFile);
 
-        const recognitionFrame = 2000;// in ms
+        const recognitionFrame = 3000;// in ms
         const confidenceThreshold = 0.1;// in ms
 
         this.cameras.forEach((camera) => {
@@ -389,68 +389,68 @@ class CamerasManager {
                 ImageProcessor.prototype.write = (data) => {
                     if (data) {
                         // Evaluate framerate
-                        const timerLastTmp = Date.now();
-                        const diff = timerLastTmp - timerLast;
-                        timerLast = timerLastTmp;
-                        const frame = cv.imdecode(data);
-
-                        if (currentRecognitionFrame >= recognitionFrame) {
-
-                            try {
-                                const inputBlob = cv.blobFromImage(frame.resizeToMax(300), 0.007843, new cv.Size(300, 300), new cv.Vec3(127.5, 0, 0));
-                                net.setInput(inputBlob);
-                                let outputBlob = net.forward();
-
-                                outputBlob = outputBlob.flattenFloat(outputBlob.sizes[2], outputBlob.sizes[3]);
-                                const results = this.extractResults(outputBlob, frame);
-
-                                rectangles = [];
-                                detectedElement = [];
-                                for (let i = 0 ; i < results.length ; i++) {
-                                    if (results[i].confidence > confidenceThreshold && autorizedCategories.indexOf(protoMapper[results[i].classLabel]) >= 0) {
-                                        Logger.info("Detected on camera " + camera.name + " : " + protoMapper[results[i].classLabel] + " / confidence : " + parseInt(results[i].confidence * 100) + "%");
-                                        detectedElement.push(protoMapper[results[i].classLabel] + " - " + parseInt(results[i].confidence * 100) + "%");
-                                        rectangles.push(results[i].rect);
-                                    }
-                                }
-
-                                currentRecognitionFrame = 0;
-                            } catch(e) {
-
-                            }
-                        }
-
-                        currentRecognitionFrame += diff;
-
-                        if (this.ocvCb[camera.id.toString()] != null) {
-                            try {
-                                cv.drawTextBox(
-                                    frame,
-                                    { x: 0, y: 0 },
-                                    [{ text: "Beta cv", fontSize: 0.4, thickness: 1, color: new cv.Vec(255, 255, 255) }],
-                                    0.7
-                                );
-                                for (let i = 0 ; i < rectangles.length ; i++) {
-                                    frame.drawRectangle(
-                                        rectangles[i],
-                                        new cv.Vec(0, 255, 0),
-                                        2,
-                                        cv.LINE_8
-                                    );
-                                    cv.drawTextBox(
-                                        frame,
-                                        { x: rectangles[i].x, y: rectangles[i].y },
-                                        [{ text: detectedElement[i], fontSize: 0.5, thickness: 1, color: new cv.Vec(0, 255, 0) }],
-                                        0.6
-                                    );
-                                }
-                            } catch(e) {
-
-                            }
+                        // const timerLastTmp = Date.now();
+                        // const diff = timerLastTmp - timerLast;
+                        // timerLast = timerLastTmp;
+                        // const frame = cv.imdecode(data);
+                        //
+                        // if (currentRecognitionFrame >= recognitionFrame) {
+                        //
+                        //     try {
+                        //         const inputBlob = cv.blobFromImage(frame.resizeToMax(300), 0.007843, new cv.Size(300, 300), new cv.Vec3(127.5, 0, 0));
+                        //         net.setInput(inputBlob);
+                        //         let outputBlob = net.forward();
+                        //
+                        //         outputBlob = outputBlob.flattenFloat(outputBlob.sizes[2], outputBlob.sizes[3]);
+                        //         const results = this.extractResults(outputBlob, frame);
+                        //
+                        //         rectangles = [];
+                        //         detectedElement = [];
+                        //         for (let i = 0 ; i < results.length ; i++) {
+                        //             if (results[i].confidence > confidenceThreshold && autorizedCategories.indexOf(protoMapper[results[i].classLabel]) >= 0) {
+                        //                 Logger.info("Detected on camera " + camera.name + " : " + protoMapper[results[i].classLabel] + " / confidence : " + parseInt(results[i].confidence * 100) + "%");
+                        //                 detectedElement.push(protoMapper[results[i].classLabel] + " - " + parseInt(results[i].confidence * 100) + "%");
+                        //                 rectangles.push(results[i].rect);
+                        //             }
+                        //         }
+                        //
+                        //         currentRecognitionFrame = 0;
+                        //     } catch(e) {
+                        //
+                        //     }
+                        // }
+                        //
+                        // currentRecognitionFrame += diff;
+                        //
+                        // if (this.ocvCb[camera.id.toString()] != null) {
+                        //     try {
+                        //         cv.drawTextBox(
+                        //             frame,
+                        //             { x: 0, y: 0 },
+                        //             [{ text: "Beta cv", fontSize: 0.4, thickness: 1, color: new cv.Vec(255, 255, 255) }],
+                        //             0.7
+                        //         );
+                        //         for (let i = 0 ; i < rectangles.length ; i++) {
+                        //             frame.drawRectangle(
+                        //                 rectangles[i],
+                        //                 new cv.Vec(0, 255, 0),
+                        //                 2,
+                        //                 cv.LINE_8
+                        //             );
+                        //             cv.drawTextBox(
+                        //                 frame,
+                        //                 { x: rectangles[i].x, y: rectangles[i].y },
+                        //                 [{ text: detectedElement[i], fontSize: 0.5, thickness: 1, color: new cv.Vec(0, 255, 0) }],
+                        //                 0.6
+                        //             );
+                        //         }
+                        //     } catch(e) {
+                        //
+                        //     }
 
                             if (frame && cv) {
                                 try {
-                                    this.ocvCb[camera.id.toString()](cv.imencode('.jpg', frame));
+                                    this.ocvCb[camera.id.toString()](data);
                                 } catch(e) {
 
                                 }
