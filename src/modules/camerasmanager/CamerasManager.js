@@ -127,6 +127,7 @@ class CamerasManager {
         this.recordedFiles = [];
         this.ocvCaps = {};
         this.ocvCb = {};
+        this.ocvPipe = {};
 
         try {
             this.camerasConfiguration = this.confManager.loadData(Object, CONF_MANAGER_KEY, true);
@@ -424,26 +425,26 @@ class CamerasManager {
 
                         if (this.ocvCb[camera.id.toString()] != null) {
                             try {
-                                // cv.drawTextBox(
-                                //     frame,
-                                //     { x: 0, y: 0 },
-                                //     [{ text: "Beta cv", fontSize: 0.4, thickness: 1, color: new cv.Vec(255, 255, 255) }],
-                                //     0.7
-                                // );
-                                // for (let i = 0 ; i < rectangles.length ; i++) {
-                                //     frame.drawRectangle(
-                                //         rectangles[i],
-                                //         new cv.Vec(0, 255, 0),
-                                //         2,
-                                //         cv.LINE_8
-                                //     );
-                                //     cv.drawTextBox(
-                                //         frame,
-                                //         { x: rectangles[i].x, y: rectangles[i].y },
-                                //         [{ text: detectedElement[i], fontSize: 0.5, thickness: 1, color: new cv.Vec(0, 255, 0) }],
-                                //         0.6
-                                //     );
-                                // }
+                                cv.drawTextBox(
+                                    frame,
+                                    { x: 0, y: 0 },
+                                    [{ text: "Beta cv", fontSize: 0.4, thickness: 1, color: new cv.Vec(255, 255, 255) }],
+                                    0.7
+                                );
+                                for (let i = 0 ; i < rectangles.length ; i++) {
+                                    frame.drawRectangle(
+                                        rectangles[i],
+                                        new cv.Vec(0, 255, 0),
+                                        2,
+                                        cv.LINE_8
+                                    );
+                                    cv.drawTextBox(
+                                        frame,
+                                        { x: rectangles[i].x, y: rectangles[i].y },
+                                        [{ text: detectedElement[i], fontSize: 0.5, thickness: 1, color: new cv.Vec(0, 255, 0) }],
+                                        0.6
+                                    );
+                                }
                             } catch(e) {
 
                             }
@@ -472,7 +473,8 @@ class CamerasManager {
 
                 var consumer = new MjpegConsumer();
                 const imageProcessor = new ImageProcessor();
-                request(camera.mjpegUrl).pipe(consumer).pipe(imageProcessor);
+                const piped = request(camera.mjpegUrl).pipe(consumer).pipe(imageProcessor);
+                this.ocvPipe[camera.id.toString()] = piped;
 
 
                 // this.ocvCaps[camera.id.toString()] = new cv.VideoCapture(camera.mjpegUrl);
@@ -766,27 +768,28 @@ class CamerasManager {
                     const camera = this.getCamera(id);
                     if (camera) {
                         if (camera.configuration.cv) {
+                            this.ocvPipe[camera.id.toString()].pipe(apiRequest.res);
                             // apiRequest.res  = new MjpegProxy(this.ocvBuffer).proxyRequestBuffer(apiRequest.req, apiRequest.res);
                             // // apiRequest.res.contentType('image/jpeg');
                             // // apiRequest.res.end(this.ocvBuffer, 'binary');
-                            apiRequest.res.writeHead(200, {
-                        		'Cache-Control': 'no-store, no-cache, must-revalidate, pre-check=0, post-check=0, max-age=0',
-                        		Pragma: 'no-cache',
-                        		Connection: 'close',
-                        		'Content-Type': 'multipart/x-mixed-replace; boundary=--myboundary'
-                        	});
-
-                            this.ocvCb[id.toString()] = (pic) => {
-                                apiRequest.res.write(`--myboundary\nContent-Type: image/jpg\nContent-length: ${pic.length}\n\n`);
-                                apiRequest.res.write(pic);
-                            }
-
-                            apiRequest.req.on("close", () => {
-                                Logger.info("Closed mjpeg connection");
-                                if (this.ocvCb && this.ocvCb[id.toString()]) {
-                                    this.ocvCb[id.toString()] = null;
-                                }
-                            });
+                                    // apiRequest.res.writeHead(200, {
+                                	// 	'Cache-Control': 'no-store, no-cache, must-revalidate, pre-check=0, post-check=0, max-age=0',
+                                	// 	Pragma: 'no-cache',
+                                	// 	Connection: 'close',
+                                	// 	'Content-Type': 'multipart/x-mixed-replace; boundary=--myboundary'
+                                	// });
+                                    //
+                                    // this.ocvCb[id.toString()] = (pic) => {
+                                    //     apiRequest.res.write(`--myboundary\nContent-Type: image/jpg\nContent-length: ${pic.length}\n\n`);
+                                    //     apiRequest.res.write(pic);
+                                    // }
+                                    //
+                                    // apiRequest.req.on("close", () => {
+                                    //     Logger.info("Closed mjpeg connection");
+                                    //     if (this.ocvCb && this.ocvCb[id.toString()]) {
+                                    //         this.ocvCb[id.toString()] = null;
+                                    //     }
+                                    // });
                             //
                             // const writeFrame = () => {
                         	// 	const buffer = this.ocvBuffer;
