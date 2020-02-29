@@ -389,7 +389,7 @@ class CamerasManager {
                 ImageProcessor.prototype.write = (data) => {
                     if (data) {
                         // Evaluate framerate
-                        // const timerLastTmp = Date.now();
+                        const timerLastTmp = Date.now();
                         // const diff = timerLastTmp - timerLast;
                         // timerLast = timerLastTmp;
                         // const frame = cv.imdecode(data);
@@ -448,14 +448,14 @@ class CamerasManager {
                         //
                         //     }
 
-                            if (frame && cv) {
+                            // if (frame && cv) {
                                 try {
                                     this.ocvCb[camera.id.toString()](data);
                                 } catch(e) {
 
                                 }
-                            }
-                        }
+
+                        // }
                     }
 
 
