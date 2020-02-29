@@ -359,7 +359,7 @@ class CamerasManager {
         const modelFile = "./res/ai/model/MobileNetSSD_deploy.caffemodel";
         const net = cv.readNetFromCaffe(protoTxt, modelFile);
 
-        const recognitionFrame = 3000;// in ms
+        const recognitionFrame = 1000;// in ms
         const confidenceThreshold = 0.1;// in ms
 
         this.cameras.forEach((camera) => {
