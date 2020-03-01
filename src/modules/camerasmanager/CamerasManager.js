@@ -407,8 +407,11 @@ class CamerasManager {
 
                                 rectangles = [];
                                 detectedElement = [];
-                                Logger.info(results);
+
                                 for (let i = 0 ; i < results.length ; i++) {
+                                    if (results[i].confidence > 0) {
+                                        Logger.info(results[i]);
+                                    }
                                     if (results[i].confidence > confidenceThreshold && autorizedCategories.indexOf(protoMapper[results[i].classLabel]) >= 0) {
                                         Logger.info("Detected on camera " + camera.name + " : " + protoMapper[results[i].classLabel] + " / confidence : " + parseInt(results[i].confidence * 100) + "%");
                                         detectedElement.push(protoMapper[results[i].classLabel] + " - " + parseInt(results[i].confidence * 100) + "%");
