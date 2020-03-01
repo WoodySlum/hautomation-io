@@ -515,6 +515,7 @@ function loaded(api) {
          * @param  {Function} cb A callback e.g. `(err, lights) => {}`
          */
         getLights(cb) {
+            this.api.exported.Logger.info("Retrieve lights");
             request.get({
                 url: this.getApiUrl() + "/lights"
             }, (error, response, body) => {
@@ -534,6 +535,7 @@ function loaded(api) {
                         this.lights.push(light);
                     });
 
+                    this.api.exported.Logger.info(this.lights);
                     this.api.radioAPI.refreshProtocols();
 
                     if (cb) {
