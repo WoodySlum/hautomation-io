@@ -359,7 +359,7 @@ class CamerasManager {
         const modelFile = "./res/ai/model/MobileNetSSD_deploy.caffemodel";
         const net = cv.readNetFromCaffe(protoTxt, modelFile);
 
-        const recognitionFrame = 2000;// in ms
+        const recognitionFrame = 1000;// in ms
         const confidenceThreshold = 0.1;// in ms
 
         this.cameras.forEach((camera) => {
@@ -389,6 +389,7 @@ class CamerasManager {
 
                 ImageProcessor.prototype.write = (data) => {
                     if (data) {
+
                         // Evaluate framerate
                         const timerLastTmp = Date.now();
                         const diff = timerLastTmp - timerLast;
@@ -772,6 +773,13 @@ class CamerasManager {
                     const camera = this.getCamera(id);
                     if (camera) {
                         if (camera.configuration.cv) {
+                            apiRequest.res.contentType('image/jpeg');
+                            apiRequest.res.writeHead(200, {
+                            	'Cache-Control': 'no-store, no-cache, must-revalidate, pre-check=0, post-check=0, max-age=0',
+                            	Pragma: 'no-cache',
+                            	Connection: 'close',
+                            	'Content-Type': 'multipart/x-mixed-replace; boundary=--myboundary'
+                            });
                             this.ocvPipe[camera.id.toString()].pipe(apiRequest.res);
                             // apiRequest.res  = new MjpegProxy(this.ocvBuffer).proxyRequestBuffer(apiRequest.req, apiRequest.res);
                             // // apiRequest.res.contentType('image/jpeg');
