@@ -193,6 +193,13 @@ function loaded(api) {
                 api.configurationAPI.saveData(data);
                 this.init();
             });
+
+            // Update lights every 5 minutes
+            api.timeEventAPI.register((self, hour, minute) => {
+                if (minute % 5 == 0) {
+                    self.getLights();
+                }
+            }, this, api.timeEventAPI.constants().EVERY_MINUTES);
         }
 
         /**
@@ -535,8 +542,6 @@ function loaded(api) {
                         this.lights.push(light);
                     });
                     this.api.exported.Logger.info(response);
-                    this.api.exported.Logger.info(body);
-                    this.api.exported.Logger.info(this.lights);
                     this.api.radioAPI.refreshProtocols();
 
                     if (cb) {
