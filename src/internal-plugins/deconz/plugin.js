@@ -534,7 +534,8 @@ function loaded(api) {
                         light.protocolName = LIGHT_PREFIX + light.uniqueid;
                         this.lights.push(light);
                     });
-
+                    this.api.exported.Logger.info(response);
+                    this.api.exported.Logger.info(body);
                     this.api.exported.Logger.info(this.lights);
                     this.api.radioAPI.refreshProtocols();
 
