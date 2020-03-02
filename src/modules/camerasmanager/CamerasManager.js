@@ -45,6 +45,8 @@ const CAMERAS_MANAGER_TIMELAPSE_STREAM = CAMERAS_MANAGER_TIMELAPSE_STREAM_BASE +
 const CAMERAS_MANAGER_RECORD_GET_BASE = ":/camera/record/get/";
 const CAMERAS_MANAGER_RECORD_GET = CAMERAS_MANAGER_RECORD_GET_BASE + "[recordKey]/";
 const CAMERAS_MANAGER_RECORD_GET_TOKEN_DURATION = 7 * 24 * 60 * 60;
+const CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION = 5000;
+const CAMERAS_RESTREAM_AFTER_REQ_TIMEOUT_DURATION = 60000;
 
 const CAMERAS_MANAGER_LIST = ":/cameras/list/";
 const CAMERAS_RETRIEVE_BASE = ":/camera/get/";
@@ -125,6 +127,7 @@ class CamerasManager {
         this.currentRecording = {};
         this.generatedTimelapses = {};
         this.recordedFiles = [];
+        this.cameraStream = {};
         this.ocvCaps = {};
         this.ocvCb = {};
         this.ocvPipe = {};
@@ -367,7 +370,7 @@ class CamerasManager {
             names.push(camera.name);
             this.ocvCb[camera.id.toString()] = null;
 
-            if (camera.configuration.cv) {
+            if (camera.configuration.cv && !this.cameraStream[camera.id.toString()]) {
                 // Tests ia
                 // const writer = new cv.VideoWriter(this.ocvBuffer, cv.VideoWriter.fourcc("MJPG"), 24, new cv.Size(1280, 720));
                 let previousFrame = null;
@@ -389,7 +392,6 @@ class CamerasManager {
 
                 ImageProcessor.prototype.write = (data) => {
                     if (data) {
-
                         // Evaluate framerate
                         const timerLastTmp = Date.now();
                         const diff = timerLastTmp - timerLast;
@@ -478,7 +480,29 @@ class CamerasManager {
 
                 var consumer = new MjpegConsumer();
                 const imageProcessor = new ImageProcessor();
-                const piped = request(camera.mjpegUrl).pipe(consumer).pipe(imageProcessor);
+                const req = request(camera.mjpegUrl);
+                this.cameraStream[camera.id.toString()] = req;
+
+                const piped = req.pipe(consumer).pipe(imageProcessor);
+                const self = this;
+
+                req.on("error", (error) => {
+                    Logger.info("Camera error " + error.message + " for camera " + camera.id + ". Restart in " + CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION + " ms.");
+                    this.cameraStream[camera.id.toString()].abort();
+                    delete this.cameraStream[camera.id.toString()];
+                    setTimeout(() => {
+                        self.initCameras();
+                    }, CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION);
+                });
+                req.on("timeout", () => {
+                    setTimeout(() => {
+                        Logger.info("Camera timeout for camera " + camera.id + ". Retry in " + CAMERAS_RESTREAM_AFTER_REQ_TIMEOUT_DURATION + " ms.");
+                        this.cameraStream[camera.id.toString()].abort();
+                        delete this.cameraStream[camera.id.toString()];
+                        self.initCameras();
+                    }, CAMERAS_RESTREAM_AFTER_REQ_TIMEOUT_DURATION);
+                });
+
                 this.ocvPipe[camera.id.toString()] = piped;
 
 
