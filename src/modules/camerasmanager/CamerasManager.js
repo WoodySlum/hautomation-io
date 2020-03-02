@@ -356,10 +356,12 @@ class CamerasManager {
         const maxElementsFilter = 5;
         const rectProportionsRate = 0; // 1.5 or 2 for vertical rectangles. 0 disable
 
-        const protoMapper = ["background", "plane", "bike", "bird", "boat", "bottle", "autobus", "car", "cat", "chair", "cow", "table", "dog", "horse", "bike", "people", "plant", "sheep", "sofa", "train", "monitor"];
-        const autorizedCategories = ["car", "cat", "dog", "bike", "people"];
-        const protoTxt = "./res/ai/model/MobileNetSSD_deploy.prototxt.txt";
-        const modelFile = "./res/ai/model/MobileNetSSD_deploy.caffemodel";
+        const map = JSON.parse(fs.readFileSync("./res/ai/model/map.json"));
+
+        const protoMapper = map.mapper;
+        const autorizedCategories = map.authorized;
+        const protoTxt = "./res/ai/model/deploy.prototxt.txt";
+        const modelFile = "./res/ai/model/deploy.caffemodel";
         const net = cv.readNetFromCaffe(protoTxt, modelFile);
 
         const recognitionFrame = 1000;// in ms
