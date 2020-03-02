@@ -469,9 +469,7 @@ class CamerasManager {
                     this.cameraCapture[camera.id.toString()] = data;
                     const header = Buffer.from(`--${STREAM_BOUNDARY}\nContent-Type: image/jpg\nContent-length: ${data.length}\n\n`);
 
-                    setTimeout(() => {
-                        done(false, Buffer.concat([header, data]));
-                    }, 10);
+                    done(false, Buffer.concat([header, data]));
                 }
 
 
