@@ -77,6 +77,8 @@ const ERROR_UNEXISTING_PICTURE = "Unexisting picture";
 const ERROR_RECORD_ALREADY_RUNNING = "Already recording camera";
 const ERROR_RECORD_UNKNOWN = "Unknown record";
 
+const STREAM_BOUNDARY = "smartiesmjpg";
+
 /**
  * This class allows to manage cameras
  * @class
@@ -128,8 +130,7 @@ class CamerasManager {
         this.generatedTimelapses = {};
         this.recordedFiles = [];
         this.cameraStream = {};
-        this.ocvCaps = {};
-        this.ocvCb = {};
+        this.cameraCapture = {};
         this.ocvPipe = {};
 
         try {
@@ -370,7 +371,6 @@ class CamerasManager {
         this.cameras.forEach((camera) => {
             ids.push(parseInt(camera.id));
             names.push(camera.name);
-            this.ocvCb[camera.id.toString()] = null;
 
             if (camera.configuration.cv && !this.cameraStream[camera.id.toString()]) {
                 // Tests ia
@@ -387,17 +387,15 @@ class CamerasManager {
                 const util = require("util");
                 const Stream = require("stream");
 
-                function ImageProcessor(options) {
-                    options = options || {};
-                }
-                util.inherits(ImageProcessor, Stream);
+                var liner = new Stream.Transform({ objectMode: true });
 
-                ImageProcessor.prototype.write = (data) => {
+                liner._transform = (data, encoding, done) => {
                     if (data) {
                         // Evaluate framerate
                         const timerLastTmp = Date.now();
                         const diff = timerLastTmp - timerLast;
                         timerLast = timerLastTmp;
+
                         const frame = cv.imdecode(data);
 
                         if (currentRecognitionFrame >= recognitionFrame) {
@@ -432,60 +430,54 @@ class CamerasManager {
 
                         currentRecognitionFrame += diff;
 
-                        if (this.ocvCb[camera.id.toString()] != null) {
-                            // try {
-                            //     cv.drawTextBox(
-                            //         frame,
-                            //         { x: 0, y: 0 },
-                            //         [{ text: "Beta cv", fontSize: 0.4, thickness: 1, color: new cv.Vec(255, 255, 255) }],
-                            //         0.7
-                            //     );
-                            //     for (let i = 0 ; i < rectangles.length ; i++) {
-                            //         frame.drawRectangle(
-                            //             rectangles[i],
-                            //             new cv.Vec(0, 255, 0),
-                            //             2,
-                            //             cv.LINE_8
-                            //         );
-                            //         cv.drawTextBox(
-                            //             frame,
-                            //             { x: rectangles[i].x, y: rectangles[i].y },
-                            //             [{ text: detectedElement[i], fontSize: 0.5, thickness: 1, color: new cv.Vec(0, 255, 0) }],
-                            //             0.6
-                            //         );
-                            //     }
-                            // } catch(e) {
-                            //
-                            // }
 
-                            if (frame && cv) {
-                                try {
-                                    this.ocvCb[camera.id.toString()](data);//(cv.imencode('.jpg', frame));
-                                } catch(e) {
+                        // try {
+                        //     cv.drawTextBox(
+                        //         frame,
+                        //         { x: 0, y: 0 },
+                        //         [{ text: "Beta cv", fontSize: 0.4, thickness: 1, color: new cv.Vec(255, 255, 255) }],
+                        //         0.7
+                        //     );
+                        //     for (let i = 0 ; i < rectangles.length ; i++) {
+                        //         frame.drawRectangle(
+                        //             rectangles[i],
+                        //             new cv.Vec(0, 255, 0),
+                        //             2,
+                        //             cv.LINE_8
+                        //         );
+                        //         cv.drawTextBox(
+                        //             frame,
+                        //             { x: rectangles[i].x, y: rectangles[i].y },
+                        //             [{ text: detectedElement[i], fontSize: 0.5, thickness: 1, color: new cv.Vec(0, 255, 0) }],
+                        //             0.6
+                        //         );
+                        //     }
+                        // } catch(e) {
+                        //
+                        // }
+                        //
+                        // if (frame && cv) {
+                        //     try {
+                        //         toto = cv.imencode('.jpg', frame);
+                        //     } catch(e) {
+                        //
+                        //     }
+                        // }
 
-                                }
-                            }
-                        }
                     }
 
-
-                };
-
-                ImageProcessor.prototype.end = (data) => {
-
-                };
-
-                ImageProcessor.prototype.destroy = (data) => {
-
-                };
+                    this.cameraCapture[camera.id.toString()] = data;
+                    const header = Buffer.from(`--${STREAM_BOUNDARY}\nContent-Type: image/jpg\nContent-length: ${data.length}\n\n`);
+                    done(false, Buffer.concat([header, data]));
+                }
 
 
-                var consumer = new MjpegConsumer();
-                const imageProcessor = new ImageProcessor();
-                const req = request(camera.mjpegUrl);
+                const consumer = new MjpegConsumer();
+                const req = request({url: camera.mjpegUrl, "rejectUnauthorized": false});
+                // const req = request({url: "https://webcam1.lpl.org/axis-cgi/mjpg/video.cgi", "rejectUnauthorized": false});
                 this.cameraStream[camera.id.toString()] = req;
 
-                const piped = req.pipe(consumer).pipe(imageProcessor);
+                const piped = req.pipe(consumer).pipe(liner);
                 const self = this;
 
                 req.on("error", (error) => {
@@ -506,13 +498,6 @@ class CamerasManager {
                 });
 
                 this.ocvPipe[camera.id.toString()] = piped;
-
-
-                // this.ocvCaps[camera.id.toString()] = new cv.VideoCapture(camera.mjpegUrl);
-                // this.ocvCaps[camera.id.toString()].set(cv.CAP_PROP_FOURCC, cv.VideoWriter.fourcc("MJPG"));
-            //     // this.ocvCaps[camera.id.toString()].set(cv.CAP_PROP_FRAME_WIDTH, 1280);
-            //     // this.ocvCaps[camera.id.toString()].set(cv.CAP_PROP_FRAME_HEIGHT, 720);
-            //
 
 
                 // let currentRecognitionFrame = 0;
@@ -799,59 +784,20 @@ class CamerasManager {
                     const camera = this.getCamera(id);
                     if (camera) {
                         if (camera.configuration.cv) {
-                            apiRequest.res.contentType('image/jpeg');
+                            apiRequest.res.contentType("image/jpeg");
                             apiRequest.res.writeHead(200, {
-                            	'Cache-Control': 'no-store, no-cache, must-revalidate, pre-check=0, post-check=0, max-age=0',
-                            	Pragma: 'no-cache',
-                            	Connection: 'close',
-                            	'Content-Type': 'multipart/x-mixed-replace; boundary=--myboundary'
+                            	"Cache-Control": "no-store, no-cache, must-revalidate, pre-check=0, post-check=0, max-age=0",
+                            	Pragma: "no-cache",
+                            	Connection: "close",
+                            	"Content-Type": "multipart/x-mixed-replace; boundary=--" + STREAM_BOUNDARY
                             });
+
                             this.ocvPipe[camera.id.toString()].pipe(apiRequest.res);
-                            // apiRequest.res  = new MjpegProxy(this.ocvBuffer).proxyRequestBuffer(apiRequest.req, apiRequest.res);
-                            // // apiRequest.res.contentType('image/jpeg');
-                            // // apiRequest.res.end(this.ocvBuffer, 'binary');
-                                    // apiRequest.res.writeHead(200, {
-                                	// 	'Cache-Control': 'no-store, no-cache, must-revalidate, pre-check=0, post-check=0, max-age=0',
-                                	// 	Pragma: 'no-cache',
-                                	// 	Connection: 'close',
-                                	// 	'Content-Type': 'multipart/x-mixed-replace; boundary=--myboundary'
-                                	// });
-                                    //
-                                    // this.ocvCb[id.toString()] = (pic) => {
-                                    //     apiRequest.res.write(`--myboundary\nContent-Type: image/jpg\nContent-length: ${pic.length}\n\n`);
-                                    //     apiRequest.res.write(pic);
-                                    // }
-                                    //
-                                    // apiRequest.req.on("close", () => {
-                                    //     Logger.info("Closed mjpeg connection");
-                                    //     if (this.ocvCb && this.ocvCb[id.toString()]) {
-                                    //         this.ocvCb[id.toString()] = null;
-                                    //     }
-                                    // });
-                            //
-                            // const writeFrame = () => {
-                        	// 	const buffer = this.ocvBuffer;
-                        	// 	apiRequest.res.write(`--myboundary\nContent-Type: image/jpg\nContent-length: ${buffer.length}\n\n`);
-                        	// 	apiRequest.res.write(buffer);
-                        	// };
-                            //
-                            // for (let i = 0 ; i < 10 ; i++) {
-                            //     writeFrame();
-                            // }
 
-                            // const r = fs.createReadStream(this.ocvBuffer) // or any other way to get a readable stream
-                            //   const ps = new stream.PassThrough() // <---- this makes a trick with stream error handling
-                            //   stream.pipeline(
-                            //    r,
-                            //    ps, // <---- this makes a trick with stream error handling
-                            //    (err) => {
-                            //     if (err) {
-                            //       console.log(err) // No such file or any other kind of error
-                            //       return apiRequest.res.sendStatus(400);
-                            //     }
-                            //   })
-                            //   ps.pipe(apiRequest.res)
-
+                            apiRequest.req.on("close", () => {
+                                Logger.info("Closed mjpeg connection");
+                                this.ocvPipe[camera.id.toString()].unpipe(apiRequest.res);
+                            });
                         } else {
                             if (camera.mjpegUrl) {
                                 if (apiRequest.authenticationData) {
@@ -1242,20 +1188,24 @@ class CamerasManager {
                         cb(Error(ERROR_UNEXISTING_PICTURE));
                     }
                 } else {
-                    if (camera.snapshotUrl) {
-                        Logger.info("Retrieving picture from camera " + id);
-                        request(camera.snapshotUrl, {encoding: "binary"}, function(error, response, body) {
-                            if (error) {
-                                Logger.err("Camera picture " + id + " error");
-                                Logger.err(error);
-                                cb(error);
-                            } else {
-                                Logger.info("Camera picture " + id + " done !");
-                                cb(null, Buffer.from(body, "binary"), response.headers["content-type"]);
-                            }
-                        });
+                    if (this.cameraCapture[camera.id.toString()]) {
+                        cb(null, this.cameraCapture[camera.id.toString()], "image/jpeg");
                     } else {
-                        cb(Error(ERROR_NO_URL_DEFINED));
+                        if (camera.snapshotUrl) {
+                            Logger.info("Retrieving picture from camera " + id);
+                            request(camera.snapshotUrl, {encoding: "binary"}, function(error, response, body) {
+                                if (error) {
+                                    Logger.err("Camera picture " + id + " error");
+                                    Logger.err(error);
+                                    cb(error);
+                                } else {
+                                    Logger.info("Camera picture " + id + " done !");
+                                    cb(null, Buffer.from(body, "binary"), response.headers["content-type"]);
+                                }
+                            });
+                        } else {
+                            cb(Error(ERROR_NO_URL_DEFINED));
+                        }
                     }
                 }
             } else {
