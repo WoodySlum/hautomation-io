@@ -396,10 +396,10 @@ class CamerasManager {
                         const diff = timerLastTmp - timerLast;
                         timerLast = timerLastTmp;
 
-                        const frame = cv.imdecode(data);
+
 
                         if (currentRecognitionFrame >= recognitionFrame) {
-
+                            const frame = cv.imdecode(data);
                             try {
                                 const inputBlob = cv.blobFromImage(frame.resizeToMax(300), 0.007843, new cv.Size(300, 300), new cv.Vec3(127.5, 0, 0));
                                 net.setInput(inputBlob);
@@ -473,8 +473,8 @@ class CamerasManager {
 
 
                 const consumer = new MjpegConsumer();
-                const req = request({url: camera.mjpegUrl, "rejectUnauthorized": false});
-                // const req = request({url: "https://webcam1.lpl.org/axis-cgi/mjpg/video.cgi", "rejectUnauthorized": false});
+                // const req = request({url: camera.mjpegUrl, "rejectUnauthorized": false});
+                const req = request({url: "https://webcam1.lpl.org/axis-cgi/mjpg/video.cgi", "rejectUnauthorized": false});
                 this.cameraStream[camera.id.toString()] = req;
 
                 const piped = req.pipe(consumer).pipe(liner);
