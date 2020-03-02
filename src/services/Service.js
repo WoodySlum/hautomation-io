@@ -108,7 +108,20 @@ class Service {
      */
     startThreaded() {
         if (this.threadsManager) {
-            this.threadsManager.run(this.run, this.name, {}, this.threadCallback);
+            this.threadsManager.run(() => {
+                process.on("SIGINT", () => {
+                    console.log("Received SIGINT");
+                    process.kill(process.pid, "SIGKILL");
+                    process.exit(0);
+                });
+
+                process.on("SIGTERM", () => {
+                    console.log("Received SIGTERM");
+                    process.kill(process.pid, "SIGKILL");
+                    process.exit(0);
+                });
+                this.run();
+            }, this.name, {}, this.threadCallback);
             this.pid = this.threadsManager.getPid(this.name);
         } else {
             throw Error(ERROR_UNDEFINED_THREADS_MANAGER);
