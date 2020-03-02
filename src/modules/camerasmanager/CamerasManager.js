@@ -397,36 +397,38 @@ class CamerasManager {
                         timerLast = timerLastTmp;
 
 
+                        setTimeout(() => {
+                            if (currentRecognitionFrame >= recognitionFrame) {
+                                const frame = cv.imdecode(data);
+                                try {
+                                    const inputBlob = cv.blobFromImage(frame.resizeToMax(300), 0.007843, new cv.Size(300, 300), new cv.Vec3(127.5, 0, 0));
+                                    net.setInput(inputBlob);
+                                    let outputBlob = net.forward();
 
-                        if (currentRecognitionFrame >= recognitionFrame) {
-                            const frame = cv.imdecode(data);
-                            try {
-                                const inputBlob = cv.blobFromImage(frame.resizeToMax(300), 0.007843, new cv.Size(300, 300), new cv.Vec3(127.5, 0, 0));
-                                net.setInput(inputBlob);
-                                let outputBlob = net.forward();
+                                    outputBlob = outputBlob.flattenFloat(outputBlob.sizes[2], outputBlob.sizes[3]);
+                                    const results = this.extractResults(outputBlob, frame);
 
-                                outputBlob = outputBlob.flattenFloat(outputBlob.sizes[2], outputBlob.sizes[3]);
-                                const results = this.extractResults(outputBlob, frame);
+                                    rectangles = [];
+                                    detectedElement = [];
 
-                                rectangles = [];
-                                detectedElement = [];
-
-                                for (let i = 0 ; i < results.length ; i++) {
-                                    if (results[i].confidence > 0) {
-                                        Logger.info(results[i]);
+                                    for (let i = 0 ; i < results.length ; i++) {
+                                        if (results[i].confidence > 0) {
+                                            Logger.info(results[i]);
+                                        }
+                                        if (results[i].confidence > confidenceThreshold && autorizedCategories.indexOf(protoMapper[results[i].classLabel]) >= 0) {
+                                            Logger.info("Detected on camera " + camera.name + " : " + protoMapper[results[i].classLabel] + " / confidence : " + parseInt(results[i].confidence * 100) + "%");
+                                            detectedElement.push(protoMapper[results[i].classLabel] + " - " + parseInt(results[i].confidence * 100) + "%");
+                                            rectangles.push(results[i].rect);
+                                        }
                                     }
-                                    if (results[i].confidence > confidenceThreshold && autorizedCategories.indexOf(protoMapper[results[i].classLabel]) >= 0) {
-                                        Logger.info("Detected on camera " + camera.name + " : " + protoMapper[results[i].classLabel] + " / confidence : " + parseInt(results[i].confidence * 100) + "%");
-                                        detectedElement.push(protoMapper[results[i].classLabel] + " - " + parseInt(results[i].confidence * 100) + "%");
-                                        rectangles.push(results[i].rect);
-                                    }
+
+                                    currentRecognitionFrame = 0;
+                                } catch(e) {
+
                                 }
-
-                                currentRecognitionFrame = 0;
-                            } catch(e) {
-
                             }
-                        }
+                        }, 10);
+
 
                         currentRecognitionFrame += diff;
 
@@ -789,13 +791,25 @@ class CamerasManager {
                             apiRequest.res.writeHead(200, {
                             	"Cache-Control": "no-store, no-cache, must-revalidate, pre-check=0, post-check=0, max-age=0",
                             	Pragma: "no-cache",
-                            	Connection: "close",
                             	"Content-Type": "multipart/x-mixed-replace; boundary=--" + STREAM_BOUNDARY
                             });
 
                             apiRequest.req.on("close", () => {
                                 Logger.info("Closed mjpeg connection");
                                 this.ocvPipe[camera.id.toString()].unpipe(apiRequest.res);
+
+                                reject(new APIResponse.class(false, {}, 766, ERROR_UNSUPPORTED_MODE));
+                            });
+                            apiRequest.req.on("clientError", () => {
+                                Logger.info("Closed mjpeg connection - client error");
+                                this.ocvPipe[camera.id.toString()].unpipe(apiRequest.res);
+
+                                reject(new APIResponse.class(false, {}, 766, ERROR_UNSUPPORTED_MODE));
+                            });
+                            apiRequest.req.on("finish", () => {
+                                Logger.info("Closed mjpeg connection - finish");
+                                this.ocvPipe[camera.id.toString()].unpipe(apiRequest.res);
+
                                 reject(new APIResponse.class(false, {}, 766, ERROR_UNSUPPORTED_MODE));
                             });
 

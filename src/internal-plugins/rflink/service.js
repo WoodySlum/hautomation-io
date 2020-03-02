@@ -43,6 +43,18 @@ function loaded(api) {
          * @param  {Function} send Send a message to parent process
          */
         run(data, send) {
+            process.on("SIGINT", () => {
+                console.log("Received SIGINT");
+                process.kill(process.pid, "SIGKILL");
+                process.exit(0);
+            });
+
+            process.on("SIGTERM", () => {
+                console.log("Received SIGTERM");
+                process.kill(process.pid, "SIGKILL");
+                process.exit(0);
+            });
+            
             const TYPE_RADIO = "RADIO";
             const TYPE_VERSION = "VERSION";
             const TYPE_ACK = "ACK";
