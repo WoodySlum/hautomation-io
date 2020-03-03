@@ -44,17 +44,15 @@ function loaded(api) {
          */
         run(data, send) {
             process.on("SIGINT", () => {
-                console.log("Received SIGINT");
                 process.kill(process.pid, "SIGKILL");
                 process.exit(0);
             });
 
             process.on("SIGTERM", () => {
-                console.log("Received SIGTERM");
                 process.kill(process.pid, "SIGKILL");
                 process.exit(0);
             });
-            
+
             const TYPE_RADIO = "RADIO";
             const TYPE_VERSION = "VERSION";
             const TYPE_ACK = "ACK";

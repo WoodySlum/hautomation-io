@@ -1,6 +1,6 @@
 "use strict";
 const request = require("request");
-const MjpegProxy = require("mjpeg-proxy").MjpegProxy;
+const MjpegProxy = require("./MjpegProxy").MjpegProxy;
 const fs = require("fs-extra");
 const sha256 = require("sha256");
 const cv = require("opencv4nodejs");
@@ -365,7 +365,7 @@ class CamerasManager {
         const modelFile = "./res/ai/model/deploy.caffemodel";
         const net = cv.readNetFromCaffe(protoTxt, modelFile);
 
-        const recognitionFrame = 1000;// in ms
+        const recognitionFrame = 3000;// in ms
         const confidenceThreshold = 0.1;// in ms
 
         this.cameras.forEach((camera) => {
@@ -382,125 +382,189 @@ class CamerasManager {
                 let detectedElement = [];
                 let timerLast = Date.now();
 
-                const request = require("request");
-                const MjpegConsumer = require("mjpeg-consumer");
-                const util = require("util");
-                const Stream = require("stream");
-
-                var liner = new Stream.Transform({ objectMode: false });
-
-                liner._transform = (data, encoding, done) => {
-                    if (data) {
-                        // Evaluate framerate
-                        const timerLastTmp = Date.now();
-                        const diff = timerLastTmp - timerLast;
-                        timerLast = timerLastTmp;
-
-
-                        setTimeout(() => {
-                            if (currentRecognitionFrame >= recognitionFrame) {
-                                const frame = cv.imdecode(data);
-                                try {
-                                    const inputBlob = cv.blobFromImage(frame.resizeToMax(300), 0.007843, new cv.Size(300, 300), new cv.Vec3(127.5, 0, 0));
-                                    net.setInput(inputBlob);
-                                    let outputBlob = net.forward();
-
-                                    outputBlob = outputBlob.flattenFloat(outputBlob.sizes[2], outputBlob.sizes[3]);
-                                    const results = this.extractResults(outputBlob, frame);
-
-                                    rectangles = [];
-                                    detectedElement = [];
-
-                                    for (let i = 0 ; i < results.length ; i++) {
-                                        if (results[i].confidence > 0) {
-                                            Logger.info(results[i]);
-                                        }
-                                        if (results[i].confidence > confidenceThreshold && autorizedCategories.indexOf(protoMapper[results[i].classLabel]) >= 0) {
-                                            Logger.info("Detected on camera " + camera.name + " : " + protoMapper[results[i].classLabel] + " / confidence : " + parseInt(results[i].confidence * 100) + "%");
-                                            detectedElement.push(protoMapper[results[i].classLabel] + " - " + parseInt(results[i].confidence * 100) + "%");
-                                            rectangles.push(results[i].rect);
-                                        }
-                                    }
-
-                                    currentRecognitionFrame = 0;
-                                } catch(e) {
-
-                                }
-                            }
-                        }, 10);
-
-
-                        currentRecognitionFrame += diff;
-
-
-                        // try {
-                        //     cv.drawTextBox(
-                        //         frame,
-                        //         { x: 0, y: 0 },
-                        //         [{ text: "Beta cv", fontSize: 0.4, thickness: 1, color: new cv.Vec(255, 255, 255) }],
-                        //         0.7
-                        //     );
-                        //     for (let i = 0 ; i < rectangles.length ; i++) {
-                        //         frame.drawRectangle(
-                        //             rectangles[i],
-                        //             new cv.Vec(0, 255, 0),
-                        //             2,
-                        //             cv.LINE_8
-                        //         );
-                        //         cv.drawTextBox(
-                        //             frame,
-                        //             { x: rectangles[i].x, y: rectangles[i].y },
-                        //             [{ text: detectedElement[i], fontSize: 0.5, thickness: 1, color: new cv.Vec(0, 255, 0) }],
-                        //             0.6
-                        //         );
-                        //     }
-                        // } catch(e) {
-                        //
-                        // }
-                        //
-                        // if (frame && cv) {
-                        //     try {
-                        //         toto = cv.imencode('.jpg', frame);
-                        //     } catch(e) {
-                        //
-                        //     }
-                        // }
-
-                    }
-
-                    this.cameraCapture[camera.id.toString()] = data;
-                    const header = Buffer.from(`--${STREAM_BOUNDARY}\nContent-Type: image/jpg\nContent-length: ${data.length}\n\n`);
-
-                    done(false, Buffer.concat([header, data]));
+                if (this.ocvPipe[camera.id.toString()]) {
+                    this.ocvPipe[camera.id.toString()].disconnect();
+                    this.ocvPipe[camera.id.toString()] = null;
                 }
 
+                this.ocvPipe[camera.id.toString()] = new MjpegProxy(camera.mjpegUrl, (err, img) => {
+                    if (!err) {
+                        if (img) {
+                                        // Evaluate framerate
+                                        const timerLastTmp = Date.now();
+                                        const diff = timerLastTmp - timerLast;
+                                        timerLast = timerLastTmp;
+                                            if (currentRecognitionFrame >= recognitionFrame) {
+                                                const frame = cv.imdecode(img);
+                                                try {
+                                                    const inputBlob = cv.blobFromImage(frame.resizeToMax(300), 0.007843, new cv.Size(300, 300), new cv.Vec3(127.5, 0, 0));
+                                                    net.setInput(inputBlob);
+                                                    let outputBlob = net.forward();
 
-                const consumer = new MjpegConsumer();
-                const req = request({url: camera.mjpegUrl, "rejectUnauthorized": false});
-                // const req = request({url: "https://webcam1.lpl.org/axis-cgi/mjpg/video.cgi", "rejectUnauthorized": false});
-                this.cameraStream[camera.id.toString()] = req;
+                                                    outputBlob = outputBlob.flattenFloat(outputBlob.sizes[2], outputBlob.sizes[3]);
+                                                    const results = this.extractResults(outputBlob, frame);
 
-                const piped = req.pipe(consumer).pipe(liner);
-                const self = this;
+                                                    rectangles = [];
+                                                    detectedElement = [];
 
-                req.on("error", (error) => {
-                    Logger.info("Camera error " + error.message + " for camera " + camera.id + ". Restart in " + CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION + " ms.");
-                    this.cameraStream[camera.id.toString()].abort();
-                    delete this.cameraStream[camera.id.toString()];
-                    setTimeout(() => {
-                        self.initCameras();
-                    }, CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION);
+                                                    for (let i = 0 ; i < results.length ; i++) {
+                                                        if (results[i].confidence > 0) {
+                                                            Logger.info(results[i]);
+                                                        }
+                                                        if (results[i].confidence > confidenceThreshold && autorizedCategories.indexOf(protoMapper[results[i].classLabel]) >= 0) {
+                                                            Logger.info("Detected on camera " + camera.name + " : " + protoMapper[results[i].classLabel] + " / confidence : " + parseInt(results[i].confidence * 100) + "%");
+                                                            detectedElement.push(protoMapper[results[i].classLabel] + " - " + parseInt(results[i].confidence * 100) + "%");
+                                                            rectangles.push(results[i].rect);
+                                                        }
+                                                    }
+
+                                                    currentRecognitionFrame = 0;
+                                                    Logger.info("Save capture");
+                                                    fs.writeFile("/tmp/cap-" + camera.id.toString() + ".jpg", img);
+                                                } catch(e) {
+
+                                                }
+                                            }
+                                        currentRecognitionFrame += diff;
+                                        this.cameraCapture[camera.id.toString()] = img;
+                        }
+                    } else {
+                        if ((err && err.code && (err.code == "ETIMEDOUT" || err.code == "ENOTFOUND")) || err === "TIMEOUT")  {
+                            Logger.warn("Could not connect to camera " + camera.id + " Retry in " + CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION + " s");
+                            setTimeout((self) => {
+                                self.initCameras();
+                            }, CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION, this);
+                        } else {
+
+                        }
+
+                        // setTimeout(() => {
+                        //
+                        // }, CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION)
+                    }
+
                 });
-                req.on("timeout", () => {
-                    setTimeout(() => {
-                        Logger.info("Camera timeout for camera " + camera.id + ". Retry in " + CAMERAS_RESTREAM_AFTER_REQ_TIMEOUT_DURATION + " ms.");
-                        this.cameraStream[camera.id.toString()].abort();
-                        delete this.cameraStream[camera.id.toString()];
-                        self.initCameras();
-                    }, CAMERAS_RESTREAM_AFTER_REQ_TIMEOUT_DURATION);
-                });
 
-                this.ocvPipe[camera.id.toString()] = piped;
+                                // const request = require("request");
+                                // const MjpegConsumer = require("mjpeg-consumer");
+                                // const util = require("util");
+                                // const Stream = require("stream");
+                                //
+                                // var liner = new Stream.Transform({ objectMode: true });
+                                //
+                                // liner._transform = (data, encoding, done) => {
+                                //     if (data) {
+                                //         // Evaluate framerate
+                                //         const timerLastTmp = Date.now();
+                                //         const diff = timerLastTmp - timerLast;
+                                //         timerLast = timerLastTmp;
+                                //
+                                //
+                                //         setTimeout(() => {
+                                //             if (currentRecognitionFrame >= recognitionFrame) {
+                                //                 const frame = cv.imdecode(data);
+                                //                 try {
+                                //                     const inputBlob = cv.blobFromImage(frame.resizeToMax(300), 0.007843, new cv.Size(300, 300), new cv.Vec3(127.5, 0, 0));
+                                //                     net.setInput(inputBlob);
+                                //                     let outputBlob = net.forward();
+                                //
+                                //                     outputBlob = outputBlob.flattenFloat(outputBlob.sizes[2], outputBlob.sizes[3]);
+                                //                     const results = this.extractResults(outputBlob, frame);
+                                //
+                                //                     rectangles = [];
+                                //                     detectedElement = [];
+                                //
+                                //                     for (let i = 0 ; i < results.length ; i++) {
+                                //                         if (results[i].confidence > 0) {
+                                //                             Logger.info(results[i]);
+                                //                         }
+                                //                         if (results[i].confidence > confidenceThreshold && autorizedCategories.indexOf(protoMapper[results[i].classLabel]) >= 0) {
+                                //                             Logger.info("Detected on camera " + camera.name + " : " + protoMapper[results[i].classLabel] + " / confidence : " + parseInt(results[i].confidence * 100) + "%");
+                                //                             detectedElement.push(protoMapper[results[i].classLabel] + " - " + parseInt(results[i].confidence * 100) + "%");
+                                //                             rectangles.push(results[i].rect);
+                                //                         }
+                                //                     }
+                                //
+                                //                     currentRecognitionFrame = 0;
+                                //                 } catch(e) {
+                                //
+                                //                 }
+                                //             }
+                                //         }, 10);
+                                //
+                                //
+                                //         currentRecognitionFrame += diff;
+                                //
+                                //
+                                //         // try {
+                                //         //     cv.drawTextBox(
+                                //         //         frame,
+                                //         //         { x: 0, y: 0 },
+                                //         //         [{ text: "Beta cv", fontSize: 0.4, thickness: 1, color: new cv.Vec(255, 255, 255) }],
+                                //         //         0.7
+                                //         //     );
+                                //         //     for (let i = 0 ; i < rectangles.length ; i++) {
+                                //         //         frame.drawRectangle(
+                                //         //             rectangles[i],
+                                //         //             new cv.Vec(0, 255, 0),
+                                //         //             2,
+                                //         //             cv.LINE_8
+                                //         //         );
+                                //         //         cv.drawTextBox(
+                                //         //             frame,
+                                //         //             { x: rectangles[i].x, y: rectangles[i].y },
+                                //         //             [{ text: detectedElement[i], fontSize: 0.5, thickness: 1, color: new cv.Vec(0, 255, 0) }],
+                                //         //             0.6
+                                //         //         );
+                                //         //     }
+                                //         // } catch(e) {
+                                //         //
+                                //         // }
+                                //         //
+                                //         // if (frame && cv) {
+                                //         //     try {
+                                //         //         toto = cv.imencode('.jpg', frame);
+                                //         //     } catch(e) {
+                                //         //
+                                //         //     }
+                                //         // }
+                                //
+                                //     }
+                                //
+                                //     this.cameraCapture[camera.id.toString()] = data;
+                                //
+                                //     const header = Buffer.from(`--${STREAM_BOUNDARY}\nContent-Type: image/jpg\nContent-length: ${data.length}\n\n`);
+                                //
+                                //     done(false, Buffer.concat([header, data]));
+                                // }
+                                //
+                                //
+                                // const consumer = new MjpegConsumer();
+                                // const req = request({url: camera.mjpegUrl, "rejectUnauthorized": false});
+                                // // const req = request({url: "https://webcam1.lpl.org/axis-cgi/mjpg/video.cgi", "rejectUnauthorized": false});
+                                // this.cameraStream[camera.id.toString()] = req;
+                                //
+                                // const piped = req.pipe(consumer).pipe(liner);
+                                // const self = this;
+                                //
+                                // req.on("error", (error) => {
+                                //     Logger.info("Camera error " + error.message + " for camera " + camera.id + ". Restart in " + CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION + " ms.");
+                                //     this.cameraStream[camera.id.toString()].abort();
+                                //     delete this.cameraStream[camera.id.toString()];
+                                //     setTimeout(() => {
+                                //         self.initCameras();
+                                //     }, CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION);
+                                // });
+                                // req.on("timeout", () => {
+                                //     setTimeout(() => {
+                                //         Logger.info("Camera timeout for camera " + camera.id + ". Retry in " + CAMERAS_RESTREAM_AFTER_REQ_TIMEOUT_DURATION + " ms.");
+                                //         this.cameraStream[camera.id.toString()].abort();
+                                //         delete this.cameraStream[camera.id.toString()];
+                                //         self.initCameras();
+                                //     }, CAMERAS_RESTREAM_AFTER_REQ_TIMEOUT_DURATION);
+                                // });
+                                //
+                                // this.ocvPipe[camera.id.toString()] = piped;
 
 
                 // let currentRecognitionFrame = 0;
@@ -787,39 +851,42 @@ class CamerasManager {
                     const camera = this.getCamera(id);
                     if (camera) {
                         if (camera.configuration.cv) {
-                            apiRequest.res.contentType("image/jpeg");
-                            apiRequest.res.writeHead(200, {
-                            	"Cache-Control": "no-store, no-cache, must-revalidate, pre-check=0, post-check=0, max-age=0",
-                            	Pragma: "no-cache",
-                            	"Content-Type": "multipart/x-mixed-replace; boundary=--" + STREAM_BOUNDARY
-                            });
-
-                            apiRequest.req.on("close", () => {
-                                Logger.info("Closed mjpeg connection");
-                                this.ocvPipe[camera.id.toString()].unpipe(apiRequest.res);
-
-                                reject(new APIResponse.class(false, {}, 766, ERROR_UNSUPPORTED_MODE));
-                            });
-                            apiRequest.req.on("clientError", () => {
-                                Logger.info("Closed mjpeg connection - client error");
-                                this.ocvPipe[camera.id.toString()].unpipe(apiRequest.res);
-
-                                reject(new APIResponse.class(false, {}, 766, ERROR_UNSUPPORTED_MODE));
-                            });
-                            apiRequest.req.on("finish", () => {
-                                Logger.info("Closed mjpeg connection - finish");
-                                this.ocvPipe[camera.id.toString()].unpipe(apiRequest.res);
-
-                                reject(new APIResponse.class(false, {}, 766, ERROR_UNSUPPORTED_MODE));
-                            });
-
-                            this.ocvPipe[camera.id.toString()].pipe(apiRequest.res);
+                            this.ocvPipe[camera.id.toString()].proxyRequest(apiRequest.req, apiRequest.res);
+                            // apiRequest.res.contentType("image/jpeg");
+                            // apiRequest.res.writeHead(200, {
+                            // 	"Cache-Control": "no-store, no-cache, must-revalidate, pre-check=0, post-check=0, max-age=0",
+                            // 	Pragma: "no-cache",
+                            // 	"Content-Type": "multipart/x-mixed-replace; boundary=--" + STREAM_BOUNDARY
+                            // });
+                            //
+                            // apiRequest.req.on("close", () => {
+                            //     Logger.info("Closed mjpeg connection");
+                            //     this.ocvPipe[camera.id.toString()].unpipe(apiRequest.res);
+                            //
+                            //     reject(new APIResponse.class(false, {}, 766, ERROR_UNSUPPORTED_MODE));
+                            // });
+                            // apiRequest.req.on("clientError", () => {
+                            //     Logger.info("Closed mjpeg connection - client error");
+                            //     this.ocvPipe[camera.id.toString()].unpipe(apiRequest.res);
+                            //
+                            //     reject(new APIResponse.class(false, {}, 766, ERROR_UNSUPPORTED_MODE));
+                            // });
+                            // apiRequest.req.on("finish", () => {
+                            //     Logger.info("Closed mjpeg connection - finish");
+                            //     this.ocvPipe[camera.id.toString()].unpipe(apiRequest.res);
+                            //
+                            //     reject(new APIResponse.class(false, {}, 766, ERROR_UNSUPPORTED_MODE));
+                            // });
+                            //
+                            // this.ocvPipe[camera.id.toString()].pipe(apiRequest.res);
 
 
                         } else {
                             if (camera.mjpegUrl) {
                                 if (apiRequest.authenticationData) {
-                                    apiRequest.res  = new MjpegProxy(camera.mjpegUrl).proxyRequest(apiRequest.req, apiRequest.res);
+                                    apiRequest.res  = new MjpegProxy("https://webcam1.lpl.org/axis-cgi/mjpg/video.cgi", (img) => {
+                                        fs.writeFileSync("/Users/smizrahi/Downloads/seb.jpg", img);
+                                    }).proxyRequest(apiRequest.req, apiRequest.res);
                                 }
                             } else {
                                 reject(new APIResponse.class(false, {}, 766, ERROR_UNSUPPORTED_MODE));
