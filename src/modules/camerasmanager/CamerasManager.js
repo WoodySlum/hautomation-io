@@ -429,6 +429,7 @@ class CamerasManager {
                                         this.cameraCapture[camera.id.toString()] = img;
                         }
                     } else {
+                        Logger.err(err);
                         if ((err && err.code && (err.code == "ETIMEDOUT" || err.code == "ENOTFOUND")) || err === "TIMEOUT")  {
                             Logger.warn("Could not connect to camera " + camera.id + " Retry in " + CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION + " s");
                             setTimeout((self) => {
