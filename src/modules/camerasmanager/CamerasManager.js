@@ -431,13 +431,13 @@ class CamerasManager {
                         } else {
                             Logger.err(err);
                             if (!isPlanned && (err && err.code && (err.code == "ETIMEDOUT" || err.code == "ENOTFOUND")))  {
-                                Logger.warn("Could not connect to camera " + camera.id + " Retry in " + CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION + " s");
-                                setTimeout((self) => {
-                                    isPlanned = true;
-                                    this.ocvPipe[camera.id.toString()].disconnect();
-                                    this.ocvPipe[camera.id.toString()] = null;
-                                    self.initCameras();
-                                }, CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION, this);
+                                Logger.warn("Could not connect to camera " + camera.id + " Retry in " + CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION + " ms");
+                                // setTimeout((self) => {
+                                //     isPlanned = true;
+                                //     this.ocvPipe[camera.id.toString()].disconnect();
+                                //     this.ocvPipe[camera.id.toString()] = null;
+                                //     self.initCameras();
+                                // }, CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION, this);
                             }
                         }
 
