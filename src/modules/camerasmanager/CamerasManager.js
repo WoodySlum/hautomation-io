@@ -434,10 +434,12 @@ class CamerasManager {
                         if ((err && err.code && (err.code == "ETIMEDOUT" || err.code == "ENOTFOUND")) || err === "TIMEOUT")  {
                             Logger.warn("Could not connect to camera " + camera.id + " Retry in " + CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION + " s");
                             setTimeout((self) => {
+                                this.ocvPipe[camera.id.toString()].disconnect();
                                 self.initCameras();
                             }, CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION, this);
                         } else if (err && err === "CLOSE")  {
                             setTimeout((self) => {
+                                this.ocvPipe[camera.id.toString()].disconnect();
                                 self.initCameras();
                             }, 10, this);
                         }

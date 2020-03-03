@@ -166,10 +166,11 @@ var MjpegProxy = exports.MjpegProxy = function(mjpegUrl, cb = null) {
     self.mjpegRequest.end();
   //----------------
 
-  self.disconnect = function(req, res) {
+  self.disconnect = function() {
       if (self.mjpegRequest) {
           self.mjpegRequest.abort();
           self.mjpegRequest = null;
+          self.cb = null;
           // self.globalMjpegResponse.destroy();
       }
   }
