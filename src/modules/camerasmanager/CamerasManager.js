@@ -441,6 +441,13 @@ class CamerasManager {
                                     this.ocvPipe[camera.id.toString()] = null;
                                     self.initCameras();
                                 }, CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION, this);
+                            } else if (!isPlanned && err == "CLOSE")  {
+                                Logger.warn("Camera stream closed " + camera.id + " Retry now.");
+                                setTimeout((self) => {
+                                    isPlanned = true;
+                                    this.ocvPipe[camera.id.toString()] = null;
+                                    self.initCameras();
+                                }, 5, this);
                             }
                         }
 
