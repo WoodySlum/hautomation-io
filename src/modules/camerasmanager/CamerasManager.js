@@ -387,6 +387,7 @@ class CamerasManager {
                     this.ocvPipe[camera.id.toString()] = null;
                 }
 
+                // this.ocvPipe[camera.id.toString()] = new MjpegProxy("https://webcam1.lpl.org/axis-cgi/mjpg/video.cgi", (err, img) => {
                 this.ocvPipe[camera.id.toString()] = new MjpegProxy(camera.mjpegUrl, (err, img) => {
                     if (!err) {
                         if (img) {
@@ -395,14 +396,16 @@ class CamerasManager {
                                         const diff = timerLastTmp - timerLast;
                                         timerLast = timerLastTmp;
                                             if (currentRecognitionFrame >= recognitionFrame) {
-                                                const frame = cv.imdecode(img);
-                                                try {
-                                                    const inputBlob = cv.blobFromImage(frame.resizeToMax(300), 0.007843, new cv.Size(300, 300), new cv.Vec3(127.5, 0, 0));
-                                                    net.setInput(inputBlob);
-                                                    let outputBlob = net.forward();
+                                                let tframe = null;
+                                                cv.imdecodeAsync(img)
+                                                .then(frame => {tframe = frame; return cv.blobFromImageAsync(frame.resizeToMax(300), 0.007843, new cv.Size(300, 300), new cv.Vec3(127.5, 0, 0));})
+                                                .then(inputBlob => net.setInputAsync(inputBlob))
+                                                .then(() => net.forwardAsync())
+                                                .then(outputBlob => {
+                                                    outputBlob.flattenFloat(outputBlob.sizes[2], outputBlob.sizes[3]);
 
                                                     outputBlob = outputBlob.flattenFloat(outputBlob.sizes[2], outputBlob.sizes[3]);
-                                                    const results = this.extractResults(outputBlob, frame);
+                                                    const results = this.extractResults(outputBlob, tframe);
 
                                                     rectangles = [];
                                                     detectedElement = [];
@@ -420,10 +423,8 @@ class CamerasManager {
 
                                                     currentRecognitionFrame = 0;
                                                     Logger.info("Save capture");
-                                                    fs.writeFile("/tmp/cap-" + camera.id.toString() + ".jpg", img);
-                                                } catch(e) {
-
-                                                }
+                                                    fs.writeFile("/tmp/cap-" + camera.id.toString() + ".jpg", tframe);
+                                                })
                                             }
                                         currentRecognitionFrame += diff;
                                         this.cameraCapture[camera.id.toString()] = img;
@@ -435,8 +436,10 @@ class CamerasManager {
                             setTimeout((self) => {
                                 self.initCameras();
                             }, CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION, this);
-                        } else {
-
+                        } else if (err && err === "CLOSE")  {
+                            setTimeout((self) => {
+                                self.initCameras();
+                            }, 10, this);
                         }
 
                         // setTimeout(() => {
@@ -884,11 +887,11 @@ class CamerasManager {
 
                         } else {
                             if (camera.mjpegUrl) {
-                                if (apiRequest.authenticationData) {
-                                    apiRequest.res  = new MjpegProxy("https://webcam1.lpl.org/axis-cgi/mjpg/video.cgi", (img) => {
-                                        fs.writeFileSync("/Users/smizrahi/Downloads/seb.jpg", img);
-                                    }).proxyRequest(apiRequest.req, apiRequest.res);
-                                }
+                                // if (apiRequest.authenticationData) {
+                                //     apiRequest.res  = new MjpegProxy("https://webcam1.lpl.org/axis-cgi/mjpg/video.cgi", (img) => {
+                                //         fs.writeFileSync("/Users/smizrahi/Downloads/seb.jpg", img);
+                                //     }).proxyRequest(apiRequest.req, apiRequest.res);
+                                // }
                             } else {
                                 reject(new APIResponse.class(false, {}, 766, ERROR_UNSUPPORTED_MODE));
                             }
