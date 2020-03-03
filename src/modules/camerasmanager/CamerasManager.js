@@ -390,12 +390,12 @@ class CamerasManager {
                         if (!err) {
                             isPlanned = false;
                             if (img && !isProcessing) {
-                                            isProcessing = true;
                                             // Evaluate framerate
                                             const timerLastTmp = Date.now();
                                             const diff = timerLastTmp - timerLast;
                                             timerLast = timerLastTmp;
                                                 if (currentRecognitionFrame >= recognitionFrame) {
+                                                    isProcessing = true;
                                                     let tframe = null;
                                                     cv.imdecodeAsync(img)
                                                     .then(frame => {tframe = frame; return cv.blobFromImageAsync(frame.resizeToMax(300), 0.007843, new cv.Size(300, 300), new cv.Vec3(127.5, 0, 0));})
@@ -422,8 +422,9 @@ class CamerasManager {
                                                         }
 
                                                         currentRecognitionFrame = 0;
+
                                                         Logger.info("Save capture");
-                                                        // fs.writeFile("/tmp/cap-" + camera.id.toString() + ".jpg", tframe);
+                                                        fs.writeFileSync("/tmp/cap-" + camera.id.toString() + ".jpg", cv.imencode('.jpg', tframe));
                                                         isProcessing = false;
                                                     })
                                                 }
@@ -433,14 +434,13 @@ class CamerasManager {
 
                         } else {
                             Logger.err(err);
-                            if (!isPlanned && (err && err.code && (err.code == "ETIMEDOUT" || err.code == "ENOTFOUND")))  {
+                            if (!isPlanned && (err && err.code && (err.code == "ETIMEDOUT" || err.code == "ENOTFOUND")) || err == "CLOSE")  {
                                 Logger.warn("Could not connect to camera " + camera.id + " Retry in " + CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION + " ms");
-                                // setTimeout((self) => {
-                                //     isPlanned = true;
-                                //     this.ocvPipe[camera.id.toString()].disconnect();
-                                //     this.ocvPipe[camera.id.toString()] = null;
-                                //     self.initCameras();
-                                // }, CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION, this);
+                                setTimeout((self) => {
+                                    isPlanned = true;
+                                    this.ocvPipe[camera.id.toString()] = null;
+                                    self.initCameras();
+                                }, CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION, this);
                             }
                         }
 
