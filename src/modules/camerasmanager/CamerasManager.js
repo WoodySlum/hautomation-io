@@ -409,7 +409,7 @@ class CamerasManager {
                                                         detectedElement = [];
 
                                                         for (let i = 0 ; i < results.length ; i++) {
-                                                            if (results[i].confidence > 0) {
+                                                            if (results[i].confidence > 1) {
                                                                 Logger.info(results[i]);
                                                             }
                                                             if (results[i].confidence > confidenceThreshold && autorizedCategories.indexOf(protoMapper[results[i].classLabel]) >= 0) {
@@ -430,7 +430,7 @@ class CamerasManager {
 
                         } else {
                             Logger.err(err);
-                            if (!isPlanned && (err && err.code && (err.code == "ETIMEDOUT" || err.code == "ENOTFOUND")) || err === "TIMEOUT" || err === "CODE")  {
+                            if (!isPlanned && (err && err.code && (err.code == "ETIMEDOUT" || err.code == "ENOTFOUND")))  {
                                 Logger.warn("Could not connect to camera " + camera.id + " Retry in " + CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION + " s");
                                 setTimeout((self) => {
                                     isPlanned = true;
