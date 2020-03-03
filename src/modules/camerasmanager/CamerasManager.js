@@ -381,75 +381,70 @@ class CamerasManager {
                 let rectangles = [];
                 let detectedElement = [];
                 let timerLast = Date.now();
+                let isPlanned = false;
 
-                if (this.ocvPipe[camera.id.toString()]) {
-                    this.ocvPipe[camera.id.toString()].disconnect();
-                    this.ocvPipe[camera.id.toString()] = null;
+                if (!this.ocvPipe[camera.id.toString()]) {
+                    // this.ocvPipe[camera.id.toString()] = new MjpegProxy("https://webcam1.lpl.org/axis-cgi/mjpg/video.cgi", (err, img) => {
+                    this.ocvPipe[camera.id.toString()] = new MjpegProxy(camera.mjpegUrl, (err, img) => {
+                        if (!err) {
+                            isPlanned = false;
+                            if (img) {
+                                            // Evaluate framerate
+                                            const timerLastTmp = Date.now();
+                                            const diff = timerLastTmp - timerLast;
+                                            timerLast = timerLastTmp;
+                                                if (currentRecognitionFrame >= recognitionFrame) {
+                                                    let tframe = null;
+                                                    cv.imdecodeAsync(img)
+                                                    .then(frame => {tframe = frame; return cv.blobFromImageAsync(frame.resizeToMax(300), 0.007843, new cv.Size(300, 300), new cv.Vec3(127.5, 0, 0));})
+                                                    .then(inputBlob => net.setInputAsync(inputBlob))
+                                                    .then(() => net.forwardAsync())
+                                                    .then(outputBlob => {
+                                                        outputBlob.flattenFloat(outputBlob.sizes[2], outputBlob.sizes[3]);
+
+                                                        outputBlob = outputBlob.flattenFloat(outputBlob.sizes[2], outputBlob.sizes[3]);
+                                                        const results = this.extractResults(outputBlob, tframe);
+
+                                                        rectangles = [];
+                                                        detectedElement = [];
+
+                                                        for (let i = 0 ; i < results.length ; i++) {
+                                                            if (results[i].confidence > 0) {
+                                                                Logger.info(results[i]);
+                                                            }
+                                                            if (results[i].confidence > confidenceThreshold && autorizedCategories.indexOf(protoMapper[results[i].classLabel]) >= 0) {
+                                                                Logger.info("Detected on camera " + camera.name + " : " + protoMapper[results[i].classLabel] + " / confidence : " + parseInt(results[i].confidence * 100) + "%");
+                                                                detectedElement.push(protoMapper[results[i].classLabel] + " - " + parseInt(results[i].confidence * 100) + "%");
+                                                                rectangles.push(results[i].rect);
+                                                            }
+                                                        }
+
+                                                        currentRecognitionFrame = 0;
+                                                        Logger.info("Save capture");
+                                                        fs.writeFile("/tmp/cap-" + camera.id.toString() + ".jpg", tframe);
+                                                    })
+                                                }
+                                            currentRecognitionFrame += diff;
+                                            this.cameraCapture[camera.id.toString()] = img;
+                            }
+
+                        } else {
+                            Logger.err(err);
+                            if (!isPlanned && (err && err.code && (err.code == "ETIMEDOUT" || err.code == "ENOTFOUND")) || err === "TIMEOUT" || err === "CODE")  {
+                                Logger.warn("Could not connect to camera " + camera.id + " Retry in " + CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION + " s");
+                                setTimeout((self) => {
+                                    isPlanned = true;
+                                    this.ocvPipe[camera.id.toString()].disconnect();
+                                    this.ocvPipe[camera.id.toString()] = null;
+                                    self.initCameras();
+                                }, CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION, this);
+                            }
+                        }
+
+                    });
                 }
 
-                // this.ocvPipe[camera.id.toString()] = new MjpegProxy("https://webcam1.lpl.org/axis-cgi/mjpg/video.cgi", (err, img) => {
-                this.ocvPipe[camera.id.toString()] = new MjpegProxy(camera.mjpegUrl, (err, img) => {
-                    if (!err) {
-                        if (img) {
-                                        // Evaluate framerate
-                                        const timerLastTmp = Date.now();
-                                        const diff = timerLastTmp - timerLast;
-                                        timerLast = timerLastTmp;
-                                            if (currentRecognitionFrame >= recognitionFrame) {
-                                                let tframe = null;
-                                                cv.imdecodeAsync(img)
-                                                .then(frame => {tframe = frame; return cv.blobFromImageAsync(frame.resizeToMax(300), 0.007843, new cv.Size(300, 300), new cv.Vec3(127.5, 0, 0));})
-                                                .then(inputBlob => net.setInputAsync(inputBlob))
-                                                .then(() => net.forwardAsync())
-                                                .then(outputBlob => {
-                                                    outputBlob.flattenFloat(outputBlob.sizes[2], outputBlob.sizes[3]);
 
-                                                    outputBlob = outputBlob.flattenFloat(outputBlob.sizes[2], outputBlob.sizes[3]);
-                                                    const results = this.extractResults(outputBlob, tframe);
-
-                                                    rectangles = [];
-                                                    detectedElement = [];
-
-                                                    for (let i = 0 ; i < results.length ; i++) {
-                                                        if (results[i].confidence > 0) {
-                                                            Logger.info(results[i]);
-                                                        }
-                                                        if (results[i].confidence > confidenceThreshold && autorizedCategories.indexOf(protoMapper[results[i].classLabel]) >= 0) {
-                                                            Logger.info("Detected on camera " + camera.name + " : " + protoMapper[results[i].classLabel] + " / confidence : " + parseInt(results[i].confidence * 100) + "%");
-                                                            detectedElement.push(protoMapper[results[i].classLabel] + " - " + parseInt(results[i].confidence * 100) + "%");
-                                                            rectangles.push(results[i].rect);
-                                                        }
-                                                    }
-
-                                                    currentRecognitionFrame = 0;
-                                                    Logger.info("Save capture");
-                                                    fs.writeFile("/tmp/cap-" + camera.id.toString() + ".jpg", tframe);
-                                                })
-                                            }
-                                        currentRecognitionFrame += diff;
-                                        this.cameraCapture[camera.id.toString()] = img;
-                        }
-                    } else {
-                        Logger.err(err);
-                        if ((err && err.code && (err.code == "ETIMEDOUT" || err.code == "ENOTFOUND")) || err === "TIMEOUT")  {
-                            Logger.warn("Could not connect to camera " + camera.id + " Retry in " + CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION + " s");
-                            setTimeout((self) => {
-                                this.ocvPipe[camera.id.toString()].disconnect();
-                                self.initCameras();
-                            }, CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION, this);
-                        } else if (err && err === "CLOSE")  {
-                            setTimeout((self) => {
-                                this.ocvPipe[camera.id.toString()].disconnect();
-                                self.initCameras();
-                            }, 10, this);
-                        }
-
-                        // setTimeout(() => {
-                        //
-                        // }, CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION)
-                    }
-
-                });
 
                                 // const request = require("request");
                                 // const MjpegConsumer = require("mjpeg-consumer");

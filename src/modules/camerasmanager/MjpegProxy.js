@@ -22,7 +22,7 @@
 var url = require('url');
 var http = require('http');
 var https = require('https');
-// process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
+process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
 var buffer = null;
 const JPG_HEADER = "FFD8FFE0";
 
@@ -58,6 +58,7 @@ var MjpegProxy = exports.MjpegProxy = function(mjpegUrl, cb = null) {
   //----------------
 
     // Send source MJPEG request
+    // self.mjpegRequest = https.request(self.mjpegOptions, function(mjpegResponse) {
     self.mjpegRequest = http.request(self.mjpegOptions, function(mjpegResponse) {
       // console.log('request');
       self.globalMjpegResponse = mjpegResponse;
