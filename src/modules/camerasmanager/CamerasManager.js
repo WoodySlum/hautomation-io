@@ -382,13 +382,15 @@ class CamerasManager {
                 let detectedElement = [];
                 let timerLast = Date.now();
                 let isPlanned = false;
+                let isProcessing = false;
 
                 if (!this.ocvPipe[camera.id.toString()]) {
                     // this.ocvPipe[camera.id.toString()] = new MjpegProxy("https://webcam1.lpl.org/axis-cgi/mjpg/video.cgi", (err, img) => {
                     this.ocvPipe[camera.id.toString()] = new MjpegProxy(camera.mjpegUrl, (err, img) => {
                         if (!err) {
                             isPlanned = false;
-                            if (img) {
+                            if (img && !isProcessing) {
+                                            isProcessing = true;
                                             // Evaluate framerate
                                             const timerLastTmp = Date.now();
                                             const diff = timerLastTmp - timerLast;
@@ -421,7 +423,8 @@ class CamerasManager {
 
                                                         currentRecognitionFrame = 0;
                                                         Logger.info("Save capture");
-                                                        fs.writeFile("/tmp/cap-" + camera.id.toString() + ".jpg", tframe);
+                                                        // fs.writeFile("/tmp/cap-" + camera.id.toString() + ".jpg", tframe);
+                                                        isProcessing = false;
                                                     })
                                                 }
                                             currentRecognitionFrame += diff;
