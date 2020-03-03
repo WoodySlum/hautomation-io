@@ -435,14 +435,14 @@ class CamerasManager {
 
                         } else {
                             Logger.err(err);
-                            if (!isPlanned && (err && err.code && (err.code == "ETIMEDOUT" || err.code == "ENOTFOUND")) || err == "CLOSE")  {
+                            if (!isPlanned && (err && err.code && (err.code == "ETIMEDOUT" || err.code == "ENOTFOUND")))  {
                                 Logger.warn("Could not connect to camera " + camera.id + " Retry in " + CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION + " ms");
                                 setTimeout((self) => {
                                     isPlanned = true;
                                     this.ocvPipe[camera.id.toString()] = null;
                                     self.initCameras();
                                 }, CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION, this);
-                            } else if (!isPlanned && err == "CLOSE")  {
+                            } else if (!isPlanned && (err == "CLOSE" || err == "TIMEOUT"))  {
                                 Logger.warn("Camera stream closed " + camera.id + " Retry now.");
                                 setTimeout((self) => {
                                     isPlanned = true;
