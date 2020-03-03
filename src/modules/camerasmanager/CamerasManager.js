@@ -402,6 +402,7 @@ class CamerasManager {
                                                     .then(inputBlob => net.setInputAsync(inputBlob))
                                                     .then(() => net.forwardAsync())
                                                     .then(outputBlob => {
+                                                        Logger.info("Analyze frame");
                                                         outputBlob.flattenFloat(outputBlob.sizes[2], outputBlob.sizes[3]);
 
                                                         outputBlob = outputBlob.flattenFloat(outputBlob.sizes[2], outputBlob.sizes[3]);
@@ -423,8 +424,8 @@ class CamerasManager {
 
                                                         currentRecognitionFrame = 0;
 
-                                                        Logger.info("Save capture");
-                                                        fs.writeFileSync("/tmp/cap-" + camera.id.toString() + ".jpg", cv.imencode('.jpg', tframe));
+                                                        // Logger.info("Save capture");
+                                                        // fs.writeFileSync("/tmp/cap-" + camera.id.toString() + ".jpg", cv.imencode('.jpg', tframe));
                                                         isProcessing = false;
                                                     })
                                                 }
