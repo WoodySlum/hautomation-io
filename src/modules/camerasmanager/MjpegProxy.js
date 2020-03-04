@@ -4,7 +4,6 @@
 var url = require("url");
 var http = require("http");
 var https = require("https");
-process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
 
 const JPG_HEADER = "FFD8";
 const JPG_FOOTER = "FFD9";
