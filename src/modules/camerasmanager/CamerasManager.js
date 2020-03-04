@@ -422,7 +422,7 @@ class CamerasManager {
                                                                         Logger.info("Detected on camera " + camera.name + " : " + protoMapper[results[i].classLabel] + " / confidence : " + parseInt(results[i].confidence * 100) + "%");
                                                                         detectedElement.push(protoMapper[results[i].classLabel] + " - " + parseInt(results[i].confidence * 100) + "%");
                                                                         rectangles.push(results[i].rect);
-                                                                        fs.writeFileSync("/Users/smizrahi/Desktop/cap-" + camera.id.toString() + ".jpg", cv.imencode('.jpg', tframe));
+                                                                        fs.writeFileSync("/tmp/cap-" + camera.id.toString() + ".jpg", img);
                                                                     }
                                                                 }
 
