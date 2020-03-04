@@ -364,6 +364,7 @@ class CamerasManager {
         const protoTxt = "./res/ai/model/deploy.prototxt.txt";
         const modelFile = "./res/ai/model/deploy.caffemodel";
         const net = cv.readNetFromCaffe(protoTxt, modelFile);
+        cv.setNumThreads(4);
 
         const recognitionFrame = 3000;// in ms
         const confidenceThreshold = 0.1;// in ms
@@ -399,28 +400,28 @@ class CamerasManager {
                                                     let tframe = null;
                                                     cv.imdecodeAsync(img)
                                                     .then(frame => {tframe = frame; return cv.blobFromImageAsync(frame.resizeToMax(300), 0.007843, new cv.Size(300, 300), new cv.Vec3(127.5, 0, 0));})
-                                                    // .then(inputBlob => net.setInputAsync(inputBlob))
-                                                    // .then(() => net.forwardAsync())
+                                                    .then(inputBlob => net.setInputAsync(inputBlob))
+                                                    .then(() => net.forwardAsync())
                                                     .then(outputBlob => {
                                                         Logger.info("Analyze frame");
-                                                        // outputBlob.flattenFloat(outputBlob.sizes[2], outputBlob.sizes[3]);
-                                                        //
-                                                        // outputBlob = outputBlob.flattenFloat(outputBlob.sizes[2], outputBlob.sizes[3]);
-                                                        // const results = this.extractResults(outputBlob, tframe);
-                                                        //
-                                                        // rectangles = [];
-                                                        // detectedElement = [];
-                                                        //
-                                                        // for (let i = 0 ; i < results.length ; i++) {
-                                                        //     if (results[i].confidence > 1) {
-                                                        //         Logger.info(results[i]);
-                                                        //     }
-                                                        //     if (results[i].confidence > confidenceThreshold && autorizedCategories.indexOf(protoMapper[results[i].classLabel]) >= 0) {
-                                                        //         Logger.info("Detected on camera " + camera.name + " : " + protoMapper[results[i].classLabel] + " / confidence : " + parseInt(results[i].confidence * 100) + "%");
-                                                        //         detectedElement.push(protoMapper[results[i].classLabel] + " - " + parseInt(results[i].confidence * 100) + "%");
-                                                        //         rectangles.push(results[i].rect);
-                                                        //     }
-                                                        // }
+                                                        outputBlob.flattenFloat(outputBlob.sizes[2], outputBlob.sizes[3]);
+
+                                                        outputBlob = outputBlob.flattenFloat(outputBlob.sizes[2], outputBlob.sizes[3]);
+                                                        const results = this.extractResults(outputBlob, tframe);
+
+                                                        rectangles = [];
+                                                        detectedElement = [];
+
+                                                        for (let i = 0 ; i < results.length ; i++) {
+                                                            if (results[i].confidence > 1) {
+                                                                Logger.info(results[i]);
+                                                            }
+                                                            if (results[i].confidence > confidenceThreshold && autorizedCategories.indexOf(protoMapper[results[i].classLabel]) >= 0) {
+                                                                Logger.info("Detected on camera " + camera.name + " : " + protoMapper[results[i].classLabel] + " / confidence : " + parseInt(results[i].confidence * 100) + "%");
+                                                                detectedElement.push(protoMapper[results[i].classLabel] + " - " + parseInt(results[i].confidence * 100) + "%");
+                                                                rectangles.push(results[i].rect);
+                                                            }
+                                                        }
 
                                                         currentRecognitionFrame = 0;
 
@@ -428,6 +429,9 @@ class CamerasManager {
                                                         // fs.writeFileSync("/tmp/cap-" + camera.id.toString() + ".jpg", cv.imencode('.jpg', tframe));
                                                         isProcessing = false;
                                                     })
+                                                    .catch((e) => {
+                                                        Logger.err(e.message);
+                                                    });
                                                 }
                                             currentRecognitionFrame += diff;
                                             this.cameraCapture[camera.id.toString()] = img;
