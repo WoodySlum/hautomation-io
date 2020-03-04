@@ -28,7 +28,7 @@ function loaded(api) {
          * @param  {boolean} cv          Computer vision
          * @returns {CameraForm}                 The instance
          */
-        constructor(id, plugin, name, ip, port, username, password, archive = true, cv = false) {
+        constructor(id, plugin, name, ip, port, username, password, archive = true, cv = false, cvfps = 3) {
             super(id);
 
             this.plugin = plugin;
@@ -100,6 +100,15 @@ function loaded(api) {
              * @Default(false);
              */
             this.cv = cv;
+
+            /**
+             * @Property("cvfps");
+             * @Title("camera.form.cv.fps");
+             * @Type("number");
+             * @Default(3);
+             * @Range([0, 120, 1]);
+             */
+            this.cvfps = cvfps;
         }
 
         /**
@@ -109,7 +118,7 @@ function loaded(api) {
          * @returns {CameraForm}      An instance
          */
         json(data) {
-            return new CameraForm(data.id, data.plugin, data.name, data.ip, data.port, data.username, data.password, data.archive, data.cv);
+            return new CameraForm(data.id, data.plugin, data.name, data.ip, data.port, data.username, data.password, data.archive, data.cv, data.cvfps);
         }
     }
 

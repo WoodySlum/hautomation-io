@@ -59,8 +59,8 @@ var MjpegProxy = exports.MjpegProxy = function(mjpegUrl, cb = null) {
   //----------------
 
     // Send source MJPEG request
-    self.mjpegRequest = https.request(self.mjpegOptions, function(mjpegResponse) {
-    // self.mjpegRequest = http.request(self.mjpegOptions, function(mjpegResponse) {
+    // self.mjpegRequest = https.request(self.mjpegOptions, function(mjpegResponse) {
+    self.mjpegRequest = (mjpegUrl.indexOf("https") == -1 ? http : https).request(self.mjpegOptions, function(mjpegResponse) {
       // console.log('request');
       self.globalMjpegResponse = mjpegResponse;
       self.boundary = extractBoundary(mjpegResponse.headers['content-type']);
@@ -174,6 +174,7 @@ var MjpegProxy = exports.MjpegProxy = function(mjpegUrl, cb = null) {
   //----------------
 
   self.disconnect = function() {
+      self.running = false;
       if (self.mjpegRequest) {
           self.mjpegRequest.abort();
           self.mjpegRequest = null;

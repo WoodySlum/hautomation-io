@@ -365,12 +365,13 @@ class CamerasManager {
         const net = cv.readNetFromCaffe(protoTxt, modelFile);
         cv.setNumThreads(4);
 
-        const recognitionFrame = 3000;// in ms
         const confidenceThreshold = 0.1;// in ms
 
         this.cameras.forEach((camera) => {
             ids.push(parseInt(camera.id));
             names.push(camera.name);
+            const recognitionFrame = (camera.configuration.cvfps ? parseInt(camera.configuration.cvfps * 1000) : 3000);// in ms
+
 
             if (!this.ocvPipe[camera.id.toString()]) {
                 // Tests ia
@@ -385,8 +386,8 @@ class CamerasManager {
                 let isProcessing = false;
 
                 if (!this.ocvPipe[camera.id.toString()]) {
-                    this.ocvPipe[camera.id.toString()] = new MjpegProxy("https://webcam1.lpl.org/axis-cgi/mjpg/video.cgi", (err, img) => {
-                    // this.ocvPipe[camera.id.toString()] = new MjpegProxy(camera.mjpegUrl, (err, img) => {
+                    // this.ocvPipe[camera.id.toString()] = new MjpegProxy("https://webcam1.lpl.org/axis-cgi/mjpg/video.cgi", (err, img) => {
+                    this.ocvPipe[camera.id.toString()] = new MjpegProxy(camera.mjpegUrl, (err, img) => {
                         if (camera.configuration.cv) {
                             if (!err) {
                                 isPlanned = false;
@@ -441,6 +442,7 @@ class CamerasManager {
                             } else {
                                 Logger.err(err);
                                 if (!isPlanned && (err && err.code && (err.code == "ETIMEDOUT" || err.code == "ENOTFOUND")))  {
+                                    this.ocvPipe[camera.id.toString()].disconnect();
                                     Logger.warn("Could not connect to camera " + camera.id + " Retry in " + CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION + " ms");
                                     setTimeout((self) => {
                                         isPlanned = true;
@@ -448,6 +450,7 @@ class CamerasManager {
                                         self.initCameras();
                                     }, CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION, this);
                                 } else if (!isPlanned && (err == "CLOSE" || err == "TIMEOUT"))  {
+                                    this.ocvPipe[camera.id.toString()].disconnect();
                                     Logger.warn("Camera stream closed " + camera.id + " Retry now.");
                                     setTimeout((self) => {
                                         isPlanned = true;
@@ -822,6 +825,12 @@ class CamerasManager {
                             }
 
                             self.camerasConfiguration = self.confManager.setData(CONF_MANAGER_KEY, apiRequest.data, self.camerasConfiguration, self.comparator);
+                            Object.keys(self.ocvPipe).forEach((ocvPipeKey) => {
+                                if (self.ocvPipe[ocvPipeKey]) {
+                                    self.ocvPipe[ocvPipeKey].disconnect();
+                                }
+                            });
+                            self.ocvPipe = {};
                             self.initCameras();
                             resolve(new APIResponse.class(true, {success:true}));
                         } else {
