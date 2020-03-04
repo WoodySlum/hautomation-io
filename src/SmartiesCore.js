@@ -159,7 +159,7 @@ class SmartiesCore {
         // Gateway manager module
         this.gatewayManager = new GatewayManager.class(this.environmentManager, NpmPackage.version, commit, this.timeEventService, AppConfiguration, this.webServices, this.eventBus, this.scenarioManager, this.threadsManager, this.messageManager, this.translateManager, EVENT_READY, EVENT_INSTALL);
         // Cameras manager module
-        this.camerasManager = new CamerasManager.class(this.pluginsManager, this.eventBus, this.webServices, this.formManager, this.confManager, this.translateManager, this.themeManager, this.dashboardManager, this.timeEventService, AppConfiguration.cameras, AppConfiguration.cachePath, this.installationManager, this.messageManager, this.gatewayManager, this.scenarioManager);
+        this.camerasManager = new CamerasManager.class(this.pluginsManager, this.eventBus, this.webServices, this.formManager, this.confManager, this.translateManager, this.themeManager, this.dashboardManager, this.timeEventService, AppConfiguration.cameras, AppConfiguration.cachePath, this.installationManager, this.messageManager, this.gatewayManager, this.scenarioManager, this.aiManager);
         // Bot engine
         this.botEngine = new BotEngine.class(AppConfiguration, this.translateManager, this.messageManager, AppConfiguration.bot, this.installationManager, this.dashboardManager, this.themeManager, this.webServices);
         // Avoid cycle of dependencies (bots)

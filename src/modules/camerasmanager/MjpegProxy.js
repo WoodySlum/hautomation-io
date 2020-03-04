@@ -1,229 +1,235 @@
-// Copyright (C) 2013, Georges-Etienne Legendre <legege@legege.com>
-//
-// Permission is hereby granted, free of charge, to any person obtaining a
-// copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to permit
-// persons to whom the Software is furnished to do so, subject to the
-// following conditions:
-//
-// The above copyright notice and this permission notice shall be included
-// in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-// USE OR OTHER DEALINGS IN THE SOFTWARE.
+// Based on https://github.com/boonepeter/node-mjpeg-proxy
+"use strict";
 
-var url = require('url');
-var http = require('http');
-var https = require('https');
-process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
+var url = require("url");
+var http = require("http");
+var https = require("https");
+process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
+
 const JPG_HEADER = "FFD8";
 const JPG_FOOTER = "FFD9";
+const MJPEG_TIMEOUT_MS = 5000;
+const ERROR_CLOSE = "CLOSE";
+const ERROR_END = "END";
+const ERROR_ABORT = "ABORT";
+const ERROR_TIMEOUT = "TIMEOUT";
 
-function extractBoundary(contentType) {
-  contentType = contentType.replace(/\s+/g, '');
+/**
+ * This class allows to proxyfy mjpeg streams
+ * @class
+ */
+class MjpegProxy {
+    /**
+     * Constructor
+     *
+     * @param  {string} mjpegUrl A mjpeg URL
+     * @param  {Function} [cb=null]    A callback `(err, jpg) => {}`
+     * @returns {MjpegProxy}                       The instance
+     */
+    constructor(mjpegUrl, cb = null) {
 
-  var startIndex = contentType.indexOf('boundary=');
-  var endIndex = contentType.indexOf(';', startIndex);
-  if (endIndex == -1) { //boundary is the last option
-    // some servers, like mjpeg-streamer puts a '\r' character at the end of each line.
-    if ((endIndex = contentType.indexOf('\r', startIndex)) == -1) {
-      endIndex = contentType.length;
-    }
-  }
-  return contentType.substring(startIndex + 9, endIndex).replace(/"/gi,'').replace(/^\-\-/gi, '');
-}
+        this.buffer = null;
+        this.cb = cb;
+        this.running = true;
+        this.mjpegOptions = url.parse(mjpegUrl);
 
-var MjpegProxy = exports.MjpegProxy = function(mjpegUrl, cb = null) {
-  var self = this;
-  var buffer = null;
-  self.cb = cb;
-  self.running = true;
+        this.audienceResponses = [];
+        this.newAudienceResponses = [];
 
-  if (!mjpegUrl) throw new Error('Please provide a source MJPEG URL');
+        this.boundary = null;
+        this.globalMjpegResponse = null;
+        const self = this;
+        this.mjpegRequest = (mjpegUrl.indexOf("https") == -1 ? http : https).request(self.mjpegOptions, (mjpegResponse) => {
+            self.globalMjpegResponse = mjpegResponse;
+            self.boundary = self.extractBoundary(mjpegResponse.headers["content-type"]);
 
-  self.mjpegOptions = url.parse(mjpegUrl);
+            let lastByte1 = null;
+            let lastByte2 = null;
 
-  self.audienceResponses = [];
-  self.newAudienceResponses = [];
+            mjpegResponse.on("data", (chunk) => {
+                // Fix CRLF issue on iOS 6+: boundary should be preceded by CRLF.
+                let buff = Buffer.from(chunk);
+                if (lastByte1 != null && lastByte2 != null) {
+                    let oldHeader = "--" + self.boundary;
 
-  self.boundary = null;
-  self.globalMjpegResponse = null;
-  self.mjpegRequest = null;
+                    let p = buff.indexOf(oldHeader);
 
-  //----------------
-
-    // Send source MJPEG request
-    // self.mjpegRequest = https.request(self.mjpegOptions, function(mjpegResponse) {
-    self.mjpegRequest = (mjpegUrl.indexOf("https") == -1 ? http : https).request(self.mjpegOptions, function(mjpegResponse) {
-      // console.log('request');
-      self.globalMjpegResponse = mjpegResponse;
-      self.boundary = extractBoundary(mjpegResponse.headers['content-type']);
-
-      var lastByte1 = null;
-      var lastByte2 = null;
-
-      mjpegResponse.on('data', function(chunk) {
-        // Fix CRLF issue on iOS 6+: boundary should be preceded by CRLF.
-        var buff = Buffer.from(chunk);
-        if (lastByte1 != null && lastByte2 != null) {
-          var oldheader = '--' + self.boundary;
-
-          var p = buff.indexOf(oldheader);
-
-          if (p == 0 && !(lastByte2 == 0x0d && lastByte1 == 0x0a) || p > 1 && !(chunk[p - 2] == 0x0d && chunk[p - 1] == 0x0a)) {
-            var b1 = chunk.slice(0, p);
-            var b2 = new Buffer('\r\n--' + self.boundary);
-            var b3 = chunk.slice(p + oldheader.length);
-            chunk = Buffer.concat([b1, b2, b3]);
-          }
-        }
-
-        lastByte1 = chunk[chunk.length - 1];
-        lastByte2 = chunk[chunk.length - 2];
-
-        var p = buff.indexOf('--' + self.boundary);
-        if (p >= 0) {
-            if (buffer != null) {
-                buffer = Buffer.concat([buffer, chunk.slice(0, p)]);
-            }
-
-            if (self.cb && buffer) {
-                if (buffer.indexOf(JPG_FOOTER, 0, "hex") != -1) {
-                    let tmpBuffer = buffer.slice(0);
-                    setTimeout(() => {
-                        self.cb(null, tmpBuffer); // slice for a copy of buffer
-                        tmpBuffer = null;
-                    }, 0);
-                } else {
-                    // Corrupted image
-                    console.log("CORRUPTED");
-                    tmpBuffer = null;
-                    buffer = null;
+                    if (p == 0 && !(lastByte2 == 0x0d && lastByte1 == 0x0a) || p > 1 && !(chunk[p - 2] == 0x0d && chunk[p - 1] == 0x0a)) {
+                        const b1 = chunk.slice(0, p);
+                        const b2 = new Buffer("\r\n--" + self.boundary);
+                        const b3 = chunk.slice(p + oldHeader.length);
+                        chunk = Buffer.concat([b1, b2, b3]);
+                    }
                 }
+
+                lastByte1 = chunk[chunk.length - 1];
+                lastByte2 = chunk[chunk.length - 2];
+
+                const p = buff.indexOf("--" + self.boundary);
+                if (p >= 0) {
+                    if (self.buffer != null) {
+                        self.buffer = Buffer.concat([self.buffer, chunk.slice(0, p)]);
+                    }
+
+                    if (self.cb && self.buffer) {
+                        // Check if corrupted image
+                        if (self.buffer.indexOf(JPG_FOOTER, 0, "hex") != -1) {
+                            let tmpBuffer = self.buffer.slice(0);
+                            setTimeout(() => { // Async processing
+                                self.cb(null, tmpBuffer); // slice for a copy of buffer
+                                tmpBuffer = null;
+                            }, 0);
+                        }
+                    }
+
+                    const extr = chunk.slice(p);
+                    const startImage = extr.indexOf(JPG_HEADER, 0, "hex");
+                    self.buffer = null;
+                    self.buffer = Buffer.from(extr.slice(startImage));
+                } else if (self.buffer != null) {
+                    self.buffer = Buffer.concat([self.buffer, chunk]);
+                }
+
+                for (let i = self.audienceResponses.length; i--;) {
+                    const res = self.audienceResponses[i];
+
+                    // First time we push data... lets start at a boundary
+                    if (self.newAudienceResponses.indexOf(res) >= 0) {
+
+                        if (p >= 0) {
+                            res.write(chunk.slice(p));
+                            self.newAudienceResponses.splice(self.newAudienceResponses.indexOf(res), 1); // remove from new
+                        }
+                    } else {
+                        res.write(chunk);
+                    }
+                }
+            });
+
+            mjpegResponse.on("end", () => {
+                // console.log("...end");
+                for (let i = self.audienceResponses.length; i--;) {
+                    const res = self.audienceResponses[i];
+                    res.end();
+                }
+            });
+
+            mjpegResponse.on("close", () => {
+                // console.log("...close");
+            });
+        });
+
+        this.mjpegRequest.setTimeout(MJPEG_TIMEOUT_MS);
+
+        this.mjpegRequest.on("close", () => {
+            if (self.cb && self.running) {
+                self.running = false;
+                self.cb(ERROR_CLOSE);
             }
+        });
 
-            const extr = chunk.slice(p);
-            const startImage = extr.indexOf(JPG_HEADER, 0, "hex");
-            buffer = null;
-            buffer = Buffer.from(extr.slice(startImage));
-        } else if (buffer != null) {
-            buffer = Buffer.concat([buffer, chunk]);
-        }
-
-        for (var i = self.audienceResponses.length; i--;) {
-          var res = self.audienceResponses[i];
-
-          // First time we push data... lets start at a boundary
-          if (self.newAudienceResponses.indexOf(res) >= 0) {
-
-            if (p >= 0) {
-              res.write(chunk.slice(p));
-              self.newAudienceResponses.splice(self.newAudienceResponses.indexOf(res), 1); // remove from new
+        this.mjpegRequest.on("end", () => {
+            if (self.cb && self.running) {
+                self.running = false;
+                self.cb(ERROR_END);
             }
-          } else {
-            res.write(chunk);
-          }
-        }
-      });
-      mjpegResponse.on('end', function () {
-        // console.log("...end");
-        for (var i = self.audienceResponses.length; i--;) {
-          var res = self.audienceResponses[i];
-          res.end();
-        }
-      });
-      mjpegResponse.on('close', function () {
-        // console.log("...close");
-      });
-    });
-    self.mjpegRequest.setTimeout(5000);
-    self.mjpegRequest.on('close', function(e) {
-        if (self.cb && self.running) {
-            self.running = false;
-            self.cb("CLOSE");
-        }
-    });
+        });
 
-    self.mjpegRequest.on('end', function(e) {
-        if (self.cb && self.running) {
-            self.running = false;
-            self.cb("END");
-        }
-    });
+        this.mjpegRequest.on("abort", () => {
+            if (self.cb && self.running) {
+                self.running = false;
+                self.cb(ERROR_ABORT);
+            }
+        });
 
-    self.mjpegRequest.on('abort', function(e) {
-        if (self.cb && self.running) {
-            self.running = false;
-            self.cb("ABORT");
-        }
-    });
+        this.mjpegRequest.on("timeout", () => {
+            if (self.cb && self.running) {
+                self.running = false;
+                self.cb(ERROR_TIMEOUT);
+            }
+        });
 
-    self.mjpegRequest.on('timeout', function(e) {
-        if (self.cb && self.running) {
-            self.running = false;
-            self.cb("TIMEOUT");
-        }
-    });
+        this.mjpegRequest.on("error", (e) => {
+            if (self.cb && self.running) {
+                self.running = false;
+                self.cb(e);
+            }
+        });
 
-    self.mjpegRequest.on('error', function(e) {
-        if (self.cb && self.running) {
-            self.running = false;
-            self.cb(e);
-        }
-    });
-    self.mjpegRequest.end();
-  //----------------
-
-  self.disconnect = function() {
-      self.running = false;
-      if (self.mjpegRequest) {
-          self.mjpegRequest.abort();
-          self.mjpegRequest = null;
-          self.cb = null;
-          // self.globalMjpegResponse.destroy();
-      }
-  }
-
-  self.proxyRequest = function(req, res) {
-    if (res.socket == null) {
-      return;
+        this.mjpegRequest.end();
     }
 
-    // There is already another client consuming the MJPEG response
-    if (self.mjpegRequest !== null) {
-      self._newClient(req, res);
+    /**
+     * Proxify request
+     *
+     * @param  {Request} req A request
+     * @param  {Response} res    A response
+     */
+    proxyRequest(req, res) {
+        if (res.socket == null) {
+            return;
+        }
+
+        // There is already another client consuming the MJPEG response
+        if (this.mjpegRequest !== null) {
+            res.writeHead(200, {
+                "Expires": "Mon, 01 Jul 1980 00:00:00 GMT",
+                "Cache-Control": "no-cache, no-store, must-revalidate",
+                "Pragma": "no-cache",
+                "Content-Type": "multipart/x-mixed-replace;boundary=" + this.boundary
+            });
+
+            this.audienceResponses.push(res);
+            this.newAudienceResponses.push(res);
+
+            res.socket.on("close", () => {
+                // console.log('exiting client!');
+
+                this.audienceResponses.splice(this.audienceResponses.indexOf(res), 1);
+                if (this.newAudienceResponses.indexOf(res) >= 0) {
+                    this.newAudienceResponses.splice(this.newAudienceResponses.indexOf(res), 1); // remove from new
+                }
+
+                // if (this.audienceResponses.length == 0) {
+                //
+                // }
+            });
+        }
     }
-  }
 
-  self._newClient = function(req, res) {
-    res.writeHead(200, {
-      'Expires': 'Mon, 01 Jul 1980 00:00:00 GMT',
-      'Cache-Control': 'no-cache, no-store, must-revalidate',
-      'Pragma': 'no-cache',
-      'Content-Type': 'multipart/x-mixed-replace;boundary=' + self.boundary
-    });
+    /**
+     * Disconnect stream
+     */
+    disconnect() {
+        this.running = false;
+        if (this.mjpegRequest) {
+            this.mjpegRequest.abort();
+            this.mjpegRequest = null;
+            this.cb = null;
+            // this.globalMjpegResponse.destroy();
+        }
+    }
 
-    self.audienceResponses.push(res);
-    self.newAudienceResponses.push(res);
+    /**
+     * Extract mjpeg boundary
+     *
+     * @param  {string} contentType A content type
+     *
+     * @returns {string}    The boundary
+     */
+    extractBoundary(contentType) {
+        contentType = contentType.replace(/\s+/g, "");
 
-    res.socket.on('close', function () {
-      // console.log('exiting client!');
-
-      self.audienceResponses.splice(self.audienceResponses.indexOf(res), 1);
-      if (self.newAudienceResponses.indexOf(res) >= 0) {
-        self.newAudienceResponses.splice(self.newAudienceResponses.indexOf(res), 1); // remove from new
-      }
-
-      if (self.audienceResponses.length == 0) {
-
-      }
-    });
-  }
+        let startIndex = contentType.indexOf("boundary=");
+        let endIndex = contentType.indexOf(";", startIndex);
+        if (endIndex == -1) { //boundary is the last option
+            // some servers, like mjpeg-streamer puts a '\r' character at the end of each line.
+            if ((endIndex = contentType.indexOf("\r", startIndex)) == -1) {
+                endIndex = contentType.length;
+            }
+        }
+        return contentType.substring(startIndex + 9, endIndex).replace(/"/gi,"").replace(/^--/gi, "");
+    }
 }
+
+module.exports = {class:MjpegProxy, ERROR_CLOSE:ERROR_CLOSE, ERROR_END:ERROR_END, ERROR_ABORT:ERROR_ABORT, ERROR_TIMEOUT:ERROR_TIMEOUT};

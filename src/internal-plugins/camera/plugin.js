@@ -26,6 +26,7 @@ function loaded(api) {
          * @param  {string} password          Camera's password
          * @param  {boolean} archive          Archive pictures
          * @param  {boolean} cv          Computer vision
+         * @param  {boolean} cvfps          Computer vision FPS
          * @returns {CameraForm}                 The instance
          */
         constructor(id, plugin, name, ip, port, username, password, archive = true, cv = false, cvfps = 3) {
@@ -207,7 +208,7 @@ function loaded(api) {
          * Generate an URL from the template
          *
          * @param  {string} [url=null] An URL template (Parameters : %port%, %ip%, %username%, %password%), without protocol and ip. For example, `cgi-bin/videostream.cgi?username=%username%&password=%password%`
-         * @param  {Boolean} [rtsp=false] An URL template (Parameters : %port%, %ip%, %username%, %password%), without protocol and ip. For example, `cgi-bin/videostream.cgi?username=%username%&password=%password%`
+         * @param  {boolean} [rtsp=false] An URL template (Parameters : %port%, %ip%, %username%, %password%), without protocol and ip. For example, `cgi-bin/videostream.cgi?username=%username%&password=%password%`
          * @returns {string}            The complete URL
          */
         generateUrlFromTemplate(url = null, rtsp = false) {

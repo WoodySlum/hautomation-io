@@ -6,5 +6,6 @@
     "camera.form.username": "Username",
     "camera.form.password": "Password",
     "camera.form.archive": "Archive pictures (for history and timelapses)",
-    "camera.form.cv": "Computer vision (beta) : Automatic recognition"
+    "camera.form.cv": "Computer vision (beta) : Enable automatic recognition",
+    "camera.form.cv.fps": "Computer vision (beta) : Analyse frame avery X seconds"
 }
