@@ -129,7 +129,6 @@ class CamerasManager {
         this.currentRecording = {};
         this.generatedTimelapses = {};
         this.recordedFiles = [];
-        this.cameraStream = {};
         this.cameraCapture = {};
         this.ocvPipe = {};
 
@@ -373,7 +372,7 @@ class CamerasManager {
             ids.push(parseInt(camera.id));
             names.push(camera.name);
 
-            if (camera.configuration.cv && !this.cameraStream[camera.id.toString()]) {
+            if (!this.ocvPipe[camera.id.toString()]) {
                 // Tests ia
                 // const writer = new cv.VideoWriter(this.ocvBuffer, cv.VideoWriter.fourcc("MJPG"), 24, new cv.Size(1280, 720));
                 let previousFrame = null;
@@ -386,87 +385,78 @@ class CamerasManager {
                 let isProcessing = false;
 
                 if (!this.ocvPipe[camera.id.toString()]) {
-                    // this.ocvPipe[camera.id.toString()] = new MjpegProxy("https://webcam1.lpl.org/axis-cgi/mjpg/video.cgi", (err, img) => {
-                    this.ocvPipe[camera.id.toString()] = new MjpegProxy(camera.mjpegUrl, (err, img) => {
-                        if (!err) {
-                            isPlanned = false;
-                            if (img && !isProcessing) {
-                                            // Evaluate framerate
-                                            const timerLastTmp = Date.now();
-                                            const diff = timerLastTmp - timerLast;
-                                            timerLast = timerLastTmp;
-                                                if (currentRecognitionFrame >= recognitionFrame) {
-                                                    isProcessing = true;
-                                                    let tframe = null;
-                                                    ImageUtils.class.resizeBin(img, (error, imgSmall) => {
-                                                        if (!error) {
-                                                            cv.imdecodeAsync(imgSmall)
-                                                            .then(frame => {tframe = frame; return cv.blobFromImageAsync(frame, 0.007843, new cv.Size(300, 300), new cv.Vec3(127.5, 0, 0));})
-                                                            .then(inputBlob => net.setInputAsync(inputBlob))
-                                                            .then(() => net.forwardAsync())
-                                                            .then(outputBlob => {
-                                                                Logger.info("Analyze frame");
-                                                                outputBlob.flattenFloat(outputBlob.sizes[2], outputBlob.sizes[3]);
+                    this.ocvPipe[camera.id.toString()] = new MjpegProxy("https://webcam1.lpl.org/axis-cgi/mjpg/video.cgi", (err, img) => {
+                    // this.ocvPipe[camera.id.toString()] = new MjpegProxy(camera.mjpegUrl, (err, img) => {
+                        if (camera.configuration.cv) {
+                            if (!err) {
+                                isPlanned = false;
+                                if (img && !isProcessing) {
+                                                // Evaluate framerate
+                                                const timerLastTmp = Date.now();
+                                                const diff = timerLastTmp - timerLast;
+                                                timerLast = timerLastTmp;
+                                                    if (currentRecognitionFrame >= recognitionFrame) {
+                                                        isProcessing = true;
+                                                        let tframe = null;
+                                                        cv.imdecodeAsync(img)
+                                                        .then(frame => {tframe = frame; return cv.blobFromImageAsync(frame.resizeToMax(300), 0.007843, new cv.Size(300, 300), new cv.Vec3(127.5, 0, 0));})
+                                                        .then(inputBlob => net.setInputAsync(inputBlob))
+                                                        .then(() => net.forwardAsync())
+                                                        .then(outputBlob => {
+                                                            Logger.info("Analyze frame for camera " + camera.id);
+                                                            outputBlob.flattenFloat(outputBlob.sizes[2], outputBlob.sizes[3]);
 
-                                                                outputBlob = outputBlob.flattenFloat(outputBlob.sizes[2], outputBlob.sizes[3]);
-                                                                const results = this.extractResults(outputBlob, tframe);
+                                                            outputBlob = outputBlob.flattenFloat(outputBlob.sizes[2], outputBlob.sizes[3]);
+                                                            const results = this.extractResults(outputBlob, tframe);
 
-                                                                rectangles = [];
-                                                                detectedElement = [];
+                                                            rectangles = [];
+                                                            detectedElement = [];
 
-                                                                for (let i = 0 ; i < results.length ; i++) {
-                                                                    if (results[i].confidence > 1) {
-                                                                        Logger.info(results[i]);
-                                                                    }
-                                                                    if (results[i].confidence > confidenceThreshold && autorizedCategories.indexOf(protoMapper[results[i].classLabel]) >= 0) {
-                                                                        Logger.info("Detected on camera " + camera.name + " : " + protoMapper[results[i].classLabel] + " / confidence : " + parseInt(results[i].confidence * 100) + "%");
-                                                                        detectedElement.push(protoMapper[results[i].classLabel] + " - " + parseInt(results[i].confidence * 100) + "%");
-                                                                        rectangles.push(results[i].rect);
-                                                                        fs.writeFileSync("/tmp/cap-" + camera.id.toString() + ".jpg", img);
-                                                                    }
+                                                            for (let i = 0 ; i < results.length ; i++) {
+                                                                if (results[i].confidence > 1) {
+                                                                    Logger.info(results[i]);
                                                                 }
+                                                                if (results[i].confidence > confidenceThreshold && autorizedCategories.indexOf(protoMapper[results[i].classLabel]) >= 0) {
+                                                                    Logger.info("Detected on camera " + camera.name + " : " + protoMapper[results[i].classLabel] + " / confidence : " + parseInt(results[i].confidence * 100) + "%");
+                                                                    detectedElement.push(protoMapper[results[i].classLabel] + " - " + parseInt(results[i].confidence * 100) + "%");
+                                                                    rectangles.push(results[i].rect);
+                                                                    fs.writeFile("/tmp/cap-" + camera.id.toString() + ".jpg", img);
+                                                                }
+                                                            }
 
-                                                                currentRecognitionFrame = 0;
-
-                                                                // Logger.info("Save capture");
-                                                                // fs.writeFileSync("/tmp/cap-" + camera.id.toString() + ".jpg", cv.imencode('.jpg', tframe));
-                                                                isProcessing = false;
-                                                            })
-                                                            .catch((e) => {
-                                                                Logger.err(e);
-                                                                currentRecognitionFrame = 0;
-                                                                isProcessing = false;
-                                                            });
-                                                        } else {
-                                                            Logger.err(error.message);
                                                             currentRecognitionFrame = 0;
-                                                            isProcessing = false;
-                                                        }
-                                                    }, 300);
-                                                }
-                                            currentRecognitionFrame += diff;
-                                            this.cameraCapture[camera.id.toString()] = img;
-                            }
 
-                        } else {
-                            Logger.err(err);
-                            if (!isPlanned && (err && err.code && (err.code == "ETIMEDOUT" || err.code == "ENOTFOUND")))  {
-                                Logger.warn("Could not connect to camera " + camera.id + " Retry in " + CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION + " ms");
-                                setTimeout((self) => {
-                                    isPlanned = true;
-                                    this.ocvPipe[camera.id.toString()] = null;
-                                    self.initCameras();
-                                }, CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION, this);
-                            } else if (!isPlanned && (err == "CLOSE" || err == "TIMEOUT"))  {
-                                Logger.warn("Camera stream closed " + camera.id + " Retry now.");
-                                setTimeout((self) => {
-                                    isPlanned = true;
-                                    this.ocvPipe[camera.id.toString()] = null;
-                                    self.initCameras();
-                                }, 5, this);
+                                                            // Logger.info("Save capture");
+
+                                                            isProcessing = false;
+                                                        })
+                                                        .catch((e) => {
+                                                            Logger.err(e.message);
+                                                        });
+                                                    }
+                                                currentRecognitionFrame += diff;
+
+                                }
+                                this.cameraCapture[camera.id.toString()] = img;
+                            } else {
+                                Logger.err(err);
+                                if (!isPlanned && (err && err.code && (err.code == "ETIMEDOUT" || err.code == "ENOTFOUND")))  {
+                                    Logger.warn("Could not connect to camera " + camera.id + " Retry in " + CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION + " ms");
+                                    setTimeout((self) => {
+                                        isPlanned = true;
+                                        this.ocvPipe[camera.id.toString()] = null;
+                                        self.initCameras();
+                                    }, CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION, this);
+                                } else if (!isPlanned && (err == "CLOSE" || err == "TIMEOUT"))  {
+                                    Logger.warn("Camera stream closed " + camera.id + " Retry now.");
+                                    setTimeout((self) => {
+                                        isPlanned = true;
+                                        this.ocvPipe[camera.id.toString()] = null;
+                                        self.initCameras();
+                                    }, 5, this);
+                                }
                             }
                         }
-
                     });
                 }
 
@@ -876,49 +866,8 @@ class CamerasManager {
                     }, apiRequest.data.timestamp?apiRequest.data.timestamp:null);
                 } else if (mode === MODE_MJPEG) {
                     const camera = this.getCamera(id);
-                    if (camera) {
-                        if (camera.configuration.cv) {
-                            this.ocvPipe[camera.id.toString()].proxyRequest(apiRequest.req, apiRequest.res);
-                            // apiRequest.res.contentType("image/jpeg");
-                            // apiRequest.res.writeHead(200, {
-                            // 	"Cache-Control": "no-store, no-cache, must-revalidate, pre-check=0, post-check=0, max-age=0",
-                            // 	Pragma: "no-cache",
-                            // 	"Content-Type": "multipart/x-mixed-replace; boundary=--" + STREAM_BOUNDARY
-                            // });
-                            //
-                            // apiRequest.req.on("close", () => {
-                            //     Logger.info("Closed mjpeg connection");
-                            //     this.ocvPipe[camera.id.toString()].unpipe(apiRequest.res);
-                            //
-                            //     reject(new APIResponse.class(false, {}, 766, ERROR_UNSUPPORTED_MODE));
-                            // });
-                            // apiRequest.req.on("clientError", () => {
-                            //     Logger.info("Closed mjpeg connection - client error");
-                            //     this.ocvPipe[camera.id.toString()].unpipe(apiRequest.res);
-                            //
-                            //     reject(new APIResponse.class(false, {}, 766, ERROR_UNSUPPORTED_MODE));
-                            // });
-                            // apiRequest.req.on("finish", () => {
-                            //     Logger.info("Closed mjpeg connection - finish");
-                            //     this.ocvPipe[camera.id.toString()].unpipe(apiRequest.res);
-                            //
-                            //     reject(new APIResponse.class(false, {}, 766, ERROR_UNSUPPORTED_MODE));
-                            // });
-                            //
-                            // this.ocvPipe[camera.id.toString()].pipe(apiRequest.res);
-
-
-                        } else {
-                            if (camera.mjpegUrl) {
-                                // if (apiRequest.authenticationData) {
-                                //     apiRequest.res  = new MjpegProxy("https://webcam1.lpl.org/axis-cgi/mjpg/video.cgi", (img) => {
-                                //         fs.writeFileSync("/Users/smizrahi/Downloads/seb.jpg", img);
-                                //     }).proxyRequest(apiRequest.req, apiRequest.res);
-                                // }
-                            } else {
-                                reject(new APIResponse.class(false, {}, 766, ERROR_UNSUPPORTED_MODE));
-                            }
-                        }
+                    if (camera && this.ocvPipe[camera.id.toString()]) {
+                        this.ocvPipe[camera.id.toString()].proxyRequest(apiRequest.req, apiRequest.res);
                     } else {
                         reject(new APIResponse.class(false, {}, 766, ERROR_UNKNOWN_IDENTIFIER));
                     }

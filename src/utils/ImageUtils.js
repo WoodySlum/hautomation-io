@@ -44,20 +44,6 @@ class ImageUtils {
             });
     }
 
-    static resizeBin(data, cb, size = 100) {
-        const buf = Buffer.from(data);
-        gm(buf)
-            .resize(size, size)
-            .setFormat("png")
-            .toBuffer(function (err, buffer) {
-                if (err) {
-                    cb(err);
-                } else {
-                    cb(null, buffer);
-                }
-            });
-    }
-
     /**
     * Blur, resize an image and convert to png
     *
