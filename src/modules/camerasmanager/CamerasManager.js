@@ -398,40 +398,51 @@ class CamerasManager {
                                                 if (currentRecognitionFrame >= recognitionFrame) {
                                                     isProcessing = true;
                                                     let tframe = null;
-                                                    cv.imdecodeAsync(img)
-                                                    .then(frame => {tframe = frame; return cv.blobFromImageAsync(frame.resizeToMax(300), 0.007843, new cv.Size(300, 300), new cv.Vec3(127.5, 0, 0));})
-                                                    .then(inputBlob => net.setInputAsync(inputBlob))
-                                                    .then(() => net.forwardAsync())
-                                                    .then(outputBlob => {
-                                                        Logger.info("Analyze frame");
-                                                        outputBlob.flattenFloat(outputBlob.sizes[2], outputBlob.sizes[3]);
+                                                    ImageUtils.class.resizeBin(img, (error, imgSmall) => {
+                                                        if (!error) {
+                                                            cv.imdecodeAsync(imgSmall)
+                                                            .then(frame => {tframe = frame; return cv.blobFromImageAsync(frame, 0.007843, new cv.Size(300, 300), new cv.Vec3(127.5, 0, 0));})
+                                                            .then(inputBlob => net.setInputAsync(inputBlob))
+                                                            .then(() => net.forwardAsync())
+                                                            .then(outputBlob => {
+                                                                Logger.info("Analyze frame");
+                                                                outputBlob.flattenFloat(outputBlob.sizes[2], outputBlob.sizes[3]);
 
-                                                        outputBlob = outputBlob.flattenFloat(outputBlob.sizes[2], outputBlob.sizes[3]);
-                                                        const results = this.extractResults(outputBlob, tframe);
+                                                                outputBlob = outputBlob.flattenFloat(outputBlob.sizes[2], outputBlob.sizes[3]);
+                                                                const results = this.extractResults(outputBlob, tframe);
 
-                                                        rectangles = [];
-                                                        detectedElement = [];
+                                                                rectangles = [];
+                                                                detectedElement = [];
 
-                                                        for (let i = 0 ; i < results.length ; i++) {
-                                                            if (results[i].confidence > 1) {
-                                                                Logger.info(results[i]);
-                                                            }
-                                                            if (results[i].confidence > confidenceThreshold && autorizedCategories.indexOf(protoMapper[results[i].classLabel]) >= 0) {
-                                                                Logger.info("Detected on camera " + camera.name + " : " + protoMapper[results[i].classLabel] + " / confidence : " + parseInt(results[i].confidence * 100) + "%");
-                                                                detectedElement.push(protoMapper[results[i].classLabel] + " - " + parseInt(results[i].confidence * 100) + "%");
-                                                                rectangles.push(results[i].rect);
-                                                            }
+                                                                for (let i = 0 ; i < results.length ; i++) {
+                                                                    if (results[i].confidence > 1) {
+                                                                        Logger.info(results[i]);
+                                                                    }
+                                                                    if (results[i].confidence > confidenceThreshold && autorizedCategories.indexOf(protoMapper[results[i].classLabel]) >= 0) {
+                                                                        Logger.info("Detected on camera " + camera.name + " : " + protoMapper[results[i].classLabel] + " / confidence : " + parseInt(results[i].confidence * 100) + "%");
+                                                                        detectedElement.push(protoMapper[results[i].classLabel] + " - " + parseInt(results[i].confidence * 100) + "%");
+                                                                        rectangles.push(results[i].rect);
+                                                                        fs.writeFileSync("/Users/smizrahi/Desktop/cap-" + camera.id.toString() + ".jpg", cv.imencode('.jpg', tframe));
+                                                                    }
+                                                                }
+
+                                                                currentRecognitionFrame = 0;
+
+                                                                // Logger.info("Save capture");
+                                                                // fs.writeFileSync("/tmp/cap-" + camera.id.toString() + ".jpg", cv.imencode('.jpg', tframe));
+                                                                isProcessing = false;
+                                                            })
+                                                            .catch((e) => {
+                                                                Logger.err(e);
+                                                                currentRecognitionFrame = 0;
+                                                                isProcessing = false;
+                                                            });
+                                                        } else {
+                                                            Logger.err(error.message);
+                                                            currentRecognitionFrame = 0;
+                                                            isProcessing = false;
                                                         }
-
-                                                        currentRecognitionFrame = 0;
-
-                                                        // Logger.info("Save capture");
-                                                        // fs.writeFileSync("/tmp/cap-" + camera.id.toString() + ".jpg", cv.imencode('.jpg', tframe));
-                                                        isProcessing = false;
-                                                    })
-                                                    .catch((e) => {
-                                                        Logger.err(e.message);
-                                                    });
+                                                    }, 300);
                                                 }
                                             currentRecognitionFrame += diff;
                                             this.cameraCapture[camera.id.toString()] = img;
