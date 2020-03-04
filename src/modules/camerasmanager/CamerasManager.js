@@ -75,6 +75,8 @@ const ERROR_UNEXISTING_PICTURE = "Unexisting picture";
 const ERROR_RECORD_ALREADY_RUNNING = "Already recording camera";
 const ERROR_RECORD_UNKNOWN = "Unknown record";
 
+const CV_CONFIDENCE_THRESHOLD_PERC = 0.2;
+
 /**
  * This class allows to manage cameras
  * @class
@@ -296,8 +298,6 @@ class CamerasManager {
         const ids = [];
         const names = [];
 
-        const confidenceThreshold = 0.3;// in %
-
         this.cameras.forEach((camera) => {
             ids.push(parseInt(camera.id));
             names.push(camera.name);
@@ -308,7 +308,7 @@ class CamerasManager {
                 let isProcessing = false;
 
                 if (!this.streamPipe[camera.id.toString()]) {
-                        this.streamPipe[camera.id.toString()] = new MjpegProxy.class(camera.mjpegUrl, (err, img) => {
+                    this.streamPipe[camera.id.toString()] = new MjpegProxy.class(camera.mjpegUrl, (err, img) => {
                         this.cameraCapture[camera.id.toString()] = img;
                         if (camera.configuration.cv) {
                             if (!err) {
@@ -324,7 +324,7 @@ class CamerasManager {
                                             const results = r.results;
                                             Logger.info(results);
                                             for (let i = 0 ; i < results.length ; i++) {
-                                                if (results[i].confidence > confidenceThreshold) {
+                                                if (results[i].confidence > CV_CONFIDENCE_THRESHOLD_PERC) {
                                                     Logger.info("Detected on camera " + camera.name + " : " + this.aiManager.cvMap.mapper[results[i].classLabel] + " / confidence : " + parseInt(results[i].confidence * 100) + "%");
                                                 }
                                             }
