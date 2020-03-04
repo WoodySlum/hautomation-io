@@ -398,9 +398,9 @@ class CamerasManager {
                                                     isProcessing = true;
                                                     let tframe = null;
                                                     cv.imdecodeAsync(img)
-                                                    .then(frame => {tframe = frame; return cv.blobFromImageAsync(frame.resizeToMax(300), 0.007843, new cv.Size(300, 300), new cv.Vec3(127.5, 0, 0));})
-                                                    .then(inputBlob => net.setInputAsync(inputBlob))
-                                                    .then(() => net.forwardAsync())
+                                                    // .then(frame => {tframe = frame; return cv.blobFromImageAsync(frame.resizeToMax(300), 0.007843, new cv.Size(300, 300), new cv.Vec3(127.5, 0, 0));})
+                                                    // .then(inputBlob => net.setInputAsync(inputBlob))
+                                                    // .then(() => net.forwardAsync())
                                                     .then(outputBlob => {
                                                         Logger.info("Analyze frame");
                                                         // outputBlob.flattenFloat(outputBlob.sizes[2], outputBlob.sizes[3]);
