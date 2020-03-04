@@ -403,24 +403,24 @@ class CamerasManager {
                                                     .then(() => net.forwardAsync())
                                                     .then(outputBlob => {
                                                         Logger.info("Analyze frame");
-                                                        outputBlob.flattenFloat(outputBlob.sizes[2], outputBlob.sizes[3]);
-
-                                                        outputBlob = outputBlob.flattenFloat(outputBlob.sizes[2], outputBlob.sizes[3]);
-                                                        const results = this.extractResults(outputBlob, tframe);
-
-                                                        rectangles = [];
-                                                        detectedElement = [];
-
-                                                        for (let i = 0 ; i < results.length ; i++) {
-                                                            if (results[i].confidence > 1) {
-                                                                Logger.info(results[i]);
-                                                            }
-                                                            if (results[i].confidence > confidenceThreshold && autorizedCategories.indexOf(protoMapper[results[i].classLabel]) >= 0) {
-                                                                Logger.info("Detected on camera " + camera.name + " : " + protoMapper[results[i].classLabel] + " / confidence : " + parseInt(results[i].confidence * 100) + "%");
-                                                                detectedElement.push(protoMapper[results[i].classLabel] + " - " + parseInt(results[i].confidence * 100) + "%");
-                                                                rectangles.push(results[i].rect);
-                                                            }
-                                                        }
+                                                        // outputBlob.flattenFloat(outputBlob.sizes[2], outputBlob.sizes[3]);
+                                                        //
+                                                        // outputBlob = outputBlob.flattenFloat(outputBlob.sizes[2], outputBlob.sizes[3]);
+                                                        // const results = this.extractResults(outputBlob, tframe);
+                                                        //
+                                                        // rectangles = [];
+                                                        // detectedElement = [];
+                                                        //
+                                                        // for (let i = 0 ; i < results.length ; i++) {
+                                                        //     if (results[i].confidence > 1) {
+                                                        //         Logger.info(results[i]);
+                                                        //     }
+                                                        //     if (results[i].confidence > confidenceThreshold && autorizedCategories.indexOf(protoMapper[results[i].classLabel]) >= 0) {
+                                                        //         Logger.info("Detected on camera " + camera.name + " : " + protoMapper[results[i].classLabel] + " / confidence : " + parseInt(results[i].confidence * 100) + "%");
+                                                        //         detectedElement.push(protoMapper[results[i].classLabel] + " - " + parseInt(results[i].confidence * 100) + "%");
+                                                        //         rectangles.push(results[i].rect);
+                                                        //     }
+                                                        // }
 
                                                         currentRecognitionFrame = 0;
 
