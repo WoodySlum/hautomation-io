@@ -432,7 +432,7 @@ class CamerasManager {
                                                             isProcessing = false;
                                                         })
                                                         .catch((e) => {
-                                                            Logger.err(e.message);
+                                                            Logger.err(e);
                                                             isProcessing = false;
                                                         });
                                                     }
