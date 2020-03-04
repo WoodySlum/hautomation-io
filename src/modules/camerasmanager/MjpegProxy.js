@@ -23,8 +23,8 @@ var url = require('url');
 var http = require('http');
 var https = require('https');
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
-var buffer = null;
-const JPG_HEADER = "FFD8FFE0";
+const JPG_HEADER = "FFD8";
+const JPG_FOOTER = "FFD9";
 
 function extractBoundary(contentType) {
   contentType = contentType.replace(/\s+/g, '');
@@ -42,6 +42,7 @@ function extractBoundary(contentType) {
 
 var MjpegProxy = exports.MjpegProxy = function(mjpegUrl, cb = null) {
   var self = this;
+  var buffer = null;
   self.cb = cb;
   self.running = true;
 
@@ -94,11 +95,18 @@ var MjpegProxy = exports.MjpegProxy = function(mjpegUrl, cb = null) {
             }
 
             if (self.cb && buffer) {
-                let tmpBuffer = buffer.slice(0);
-                setTimeout(() => {
-                    self.cb(null, tmpBuffer); // slice for a copy of buffer
+                if (buffer.indexOf(JPG_FOOTER, 0, "hex") != -1) {
+                    let tmpBuffer = buffer.slice(0);
+                    setTimeout(() => {
+                        self.cb(null, tmpBuffer); // slice for a copy of buffer
+                        tmpBuffer = null;
+                    }, 0);
+                } else {
+                    // Corrupted image
+                    console.log("CORRUPTED");
                     tmpBuffer = null;
-                }, 0);
+                    buffer = null;
+                }
             }
 
             const extr = chunk.slice(p);
