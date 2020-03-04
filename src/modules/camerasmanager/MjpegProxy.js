@@ -43,6 +43,7 @@ function extractBoundary(contentType) {
 var MjpegProxy = exports.MjpegProxy = function(mjpegUrl, cb = null) {
   var self = this;
   self.cb = cb;
+  self.running = true;
 
   if (!mjpegUrl) throw new Error('Please provide a source MJPEG URL');
 
@@ -136,31 +137,36 @@ var MjpegProxy = exports.MjpegProxy = function(mjpegUrl, cb = null) {
     });
     self.mjpegRequest.setTimeout(5000);
     self.mjpegRequest.on('close', function(e) {
-        if (self.cb) {
+        if (self.cb && self.running) {
+            self.running = false;
             self.cb("CLOSE");
         }
     });
 
     self.mjpegRequest.on('end', function(e) {
-        if (self.cb) {
+        if (self.cb && self.running) {
+            self.running = false;
             self.cb("END");
         }
     });
 
     self.mjpegRequest.on('abort', function(e) {
-        if (self.cb) {
+        if (self.cb && self.running) {
+            self.running = false;
             self.cb("ABORT");
         }
     });
 
     self.mjpegRequest.on('timeout', function(e) {
-        if (self.cb) {
+        if (self.cb && self.running) {
+            self.running = false;
             self.cb("TIMEOUT");
         }
     });
 
     self.mjpegRequest.on('error', function(e) {
-        if (self.cb) {
+        if (self.cb && self.running) {
+            self.running = false;
             self.cb(e);
         }
     });
