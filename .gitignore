@@ -92,3 +92,6 @@ typings/
 
 # dotenv environment variables file
 .env
+
+# OpenCV
+res/ai/opencv

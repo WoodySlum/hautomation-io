@@ -18,8 +18,7 @@ cache:
   - export NODE_TLS_REJECT_UNAUTHORIZED=0
   - npm config set strict-ssl false
   - rm -Rf package-lock.json
-  - npm install
-  - npm rebuild
+  - npm install --unsafe-perm
   - echo "{\"commit\":\"$(echo $CI_COMMIT_SHA | head -c8)\"}" > version.json
   - npm run --verbose build
   - npm run --verbose build-deb
@@ -85,6 +84,8 @@ test:armhf:
   - ci
   - armv7
   - buster
+  only:
+    - master
   except:
   - tags
   script:

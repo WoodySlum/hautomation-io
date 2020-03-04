@@ -102,7 +102,7 @@ class Logger {
             // Line
             if (enableLine) {
                 logLine.lineNumber = "\x1b[32ml." + stack.getLineNumber() + "\x1b[0m";
-                logLineConfig.config.lineNumber = {minWidth: 5, maxWidth: 5};
+                logLineConfig.config.lineNumber = {minWidth: 5, maxWidth: 6};
             }
 
             // Message

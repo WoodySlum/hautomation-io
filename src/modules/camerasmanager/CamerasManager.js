@@ -1,6 +1,6 @@
 "use strict";
 const request = require("request");
-const MjpegProxy = require("mjpeg-proxy").MjpegProxy;
+const MjpegProxy = require("./MjpegProxy");
 const fs = require("fs-extra");
 const sha256 = require("sha256");
 const Logger = require("./../../logger/Logger");
@@ -44,6 +44,7 @@ const CAMERAS_MANAGER_TIMELAPSE_STREAM = CAMERAS_MANAGER_TIMELAPSE_STREAM_BASE +
 const CAMERAS_MANAGER_RECORD_GET_BASE = ":/camera/record/get/";
 const CAMERAS_MANAGER_RECORD_GET = CAMERAS_MANAGER_RECORD_GET_BASE + "[recordKey]/";
 const CAMERAS_MANAGER_RECORD_GET_TOKEN_DURATION = 7 * 24 * 60 * 60;
+const CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION = 5000;
 
 const CAMERAS_MANAGER_LIST = ":/cameras/list/";
 const CAMERAS_RETRIEVE_BASE = ":/camera/get/";
@@ -74,6 +75,7 @@ const ERROR_UNEXISTING_PICTURE = "Unexisting picture";
 const ERROR_RECORD_ALREADY_RUNNING = "Already recording camera";
 const ERROR_RECORD_UNKNOWN = "Unknown record";
 
+const CV_CONFIDENCE_THRESHOLD_PERC = 0.2;
 
 /**
  * This class allows to manage cameras
@@ -98,9 +100,10 @@ class CamerasManager {
      * @param  {MessageManager} messageManager    The message manager
      * @param  {GatewayManager} gatewayManager    The gateway manager
      * @param  {ScenarioManager} scenarioManager    The scenario manager
+     * @param  {AiManager} aiManager    The ai manager
      * @returns {CamerasManager}                       The instance
      */
-    constructor(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager, dashboardManager, timeEventService, camerasConfiguration = null, cachePath = null, installationManager = null, messageManager, gatewayManager, scenarioManager) {
+    constructor(pluginsManager, eventBus, webServices, formManager, confManager, translateManager, themeManager, dashboardManager, timeEventService, camerasConfiguration = null, cachePath = null, installationManager = null, messageManager, gatewayManager, scenarioManager, aiManager) {
         this.pluginsManager = pluginsManager;
         this.webServices = webServices;
         this.formManager = formManager;
@@ -110,7 +113,7 @@ class CamerasManager {
         this.dashboardManager = dashboardManager;
         this.timeEventService = timeEventService;
         this.camerasArchiveFolder = (camerasConfiguration && camerasConfiguration.archiveFolder)?camerasConfiguration.archiveFolder:"/tmp/";
-        this.cachePath = (cachePath)?cachePath:"/tmp/";
+        this.cachePath = (cachePath) ? cachePath : "/tmp/";
         this.enableHistory = (camerasConfiguration && camerasConfiguration.history)?camerasConfiguration.history:true;
         this.enableSeason = (camerasConfiguration && camerasConfiguration.season)?camerasConfiguration.season:true;
         this.enableTimelapse = (camerasConfiguration && camerasConfiguration.timelapse)?camerasConfiguration.timelapse:true;
@@ -118,6 +121,7 @@ class CamerasManager {
         this.messageManager = messageManager;
         this.gatewayManager = gatewayManager;
         this.scenarioManager = scenarioManager;
+        this.aiManager = aiManager;
         this.cameras = [];
         this.delegates = {};
         this.currentTimelapse = null;
@@ -125,6 +129,8 @@ class CamerasManager {
         this.currentRecording = {};
         this.generatedTimelapses = {};
         this.recordedFiles = [];
+        this.cameraCapture = {};
+        this.streamPipe = {};
 
         try {
             this.camerasConfiguration = this.confManager.loadData(Object, CONF_MANAGER_KEY, true);
@@ -291,9 +297,68 @@ class CamerasManager {
         // Register forms
         const ids = [];
         const names = [];
+
         this.cameras.forEach((camera) => {
             ids.push(parseInt(camera.id));
             names.push(camera.name);
+            const recognitionFrame = (camera.configuration.cvfps ? parseInt(camera.configuration.cvfps * 1000) : 3000);// in ms
+
+            if (!this.streamPipe[camera.id.toString()]) {
+                let timerLast = Date.now();
+                let isProcessing = false;
+
+                if (!this.streamPipe[camera.id.toString()]) {
+                    this.streamPipe[camera.id.toString()] = new MjpegProxy.class(camera.mjpegUrl, (err, img) => {
+                        this.cameraCapture[camera.id.toString()] = img;
+                        if (camera.configuration.cv) {
+                            if (!err) {
+                                if (img && !isProcessing) {
+                                    // Evaluate framerate
+                                    const timerLastTmp = Date.now();
+                                    const diff = timerLastTmp - timerLast;
+
+                                    if (diff >= recognitionFrame) {
+                                        isProcessing = true;
+                                        this.aiManager.processCvSsd(img).then((r) => {
+                                            Logger.verbose("Analyze frame for camera " + camera.id);
+                                            const results = r.results;
+                                            Logger.info(results);
+                                            for (let i = 0 ; i < results.length ; i++) {
+                                                if (results[i].confidence > CV_CONFIDENCE_THRESHOLD_PERC) {
+                                                    Logger.info("Detected on camera " + camera.name + " : " + this.aiManager.cvMap.mapper[results[i].classLabel] + " / confidence : " + parseInt(results[i].confidence * 100) + "%");
+                                                }
+                                            }
+                                            timerLast = timerLastTmp;
+                                            isProcessing = false;
+                                        })
+                                            .catch(() => {
+                                                timerLast = timerLastTmp;
+                                                isProcessing = false;
+                                            });
+                                    }
+                                }
+                            } else {
+                                Logger.err(err);
+                                if (err && err.code && (err.code == "ETIMEDOUT" || err.code == "ENOTFOUND")) {
+                                    this.streamPipe[camera.id.toString()].disconnect();
+                                    Logger.warn("Could not connect to camera " + camera.id + " Retry in " + CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION + " ms");
+                                    setTimeout((self) => {
+                                        this.streamPipe[camera.id.toString()] = null;
+                                        self.initCameras();
+                                    }, CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION, this);
+                                } else if (err == MjpegProxy.ERROR_CLOSE || err == MjpegProxy.ERROR_TIMEOUT)  {
+                                    this.streamPipe[camera.id.toString()].disconnect();
+                                    Logger.verbose("Camera stream closed " + camera.id + " Retry now.");
+                                    setTimeout((self) => {
+                                        this.streamPipe[camera.id.toString()] = null;
+                                        self.initCameras();
+                                    }, 500, this);
+                                }
+                            }
+                        }
+                    });
+                }
+            }
         });
         this.formManager.register(CamerasForm.class, ids, names);
         this.registerTile(this);
@@ -433,6 +498,12 @@ class CamerasManager {
                             }
 
                             self.camerasConfiguration = self.confManager.setData(CONF_MANAGER_KEY, apiRequest.data, self.camerasConfiguration, self.comparator);
+                            Object.keys(self.streamPipe).forEach((streamPipeKey) => {
+                                if (self.streamPipe[streamPipeKey]) {
+                                    self.streamPipe[streamPipeKey].disconnect();
+                                }
+                            });
+                            self.streamPipe = {};
                             self.initCameras();
                             resolve(new APIResponse.class(true, {success:true}));
                         } else {
@@ -477,14 +548,8 @@ class CamerasManager {
                     }, apiRequest.data.timestamp?apiRequest.data.timestamp:null);
                 } else if (mode === MODE_MJPEG) {
                     const camera = this.getCamera(id);
-                    if (camera) {
-                        if (camera.mjpegUrl) {
-                            if (apiRequest.authenticationData) {
-                                apiRequest.res  = new MjpegProxy(camera.mjpegUrl).proxyRequest(apiRequest.req, apiRequest.res);
-                            }
-                        } else {
-                            reject(new APIResponse.class(false, {}, 766, ERROR_UNSUPPORTED_MODE));
-                        }
+                    if (camera && this.streamPipe[camera.id.toString()]) {
+                        this.streamPipe[camera.id.toString()].proxyRequest(apiRequest.req, apiRequest.res);
                     } else {
                         reject(new APIResponse.class(false, {}, 766, ERROR_UNKNOWN_IDENTIFIER));
                     }
@@ -493,7 +558,7 @@ class CamerasManager {
                     if (camera) {
                         if (camera.rtspUrl) {
                             if (apiRequest.authenticationData) {
-                                apiRequest.res  = new MjpegProxy(camera.rtspUrl).proxyRequest(apiRequest.req, apiRequest.res);
+                                apiRequest.res  = new MjpegProxy.class(camera.rtspUrl).proxyRequest(apiRequest.req, apiRequest.res);
                             }
                         } else {
                             reject(new APIResponse.class(false, {}, 766, ERROR_UNSUPPORTED_MODE));
@@ -866,20 +931,24 @@ class CamerasManager {
                         cb(Error(ERROR_UNEXISTING_PICTURE));
                     }
                 } else {
-                    if (camera.snapshotUrl) {
-                        Logger.info("Retrieving picture from camera " + id);
-                        request(camera.snapshotUrl, {encoding: "binary"}, function(error, response, body) {
-                            if (error) {
-                                Logger.err("Camera picture " + id + " error");
-                                Logger.err(error);
-                                cb(error);
-                            } else {
-                                Logger.info("Camera picture " + id + " done !");
-                                cb(null, Buffer.from(body, "binary"), response.headers["content-type"]);
-                            }
-                        });
+                    if (this.cameraCapture[camera.id.toString()]) {
+                        cb(null, this.cameraCapture[camera.id.toString()], "image/jpeg");
                     } else {
-                        cb(Error(ERROR_NO_URL_DEFINED));
+                        if (camera.snapshotUrl) {
+                            Logger.info("Retrieving picture from camera " + id);
+                            request(camera.snapshotUrl, {encoding: "binary"}, function(error, response, body) {
+                                if (error) {
+                                    Logger.err("Camera picture " + id + " error");
+                                    Logger.err(error);
+                                    cb(error);
+                                } else {
+                                    Logger.info("Camera picture " + id + " done !");
+                                    cb(null, Buffer.from(body, "binary"), response.headers["content-type"]);
+                                }
+                            });
+                        } else {
+                            cb(Error(ERROR_NO_URL_DEFINED));
+                        }
                     }
                 }
             } else {

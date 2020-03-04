@@ -193,6 +193,13 @@ function loaded(api) {
                 api.configurationAPI.saveData(data);
                 this.init();
             });
+
+            // Update lights every 5 minutes
+            api.timeEventAPI.register((self, hour, minute) => {
+                if (minute % 5 == 0) {
+                    self.getLights();
+                }
+            }, this, api.timeEventAPI.constants().EVERY_MINUTES);
         }
 
         /**
@@ -515,6 +522,7 @@ function loaded(api) {
          * @param  {Function} cb A callback e.g. `(err, lights) => {}`
          */
         getLights(cb) {
+            this.api.exported.Logger.info("Retrieve lights");
             request.get({
                 url: this.getApiUrl() + "/lights"
             }, (error, response, body) => {
@@ -533,7 +541,7 @@ function loaded(api) {
                         light.protocolName = LIGHT_PREFIX + light.uniqueid;
                         this.lights.push(light);
                     });
-
+                    this.api.exported.Logger.info(response);
                     this.api.radioAPI.refreshProtocols();
 
                     if (cb) {

@@ -623,17 +623,20 @@ class WebServices extends Service.class {
             apiResponse = new APIResponse.class(false, {}, 1, "Unknown api called");
         }
 
-        if (apiResponse.success) {
-            if (apiResponse.upToDate) {
-                res.status(API_UP_TO_DATE).send();
-            } else if (!apiResponse.contentType || (apiResponse.contentType === APIResponse.JSON_CONTENT_TYPE)) {
-                res.json(apiResponse.response);
+
+        if (!res.headersSent) {
+            if (apiResponse.success) {
+                if (apiResponse.upToDate) {
+                    res.status(API_UP_TO_DATE).send();
+                } else if (!apiResponse.contentType || (apiResponse.contentType === APIResponse.JSON_CONTENT_TYPE)) {
+                    res.json(apiResponse.response);
+                } else {
+                    res.setHeader("Content-Type", apiResponse.contentType);
+                    res.end(apiResponse.response, "binary");
+                }
             } else {
-                res.setHeader("Content-Type", apiResponse.contentType);
-                res.end(apiResponse.response, "binary");
+                res.status(API_ERROR_HTTP_CODE).json({"code":apiResponse.errorCode,"message":apiResponse.errorMessage, "data":apiResponse.response});
             }
-        } else {
-            res.status(API_ERROR_HTTP_CODE).json({"code":apiResponse.errorCode,"message":apiResponse.errorMessage, "data":apiResponse.response});
         }
     }
 

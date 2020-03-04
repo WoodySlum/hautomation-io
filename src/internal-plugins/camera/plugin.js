@@ -25,9 +25,11 @@ function loaded(api) {
          * @param  {string} username          Camera's username
          * @param  {string} password          Camera's password
          * @param  {boolean} archive          Archive pictures
+         * @param  {boolean} cv          Computer vision
+         * @param  {boolean} cvfps          Computer vision FPS
          * @returns {CameraForm}                 The instance
          */
-        constructor(id, plugin, name, ip, port, username, password, archive = true) {
+        constructor(id, plugin, name, ip, port, username, password, archive = true, cv = false, cvfps = 3) {
             super(id);
 
             this.plugin = plugin;
@@ -91,6 +93,23 @@ function loaded(api) {
              * @Default(true);
              */
             this.archive = archive;
+
+            /**
+             * @Property("cv");
+             * @Title("camera.form.cv");
+             * @Type("boolean");
+             * @Default(false);
+             */
+            this.cv = cv;
+
+            /**
+             * @Property("cvfps");
+             * @Title("camera.form.cv.fps");
+             * @Type("number");
+             * @Default(3);
+             * @Range([0, 120, 1]);
+             */
+            this.cvfps = cvfps;
         }
 
         /**
@@ -100,7 +119,7 @@ function loaded(api) {
          * @returns {CameraForm}      An instance
          */
         json(data) {
-            return new CameraForm(data.id, data.plugin, data.name, data.ip, data.port, data.username, data.password, data.archive);
+            return new CameraForm(data.id, data.plugin, data.name, data.ip, data.port, data.username, data.password, data.archive, data.cv, data.cvfps);
         }
     }
 
@@ -147,7 +166,7 @@ function loaded(api) {
             this.downCb = downCb;
             this.snapshotUrl = this.generateUrlFromTemplate(snapshotUrl);
             this.mjpegUrl = this.generateUrlFromTemplate(mjpegUrl);
-            this.rtspUrl = this.generateUrlFromTemplate(rtspUrl);
+            this.rtspUrl = this.generateUrlFromTemplate(rtspUrl, true);
             this.archive = (this.configuration.archive ? true : false);
         }
 
@@ -189,9 +208,10 @@ function loaded(api) {
          * Generate an URL from the template
          *
          * @param  {string} [url=null] An URL template (Parameters : %port%, %ip%, %username%, %password%), without protocol and ip. For example, `cgi-bin/videostream.cgi?username=%username%&password=%password%`
+         * @param  {boolean} [rtsp=false] An URL template (Parameters : %port%, %ip%, %username%, %password%), without protocol and ip. For example, `cgi-bin/videostream.cgi?username=%username%&password=%password%`
          * @returns {string}            The complete URL
          */
-        generateUrlFromTemplate(url = null) {
+        generateUrlFromTemplate(url = null, rtsp = false) {
             if (url && url.length > 0) {
                 let pUrl = "http://";
                 if (this.configuration.port) {
@@ -199,8 +219,11 @@ function loaded(api) {
                         pUrl = "https://";
                     }
                 }
+                if (rtsp) {
+                    pUrl = "rtsp://";
+                }
 
-                pUrl += ((this.configuration.ip.ip === "freetext") ? this.configuration.ip.freetext : this.configuration.ip.ip) + ":" + this.configuration.port;
+                pUrl += ((this.configuration.ip.ip === "freetext") ? this.configuration.ip.freetext : this.configuration.ip.ip) + (rtsp ? "" : ":" + this.configuration.port);
                 pUrl += "/" + url;
 
                 pUrl = pUrl.replace("%username%", this.configuration.username);

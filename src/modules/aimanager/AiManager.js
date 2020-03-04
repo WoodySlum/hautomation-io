@@ -1,6 +1,7 @@
 "use strict";
 
 const bayes = require("bayes");
+const cv = require("opencv4nodejs");
 const fs = require("fs");
 const Logger = require("./../../logger/Logger");
 const DateUtils = require("./../../utils/DateUtils");
@@ -13,6 +14,7 @@ const CLASS_MONTHS = ["january", "february", "march", "april", "may", "june", "j
 const CLASS_DAYOFF = ["workon", "workoff"];
 const CLASS_DAYNIGHT = ["day", "night"];
 const CLASS_TIME = "time";
+
 
 /**
  * This class is used for artificial intelligence and machine learning
@@ -36,6 +38,13 @@ class AiManager {
         this.environmentManager = environmentManager;
         this.classifiers = {};
 
+        // Computer vision
+        this.cvMap = null;
+        this.cvProtoTxt = null;
+        this.cvModelFile = null;
+        this.cvNet = null;
+        this.initCv();
+
         try {
             const serializedData = JSON.parse(fs.readFileSync(this.databaseFile));
             Object.keys(serializedData).forEach((key) => {
@@ -49,7 +58,6 @@ class AiManager {
 
         // Save classifiers on stop core
         const self = this;
-
         if (eventBus) {
             eventBus.on(stopEventName, () => {
                 self.saveClassifiers();
@@ -59,6 +67,17 @@ class AiManager {
         this.timeEventService.register(() => {
             self.saveClassifiers();
         }, this, TimeEventService.EVERY_HOURS_INACCURATE);
+    }
+
+    /**
+     * Init computer vision (called in constructor)
+     */
+    initCv() {
+        this.cvMap = JSON.parse(fs.readFileSync("./res/ai/model/map.json"));
+        const cvProtoTxt = "./res/ai/model/deploy.prototxt.txt";
+        const cvModelFile = "./res/ai/model/deploy.caffemodel";
+        this.cvNet = cv.readNetFromCaffe(cvProtoTxt, cvModelFile);
+        cv.setNumThreads(4);
     }
 
     /**
@@ -201,6 +220,66 @@ class AiManager {
         fs.writeFileSync(this.databaseFile, JSON.stringify(json));
     }
 
+    /**
+     * Process neuronal artificial recognition on image
+     *
+     * @param  {Buffer} img An image
+     *
+     * @returns {Promise} The promise with a 2 properties object resolve - `results` and `frame`
+     */
+    processCvSsd(img) {
+        const self = this;
+        return new Promise((resolve, reject) => {
+            let tFrame = null;
+            cv.imdecodeAsync(img)
+                .then(frame => {
+                    tFrame = frame;
+                    return cv.blobFromImageAsync(frame.resizeToMax(300), 0.007843, new cv.Size(300, 300), new cv.Vec3(127.5, 0, 0));
+                })
+                .then(inputBlob => self.cvNet.setInputAsync(inputBlob))
+                .then(() => self.cvNet.forwardAsync())
+                .then(outputBlob => {
+                    outputBlob.flattenFloat(outputBlob.sizes[2], outputBlob.sizes[3]);
+                    outputBlob = outputBlob.flattenFloat(outputBlob.sizes[2], outputBlob.sizes[3]);
+
+                    const results = Array(outputBlob.rows)
+                        .fill(0)
+                        .map((res, i) => {
+                            const classLabel = outputBlob.at(i, 1);
+                            const confidence = outputBlob.at(i, 2);
+                            const bottomLeft = new cv.Point(
+                                outputBlob.at(i, 3) * tFrame.cols,
+                                outputBlob.at(i, 6) * tFrame.rows
+                            );
+                            const topRight = new cv.Point(
+                                outputBlob.at(i, 5) * tFrame.cols,
+                                outputBlob.at(i, 4) * tFrame.rows
+                            );
+                            const rect = new cv.Rect(
+                                bottomLeft.x,
+                                topRight.y,
+                                topRight.x - bottomLeft.x,
+                                bottomLeft.y - topRight.y
+                            );
+
+                            return ({
+                                classLabel,
+                                confidence,
+                                rect
+                            });
+                        })
+                        .filter((item) => {
+                            return item.confidence > 0;
+                        });
+
+                    resolve({results: results, frame: tFrame});
+                })
+                .catch((e) => {
+                    Logger.err(e);
+                    reject(e);
+                });
+        });
+    }
 
 }
 

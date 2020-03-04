@@ -62,7 +62,8 @@
         "doc": "documentation build ./src/** -f md -o ./doc/DOCUMENTATION.md && documentation build ./src/modules/pluginsmanager/publicapis/** -f md -o ./doc/PUBLIC-APIS.md",
         "pre-build": "npm run doc && rm -Rf ./build/* && mkdir -p ./build/plugins && mkdir -p ./build/doc && mkdir -p ./build/data && cp ./data/config.json.default ./build/data/config.json && cp -R ./data/ssl ./build/data/ && cp ./doc/PLUGIN.md ./build/doc/ && cp ./doc/PUBLIC-APIS.md ./build/doc/ && cp -R ./scripts ./build/ && cp -R ./res ./build/",
         "build": "npm run pre-build && node node_modules/pkg/lib-es5/bin.js -o ./build/smarties . && rm -Rf build/*.node && find ./node_modules -name '*.node'| grep lib | xargs cp -Rfn -t ./build/ && find ./node_modules -name '*.node'| grep target | xargs cp -Rfn -t ./build/ && find ./node_modules -name '*.node'| grep Release | xargs cp -Rfn -t ./build/",
-        "build-deb": "rm -Rf ./build/deb && rm -Rf /tmp/deb && cp -R ./scripts/deb /tmp/deb && sed -e s@{VERSION}@$npm_package_version@ -e s@{ARCH}@$(dpkg --print-architecture)@ -e s@{DISTRIB}@$(dpkg --status tzdata|grep Provides|cut -f2 -d'-')@ ./scripts/deb/DEBIAN/control > /tmp/deb/DEBIAN/control && cp -R ./build/* /tmp/deb/var/smarties/ && chmod 755 /tmp/deb/DEBIAN/pre* && chmod 755 /tmp/deb/DEBIAN/post* && dpkg-deb --build /tmp/deb ./build/smarties-$(dpkg --status tzdata|grep Provides|cut -f2 -d'-')-$(dpkg --print-architecture)-$npm_package_version.deb && rm -Rf /tmp/deb"
+        "build-deb": "rm -Rf ./build/deb && rm -Rf /tmp/deb && cp -R ./scripts/deb /tmp/deb && sed -e s@{VERSION}@$npm_package_version@ -e s@{ARCH}@$(dpkg --print-architecture)@ -e s@{DISTRIB}@$(dpkg --status tzdata|grep Provides|cut -f2 -d'-')@ ./scripts/deb/DEBIAN/control > /tmp/deb/DEBIAN/control && cp -R ./build/* /tmp/deb/var/smarties/ && chmod 755 /tmp/deb/DEBIAN/pre* && chmod 755 /tmp/deb/DEBIAN/post* && dpkg-deb --build /tmp/deb ./build/smarties-$(dpkg --status tzdata|grep Provides|cut -f2 -d'-')-$(dpkg --print-architecture)-$npm_package_version.deb && rm -Rf /tmp/deb",
+        "postinstall": "rm -Rf ./res/ai/opencv && mkdir ./res/ai/opencv && cp -R ./node_modules/opencv-build/opencv/build/bin ./res/ai/opencv && cp -R ./node_modules/opencv-build/opencv/build/lib ./res/ai/opencv && cp -R ./node_modules/opencv-build/opencv/build/include ./res/ai/opencv"
     },
     "bin": "SmartiesRunner.js",
     "pkg": {
@@ -80,8 +81,16 @@
             "./src/**/lib/*",
             "./src/**/global_lib/*",
             "./**/*.py",
-            "./src/modules/botengine/linux/asoundrc"
+            "./src/modules/botengine/linux/asoundrc",
+            "./res/ai/*"
         ]
+    },
+    "opencv4nodejs": {
+        "disableAutoBuild": 0,
+        "autoBuildOpencvVersion": "4.1.2",
+        "opencvBinDir": "./res/ai/opencv/bin/",
+        "opencvIncludeDir": "./res/ai/opencv/include/",
+        "opencvLibDir": "./res/ai/opencv/lib/"
     },
     "repository": {
         "type": "git",
@@ -131,6 +140,7 @@
         "exec-extra": "^2.8.0",
         "express": "^4.17.1",
         "extract-zip": "^1.6",
+        "file-on-write": "^1.1.1",
         "fs-extra": "^4.0",
         "fs-readdir-recursive": "^1.1.0",
         "gm": "^1.23.1",
@@ -141,6 +151,7 @@
         "isomorphic-fetch": "^2.2",
         "mac-scanner": "^1.1",
         "md5-file": "^3.2",
+        "mjpeg-consumer": "^2.0.0",
         "mjpeg-proxy": "git://github.com/boonepeter/node-mjpeg-proxy.git#master",
         "moment": "^2.22",
         "moment-timezone": "^0.5.27",
@@ -156,6 +167,7 @@
         "node-record-lpcm16": "^0.3",
         "node-wit": "^4.3",
         "node-witai-speech": "^1.0",
+        "opencv4nodejs": "^5.5.0",
         "os-utils": "^0.0.14",
         "prowler": "^0.0",
         "qrcode": "^1.4.4",
