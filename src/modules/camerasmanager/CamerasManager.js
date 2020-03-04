@@ -308,8 +308,7 @@ class CamerasManager {
                 let isProcessing = false;
 
                 if (!this.streamPipe[camera.id.toString()]) {
-                    this.streamPipe[camera.id.toString()] = new MjpegProxy.class("https://webcam1.lpl.org/axis-cgi/mjpg/video.cgi", (err, img) => {
-                        // this.streamPipe[camera.id.toString()] = new MjpegProxy.class(camera.mjpegUrl, (err, img) => {
+                        this.streamPipe[camera.id.toString()] = new MjpegProxy.class(camera.mjpegUrl, (err, img) => {
                         this.cameraCapture[camera.id.toString()] = img;
                         if (camera.configuration.cv) {
                             if (!err) {
@@ -321,7 +320,7 @@ class CamerasManager {
                                     if (diff >= recognitionFrame) {
                                         isProcessing = true;
                                         this.aiManager.processCvSsd(img).then((r) => {
-                                            Logger.info("Analyze frame for camera " + camera.id);
+                                            Logger.verbose("Analyze frame for camera " + camera.id);
                                             const results = r.results;
                                             Logger.info(results);
                                             for (let i = 0 ; i < results.length ; i++) {
