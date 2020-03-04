@@ -389,8 +389,7 @@ class CamerasManager {
                     // this.ocvPipe[camera.id.toString()] = new MjpegProxy("https://webcam1.lpl.org/axis-cgi/mjpg/video.cgi", (err, img) => {
                     this.ocvPipe[camera.id.toString()] = new MjpegProxy(camera.mjpegUrl, (err, img) => {
                         if (camera.configuration.cv) {
-                            Logger.info("Received pic " + camera.id);
-                            if (!err && !isProcessing) {
+                            if (!err) {
                                 isPlanned = false;
                                 if (img && !isProcessing) {
                                                 // Evaluate framerate
@@ -398,7 +397,6 @@ class CamerasManager {
                                                 const diff = timerLastTmp - timerLast;
                                                 timerLast = timerLastTmp;
                                                     if (currentRecognitionFrame >= recognitionFrame) {
-                                                        Logger.info("Start processing " + camera.id);
                                                         isProcessing = true;
                                                         let tframe = null;
                                                         cv.imdecodeAsync(img)
@@ -435,6 +433,7 @@ class CamerasManager {
                                                         })
                                                         .catch((e) => {
                                                             Logger.err(e.message);
+                                                            isProcessing = false;
                                                         });
                                                     }
                                                 currentRecognitionFrame += diff;
