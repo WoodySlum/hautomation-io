@@ -309,51 +309,49 @@ class CamerasManager {
 
                 if (!this.streamPipe[camera.id.toString()]) {
                     this.streamPipe[camera.id.toString()] = new MjpegProxy.class(camera.mjpegUrl, (err, img) => {
-                        this.cameraCapture[camera.id.toString()] = img;
-                        if (camera.configuration.cv) {
-                            if (!err) {
-                                if (img && !isProcessing) {
-                                    // Evaluate framerate
-                                    const timerLastTmp = Date.now();
-                                    const diff = timerLastTmp - timerLast;
+                        if (!err) {
+                            this.cameraCapture[camera.id.toString()] = img;
+                            if (camera.configuration.cv && img && !isProcessing) {
+                                // Evaluate framerate
+                                const timerLastTmp = Date.now();
+                                const diff = timerLastTmp - timerLast;
 
-                                    if (diff >= recognitionFrame) {
-                                        isProcessing = true;
-                                        this.aiManager.processCvSsd(img).then((r) => {
-                                            Logger.verbose("Analyze frame for camera " + camera.id);
-                                            const results = r.results;
-                                            Logger.info(results);
-                                            for (let i = 0 ; i < results.length ; i++) {
-                                                if (results[i].confidence > CV_CONFIDENCE_THRESHOLD_PERC) {
-                                                    Logger.info("Detected on camera " + camera.name + " : " + this.aiManager.cvMap.mapper[results[i].classLabel] + " / confidence : " + parseInt(results[i].confidence * 100) + "%");
-                                                }
+                                if (diff >= recognitionFrame) {
+                                    isProcessing = true;
+                                    this.aiManager.processCvSsd(img).then((r) => {
+                                        Logger.verbose("Analyze frame for camera " + camera.id);
+                                        const results = r.results;
+                                        Logger.info(results);
+                                        for (let i = 0 ; i < results.length ; i++) {
+                                            if (results[i].confidence > CV_CONFIDENCE_THRESHOLD_PERC) {
+                                                Logger.info("Detected on camera " + camera.name + " : " + this.aiManager.cvMap.mapper[results[i].classLabel] + " / confidence : " + parseInt(results[i].confidence * 100) + "%");
                                             }
+                                        }
+                                        timerLast = timerLastTmp;
+                                        isProcessing = false;
+                                    })
+                                        .catch(() => {
                                             timerLast = timerLastTmp;
                                             isProcessing = false;
-                                        })
-                                            .catch(() => {
-                                                timerLast = timerLastTmp;
-                                                isProcessing = false;
-                                            });
-                                    }
+                                        });
                                 }
-                            } else {
-                                Logger.err(err);
-                                if (err && err.code && (err.code == "ETIMEDOUT" || err.code == "ENOTFOUND")) {
-                                    this.streamPipe[camera.id.toString()].disconnect();
-                                    Logger.warn("Could not connect to camera " + camera.id + " Retry in " + CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION + " ms");
-                                    setTimeout((self) => {
-                                        this.streamPipe[camera.id.toString()] = null;
-                                        self.initCameras();
-                                    }, CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION, this);
-                                } else if (err == MjpegProxy.ERROR_CLOSE || err == MjpegProxy.ERROR_TIMEOUT)  {
-                                    this.streamPipe[camera.id.toString()].disconnect();
-                                    Logger.verbose("Camera stream closed " + camera.id + " Retry now.");
-                                    setTimeout((self) => {
-                                        this.streamPipe[camera.id.toString()] = null;
-                                        self.initCameras();
-                                    }, 500, this);
-                                }
+                            }
+                        } else {
+                            Logger.err(err);
+                            if (err && err.code && (err.code == "ETIMEDOUT" || err.code == "ENOTFOUND")) {
+                                this.streamPipe[camera.id.toString()].disconnect();
+                                Logger.warn("Could not connect to camera " + camera.id + " Retry in " + CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION + " ms");
+                                setTimeout((self) => {
+                                    this.streamPipe[camera.id.toString()] = null;
+                                    self.initCameras();
+                                }, CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION, this);
+                            } else if (err == MjpegProxy.ERROR_CLOSE || err == MjpegProxy.ERROR_TIMEOUT)  {
+                                this.streamPipe[camera.id.toString()].disconnect();
+                                Logger.verbose("Camera stream closed " + camera.id + " Retry now.");
+                                setTimeout((self) => {
+                                    this.streamPipe[camera.id.toString()] = null;
+                                    self.initCameras();
+                                }, 500, this);
                             }
                         }
                     });
