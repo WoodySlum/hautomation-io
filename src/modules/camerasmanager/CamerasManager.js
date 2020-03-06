@@ -321,7 +321,7 @@ class CamerasManager {
                                         const results = r.results;
                                         Logger.verbose(results);
                                         for (let i = 0 ; i < results.length ; i++) {
-                                            if (results[i].confidence > this.aiManager.cvMap.confidence && this.aiManager.cvMap.authorized[this.aiManager.cvMap.mapper[results[i].classLabel]] != -1) {
+                                            if (results[i].confidence > this.aiManager.cvMap.confidence && this.aiManager.cvMap.authorized.indexOf(this.aiManager.cvMap.mapper[results[i].classLabel]) != -1) {
                                                 Logger.info("Detected on camera " + camera.name + " : " + this.aiManager.cvMap.mapper[results[i].classLabel] + " / confidence : " + parseInt(results[i].confidence * 100) + "%");
                                             }
                                         }
