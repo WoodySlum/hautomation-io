@@ -151,8 +151,6 @@
         "isomorphic-fetch": "^2.2",
         "mac-scanner": "^1.1",
         "md5-file": "^3.2",
-        "mjpeg-consumer": "^2.0.0",
-        "mjpeg-proxy": "git://github.com/boonepeter/node-mjpeg-proxy.git#master",
         "moment": "^2.22",
         "moment-timezone": "^0.5.27",
         "month-season": "^1.0",
