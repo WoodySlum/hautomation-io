@@ -72,10 +72,10 @@ class MjpegProxy {
 
                     if (self.cb && self.buffer) {
                         // Check if corrupted image
-                        if (self.buffer.indexOf(JPG_FOOTER, 0, "hex") != -1) {
-                            let tmpBuffer = self.buffer.slice(0);
+                        if (self.buffer.indexOf(JPG_HEADER, 0, "hex") != -1 && self.buffer.indexOf(JPG_FOOTER, 0, "hex") != -1) {
+                            let tmpBuffer = self.buffer.slice(self.buffer.indexOf(JPG_HEADER, 0, "hex"), self.buffer.indexOf(JPG_FOOTER, 0, "hex")); // slice for a copy of buffer
                             setTimeout(() => { // Async processing
-                                self.cb(null, tmpBuffer); // slice for a copy of buffer
+                                self.cb(null, tmpBuffer);
                                 tmpBuffer = null;
                             }, 0);
                         }
@@ -85,6 +85,7 @@ class MjpegProxy {
                     const startImage = extr.indexOf(JPG_HEADER, 0, "hex");
                     self.buffer = null;
                     self.buffer = Buffer.from(extr.slice(startImage));
+                    // console.log("==> " + self.buffer.toString("hex"));
                 } else if (self.buffer != null) {
                     self.buffer = Buffer.concat([self.buffer, chunk]);
                 }
