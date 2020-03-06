@@ -75,8 +75,6 @@ const ERROR_UNEXISTING_PICTURE = "Unexisting picture";
 const ERROR_RECORD_ALREADY_RUNNING = "Already recording camera";
 const ERROR_RECORD_UNKNOWN = "Unknown record";
 
-const CV_CONFIDENCE_THRESHOLD_PERC = 0.2;
-
 /**
  * This class allows to manage cameras
  * @class
@@ -321,9 +319,9 @@ class CamerasManager {
                                     this.aiManager.processCvSsd(img).then((r) => {
                                         Logger.verbose("Analyze frame for camera " + camera.id);
                                         const results = r.results;
-                                        Logger.info(results);
+                                        Logger.verbose(results);
                                         for (let i = 0 ; i < results.length ; i++) {
-                                            if (results[i].confidence > CV_CONFIDENCE_THRESHOLD_PERC) {
+                                            if (results[i].confidence > this.aiManager.cvMap.confidence && this.aiManager.cvMap.authorized[this.aiManager.cvMap.mapper[results[i].classLabel]] != -1) {
                                                 Logger.info("Detected on camera " + camera.name + " : " + this.aiManager.cvMap.mapper[results[i].classLabel] + " / confidence : " + parseInt(results[i].confidence * 100) + "%");
                                             }
                                         }
@@ -337,7 +335,6 @@ class CamerasManager {
                                 }
                             }
                         } else {
-                            Logger.err(err);
                             if (err && err.code && (err.code == "ETIMEDOUT" || err.code == "ENOTFOUND")) {
                                 this.streamPipe[camera.id.toString()].disconnect();
                                 Logger.warn("Could not connect to camera " + camera.id + " Retry in " + CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION + " ms");
@@ -392,7 +389,7 @@ class CamerasManager {
                     camera.init();
                     this.cameras.push(camera);
 
-                    Logger.info("Camera '" + configuration.name + "' loaded (#" + configuration.id + ")");
+                    Logger.verbose("Camera '" + configuration.name + "' loaded (#" + configuration.id + ")");
                 } else {
                     Logger.err("Plugin " + configuration.plugin + " does not have linked camera class");
                 }
