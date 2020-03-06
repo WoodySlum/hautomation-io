@@ -522,7 +522,7 @@ function loaded(api) {
          * @param  {Function} cb A callback e.g. `(err, lights) => {}`
          */
         getLights(cb) {
-            this.api.exported.Logger.info("Retrieve lights");
+            this.api.exported.Logger.verbose("Retrieve lights");
             request.get({
                 url: this.getApiUrl() + "/lights"
             }, (error, response, body) => {
@@ -541,7 +541,7 @@ function loaded(api) {
                         light.protocolName = LIGHT_PREFIX + light.uniqueid;
                         this.lights.push(light);
                     });
-                    this.api.exported.Logger.info(response);
+                    this.api.exported.Logger.verbose(response);
                     this.api.radioAPI.refreshProtocols();
 
                     if (cb) {

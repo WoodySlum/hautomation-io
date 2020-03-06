@@ -127,6 +127,7 @@ class CamerasManager {
         this.currentRecording = {};
         this.generatedTimelapses = {};
         this.recordedFiles = [];
+        this.registeredCamerasEvents = {};
         this.cameraCapture = {};
         this.streamPipe = {};
 
@@ -321,8 +322,20 @@ class CamerasManager {
                                         const results = r.results;
                                         Logger.verbose(results);
                                         for (let i = 0 ; i < results.length ; i++) {
-                                            if (results[i].confidence > this.aiManager.cvMap.confidence && this.aiManager.cvMap.authorized.indexOf(this.aiManager.cvMap.mapper[results[i].classLabel]) != -1) {
-                                                Logger.info("Detected on camera " + camera.name + " : " + this.aiManager.cvMap.mapper[results[i].classLabel] + " / confidence : " + parseInt(results[i].confidence * 100) + "%");
+                                            const detectedObject = this.getAvailableDetectedObjects()[results[i].classLabel];
+                                            const confidence = parseInt(results[i].confidence * 100);
+                                            if (results[i].confidence > this.aiManager.cvMap.confidence && this.aiManager.cvMap.authorized.indexOf(detectedObject) != -1) {
+                                                Logger.info("Detected on camera " + camera.name + " : " + detectedObject + " / confidence : " + confidence + "%");
+
+                                                Object.keys(this.registeredCamerasEvents).forEach((key) => {
+                                                    if (this.registeredCamerasEvents[key].cameraId.toString() === camera.id.toString() || this.registeredCamerasEvents[key].cameraId === "*") {
+                                                        if ((!Array.isArray(this.registeredCamerasEvents[key].detectedObject) && (this.registeredCamerasEvents[key].detectedObject === detectedObject || this.registeredCamerasEvents[key].detectedObject === "*")) || (Array.isArray(this.registeredCamerasEvents[key].detectedObject) && this.registeredCamerasEvents[key].detectedObject.indexOf(detectedObject) != -1)) {
+                                                            if (this.registeredCamerasEvents[key].cb) {
+                                                                this.registeredCamerasEvents[key].cb(camera.id, detectedObject, confidence, results[i]);
+                                                            }
+                                                        }
+                                                    }
+                                                });
                                             }
                                         }
                                         timerLast = timerLastTmp;
@@ -1164,6 +1177,36 @@ class CamerasManager {
         } else {
             cb(Error(ERROR_RECORD_ALREADY_RUNNING));
         }
+    }
+
+    /**
+     * Get available detected objects list for computer vision
+     *
+     * @returns {Array}                      The detected objects
+     */
+    getAvailableDetectedObjects() {
+        return this.aiManager.cvMap.mapper.sort();
+    }
+
+    /**
+     * Register to camera events with computer vision
+     *
+     * @param  {string}   [cameraId="*"] Camera identifier. `*` if all camera needed
+     * @param  {string|Array}   [detectedObject="*"] Detected objects on computer vision
+     * @param  {string}   key         The register key
+     * @param  {Function} cb         A callback `(cameraId, detectedObject, confidence, cvData) => {}`
+     */
+    registerCameraEvent(cameraId = "*", detectedObject = "*", key, cb) {
+        this.registeredCamerasEvents[key] = {cameraId: cameraId, detectedObject: detectedObject, cb: cb};
+    }
+
+    /**
+     * Unregister to camera events with computer vision
+     *
+     * @param  {string}   key         The register key
+     */
+    unregisterCameraEvent(key) {
+        delete this.registeredCamerasEvents[key];
     }
 }
 

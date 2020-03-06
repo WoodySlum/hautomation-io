@@ -1,0 +1,4 @@
+{
+    "camera.alert.detected.objects": "Pick camera detection triggers",
+    "camera.alert.detected.message": "%@ has been detected on camera %@. Confidence : %@%"
+}

@@ -78,6 +78,36 @@ class CameraAPI {
     record(id, cb, timer = 60, sendMessage = true) {
         return PrivateProperties.oprivate(this).camerasManager.record(id, cb, timer, sendMessage);
     }
+
+    /**
+     * Get available detected objects list for computer vision
+     *
+     * @returns {Array}                      The detected objects
+     */
+    getAvailableDetectedObjects() {
+        return PrivateProperties.oprivate(this).camerasManager.getAvailableDetectedObjects();
+    }
+
+    /**
+     * Register to camera events with computer vision
+     *
+     * @param  {string}   [cameraId="*"] Camera identifier. `*` if all camera needed
+     * @param  {string|Array}   [detectedObject="*"] Detected objects on computer vision
+     * @param  {string}   key         The register key
+     * @param  {Function} cb         A callback `(cameraId, detectedObject, confidence, cvData) => {}`
+     */
+    registerCameraEvent(cameraId = "*", detectedObject = "*", key, cb) {
+        PrivateProperties.oprivate(this).camerasManager.registerCameraEvent(cameraId, detectedObject, key, cb);
+    }
+
+    /**
+     * Unregister to camera events with computer vision
+     *
+     * @param  {string}   key         The register key
+     */
+    unregisterCameraEvent(key) {
+        PrivateProperties.oprivate(this).camerasManager.unregisterCameraEvent(key);
+    }
 }
 
 module.exports = {class:CameraAPI};

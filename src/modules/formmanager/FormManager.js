@@ -470,6 +470,7 @@ class FormManager {
                             } else if (display === "hidden") {
                                 schemaUI[prop]["ui:widget"] = "hidden";
                             } else if (display === "checkbox") {
+                                meta.Unique = true;
                                 schemaPropertiesProp["items"] = {};
                                 schemaPropertiesProp.items.type = schemaPropertiesProp.type;
                                 schemaPropertiesProp.type = "array";

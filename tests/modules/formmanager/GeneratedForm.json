@@ -102,7 +102,7 @@
             "Bar"
           ]
         },
-        "uniqueItems": false
+        "uniqueItems": true
       },
       "m": {
         "type": "string",
