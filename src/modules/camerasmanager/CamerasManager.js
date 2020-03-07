@@ -325,7 +325,7 @@ class CamerasManager {
                                         for (let i = 0 ; i < results.length ; i++) {
                                             const detectedObject = this.getAvailableDetectedObjects()[results[i].classLabel];
                                             const confidence = parseInt(results[i].confidence * 100);
-                                            if (results[i].confidence > this.aiManager.cvMap.confidence && results[i].confidence <= 1 && this.aiManager.cvMap.authorized.indexOf(detectedObject) != -1) {
+                                            if (results[i].confidence > this.aiManager.cvMap.confidence && results[i].confidence < 1 && this.aiManager.cvMap.authorized.indexOf(detectedObject) != -1) {
                                                 Logger.info("Detected on camera " + camera.name + " : " + detectedObject + " / confidence : " + confidence + "%");
 
                                                 Object.keys(this.registeredCamerasEvents).forEach((key) => {
