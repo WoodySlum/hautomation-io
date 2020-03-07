@@ -132,6 +132,9 @@ function loaded(api) {
             }
         }
 
+        /**
+         * Register tile
+         */
         registerTile() {
             const buttons = [{human: ""}, {car: ""}, {dog: ""}, {cat: ""}];
             const tile = this.api.dashboardAPI.Tile(CAMERA_REGISTER_KEY, this.api.dashboardAPI.TileType().TILE_GENERIC_ACTION, api.exported.Icons.class.list()["bell"], null, api.translateAPI.t("camera.alert.tile.title"), null, null, null, null, null, CAMERA_REGISTER_KEY, {buttons: buttons}, null, api.webAPI.Authentication().AUTH_USAGE_LEVEL);
@@ -148,7 +151,7 @@ function loaded(api) {
         processAPI(apiRequest) {
             const self = this;
             if (apiRequest.route.startsWith(":/" + CAMERA_REGISTER_KEY + "/")) {
-                return new Promise((resolve, reject) => {
+                return new Promise((resolve) => {
                     if (apiRequest.data && apiRequest.data.action) {
                         self.action(apiRequest.data.action, apiRequest.authenticationData.username);
                     }

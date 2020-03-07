@@ -34,7 +34,7 @@ const EVENT_SCAN_IP_CHANGES = "scan-ip-change";
 const EVENT_SCAN_IP_UPDATE = "scan-ip-update";
 const UPTIME_FILE = ".uptime";
 const EVENT_POWER_OUTAGE = "power-outage";
-const POWER_OUTAGE_DELAY = 10 * 1000;
+// const POWER_OUTAGE_DELAY = 10 * 1000;
 
 /**
  * This class allows to manage house environment

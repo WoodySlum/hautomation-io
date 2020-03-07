@@ -3,7 +3,6 @@ const request = require("request");
 const MjpegProxy = require("./MjpegProxy");
 const fs = require("fs-extra");
 const sha256 = require("sha256");
-const os = require("os-utils");
 const Logger = require("./../../logger/Logger");
 const PluginsManager = require("./../pluginsmanager/PluginsManager");
 const WebServices = require("./../../services/webservices/WebServices");

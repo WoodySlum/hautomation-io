@@ -305,7 +305,7 @@ class AiManager {
             );
         }
 
-        return cv.imencode('.jpg', frame);
+        return cv.imencode(".jpg", frame);
     }
 }
 
