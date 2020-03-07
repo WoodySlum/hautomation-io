@@ -22,10 +22,19 @@ function loaded(api) {
          * @param  {number} id           Identifier
          * @param  {Array} objects       The detected objects
          * @param  {number} mode       The mode
+         * @param  {boolean} tile       The tile
          * @returns {CameraAlertForm}              The instance
          */
-        constructor(id, objects, mode = 0) {
+        constructor(id, objects, mode = 0, tile = true) {
             super(id);
+
+            /**
+             * @Property("tile");
+             * @Type("boolean");
+             * @Title("camera.alert.detected.tile");
+             * @Default(true);
+             */
+            this.tile = tile;
 
             /**
              * @Property("mode");
@@ -77,7 +86,7 @@ function loaded(api) {
          * @returns {CameraAlertForm}      A form object
          */
         json(data) {
-            return new CameraAlertForm(data.id, data.objects, data.mode);
+            return new CameraAlertForm(data.id, data.objects, data.mode, data.tile);
         }
     }
 
@@ -115,7 +124,9 @@ function loaded(api) {
             this.api.cameraAPI.unregisterCameraEvent(CAMERA_REGISTER_KEY);
             this.locks = {};
             this.api.dashboardAPI.unregisterTile(CAMERA_REGISTER_KEY);
-            this.registerTile();
+            if (configuration && configuration.tile) {
+                this.registerTile();
+            }
 
             if (configuration && configuration.objects && configuration.objects.length > 0 && configuration.mode > 0) {
                 const self = this;
