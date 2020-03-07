@@ -3,6 +3,7 @@ const request = require("request");
 const MjpegProxy = require("./MjpegProxy");
 const fs = require("fs-extra");
 const sha256 = require("sha256");
+const os = require("os-utils");
 const Logger = require("./../../logger/Logger");
 const PluginsManager = require("./../pluginsmanager/PluginsManager");
 const WebServices = require("./../../services/webservices/WebServices");
@@ -310,7 +311,7 @@ class CamerasManager {
                     this.streamPipe[camera.id.toString()] = new MjpegProxy.class(camera.mjpegUrl, (err, img) => {
                         if (!err) {
                             this.cameraCapture[camera.id.toString()] = img;
-                            if (camera.configuration.cv && img && !isProcessing) {
+                            if (camera.configuration.cv && img && !isProcessing && !this.currentTimelapse) {
                                 // Evaluate framerate
                                 const timerLastTmp = Date.now();
                                 const diff = timerLastTmp - timerLast;
@@ -324,7 +325,7 @@ class CamerasManager {
                                         for (let i = 0 ; i < results.length ; i++) {
                                             const detectedObject = this.getAvailableDetectedObjects()[results[i].classLabel];
                                             const confidence = parseInt(results[i].confidence * 100);
-                                            if (results[i].confidence > this.aiManager.cvMap.confidence && this.aiManager.cvMap.authorized.indexOf(detectedObject) != -1) {
+                                            if (results[i].confidence > this.aiManager.cvMap.confidence && results[i].confidence <= 1 && this.aiManager.cvMap.authorized.indexOf(detectedObject) != -1) {
                                                 Logger.info("Detected on camera " + camera.name + " : " + detectedObject + " / confidence : " + confidence + "%");
 
                                                 Object.keys(this.registeredCamerasEvents).forEach((key) => {
