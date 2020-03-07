@@ -38,6 +38,9 @@ class MjpegProxy {
         this.boundary = null;
         this.globalMjpegResponse = null;
         const self = this;
+        if (mjpegUrl.indexOf("https") != -1) {
+            process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
+        }
         this.mjpegRequest = (mjpegUrl.indexOf("https") == -1 ? http : https).request(self.mjpegOptions, (mjpegResponse) => {
             self.globalMjpegResponse = mjpegResponse;
             self.boundary = self.extractBoundary(mjpegResponse.headers["content-type"]);

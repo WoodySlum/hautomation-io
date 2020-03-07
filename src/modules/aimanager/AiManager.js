@@ -281,6 +281,32 @@ class AiManager {
         });
     }
 
+    /**
+     * Surround elements on picture
+     *
+     * @param  {Array} results The `processCvSsd` results
+     * @param  {Mat} frame The cv initial mat
+     *
+     * @returns {Buffer} The JPG image
+     */
+    drawCvRectangles(results, frame) {
+        for (let i = 0 ; i < results.length ; i++) {
+            frame.drawRectangle(
+                results[i].rect,
+                new cv.Vec(0, 255, 0),
+                2,
+                cv.LINE_8
+            );
+            cv.drawTextBox(
+                frame,
+                { x: results[i].rect.x, y: results[i].rect.y },
+                [{ text: this.cvMap.mapper[results[i].classLabel] + " - " + parseInt(results[i].confidence * 100) + "%", fontSize: 0.5, thickness: 1, color: new cv.Vec(0, 255, 0) }],
+                0.6
+            );
+        }
+
+        return cv.imencode('.jpg', frame);
+    }
 }
 
 module.exports = {class:AiManager, ERROR_NO_CLASSIFIER:ERROR_NO_CLASSIFIER, DB_FILE_EXTENSION:DB_FILE_EXTENSION};

@@ -322,17 +322,26 @@ class CamerasManager {
                                         Logger.verbose("Analyze frame for camera " + camera.id);
                                         const results = r.results;
                                         Logger.verbose(results);
+                                        let validResults = [];
                                         for (let i = 0 ; i < results.length ; i++) {
                                             const detectedObject = this.getAvailableDetectedObjects()[results[i].classLabel];
                                             const confidence = parseInt(results[i].confidence * 100);
                                             if (results[i].confidence > this.aiManager.cvMap.confidence && results[i].confidence < 1 && this.aiManager.cvMap.authorized.indexOf(detectedObject) != -1) {
                                                 Logger.info("Detected on camera " + camera.name + " : " + detectedObject + " / confidence : " + confidence + "%");
+                                                validResults.push(results[i]);
+                                            }
+                                        }
 
+                                        if (validResults.length > 0) {
+                                            let drawedImg = this.aiManager.drawCvRectangles(validResults, r.frame);
+                                            for (let i = 0 ; i < validResults.length ; i++) {
+                                                const confidence = parseInt(validResults[i].confidence * 100);
+                                                const detectedObject = this.getAvailableDetectedObjects()[validResults[i].classLabel];
                                                 Object.keys(this.registeredCamerasEvents).forEach((key) => {
                                                     if (this.registeredCamerasEvents[key].cameraId.toString() === camera.id.toString() || this.registeredCamerasEvents[key].cameraId === "*") {
                                                         if ((!Array.isArray(this.registeredCamerasEvents[key].detectedObject) && (this.registeredCamerasEvents[key].detectedObject === detectedObject || this.registeredCamerasEvents[key].detectedObject === "*")) || (Array.isArray(this.registeredCamerasEvents[key].detectedObject) && this.registeredCamerasEvents[key].detectedObject.indexOf(detectedObject) != -1)) {
                                                             if (this.registeredCamerasEvents[key].cb) {
-                                                                this.registeredCamerasEvents[key].cb(camera.id, detectedObject, confidence, results[i]);
+                                                                this.registeredCamerasEvents[key].cb(camera.id, detectedObject, confidence, results[i], img, drawedImg);
                                                             }
                                                         }
                                                     }
@@ -1195,7 +1204,7 @@ class CamerasManager {
      * @param  {string}   [cameraId="*"] Camera identifier. `*` if all camera needed
      * @param  {string|Array}   [detectedObject="*"] Detected objects on computer vision
      * @param  {string}   key         The register key
-     * @param  {Function} cb         A callback `(cameraId, detectedObject, confidence, cvData) => {}`
+     * @param  {Function} cb         A callback `(cameraId, detectedObject, confidence, cvData, img, drawedImg) => {}`
      */
     registerCameraEvent(cameraId = "*", detectedObject = "*", key, cb) {
         this.registeredCamerasEvents[key] = {cameraId: cameraId, detectedObject: detectedObject, cb: cb};

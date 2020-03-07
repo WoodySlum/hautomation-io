@@ -1,6 +1,7 @@
 "use strict";
 const CAMERA_REGISTER_KEY = "plugin-camera-alert";
 const LOCK_S = 2 * 60;
+const ALERT_VALIDITY_S = 60 * 60;
 
 /**
  * Loaded function
@@ -20,10 +21,22 @@ function loaded(api) {
          *
          * @param  {number} id           Identifier
          * @param  {Array} objects       The detected objects
+         * @param  {number} mode       The mode
          * @returns {CameraAlertForm}              The instance
          */
-        constructor(id, objects) {
+        constructor(id, objects, mode = 0) {
             super(id);
+
+            /**
+             * @Property("mode");
+             * @Type("number");
+             * @Title("camera.alert.detected.mode");
+             * @Enum([0, 1, 2]);
+             * @EnumNames(["camera.alert.detected.mode.never", "camera.alert.detected.mode.always", "camera.alert.detected.mode.on.alarm"]);
+             * @Display("radio");
+             * @Default(0);
+             */
+            this.mode = mode;
 
             /**
              * @Property("objects");
@@ -34,7 +47,6 @@ function loaded(api) {
              * @Display("checkbox");
              */
             this.objects = objects;
-
         }
 
         /**
@@ -65,7 +77,7 @@ function loaded(api) {
          * @returns {CameraAlertForm}      A form object
          */
         json(data) {
-            return new CameraAlertForm(data.id, data.objects);
+            return new CameraAlertForm(data.id, data.objects, data.mode);
         }
     }
 
@@ -87,7 +99,9 @@ function loaded(api) {
         constructor(api) {
             this.api = api;
             this.locks = {};
+            this.eventsRegisteredKeys = [];
             this.registerAlert();
+            this.api.webAPI.register(this, this.api.webAPI.constants().POST, ":/" + CAMERA_REGISTER_KEY + "/[set*]/[action*]/", api.webAPI.Authentication().AUTH_USAGE_LEVEL);
             this.api.configurationAPI.setUpdateCb(() => {
                 this.registerAlert();
             });
@@ -99,21 +113,82 @@ function loaded(api) {
         registerAlert() {
             const configuration = this.api.configurationAPI.getConfiguration();
             this.api.cameraAPI.unregisterCameraEvent(CAMERA_REGISTER_KEY);
-            if (configuration && configuration.objects && configuration.objects.length > 0) {
+            this.locks = {};
+            this.api.dashboardAPI.unregisterTile(CAMERA_REGISTER_KEY);
+            this.registerTile();
+
+            if (configuration && configuration.objects && configuration.objects.length > 0 && configuration.mode > 0) {
                 const self = this;
-                this.api.cameraAPI.registerCameraEvent("*", configuration.objects, CAMERA_REGISTER_KEY, (cameraId, detectedObject, confidence) => {
+
+                this.api.cameraAPI.registerCameraEvent("*", configuration.objects, CAMERA_REGISTER_KEY, (cameraId, detectedObject, confidence, cvData, img, drawedImg) => {
                     if (!self.locks[detectedObject] || self.api.exported.DateUtils.class.timestamp() > (self.locks[detectedObject] + LOCK_S)) {
-                        self.locks[detectedObject] = self.api.exported.DateUtils.class.timestamp();
-                        self.api.messageAPI.sendMessage("*", self.api.translateAPI.t("camera.alert.detected.message", (detectedObject.charAt(0).toUpperCase() + detectedObject.slice(1)), self.api.cameraAPI.getCameras()[cameraId], confidence));
-                        self.api.cameraAPI.getImage(cameraId, (err, data) => {
-                            self.api.messageAPI.sendMessage("*", null, null, null, data.toString("base64"));
-                        });
+                        if ((configuration.mode === 1 || configuration.mode === 2 && self.api.alarmAPI.alarmStatus())) {
+                            self.locks[detectedObject] = self.api.exported.DateUtils.class.timestamp();
+                            self.api.messageAPI.sendMessage("*", self.api.translateAPI.t("camera.alert.detected.message", (detectedObject.charAt(0).toUpperCase() + detectedObject.slice(1)), self.api.cameraAPI.getCameras()[cameraId], confidence));
+                            self.api.messageAPI.sendMessage("*", null, null, null, drawedImg.toString("base64"));
+                        }
                     }
                 });
             }
         }
 
+        registerTile() {
+            const buttons = [{human: ""}, {car: ""}, {dog: ""}, {cat: ""}];
+            const tile = this.api.dashboardAPI.Tile(CAMERA_REGISTER_KEY, this.api.dashboardAPI.TileType().TILE_GENERIC_ACTION, api.exported.Icons.class.list()["bell"], null, api.translateAPI.t("camera.alert.tile.title"), null, null, null, null, null, CAMERA_REGISTER_KEY, {buttons: buttons}, null, api.webAPI.Authentication().AUTH_USAGE_LEVEL);
+            this.api.dashboardAPI.registerTile(tile);
+        }
 
+
+        /**
+         * Process API callback
+         *
+         * @param  {APIRequest} apiRequest An APIRequest
+         * @returns {Promise}  A promise with an APIResponse object
+         */
+        processAPI(apiRequest) {
+            const self = this;
+            if (apiRequest.route.startsWith(":/" + CAMERA_REGISTER_KEY + "/")) {
+                return new Promise((resolve, reject) => {
+                    if (apiRequest.data && apiRequest.data.action) {
+                        self.action(apiRequest.data.action, apiRequest.authenticationData.username);
+                    }
+
+                    resolve(self.api.webAPI.APIResponse(true, {success:true}));
+                });
+            }
+        }
+
+        /**
+         * Handle button actions
+         *
+         * @param  {string} name The action name
+         * @param  {string} username The username of the request
+         */
+        action(name, username) {
+            const self = this;
+            const key = CAMERA_REGISTER_KEY + "-action-" + name + "-" + this.api.exported.DateUtils.class.timestamp();
+            this.eventsRegisteredKeys.push(key);
+            this.api.cameraAPI.unregisterCameraEvent(key);
+            this.api.cameraAPI.registerCameraEvent("*", name, key, (cameraId, detectedObject, confidence, cvData, img, drawedImg) => {
+                if (self.eventsRegisteredKeys.indexOf(key) != -1) {
+                    self.api.messageAPI.sendMessage([username], self.api.translateAPI.t("camera.alert.detected.message", (detectedObject.charAt(0).toUpperCase() + detectedObject.slice(1)), self.api.cameraAPI.getCameras()[cameraId], confidence));
+                    self.api.messageAPI.sendMessage([username], null, null, null, drawedImg.toString("base64"));
+                    self.eventsRegisteredKeys.splice(self.eventsRegisteredKeys.indexOf(key), 1);
+
+                }
+                self.api.cameraAPI.unregisterCameraEvent(key);
+            });
+
+            setTimeout((self) => {
+                self.api.cameraAPI.unregisterCameraEvent(key);
+                if (self.eventsRegisteredKeys.indexOf(key) != -1) {
+                    self.eventsRegisteredKeys.splice(self.eventsRegisteredKeys.indexOf(key), 1);
+                    self.api.messageAPI.sendMessage([username], self.api.translateAPI.t("camera.alert.detection.enabled.message.stop", name, (ALERT_VALIDITY_S / 60)));
+                }
+            }, ALERT_VALIDITY_S * 1000, this);
+
+            self.api.messageAPI.sendMessage([username], self.api.translateAPI.t("camera.alert.detection.enabled.message", name, (ALERT_VALIDITY_S / 60)));
+        }
     }
 
     api.registerInstance(new CameraAlert(api));

@@ -1,4 +1,11 @@
 {
     "camera.alert.detected.objects": "Choisissez les éléments déclencheurs pour les caméras",
-    "camera.alert.detected.message": "%@ a été détecté sur la camera %@. Pertinence : %@%"
+    "camera.alert.detected.message": "%@ a été détecté sur la camera %@. Pertinence : %@%",
+    "camera.alert.tile.title": "M'alerter",
+    "camera.alert.detected.mode": "Mode d'alerte",
+    "camera.alert.detected.mode.never": "Désactivé",
+    "camera.alert.detected.mode.always": "Toujours",
+    "camera.alert.detected.mode.on.alarm": "Seulement quand l'alarme est activée",
+    "camera.alert.detection.enabled.message": "Vous serez prévenus si '%@' est détecté pendant %@ minutes",
+    "camera.alert.detection.enabled.message.stop": "Pas de  '%@' détecté depuis %@ minutes. Annulation de la demande."
 }

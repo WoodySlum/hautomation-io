@@ -94,7 +94,7 @@ class CameraAPI {
      * @param  {string}   [cameraId="*"] Camera identifier. `*` if all camera needed
      * @param  {string|Array}   [detectedObject="*"] Detected objects on computer vision
      * @param  {string}   key         The register key
-     * @param  {Function} cb         A callback `(cameraId, detectedObject, confidence, cvData) => {}`
+     * @param  {Function} cb         A callback `(cameraId, detectedObject, confidence, cvData, img, drawedImg) => {}`
      */
     registerCameraEvent(cameraId = "*", detectedObject = "*", key, cb) {
         PrivateProperties.oprivate(this).camerasManager.registerCameraEvent(cameraId, detectedObject, key, cb);

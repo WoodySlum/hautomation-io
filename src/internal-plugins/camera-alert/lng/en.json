@@ -1,4 +1,11 @@
 {
     "camera.alert.detected.objects": "Pick camera detection triggers",
-    "camera.alert.detected.message": "%@ has been detected on camera %@. Confidence : %@%"
+    "camera.alert.detected.message": "%@ has been detected on camera %@. Confidence : %@%",
+    "camera.alert.tile.title": "Alert me",
+    "camera.alert.detected.mode": "Alert mode",
+    "camera.alert.detected.mode.never": "Disabled",
+    "camera.alert.detected.mode.always": "Always",
+    "camera.alert.detected.mode.on.alarm": "Only when alarm is on",
+    "camera.alert.detection.enabled.message": "You will be alerted if a %@ is detected for %@ minutes",
+    "camera.alert.detection.enabled.message.stop": "No %@ detected since %@ minutes. Cancelling request."
 }
