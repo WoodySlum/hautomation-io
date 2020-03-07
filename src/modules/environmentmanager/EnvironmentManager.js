@@ -625,6 +625,7 @@ class EnvironmentManager {
 
         });
         values.push("freetext");
+        valuesWithoutFreetext.push("-");
         labels.push(this.translateManager.t("form.ip.scan.freetext.list"));
         this.formManager.register(IpScanForm.class, values, labels, valuesWithoutFreetext);
     }

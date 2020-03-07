@@ -32,7 +32,7 @@ class IpScanForm extends FormObject.class {
          * @Title("form.ip.scan.freetext");
          * @DependencyField("ip");
          * @DependencyValues("freetext");
-         * @Default("-");
+         * @Default("");
          */
         this.freetext = freetext;
 
