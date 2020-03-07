@@ -700,10 +700,10 @@ class EnvironmentManager {
             if (fs.existsSync(uptimeFile)) {
                 const powerOutageDuration = parseInt((DateUtils.class.timestamp() - parseInt(fs.readFileSync(uptimeFile))) / 60); // In minutes
                 if (powerOutageDuration > 0) {
-                    setTimeout((self) => {
-                        self.messageManager.sendMessage("*", self.translateManager.t("power.outage.alert", powerOutageDuration));
-                        this.eventBus.emit(EVENT_POWER_OUTAGE, {duration:(powerOutageDuration * 60)});
-                    }, POWER_OUTAGE_DELAY, this);
+                    // setTimeout((self) => {
+                    //     self.messageManager.sendMessage("*", self.translateManager.t("power.outage.alert", powerOutageDuration));
+                    //     this.eventBus.emit(EVENT_POWER_OUTAGE, {duration:(powerOutageDuration * 60)});
+                    // }, POWER_OUTAGE_DELAY, this);
                 }
             }
 
