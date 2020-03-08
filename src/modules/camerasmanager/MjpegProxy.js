@@ -78,7 +78,9 @@ class MjpegProxy {
                         if (self.buffer.indexOf(JPG_HEADER, 0, "hex") != -1 && self.buffer.indexOf(JPG_FOOTER, 0, "hex") != -1) {
                             let tmpBuffer = self.buffer.slice(self.buffer.indexOf(JPG_HEADER, 0, "hex"), self.buffer.indexOf(JPG_FOOTER, 0, "hex")); // slice for a copy of buffer
                             setTimeout(() => { // Async processing
-                                self.cb(null, tmpBuffer);
+                                if (self.cb) {
+                                    self.cb(null, tmpBuffer);
+                                }
                                 tmpBuffer = null;
                             }, 0);
                         }
