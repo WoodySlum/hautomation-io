@@ -8,5 +8,6 @@
     "camera.alert.detected.mode.on.alarm": "Seulement quand l'alarme est activée",
     "camera.alert.detection.enabled.message": "Vous serez prévenus si '%@' est détecté pendant %@ minutes",
     "camera.alert.detection.enabled.message.stop": "Pas de  '%@' détecté depuis %@ minutes. Annulation de la demande.",
-    "camera.alert.detected.tile": "Afficher l'élément sur le tableau de bord"
+    "camera.alert.detected.tile": "Afficher l'élément sur le tableau de bord",
+    "camera.alert.detected.only.on.day": "Alerter uniquement lorsqu'il fait jour"
 }

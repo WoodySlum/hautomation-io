@@ -23,9 +23,10 @@ function loaded(api) {
          * @param  {Array} objects       The detected objects
          * @param  {number} mode       The mode
          * @param  {boolean} tile       The tile
+         * @param  {boolean} onlyOnDay       Only on day
          * @returns {CameraAlertForm}              The instance
          */
-        constructor(id, objects, mode = 0, tile = true) {
+        constructor(id, objects, mode = 0, tile = true, onlyOnDay = false) {
             super(id);
 
             /**
@@ -35,6 +36,14 @@ function loaded(api) {
              * @Default(true);
              */
             this.tile = tile;
+
+            /**
+             * @Property("onlyOnDay");
+             * @Type("boolean");
+             * @Title("camera.alert.detected.only.on.day");
+             * @Default(false);
+             */
+            this.onlyOnDay = onlyOnDay;
 
             /**
              * @Property("mode");
@@ -86,7 +95,7 @@ function loaded(api) {
          * @returns {CameraAlertForm}      A form object
          */
         json(data) {
-            return new CameraAlertForm(data.id, data.objects, data.mode, data.tile);
+            return new CameraAlertForm(data.id, data.objects, data.mode, data.tile, data.onlyOnDay);
         }
     }
 
@@ -134,9 +143,11 @@ function loaded(api) {
                 this.api.cameraAPI.registerCameraEvent("*", configuration.objects, CAMERA_REGISTER_KEY, (cameraId, detectedObject, confidence, cvData, img, drawedImg) => {
                     if (!self.locks[detectedObject] || self.api.exported.DateUtils.class.timestamp() > (self.locks[detectedObject] + LOCK_S)) {
                         if ((configuration.mode === 1 || configuration.mode === 2 && self.api.alarmAPI.alarmStatus())) {
-                            self.locks[detectedObject] = self.api.exported.DateUtils.class.timestamp();
-                            self.api.messageAPI.sendMessage("*", self.api.translateAPI.t("camera.alert.detected.message", (detectedObject.charAt(0).toUpperCase() + detectedObject.slice(1)), self.api.cameraAPI.getCameras()[cameraId], confidence));
-                            self.api.messageAPI.sendMessage("*", null, null, null, drawedImg.toString("base64"));
+                            if (!configuration.onlyOnDay || (configuration.onlyOnDay && !self.api.environmentAPI.isNight())) {
+                                self.locks[detectedObject] = self.api.exported.DateUtils.class.timestamp();
+                                self.api.messageAPI.sendMessage("*", self.api.translateAPI.t("camera.alert.detected.message", (detectedObject.charAt(0).toUpperCase() + detectedObject.slice(1)), self.api.cameraAPI.getCameras()[cameraId], confidence));
+                                self.api.messageAPI.sendMessage("*", null, null, null, drawedImg.toString("base64"));
+                            }
                         }
                     }
                 });
@@ -148,7 +159,7 @@ function loaded(api) {
          */
         registerTile() {
             const buttons = [{human: ""}, {car: ""}, {dog: ""}, {cat: ""}];
-            const tile = this.api.dashboardAPI.Tile(CAMERA_REGISTER_KEY, this.api.dashboardAPI.TileType().TILE_GENERIC_ACTION, api.exported.Icons.class.list()["bell"], null, api.translateAPI.t("camera.alert.tile.title"), null, null, null, null, null, CAMERA_REGISTER_KEY, {buttons: buttons}, null, api.webAPI.Authentication().AUTH_USAGE_LEVEL);
+            const tile = this.api.dashboardAPI.Tile(CAMERA_REGISTER_KEY, this.api.dashboardAPI.TileType().TILE_GENERIC_ACTION, api.exported.Icons.class.list()["bell"], null, api.translateAPI.t("camera.alert.tile.title"), null, null, null, null, 101, CAMERA_REGISTER_KEY, {buttons: buttons}, null, api.webAPI.Authentication().AUTH_USAGE_LEVEL);
             this.api.dashboardAPI.registerTile(tile);
         }
 
@@ -180,15 +191,17 @@ function loaded(api) {
          */
         action(name, username) {
             const self = this;
+            const configuration = this.api.configurationAPI.getConfiguration();
             const key = CAMERA_REGISTER_KEY + "-action-" + name + "-" + this.api.exported.DateUtils.class.timestamp();
             this.eventsRegisteredKeys.push(key);
             this.api.cameraAPI.unregisterCameraEvent(key);
             this.api.cameraAPI.registerCameraEvent("*", name, key, (cameraId, detectedObject, confidence, cvData, img, drawedImg) => {
-                if (self.eventsRegisteredKeys.indexOf(key) != -1) {
-                    self.api.messageAPI.sendMessage([username], self.api.translateAPI.t("camera.alert.detected.message", (detectedObject.charAt(0).toUpperCase() + detectedObject.slice(1)), self.api.cameraAPI.getCameras()[cameraId], confidence));
-                    self.api.messageAPI.sendMessage([username], null, null, null, drawedImg.toString("base64"));
-                    self.eventsRegisteredKeys.splice(self.eventsRegisteredKeys.indexOf(key), 1);
+                if (!configuration.onlyOnDay || (configuration.onlyOnDay && !self.api.environmentAPI.isNight())) {
+                    if (self.eventsRegisteredKeys.indexOf(key) != -1) {
+                        self.api.messageAPI.sendMessage([username], self.api.translateAPI.t("camera.alert.detected.message", (detectedObject.charAt(0).toUpperCase() + detectedObject.slice(1)), self.api.cameraAPI.getCameras()[cameraId], confidence));
+                        self.api.messageAPI.sendMessage([username], null, null, null, drawedImg.toString("base64"));
 
+                    }
                 }
                 self.api.cameraAPI.unregisterCameraEvent(key);
             });
@@ -197,7 +210,6 @@ function loaded(api) {
                 self.api.cameraAPI.unregisterCameraEvent(key);
                 if (self.eventsRegisteredKeys.indexOf(key) != -1) {
                     self.eventsRegisteredKeys.splice(self.eventsRegisteredKeys.indexOf(key), 1);
-                    self.api.messageAPI.sendMessage([username], self.api.translateAPI.t("camera.alert.detection.enabled.message.stop", name, (ALERT_VALIDITY_S / 60)));
                 }
             }, ALERT_VALIDITY_S * 1000, this);
 

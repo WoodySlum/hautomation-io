@@ -8,5 +8,6 @@
     "camera.alert.detected.mode.on.alarm": "Only when alarm is on",
     "camera.alert.detection.enabled.message": "You will be alerted if a %@ is detected for %@ minutes",
     "camera.alert.detection.enabled.message.stop": "No %@ detected since %@ minutes. Cancelling request.",
-    "camera.alert.detected.tile": "Show dashboard tile"
+    "camera.alert.detected.tile": "Show dashboard tile",
+    "camera.alert.detected.only.on.day": "Alerts only when it is day"
 }
