@@ -209,7 +209,9 @@ function loaded(api) {
                         const action = new Promise((resolve, reject) => {
                             self.processRoombaCommand(roombaScenarioForm.roomba, roombaScenarioForm.command, resolve, reject);
                         });
-                        action.then();
+                        action.then().catch((e) => {
+                            this.api.exported.Logger.err(e);
+                        });
                     });
                 }
             }, this.api.translateAPI.t("esp8266.roomba.scenario.title"), null, true, this.getRoombaIds(), this.getRoombaNames(), this.getRoombaCommandIds(), this.getRoombaCommandNames());
