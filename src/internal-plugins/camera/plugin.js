@@ -27,9 +27,10 @@ function loaded(api) {
          * @param  {boolean} archive          Archive pictures
          * @param  {boolean} cv          Computer vision
          * @param  {boolean} cvfps          Computer vision FPS
+         * @param  {boolean} cvlive          Computer vision live view
          * @returns {CameraForm}                 The instance
          */
-        constructor(id, plugin, name, ip, port, username, password, archive = true, cv = false, cvfps = 3) {
+        constructor(id, plugin, name, ip, port, username, password, archive = true, cv = false, cvfps = 3, cvlive = false) {
             super(id);
 
             this.plugin = plugin;
@@ -110,6 +111,14 @@ function loaded(api) {
              * @Range([0, 120, 1]);
              */
             this.cvfps = cvfps;
+
+            /**
+             * @Property("cvlive");
+             * @Title("camera.form.cv.live");
+             * @Type("boolean");
+             * @Default(false);
+             */
+            this.cvlive = cvlive;
         }
 
         /**
@@ -119,7 +128,7 @@ function loaded(api) {
          * @returns {CameraForm}      An instance
          */
         json(data) {
-            return new CameraForm(data.id, data.plugin, data.name, data.ip, data.port, data.username, data.password, data.archive, data.cv, data.cvfps);
+            return new CameraForm(data.id, data.plugin, data.name, data.ip, data.port, data.username, data.password, data.archive, data.cv, data.cvfps, data.cvlive);
         }
     }
 

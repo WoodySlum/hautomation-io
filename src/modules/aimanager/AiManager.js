@@ -223,19 +223,15 @@ class AiManager {
     /**
      * Process neuronal artificial recognition on image
      *
-     * @param  {Buffer} img An image
+     * @param  {Buffer|Mat} img An image
      *
      * @returns {Promise} The promise with a 2 properties object resolve - `results` and `frame`
      */
     processCvSsd(img) {
         const self = this;
         return new Promise((resolve, reject) => {
-            let tFrame = null;
-            cv.imdecodeAsync(img)
-                .then(frame => {
-                    tFrame = frame;
-                    return cv.blobFromImageAsync(frame.resizeToMax(300), 0.007843, new cv.Size(300, 300), new cv.Vec3(127.5, 0, 0));
-                })
+            const tFrame = ((img instanceof cv.Mat) ? img : cv.imdecode(img));
+            cv.blobFromImageAsync(tFrame.resizeToMax(300), 0.007843, new cv.Size(300, 300), new cv.Vec3(127.5, 0, 0))
                 .then(inputBlob => self.cvNet.setInputAsync(inputBlob))
                 .then(() => self.cvNet.forwardAsync())
                 .then(outputBlob => {
@@ -285,11 +281,12 @@ class AiManager {
      * Surround elements on picture
      *
      * @param  {Array} results The `processCvSsd` results
-     * @param  {Mat} frame The cv initial mat
+     * @param  {Buffer|Mat} img The cv initial mat
      *
      * @returns {Buffer} The JPG image
      */
-    drawCvRectangles(results, frame) {
+    drawCvRectangles(results, img) {
+        const frame = ((img instanceof cv.Mat) ? img : cv.imdecode(img));
         for (let i = 0 ; i < results.length ; i++) {
             frame.drawRectangle(
                 results[i].rect,

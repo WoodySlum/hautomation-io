@@ -7,5 +7,6 @@
     "camera.form.password": "Mot de passe",
     "camera.form.archive": "Archiver les images (concerne l'historique et les timelapse)",
     "camera.form.cv": "Computer vision (beta) : Activer la reconnaissance automatique",
-    "camera.form.cv.fps": "Computer vision (beta) : Analyser les images toutes les X secondes"
+    "camera.form.cv.fps": "Computer vision (beta) : Analyser les images toutes les X secondes",
+    "camera.form.cv.live": "Computer vision (beta) : Activer live view"
 }

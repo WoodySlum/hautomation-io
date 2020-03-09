@@ -1,6 +1,7 @@
 "use strict";
 const request = require("request");
 const MjpegProxy = require("./MjpegProxy");
+const cv = require("opencv4nodejs");
 const fs = require("fs-extra");
 const sha256 = require("sha256");
 const Logger = require("./../../logger/Logger");
@@ -301,15 +302,21 @@ class CamerasManager {
             ids.push(parseInt(camera.id));
             names.push(camera.name);
             const recognitionFrame = (camera.configuration.cvfps ? parseInt(camera.configuration.cvfps * 1000) : 3000);// in ms
-
+            const cameraTransform = camera.configuration.cvlive ? true : false;
             if (!this.streamPipe[camera.id.toString()]) {
                 let timerLast = Date.now();
                 let isProcessing = false;
 
                 if (!this.streamPipe[camera.id.toString()]) {
-                    this.streamPipe[camera.id.toString()] = new MjpegProxy.class(camera.mjpegUrl, (err, img) => {
+                    let validResults = [];
+                    this.streamPipe[camera.id.toString()] = new MjpegProxy.class(camera.mjpegUrl, cameraTransform, (err, img) => {
                         if (!err) {
                             this.cameraCapture[camera.id.toString()] = img;
+                            let cameraImage = img;
+                            if (cameraTransform) {
+                                cameraImage = cv.imdecode(img);
+                            }
+
                             if (camera.configuration.cv && img && !isProcessing && !this.currentTimelapse) {
                                 // Evaluate framerate
                                 const timerLastTmp = Date.now();
@@ -317,11 +324,11 @@ class CamerasManager {
 
                                 if (diff >= recognitionFrame) {
                                     isProcessing = true;
-                                    this.aiManager.processCvSsd(img).then((r) => {
+                                    this.aiManager.processCvSsd(cameraImage).then((r) => {
                                         Logger.verbose("Analyze frame for camera " + camera.id);
                                         const results = r.results;
                                         Logger.verbose(results);
-                                        let validResults = [];
+                                        validResults = [];
                                         for (let i = 0 ; i < results.length ; i++) {
                                             const detectedObject = this.getAvailableDetectedObjects()[results[i].classLabel];
                                             const confidence = parseInt(results[i].confidence * 100);
@@ -354,6 +361,14 @@ class CamerasManager {
                                             timerLast = timerLastTmp;
                                             isProcessing = false;
                                         });
+                                }
+                            }
+
+                            if (cameraTransform) {
+                                if (validResults.length > 0) {
+                                    return this.aiManager.drawCvRectangles(validResults, cameraImage);
+                                } else {
+                                    return img;
                                 }
                             }
                         } else {

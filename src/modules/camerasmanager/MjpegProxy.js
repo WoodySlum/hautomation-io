@@ -22,15 +22,18 @@ class MjpegProxy {
      * Constructor
      *
      * @param  {string} mjpegUrl A mjpeg URL
+     * @param  {boolean} [transform=false]    Transform image. `true` will stream thr result of `cb`
      * @param  {Function} [cb=null]    A callback `(err, jpg) => {}`
      * @returns {MjpegProxy}                       The instance
      */
-    constructor(mjpegUrl, cb = null) {
+    constructor(mjpegUrl, transform = false, cb = null) {
 
         this.buffer = null;
         this.cb = cb;
         this.running = true;
         this.mjpegOptions = url.parse(mjpegUrl);
+        this.rBuffer = new Buffer(0);
+        this.transform = transform;
 
         this.audienceResponses = [];
         this.newAudienceResponses = [];
@@ -76,10 +79,22 @@ class MjpegProxy {
                     if (self.cb && self.buffer) {
                         // Check if corrupted image
                         if (self.buffer.indexOf(JPG_HEADER, 0, "hex") != -1 && self.buffer.indexOf(JPG_FOOTER, 0, "hex") != -1) {
+
                             let tmpBuffer = self.buffer.slice(self.buffer.indexOf(JPG_HEADER, 0, "hex"), self.buffer.indexOf(JPG_FOOTER, 0, "hex")); // slice for a copy of buffer
+
                             setTimeout(() => { // Async processing
+                                let image = tmpBuffer;
                                 if (self.cb) {
-                                    self.cb(null, tmpBuffer);
+                                    image = self.cb(null, tmpBuffer);
+                                }
+                                // Got a buffer
+                                if (self.transform) {// && self.rBuffer && self.rBuffer.length > 0) {
+                                    if (self.rBuffer.indexOf(self.boundary) == -1) {
+                                        self.rBuffer = Buffer.concat([self.rBuffer, self.generateHeader(image), image]);
+                                    } else {
+                                        // If there is already a boundary inside, the buffer is already full.
+                                        self.rBuffer = Buffer.concat([self.rBuffer.slice(0, self.rBuffer.indexOf(self.boundary)) ,self.generateHeader(image), image]);
+                                    }
                                 }
                                 tmpBuffer = null;
                             }, 0);
@@ -102,13 +117,21 @@ class MjpegProxy {
                     if (self.newAudienceResponses.indexOf(res) >= 0) {
 
                         if (p >= 0) {
-                            res.write(chunk.slice(p));
+                            if (!self.transform) {
+                                res.write(chunk.slice(p));
+                            }
                             self.newAudienceResponses.splice(self.newAudienceResponses.indexOf(res), 1); // remove from new
                         }
                     } else {
-                        res.write(chunk);
+                        if (self.transform && self.rBuffer) {
+                            res.write(self.rBuffer.slice(0, chunk.length));
+                        } else {
+                            res.write(chunk);
+                        }
                     }
                 }
+
+                self.rBuffer = self.rBuffer.slice(chunk.length, self.rBuffer.length);
             });
 
             mjpegResponse.on("end", () => {
@@ -162,6 +185,17 @@ class MjpegProxy {
         });
 
         this.mjpegRequest.end();
+    }
+
+    /**
+     * Generates MJPEG header boundary
+     *
+     * @param  {Buffer} buffer A buffer full JPG image
+     *
+     * @returns {Buffer}    The header
+     */
+    generateHeader(buffer) {
+        return Buffer.from("--" + this.boundary + "\r\nContent-type: image/jpeg\r\nContent-Length: " + buffer.length + "\r\n\r\n");
     }
 
     /**
