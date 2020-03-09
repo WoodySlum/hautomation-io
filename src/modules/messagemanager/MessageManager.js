@@ -13,11 +13,13 @@ const Icons = require("./../../utils/Icons");
 const MessageScenarioForm = require("./MessageScenarioForm");
 const MessageScenarioTriggerForm = require("./MessageScenarioTriggerForm");
 const fs = require("fs-extra");
+const sizeof = require("object-sizeof");
 
 const DB_VERSION = "0.0.0";
 const LOCK_FILE_PREFIX = "message-lock-time-";
 const ROUTE_GET = ":/messages/get/";
 const ROUTE_SET = ":/messages/set/";
+const MAX_SIZE_OF_MESSAGES_B = 1000000;
 
 /**
  * This class allows to manage message sending
@@ -213,7 +215,7 @@ class MessageManager {
             if (error) {
                 cb(error);
             } else {
-                const results = [];
+                let results = [];
                 objects.forEach((dbObj) => {
                     results.push({
                         id:dbObj.id,
@@ -229,6 +231,11 @@ class MessageManager {
                         received:dbObj.received
                     });
                 });
+                
+                while (sizeof(results) > MAX_SIZE_OF_MESSAGES_B) {
+                    results.splice(-1,1);
+                }
+
                 cb(null, results);
             }
         });
