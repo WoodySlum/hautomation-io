@@ -32,7 +32,7 @@ class MjpegProxy {
         this.cb = cb;
         this.running = true;
         this.mjpegOptions = url.parse(mjpegUrl);
-        this.rBuffer = new Buffer(0);
+        this.rBuffer = new Buffer.alloc(0);
         this.transform = transform;
 
         this.audienceResponses = [];
@@ -61,7 +61,7 @@ class MjpegProxy {
 
                     if (p == 0 && !(lastByte2 == 0x0d && lastByte1 == 0x0a) || p > 1 && !(chunk[p - 2] == 0x0d && chunk[p - 1] == 0x0a)) {
                         const b1 = chunk.slice(0, p);
-                        const b2 = new Buffer("\r\n--" + self.boundary);
+                        const b2 = new Buffer.from("\r\n--" + self.boundary);
                         const b3 = chunk.slice(p + oldHeader.length);
                         chunk = Buffer.concat([b1, b2, b3]);
                     }
@@ -85,7 +85,10 @@ class MjpegProxy {
                             setTimeout(() => { // Async processing
                                 let image = tmpBuffer;
                                 if (self.cb) {
-                                    image = self.cb(null, tmpBuffer);
+                                    const rImage = Buffer.from(self.cb(null, tmpBuffer));
+                                    if (rImage && rImage.indexOf(JPG_HEADER, 0, "hex") != -1 && rImage.indexOf(JPG_FOOTER, 0, "hex") != -1) {
+                                        image = rImage;
+                                    }
                                 }
                                 // Got a buffer
                                 if (self.transform) {// && self.rBuffer && self.rBuffer.length > 0) {
@@ -195,7 +198,7 @@ class MjpegProxy {
      * @returns {Buffer}    The header
      */
     generateHeader(buffer) {
-        return Buffer.from("--" + this.boundary + "\r\nContent-type: image/jpeg\r\nContent-Length: " + buffer.length + "\r\n\r\n");
+        return Buffer.from("\r\n--" + this.boundary + "\r\nContent-type: image/jpeg\r\nContent-Length: " + buffer.length + "\r\n\r\n");
     }
 
     /**

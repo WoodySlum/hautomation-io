@@ -368,7 +368,7 @@ class CamerasManager {
                                 if (validResults.length > 0) {
                                     return this.aiManager.drawCvRectangles(validResults, cameraImage);
                                 } else {
-                                    return img;
+                                    return this.cameraCapture[camera.id.toString()];
                                 }
                             }
                         } else {
