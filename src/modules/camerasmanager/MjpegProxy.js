@@ -85,9 +85,12 @@ class MjpegProxy {
                             setTimeout(() => { // Async processing
                                 let image = tmpBuffer;
                                 if (self.cb) {
-                                    const rImage = Buffer.from(self.cb(null, tmpBuffer));
-                                    if (rImage && rImage.indexOf(JPG_HEADER, 0, "hex") != -1 && rImage.indexOf(JPG_FOOTER, 0, "hex") != -1) {
-                                        image = rImage;
+                                    let rImage = self.cb(null, tmpBuffer);
+                                    if (rImage) {
+                                        rImage = Buffer.from(rImage);
+                                        if (rImage.indexOf(JPG_HEADER, 0, "hex") != -1 && rImage.indexOf(JPG_FOOTER, 0, "hex") != -1) {
+                                            image = rImage;
+                                        }
                                     }
                                 }
                                 // Got a buffer
