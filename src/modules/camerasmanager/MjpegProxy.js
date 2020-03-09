@@ -87,8 +87,7 @@ class MjpegProxy {
                                 if (self.cb) {
                                     let rImage = self.cb(null, tmpBuffer);
                                     if (rImage && rImage.indexOf(JPG_HEADER, 0, "hex") != -1 && rImage.indexOf(JPG_FOOTER, 0, "hex") != -1) {
-                                            image = rImage;
-                                        }
+                                        image = rImage;
                                     }
                                 }
                                 // Got a buffer
