@@ -307,7 +307,7 @@ class CamerasManager {
                 let isProcessing = false;
 
                 if (!this.streamPipe[camera.id.toString()]) {
-                    this.streamPipe[camera.id.toString()] = new MjpegProxy.class("https://webcam1.lpl.org/axis-cgi/mjpg/video.cgi", (err, img) => {
+                    this.streamPipe[camera.id.toString()] = new MjpegProxy.class(camera.mjpegUrl, (err, img) => {
                         if (!err) {
                             this.cameraCapture[camera.id.toString()] = img;
                             if (camera.configuration.cv && img && !isProcessing && !this.currentTimelapse) {
