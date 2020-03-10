@@ -76,6 +76,8 @@ const ERROR_UNEXISTING_PICTURE = "Unexisting picture";
 const ERROR_RECORD_ALREADY_RUNNING = "Already recording camera";
 const ERROR_RECORD_UNKNOWN = "Unknown record";
 
+const AI_KEY = "cameras";
+
 /**
  * This class allows to manage cameras
  * @class
@@ -183,6 +185,9 @@ class CamerasManager {
             self.generateDailyTimeLapses(self);
             self.generateSeasonTimeLapses(self);
         }, this, TimeEventService.EVERY_DAYS);
+
+        // Machine learning
+        this.aiManager.register(AI_KEY);
     }
 
     /**
@@ -197,9 +202,6 @@ class CamerasManager {
         context.initCameras();
         context.registerCamerasListForm();
         context.registerTile(context);
-
-        //this.record(1503653182, (err, s) => {});
-        //
     }
 
     /**
@@ -309,7 +311,8 @@ class CamerasManager {
 
                 if (!this.streamPipe[camera.id.toString()]) {
                     let validResults = [];
-                    this.streamPipe[camera.id.toString()] = new MjpegProxy.class(camera.mjpegUrl, cameraTransform, (err, img) => {
+                    this.streamPipe[camera.id.toString()] = new MjpegProxy.class("https://webcam1.lpl.org/axis-cgi/mjpg/video.cgi", cameraTransform, (err, img) => {
+                    // this.streamPipe[camera.id.toString()] = new MjpegProxy.class(camera.mjpegUrl, cameraTransform, (err, img) => {
                         if (!err) {
                             this.cameraCapture[camera.id.toString()] = img;
                             let cameraImage = img;
@@ -335,6 +338,19 @@ class CamerasManager {
                                             if (results.length <= this.aiManager.cvMap.maxElements && results[i].confidence > this.aiManager.cvMap.confidence && results[i].confidence < 1 && this.aiManager.cvMap.authorized.indexOf(detectedObject) != -1) {
                                                 Logger.info("Detected on camera " + camera.name + " : " + detectedObject + " / confidence : " + confidence + "%");
                                                 validResults.push(results[i]);
+
+                                                // Learn value
+                                                const aiClassifiers = [camera.id];
+
+                                                if (camera.name) {
+                                                    aiClassifiers.push(camera.name);
+                                                }
+
+                                                this.aiManager.learnWithTime(AI_KEY, aiClassifiers, detectedObject).then(() => {
+                                                    Logger.verbose("Learned new value for " + camera.id);
+                                                }).catch((e) => {
+                                                    Logger.err("Error while learning sensor : " + e.message);
+                                                });
                                             }
                                         }
 
@@ -343,6 +359,7 @@ class CamerasManager {
                                             for (let i = 0 ; i < validResults.length ; i++) {
                                                 const confidence = parseInt(validResults[i].confidence * 100);
                                                 const detectedObject = this.getAvailableDetectedObjects()[validResults[i].classLabel];
+                                                // Dispatch value
                                                 Object.keys(this.registeredCamerasEvents).forEach((key) => {
                                                     if (this.registeredCamerasEvents[key].cameraId.toString() === camera.id.toString() || this.registeredCamerasEvents[key].cameraId === "*") {
                                                         if ((!Array.isArray(this.registeredCamerasEvents[key].detectedObject) && (this.registeredCamerasEvents[key].detectedObject === detectedObject || this.registeredCamerasEvents[key].detectedObject === "*")) || (Array.isArray(this.registeredCamerasEvents[key].detectedObject) && this.registeredCamerasEvents[key].detectedObject.indexOf(detectedObject) != -1)) {
