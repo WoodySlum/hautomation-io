@@ -53,7 +53,10 @@ Control Tuya outlets and lights
 
 ##### Cameras
 
-Keep an eye on your house. You can check camera history over 5 days, and 2 timelapses are generated every day :
+Keep an eye on your house. OpenCV is used to detect locally pre-trained models.
+You can be alerted when a model is detected.
+
+You can check camera history over 5 days, and 2 timelapses are generated every day :
 * Last 24 hours : Check in 60 sec whole past day (one picture per minute over 24h)
 * Season : Contemplate the evolution of seasons (one picture per day over one year)
 
