@@ -231,7 +231,7 @@ class AiManager {
         const self = this;
         return new Promise((resolve, reject) => {
             const tFrame = ((img instanceof cv.Mat) ? img : cv.imdecode(img));
-            cv.blobFromImageAsync(tFrame.resizeToMax(900), 0.007843, new cv.Size(900, 900), new cv.Vec3(127.5, 0, 0))
+            cv.blobFromImageAsync(tFrame.resizeToMax(300), 0.007843, new cv.Size(300, 300), new cv.Vec3(127.5, 0, 0))
                 .then(inputBlob => self.cvNet.setInputAsync(inputBlob))
                 .then(() => self.cvNet.forwardAsync())
                 .then(outputBlob => {
