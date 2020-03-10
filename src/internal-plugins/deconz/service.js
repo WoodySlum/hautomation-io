@@ -19,6 +19,12 @@ function loaded(api) {
          * @returns {DeconzService}        The instance
          */
         constructor(plugin, port) {
+            try {
+                api.installerAPI.executeCommand("mkdir -p /root/.local && rm -f /.local && ln -s /root/.local /"); // Link to /root dir for backup
+            } catch(e) {
+                api.exported.Logger.err(e);
+            }
+
             super("deconz", null, api.exported.Service.SERVICE_MODE_EXTERNAL, "deCONZ -platform minimal --http-port=" + port);
         }
     }
