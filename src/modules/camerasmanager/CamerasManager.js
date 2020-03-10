@@ -309,8 +309,7 @@ class CamerasManager {
 
                 if (!this.streamPipe[camera.id.toString()]) {
                     let validResults = [];
-                    this.streamPipe[camera.id.toString()] = new MjpegProxy.class("https://webcam1.lpl.org/axis-cgi/mjpg/video.cgi", cameraTransform, (err, img) => {
-                    // this.streamPipe[camera.id.toString()] = new MjpegProxy.class(camera.mjpegUrl, cameraTransform, (err, img) => {
+                    this.streamPipe[camera.id.toString()] = new MjpegProxy.class(camera.mjpegUrl, cameraTransform, (err, img) => {
                         if (!err) {
                             this.cameraCapture[camera.id.toString()] = img;
                             let cameraImage = img;
