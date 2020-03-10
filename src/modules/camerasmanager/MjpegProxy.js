@@ -32,7 +32,7 @@ class MjpegProxy {
         this.cb = cb;
         this.running = true;
         this.mjpegOptions = url.parse(mjpegUrl);
-        this.rBuffer = new Buffer.alloc(0);
+        this.rBuffer = Buffer(0);
         this.transform = transform;
 
         this.audienceResponses = [];
@@ -61,7 +61,7 @@ class MjpegProxy {
 
                     if (p == 0 && !(lastByte2 == 0x0d && lastByte1 == 0x0a) || p > 1 && !(chunk[p - 2] == 0x0d && chunk[p - 1] == 0x0a)) {
                         const b1 = chunk.slice(0, p);
-                        const b2 = new Buffer.from("\r\n--" + self.boundary);
+                        const b2 = Buffer.from("\r\n--" + self.boundary);
                         const b3 = chunk.slice(p + oldHeader.length);
                         chunk = Buffer.concat([b1, b2, b3]);
                     }
