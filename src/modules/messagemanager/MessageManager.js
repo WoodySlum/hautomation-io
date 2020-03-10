@@ -13,7 +13,7 @@ const Icons = require("./../../utils/Icons");
 const MessageScenarioForm = require("./MessageScenarioForm");
 const MessageScenarioTriggerForm = require("./MessageScenarioTriggerForm");
 const fs = require("fs-extra");
-const sizeof = require("object-sizeof");
+// const sizeof = require("object-sizeof");
 
 const DB_VERSION = "0.0.0";
 const LOCK_FILE_PREFIX = "message-lock-time-";
@@ -231,10 +231,10 @@ class MessageManager {
                         received:dbObj.received
                     });
                 });
-                
-                while (sizeof(results) > MAX_SIZE_OF_MESSAGES_B) {
-                    results.splice(-1,1);
-                }
+
+                // while (sizeof(results) > MAX_SIZE_OF_MESSAGES_B) {
+                //     results.splice(-1,1);
+                // }
 
                 cb(null, results);
             }
