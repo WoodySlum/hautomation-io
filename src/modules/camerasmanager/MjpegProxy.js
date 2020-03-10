@@ -32,7 +32,7 @@ class MjpegProxy {
         this.cb = cb;
         this.running = true;
         this.mjpegOptions = url.parse(mjpegUrl);
-        this.rBuffer = Buffer(0);
+        this.rBuffer = Buffer.alloc(0);
         this.transform = transform;
 
         this.audienceResponses = [];

@@ -1,6 +1,7 @@
 {
     "mapper": ["background", "aeroplane", "bicycle", "bird", "boat", "bottle", "bus", "car", "cat", "chair", "cow", "diningtable", "dog", "horse", "motorbike", "person", "pottedplant", "sheep", "sofa", "train", "tvmonitor"],
-    "authorized": ["car", "cat", "dog", "motorbike", "person"],
+    "authorized": ["car", "cat", "dog", "bicycle", "motorbike", "person"],
     "confidence": 0.3,
-    "maxElements": 5
+    "maxElements": 5,
+    "boxSize": 600
 }
