@@ -137,7 +137,7 @@ class TimeEventService extends Service.class {
 
         const index = this.elementForHash(obj.hash);
         if (index === -1) {
-            Logger.warn("Element not found");
+            Logger.verbose("Element not found");
         } else {
             this.registeredElements.splice(index ,1);
         }

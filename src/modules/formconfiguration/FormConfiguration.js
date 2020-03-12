@@ -117,7 +117,7 @@ class FormConfiguration {
                 this.data.id = 0;
             }
         } catch(e) {
-            Logger.warn("Load config for " + this.name + " error : " + e.message);
+            Logger.verbose("Load config for " + this.name + " error : " + e.message);
 
         }
     }
