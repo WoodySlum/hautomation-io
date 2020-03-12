@@ -15,6 +15,14 @@ const CLASS_DAYOFF = ["workon", "workoff"];
 const CLASS_DAYNIGHT = ["day", "night"];
 const CLASS_TIME = "time";
 
+const CV_DEFAULT_MAPPER = ["background", "aeroplane", "bicycle", "bird", "boat", "bottle", "bus", "car", "cat", "chair", "cow", "diningtable", "dog", "horse", "motorbike", "person", "pottedplant", "sheep", "sofa", "train", "tvmonitor"];
+const CV_DEFAULT_AUTHORIZED = ["car", "cat", "dog", "bicycle", "motorbike", "person"];
+const CV_DEFAULT_CONFIDENCE = 0.35;
+const CV_DEFAULT_MAX_ELEMENTS = 10;
+const CV_DEFAULT_BOX_SIZE = 300;
+const CV_DEFAULT_NB_THREADS = 4;
+const CV_DEFAULT_RESIZE = true;
+const CV_DEFAULT_MEAN = 127.5;
 
 /**
  * This class is used for artificial intelligence and machine learning
@@ -24,7 +32,7 @@ class AiManager {
     /**
      * Constructor
      *
-     * @param  {string} configurationPath The configuration path
+     * @param  {Object} appConfiguration The configuration
      * @param  {EventEmitter} eventBus    The global event bus
      * @param  {string} stopEventName    The stop event name
      * @param  {TimeEventService} timeEventService    The time event service
@@ -32,8 +40,9 @@ class AiManager {
      *
      * @returns {AiManager} The instance
      */
-    constructor(configurationPath, eventBus, stopEventName, timeEventService, environmentManager) {
-        this.databaseFile = configurationPath + "data" + DB_FILE_EXTENSION;
+    constructor(appConfiguration, eventBus, stopEventName, timeEventService, environmentManager) {
+        this.appConfiguration = appConfiguration;
+        this.databaseFile = appConfiguration.configurationPath + "data" + DB_FILE_EXTENSION;
         this.timeEventService = timeEventService;
         this.environmentManager = environmentManager;
         this.classifiers = {};
@@ -73,11 +82,67 @@ class AiManager {
      * Init computer vision (called in constructor)
      */
     initCv() {
-        this.cvMap = JSON.parse(fs.readFileSync("./res/ai/model/map.json"));
+        this.cvMap = {};
+
+        if (this.appConfiguration.ai && this.appConfiguration.ai.cv && this.appConfiguration.ai.cv.mapper) {
+            this.cvMap.mapper = this.appConfiguration.ai.cv.mapper;
+        } else {
+            this.cvMap.mapper = CV_DEFAULT_MAPPER;
+        }
+
+        if (this.appConfiguration.ai && this.appConfiguration.ai.cv && this.appConfiguration.ai.cv.mapper) {
+            this.cvMap.authorized = this.appConfiguration.ai.cv.authorized;
+        } else {
+            this.cvMap.authorized = CV_DEFAULT_AUTHORIZED;
+        }
+
+        if (this.appConfiguration.ai && this.appConfiguration.ai.cv && this.appConfiguration.ai.cv.confidence) {
+            this.cvMap.confidence = this.appConfiguration.ai.cv.confidence;
+        } else {
+            this.cvMap.confidence = CV_DEFAULT_AUTHORIZED;
+        }
+
+        if (this.appConfiguration.ai && this.appConfiguration.ai.cv && this.appConfiguration.ai.cv.maxElements) {
+            this.cvMap.maxElements = this.appConfiguration.ai.cv.maxElements;
+        } else {
+            this.cvMap.maxElements = CV_DEFAULT_MAX_ELEMENTS;
+        }
+
+        if (this.appConfiguration.ai && this.appConfiguration.ai.cv && this.appConfiguration.ai.cv.boxSize) {
+            this.cvMap.boxSize = this.appConfiguration.ai.cv.boxSize;
+        } else {
+            this.cvMap.boxSize = CV_DEFAULT_BOX_SIZE;
+        }
+
+        if (this.appConfiguration.ai && this.appConfiguration.ai.cv && this.appConfiguration.ai.cv.resize != null) {
+            this.cvMap.resize = this.appConfiguration.ai.cv.resize;
+        } else {
+            this.cvMap.resize = CV_DEFAULT_RESIZE;
+        }
+
+        if (this.appConfiguration.ai && this.appConfiguration.ai.cv && this.appConfiguration.ai.cv.mean) {
+            this.cvMap.mean = this.appConfiguration.ai.cv.mean;
+        } else {
+            this.cvMap.mean = CV_DEFAULT_MEAN;
+        }
+
+        if (this.appConfiguration.ai && this.appConfiguration.ai.cv && this.appConfiguration.ai.cv.scaleFactor) {
+            this.cvMap.scaleFactor = this.appConfiguration.ai.cv.scaleFactor;
+        } else {
+            this.cvMap.scaleFactor = (1.0 / this.cvMap.mean);
+        }
+
+        if (this.appConfiguration.ai && this.appConfiguration.ai.cv && this.appConfiguration.ai.cv.nbThreads) {
+            cv.setNumThreads(this.appConfiguration.ai.cv.nbThreads);
+        } else {
+            cv.setNumThreads(CV_DEFAULT_NB_THREADS);
+        }
+
+        Logger.info("Computer vision params : " + JSON.stringify(this.cvMap));
+
         const cvProtoTxt = "./res/ai/model/deploy.prototxt.txt";
         const cvModelFile = "./res/ai/model/deploy.caffemodel";
         this.cvNet = cv.readNetFromCaffe(cvProtoTxt, cvModelFile);
-        cv.setNumThreads(4);
     }
 
     /**
@@ -231,7 +296,7 @@ class AiManager {
         const self = this;
         return new Promise((resolve, reject) => {
             const tFrame = ((img instanceof cv.Mat) ? img : cv.imdecode(img));
-            cv.blobFromImageAsync(tFrame.resizeToMax(300), 0.00727, new cv.Size(this.cvMap.boxSize, this.cvMap.boxSize), new cv.Vec3(127.5, 127.5, 127.5))
+            cv.blobFromImageAsync((this.cvMap.resize ? tFrame.resizeToMax(this.cvMap.boxSize) : tFrame), this.cvMap.scaleFactor, new cv.Size(this.cvMap.boxSize, this.cvMap.boxSize), new cv.Vec3(this.cvMap.mean, this.cvMap.mean, this.cvMap.mean), true)
                 .then(inputBlob => self.cvNet.setInputAsync(inputBlob))
                 .then(() => self.cvNet.forwardAsync())
                 .then(outputBlob => {
