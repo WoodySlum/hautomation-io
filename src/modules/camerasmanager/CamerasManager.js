@@ -372,6 +372,8 @@ class CamerasManager {
                                         }
                                         timerLast = timerLastTmp;
                                         isProcessing = false;
+                                        const aiDuration = Date.now() - timerLastTmp;
+                                        Logger.verbose("Frame analysis duration : " + aiDuration + " ms");
                                     })
                                         .catch(() => {
                                             timerLast = timerLastTmp;
