@@ -67,8 +67,12 @@ function loaded(api) {
          */
         constructor(api, id, configuration) {
             super(api, id, configuration);
-            api.exported.Radio.registerSensor(api, this, () => {
-                api.messageAPI.sendMessage("*", api.translateAPI.t("radio.smoke.sensor.message", configuration.name), null, null, null, true);
+            const self = this;
+            api.exported.Radio.registerSensor(api, this, (radioObject) => {
+                self.setValue(parseFloat(radioObject.value));
+                if (radioObject.value === 1) {
+                    api.messageAPI.sendMessage("*", api.translateAPI.t("radio.smoke.sensor.message", configuration.name), null, null, null, true);
+                }
             });
         }
     }

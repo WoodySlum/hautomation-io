@@ -11,6 +11,13 @@ const LIGHT_PREFIX = "zigbee-light-";
 const WS_SCAN_ENDPOINT = "deconz-scan/set/";
 const DEFAULT_TRANSITION_TIME = 9; // Default was 9
 
+const LIGHT_TYPE_UNKNOWN = 1;
+const LIGHT_TYPE_COLOR_TEMPERATURE = 2;
+const LIGHT_TYPE_DIMMABLE = 3;
+const LIGHT_TYPE_EXTENDED_COLOR = 4;
+const LIGHT_TYPE_RANGE_EXTENDER = 5;
+const LIGHT_TYPE_WARNING = 6;
+
 /**
  * Loaded plugin function
  *
@@ -451,25 +458,31 @@ function loaded(api) {
                 if (light.protocolName === protocol) {
                     found = light;
                 }
+
+                if (protocol === "zigbee" && deviceId.toLowerCase() === light.uniqueid.toLowerCase()) {
+                    found = light;
+                }
             });
 
             if (found) {
-                return this.switchLight(found.key, status, deviceStatus);
+                return this.switchLight(found, status, deviceStatus);
+            } else {
+
             }
         }
 
         /**
          * Switch a zigbee light
          *
-         * @param  {string} key The device key
+         * @param  {Object} light The device
          * @param  {number} status  The status
          * @param  {DeviceStatus} deviceStatus  The device status : color, brightness, ...
          * @param  {Function} cb A callback e.g. `(err, status) => {}`
          */
-        switchLight(key, status, deviceStatus, cb) {
+        switchLight(light, status, deviceStatus, cb) {
             const on = (!deviceStatus.status ? false : (deviceStatus.status === super.constants().STATUS_ON || deviceStatus.status === super.constants().STATUS_ALL_ON) ? true : false);
             const bri = parseInt(deviceStatus.brightness > -1 ? (deviceStatus.brightness * 254) : 254);
-            const data = {
+            let data = {
                 on: on,
                 bri: bri,
                 transitiontime: DEFAULT_TRANSITION_TIME
@@ -486,11 +499,21 @@ function loaded(api) {
                 data.ct = ct;
             }
 
-            this.api.exported.Logger.debug("Switch light URL : " + this.getApiUrl() + "/lights/" + key + "/state");
+            if (light.stype === LIGHT_TYPE_WARNING) {
+                if (on) {
+                    data = {alert: "lselect"};
+                } else {
+                    data = {alert: "none"};
+                }
+            }
+
+            this.api.exported.Logger.debug("Switch light URL : " + this.getApiUrl() + "/lights/" + light.key + "/state");
             this.api.exported.Logger.debug("Switch light params : " + JSON.stringify(data));
+            // {alert: "lselect"
+            // alert: "none"
             request.put({
                 headers: {"content-type" : "application/json"},
-                url:     this.getApiUrl() + "/lights/" + key + "/state",
+                url:     this.getApiUrl() + "/lights/" + light.key + "/state",
                 body:    JSON.stringify(data)
             }, (error, response, body) => {
                 this.api.exported.Logger.debug("Switch light results : ");
@@ -534,13 +557,33 @@ function loaded(api) {
                 } else {
                     const lights = JSON.parse(body);
                     let keys = Object.keys(lights);
+
                     this.lights = [];
                     keys.forEach((key) => {
                         const light = lights[key];
                         light.key = key;
+                        if (light.type.toLowerCase() == "unknown") {
+                            light.stype = LIGHT_TYPE_UNKNOWN;
+                        } else if (light.type.toLowerCase() == "color temperature light") {
+                            light.stype = LIGHT_TYPE_COLOR_TEMPERATURE;
+                        } else if (light.type.toLowerCase() == "dimmable light") {
+                            light.stype = LIGHT_TYPE_DIMMABLE;
+                        } else if (light.type.toLowerCase() == "extended color light") {
+                            light.stype = LIGHT_TYPE_EXTENDED_COLOR;
+                        } else if (light.type.toLowerCase() == "range extender") {
+                            light.stype = LIGHT_TYPE_RANGE_EXTENDER;
+                        } else if (light.type.toLowerCase() == "warning device") {
+                            light.stype = LIGHT_TYPE_WARNING;
+                        } else {
+                            light.stype = LIGHT_TYPE_UNKNOWN;
+                        }
+
+
                         light.protocolName = LIGHT_PREFIX + light.uniqueid;
+
                         this.lights.push(light);
                     });
+
                     this.api.exported.Logger.verbose(response);
                     this.api.radioAPI.refreshProtocols();
 
@@ -651,6 +694,11 @@ function loaded(api) {
             // Water leak
             if (d && d.state && d.uniqueid && d.r == "sensors" && d.state.hasOwnProperty("water")) {
                 this.onRadioEvent(2400, "zigbee", d.uniqueid, 1, (d.state.water ? 1 : 0), this.constants().STATUS_ON, "WATER-LEAK");
+            }
+
+            // Fire
+            if (d && d.state && d.uniqueid && d.r == "sensors" && d.state.hasOwnProperty("fire")) {
+                this.onRadioEvent(2400, "zigbee", d.uniqueid, 1, (d.state.fire ? 1 : 0), this.constants().STATUS_ON, "SMOKE");
             }
 
             // Switch
