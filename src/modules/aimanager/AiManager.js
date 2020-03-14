@@ -99,7 +99,7 @@ class AiManager {
         if (this.appConfiguration.ai && this.appConfiguration.ai.cv && this.appConfiguration.ai.cv.confidence) {
             this.cvMap.confidence = this.appConfiguration.ai.cv.confidence;
         } else {
-            this.cvMap.confidence = CV_DEFAULT_AUTHORIZED;
+            this.cvMap.confidence = CV_DEFAULT_CONFIDENCE;
         }
 
         if (this.appConfiguration.ai && this.appConfiguration.ai.cv && this.appConfiguration.ai.cv.maxElements) {

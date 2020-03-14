@@ -466,8 +466,6 @@ function loaded(api) {
 
             if (found) {
                 return this.switchLight(found, status, deviceStatus);
-            } else {
-
             }
         }
 
