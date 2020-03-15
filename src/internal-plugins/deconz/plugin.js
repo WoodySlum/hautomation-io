@@ -247,7 +247,8 @@ function loaded(api) {
                     }
 
                     data.identifier = discovered[0].id;
-                    this.ip = discovered[0].internalipaddress;
+                    // this.ip = discovered[0].internalipaddress;
+                    this.ip = "127.0.0.1";
                     data.url = "http://" + this.ip + ":" + DECONZ_HTTP_PORT +"/";
                     api.configurationAPI.saveData(data);
                     this.getToken((err) => {
