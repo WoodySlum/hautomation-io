@@ -646,6 +646,8 @@ class EnvironmentManager {
                     concurrency: 50, //amount of ips that are pinged in parallel
                     scanTimeout: 15000 //runs scan every 30 seconds (+ time it takes to execute 250 ips ~ 5 secs)
                 };
+                Logger.verbose("Start ip scan");
+                Logger.verbose(config);
                 const scanner = new MacScanner(config);
                 scanner.start();
 
@@ -654,6 +656,7 @@ class EnvironmentManager {
                 });
                 scanner.on("scanned", (availableHosts) => {
                     Logger.verbose("New ip scanned received");
+                    Logger.verbose(availableHosts);
                     this.scannedIps = availableHosts;
                     let counter = availableHosts.length;
                     availableHosts.forEach((availableHost) => {
