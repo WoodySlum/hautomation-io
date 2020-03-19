@@ -1,9 +1,10 @@
 // Based on https://github.com/boonepeter/node-mjpeg-proxy
 "use strict";
 
-var url = require("url");
-var http = require("http");
-var https = require("https");
+const url = require("url");
+const http = require("http");
+const https = require("https");
+const Logger = require("./../../logger/Logger");
 
 const JPG_HEADER = "FFD8";
 const JPG_FOOTER = "FFD9";
@@ -209,6 +210,7 @@ class MjpegProxy {
      */
     proxyRequest(req, res) {
         if (res.socket == null) {
+            Logger.info("Null socket");
             return;
         }
 
@@ -221,12 +223,13 @@ class MjpegProxy {
                 "Content-Type": "multipart/x-mixed-replace;boundary=" + this.boundary
             });
 
+            Logger.verbose("New mjpeg client");
             this.audienceResponses.push(res);
             this.newAudienceResponses.push(res);
 
             res.socket.on("close", () => {
                 // console.log('exiting client!');
-
+                Logger.verbose("Mjpeg client exit");
                 this.audienceResponses.splice(this.audienceResponses.indexOf(res), 1);
                 if (this.newAudienceResponses.indexOf(res) >= 0) {
                     this.newAudienceResponses.splice(this.newAudienceResponses.indexOf(res), 1); // remove from new
@@ -236,6 +239,8 @@ class MjpegProxy {
                 //
                 // }
             });
+        } else {
+            Logger.info("No mjpeg request");
         }
     }
 
