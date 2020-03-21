@@ -119,17 +119,22 @@ class MjpegProxy {
 
                     // First time we push data... lets start at a boundary
                     if (self.newAudienceResponses.indexOf(res) >= 0) {
-
+                        Logger.verbose("Write first buf 1");
                         if (p >= 0) {
+                            Logger.verbose("Write first buf 2");
                             if (!self.transform) {
+                                Logger.verbose("Write first buf 3");
                                 res.write(chunk.slice(p));
                             }
                             self.newAudienceResponses.splice(self.newAudienceResponses.indexOf(res), 1); // remove from new
                         }
                     } else {
+                        Logger.verbose("Write buf");
                         if (self.transform && self.rBuffer) {
+                            Logger.verbose("Write buf 1 " + self.rBuffer.length);
                             res.write(self.rBuffer.slice(0, chunk.length));
                         } else {
+                            Logger.verbose("Write buf 2");
                             res.write(chunk);
                         }
                     }
