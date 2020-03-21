@@ -658,23 +658,20 @@ class EnvironmentManager {
                     Logger.verbose("New ip scanned received");
                     Logger.verbose(availableHosts);
                     this.scannedIps = availableHosts;
-                    let counter = availableHosts.length;
                     availableHosts.forEach((availableHost) => {
                         dns.reverse(availableHost.ip, (err, domains) => {
                             if (!err && domains && domains.length > 0) {
                                 for (let i = 0 ; i < this.scannedIps.length ; i++) {
                                     if (this.scannedIps[i].ip === availableHost.ip) {
                                         this.scannedIps[i].name = domains[0];
+                                        this.registerIpScanForm();
                                     }
                                 }
                             }
-                            counter--;
-                            if (counter <= 0) {
-                                this.registerIpScanForm();
-                                this.eventBus.emit(EVENT_SCAN_IP_UPDATE, {scannedIp:this.scannedIps});
-                            }
                         });
                     });
+                    this.registerIpScanForm();
+                    this.eventBus.emit(EVENT_SCAN_IP_UPDATE, {scannedIp:this.scannedIps});
                 });
 
                 scanner.on("entered", (target) => {
