@@ -119,7 +119,7 @@ class EnvironmentManager {
         setTimeout((self) => {
             // Start ip scan after 30 seconds for network ready
             self.startIpScan();
-        }, 30000, this)
+        }, 30000, this);
     }
 
     /**
