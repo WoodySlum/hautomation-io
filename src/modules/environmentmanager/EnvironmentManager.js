@@ -116,10 +116,7 @@ class EnvironmentManager {
             this.setTimezone(this.appConfiguration);
         }
 
-        setTimeout((self) => {
-            // Start ip scan after 30 seconds for network ready
-            self.startIpScan();
-        }, 30000, this);
+        this.startIpScan();
     }
 
     /**
@@ -657,31 +654,49 @@ class EnvironmentManager {
                 scanner.on("error", (error) => {
                     Logger.err(error.message);
                 });
-                scanner.on("scanned", (availableHosts) => {
-                    Logger.verbose("New ip scanned received");
-                    Logger.verbose(availableHosts);
-                    this.scannedIps = availableHosts;
-                    availableHosts.forEach((availableHost) => {
-                        dns.reverse(availableHost.ip, (err, domains) => {
+
+                scanner.on("entered", (target) => {
+                    Logger.verbose("New ip received");
+                    Logger.verbose(target);
+                    let found = false;
+                    for (let j = 0 ; j < this.scannedIps.length ; j++) {
+                        if (this.scannedIps[j].ip === target.ip) {
+                            found = true;
+                        }
+                    }
+
+                    if (!found) {
+                        this.scannedIps.push(target);
+                        dns.reverse(target.ip, (err, domains) => {
                             if (!err && domains && domains.length > 0) {
                                 for (let i = 0 ; i < this.scannedIps.length ; i++) {
-                                    if (this.scannedIps[i].ip === availableHost.ip) {
+                                    if (this.scannedIps[i].ip === target.ip) {
                                         this.scannedIps[i].name = domains[0];
                                         this.registerIpScanForm();
                                     }
                                 }
                             }
                         });
-                    });
+                    }
+
                     this.registerIpScanForm();
                     this.eventBus.emit(EVENT_SCAN_IP_UPDATE, {scannedIp:this.scannedIps});
-                });
-
-                scanner.on("entered", (target) => {
                     this.eventBus.emit(EVENT_SCAN_IP_CHANGES, {scannedIp:this.scannedIps, target:target});
                 });
 
                 scanner.on("left", (target) => {
+                    Logger.verbose("New ip removed");
+                    Logger.verbose(target);
+                    let found = -1;
+                    for (let i = 0 ; i < this.scannedIps.length ; i++) {
+                        if (this.scannedIps[i].ip === target.ip) {
+                            found = i;
+                        }
+                    }
+                    if (found >= 0) {
+                        this.scannedIps.splice(found, 1);
+                    }
+
                     this.eventBus.emit(EVENT_SCAN_IP_CHANGES, {scannedIp:this.scannedIps, target:target});
                 });
 
@@ -699,27 +714,27 @@ class EnvironmentManager {
      */
     manageUptimeFile() {
         if (!process.env.TEST) {
-            const uptimeFile = this.appConfiguration.configurationPath + UPTIME_FILE;
+            // const uptimeFile = this.appConfiguration.configurationPath + UPTIME_FILE;
+            //
+            // if (fs.existsSync(uptimeFile)) {
+            //     const powerOutageDuration = parseInt((DateUtils.class.timestamp() - parseInt(fs.readFileSync(uptimeFile))) / 60); // In minutes
+            //     if (powerOutageDuration > 0) {
+            //         setTimeout((self) => {
+            //             self.messageManager.sendMessage("*", self.translateManager.t("power.outage.alert", powerOutageDuration));
+            //             this.eventBus.emit(EVENT_POWER_OUTAGE, {duration:(powerOutageDuration * 60)});
+            //         }, POWER_OUTAGE_DELAY, this);
+            //     }
+            // }
 
-            if (fs.existsSync(uptimeFile)) {
-                const powerOutageDuration = parseInt((DateUtils.class.timestamp() - parseInt(fs.readFileSync(uptimeFile))) / 60); // In minutes
-                if (powerOutageDuration > 0) {
-                    // setTimeout((self) => {
-                    //     self.messageManager.sendMessage("*", self.translateManager.t("power.outage.alert", powerOutageDuration));
-                    //     this.eventBus.emit(EVENT_POWER_OUTAGE, {duration:(powerOutageDuration * 60)});
-                    // }, POWER_OUTAGE_DELAY, this);
-                }
-            }
-
-            fs.writeFileSync(uptimeFile, DateUtils.class.timestamp());
-
-            this.timeEventService.register(() => {
-                fs.writeFileSync(uptimeFile, DateUtils.class.timestamp());
-            }, this, TimeEventService.EVERY_MINUTES);
-
-            this.eventBus.on(this.eventStop, () => {
-                fs.unlinkSync(uptimeFile);
-            });
+            // fs.writeFileSync(uptimeFile, DateUtils.class.timestamp());
+            //
+            // this.timeEventService.register(() => {
+            //     fs.writeFileSync(uptimeFile, DateUtils.class.timestamp());
+            // }, this, TimeEventService.EVERY_MINUTES);
+            //
+            // this.eventBus.on(this.eventStop, () => {
+            //     fs.unlinkSync(uptimeFile);
+            // });
         }
     }
 }
