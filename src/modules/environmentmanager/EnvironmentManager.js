@@ -32,7 +32,7 @@ const DEBIAN_REPOSITORY = "https://deb.smarties.io/";
 const DEBIAN_REPOSITORY_LAST_VERSION = "dists/{dist}/main/binary-{arch}/Packages";
 const EVENT_SCAN_IP_CHANGES = "scan-ip-change";
 const EVENT_SCAN_IP_UPDATE = "scan-ip-update";
-const UPTIME_FILE = ".uptime";
+// const UPTIME_FILE = ".uptime";
 const EVENT_POWER_OUTAGE = "power-outage";
 // const POWER_OUTAGE_DELAY = 10 * 1000;
 

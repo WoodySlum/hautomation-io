@@ -330,7 +330,7 @@ class CamerasManager {
      * Init a camera instance and add to local array
      *
      * @param  {Object} configuration The camera configuration
-     * @param  {Boolean} [reload=false] Reload flag
+     * @param  {boolean} [reload=false] Reload flag
      */
     initCamera(configuration, reload = false) {
         if (configuration.plugin) {
