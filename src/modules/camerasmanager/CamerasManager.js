@@ -447,7 +447,7 @@ class CamerasManager {
                                             this.streamPipe[camera.id.toString()] = null;
                                             self.initCamera(configuration, true);
                                         }, CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION, this);
-                                    } else if (err && err.code && err.code == "ENETUNREACH")  {
+                                    } else if (err && err.code)  {
                                         setTimeout((self) => {
                                             this.streamPipe[camera.id.toString()] = null;
                                             self.initCamera(configuration, true);

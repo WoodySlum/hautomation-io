@@ -116,7 +116,10 @@ class EnvironmentManager {
             this.setTimezone(this.appConfiguration);
         }
 
-        this.startIpScan();
+
+        setTimeout((self) => {
+            self.startIpScan();
+        }, 30000, this);
     }
 
     /**
