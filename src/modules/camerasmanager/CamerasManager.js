@@ -46,6 +46,7 @@ const CAMERAS_MANAGER_RECORD_GET_BASE = ":/camera/record/get/";
 const CAMERAS_MANAGER_RECORD_GET = CAMERAS_MANAGER_RECORD_GET_BASE + "[recordKey]/";
 const CAMERAS_MANAGER_RECORD_GET_TOKEN_DURATION = 7 * 24 * 60 * 60;
 const CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION = 5000;
+const CAMERAS_RESTREAM_AFTER_UNREACH_DURATION = 30000;
 
 const CAMERAS_MANAGER_LIST = ":/cameras/list/";
 const CAMERAS_RETRIEVE_BASE = ":/camera/get/";
@@ -303,113 +304,8 @@ class CamerasManager {
         this.cameras.forEach((camera) => {
             ids.push(parseInt(camera.id));
             names.push(camera.name);
-            const recognitionFrame = (camera.configuration.cvfps ? parseInt(camera.configuration.cvfps * 1000) : 3000);// in ms
-            const cameraTransform = camera.configuration.cvlive ? true : false;
-            if (!this.streamPipe[camera.id.toString()]) {
-                let timerLast = Date.now();
-                let isProcessing = false;
-
-                if (!this.streamPipe[camera.id.toString()]) {
-                    let validResults = [];
-                    this.streamPipe[camera.id.toString()] = new MjpegProxy.class(camera.mjpegUrl, cameraTransform, (err, img) => {
-                        if (!err) {
-                            this.cameraCapture[camera.id.toString()] = img;
-                            let cameraImage = img;
-                            if (cameraTransform) {
-                                cameraImage = cv.imdecode(img);
-                            }
-
-                            if (camera.configuration.cv && img && !isProcessing && !this.currentTimelapse) {
-                                // Evaluate framerate
-                                const timerLastTmp = Date.now();
-                                const diff = timerLastTmp - timerLast;
-
-                                if (diff >= recognitionFrame) {
-                                    isProcessing = true;
-                                    this.aiManager.processCvSsd(cameraImage).then((r) => {
-                                        Logger.verbose("Analyze frame for camera " + camera.id);
-                                        const results = r.results;
-                                        Logger.verbose(results);
-                                        validResults = [];
-                                        for (let i = 0 ; i < results.length ; i++) {
-                                            const detectedObject = this.getAvailableDetectedObjects()[results[i].classLabel];
-                                            const confidence = parseInt(results[i].confidence * 100);
-                                            if (results.length <= this.aiManager.cvMap.maxElements && results[i].confidence > this.aiManager.cvMap.confidence && results[i].confidence < 1 && this.aiManager.cvMap.authorized.indexOf(detectedObject) != -1) {
-                                                Logger.info("Detected on camera " + camera.name + " : " + detectedObject + " / confidence : " + confidence + "%");
-                                                validResults.push(results[i]);
-
-                                                // Learn value
-                                                const aiClassifiers = [camera.id];
-
-                                                if (camera.name) {
-                                                    aiClassifiers.push(camera.name);
-                                                }
-
-                                                this.aiManager.learnWithTime(AI_KEY, aiClassifiers, detectedObject).then(() => {
-                                                    Logger.verbose("Learned new value for " + camera.id);
-                                                }).catch((e) => {
-                                                    Logger.err("Error while learning sensor : " + e.message);
-                                                });
-                                            }
-                                        }
-
-                                        if (validResults.length > 0) {
-                                            let drawedImg = this.aiManager.drawCvRectangles(validResults, r.frame);
-                                            for (let i = 0 ; i < validResults.length ; i++) {
-                                                const confidence = parseInt(validResults[i].confidence * 100);
-                                                const detectedObject = this.getAvailableDetectedObjects()[validResults[i].classLabel];
-                                                // Dispatch value
-                                                Object.keys(this.registeredCamerasEvents).forEach((key) => {
-                                                    if (this.registeredCamerasEvents[key].cameraId.toString() === camera.id.toString() || this.registeredCamerasEvents[key].cameraId === "*") {
-                                                        if ((!Array.isArray(this.registeredCamerasEvents[key].detectedObject) && (this.registeredCamerasEvents[key].detectedObject === detectedObject || this.registeredCamerasEvents[key].detectedObject === "*")) || (Array.isArray(this.registeredCamerasEvents[key].detectedObject) && this.registeredCamerasEvents[key].detectedObject.indexOf(detectedObject) != -1)) {
-                                                            if (this.registeredCamerasEvents[key].cb) {
-                                                                this.registeredCamerasEvents[key].cb(camera.id, detectedObject, confidence, results[i], img, drawedImg);
-                                                            }
-                                                        }
-                                                    }
-                                                });
-                                            }
-                                        }
-                                        timerLast = timerLastTmp;
-                                        isProcessing = false;
-                                        const aiDuration = Date.now() - timerLastTmp;
-                                        Logger.verbose("Frame analysis duration : " + aiDuration + " ms");
-                                    })
-                                        .catch(() => {
-                                            timerLast = timerLastTmp;
-                                            isProcessing = false;
-                                        });
-                                }
-                            }
-
-                            if (cameraTransform) {
-                                if (validResults.length > 0) {
-                                    return this.aiManager.drawCvRectangles(validResults, cameraImage);
-                                } else {
-                                    return this.cameraCapture[camera.id.toString()];
-                                }
-                            }
-                        } else {
-                            if (err && err.code && (err.code == "ETIMEDOUT" || err.code == "ENOTFOUND")) {
-                                this.streamPipe[camera.id.toString()].disconnect();
-                                Logger.warn("Could not connect to camera " + camera.id + " Retry in " + CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION + " ms");
-                                setTimeout((self) => {
-                                    this.streamPipe[camera.id.toString()] = null;
-                                    self.initCameras();
-                                }, CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION, this);
-                            } else if (err == MjpegProxy.ERROR_CLOSE || err == MjpegProxy.ERROR_TIMEOUT)  {
-                                this.streamPipe[camera.id.toString()].disconnect();
-                                Logger.verbose("Camera stream closed " + camera.id + " Retry now.");
-                                setTimeout((self) => {
-                                    this.streamPipe[camera.id.toString()] = null;
-                                    self.initCameras();
-                                }, 500, this);
-                            }
-                        }
-                    });
-                }
-            }
         });
+
         this.formManager.register(CamerasForm.class, ids, names);
         this.registerTile(this);
 
@@ -434,17 +330,133 @@ class CamerasManager {
      * Init a camera instance and add to local array
      *
      * @param  {Object} configuration The camera configuration
+     * @param  {Boolean} [reload=false] Reload flag
      */
-    initCamera(configuration) {
+    initCamera(configuration, reload = false) {
         if (configuration.plugin) {
             const p = this.pluginsManager.getPluginByIdentifier(configuration.plugin, false);
             if (p) {
                 if (p.cameraAPI.cameraClass) {
                     const camera = new p.cameraAPI.cameraClass(p, configuration.id, configuration);
-                    camera.init();
-                    this.cameras.push(camera);
+                    if (!reload) {
+                        camera.init();
+                        this.cameras.push(camera);
+                        Logger.verbose("Camera '" + configuration.name + "' loaded (#" + configuration.id + ")");
+                    } else {
+                        Logger.verbose("Camera '" + configuration.name + "' reloaded (#" + configuration.id + ")");
+                    }
 
-                    Logger.verbose("Camera '" + configuration.name + "' loaded (#" + configuration.id + ")");
+                    const recognitionFrame = (camera.configuration.cvfps ? parseInt(camera.configuration.cvfps * 1000) : 3000);// in ms
+                    const cameraTransform = camera.configuration.cvlive ? true : false;
+                    if (!this.streamPipe[camera.id.toString()]) {
+                        let timerLast = Date.now();
+                        let isProcessing = false;
+
+                        if (!this.streamPipe[camera.id.toString()]) {
+                            let validResults = [];
+                            this.streamPipe[camera.id.toString()] = new MjpegProxy.class(camera.mjpegUrl, cameraTransform, (err, img) => {
+                                if (!err) {
+                                    this.cameraCapture[camera.id.toString()] = img;
+                                    let cameraImage = img;
+                                    if (cameraTransform) {
+                                        cameraImage = cv.imdecode(img);
+                                    }
+
+                                    if (camera.configuration.cv && img && !isProcessing && !this.currentTimelapse) {
+                                        // Evaluate framerate
+                                        const timerLastTmp = Date.now();
+                                        const diff = timerLastTmp - timerLast;
+
+                                        if (diff >= recognitionFrame) {
+                                            isProcessing = true;
+                                            this.aiManager.processCvSsd(cameraImage).then((r) => {
+                                                Logger.verbose("Analyze frame for camera " + camera.id);
+                                                const results = r.results;
+                                                Logger.verbose(results);
+                                                validResults = [];
+                                                for (let i = 0 ; i < results.length ; i++) {
+                                                    const detectedObject = this.getAvailableDetectedObjects()[results[i].classLabel];
+                                                    const confidence = parseInt(results[i].confidence * 100);
+                                                    if (results.length <= this.aiManager.cvMap.maxElements && results[i].confidence > this.aiManager.cvMap.confidence && results[i].confidence < 1 && this.aiManager.cvMap.authorized.indexOf(detectedObject) != -1) {
+                                                        Logger.info("Detected on camera " + camera.name + " : " + detectedObject + " / confidence : " + confidence + "%");
+                                                        validResults.push(results[i]);
+
+                                                        // Learn value
+                                                        const aiClassifiers = [camera.id];
+
+                                                        if (camera.name) {
+                                                            aiClassifiers.push(camera.name);
+                                                        }
+
+                                                        this.aiManager.learnWithTime(AI_KEY, aiClassifiers, detectedObject).then(() => {
+                                                            Logger.verbose("Learned new value for " + camera.id);
+                                                        }).catch((e) => {
+                                                            Logger.err("Error while learning sensor : " + e.message);
+                                                        });
+                                                    }
+                                                }
+
+                                                if (validResults.length > 0) {
+                                                    let drawedImg = this.aiManager.drawCvRectangles(validResults, r.frame);
+                                                    for (let i = 0 ; i < validResults.length ; i++) {
+                                                        const confidence = parseInt(validResults[i].confidence * 100);
+                                                        const detectedObject = this.getAvailableDetectedObjects()[validResults[i].classLabel];
+                                                        // Dispatch value
+                                                        Object.keys(this.registeredCamerasEvents).forEach((key) => {
+                                                            if (this.registeredCamerasEvents[key].cameraId.toString() === camera.id.toString() || this.registeredCamerasEvents[key].cameraId === "*") {
+                                                                if ((!Array.isArray(this.registeredCamerasEvents[key].detectedObject) && (this.registeredCamerasEvents[key].detectedObject === detectedObject || this.registeredCamerasEvents[key].detectedObject === "*")) || (Array.isArray(this.registeredCamerasEvents[key].detectedObject) && this.registeredCamerasEvents[key].detectedObject.indexOf(detectedObject) != -1)) {
+                                                                    if (this.registeredCamerasEvents[key].cb) {
+                                                                        this.registeredCamerasEvents[key].cb(camera.id, detectedObject, confidence, results[i], img, drawedImg);
+                                                                    }
+                                                                }
+                                                            }
+                                                        });
+                                                    }
+                                                }
+                                                timerLast = timerLastTmp;
+                                                isProcessing = false;
+                                                const aiDuration = Date.now() - timerLastTmp;
+                                                Logger.verbose("Frame analysis duration : " + aiDuration + " ms");
+                                            })
+                                                .catch(() => {
+                                                    timerLast = timerLastTmp;
+                                                    isProcessing = false;
+                                                });
+                                        }
+                                    }
+
+                                    if (cameraTransform) {
+                                        if (validResults.length > 0) {
+                                            return this.aiManager.drawCvRectangles(validResults, cameraImage);
+                                        } else {
+                                            return this.cameraCapture[camera.id.toString()];
+                                        }
+                                    }
+                                } else {
+                                    if (err && err.code && (err.code == "ETIMEDOUT" || err.code == "ENOTFOUND")) {
+                                        this.streamPipe[camera.id.toString()].disconnect();
+                                        Logger.warn("Could not connect to camera " + camera.id + " Retry in " + CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION + " ms");
+                                        setTimeout((self) => {
+                                            this.streamPipe[camera.id.toString()] = null;
+                                            self.initCamera(configuration, true);
+                                        }, CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION, this);
+                                    } else if (err == MjpegProxy.ERROR_CLOSE || err == MjpegProxy.ERROR_TIMEOUT)  {
+                                        this.streamPipe[camera.id.toString()].disconnect();
+                                        Logger.verbose("Camera stream closed " + camera.id + " Retry now.");
+                                        setTimeout((self) => {
+                                            this.streamPipe[camera.id.toString()] = null;
+                                            self.initCamera(configuration, true);
+                                        }, CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION, this);
+                                    } else if (err && err.code && err.code == "ENETUNREACH")  {
+                                        setTimeout((self) => {
+                                            this.streamPipe[camera.id.toString()] = null;
+                                            self.initCamera(configuration, true);
+                                        }, CAMERAS_RESTREAM_AFTER_UNREACH_DURATION, this);
+                                    }
+                                }
+                            });
+                        }
+                    }
                 } else {
                     Logger.err("Plugin " + configuration.plugin + " does not have linked camera class");
                 }

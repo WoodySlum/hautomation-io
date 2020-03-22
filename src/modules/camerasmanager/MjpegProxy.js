@@ -187,6 +187,7 @@ class MjpegProxy {
         });
 
         this.mjpegRequest.on("error", (e) => {
+            Logger.verbose(e);
             if (self.cb && self.running) {
                 self.running = false;
                 self.cb(e);
