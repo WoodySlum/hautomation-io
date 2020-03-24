@@ -47,6 +47,8 @@ const CAMERAS_MANAGER_RECORD_GET = CAMERAS_MANAGER_RECORD_GET_BASE + "[recordKey
 const CAMERAS_MANAGER_RECORD_GET_TOKEN_DURATION = 7 * 24 * 60 * 60;
 const CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION = 5000;
 const CAMERAS_RESTREAM_AFTER_UNREACH_DURATION = 30000;
+const CAMERAS_RECONNECT_S = 60 * 60; // Restart stream every to avoid camera overhead / network congestion
+const CAMERAS_PAUSE_ON_RECONNECT_S = 5 * 60; // After restart stream, wait for this time before restream.
 
 const CAMERAS_MANAGER_LIST = ":/cameras/list/";
 const CAMERAS_RETRIEVE_BASE = ":/camera/get/";
@@ -186,6 +188,29 @@ class CamerasManager {
             self.generateDailyTimeLapses(self);
             self.generateSeasonTimeLapses(self);
         }, this, TimeEventService.EVERY_DAYS);
+
+        // Reboot stream
+        let rebootStreamTimer = 0;
+        this.timeEventService.register((self) => {
+            if (rebootStreamTimer == CAMERAS_RECONNECT_S) {
+                Logger.info("Stop cameras stream for reboot. Next stream in " + CAMERAS_PAUSE_ON_RECONNECT_S + " s");
+                Object.keys(this.streamPipe).forEach((key) => {
+                    this.streamPipe[key].disconnect();
+                    this.streamPipe[key] = null;
+                });
+
+                setTimeout(() => {
+                    // Reboot streams
+                    Logger.info("Restream cameras");
+                    Object.keys(this.streamPipe).forEach((key) => {
+                        self.initCamera(self.getCamera(key).configuration, true);
+                    });
+                    rebootStreamTimer = 0;
+                }, CAMERAS_PAUSE_ON_RECONNECT_S * 1000);
+            }
+
+            rebootStreamTimer++;
+        }, this, TimeEventService.EVERY_SECONDS);
 
         // Machine learning
         this.aiManager.register(AI_KEY);
