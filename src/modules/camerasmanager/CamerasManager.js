@@ -47,7 +47,7 @@ const CAMERAS_MANAGER_RECORD_GET = CAMERAS_MANAGER_RECORD_GET_BASE + "[recordKey
 const CAMERAS_MANAGER_RECORD_GET_TOKEN_DURATION = 7 * 24 * 60 * 60;
 const CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION = 5000;
 const CAMERAS_RESTREAM_AFTER_UNREACH_DURATION = 30000;
-const CAMERAS_RECONNECT_S = 2 * 60 * 60; // Restart stream every to avoid camera overhead / network congestion
+const CAMERAS_RECONNECT_S = 1 * 60 * 60; // Restart stream every to avoid camera overhead / network congestion
 const CAMERAS_PAUSE_ON_RECONNECT_S = 2 * 60; // After restart stream, wait for this time before restream.
 
 const CAMERAS_MANAGER_LIST = ":/cameras/list/";
