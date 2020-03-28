@@ -20,7 +20,12 @@
         "archiveFolder":"./data/cameras/",
         "history":true,
         "season":true,
-        "timelapse":true
+        "timelapse":true,
+        "reconnect" : {
+            "enable": true,
+            "every": 3600,
+            "sleepTime": 10
+        }
     },
     "lng":"en",
     "home": {
@@ -34,5 +39,13 @@
         "sensitivity":0.1,
         "audioGain":1.0,
         "outputVolume": 90
+    },
+    "ai":{
+        "cv": {
+            "mapper": ["background", "aeroplane", "bicycle", "bird", "boat", "bottle", "bus", "car", "cat", "chair", "cow", "diningtable", "dog", "horse", "motorbike", "person", "pottedplant", "sheep", "sofa", "train", "tvmonitor"],
+            "authorized": ["car", "cat", "dog", "bicycle", "motorbike", "person"],
+            "confidence": 0.35,
+            "maxElements": 10
+        }
     }
 }

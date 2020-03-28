@@ -47,8 +47,9 @@ const CAMERAS_MANAGER_RECORD_GET = CAMERAS_MANAGER_RECORD_GET_BASE + "[recordKey
 const CAMERAS_MANAGER_RECORD_GET_TOKEN_DURATION = 7 * 24 * 60 * 60;
 const CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION = 5000;
 const CAMERAS_RESTREAM_AFTER_UNREACH_DURATION = 30000;
+const CAMERAS_RECONNECT_ENABLE = true; // Enable restream
 const CAMERAS_RECONNECT_S = 1 * 60 * 60; // Restart stream every to avoid camera overhead / network congestion
-const CAMERAS_PAUSE_ON_RECONNECT_S = 2 * 60; // After restart stream, wait for this time before restream.
+const CAMERAS_PAUSE_ON_RECONNECT_S = 10; // After restart stream, wait for this time before restream.
 
 const CAMERAS_MANAGER_LIST = ":/cameras/list/";
 const CAMERAS_RETRIEVE_BASE = ":/camera/get/";
@@ -190,27 +191,33 @@ class CamerasManager {
         }, this, TimeEventService.EVERY_DAYS);
 
         // Reboot stream
-        let rebootStreamTimer = 0;
-        this.timeEventService.register((self) => {
-            if (rebootStreamTimer == CAMERAS_RECONNECT_S) {
-                Logger.info("Stop cameras stream for reboot. Next stream in " + CAMERAS_PAUSE_ON_RECONNECT_S + " s");
-                Object.keys(this.streamPipe).forEach((key) => {
-                    this.streamPipe[key].disconnect();
-                    this.streamPipe[key] = null;
-                });
+        if (camerasConfiguration && camerasConfiguration.reconnect && camerasConfiguration.reconnect.hasOwnProperty("enable") ? camerasConfiguration.reconnect.enable : CAMERAS_RECONNECT_ENABLE) {
+            let rebootStreamTimer = 0;
+            const camerasReconnect = camerasConfiguration && camerasConfiguration.reconnect && camerasConfiguration.reconnect.hasOwnProperty("every") ? camerasConfiguration.reconnect.every : CAMERAS_RECONNECT_S;
+            const camerasPauseReconnect = camerasConfiguration && camerasConfiguration.reconnect && camerasConfiguration.reconnect.hasOwnProperty("sleepTime") ? camerasConfiguration.reconnect.sleepTime : CAMERAS_PAUSE_ON_RECONNECT_S;
 
-                setTimeout(() => {
-                    // Reboot streams
-                    Logger.info("Restream cameras");
+            this.timeEventService.register((self) => {
+
+                if (rebootStreamTimer == camerasReconnect) {
+                    Logger.info("Stop cameras stream for reboot. Next stream in " + camerasPauseReconnect + " s");
                     Object.keys(this.streamPipe).forEach((key) => {
-                        self.initCamera(self.getCamera(key).configuration, true);
+                        this.streamPipe[key].disconnect();
+                        this.streamPipe[key] = null;
                     });
-                    rebootStreamTimer = 0;
-                }, CAMERAS_PAUSE_ON_RECONNECT_S * 1000);
-            }
 
-            rebootStreamTimer++;
-        }, this, TimeEventService.EVERY_SECONDS);
+                    setTimeout(() => {
+                        // Reboot streams
+                        Logger.info("Restream cameras");
+                        Object.keys(this.streamPipe).forEach((key) => {
+                            self.initCamera(self.getCamera(key).configuration, true);
+                        });
+                        rebootStreamTimer = 0;
+                    }, camerasPauseReconnect * 1000);
+                }
+
+                rebootStreamTimer++;
+            }, this, TimeEventService.EVERY_SECONDS);
+        }
 
         // Machine learning
         this.aiManager.register(AI_KEY);
