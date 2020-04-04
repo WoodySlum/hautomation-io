@@ -1,7 +1,7 @@
 "use strict";
 const request = require("request");
 const MjpegProxy = require("./MjpegProxy");
-const cv = require("opencv4nodejs");
+// const cv = require("opencv4nodejs");
 const fs = require("fs-extra");
 const sha256 = require("sha256");
 const Logger = require("./../../logger/Logger");
@@ -45,8 +45,6 @@ const CAMERAS_MANAGER_TIMELAPSE_STREAM = CAMERAS_MANAGER_TIMELAPSE_STREAM_BASE +
 const CAMERAS_MANAGER_RECORD_GET_BASE = ":/camera/record/get/";
 const CAMERAS_MANAGER_RECORD_GET = CAMERAS_MANAGER_RECORD_GET_BASE + "[recordKey]/";
 const CAMERAS_MANAGER_RECORD_GET_TOKEN_DURATION = 7 * 24 * 60 * 60;
-const CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION = 5000;
-const CAMERAS_RESTREAM_AFTER_UNREACH_DURATION = 30000;
 const CAMERAS_RECONNECT_ENABLE = true; // Enable restream
 const CAMERAS_RECONNECT_S = 1 * 60 * 60; // Restart stream every to avoid camera overhead / network congestion
 const CAMERAS_PAUSE_ON_RECONNECT_S = 10; // After restart stream, wait for this time before restream.
@@ -378,27 +376,25 @@ class CamerasManager {
                         Logger.verbose("Camera '" + configuration.name + "' reloaded (#" + configuration.id + ")");
                     }
 
-                    const recognitionFrame = (camera.configuration.cvfps ? parseInt(camera.configuration.cvfps * 1000) : 3000);// in ms
-                    const cameraTransform = camera.configuration.cvlive ? true : false;
-                    if (!this.streamPipe[camera.id.toString()]) {
-                        let timerLast = Date.now();
-                        let isProcessing = false;
 
-                        if (!this.streamPipe[camera.id.toString()]) {
-                            let validResults = [];
-                            this.streamPipe[camera.id.toString()] = new MjpegProxy.class(camera.mjpegUrl, cameraTransform, (err, img) => {
+                    const recognitionFrame = (camera.configuration.cvfps ? parseInt(camera.configuration.cvfps * 1000) : 3000);// in ms
+                    // const cameraTransform = camera.configuration.cvlive ? true : false;
+
+                    let timerLast = Date.now();
+                    let isProcessing = false;
+                    let validResults = [];
+                    const timeEventCb = (self) => {
+                        const timerLastTmp = Date.now();
+                        const diff = timerLastTmp - timerLast;
+                        if (diff >= recognitionFrame) {
+                            self.getImage(configuration.id, (err, img) => {
                                 if (!err) {
                                     this.cameraCapture[camera.id.toString()] = img;
-                                    let cameraImage = img;
-                                    if (cameraTransform) {
-                                        cameraImage = cv.imdecode(img);
-                                    }
-
                                     if (camera.configuration.cv && img && !isProcessing && !this.currentTimelapse) {
                                         // Evaluate framerate
                                         const timerLastTmp = Date.now();
                                         const diff = timerLastTmp - timerLast;
-
+                                        let cameraImage = img;
                                         if (diff >= recognitionFrame) {
                                             isProcessing = true;
                                             this.aiManager.processCvSsd(cameraImage).then((r) => {
@@ -456,41 +452,19 @@ class CamerasManager {
                                                 });
                                         }
                                     }
-
-                                    if (cameraTransform) {
-                                        if (validResults.length > 0) {
-                                            return this.aiManager.drawCvRectangles(validResults, cameraImage);
-                                        } else {
-                                            return this.cameraCapture[camera.id.toString()];
-                                        }
-                                    }
+                                    // console.log(data);process.exit(0);
                                 } else {
-                                    if (err && err.code && (err.code == "ETIMEDOUT" || err.code == "ENOTFOUND")) {
-                                        this.streamPipe[camera.id.toString()].disconnect();
-                                        Logger.warn("Could not connect to camera " + camera.id + " Retry in " + CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION + " ms");
-                                        setTimeout((self) => {
-                                            this.streamPipe[camera.id.toString()] = null;
-                                            self.initCamera(configuration, true);
-                                        }, CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION, this);
-                                    } else if (err == MjpegProxy.ERROR_CLOSE || err == MjpegProxy.ERROR_TIMEOUT)  {
-                                        this.streamPipe[camera.id.toString()].disconnect();
-                                        Logger.verbose("Camera stream closed " + camera.id + " Retry now.");
-                                        setTimeout((self) => {
-                                            this.streamPipe[camera.id.toString()] = null;
-                                            self.initCamera(configuration, true);
-                                        }, CAMERAS_RESTREAM_AFTER_REQ_ABORT_DURATION, this);
-                                    } else if (err && err.code)  {
-                                        Logger.verbose(err);
-                                        Logger.verbose("Other error. Retry in " + CAMERAS_RESTREAM_AFTER_UNREACH_DURATION + " ms");
-                                        setTimeout((self) => {
-                                            this.streamPipe[camera.id.toString()] = null;
-                                            self.initCamera(configuration, true);
-                                        }, CAMERAS_RESTREAM_AFTER_UNREACH_DURATION, this);
-                                    }
+                                    Logger.err("Error : " + err.message);
                                 }
-                            });
+
+                                timerLast = timerLastTmp;
+                            }, null, true);
                         }
-                    }
+                    };
+
+                    const timeEventServiceKey = "camera-" + camera.id.toString();
+                    this.timeEventService.unregister(timeEventCb, TimeEventService.EVERY_SECONDS, null, null, null, timeEventServiceKey);
+                    this.timeEventService.register(timeEventCb, this, TimeEventService.EVERY_SECONDS, null, null, null, timeEventServiceKey);
                 } else {
                     Logger.err("Plugin " + configuration.plugin + " does not have linked camera class");
                 }
@@ -644,21 +618,24 @@ class CamerasManager {
                     }, apiRequest.data.timestamp?apiRequest.data.timestamp:null);
                 } else if (mode === MODE_MJPEG) {
                     const camera = this.getCamera(id);
-                    if (camera && this.streamPipe[camera.id.toString()]) {
-                        this.streamPipe[camera.id.toString()].proxyRequest(apiRequest.req, apiRequest.res);
-                    } else {
-                        reject(new APIResponse.class(false, {}, 766, ERROR_UNKNOWN_IDENTIFIER));
-                    }
+                    const mjpegProxy = new MjpegProxy.class(camera.mjpegUrl);
+
+                    apiRequest.req.on("close", () => {
+                        Logger.info("Closed mjpeg connection");
+                        mjpegProxy.disconnect();
+                        reject(new APIResponse.class(false, {}, 766, ERROR_UNSUPPORTED_MODE));
+                    });
+                    mjpegProxy.proxyRequest(apiRequest.req, apiRequest.res);
                 } else if (mode === MODE_RTSP) {
                     const camera = this.getCamera(id);
                     if (camera) {
-                        if (camera.rtspUrl) {
-                            if (apiRequest.authenticationData) {
-                                apiRequest.res  = new MjpegProxy.class(camera.rtspUrl).proxyRequest(apiRequest.req, apiRequest.res);
-                            }
-                        } else {
-                            reject(new APIResponse.class(false, {}, 766, ERROR_UNSUPPORTED_MODE));
-                        }
+                        // if (camera.rtspUrl) {
+                        //     if (apiRequest.authenticationData) {
+                        //         apiRequest.res  = new MjpegProxy.class(camera.rtspUrl).proxyRequest(apiRequest.req, apiRequest.res);
+                        //     }
+                        // } else {
+                        reject(new APIResponse.class(false, {}, 766, ERROR_UNSUPPORTED_MODE));
+                        // }
                     } else {
                         reject(new APIResponse.class(false, {}, 766, ERROR_UNKNOWN_IDENTIFIER));
                     }
@@ -1008,8 +985,9 @@ class CamerasManager {
      * @param  {number}   id Camera identifier
      * @param  {Function} cb         A callback with error, image buffer and mime type. Example : `(err, data, mime) => {}`
      * @param  {number}   [timestamp=null] The timestamp of the picture. If `null`, live snapshot.
+     * @param  {boolean}   [force=false] Force retrieve picture
      */
-    getImage(id, cb, timestamp = null) {
+    getImage(id, cb, timestamp = null, force = false) {
         if (id) {
             const camera = this.getCamera(id);
             if (camera) {
@@ -1027,7 +1005,7 @@ class CamerasManager {
                         cb(Error(ERROR_UNEXISTING_PICTURE));
                     }
                 } else {
-                    if (this.cameraCapture[camera.id.toString()]) {
+                    if (this.cameraCapture[camera.id.toString()] && !force) {
                         cb(null, this.cameraCapture[camera.id.toString()], "image/jpeg");
                     } else {
                         if (camera.snapshotUrl) {

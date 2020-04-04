@@ -124,7 +124,14 @@ class MjpegProxy {
                             Logger.verbose("Write first buf 2");
                             if (!self.transform) {
                                 Logger.verbose("Write first buf 3");
+                                res.writeHead(200, {
+                                    "Expires": "Mon, 01 Jul 1980 00:00:00 GMT",
+                                    "Cache-Control": "no-cache, no-store, must-revalidate",
+                                    "Pragma": "no-cache",
+                                    "Content-Type": "multipart/x-mixed-replace;boundary=" + self.boundary
+                                });
                                 res.write(chunk.slice(p));
+
                             }
                             self.newAudienceResponses.splice(self.newAudienceResponses.indexOf(res), 1); // remove from new
                         }
@@ -222,12 +229,6 @@ class MjpegProxy {
 
         // There is already another client consuming the MJPEG response
         if (this.mjpegRequest !== null) {
-            res.writeHead(200, {
-                "Expires": "Mon, 01 Jul 1980 00:00:00 GMT",
-                "Cache-Control": "no-cache, no-store, must-revalidate",
-                "Pragma": "no-cache",
-                "Content-Type": "multipart/x-mixed-replace;boundary=" + this.boundary
-            });
 
             Logger.verbose("New mjpeg client");
             this.audienceResponses.push(res);
