@@ -122,14 +122,14 @@ class MjpegProxy {
                         Logger.verbose("Write first buf 1");
                         if (p >= 0) {
                             Logger.verbose("Write first buf 2");
+                            res.writeHead(200, {
+                                "Expires": "Mon, 01 Jul 1980 00:00:00 GMT",
+                                "Cache-Control": "no-cache, no-store, must-revalidate",
+                                "Pragma": "no-cache",
+                                "Content-Type": "multipart/x-mixed-replace;boundary=" + self.boundary
+                            });
                             if (!self.transform) {
                                 Logger.verbose("Write first buf 3");
-                                res.writeHead(200, {
-                                    "Expires": "Mon, 01 Jul 1980 00:00:00 GMT",
-                                    "Cache-Control": "no-cache, no-store, must-revalidate",
-                                    "Pragma": "no-cache",
-                                    "Content-Type": "multipart/x-mixed-replace;boundary=" + self.boundary
-                                });
                                 res.write(chunk.slice(p));
 
                             }

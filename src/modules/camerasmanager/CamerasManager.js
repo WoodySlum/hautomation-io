@@ -45,9 +45,6 @@ const CAMERAS_MANAGER_TIMELAPSE_STREAM = CAMERAS_MANAGER_TIMELAPSE_STREAM_BASE +
 const CAMERAS_MANAGER_RECORD_GET_BASE = ":/camera/record/get/";
 const CAMERAS_MANAGER_RECORD_GET = CAMERAS_MANAGER_RECORD_GET_BASE + "[recordKey]/";
 const CAMERAS_MANAGER_RECORD_GET_TOKEN_DURATION = 7 * 24 * 60 * 60;
-const CAMERAS_RECONNECT_ENABLE = true; // Enable restream
-const CAMERAS_RECONNECT_S = 1 * 60 * 60; // Restart stream every to avoid camera overhead / network congestion
-const CAMERAS_PAUSE_ON_RECONNECT_S = 10; // After restart stream, wait for this time before restream.
 
 const CAMERAS_MANAGER_LIST = ":/cameras/list/";
 const CAMERAS_RETRIEVE_BASE = ":/camera/get/";
@@ -134,7 +131,7 @@ class CamerasManager {
         this.recordedFiles = [];
         this.registeredCamerasEvents = {};
         this.cameraCapture = {};
-        this.streamPipe = {};
+        this.detectedObjects = {};
 
         try {
             this.camerasConfiguration = this.confManager.loadData(Object, CONF_MANAGER_KEY, true);
@@ -187,35 +184,6 @@ class CamerasManager {
             self.generateDailyTimeLapses(self);
             self.generateSeasonTimeLapses(self);
         }, this, TimeEventService.EVERY_DAYS);
-
-        // Reboot stream
-        if (camerasConfiguration && camerasConfiguration.reconnect && camerasConfiguration.reconnect.hasOwnProperty("enable") ? camerasConfiguration.reconnect.enable : CAMERAS_RECONNECT_ENABLE) {
-            let rebootStreamTimer = 0;
-            const camerasReconnect = camerasConfiguration && camerasConfiguration.reconnect && camerasConfiguration.reconnect.hasOwnProperty("every") ? camerasConfiguration.reconnect.every : CAMERAS_RECONNECT_S;
-            const camerasPauseReconnect = camerasConfiguration && camerasConfiguration.reconnect && camerasConfiguration.reconnect.hasOwnProperty("sleepTime") ? camerasConfiguration.reconnect.sleepTime : CAMERAS_PAUSE_ON_RECONNECT_S;
-
-            this.timeEventService.register((self) => {
-
-                if (rebootStreamTimer == camerasReconnect) {
-                    Logger.info("Stop cameras stream for reboot. Next stream in " + camerasPauseReconnect + " s");
-                    Object.keys(this.streamPipe).forEach((key) => {
-                        this.streamPipe[key].disconnect();
-                        this.streamPipe[key] = null;
-                    });
-
-                    setTimeout(() => {
-                        // Reboot streams
-                        Logger.info("Restream cameras");
-                        Object.keys(this.streamPipe).forEach((key) => {
-                            self.initCamera(self.getCamera(key).configuration, true);
-                        });
-                        rebootStreamTimer = 0;
-                    }, camerasPauseReconnect * 1000);
-                }
-
-                rebootStreamTimer++;
-            }, this, TimeEventService.EVERY_SECONDS);
-        }
 
         // Machine learning
         this.aiManager.register(AI_KEY);
@@ -424,6 +392,8 @@ class CamerasManager {
                                                     }
                                                 }
 
+                                                this.detectedObjects[camera.id.toString()] = validResults;
+
                                                 if (validResults.length > 0) {
                                                     let drawedImg = this.aiManager.drawCvRectangles(validResults, r.frame);
                                                     for (let i = 0 ; i < validResults.length ; i++) {
@@ -568,12 +538,6 @@ class CamerasManager {
                             }
 
                             self.camerasConfiguration = self.confManager.setData(CONF_MANAGER_KEY, apiRequest.data, self.camerasConfiguration, self.comparator);
-                            Object.keys(self.streamPipe).forEach((streamPipeKey) => {
-                                if (self.streamPipe[streamPipeKey]) {
-                                    self.streamPipe[streamPipeKey].disconnect();
-                                }
-                            });
-                            self.streamPipe = {};
                             self.initCameras();
                             resolve(new APIResponse.class(true, {success:true}));
                         } else {
@@ -617,14 +581,27 @@ class CamerasManager {
                         }
                     }, apiRequest.data.timestamp?apiRequest.data.timestamp:null);
                 } else if (mode === MODE_MJPEG) {
-                    const camera = this.getCamera(id);
-                    const mjpegProxy = new MjpegProxy.class(camera.mjpegUrl);
+                    const camera = self.getCamera(id);
+                    let mjpegProxy;
+                    if (camera && camera.configuration && camera.configuration.cvlive) {
+                        mjpegProxy = new MjpegProxy.class(camera.mjpegUrl, true, (err, img) => {
+                            if (!err && self.detectedObjects[camera.id.toString()] && self.detectedObjects[camera.id.toString()].length > 0) {
+                                img = self.aiManager.drawCvRectangles(self.detectedObjects[camera.id.toString()], img);
+                            }
+                            if (!err) {
+                                return img;
+                            }
+                        });
+                    } else {
+                        mjpegProxy = new MjpegProxy.class(camera.mjpegUrl);
+                    }
 
                     apiRequest.req.on("close", () => {
                         Logger.info("Closed mjpeg connection");
                         mjpegProxy.disconnect();
                         reject(new APIResponse.class(false, {}, 766, ERROR_UNSUPPORTED_MODE));
                     });
+
                     mjpegProxy.proxyRequest(apiRequest.req, apiRequest.res);
                 } else if (mode === MODE_RTSP) {
                     const camera = this.getCamera(id);
