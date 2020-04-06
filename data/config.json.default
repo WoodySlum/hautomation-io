@@ -20,12 +20,7 @@
         "archiveFolder":"./data/cameras/",
         "history":true,
         "season":true,
-        "timelapse":true,
-        "reconnect" : {
-            "enable": true,
-            "every": 3600,
-            "sleepTime": 10
-        }
+        "timelapse":true
     },
     "lng":"en",
     "home": {
