@@ -262,6 +262,10 @@ function loaded(api) {
                     });
                 } else if (err) {
                     this.api.exported.Logger.err(err);
+                    // Retry in 30 s
+                    setTimeout((self) => {
+                        self.init();
+                    }, 30000, this);
                 } else if (!err && discovered && discovered.length == 0) {
                     let data = api.configurationAPI.getConfiguration();
                     this.ip = this.api.environmentAPI.getLocalIp();
