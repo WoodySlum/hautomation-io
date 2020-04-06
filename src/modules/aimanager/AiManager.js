@@ -25,6 +25,8 @@ const CV_DEFAULT_RESIZE = true;
 const CV_DEFAULT_MEAN = 127.5;
 const CV_DEFAULT_MIN_RATIO_HEIGHT_PERC = 0.05;
 const CV_DEFAULT_MIN_RATIO_WIDTH_PERC = 0.05;
+const CV_DEFAULT_MAX_RATIO_HEIGHT_PERC = 0.95;
+const CV_DEFAULT_MAX_RATIO_WIDTH_PERC = 0.05;
 
 /**
  * This class is used for artificial intelligence and machine learning
@@ -144,6 +146,18 @@ class AiManager {
             this.cvMap.minWidthPerc = this.appConfiguration.ai.cv.minWidthPerc;
         } else {
             this.cvMap.minWidthPerc = CV_DEFAULT_MIN_RATIO_WIDTH_PERC;
+        }
+
+        if (this.appConfiguration.ai && this.appConfiguration.ai.cv && this.appConfiguration.ai.cv.maxHeightPerc != null) {
+            this.cvMap.maxHeightPerc = this.appConfiguration.ai.cv.maxHeightPerc;
+        } else {
+            this.cvMap.maxHeightPerc = CV_DEFAULT_MAX_RATIO_HEIGHT_PERC;
+        }
+
+        if (this.appConfiguration.ai && this.appConfiguration.ai.cv && this.appConfiguration.ai.cv.maxWidthPerc != null) {
+            this.cvMap.maxWidthPerc = this.appConfiguration.ai.cv.maxWidthPerc;
+        } else {
+            this.cvMap.maxWidthPerc = CV_DEFAULT_MAX_RATIO_WIDTH_PERC;
         }
 
         if (this.appConfiguration.ai && this.appConfiguration.ai.cv && this.appConfiguration.ai.cv.nbThreads) {
@@ -348,8 +362,10 @@ class AiManager {
                             const width = tFrame.sizes[1];
                             let valid = false;
                             if (item.confidence > 0) {
-                                if (((item.rect.height / height) > this.cvMap.minHeightPerc) && ((item.rect.width / width) > this.cvMap.minWidthPerc)) {
+                                if (((item.rect.height / height) >= this.cvMap.minHeightPerc) && ((item.rect.width / width) >= this.cvMap.minWidthPerc) && ((item.rect.height / height) <= this.cvMap.maxHeightPerc) && ((item.rect.width / width) <= this.cvMap.maxWidthPerc)) {
                                     valid = true;
+                                } else {
+                                    Logger.info("Reject item : width " + item.rect.width + " / " + width + " width " + item.rect.height + " / " + height);
                                 }
                             }
 
