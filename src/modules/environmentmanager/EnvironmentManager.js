@@ -118,7 +118,7 @@ class EnvironmentManager {
 
 
         setTimeout((self) => {
-            self.startIpScan();
+            // self.startIpScan();
         }, 30000, this);
     }
 

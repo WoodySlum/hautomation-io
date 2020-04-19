@@ -365,7 +365,7 @@ class AiManager {
                                 if (((item.rect.height / height) >= this.cvMap.minHeightPerc) && ((item.rect.width / width) >= this.cvMap.minWidthPerc) && ((item.rect.height / height) <= this.cvMap.maxHeightPerc) && ((item.rect.width / width) <= this.cvMap.maxWidthPerc)) {
                                     valid = true;
                                 } else {
-                                    Logger.info("Reject item : width " + item.rect.width + " / " + width + " width " + item.rect.height + " / " + height);
+                                    // Logger.info("Reject item : width " + item.rect.width + " / " + width + " width " + item.rect.height + " / " + height);
                                 }
                             }
 
