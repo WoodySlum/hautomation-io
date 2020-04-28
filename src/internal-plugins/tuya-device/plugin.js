@@ -264,10 +264,10 @@ function loaded(api) {
                         }
                     }
 
-                    if (isTuyaDevice && device.status != isOn) {
-                        device.status = isOn;
-                        context.api.deviceAPI.switchDeviceWithDevice(device);
-                    }
+                    // if (isTuyaDevice && device.status != isOn) {
+                    //     device.status = isOn;
+                    //     context.api.deviceAPI.switchDeviceWithDevice(device);
+                    // }
                 });
             });
         }

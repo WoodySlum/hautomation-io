@@ -97,6 +97,7 @@ class EnvironmentManager {
         this.userManager.environmentManager = this;
         this.dist = null;
         this.arch = null;
+        this.scanner = null;
         this.scannedIps = [];
         this.manageUptimeFile();
         webServices.registerAPI(this, WebServices.GET, ":" + ROUTE_APP_ENVIRONMENT_INFORMATION, Authentication.AUTH_GUEST_LEVEL);
@@ -118,7 +119,7 @@ class EnvironmentManager {
 
 
         setTimeout((self) => {
-            // self.startIpScan();
+            self.startIpScan();
         }, 30000, this);
     }
 
@@ -646,19 +647,23 @@ class EnvironmentManager {
                     debug: false,
                     initial: true,
                     network: baseIp + ".1/24",
-                    concurrency: 50, //amount of ips that are pinged in parallel
-                    scanTimeout: 15000 //runs scan every 30 seconds (+ time it takes to execute 250 ips ~ 5 secs)
+                    concurrency: 10, //amount of ips that are pinged in parallel
+                    scanTimeout: 60000 //runs scan every 30 seconds (+ time it takes to execute 250 ips ~ 5 secs)
                 };
                 Logger.verbose("Start ip scan");
                 Logger.verbose(config);
-                const scanner = new MacScanner(config);
-                scanner.start();
+                if (this.scanner) {
+                    this.scanner.stop();
+                    this.scanner = null;
+                }
+                this.scanner = new MacScanner(config);
+                this.scanner.start();
 
-                scanner.on("error", (error) => {
+                this.scanner.on("error", (error) => {
                     Logger.err(error.message);
                 });
 
-                scanner.on("entered", (target) => {
+                this.scanner.on("entered", (target) => {
                     Logger.verbose("New ip received");
                     Logger.verbose(target);
                     let found = false;
@@ -687,7 +692,7 @@ class EnvironmentManager {
                     this.eventBus.emit(EVENT_SCAN_IP_CHANGES, {scannedIp:this.scannedIps, target:target});
                 });
 
-                scanner.on("left", (target) => {
+                this.scanner.on("left", (target) => {
                     Logger.verbose("New ip removed");
                     Logger.verbose(target);
                     let found = -1;
