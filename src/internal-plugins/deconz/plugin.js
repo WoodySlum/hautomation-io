@@ -268,7 +268,7 @@ function loaded(api) {
                     }, 30000, this);
                 } else if (!err && discovered && discovered.length == 0) {
                     let data = api.configurationAPI.getConfiguration();
-                    this.ip = this.api.environmentAPI.getLocalIp();
+                    this.ip = "127.0.0.1";//this.api.environmentAPI.getLocalIp();
                     data.url = "http://" + this.ip + ":" + DECONZ_HTTP_PORT +"/";
                     api.configurationAPI.saveData(data);
                     this.getToken((err) => {
