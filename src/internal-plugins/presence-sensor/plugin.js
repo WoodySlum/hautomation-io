@@ -39,7 +39,7 @@ function loaded(api) {
          * @returns {PresenceSensor}                                                       The instance
          */
         constructor(api, id, configuration) {
-            super(api, id, "PRESENCE", configuration, api.exported.Icons.class.list()["male"], 0);
+            super(api, id, "PRESENCE", configuration, api.exported.Icons.class.list()["pitch"], 0);
             this.chartType = api.exported.Sensor.constants().CHART_TYPE_BAR;
             this.aggregationMode = api.exported.Sensor.constants().AGGREGATION_MODE_SUM;
             this.unit = api.translateAPI.t("presence.unit.seconds");

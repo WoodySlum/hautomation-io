@@ -10,6 +10,7 @@ const BACKUP_DIR = "/root/.local/share/dresden-elektronik/deCONZ/";
 const LIGHT_PREFIX = "zigbee-light-";
 const WS_SCAN_ENDPOINT = "deconz-scan/set/";
 const DEFAULT_TRANSITION_TIME = 9; // Default was 9
+const LOCAL_IP = "127.0.0.1";
 
 const LIGHT_TYPE_UNKNOWN = 1;
 const LIGHT_TYPE_COLOR_TEMPERATURE = 2;
@@ -158,6 +159,7 @@ function loaded(api) {
             this.ip = null;
             this.webSocket = null;
             this.lights = [];
+            this.sensors = [];
 
             const DeconzService = DeconzServiceClass(api);
             this.service = new DeconzService(this, DECONZ_HTTP_PORT);
@@ -201,10 +203,24 @@ function loaded(api) {
                 this.init();
             });
 
-            // Update lights every 5 minutes
+            // Update lights and sensors every 5 minutes
             api.timeEventAPI.register((self, hour, minute) => {
                 if (minute % 5 == 0) {
                     self.getLights();
+                    self.getSensors((err, sensors) => {
+                        if (!err && sensors && sensors.length > 0 && minute == 0) {
+                            // Simulate battery level for lowbattery property sensors
+                            sensors.forEach((sensor) => {
+                                if (sensor.id && sensor.config && !sensor.config.battery && sensor.state && sensor.state.hasOwnProperty("lowbattery")) {
+                                    if (sensor.state.lowbattery) {
+                                        self.onRadioEvent(2400, "zigbee", sensor.uniqueid, 1, 5, self.constants().STATUS_ON, "BATTERY");
+                                    } else {
+                                        self.onRadioEvent(2400, "zigbee", sensor.uniqueid, 1, 100, self.constants().STATUS_ON, "BATTERY");
+                                    }
+                                }
+                            });
+                        }
+                    });
                 }
             }, this, api.timeEventAPI.constants().EVERY_MINUTES);
         }
@@ -248,7 +264,7 @@ function loaded(api) {
 
                     data.identifier = discovered[0].id;
                     // this.ip = discovered[0].internalipaddress;
-                    this.ip = "127.0.0.1";
+                    this.ip = LOCAL_IP;
                     data.url = "http://" + this.ip + ":" + DECONZ_HTTP_PORT +"/";
                     api.configurationAPI.saveData(data);
                     this.getToken((err) => {
@@ -257,6 +273,7 @@ function loaded(api) {
                         } else {
                             this.addTile();
                             this.getLights();
+                            this.getSensors();
                             this.connectWebSocket();
                         }
                     });
@@ -268,7 +285,7 @@ function loaded(api) {
                     }, 30000, this);
                 } else if (!err && discovered && discovered.length == 0) {
                     let data = api.configurationAPI.getConfiguration();
-                    this.ip = "127.0.0.1";//this.api.environmentAPI.getLocalIp();
+                    this.ip = LOCAL_IP;//this.api.environmentAPI.getLocalIp();
                     data.url = "http://" + this.ip + ":" + DECONZ_HTTP_PORT +"/";
                     api.configurationAPI.saveData(data);
                     this.getToken((err) => {
@@ -277,6 +294,7 @@ function loaded(api) {
                         } else {
                             this.addTile();
                             this.getLights();
+                            this.getSensors();
                             this.connectWebSocket();
                         }
                     });
@@ -598,6 +616,51 @@ function loaded(api) {
         }
 
         /**
+         * Get sensors
+         *
+         * @param  {Function} cb A callback e.g. `(err, sensors) => {}`
+         */
+        getSensors(cb) {
+            this.api.exported.Logger.verbose("Retrieve sensors");
+            request.get({
+                url: this.getApiUrl() + "/sensors"
+            }, (error, response, body) => {
+                if (error) {
+                    this.api.exported.Logger.err("Could get sensors : " + error.message);
+                    if (cb) {
+                        cb(error, null);
+                    }
+                } else {
+                    const sensors = JSON.parse(body);
+                    this.sensors = [];
+                    let keys = Object.keys(sensors);
+                    const mySensors = this.api.sensorAPI.getSensors();
+                    keys.forEach((key) => {
+                        let sensorId = null;
+                        Object.keys(mySensors).forEach((mySensorKey) => {
+                            const mySensor = this.api.sensorAPI.getSensor(mySensorKey);
+                            if (mySensor && mySensor.configuration && mySensor.configuration.radio && mySensor.configuration.radio.length > 0) {
+                                mySensor.configuration.radio.forEach((radioObj) => {
+                                    if (radioObj.module === "deconz" && radioObj.protocol === "zigbee" && radioObj.deviceId.toLowerCase() === sensors[key].uniqueid.toLowerCase()) {
+                                        sensorId = mySensorKey;
+                                    }
+                                });
+                            }
+                        });
+
+                        sensors[key].id = sensorId;
+                        this.sensors.push(sensors[key]);
+                    });
+
+
+                    if (cb) {
+                        cb(null, this.sensors);
+                    }
+                }
+            });
+        }
+
+        /**
          * Get config
          *
          * @param  {Function} cb A callback e.g. `(err, config) => {}`
@@ -743,6 +806,7 @@ function loaded(api) {
                                     if (!added[d.uniqueid]) {
                                         added[d.uniqueid] = true;
                                         this.api.messageAPI.sendMessage("*", this.api.translateAPI.t("deconz.message.new.sensor", d.sensor.type, d.uniqueid));
+                                        this.getSensors();
                                     }
                                 }
                             };
