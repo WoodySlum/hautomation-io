@@ -208,21 +208,32 @@ function loaded(api) {
                 if (minute % 5 == 0) {
                     self.getLights();
                     self.getSensors((err, sensors) => {
-                        if (!err && sensors && sensors.length > 0 && minute == 0) {
-                            // Simulate battery level for lowbattery property sensors
-                            sensors.forEach((sensor) => {
-                                if (sensor.id && sensor.config && !sensor.config.battery && sensor.state && sensor.state.hasOwnProperty("lowbattery")) {
-                                    if (sensor.state.lowbattery) {
-                                        self.onRadioEvent(2400, "zigbee", sensor.uniqueid, 1, 5, self.constants().STATUS_ON, "BATTERY");
-                                    } else {
-                                        self.onRadioEvent(2400, "zigbee", sensor.uniqueid, 1, 100, self.constants().STATUS_ON, "BATTERY");
-                                    }
-                                }
-                            });
+                        if (!err && sensors && sensors.length > 0 && minute == 0 && hour == 19) {
+                            self.updateBatterySensors();
                         }
                     });
                 }
             }, this, api.timeEventAPI.constants().EVERY_MINUTES);
+        }
+
+        /**
+         * Update battery battery informations
+         */
+        updateBatterySensors() {
+            // Simulate battery level for lowbattery property sensors
+            this.sensors.forEach((sensor) => {
+                if (sensor.id && sensor.config && !sensor.config.battery && sensor.state && sensor.state.hasOwnProperty("lowbattery")) {
+                    if (sensor.state.lowbattery) {
+                        this.onRadioEvent(2400, "zigbee", sensor.uniqueid, 1, 5, this.constants().STATUS_ON, "BATTERY");
+                    } else {
+                        this.onRadioEvent(2400, "zigbee", sensor.uniqueid, 1, 100, this.constants().STATUS_ON, "BATTERY");
+                    }
+                }
+
+                if (sensor.id && sensor.config && sensor.config.hasOwnProperty("battery")) {
+                    this.onRadioEvent(2400, "zigbee", sensor.uniqueid, 1, sensor.config.battery, this.constants().STATUS_ON, "BATTERY");
+                }
+            });
         }
 
         /**
@@ -273,7 +284,11 @@ function loaded(api) {
                         } else {
                             this.addTile();
                             this.getLights();
-                            this.getSensors();
+                            this.getSensors((err, sensors) => {
+                                if (!err && sensors && sensors.length > 0) {
+                                    this.updateBatterySensors();
+                                }
+                            });
                             this.connectWebSocket();
                         }
                     });
@@ -294,7 +309,11 @@ function loaded(api) {
                         } else {
                             this.addTile();
                             this.getLights();
-                            this.getSensors();
+                            this.getSensors((err, sensors) => {
+                                if (!err && sensors && sensors.length > 0) {
+                                    this.updateBatterySensors();
+                                }
+                            });
                             this.connectWebSocket();
                         }
                     });
