@@ -244,32 +244,32 @@ function loaded(api) {
             if (!context) {
                 context = this;
             }
-
-            context.retrieveDevicesAndStates(() => {
-                context.api.deviceAPI.getDevices().forEach((device) => {
-                    let isTuyaDevice = false;
-                    let isOn = context.api.deviceAPI.constants().INT_STATUS_OFF;
-                    if (device && device.TuyaDeviceForm) {
-                        for (let i = 0 ; i < device.TuyaDeviceForm.length ; i++) {
-                            if (device.TuyaDeviceForm[i] && device.TuyaDeviceForm[i].tuyaId) {
-                                for (let j = 0 ; j < context.tuyaDevices.length ; j++) {
-                                    if (context.tuyaDevices[j].id === device.TuyaDeviceForm[i].tuyaId) {
-                                        isTuyaDevice = true;
-                                        if (context.tuyaDevices[j].data.state) {
-                                            isOn = context.api.deviceAPI.constants().INT_STATUS_ON;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    // if (isTuyaDevice && device.status != isOn) {
-                    //     device.status = isOn;
-                    //     context.api.deviceAPI.switchDeviceWithDevice(device);
-                    // }
-                });
-            });
+            
+            // context.retrieveDevicesAndStates(() => {
+            //     context.api.deviceAPI.getDevices().forEach((device) => {
+            //         let isTuyaDevice = false;
+            //         let isOn = context.api.deviceAPI.constants().INT_STATUS_OFF;
+            //         if (device && device.TuyaDeviceForm) {
+            //             for (let i = 0 ; i < device.TuyaDeviceForm.length ; i++) {
+            //                 if (device.TuyaDeviceForm[i] && device.TuyaDeviceForm[i].tuyaId) {
+            //                     for (let j = 0 ; j < context.tuyaDevices.length ; j++) {
+            //                         if (context.tuyaDevices[j].id === device.TuyaDeviceForm[i].tuyaId) {
+            //                             isTuyaDevice = true;
+            //                             if (context.tuyaDevices[j].data.state) {
+            //                                 isOn = context.api.deviceAPI.constants().INT_STATUS_ON;
+            //                             }
+            //                         }
+            //                     }
+            //                 }
+            //             }
+            //         }
+            //
+            //         if (isTuyaDevice && device.status != isOn) {
+            //             device.status = isOn;
+            //             context.api.deviceAPI.switchDeviceWithDevice(device);
+            //         }
+            //     });
+            // });
         }
     }
 

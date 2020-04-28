@@ -709,8 +709,8 @@ class EnvironmentManager {
                 });
 
                 this.eventBus.on(this.eventStop, () => {
-                    scanner.stop();
-                    scanner.close();
+                    this.scanner.stop();
+                    this.scanner.close();
                 });
             }
 
