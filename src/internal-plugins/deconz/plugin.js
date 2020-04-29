@@ -230,7 +230,7 @@ function loaded(api) {
                     }
                 }
 
-                if (sensor.id && sensor.config && sensor.config.hasOwnProperty("battery")) {
+                if (sensor.id && sensor.config && sensor.config.hasOwnProperty("battery") && sensor.config.battery != null) {
                     this.onRadioEvent(2400, "zigbee", sensor.uniqueid, 1, sensor.config.battery, this.constants().STATUS_ON, "BATTERY");
                 }
             });
