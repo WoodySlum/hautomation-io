@@ -118,9 +118,12 @@ class EnvironmentManager {
         }
 
 
-        setTimeout((self) => {
-            self.startIpScan();
-        }, 30000, this);
+        if (!this.appConfiguration.disableIpScan) {
+            process.exit(0);
+            setTimeout((self) => {
+                self.startIpScan();
+            }, 30000, this);
+        }
     }
 
     /**
