@@ -145,7 +145,7 @@ function loaded(api) {
                         if ((configuration.mode === 1 || configuration.mode === 2 && self.api.alarmAPI.alarmStatus())) {
                             if (!configuration.onlyOnDay || (configuration.onlyOnDay && !self.api.environmentAPI.isNight())) {
                                 self.locks[detectedObject] = self.api.exported.DateUtils.class.timestamp();
-                                self.api.messageAPI.sendMessage("*", self.api.translateAPI.t("camera.alert.detected.message", (detectedObject.charAt(0).toUpperCase() + detectedObject.slice(1)), self.api.cameraAPI.getCameras()[cameraId], confidence));
+                                self.api.messageAPI.sendMessage("*", self.api.translateAPI.t("camera.alert.detected.message", self.api.translateAPI.t("ai." + detectedObject), self.api.cameraAPI.getCameras()[cameraId], confidence));
                                 self.api.messageAPI.sendMessage("*", null, null, null, drawedImg.toString("base64"));
                             }
                         }

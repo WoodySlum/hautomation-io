@@ -26,7 +26,7 @@ const CV_DEFAULT_MEAN = 127.5;
 const CV_DEFAULT_MIN_RATIO_HEIGHT_PERC = 0.05;
 const CV_DEFAULT_MIN_RATIO_WIDTH_PERC = 0.05;
 const CV_DEFAULT_MAX_RATIO_HEIGHT_PERC = 0.95;
-const CV_DEFAULT_MAX_RATIO_WIDTH_PERC = 0.05;
+const CV_DEFAULT_MAX_RATIO_WIDTH_PERC = 0.95;
 
 /**
  * This class is used for artificial intelligence and machine learning
@@ -41,14 +41,18 @@ class AiManager {
      * @param  {string} stopEventName    The stop event name
      * @param  {TimeEventService} timeEventService    The time event service
      * @param  {EnvironmentManager} environmentManager    The environment manager
+     * @param  {ThemeManager} themeManager    The theme manager
+     * @param  {TranslateManager} translateManager    The translate manager
      *
      * @returns {AiManager} The instance
      */
-    constructor(appConfiguration, eventBus, stopEventName, timeEventService, environmentManager) {
+    constructor(appConfiguration, eventBus, stopEventName, timeEventService, environmentManager, themeManager, translateManager) {
         this.appConfiguration = appConfiguration;
         this.databaseFile = appConfiguration.configurationPath + "data" + DB_FILE_EXTENSION;
         this.timeEventService = timeEventService;
         this.environmentManager = environmentManager;
+        this.themeManager = themeManager;
+        this.translateManager = translateManager;
         this.classifiers = {};
 
         // Computer vision
@@ -360,12 +364,14 @@ class AiManager {
                         .filter((item) => {
                             const height = tFrame.sizes[0];
                             const width = tFrame.sizes[1];
+                            item.classLabelTranslated = this.translateManager.t("ai." + this.cvMap.mapper[item.classLabel]);
                             let valid = false;
+
                             if (item.confidence > 0) {
                                 if (((item.rect.height / height) >= this.cvMap.minHeightPerc) && ((item.rect.width / width) >= this.cvMap.minWidthPerc) && ((item.rect.height / height) <= this.cvMap.maxHeightPerc) && ((item.rect.width / width) <= this.cvMap.maxWidthPerc)) {
                                     valid = true;
                                 } else {
-                                    // Logger.info("Reject item : width " + item.rect.width + " / " + width + " width " + item.rect.height + " / " + height);
+                                    Logger.verbose("Reject item : width " + item.rect.width + " / " + width + " width " + item.rect.height + " / " + height);
                                 }
                             }
 
@@ -390,21 +396,46 @@ class AiManager {
      * @returns {Buffer} The JPG image
      */
     drawCvRectangles(results, img) {
-        const frame = ((img instanceof cv.Mat) ? img : cv.imdecode(img));
+        let frame = ((img instanceof cv.Mat) ? img : cv.imdecode(img));
+        const overlay = frame.copy();
+        const opacity = 0.3;
+        const colors = this.themeManager.getColors();
+        const clearColor = new cv.Vec(parseInt(colors.clearColor.substr(5, 2), 16), parseInt(colors.clearColor.substr(3, 2), 16), parseInt(colors.clearColor.substr(1, 2), 16));
+        //B,V,R
+        const headerColor = new cv.Vec(parseInt(colors.darkenColor.substr(5, 2), 16), parseInt(colors.darkenColor.substr(3, 2), 16), parseInt(colors.darkenColor.substr(1, 2), 16));
+
         for (let i = 0 ; i < results.length ; i++) {
-            frame.drawRectangle(
+
+            // Overlay
+            overlay.drawRectangle(
                 results[i].rect,
-                new cv.Vec(0, 255, 0),
-                2,
-                cv.LINE_8
+                clearColor,
+                -1,
+                cv.LINE_AA
             );
-            cv.drawTextBox(
-                frame,
-                { x: results[i].rect.x, y: results[i].rect.y },
-                [{ text: this.cvMap.mapper[results[i].classLabel] + " - " + parseInt(results[i].confidence * 100) + "%", fontSize: 0.5, thickness: 1, color: new cv.Vec(0, 255, 0) }],
-                0.6
+
+            frame  = overlay.addWeighted(opacity, frame, 1 - opacity, 0, frame).copy();
+
+            // Text background
+            frame.drawRectangle(
+                new cv.Rect(results[i].rect.x, results[i].rect.y, results[i].rect.width, 15),
+                headerColor,
+                -1,
+                cv.LINE_AA
             );
+
+            // Text
+            frame.putText(results[i].classLabelTranslated + " - " + parseInt(results[i].confidence * 100) + "%", new cv.Point2(results[i].rect.x + 4, results[i].rect.y + 10), cv.FONT_HERSHEY_SIMPLEX, 0.35 /* font size */, clearColor, 1 /* line type */, 2 /* thickness */);
+
+            // Border
+            // frame.drawRectangle(
+            //     results[i].rect,
+            //     clearColor,
+            //     1,
+            //     cv.LINE_AA
+            // );
         }
+
 
         return cv.imencode(".jpg", frame);
     }

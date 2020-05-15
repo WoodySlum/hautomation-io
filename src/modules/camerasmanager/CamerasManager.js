@@ -368,6 +368,7 @@ class CamerasManager {
                                             this.aiManager.processCvSsd(cameraImage).then((r) => {
                                                 Logger.verbose("Analyze frame for camera " + camera.id);
                                                 const results = r.results;
+                                                
                                                 Logger.verbose(results);
                                                 validResults = [];
                                                 for (let i = 0 ; i < results.length ; i++) {

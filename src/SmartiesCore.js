@@ -153,7 +153,7 @@ class SmartiesCore {
         // Environment manager
         this.environmentManager = new EnvironmentManager.class(AppConfiguration, this.confManager, this.formManager, this.webServices, this.dashboardManager, this.translateManager, this.scenarioManager, NpmPackage.version, commit, this.installationManager, this.timeEventService, this.eventBus, this.messageManager, EVENT_STOP, EVENT_READY, this.userManager);
         // Ai
-        this.aiManager = new AiManager.class(AppConfiguration, this.eventBus, EVENT_STOP, this.timeEventService, this.environmentManager);
+        this.aiManager = new AiManager.class(AppConfiguration, this.eventBus, EVENT_STOP, this.timeEventService, this.environmentManager, this.themeManager, this.translateManager);
         // Authentication module
         this.authentication = new Authentication.class(this.webServices, this.userManager, this.environmentManager);
         // Gateway manager module
