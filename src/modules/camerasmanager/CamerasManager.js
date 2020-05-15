@@ -30,6 +30,10 @@ const CAMERAS_MANAGER_TIMELAPSE_DAILY_STREAM_BASE = ":/camera/timelapse/daily/st
 const CAMERAS_MANAGER_TIMELAPSE_DAILY_STREAM = CAMERAS_MANAGER_TIMELAPSE_DAILY_STREAM_BASE + "[id]/";
 const CAMERAS_MANAGER_TIMELAPSE_DAILY_GET_BASE = ":/camera/timelapse/daily/get/";
 const CAMERAS_MANAGER_TIMELAPSE_DAILY_GET = CAMERAS_MANAGER_TIMELAPSE_DAILY_GET_BASE + "[id]/";
+const CAMERAS_MANAGER_TIMELAPSE_DAILY_HOT_STREAM_BASE = ":/camera/timelapse/daily-hot/stream/";
+const CAMERAS_MANAGER_TIMELAPSE_DAILY_HOT_STREAM = CAMERAS_MANAGER_TIMELAPSE_DAILY_HOT_STREAM_BASE + "[id]/";
+const CAMERAS_MANAGER_TIMELAPSE_DAILY_HOT_GET_BASE = ":/camera/timelapse/daily-hot/get/";
+const CAMERAS_MANAGER_TIMELAPSE_DAILY_HOT_GET = CAMERAS_MANAGER_TIMELAPSE_DAILY_HOT_GET_BASE + "[id]/";
 const CAMERAS_MANAGER_TIMELAPSE_SEASON_STREAM_BASE = ":/camera/timelapse/season/stream/";
 const CAMERAS_MANAGER_TIMELAPSE_SEASON_STREAM = CAMERAS_MANAGER_TIMELAPSE_SEASON_STREAM_BASE + "[id]/";
 const CAMERAS_MANAGER_TIMELAPSE_SEASON_GET_BASE = ":/camera/timelapse/season/get/";
@@ -59,9 +63,11 @@ const MODE_RTSP = "rtsp";
 const DAILY_DURATION = 24 * 60 * 60;
 const SEASON_DURATION = 100 * 12 * 30 * 24 * 60 * 60;
 const CAMERAS_RETENTION_TIME = 60 * 60 * 24 * 7; // In seconds
+const CAMERA_RECORD_HOTFILE_DURATION_S = 60;
 const CAMERA_FILE_EXTENSION = ".JPG";
 const CAMERA_SEASON_EXTENSION = "-season";
 const CAMERA_DAILY_EXTENSION = "-daily";
+const CAMERA_DAILY_HOT_EXTENSION = "-hot-daily";
 
 const ERROR_ALREADY_REGISTERED = "Already registered";
 const ERROR_NOT_REGISTERED = "Not registered";
@@ -132,6 +138,7 @@ class CamerasManager {
         this.registeredCamerasEvents = {};
         this.cameraCapture = {};
         this.detectedObjects = {};
+        this.isRecording = {};
 
         try {
             this.camerasConfiguration = this.confManager.loadData(Object, CONF_MANAGER_KEY, true);
@@ -161,6 +168,8 @@ class CamerasManager {
         // Timelapse
         this.webServices.registerAPI(this, WebServices.GET, CAMERAS_MANAGER_TIMELAPSE_DAILY_STREAM, Authentication.AUTH_USAGE_LEVEL, 30 * 60);
         this.webServices.registerAPI(this, WebServices.GET, CAMERAS_MANAGER_TIMELAPSE_DAILY_GET, Authentication.AUTH_USAGE_LEVEL);
+        this.webServices.registerAPI(this, WebServices.GET, CAMERAS_MANAGER_TIMELAPSE_DAILY_HOT_STREAM, Authentication.AUTH_USAGE_LEVEL, 30 * 60);
+        this.webServices.registerAPI(this, WebServices.GET, CAMERAS_MANAGER_TIMELAPSE_DAILY_HOT_GET, Authentication.AUTH_USAGE_LEVEL);
         this.webServices.registerAPI(this, WebServices.POST, CAMERAS_MANAGER_TIMELAPSE_GENERATE_POST, Authentication.AUTH_USAGE_LEVEL);
         this.webServices.registerAPI(this, WebServices.GET, CAMERAS_MANAGER_TIMELAPSE_STATUS_GET, Authentication.AUTH_USAGE_LEVEL);
         this.webServices.registerAPI(this, WebServices.GET, CAMERAS_MANAGER_TIMELAPSE_GET, Authentication.AUTH_USAGE_LEVEL);
@@ -183,6 +192,8 @@ class CamerasManager {
         this.timeEventService.register((self) => {
             self.generateDailyTimeLapses(self);
             self.generateSeasonTimeLapses(self);
+            self.cleanVideoFiles(self);
+
         }, this, TimeEventService.EVERY_DAYS);
 
         // Machine learning
@@ -368,7 +379,7 @@ class CamerasManager {
                                             this.aiManager.processCvSsd(cameraImage).then((r) => {
                                                 Logger.verbose("Analyze frame for camera " + camera.id);
                                                 const results = r.results;
-                                                
+
                                                 Logger.verbose(results);
                                                 validResults = [];
                                                 for (let i = 0 ; i < results.length ; i++) {
@@ -410,6 +421,57 @@ class CamerasManager {
                                                                 }
                                                             }
                                                         });
+
+                                                        if (!this.isRecording[camera.id.toString()]) {
+                                                            this.isRecording[camera.id.toString()] = "recording";
+
+                                                            this.record(camera.id, (err, generatedFilepath) => {
+                                                                if (!err) {
+                                                                    const cameraDailyHotFile = this.dailyHotFilepath(camera, this.camerasArchiveFolder);
+                                                                    if (!fs.existsSync(cameraDailyHotFile)) {
+                                                                        fs.move(generatedFilepath, cameraDailyHotFile);
+                                                                        delete this.isRecording[camera.id.toString()];
+                                                                    } else {
+                                                                        const intermediate1File = this.cachePath + "intermediate1.ts";
+                                                                        const intermediate2File = this.cachePath + "intermediate2.ts";
+                                                                        fs.remove(intermediate1File, () => {
+                                                                            this.installationManager.executeCommand("ffmpeg -y -i " + cameraDailyHotFile + " -c copy -bsf:v h264_mp4toannexb -f mpegts " + intermediate1File, false, (error) => {
+                                                                                if (!error) {
+                                                                                    fs.remove(intermediate2File, () => {
+                                                                                        this.installationManager.executeCommand("ffmpeg -y -i " + generatedFilepath + " -c copy -bsf:v h264_mp4toannexb -f mpegts " + intermediate2File, false, (error) => {
+                                                                                            if (!error) {
+                                                                                                this.installationManager.executeCommand("ffmpeg -y -i \"concat:" + intermediate1File + "|" + intermediate2File + "\" -c copy -bsf:a aac_adtstoasc " + cameraDailyHotFile, false, (error) => {
+                                                                                                    if (!error) {
+                                                                                                        // OK !
+                                                                                                    } else {
+                                                                                                        Logger.err(error);
+                                                                                                    }
+
+                                                                                                    fs.remove(intermediate1File);
+                                                                                                    fs.remove(intermediate2File);
+                                                                                                    fs.remove(generatedFilepath);
+                                                                                                    delete this.isRecording[camera.id.toString()];
+                                                                                                });
+                                                                                            } else {
+                                                                                                Logger.err(error);
+                                                                                                fs.remove(intermediate1File);
+                                                                                                fs.remove(generatedFilepath);
+                                                                                                delete this.isRecording[camera.id.toString()];
+                                                                                            }
+
+                                                                                        });
+                                                                                    });
+                                                                                } else {
+                                                                                    Logger.err(error);
+                                                                                    fs.remove(generatedFilepath);
+                                                                                    delete this.isRecording[camera.id.toString()];
+                                                                                }
+                                                                            });
+                                                                        });
+                                                                    }
+                                                                }
+                                                            }, CAMERA_RECORD_HOTFILE_DURATION_S, false);
+                                                        }
                                                     }
                                                 }
                                                 timerLast = timerLastTmp;
@@ -659,6 +721,10 @@ class CamerasManager {
             return new Promise((resolve, reject) => {
                 self.stream(apiRequest, self.dailyFilepath, reject);
             });
+        } else if (apiRequest.route.startsWith(CAMERAS_MANAGER_TIMELAPSE_DAILY_HOT_STREAM_BASE)) {
+            return new Promise((resolve, reject) => {
+                self.stream(apiRequest, self.dailyHotFilepath, reject);
+            });
         } else if (apiRequest.route.startsWith(CAMERAS_MANAGER_TIMELAPSE_DAILY_GET_BASE)) {
             return new Promise((resolve, reject) => {
                 const camera = this.getCamera(apiRequest.data.id);
@@ -668,6 +734,23 @@ class CamerasManager {
                         apiRequest.res.setHeader("Content-disposition", "attachment; filename=daily-" + camera.id + TimelapseGenerator.VIDEO_EXTENSION);
                         apiRequest.res.setHeader("Content-type", "video/mp4");
                         const filestream = fs.createReadStream(dailyFilepath);
+                        filestream.pipe(apiRequest.res);
+                    } else {
+                        reject(new APIResponse.class(false, {}, 770, ERROR_TIMELAPSE_NOT_GENERATED));
+                    }
+                } else {
+                    reject(new APIResponse.class(false, {}, 766, ERROR_UNKNOWN_IDENTIFIER));
+                }
+            });
+        } else if (apiRequest.route.startsWith(CAMERAS_MANAGER_TIMELAPSE_DAILY_HOT_GET_BASE)) {
+            return new Promise((resolve, reject) => {
+                const camera = this.getCamera(apiRequest.data.id);
+                if (camera) {
+                    const dailyHotFilepath = this.dailyHotFilepath(camera, this.camerasArchiveFolder);
+                    if (fs.existsSync(dailyHotFilepath)) {
+                        apiRequest.res.setHeader("Content-disposition", "attachment; filename=daily-hot-" + camera.id + TimelapseGenerator.VIDEO_EXTENSION);
+                        apiRequest.res.setHeader("Content-type", "video/mp4");
+                        const filestream = fs.createReadStream(dailyHotFilepath);
                         filestream.pipe(apiRequest.res);
                     } else {
                         reject(new APIResponse.class(false, {}, 770, ERROR_TIMELAPSE_NOT_GENERATED));
@@ -1041,6 +1124,17 @@ class CamerasManager {
     }
 
     /**
+     * Get the daily hot file path
+     *
+     * @param  {Camera} camera               A camera
+     * @param  {string} camerasArchiveFolder Camera archive folder
+     * @returns {string}                      The path
+     */
+    dailyHotFilepath(camera, camerasArchiveFolder) {
+        return camerasArchiveFolder + camera.id + CAMERA_DAILY_HOT_EXTENSION + TimelapseGenerator.VIDEO_EXTENSION;
+    }
+
+    /**
      * Get the season timelapse file path
      *
      * @param  {Camera} camera               A camera
@@ -1066,6 +1160,18 @@ class CamerasManager {
                 context.processAutotimelapse(timelapse, dailyFilename);
             });
         }
+    }
+
+    /**
+     * Clean video files
+     *
+     * @param  {CamerasManager} context The context (self)
+     */
+    cleanVideoFiles(context) {
+        const cameras = context.cameras;
+        cameras.forEach((camera) => {
+            fs.remove(context.dailyHotFilepath(camera, context.camerasArchiveFolder));
+        });
     }
 
     /**
