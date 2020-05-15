@@ -1299,7 +1299,7 @@ class CamerasManager {
                         Logger.info("Detected framerate : " + frameRate);
                         Logger.info("Converting video session");
 
-                        this.installationManager.executeCommand("avconv -r " + ((frameRate < 1) ? 1:frameRate) + " -i " + recordSessionFile + ".mjpg -vcodec libx264 " + recordSessionFile + TimelapseGenerator.VIDEO_EXTENSION, false, (error, stdout, stderr) => {
+                        this.installationManager.executeCommand("ffmpeg -r " + ((frameRate < 1) ? 1:frameRate) + " -i " + recordSessionFile + ".mjpg -vcodec libx264 " + recordSessionFile + TimelapseGenerator.VIDEO_EXTENSION, false, (error, stdout, stderr) => {
                             // Clean mjpg stream
                             fs.remove(recordSessionFile + ".mjpg");
                             if (error) {
