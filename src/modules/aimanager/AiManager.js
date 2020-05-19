@@ -418,14 +418,14 @@ class AiManager {
 
             // Text background
             frame.drawRectangle(
-                new cv.Rect(results[i].rect.x, results[i].rect.y, results[i].rect.width, 15),
+                new cv.Rect(results[i].rect.x, results[i].rect.y - 15, results[i].rect.width, 15),
                 headerColor,
                 -1,
                 cv.LINE_AA
             );
 
             // Text
-            frame.putText(results[i].classLabelTranslated + " - " + parseInt(results[i].confidence * 100) + "%", new cv.Point2(results[i].rect.x + 4, results[i].rect.y + 10), cv.FONT_HERSHEY_SIMPLEX, 0.35 /* font size */, clearColor, 1 /* line type */, 2 /* thickness */);
+            frame.putText(results[i].classLabelTranslated + " - " + parseInt(results[i].confidence * 100) + "%", new cv.Point2(results[i].rect.x + 4, results[i].rect.y - 5), cv.FONT_HERSHEY_SIMPLEX, 0.35 /* font size */, clearColor, 1 /* line type */, 2 /* thickness */);
 
             // Border
             // frame.drawRectangle(
