@@ -63,7 +63,7 @@ const MODE_RTSP = "rtsp";
 const DAILY_DURATION = 24 * 60 * 60;
 const SEASON_DURATION = 100 * 12 * 30 * 24 * 60 * 60;
 const CAMERAS_RETENTION_TIME = 60 * 60 * 24 * 7; // In seconds
-const CAMERA_RECORD_HOTFILE_DURATION_S = 60;
+const CAMERA_RECORD_HOTFILE_DURATION_S = 30;
 const CAMERA_FILE_EXTENSION = ".JPG";
 const CAMERA_SEASON_EXTENSION = "-season";
 const CAMERA_DAILY_EXTENSION = "-daily";
@@ -1267,7 +1267,7 @@ class CamerasManager {
      * @param  {boolean}   [sendMessage=true] Send message to users when record is done
      */
     record(id, cb, timer = 60, sendMessage = true) {
-        if (!this.currentRecording[parseInt(id)]) {
+        // if (!this.currentRecording[parseInt(id)]) {
             this.currentRecording[parseInt(id)] = {};
             const camera = this.getCamera(id);
             if (camera.mjpegUrl) {
@@ -1324,9 +1324,9 @@ class CamerasManager {
             } else {
                 cb(Error(ERROR_UNSUPPORTED_MODE));
             }
-        } else {
-            cb(Error(ERROR_RECORD_ALREADY_RUNNING));
-        }
+        // } else {
+        //     cb(Error(ERROR_RECORD_ALREADY_RUNNING));
+        // }
     }
 
     /**
