@@ -432,8 +432,8 @@ class CamerasManager {
                                                                         fs.moveSync(generatedFilepath, cameraDailyHotFile);
                                                                         delete this.isRecording[camera.id.toString()];
                                                                     } else {
-                                                                        const intermediate1File = this.cachePath + "intermediate1.ts";
-                                                                        const intermediate2File = this.cachePath + "intermediate2.ts";
+                                                                        const intermediate1File = this.cachePath + camera.id.toString() + "-intermediate1.ts";
+                                                                        const intermediate2File = this.cachePath + camera.id.toString() + "-intermediate2.ts";
                                                                         fs.remove(intermediate1File, () => {
                                                                             this.installationManager.executeCommand("ffmpeg -y -i " + cameraDailyHotFile + " -c copy -bsf:v h264_mp4toannexb -f mpegts " + intermediate1File, false, (error) => {
                                                                                 if (!error) {
