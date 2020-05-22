@@ -429,7 +429,7 @@ class CamerasManager {
                                                                 if (!err) {
                                                                     const cameraDailyHotFile = this.dailyHotFilepath(camera, this.camerasArchiveFolder);
                                                                     if (!fs.existsSync(cameraDailyHotFile)) {
-                                                                        fs.move(generatedFilepath, cameraDailyHotFile);
+                                                                        fs.moveSync(generatedFilepath, cameraDailyHotFile);
                                                                         delete this.isRecording[camera.id.toString()];
                                                                     } else {
                                                                         const intermediate1File = this.cachePath + "intermediate1.ts";
