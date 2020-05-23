@@ -422,7 +422,7 @@ class CamerasManager {
                                                             }
                                                         });
 
-                                                        if (1==2 && !this.isRecording[camera.id.toString()]) {
+                                                        if (!this.isRecording[camera.id.toString()]) {
                                                             this.isRecording[camera.id.toString()] = "recording";
 
                                                             this.record(camera.id, (err, generatedFilepath) => {
