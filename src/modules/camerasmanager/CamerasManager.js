@@ -78,7 +78,7 @@ const ERROR_UNSUPPORTED_MODE = "Unsupported mode";
 const ERROR_TIMELAPSE_NOT_GENERATED = "Timelapse not generated";
 const ERROR_UNKNOWN_TIMELAPSE_TOKEN = "Unknown timelapse token";
 const ERROR_UNEXISTING_PICTURE = "Unexisting picture";
-const ERROR_RECORD_ALREADY_RUNNING = "Already recording camera";
+// const ERROR_RECORD_ALREADY_RUNNING = "Already recording camera";
 const ERROR_RECORD_UNKNOWN = "Unknown record";
 
 const AI_KEY = "cameras";
@@ -422,7 +422,7 @@ class CamerasManager {
                                                             }
                                                         });
 
-                                                        if (!this.isRecording[camera.id.toString()]) {
+                                                        if (1==2 && !this.isRecording[camera.id.toString()]) {
                                                             this.isRecording[camera.id.toString()] = "recording";
 
                                                             this.record(camera.id, (err, generatedFilepath) => {
@@ -1268,62 +1268,94 @@ class CamerasManager {
      */
     record(id, cb, timer = 60, sendMessage = true) {
         // if (!this.currentRecording[parseInt(id)]) {
-            this.currentRecording[parseInt(id)] = {};
-            const camera = this.getCamera(id);
-            if (camera.mjpegUrl) {
-                try {
-                    const recordSessionFile = this.cachePath + id + "-" + DateUtils.class.timestamp() + "-record";
-                    Logger.info("Recording video for camera " + id + " for " + timer + " seconds");
-                    let frameCount = 0;
-                    const wstream = fs.createWriteStream(recordSessionFile + ".mjpg");
-                    const req = request(camera.mjpegUrl);
-                    const PassThrough = require("stream").PassThrough;
-                    const pt = new PassThrough();
-                    req.pipe(pt).pipe(wstream);
-                    pt.on("data", (chunk) => {
-                        if (chunk.toString("utf8").indexOf("JFIF")!==-1) {
-                            frameCount++;
+        this.currentRecording[parseInt(id)] = {};
+        const camera = this.getCamera(id);
+        if (camera.mjpegUrl) {
+            try {
+                const recordSessionFile = this.cachePath + id + "-" + DateUtils.class.timestamp() + "-record";
+                const recordSessionFileAi = this.cachePath + id + "-" + DateUtils.class.timestamp() + "-record-ai";
+                const showRectangles = (camera.configuration && camera.configuration.cvlive) ? true : false;
+                Logger.info("Recording video for camera " + id + " for " + timer + " seconds");
+                let frameCount = 0;
+                const wstream = fs.createWriteStream(recordSessionFile + ".mjpg");
+                const req = request(camera.mjpegUrl);
+                const PassThrough = require("stream").PassThrough;
+                const pt = new PassThrough();
+                let currentPic = Buffer.alloc(0); // Buffer
+
+                req.pipe(pt).pipe(wstream);
+
+                pt.on("data", (chunk) => {
+                    if (chunk.toString("utf8").indexOf("JFIF") !==-1 ) {
+                        frameCount++;
+                    }
+
+                    if (showRectangles) {
+                        // A footer
+                        if (chunk.indexOf(MjpegProxy.JPG_FOOTER, 0, "hex") != -1 && currentPic && currentPic.length > 0) {
+                            currentPic = Buffer.concat([currentPic, chunk.slice(0, chunk.indexOf(MjpegProxy.JPG_FOOTER, 0, "hex") + MjpegProxy.JPG_FOOTER.length)]);
+                            if (this.detectedObjects[camera.id.toString()] && this.detectedObjects[camera.id.toString()].length > 0) {
+                                currentPic = this.aiManager.drawCvRectangles(this.detectedObjects[camera.id.toString()], currentPic);
+                            }
+                            fs.appendFile(recordSessionFileAi, Buffer.concat([Buffer.from("\r\n--bounds\r\nContent-type: image/jpeg\r\nContent-Length: " + currentPic.length + "\r\n\r\n"), Buffer.from(currentPic)]));
+
+                            currentPic = Buffer.alloc(0);
+                        }
+
+                        // No header, no footer
+                        if (chunk.indexOf(MjpegProxy.JPG_HEADER, 0, "hex") == -1 && chunk.indexOf(MjpegProxy.JPG_HEADER, 0, "hex") == -1 && currentPic && currentPic.length > 0) {
+                            currentPic = Buffer.concat([Buffer.from(currentPic), chunk]);
+                        }
+
+                        // New header
+                        if (chunk.indexOf(MjpegProxy.JPG_HEADER, 0, "hex") != -1) {
+                            currentPic = Buffer.concat([chunk.slice(chunk.indexOf(MjpegProxy.JPG_HEADER, 0, "hex"), chunk.length)]);
+                        }
+                    }
+                });
+                req.on("error", (err) => {
+                    cb(err);
+                });
+
+                setTimeout((vwstream, vreq, self) => {
+                    vwstream.end();
+                    vreq.abort();
+                    const frameRate = Math.round(frameCount / timer);
+                    Logger.info("Record session stop");
+                    delete this.currentRecording[parseInt(id)];
+                    Logger.info("Detected frames : " + frameCount);
+                    Logger.info("Detected framerate : " + frameRate);
+                    Logger.info("Converting video session");
+
+                    this.installationManager.executeCommand("ffmpeg -r " + ((frameRate < 1) ? 1:frameRate) + " -i " + (showRectangles ? recordSessionFileAi : recordSessionFile + ".mjpg") + " -vcodec libx264 " + recordSessionFile + TimelapseGenerator.VIDEO_EXTENSION, false, (error, stdout, stderr) => {
+                        // Clean mjpg stream
+                        fs.remove(recordSessionFile + ".mjpg");
+                        if (showRectangles) {
+                            fs.remove(recordSessionFileAi);
+                        }
+
+                        if (error) {
+                            Logger.err(stderr);
+                            cb(error);
+                        } else {
+                            Logger.info("Video session encoding terminated.");
+                            const key = sha256(recordSessionFile).substr(1, 6);
+                            this.recordedFiles[key] = recordSessionFile + TimelapseGenerator.VIDEO_EXTENSION;
+                            const link = self.gatewayManager.getDistantApiUrl() + CAMERAS_MANAGER_RECORD_GET_BASE.replace(":/", "") + key + "/?t=" + self.webServices.getToken(CAMERAS_MANAGER_RECORD_GET, CAMERAS_MANAGER_RECORD_GET_TOKEN_DURATION);
+                            if (sendMessage) {
+                                self.messageManager.sendMessage("*",  self.translateManager.t("camera.record.download.message", this.getCamera(id).configuration.name, link));
+                            }
+
+                            cb(null, this.recordedFiles[key], key, link);
                         }
                     });
-                    req.on("error", (err) => {
-                        cb(err);
-                    });
-
-                    setTimeout((vwstream, vreq, self) => {
-                        vwstream.end();
-                        vreq.abort();
-                        const frameRate = Math.round(frameCount / timer);
-                        Logger.info("Record session stop");
-                        delete this.currentRecording[parseInt(id)];
-                        Logger.info("Detected frames : " + frameCount);
-                        Logger.info("Detected framerate : " + frameRate);
-                        Logger.info("Converting video session");
-
-                        this.installationManager.executeCommand("ffmpeg -r " + ((frameRate < 1) ? 1:frameRate) + " -i " + recordSessionFile + ".mjpg -vcodec libx264 " + recordSessionFile + TimelapseGenerator.VIDEO_EXTENSION, false, (error, stdout, stderr) => {
-                            // Clean mjpg stream
-                            fs.remove(recordSessionFile + ".mjpg");
-                            if (error) {
-                                Logger.err(stderr);
-                                cb(error);
-                            } else {
-                                Logger.info("Video session encoding terminated.");
-                                const key = sha256(recordSessionFile).substr(1, 6);
-                                this.recordedFiles[key] = recordSessionFile + TimelapseGenerator.VIDEO_EXTENSION;
-                                const link = self.gatewayManager.getDistantApiUrl() + CAMERAS_MANAGER_RECORD_GET_BASE.replace(":/", "") + key + "/?t=" + self.webServices.getToken(CAMERAS_MANAGER_RECORD_GET, CAMERAS_MANAGER_RECORD_GET_TOKEN_DURATION);
-                                if (sendMessage) {
-                                    self.messageManager.sendMessage("*",  self.translateManager.t("camera.record.download.message", this.getCamera(id).configuration.name, link));
-                                }
-
-                                cb(null, this.recordedFiles[key], key, link);
-                            }
-                        });
-                    }, timer * 1000, wstream, req, this);
-                } catch(err) {
-                    cb(err);
-                }
-            } else {
-                cb(Error(ERROR_UNSUPPORTED_MODE));
+                }, timer * 1000, wstream, req, this);
+            } catch(err) {
+                cb(err);
             }
+        } else {
+            cb(Error(ERROR_UNSUPPORTED_MODE));
+        }
         // } else {
         //     cb(Error(ERROR_RECORD_ALREADY_RUNNING));
         // }
