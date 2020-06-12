@@ -110,7 +110,8 @@ const INTERNAL_PLUGINS = [
     "sensor-sumup",
     "camera-alert",
     "switch-sensor",
-    "radio-switch-sensor"
+    "radio-switch-sensor",
+    "bmw"
 ];
 
 const CORE_PLUGINS = [
