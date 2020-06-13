@@ -1,5 +1,8 @@
 {
     "bmw.zone": "Zone",
     "bmw.username": "BMW connected drive account username",
-    "bmw.password": "BMW connected drive account password"
+    "bmw.password": "BMW connected drive account password",
+    "bmw.locked": "Secured",
+    "bmw.unlocked": "Opened",
+    "bmw.charged.message": "Your BMW %@ vehicle is fully charged"
 }

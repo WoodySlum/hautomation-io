@@ -80,6 +80,7 @@ function loaded(api) {
         constructor(api) {
             this.api = api;
             this.updateCarInfos();
+            this.previousChargingStatus = "";
 
             this.api.configurationAPI.setUpdateCb(() => {
                 this.updateCarInfos();
@@ -106,39 +107,61 @@ function loaded(api) {
                 }).then(() => {
                     ConnectedDriveApi.getVehicles().then((vehicles) => {
                         if (vehicles.length > 0) {
-                            vehicles[0].getStatus().then((status) => {
-                                if (status.remainingRangeTotal != null && status.remainingRangeTotal != "undefined") {
-                                    const tileId = status.vin + "-fuel";
-                                    api.dashboardAPI.unregisterTile(tileId);
-                                    const tile = api.dashboardAPI.Tile(tileId, api.dashboardAPI.TileType().TILE_INFO_TWO_ICONS, api.exported.Icons.class.list()["cab"], api.exported.Icons.class.list()["fuel"], status.remainingRangeTotal + " km", null, null, null, null, 108, null, null, null, api.webAPI.Authentication().AUTH_USAGE_LEVEL);
-                                    api.dashboardAPI.registerTile(tile);
-                                }
+                            for (let i = 0 ; i < vehicles.length ; i++) {
+                                vehicles[i].getStatus().then((status) => {
+                                    // Total
+                                    const miniTiles = [];
 
-                                if (status.chargingLevelHv != null && status.chargingLevelHv != "undefined") {
-                                    const tileId = status.vin + "-charge";
-                                    api.dashboardAPI.unregisterTile(tileId);
+                                    miniTiles.push({icon: api.exported.Icons.class.list()["cab"], text: vehicles[i].model.split(" ")[0], colorDefault: api.themeAPI.constants().DARK_COLOR_KEY});
 
-                                    let icon = api.exported.Icons.class.list()["battery-2"];
-                                    if (status.chargingStatus == "CHARGING") {
-                                        icon = api.exported.Icons.class.list()["plug-1"];
-                                    } else if (status.chargingLevelHv < 25) {
-                                        icon = api.exported.Icons.class.list()["battery-0"];
-                                    } else if (status.chargingLevelHv < 50) {
-                                        icon = api.exported.Icons.class.list()["battery-1"];
-                                    } else if (status.chargingLevelHv < 75) {
-                                        icon = api.exported.Icons.class.list()["battery-2"];
-                                    } else if (status.chargingLevelHv < 95) {
-                                        icon = api.exported.Icons.class.list()["battery-3"];
-                                    } else {
-                                        icon = api.exported.Icons.class.list()["battery-4"];
+                                    if (status.remainingRangeTotal != null && status.remainingRangeTotal != "undefined") {
+                                        miniTiles.push({icon: api.exported.Icons.class.list()["fuel"], text: status.remainingRangeTotal + " km", colorDefault: api.themeAPI.constants().DARK_COLOR_KEY});
                                     }
-                                    const tile = api.dashboardAPI.Tile(tileId, api.dashboardAPI.TileType().TILE_INFO_TWO_ICONS, api.exported.Icons.class.list()["cab"], icon, status.chargingLevelHv + " %" + (status.remainingRangeElectric ? " [" + status.remainingRangeElectric + " km]" : ""), null, null, null, null, 108, null, null, null, api.webAPI.Authentication().AUTH_USAGE_LEVEL);
-                                    api.dashboardAPI.registerTile(tile);
-                                }
 
-                            }).catch((e) => {
-                                api.exported.Logger.err(e.message);
-                            });
+                                    if (status.chargingLevelHv != null && status.chargingLevelHv != "undefined") {
+                                        let icon = api.exported.Icons.class.list()["battery-2"];
+                                        if (status.chargingStatus == "CHARGING") {
+                                            icon = api.exported.Icons.class.list()["plug-1"];
+                                        } else if (status.chargingLevelHv < 25) {
+                                            icon = api.exported.Icons.class.list()["battery-0"];
+                                        } else if (status.chargingLevelHv < 50) {
+                                            icon = api.exported.Icons.class.list()["battery-1"];
+                                        } else if (status.chargingLevelHv < 75) {
+                                            icon = api.exported.Icons.class.list()["battery-2"];
+                                        } else if (status.chargingLevelHv < 95) {
+                                            icon = api.exported.Icons.class.list()["battery-3"];
+                                        } else {
+                                            icon = api.exported.Icons.class.list()["battery-4"];
+                                        }
+
+                                        miniTiles.push({icon: icon, text: status.chargingLevelHv + " %" + (status.remainingRangeElectric ? " [" + status.remainingRangeElectric + " km]" : ""), colorDefault: api.themeAPI.constants().DARK_COLOR_KEY});
+
+                                        // Send notifications
+                                        if (this.previousChargingStatus == "CHARGING" && status.chargingStatus != "CHARGING") {
+                                            api.messageAPI.sendMessage("*", api.translateAPI.t("bmw.charged.message", vehicles[i].model));
+                                        }
+
+                                        this.previousChargingStatus = status.chargingStatus;
+                                    }
+
+                                    // Closed status
+                                    if (status.doorLockState == "UNLOCKED" || status.doorDriverFront != "CLOSED" || status.doorDriverRear != "CLOSED" || status.doorPassengerFront != "CLOSED" || status.doorPassengerRear != "CLOSED" || status.hood != "CLOSED" || status.windowDriverFront != "CLOSED" || status.windowDriverRear != "CLOSED" || status.windowPassengerFront != "CLOSED" || status.windowPassengerRear != "CLOSED") {
+                                        miniTiles.push({icon: api.exported.Icons.class.list()["unlock"], text: api.translateAPI.t("bmw.unlocked"), colorDefault: api.themeAPI.constants().OFF_COLOR_KEY});
+                                    } else {
+                                        miniTiles.push({icon: api.exported.Icons.class.list()["lock"], text: api.translateAPI.t("bmw.locked"), colorDefault: api.themeAPI.constants().DARK_COLOR_KEY});
+                                    }
+
+                                    miniTiles.push({icon: api.exported.Icons.class.list()["road"], text: status.mileage + " km", colorDefault: api.themeAPI.constants().DARK_COLOR_KEY});
+
+                                    // Mini tiles
+                                    const tileId = status.vin;
+                                    api.dashboardAPI.unregisterTile(tileId);
+                                    const tile = api.dashboardAPI.Tile(tileId, api.dashboardAPI.TileType().TILE_SUB_TILES, null, null, null, null, null, null, 0, 109, null, miniTiles, api.webAPI.Authentication().AUTH_USAGE_LEVEL);
+                                    api.dashboardAPI.registerTile(tile);
+                                }).catch((e) => {
+                                    api.exported.Logger.err(e.message);
+                                });
+                            }
                         }
                     }).catch((e) => {
                         api.exported.Logger.err(e.message);
