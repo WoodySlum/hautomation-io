@@ -302,7 +302,6 @@ class CamerasManager {
      */
     initCameras() {
         this.cameras = [];
-        console.log(this.camerasConfiguration);
         this.camerasConfiguration.forEach((cameraConfiguration) => {
             this.initCamera(cameraConfiguration);
         });
