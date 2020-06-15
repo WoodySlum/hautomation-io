@@ -86,7 +86,7 @@ function loaded(api) {
                 this.updateCarInfos();
             });
 
-            this.api.timeEventAPI.register((self, minute) => {
+            this.api.timeEventAPI.register((self, hour, minute) => {
                 if (minute % 5 == 0) {
                     self.updateCarInfos();
                 }
