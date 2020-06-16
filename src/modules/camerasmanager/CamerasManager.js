@@ -365,7 +365,7 @@ class CamerasManager {
                     const timeEventCb = (self) => {
                         const timerLastTmp = Date.now();
                         const diff = timerLastTmp - timerLast;
-                        if (diff >= recognitionFrame) {
+                        if (diff >= recognitionFrame && camera.configuration.cv && !isProcessing) {
                             self.getImage(configuration.id, (err, img) => {
                                 if (!err) {
                                     this.cameraCapture[camera.id.toString()] = img;
@@ -488,6 +488,8 @@ class CamerasManager {
                                     // console.log(data);process.exit(0);
                                 } else {
                                     Logger.err("Error : " + err.message);
+                                    isProcessing = false;
+                                    timerLast = Date.now();
                                 }
 
                                 timerLast = timerLastTmp;
