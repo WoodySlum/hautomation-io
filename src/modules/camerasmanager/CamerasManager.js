@@ -531,7 +531,7 @@ class CamerasManager {
      * @param  {CamerasManager} context The instance
      */
     registerTile(context) {
-        let tile = new Tile.class(context.dashboardManager.themeManager, "cameras", Tile.TILE_ACTION_ONE_ICON, Icons.class.list()["facetime_video"], null, context.translateManager.t("cameras.tile"), null, null, null, 0, 100, "cameras");
+        let tile = new Tile.class(context.dashboardManager.themeManager, "cameras", Tile.TILE_GENERIC_ACTION_DARK, Icons.class.list()["facetime_video"], null, context.translateManager.t("cameras.tile"), null, null, null, 0, 100, "cameras");
         if (context.cameras.length > 0) {
             context.dashboardManager.registerTile(tile);
         }
@@ -541,7 +541,7 @@ class CamerasManager {
             context.getImage(defaultCamera.id, (err, data) => {
                 if (!err) {
                     ImageUtils.class.resize(data.toString("base64"), (error, tData) => {
-                        tile = new Tile.class(context.dashboardManager.themeManager, "cameras", Tile.TILE_PICTURE_TEXT, null, null, context.translateManager.t("cameras.tile"), null, tData, null, 0, 100, "cameras");
+                        tile = new Tile.class(context.dashboardManager.themeManager, "cameras", Tile.TILE_GENERIC_ACTION_DARK, Icons.class.list()["facetime_video"], null, context.translateManager.t("cameras.tile"), null, tData, null, 0, 100, "cameras");
                         if (context.cameras.length > 0) {
                             context.dashboardManager.registerTile(tile);
                         }
