@@ -4,5 +4,7 @@
     "bmw.password": "BMW connected drive account password",
     "bmw.locked": "Secured",
     "bmw.unlocked": "Opened",
-    "bmw.charged.message": "Your BMW %@ vehicle is fully charged"
+    "bmw.charged.message": "Your BMW %@ vehicle is fully charged",
+    "bmw.health.ok": "Ok",
+    "bmw.health.ko": "Maint."
 }
