@@ -100,11 +100,13 @@ function loaded(api) {
          * @param  {Vehicle} vehicle           The vehicle
          */
         updateCarPicture(vehicle) {
-            vehicle.getImage().then((pic) => {
+            vehicle.getImage(800, 800).then((pic) => {
                 if (pic) {
-                    this.carPictures[vehicle.originalData.vin] = pic.split(",")[1];
-                    this.previousChargingStatus[vehicle.originalData.vin] = "";
-                    this.updateCarInfos();
+                    api.exported.ImageUtils.class.crop(pic.split(",")[1], 250, 200, 250, 250, (err, picture) => {
+                        this.carPictures[vehicle.originalData.vin] = picture;
+                        this.previousChargingStatus[vehicle.originalData.vin] = "";
+                        this.updateCarInfos();
+                    });
                 }
             }).catch((e) => {
                 api.exported.Logger.err(e.message);

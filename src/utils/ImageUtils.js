@@ -70,6 +70,30 @@ class ImageUtils {
                 }
             });
     }
+
+    /**
+    * Blur, resize an image and convert to png
+    *
+    * @param  {string}   b64string  The base64 image string
+    * @param  {number}   x The position x
+    * @param  {number}   y The position y
+    * @param  {number}   width The width
+    * @param  {number}   height The height
+    * @param  {Function} cb         A callback when image process is done `(err, data) => {}``
+    * @returns {string}              The base64 output image string
+    */
+    static crop(b64string, x, y, width, height, cb) {
+        const buf = Buffer.from(b64string, "base64");
+        gm(buf)
+            .crop(width, height, x, y)
+            .toBuffer(function (err, buffer) {
+                if (err) {
+                    cb(err);
+                } else {
+                    cb(null, buffer.toString("base64"));
+                }
+            });
+    }
 }
 
 module.exports = {class:ImageUtils};
