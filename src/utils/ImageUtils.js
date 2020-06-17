@@ -48,7 +48,7 @@ class ImageUtils {
     * Blur, resize an image and convert to png
     *
     * @param  {string}   b64string  The base64 image string
-    * @param  {Function} cb         A callback when image process is done `(err, data) => {}``
+    * @param  {Function} cb         A callback when image process is done `(err, data) => {}`
     * @param  {number}   [size=100] The size in pixel
     * @returns {string}              The base64 output image string
     */
@@ -79,7 +79,7 @@ class ImageUtils {
     * @param  {number}   y The position y
     * @param  {number}   width The width
     * @param  {number}   height The height
-    * @param  {Function} cb         A callback when image process is done `(err, data) => {}``
+    * @param  {Function} cb         A callback when image process is done `(err, data) => {}`
     * @returns {string}              The base64 output image string
     */
     static crop(b64string, x, y, width, height, cb) {
