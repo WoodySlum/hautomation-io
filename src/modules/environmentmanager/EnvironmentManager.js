@@ -190,11 +190,14 @@ class EnvironmentManager {
     registerTile() {
         let tileTitle = this.translateManager.t("environment.day");
         let icon = "sun-1";
+        let background = fs.readFileSync("./res/tiles/day.jpg").toString("base64");
         if (this.isNight()) {
             tileTitle = this.translateManager.t("environment.night");
             icon = "moon";
+            background = fs.readFileSync("./res/tiles/night.jpg").toString("base64");
         }
-        const tile = new Tile.class(this.dashboardManager.themeManager, "day-night", Tile.TILE_INFO_ONE_TEXT, Icons.class.list()[icon], null, tileTitle, null, null, null, null, 200);
+        //TILE_INFO_ONE_TEXT
+        const tile = new Tile.class(this.dashboardManager.themeManager, "day-night", Tile.TILE_GENERIC_ACTION_DARK, Icons.class.list()[icon], null, tileTitle, null, background, null, null, 200);
         this.dashboardManager.registerTile(tile);
     }
 

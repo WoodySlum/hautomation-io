@@ -1,6 +1,7 @@
 "use strict";
 
 const request = require("request");
+const fs = require("fs-extra");
 const WS_ESP8266_ROOMBA_BASE_ROUTE = ":/esp8266-roomba/";
 const ROOMBA_START = "start";
 const ROOMBA_CLEAN = ROOMBA_START;
@@ -194,7 +195,8 @@ function loaded(api) {
          */
         generateTiles(id, name) {
             const buttons = [{stop: ""}, {spot: ""}, {dock: ""}];
-            const tile = this.api.dashboardAPI.Tile(id, this.api.dashboardAPI.TileType().TILE_GENERIC_ACTION, api.exported.Icons.class.list()["contrast"], null, this.api.translateAPI.t("esp8266.roomba.tile.start", name), null, null, null, 0, 23, "esp8266-roomba/" + id + "/start/", {buttons: buttons});
+            let background = fs.readFileSync("./res/tiles/roomba.jpg").toString("base64");
+            const tile = this.api.dashboardAPI.Tile(id, this.api.dashboardAPI.TileType().TILE_GENERIC_ACTION_DARK, api.exported.Icons.class.list()["contrast"], null, this.api.translateAPI.t("esp8266.roomba.tile.start", name), null, background, null, 0, 23, "esp8266-roomba/" + id + "/start/", {buttons: buttons});
             this.api.dashboardAPI.registerTile(tile);
         }
 
