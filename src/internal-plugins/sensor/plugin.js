@@ -249,6 +249,8 @@ function loaded(api) {
             this.round = round;
 
             this.name = this.configuration.name;
+
+            this.tileBackground = null;
         }
 
         /**
@@ -406,7 +408,12 @@ function loaded(api) {
          * @returns {Tile}                  A tile
          */
         getTile(convertedValue) {
-            return this.api.dashboardAPI.Tile("sensor-"+this.id, this.api.dashboardAPI.TileType().TILE_INFO_TWO_TEXT, this.icon, null, this.name, convertedValue.value + " " + convertedValue.unit, null, null, null, 800, "statistics");
+            if (this.tileBackground) {
+                return this.api.dashboardAPI.Tile("sensor-"+this.id, this.api.dashboardAPI.TileType().TILE_INFO_TWO_TEXT, this.icon, null, this.name, convertedValue.value + " " + convertedValue.unit, this.tileBackground, null, null, 800, "statistics");
+            } else {
+                return this.api.dashboardAPI.Tile("sensor-"+this.id, this.api.dashboardAPI.TileType().TILE_INFO_TWO_TEXT, this.icon, null, this.name, convertedValue.value + " " + convertedValue.unit, null, null, null, 800, "statistics");
+            }
+
         }
 
         /**
@@ -779,6 +786,19 @@ function loaded(api) {
 
 
             return classifierResult;
+        }
+
+        /**
+         * Set tile background
+         *
+         * @param  {string|Buffer} data            The tile background
+         */
+        setTileBackground(data) {
+            if (typeof data == "string") {
+                this.tileBackground = fs.readFileSync(data).toString("base64");
+            } else {
+                this.tileBackground = data.toString("base64");
+            }
         }
     }
 

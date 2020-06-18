@@ -65,7 +65,8 @@ class MessageManager {
         this.webServices.registerAPI(this, WebServices.POST, ROUTE_SET, Authentication.AUTH_USAGE_LEVEL);
 
         // Dashboard
-        const tile = new Tile.class(this.dashboardManager.themeManager, "chat", Tile.TILE_GENERIC_ACTION, Icons.class.list()["uniF1D7"], null, this.translateManager.t("tile.chat"), null, null, null, 0, 500, "chat");
+        const background = fs.readFileSync("./res/tiles/communicate.jpg").toString("base64");
+        const tile = new Tile.class(this.dashboardManager.themeManager, "chat", Tile.TILE_GENERIC_ACTION_DARK, Icons.class.list()["uniF1D7"], null, this.translateManager.t("tile.chat"), null, background, null, 0, 500, "chat");
         this.dashboardManager.registerTile(tile);
 
         // Scenario

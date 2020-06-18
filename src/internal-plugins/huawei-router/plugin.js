@@ -2,6 +2,7 @@
 
 const sha256 = require("sha256");
 const routerBridge = require("dialog-router-api");
+const fs = require("fs-extra");
 /**
  * Loaded function
  *
@@ -250,7 +251,8 @@ function loaded(api) {
                                                     }
 
                                                     if (conf.technoTile) {
-                                                        const tile = api.dashboardAPI.Tile("huawei-router-network", api.dashboardAPI.TileType().TILE_INFO_TWO_TEXT, api.exported.Icons.class.list()["signal"], null, api.translateAPI.t("huawei.router.router.title"), networkType + " [" + rssiIndicator + "%]");
+                                                        const background = fs.readFileSync("./res/tiles/router4g.jpg").toString("base64");
+                                                        const tile = api.dashboardAPI.Tile("huawei-router-network", api.dashboardAPI.TileType().TILE_INFO_TWO_TEXT, api.exported.Icons.class.list()["signal"], null, api.translateAPI.t("huawei.router.router.title"), networkType + " [" + rssiIndicator + "%]", background);
                                                         api.dashboardAPI.registerTile(tile);
                                                     } else {
                                                         api.dashboardAPI.unregisterTile("huawei-router-network");

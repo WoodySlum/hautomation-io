@@ -1,5 +1,6 @@
 "use strict";
 const path = require("path");
+const fs = require("fs-extra");
 
 const Logger = require("./../../logger/Logger");
 const WebServices = require("./../../services/webservices/WebServices");
@@ -170,7 +171,8 @@ class AlarmManager {
      * Register alarm tile
      */
     registerTile() {
-        const tile = new Tile.class(this.dashboardManager.themeManager, "alarm", Tile.TILE_GENERIC_ACTION_STATUS, Icons.class.list()["uniF2DA"], null, this.translateManager.t("alarm.tile.title"), null, null, null, this.alarmStatus()?1:0, 5, SWITCH_ALARM_ROUTE_BASE, null, Authentication.AUTH_GUEST_LEVEL);
+        const background = fs.readFileSync("./res/tiles/alarm.jpg").toString("base64");
+        const tile = new Tile.class(this.dashboardManager.themeManager, "alarm", Tile.TILE_GENERIC_ACTION_STATUS, Icons.class.list()["uniF2DA"], null, this.translateManager.t("alarm.tile.title"), null, background, null, this.alarmStatus()?1:0, 5, SWITCH_ALARM_ROUTE_BASE, null, Authentication.AUTH_GUEST_LEVEL);
         this.dashboardManager.registerTile(tile);
     }
 
