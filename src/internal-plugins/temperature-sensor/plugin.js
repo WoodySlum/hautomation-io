@@ -1,6 +1,5 @@
 "use strict";
 
-const fs = require("fs-extra");
 const MIN_VALUE = -50;
 const MAX_VALUE = 50;
 
