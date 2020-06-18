@@ -9,7 +9,7 @@ const DateUtils = require("./../../utils/DateUtils");
 const DashboardScenarioTrigger = require("./DashboardScenarioTrigger");
 
 const BASE_ROUTE = ":/dashboard/get/";
-const ROUTE = BASE_ROUTE + "[timestamp*]/[all*]/";
+const ROUTE = BASE_ROUTE + "[timestamp*]/[all*]/[light*]/";
 const BASE_ROUTE_CUSTOMIZE = ":/dashboard/preferences/set/";
 const SCENARIO_BASE_ROUTE = ":/scenario/dashboard/trigger/set/";
 const SCENARIO_ROUTE = SCENARIO_BASE_ROUTE + "[scenarioId]/";
@@ -196,10 +196,11 @@ class DashboardManager {
      * Build a dashboard object
      *
      * @param  {string} username Username
-     * @param  {boolean} allTiles `true` if ot should return all tiles, `false` otherwise
+     * @param  {boolean} allTiles `true` if should return all tiles, `false` otherwise
+     * @param  {boolean} light `true` if no images in stream, `false` otherwise
      * @returns {Object} A dashboard object
      */
-    buildDashboard(username, allTiles = true) {
+    buildDashboard(username, allTiles = true, light = false) {
         const tiles = this.getReadableTiles(username).sort(function(a, b) {
             if (parseFloat(a.order) > parseFloat(b.order)) {
                 return 1;
@@ -216,11 +217,23 @@ class DashboardManager {
                 return 0;
             }
         });
+
+        const realTiles = this.filterTiles(tiles, allTiles?null:username);
+        // Remove images if needed
+        console.log("HELLO");
+        if (light) {
+            console.log("HELL");
+            realTiles.forEach((tile) => {
+                tile.picture = null;
+                tile.pictures = [];
+            });
+        }
+
         return {
             timestamp:this.lastGenerated,
             timestampFormatted: DateUtils.class.dateFormatted(this.translateManager.t("datetime.format"), this.lastGenerated),
             excludeTiles:(this.dashboardPreferences[username] && this.dashboardPreferences[username].excludeTiles)?this.dashboardPreferences[username].excludeTiles:[],
-            tiles:this.filterTiles(tiles, allTiles?null:username)
+            tiles: realTiles
         };
     }
 
@@ -233,16 +246,16 @@ class DashboardManager {
     processAPI(apiRequest) {
         const self = this;
         if (apiRequest.route.startsWith(BASE_ROUTE)) {
-            return new Promise((resolve) => {
+            return new Promise((resolve) => {console.log(apiRequest.data);
                 if (apiRequest.data.timestamp) {
                     if (parseInt(apiRequest.data.timestamp) >= parseInt(this.lastGenerated)) {
                         // Up to date !
                         resolve(new APIResponse.class(true, {}, null, null, true));
                     } else {
-                        resolve(new APIResponse.class(true, self.buildDashboard(apiRequest.authenticationData.username, apiRequest.data.all?true:false)));
+                        resolve(new APIResponse.class(true, self.buildDashboard(apiRequest.authenticationData.username, apiRequest.data.all?(apiRequest.data.all == "1"?true:false):false, apiRequest.data.light?(apiRequest.data.light == "1"?true:false):false)));
                     }
                 } else {
-                    resolve(new APIResponse.class(true, self.buildDashboard(apiRequest.authenticationData.username, apiRequest.data.all?true:false)));
+                    resolve(new APIResponse.class(true, self.buildDashboard(apiRequest.authenticationData.username, apiRequest.data.all?(apiRequest.data.all == "1"?true:false):false, apiRequest.data.light?(apiRequest.data.light == "1"?true:false):false)));
                 }
             });
         } else if (apiRequest.route === BASE_ROUTE_CUSTOMIZE) {
