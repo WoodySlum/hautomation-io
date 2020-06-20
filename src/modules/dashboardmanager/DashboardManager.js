@@ -72,9 +72,10 @@ class DashboardManager {
      * Get readable tiles object (without methods, simple POJO)
      *
      * @param  {string} [username=null] A username, for tile customization
+     * @param  {boolean} light `true` if no images in stream, `false` otherwise
      * @returns {[Object]} The readable tiles
      */
-    getReadableTiles(username = null) {
+    getReadableTiles(username = null, light) {
         const tiles = [];
         let user = null;
         if (this.userManager != null) {
@@ -84,6 +85,7 @@ class DashboardManager {
         this.tiles.forEach((tile) => {
             if (!user || user && user.level >= tile.authentication) {
                 tile.customize(username); // Customize tile colors depending on theme
+                tile.applyMode(username, light);
                 tiles.push(tile.get());
             }
         });
@@ -201,7 +203,7 @@ class DashboardManager {
      * @returns {Object} A dashboard object
      */
     buildDashboard(username, allTiles = true, light = false) {
-        const tiles = this.getReadableTiles(username).sort(function(a, b) {
+        const tiles = this.getReadableTiles(username, light).sort(function(a, b) {
             if (parseFloat(a.order) > parseFloat(b.order)) {
                 return 1;
             } else if (parseFloat(a.order) < parseFloat(b.order)) {
@@ -219,15 +221,6 @@ class DashboardManager {
         });
 
         const realTiles = this.filterTiles(tiles, allTiles?null:username);
-        // Remove images if needed
-        console.log("HELLO");
-        if (light) {
-            console.log("HELL");
-            realTiles.forEach((tile) => {
-                tile.picture = null;
-                tile.pictures = [];
-            });
-        }
 
         return {
             timestamp:this.lastGenerated,
@@ -246,7 +239,7 @@ class DashboardManager {
     processAPI(apiRequest) {
         const self = this;
         if (apiRequest.route.startsWith(BASE_ROUTE)) {
-            return new Promise((resolve) => {console.log(apiRequest.data);
+            return new Promise((resolve) => {
                 if (apiRequest.data.timestamp) {
                     if (parseInt(apiRequest.data.timestamp) >= parseInt(this.lastGenerated)) {
                         // Up to date !

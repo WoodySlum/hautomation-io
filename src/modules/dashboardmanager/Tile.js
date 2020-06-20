@@ -87,7 +87,7 @@ class Tile {
             this.colors.colorDefault = this.themeManager.getColors(username).primaryColor;
             this.colors.colorContent = this.themeManager.getColors(username).clearColor;
         } else if (this.type === TILE_GENERIC_ACTION_DARK) {
-            this.colors.colorDefault = this.themeManager.getColors(username).darkColor;
+            this.colors.colorDefault = this.themeManager.getColors(username).darkenColor;
             this.colors.colorContent = this.themeManager.getColors(username).clearColor;
         } else if (this.type === TILE_PICTURE_TEXT) {
             this.colors.colorContent = this.themeManager.getColors(username).clearColor;
@@ -135,6 +135,23 @@ class Tile {
         + (this.object?JSON.stringify(this.object):"")
         + (this.status?this.status.toString():"")
         );
+    }
+
+    /**
+     * Apply light mode : remove image, ...
+     *
+     * @param  {string} [username=null] A username
+     * @param  {boolean} [lightMode=false]                Light mode
+     */
+    applyMode(username = null, lightMode = false) {
+        if (lightMode) {
+            this.picture = null;
+            this.pictures = [];
+        }
+
+        if (this.colors.colorDefault == this.themeManager.getColors(username).secondaryColor && this.picture) {
+            this.colors.colorDefault = this.themeManager.getColors(username).darkenColor;
+        }
     }
 }
 
