@@ -1,8 +1,6 @@
 "use strict";
 
 const ConnectedDriveApi = require("@mihaiblaga89/bmw-connecteddrive-api");
-const request = require("request");
-const fs = require("fs-extra");
 
 /**
  * Loaded function
@@ -84,7 +82,6 @@ function loaded(api) {
             this.updateCarInfos();
             this.previousChargingStatus = {};
             this.carPictures = {};
-            this.carLocations = {};
 
             this.api.configurationAPI.setUpdateCb(() => {
                 this.updateCarInfos();
@@ -138,56 +135,6 @@ function loaded(api) {
                                     vehicles[i].getStatus().then((status) => {
                                         // Total
                                         const miniTiles = [];
-
-                                        if (status.position && (!this.carLocations[vehicles[i].originalData.vin] || this.carLocations[vehicles[i].originalData.vin].position.lon != status.position.lon || this.carLocations[vehicles[i].originalData.vin].position.lat != status.position.lat)) {
-                                            this.carLocations[vehicles[i].originalData.vin] = {position: status.position};
-
-                                            const userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.106 Safari/537.36";
-                                            const reverseGeocodingUrl = "https://nominatim.openstreetmap.org/reverse?lat=" + status.position.lat + "&lon=" + status.position.lon + "&format=json";
-                                            request({url: reverseGeocodingUrl, headers: { "User-Agent": userAgent}}, (error, response, body) => {
-                                                let metaData = null;
-                                                if (!error && response.statusCode == 200) {
-                                                    metaData = JSON.parse(body);
-                                                } else {
-                                                    api.exported.Logger.err(body);
-                                                }
-
-                                                const long2tile = (lon, zoom) => { return (Math.floor((lon + 180)/ 360 * Math.pow(2, zoom))); };
-                                                const lat2tile = (lat, zoom) => { return (Math.floor((1 - Math.log(Math.tan(lat * Math.PI / 180) + 1 / Math.cos(lat * Math.PI / 180)) / Math.PI) / 2 * Math.pow(2, zoom))); };
-                                                const zoom = 19;
-                                                // const url = "http://c.tile.openstreetmap.fr/osmfr/" + zoom + "/" + long2tile(status.position.lon, zoom) + "/" + lat2tile(status.position.lat, zoom) + ".png";
-                                                const url = "http://mt1.google.com/vt/lyrs=y&x=" + long2tile(status.position.lon, zoom) + "&y=" + lat2tile(status.position.lat, zoom) + "&z=" + zoom;
-                                                
-                                                request({url: url, encoding: "binary", headers: { "User-Agent": userAgent}}, (error, response, body) => {
-                                                    if (!error && response.statusCode == 200) {
-                                                        const tile = Buffer.alloc(body.length, body, "binary").toString("base64");
-                                                        const car = fs.readFileSync("./res/pictures/car.png").toString("base64");
-
-                                                        api.exported.ImageUtils.class.rotate(car, (err, data) => {
-                                                            if (!err && data) {
-                                                                api.exported.ImageUtils.class.merge(tile, (err, data) => {
-                                                                    if (!err && data) {
-                                                                        const tileId = vehicles[i].originalData.vin + "-pic";
-                                                                        api.dashboardAPI.unregisterTile(tileId);
-                                                                        const tile = api.dashboardAPI.Tile(tileId, api.dashboardAPI.TileType().TILE_GENERIC_ACTION_DARK, " ", null, (metaData && metaData.address && metaData.address.town) ? metaData.address.town : null, null, data, null, 0, 110, null, miniTiles, api.webAPI.Authentication().AUTH_USAGE_LEVEL);
-                                                                        api.dashboardAPI.registerTile(tile);
-                                                                    } else {
-                                                                        api.exported.Logger.err(err);
-                                                                    }
-
-                                                                }, data, api.exported.cachePath, 116, 110);
-                                                            } else {
-                                                                api.exported.Logger.err(err);
-                                                            }
-
-                                                        }, status.position.heading);
-
-                                                    } else {
-                                                        api.exported.Logger.err(body);
-                                                    }
-                                                });
-                                            });
-                                        }
 
                                         miniTiles.push({icon: api.exported.Icons.class.list()["cab"], text: vehicles[i].model.split(" ")[0], colorDefault: api.themeAPI.constants().DARK_COLOR_KEY});
 

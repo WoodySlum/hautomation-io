@@ -83,8 +83,7 @@
             "./**/*.py",
             "./src/modules/botengine/linux/asoundrc",
             "./res/ai/*",
-            "./res/tiles/*",
-            "./res/pictures/*"
+            "./res/tiles/*"
         ]
     },
     "opencv4nodejs": {
