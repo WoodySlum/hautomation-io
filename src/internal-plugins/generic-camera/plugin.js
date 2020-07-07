@@ -38,7 +38,7 @@ function loaded(api) {
              * @Property("snapshotUrl");
              * @Title("camera.generic.snapshot.url");
              * @Type("string");
-             * @Required(true);
+             * @Required(false);
              */
             this.snapshotUrl = snapshotUrl;
 

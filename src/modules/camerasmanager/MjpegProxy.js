@@ -4,6 +4,7 @@
 const url = require("url");
 const http = require("http");
 const https = require("https");
+const rtsp = require("rtsp-ffmpeg");
 const Logger = require("./../../logger/Logger");
 
 const JPG_HEADER = "FFD8";
@@ -23,185 +24,219 @@ class MjpegProxy {
      * Constructor
      *
      * @param  {string} mjpegUrl A mjpeg URL
+     * @param  {string} rtspUrl A rtsp URL
      * @param  {boolean} [transform=false]    Transform image. `true` will stream thr result of `cb`
      * @param  {Function} [cb=null]    A callback `(err, jpg) => {}`
      * @returns {MjpegProxy}                       The instance
      */
-    constructor(mjpegUrl, transform = false, cb = null) {
+    constructor(mjpegUrl, rtspUrl, transform = false, cb = null) {
 
         this.buffer = null;
         this.cb = cb;
         this.running = true;
-        this.mjpegOptions = url.parse(mjpegUrl);
-        this.rBuffer = Buffer.alloc(0);
-        this.transform = transform;
 
         this.audienceResponses = [];
         this.newAudienceResponses = [];
+        this.boundary = "--SMARTIES--";
 
-        this.boundary = null;
-        this.globalMjpegResponse = null;
-        const self = this;
-        if (mjpegUrl.indexOf("https") != -1) {
-            process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
-        }
-        this.mjpegRequest = (mjpegUrl.indexOf("https") == -1 ? http : https).request(self.mjpegOptions, (mjpegResponse) => {
-            self.globalMjpegResponse = mjpegResponse;
-            self.boundary = self.extractBoundary(mjpegResponse.headers["content-type"]);
 
-            let lastByte1 = null;
-            let lastByte2 = null;
+        if (mjpegUrl) {
+            this.mjpegOptions = url.parse(mjpegUrl);
+            this.rBuffer = Buffer.alloc(0);
+            this.transform = transform;
 
-            mjpegResponse.on("data", (chunk) => {
-                // Fix CRLF issue on iOS 6+: boundary should be preceded by CRLF.
-                let buff = Buffer.from(chunk);
-                if (lastByte1 != null && lastByte2 != null) {
-                    let oldHeader = "--" + self.boundary;
+            this.globalMjpegResponse = null;
+            const self = this;
+            if (mjpegUrl.indexOf("https") != -1) {
+                process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
+            }
+            this.mjpegRequest = (mjpegUrl.indexOf("https") == -1 ? http : https).request(self.mjpegOptions, (mjpegResponse) => {
+                self.globalMjpegResponse = mjpegResponse;
+                self.boundary = self.extractBoundary(mjpegResponse.headers["content-type"]);
 
-                    let p = buff.indexOf(oldHeader);
+                let lastByte1 = null;
+                let lastByte2 = null;
 
-                    if (p == 0 && !(lastByte2 == 0x0d && lastByte1 == 0x0a) || p > 1 && !(chunk[p - 2] == 0x0d && chunk[p - 1] == 0x0a)) {
-                        const b1 = chunk.slice(0, p);
-                        const b2 = Buffer.from("\r\n--" + self.boundary);
-                        const b3 = chunk.slice(p + oldHeader.length);
-                        chunk = Buffer.concat([b1, b2, b3]);
-                    }
-                }
+                mjpegResponse.on("data", (chunk) => {
+                    // Fix CRLF issue on iOS 6+: boundary should be preceded by CRLF.
+                    let buff = Buffer.from(chunk);
+                    if (lastByte1 != null && lastByte2 != null) {
+                        let oldHeader = "--" + self.boundary;
 
-                lastByte1 = chunk[chunk.length - 1];
-                lastByte2 = chunk[chunk.length - 2];
+                        let p = buff.indexOf(oldHeader);
 
-                const p = buff.indexOf("--" + self.boundary);
-                if (p >= 0) {
-                    if (self.buffer != null) {
-                        self.buffer = Buffer.concat([self.buffer, chunk.slice(0, p)]);
-                    }
-
-                    if (self.cb && self.buffer) {
-                        // Check if corrupted image
-                        if (self.buffer.indexOf(JPG_HEADER, 0, "hex") != -1 && self.buffer.indexOf(JPG_FOOTER, 0, "hex") != -1) {
-
-                            let tmpBuffer = self.buffer.slice(self.buffer.indexOf(JPG_HEADER, 0, "hex"), self.buffer.indexOf(JPG_FOOTER, 0, "hex")); // slice for a copy of buffer
-
-                            setTimeout(() => { // Async processing
-                                let image = tmpBuffer;
-                                if (self.cb) {
-                                    let rImage = self.cb(null, tmpBuffer);
-                                    if (rImage && rImage.indexOf(JPG_HEADER, 0, "hex") != -1 && rImage.indexOf(JPG_FOOTER, 0, "hex") != -1) {
-                                        image = rImage;
-                                    }
-                                }
-                                // Got a buffer
-                                if (self.transform) {// && self.rBuffer && self.rBuffer.length > 0) {
-                                    if (self.rBuffer.indexOf(self.boundary) == -1) {
-                                        self.rBuffer = Buffer.concat([self.rBuffer, self.generateHeader(image), image]);
-                                    } else {
-                                        // If there is already a boundary inside, the buffer is already full.
-                                        self.rBuffer = Buffer.concat([self.rBuffer.slice(0, self.rBuffer.indexOf(self.boundary)) ,self.generateHeader(image), image]);
-                                    }
-                                }
-                                tmpBuffer = null;
-                            }, 0);
+                        if (p == 0 && !(lastByte2 == 0x0d && lastByte1 == 0x0a) || p > 1 && !(chunk[p - 2] == 0x0d && chunk[p - 1] == 0x0a)) {
+                            const b1 = chunk.slice(0, p);
+                            const b2 = Buffer.from("\r\n--" + self.boundary);
+                            const b3 = chunk.slice(p + oldHeader.length);
+                            chunk = Buffer.concat([b1, b2, b3]);
                         }
                     }
 
-                    const extr = chunk.slice(p);
-                    const startImage = extr.indexOf(JPG_HEADER, 0, "hex");
-                    self.buffer = null;
-                    self.buffer = Buffer.from(extr.slice(startImage));
-                    // console.log("==> " + self.buffer.toString("hex"));
-                } else if (self.buffer != null) {
-                    self.buffer = Buffer.concat([self.buffer, chunk]);
-                }
+                    lastByte1 = chunk[chunk.length - 1];
+                    lastByte2 = chunk[chunk.length - 2];
 
-                for (let i = self.audienceResponses.length; i--;) {
-                    const res = self.audienceResponses[i];
+                    const p = buff.indexOf("--" + self.boundary);
+                    if (p >= 0) {
+                        if (self.buffer != null) {
+                            self.buffer = Buffer.concat([self.buffer, chunk.slice(0, p)]);
+                        }
 
-                    // First time we push data... lets start at a boundary
-                    if (self.newAudienceResponses.indexOf(res) >= 0) {
-                        Logger.verbose("Write first buf 1");
-                        if (p >= 0) {
-                            Logger.verbose("Write first buf 2");
-                            res.writeHead(200, {
-                                "Expires": "Mon, 01 Jul 1980 00:00:00 GMT",
-                                "Cache-Control": "no-cache, no-store, must-revalidate",
-                                "Pragma": "no-cache",
-                                "Content-Type": "multipart/x-mixed-replace;boundary=" + self.boundary
-                            });
-                            if (!self.transform) {
-                                Logger.verbose("Write first buf 3");
-                                res.write(chunk.slice(p));
+                        if (self.cb && self.buffer) {
+                            // Check if corrupted image
+                            if (self.buffer.indexOf(JPG_HEADER, 0, "hex") != -1 && self.buffer.indexOf(JPG_FOOTER, 0, "hex") != -1) {
 
+                                let tmpBuffer = self.buffer.slice(self.buffer.indexOf(JPG_HEADER, 0, "hex"), self.buffer.indexOf(JPG_FOOTER, 0, "hex")); // slice for a copy of buffer
+
+                                setTimeout(() => { // Async processing
+                                    let image = tmpBuffer;
+                                    if (self.cb) {
+                                        let rImage = self.cb(null, tmpBuffer);
+                                        if (rImage && rImage.indexOf(JPG_HEADER, 0, "hex") != -1 && rImage.indexOf(JPG_FOOTER, 0, "hex") != -1) {
+                                            image = rImage;
+                                        }
+                                    }
+                                    // Got a buffer
+                                    if (self.transform) {// && self.rBuffer && self.rBuffer.length > 0) {
+                                        if (self.rBuffer.indexOf(self.boundary) == -1) {
+                                            self.rBuffer = Buffer.concat([self.rBuffer, self.generateHeader(image), image]);
+                                        } else {
+                                            // If there is already a boundary inside, the buffer is already full.
+                                            self.rBuffer = Buffer.concat([self.rBuffer.slice(0, self.rBuffer.indexOf(self.boundary)) ,self.generateHeader(image), image]);
+                                        }
+                                    }
+                                    tmpBuffer = null;
+                                }, 0);
                             }
-                            self.newAudienceResponses.splice(self.newAudienceResponses.indexOf(res), 1); // remove from new
                         }
-                    } else {
-                        Logger.verbose("Write buf");
-                        if (self.transform && self.rBuffer) {
-                            Logger.verbose("Write buf 1 " + self.rBuffer.length);
-                            res.write(self.rBuffer.slice(0, chunk.length));
+
+                        const extr = chunk.slice(p);
+                        const startImage = extr.indexOf(JPG_HEADER, 0, "hex");
+                        self.buffer = null;
+                        self.buffer = Buffer.from(extr.slice(startImage));
+                        // console.log("==> " + self.buffer.toString("hex"));
+                    } else if (self.buffer != null) {
+                        self.buffer = Buffer.concat([self.buffer, chunk]);
+                    }
+
+                    for (let i = self.audienceResponses.length; i--;) {
+                        const res = self.audienceResponses[i];
+
+                        // First time we push data... lets start at a boundary
+                        if (self.newAudienceResponses.indexOf(res) >= 0) {
+                            Logger.verbose("Write first buf 1");
+                            if (p >= 0) {
+                                Logger.verbose("Write first buf 2");
+                                res.writeHead(200, {
+                                    "Expires": "Mon, 01 Jul 1980 00:00:00 GMT",
+                                    "Cache-Control": "no-cache, no-store, must-revalidate",
+                                    "Pragma": "no-cache",
+                                    "Content-Type": "multipart/x-mixed-replace;boundary=" + self.boundary
+                                });
+                                if (!self.transform) {
+                                    Logger.verbose("Write first buf 3");
+                                    res.write(chunk.slice(p));
+
+                                }
+                                self.newAudienceResponses.splice(self.newAudienceResponses.indexOf(res), 1); // remove from new
+                            }
                         } else {
-                            Logger.verbose("Write buf 2");
-                            res.write(chunk);
+                            Logger.verbose("Write buf");
+                            if (self.transform && self.rBuffer) {
+                                Logger.verbose("Write buf 1 " + self.rBuffer.length);
+                                res.write(self.rBuffer.slice(0, chunk.length));
+                            } else {
+                                Logger.verbose("Write buf 2");
+                                res.write(chunk);
+                            }
                         }
                     }
+
+                    self.rBuffer = self.rBuffer.slice(chunk.length, self.rBuffer.length);
+                });
+
+                mjpegResponse.on("end", () => {
+                    // console.log("...end");
+                    for (let i = self.audienceResponses.length; i--;) {
+                        const res = self.audienceResponses[i];
+                        res.end();
+                    }
+                });
+
+                mjpegResponse.on("close", () => {
+                    // console.log("...close");
+                });
+            });
+
+            this.mjpegRequest.setTimeout(MJPEG_TIMEOUT_MS);
+
+            this.mjpegRequest.on("close", () => {
+                if (self.cb && self.running) {
+                    self.running = false;
+                    self.cb(ERROR_CLOSE);
                 }
-
-                self.rBuffer = self.rBuffer.slice(chunk.length, self.rBuffer.length);
             });
 
-            mjpegResponse.on("end", () => {
-                // console.log("...end");
-                for (let i = self.audienceResponses.length; i--;) {
-                    const res = self.audienceResponses[i];
-                    res.end();
+            this.mjpegRequest.on("end", () => {
+                if (self.cb && self.running) {
+                    self.running = false;
+                    self.cb(ERROR_END);
                 }
             });
 
-            mjpegResponse.on("close", () => {
-                // console.log("...close");
+            this.mjpegRequest.on("abort", () => {
+                if (self.cb && self.running) {
+                    self.running = false;
+                    self.cb(ERROR_ABORT);
+                }
             });
-        });
 
-        this.mjpegRequest.setTimeout(MJPEG_TIMEOUT_MS);
+            this.mjpegRequest.on("timeout", () => {
+                if (self.cb && self.running) {
+                    self.running = false;
+                    self.cb(ERROR_TIMEOUT);
+                }
+            });
 
-        this.mjpegRequest.on("close", () => {
-            if (self.cb && self.running) {
-                self.running = false;
-                self.cb(ERROR_CLOSE);
-            }
-        });
+            this.mjpegRequest.on("error", (e) => {
+                Logger.verbose(e);
+                if (self.cb && self.running) {
+                    self.running = false;
+                    self.cb(e);
+                }
+            });
 
-        this.mjpegRequest.on("end", () => {
-            if (self.cb && self.running) {
-                self.running = false;
-                self.cb(ERROR_END);
-            }
-        });
+            this.mjpegRequest.end();
 
-        this.mjpegRequest.on("abort", () => {
-            if (self.cb && self.running) {
-                self.running = false;
-                self.cb(ERROR_ABORT);
-            }
-        });
+        } else {
+            this.stream = new rtsp.FFMpeg({input: rtspUrl, rate: 5});
 
-        this.mjpegRequest.on("timeout", () => {
-            if (self.cb && self.running) {
-                self.running = false;
-                self.cb(ERROR_TIMEOUT);
-            }
-        });
+            setTimeout(() => {
+                this.audienceResponses.forEach((res) => {
+                    res.writeHead(200, {
+                        "Expires": "Mon, 01 Jul 1980 00:00:00 GMT",
+                        "Cache-Control": "no-cache, no-store, must-revalidate",
+                        "Pragma": "no-cache",
+                        "Content-Type": "multipart/x-mixed-replace;boundary=" + this.boundary
+                    });
+                });
 
-        this.mjpegRequest.on("error", (e) => {
-            Logger.verbose(e);
-            if (self.cb && self.running) {
-                self.running = false;
-                self.cb(e);
-            }
-        });
+                let childProcess = null;
+                this.stream.on("data", (data) => {
+                    let buffer = Buffer.from(data, "binary");
+                    if (this.cb) {
+                        buffer = this.cb(null, buffer);
+                    }
+                    this.audienceResponses.forEach((res) => {
+                        res.write(this.generateHeader(buffer));
+                        res.write(buffer);
+                        this.stream.child = childProcess;
+                    });
+                });
+                childProcess = this.stream.child;
+            }, 500);
+        }
 
-        this.mjpegRequest.end();
     }
 
     /**
@@ -261,6 +296,10 @@ class MjpegProxy {
             this.mjpegRequest = null;
             this.cb = null;
             // this.globalMjpegResponse.destroy();
+        }
+
+        if (this.stream) {
+            this.stream.stop();
         }
     }
 

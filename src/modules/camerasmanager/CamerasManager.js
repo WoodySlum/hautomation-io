@@ -1,5 +1,6 @@
 "use strict";
 const request = require("request");
+const rtsp = require("rtsp-ffmpeg");
 const MjpegProxy = require("./MjpegProxy");
 // const cv = require("opencv4nodejs");
 const fs = require("fs-extra");
@@ -128,6 +129,7 @@ class CamerasManager {
         this.gatewayManager = gatewayManager;
         this.scenarioManager = scenarioManager;
         this.aiManager = aiManager;
+        this.eventBus = eventBus;
         this.cameras = [];
         this.delegates = {};
         this.currentTimelapse = null;
@@ -649,7 +651,7 @@ class CamerasManager {
                     const camera = self.getCamera(id);
                     let mjpegProxy;
                     if (camera && camera.configuration && camera.configuration.cvlive) {
-                        mjpegProxy = new MjpegProxy.class(camera.mjpegUrl, true, (err, img) => {
+                        mjpegProxy = new MjpegProxy.class(camera.mjpegUrl, camera.rtspUrl, true, (err, img) => {
                             if (!err && self.detectedObjects[camera.id.toString()] && self.detectedObjects[camera.id.toString()].length > 0) {
                                 img = self.aiManager.drawCvRectangles(self.detectedObjects[camera.id.toString()], img);
                             }
@@ -658,7 +660,7 @@ class CamerasManager {
                             }
                         });
                     } else {
-                        mjpegProxy = new MjpegProxy.class(camera.mjpegUrl);
+                        mjpegProxy = new MjpegProxy.class(camera.mjpegUrl, camera.rtspUrl);
                     }
 
                     apiRequest.req.on("close", () => {
@@ -1071,7 +1073,7 @@ class CamerasManager {
                     if (this.cameraCapture[camera.id.toString()] && !force) {
                         cb(null, this.cameraCapture[camera.id.toString()], "image/jpeg");
                     } else {
-                        if (camera.snapshotUrl) {
+                        if (camera.snapshotUrl && camera.snapshotUrl.length > 0) {
                             Logger.info("Retrieving picture from camera " + id);
                             request(camera.snapshotUrl, {encoding: "binary"}, function(error, response, body) {
                                 if (error) {
@@ -1083,6 +1085,17 @@ class CamerasManager {
                                     cb(null, Buffer.from(body, "binary"), response.headers["content-type"]);
                                 }
                             });
+                        } else if (camera.rtspUrl && camera.rtspUrl.length > 0) {
+                            const stream = new rtsp.FFMpeg({input: camera.rtspUrl, rate: 1, resolution: "640x480"});
+
+                            let childProcess = null;
+                            stream.on("data", (data) => {
+                                stream.child = childProcess;
+                                stream.stop();
+                                cb(null, data, "image/jpeg");
+                            });
+                            childProcess = stream.child;
+
                         } else {
                             cb(Error(ERROR_NO_URL_DEFINED));
                         }

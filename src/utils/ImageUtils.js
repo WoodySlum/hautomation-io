@@ -84,15 +84,15 @@ class ImageUtils {
     static rotate(b64string, cb, angle) {
         const buf = Buffer.alloc(b64string.length, b64string, "base64");
         gm(buf)
-        .rotate("#FFFFFFFF", angle)
-        .setFormat("png")
-        .toBuffer((err, buffer) => {
-            if (err) {
-                cb(err);
-            } else {
-                cb(null, buffer.toString("base64"));
-            }
-        });
+            .rotate("#FFFFFFFF", angle)
+            .setFormat("png")
+            .toBuffer((err, buffer) => {
+                if (err) {
+                    cb(err);
+                } else {
+                    cb(null, buffer.toString("base64"));
+                }
+            });
     }
 
     /**
@@ -112,16 +112,16 @@ class ImageUtils {
         const buf2 = Buffer.alloc(b64stringInput2.length, b64stringInput2, "base64");
         fs.writeFileSync(tmpFile, buf2);
         gm(buf)
-        .composite(tmpFile)
-        .geometry("+" + x + "+" + y)
-        .setFormat("jpg")
-        .toBuffer((err, buffer) => {
-            if (err) {
-                cb(err);
-            } else {
-                cb(null, buffer.toString("base64"));
-            }
-        });
+            .composite(tmpFile)
+            .geometry("+" + x + "+" + y)
+            .setFormat("jpg")
+            .toBuffer((err, buffer) => {
+                if (err) {
+                    cb(err);
+                } else {
+                    cb(null, buffer.toString("base64"));
+                }
+            });
     }
 
     /**
