@@ -1,0 +1,10 @@
+{
+    "bmw.zone": "Zone",
+    "bmw.username": "BMW connected drive nom d'utilisateur",
+    "bmw.password": "BMW connected drive mot de passe",
+    "bmw.locked": "Sécur.",
+    "bmw.unlocked": "Ouvert",
+    "bmw.charged.message": "Votre véhicule BMW %@ est chargé a 100%",
+    "bmw.health.ok": "Ok",
+    "bmw.health.ko": "Maint."
+}

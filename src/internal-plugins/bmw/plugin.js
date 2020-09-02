@@ -3,6 +3,7 @@
 const ConnectedDriveApi = require("@mihaiblaga89/bmw-connecteddrive-api");
 const request = require("request");
 const fs = require("fs-extra");
+const sha256 = require("sha256");
 
 /**
  * Loaded function
@@ -85,6 +86,7 @@ function loaded(api) {
             this.previousChargingStatus = {};
             this.carPictures = {};
             this.carLocations = {};
+            this.registeredElements = {};
 
             this.api.configurationAPI.setUpdateCb(() => {
                 this.updateCarInfos();
@@ -95,6 +97,32 @@ function loaded(api) {
                     self.updateCarInfos();
                 }
             }, this, this.api.timeEventAPI.constants().EVERY_MINUTES);
+        }
+
+        /**
+         * Register for car infos
+         *
+         * @param  {Function} cb            A callback triggered when weather information is received. Example : `(d) => {}`
+         * @param  {string} id            An identifier
+         */
+        register(cb, id = null) {
+            const index = sha256(cb.toString() + id);
+            this.registeredElements[index] = cb;
+        }
+
+        /**
+         * Unregister car infos
+         *
+         * @param  {Function} cb             A callback triggered when weather information is received. Example : `(d) => {}`
+         * @param  {string} id            An identifier
+         */
+        unregister(cb, id = null) {
+            const index = sha256(cb.toString() + id);
+            if (this.registeredElements[index]) {
+                delete this.registeredElements[index];
+            } else {
+                api.exported.Logger.warn("Element not found");
+            }
         }
 
         /**
@@ -138,6 +166,9 @@ function loaded(api) {
                                     vehicles[i].getStatus().then((status) => {
                                         // Total
                                         const miniTiles = [];
+                                        Object.keys(this.registeredElements).forEach((registeredKey) => {
+                                            this.registeredElements[registeredKey](status);
+                                        });
 
                                         if (status.position && (!this.carLocations[vehicles[i].originalData.vin] || this.carLocations[vehicles[i].originalData.vin].position.lon != status.position.lon || this.carLocations[vehicles[i].originalData.vin].position.lat != status.position.lat)) {
                                             this.carLocations[vehicles[i].originalData.vin] = {position: status.position};

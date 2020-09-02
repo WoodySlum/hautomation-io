@@ -111,7 +111,10 @@ const INTERNAL_PLUGINS = [
     "camera-alert",
     "switch-sensor",
     "radio-switch-sensor",
-    "bmw"
+    "bmw",
+    // "netgear",
+    "distance-sensor",
+    "bmw-distance-sensor"
 ];
 
 const CORE_PLUGINS = [
@@ -142,7 +145,8 @@ const CORE_PLUGINS = [
     "radio-pressure-sensor",
     "radio-contact-sensor",
     "contact-sensor",
-    "switch-sensor"
+    "switch-sensor",
+    "distance-sensor"
 ];
 
 /**

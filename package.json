@@ -158,6 +158,7 @@
         "moment-timezone": "^0.5.27",
         "month-season": "^1.0",
         "net-ping": "^1.2",
+        "netgear": "^4.2.0",
         "ngrok": "^3.2.7",
         "node-datetime": "^1.0",
         "node-google-timezone": "^0.1",
