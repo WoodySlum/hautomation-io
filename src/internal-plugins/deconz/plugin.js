@@ -336,10 +336,16 @@ function loaded(api) {
                         cb(error, null);
                     }
                 } else {
-                    const discovered = JSON.parse(body);
-                    if (cb) {
-                        cb(null, discovered);
+                    try {
+                        const discovered = JSON.parse(body);
+                        if (cb) {
+                            cb(null, discovered);
+                        }
+                    } catch(e) {
+                        this.api.exported.Logger.err("Could not parse deconz JSON ");
+                        this.api.exported.Logger.err(body);
                     }
+
                 }
             });
         }
