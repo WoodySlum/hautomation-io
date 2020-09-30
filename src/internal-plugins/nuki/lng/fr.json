@@ -1,0 +1,17 @@
+{
+    "nuki.ip": "Web API adresse ip",
+    "nuki.port": "Web API port",
+    "nuki.token": "Web API token",
+    "nuki.action": "Action",
+    "nuki.none": "Ne rien faire",
+    "nuki.lock": "Verrouiller",
+    "nuki.unlock": "Déverrouiller",
+    "nuki.scenario": "Nuki",
+    "nuki.state.locked": "Verrouillé",
+    "nuki.state.unlocked": "Déverrouillé",
+    "nuki.door.state.opened": "Porte ouvert",
+    "nuki.door.state.closed": "Porte fermée",
+    "nuki.battery.low": "La batterie du Nuki est faible, changez les sans attendre"
+
+
+}

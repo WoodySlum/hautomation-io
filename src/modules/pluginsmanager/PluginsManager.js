@@ -114,7 +114,8 @@ const INTERNAL_PLUGINS = [
     "bmw",
     // "netgear",
     "distance-sensor",
-    "bmw-distance-sensor"
+    "bmw-distance-sensor",
+    "nuki"
 ];
 
 const CORE_PLUGINS = [

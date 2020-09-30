@@ -34,7 +34,9 @@
             "**/internal-plugins/*huawei*/*",
             "**/internal-plugins/deconz/*",
             "**/internal-plugins/ifttt/*",
-            "**/internal-plugins/water-plant-alert/*"
+            "**/internal-plugins/water-plant-alert",
+            "**/internal-plugins/bmw/*",
+            "**/internal-plugins/nuki/*"
         ],
         "ignore-class-method": "stringify",
         "check-coverage": true,
@@ -169,6 +171,7 @@
         "node-record-lpcm16": "^0.3",
         "node-wit": "^4.3",
         "node-witai-speech": "^1.0",
+        "nuki-bridge-api": "^1",
         "object-sizeof": "^1.5",
         "opencv4nodejs": "^5",
         "os-utils": "^0.0.14",
