@@ -135,7 +135,7 @@ function loaded(api) {
             this.refreshNukiState();
 
             this.api.timeEventAPI.register(() => {
-                self.refreshNukiState();
+                self.refreshNukiState(self);
             }, this, this.api.timeEventAPI.constants().EVERY_MINUTES);
         }
 
@@ -161,14 +161,20 @@ function loaded(api) {
 
         /**
          * Refresh Nuki state
+         *
+         * @param  {Nuki} [context=null] The context. If null, set to this
          */
-        refreshNukiState() {
-            const conf = this.api.configurationAPI.getConfiguration();
+        refreshNukiState(context = null) {
+            if (!context) {
+                context = this;
+            }
+            const conf = context.api.configurationAPI.getConfiguration();
             if (conf.ip && conf.port && conf.token)  {
                 const bridge = new NukiBridgeApi.Bridge(conf.ip, parseInt(conf.port), conf.token);
-                const self = this;
+                const self = context;
                 bridge.list().then((nukis) => {
                     nukis.forEach((nukiElt) => {
+                        console.log(nukiElt);
                         if (nukiElt.lastKnownState.state == 2) {
                             self.locked = false;
                         } else if (nukiElt.lastKnownState.state == 1) {
@@ -181,11 +187,11 @@ function loaded(api) {
                             self.doorOpened = true;
                         }
 
-                        this.addTile();
+                        self.addTile();
 
-                        if (!this.notificationSent && nukiElt.lastKnownState.batteryCritical) {
-                            this.notificationSent = true;
-                            this.api.messageAPI.sendMessage("*", this.api.translateAPI.t("nuki.battery.low"), null, null, null, true);
+                        if (!self.notificationSent && nukiElt.lastKnownState.batteryCritical) {
+                            self.notificationSent = true;
+                            self.api.messageAPI.sendMessage("*", self.api.translateAPI.t("nuki.battery.low"), null, null, null, true);
                         }
 
                         /*

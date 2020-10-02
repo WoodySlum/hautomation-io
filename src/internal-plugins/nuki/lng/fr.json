@@ -9,7 +9,7 @@
     "nuki.scenario": "Nuki",
     "nuki.state.locked": "Verrouillé",
     "nuki.state.unlocked": "Déverrouillé",
-    "nuki.door.state.opened": "Porte ouvert",
+    "nuki.door.state.opened": "Porte ouverte",
     "nuki.door.state.closed": "Porte fermée",
     "nuki.battery.low": "La batterie du Nuki est faible, changez les sans attendre"
 
