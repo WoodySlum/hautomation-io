@@ -174,8 +174,7 @@ function loaded(api) {
                 const self = context;
                 bridge.list().then((nukis) => {
                     nukis.forEach((nukiElt) => {
-                        console.log(nukiElt);
-                        if (nukiElt.lastKnownState.state == 2) {
+                        if (nukiElt.lastKnownState.state == 2 || nukiElt.lastKnownState.state == 3) {
                             self.locked = false;
                         } else if (nukiElt.lastKnownState.state == 1) {
                             self.locked = true;
@@ -206,6 +205,8 @@ function loaded(api) {
                         timestamp: '2020-09-30T19:07:13+00:00'
                         */
                     });
+                }).catch((e) => {
+                    context.api.Logger.err(e.message);
                 });
             }
         }
@@ -228,6 +229,8 @@ function loaded(api) {
                             nuki.lockAction(LockActions.UNLOCK);
                         }
                     });
+                }).catch((e) => {
+                    this.api.Logger.err(e.message);
                 });
             }
         }
