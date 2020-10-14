@@ -58,7 +58,7 @@
         "start": "node SmartiesRunner.js",
         "start-docker": "env DOCKER=true node SmartiesRunner.js",
         "pre-test": "rm -Rf /tmp/data && mkdir /tmp/data && cp -f ./data/config.json.default /tmp/data/config.json",
-        "test": "npm run pre-test && env TEST=1 NO_LOG=1 mocha --timeout 10000 --exit --reporter spec $(find tests -name '*.tests.js')",
+        "test": "npm run pre-test && env TEST=1 NO_LOG=1 mocha --timeout 30000 --exit --reporter spec $(find tests -name '*.tests.js')",
         "cov": "env COV=1 TEST=1 NO_LOG=1 nyc npm run test",
         "lint": "eslint ./src/ --ext .js",
         "lint-fix": "eslint ./src/ --ext .js --fix",
