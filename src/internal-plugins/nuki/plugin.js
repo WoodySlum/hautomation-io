@@ -206,7 +206,7 @@ function loaded(api) {
                         */
                     });
                 }).catch((e) => {
-                    context.api.Logger.err(e.message);
+                    context.api.exported.Logger.err(e.message);
                 });
             }
         }
@@ -230,7 +230,7 @@ function loaded(api) {
                         }
                     });
                 }).catch((e) => {
-                    this.api.Logger.err(e.message);
+                    this.api.exported.Logger.err(e.message);
                 });
             }
         }

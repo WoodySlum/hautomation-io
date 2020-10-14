@@ -24,6 +24,7 @@ const ROUTE_WS_GET = ":/plugins/get/";
 const ROUTE_WS_ENABLE_SET_BASE = ":/plugins/enable/";
 const ROUTE_WS_ENABLE_SET = ROUTE_WS_ENABLE_SET_BASE + "[plugin]/[status]/";
 const ROUTE_WS_GENERAL_ENABLE_SET = ":/plugins/general/enable/";
+const ROUTE_WS_OAUTH_TOKEN_SET = ":/oauth-token/";
 
 const ERROR_MISSING_PROPERTY = "Missing property name, version or description for plugin";
 const ERROR_NOT_A_FUNCTION = "Missing plugin class";
@@ -115,7 +116,8 @@ const INTERNAL_PLUGINS = [
     // "netgear",
     "distance-sensor",
     "bmw-distance-sensor",
-    "nuki"
+    "nuki",
+    "legrand"
 ];
 
 const CORE_PLUGINS = [
@@ -229,16 +231,21 @@ class PluginsManager {
             this.pluginsConf = [];
         }
 
+
+
+        // Register plugins WS
+        this.webServices.registerAPI(this, WebServices.GET, ROUTE_WS_GET, Authentication.AUTH_ADMIN_LEVEL);
+        this.webServices.registerAPI(this, WebServices.POST, ROUTE_WS_ENABLE_SET, Authentication.AUTH_ADMIN_LEVEL);
+        this.webServices.registerAPI(this, WebServices.POST, ROUTE_WS_GENERAL_ENABLE_SET, Authentication.AUTH_ADMIN_LEVEL);
+        this.webServices.registerAPI(this, WebServices.POST, ROUTE_WS_OAUTH_TOKEN_SET, Authentication.AUTH_ADMIN_LEVEL);
+        this.wsOauthToken = this.webServices.getToken(ROUTE_WS_OAUTH_TOKEN_SET, Number.MAX_SAFE_INTEGER);
+
         this.load();
         // Dispatch event
         if (this.eventBus) {
             this.eventBus.emit(EVENT_LOADED, this);
         }
 
-        // Register plugins WS
-        this.webServices.registerAPI(this, WebServices.GET, ROUTE_WS_GET, Authentication.AUTH_ADMIN_LEVEL);
-        this.webServices.registerAPI(this, WebServices.POST, ROUTE_WS_ENABLE_SET, Authentication.AUTH_ADMIN_LEVEL);
-        this.webServices.registerAPI(this, WebServices.POST, ROUTE_WS_GENERAL_ENABLE_SET, Authentication.AUTH_ADMIN_LEVEL);
     }
 
     /**
@@ -351,7 +358,8 @@ class PluginsManager {
                 this.backupManager,
                 this.gatewayManager,
                 this.aiManager,
-                this.CORE_EVENT_READY
+                this.CORE_EVENT_READY,
+                this.wsOauthToken
             );
 
             item = pApi;
@@ -636,7 +644,6 @@ class PluginsManager {
     processAPI(apiRequest) {
         if (apiRequest.route === ROUTE_WS_GET) {
             let plugins = [];
-
             this.plugins.forEach((plugin) => {
                 const services = [];
                 const pluginConf = this.getPluginConf(plugin.identifier);
@@ -653,10 +660,12 @@ class PluginsManager {
                     version:plugin.version,
                     services:services,
                     dependencies:plugin.dependencies,
+                    oauth: plugin.oauth ? Object.assign(plugin.oauth, {wsOauthToken: this.wsOauthToken}) : null,
                     enabled:(pluginConf && pluginConf.enable)?true:false,
                     corePlugin:(CORE_PLUGINS.indexOf(plugin.identifier) !== -1)
                 });
-                plugins = plugins.sort(function (a,b) {
+
+                plugins = plugins.sort((a,b) => {
                     return a.identifier.localeCompare(b.identifier);
                 });
             });
@@ -722,6 +731,17 @@ class PluginsManager {
                 } else {
                     reject(new APIResponse.class(false, null, 9878, "Missing JSON data with status property : {status:[identifier:foo, status:true]}"));
                 }
+            });
+        } else if (apiRequest.route == ROUTE_WS_OAUTH_TOKEN_SET) {
+            return new Promise((resolve) => {
+                const p = this.getPluginByIdentifier(apiRequest.params.plugin);
+                if (p && p.instance && p.instance.onOAuthData) {
+                    p.instance.onOAuthData(apiRequest.params.oauth);
+                } else {
+                    Logger.err("oauth : Could not find instance or onOAuthData method for plugin " + apiRequest.params.plugin);
+                }
+
+                resolve(new APIResponse.class(true, {success:true}));
             });
         }
     }

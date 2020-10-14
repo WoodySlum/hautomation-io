@@ -95,7 +95,11 @@ class ConfigurationAPI {
      * @returns {Array}      An array of objects (instance of classType), or an object
      */
     loadData(classType, disableClassMapping = false) {
-        return PrivateProperties.oprivate(this).confManager.formConfiguration.loadData(classType, PrivateProperties.oprivate(this).name, disableClassMapping);
+        if (PrivateProperties.oprivate(this).confManager.formConfiguration) {
+            return PrivateProperties.oprivate(this).confManager.formConfiguration.loadData(classType, PrivateProperties.oprivate(this).name, disableClassMapping);
+        } else {
+            return PrivateProperties.oprivate(this).formConfiguration.confManager.loadData(classType, PrivateProperties.oprivate(this).name, disableClassMapping);
+        }
     }
 
     /**
@@ -104,7 +108,11 @@ class ConfigurationAPI {
      * @param  {Object} data A JS object
      */
     saveData(data) {
-        PrivateProperties.oprivate(this).formConfiguration.saveConfig(data);
+        if (PrivateProperties.oprivate(this).confManager.formConfiguration) {
+            PrivateProperties.oprivate(this).formConfiguration.saveConfig(data);
+        } else {
+            PrivateProperties.oprivate(this).formConfiguration.confManager.saveData(data, PrivateProperties.oprivate(this).name);
+        }
     }
 
     /**

@@ -36,7 +36,8 @@
             "**/internal-plugins/ifttt/*",
             "**/internal-plugins/water-plant-alert",
             "**/internal-plugins/bmw/*",
-            "**/internal-plugins/nuki/*"
+            "**/internal-plugins/nuki/*",
+            "**/internal-plugins/legrand/*"
         ],
         "ignore-class-method": "stringify",
         "check-coverage": true,

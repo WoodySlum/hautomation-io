@@ -1,5 +1,5 @@
 "use strict";
-
+const request = require("request");
 const PrivateProperties = require("./PrivateProperties");
 const WebAPI = require("./publicapis/WebAPI");
 const ServicesManagerAPI = require("./publicapis/ServicesManagerAPI");
@@ -37,6 +37,7 @@ const Icons = require("./../../utils/Icons");
 const ImageUtils = require("./../../utils/ImageUtils");
 const Cleaner = require("./../../utils/Cleaner");
 const SmartiesRunnerConstants = require("./../../../SmartiesRunnerConstants");
+const OAUTH_RENEW = "https://www.smarties.io/renew-oauth";
 
 /**
  * This class is an interface for plugins
@@ -77,9 +78,10 @@ class PluginsAPI {
     //  * @param  {GatewayManager} gatewayManager The gateway manager
     //  * @param  {AiManager} aiManager The ai manager
     //  * @param  {string} CORE_EVENT_READY The core event ready identifier
+    //  * @param  {string} oAuthRenewWsToken The oAuth renew token
     //  * @returns {PluginAPI}                  Instance
     //  */
-    constructor(previousVersion, p, webServices, appConfiguration, servicesManager, dbManager, translateManager, formManager, confManager, timeEventService, schedulerService, dashboardManager, themeManager, sensorsManager, installationManager, userManager, messageManager, scenarioManager, alarmManager, camerasManager, radioManager, environmentManager, pluginsManager, iotManager, botEngine, eventBus, deviceManager, backupManager, gatewayManager, aiManager, CORE_EVENT_READY) {
+    constructor(previousVersion, p, webServices, appConfiguration, servicesManager, dbManager, translateManager, formManager, confManager, timeEventService, schedulerService, dashboardManager, themeManager, sensorsManager, installationManager, userManager, messageManager, scenarioManager, alarmManager, camerasManager, radioManager, environmentManager, pluginsManager, iotManager, botEngine, eventBus, deviceManager, backupManager, gatewayManager, aiManager, CORE_EVENT_READY, oAuthRenewWsToken) {
         PrivateProperties.createPrivateState(this);
         this.previousVersion = previousVersion;
         this.p = p;
@@ -89,11 +91,13 @@ class PluginsAPI {
         this.category = this.p.attributes.category;
         this.version = this.p.attributes.version;
         this.description = this.p.attributes.description;
+        this.oauth = this.p.attributes.oauth ? this.p.attributes.oauth : null;
         this.classes = Array.isArray(this.p.attributes.classes)?this.p.attributes.classes.slice():[];
         this.dependencies = (Array.isArray(this.p.attributes.dependencies))?this.p.attributes.dependencies.slice():[];
         this.exported = {};
         this.instance = null;
         this.CORE_EVENT_READY = CORE_EVENT_READY;
+        PrivateProperties.oprivate(this).oAuthRenewWsToken = oAuthRenewWsToken;
 
         // Export classes
         this.exported = Object.assign(this.exported,
@@ -136,6 +140,7 @@ class PluginsAPI {
         this.backupAPI = new BackupAPI.class(backupManager);
         this.gatewayAPI = new GatewayAPI.class(gatewayManager);
         this.aiAPI = new AiAPI.class(this.identifier, aiManager);
+        this.apiUrl = gatewayManager.getDistantApiUrl();
 
         PrivateProperties.oprivate(this).pluginsManager = pluginsManager;
     }
@@ -231,6 +236,38 @@ class PluginsAPI {
      */
     getIdentifier() {
         return this.identifier;
+    }
+
+    /**
+     * Renew oauth token
+     *
+     * @param  {string} url oAuth URL
+     * @param  {Object} params The parameters for oauth request
+     * @param  {Function} [cb=null] The callback `(err) => {}`
+     */
+    renewOAuthToken(url, params, cb = null) {
+        const allParams = Object.assign({wsOauthToken:PrivateProperties.oprivate(this).oAuthRenewWsToken, oauthUrl: url, plugin: this.identifier, url: this.apiUrl + "oauth-token/"}, params);
+
+        let getReq = "";
+        Object.keys(allParams).forEach((key) => {
+            getReq += key + "=" + encodeURIComponent(allParams[key]) + "&";
+        });
+        if (allParams.length > 0) {
+            getReq.slice(0, -1);
+        }
+
+        request(OAUTH_RENEW + "?" + getReq, (err) => {
+            if (err) {
+                if (cb) {
+                    cb(err);
+                }
+                Logger.err(err);
+            } else {
+                if (cb) {
+                    cb();
+                }
+            }
+        });
     }
 }
 

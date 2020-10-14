@@ -135,6 +135,7 @@ class ConfManager {
         } catch (e) {
             if (e.message !== ERROR_EMPTY_FILE && e.message !== ERROR_INVALID_JSON) {
                 Logger.verbose("Invalid json file for path " + jsonPath);
+                Logger.verbose(e.message);
                 throw Error(ERROR_INVALID_FILE);
             } else {
                 throw e;

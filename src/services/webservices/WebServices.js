@@ -662,7 +662,7 @@ class WebServices extends Service.class {
      * Generates a token
      *
      * @param  {string} route           The route
-     * @param  {int} [expirationTime=0] Expiration time - 0 for one time usage
+     * @param  {int} [expirationTime=0] Expiration time in sec - 0 for one time usage
      * @returns {string}                   The token
      */
     getToken(route, expirationTime = 0) {

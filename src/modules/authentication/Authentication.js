@@ -192,7 +192,7 @@ class Authentication {
             Object.keys(this.tokens).forEach((username) => {
                 let i = 0;
                 this.tokens[username].forEach((tokenData) => {
-                    if ((tokenData.serviceIdentifier === apiRequest.apiRegistration.identifier)
+                    if (apiRequest.apiRegistration && (tokenData.serviceIdentifier === apiRequest.apiRegistration.identifier)
                         && (t === tokenData.token)){
                         detectedUsername = username;
                         if (tokenData.expirationTime === 0) {

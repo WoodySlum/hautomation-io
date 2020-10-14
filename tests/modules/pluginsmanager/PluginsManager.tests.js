@@ -2,12 +2,42 @@
 var chai = require("chai");
 var expect = chai.expect;
 var sinon = require("sinon");
+const SmartiesCore = require("./../../../src/SmartiesCore").class;
 var GlobalMocks = require("./../../GlobalMocks");
 var SmartiesRunnerConstants = require("./../../../SmartiesRunnerConstants");
 var PluginsManager = require("./../../../src/modules/pluginsmanager/PluginsManager");
 var PluginAPI = require("./../../../src/modules/pluginsmanager/PluginAPI");
 var WebServices = require("./../../../src/services/webservices/WebServices");
 const TEST_PLUGIN = "rflink";
+
+const core = new SmartiesCore();
+const eventBus = {on:()=>{}};
+
+const userManager = core.userManager;
+const servicesManager = core.servicesManager;
+const dbManager = core.dbManager;
+const translateManager = core.translateManager;
+const formManager = core.formManager;
+const confManager = core.confManager;
+const timeEventService = core.timeEventService;
+const schedulerService = core.schedulerService;
+const dashboardManager = core.dashboardManager;
+const themeManager = core.themeManager;
+const sensorsManager = core.sensorsManager;
+const installationManager = core.installationManager;
+const messageManager = core.messageManager;
+const scenarioManager = core.scenarioManager;
+const alarmManager = core.alarmManager;
+const camerasManager = core.camerasManager;
+const radioManager = core.radioManager;
+const environmentManager = core.environmentManager;
+const pluginsManager = core.pluginsManager;
+const iotManager = core.iotManager;
+const botEngine = core.botEngine;
+const deviceManager = core.deviceManager;
+const backupManager = core.backupManager;
+const gatewayManager = core.gatewayManager;
+
 
 describe("PluginsManager", function() {
     let pluginsManager;
@@ -75,13 +105,15 @@ describe("PluginsManager", function() {
         const appConfiguration = {cachePath:"foobar"};
         webServices = sinon.mock(WebServices.class);
         webServices.registerAPI = ()=>{};
+        webServices.getToken = ()=>{};
         sinon.stub(PluginsManager.class.prototype, 'load');
         pluginsManager = new PluginsManager.class({}, webServices);
-        pluginA = new PluginAPI.class("0.0.0", pluginARef, webServices, appConfiguration);
-        pluginB = new PluginAPI.class("0.0.0", pluginBRef, webServices, appConfiguration);
-        pluginC = new PluginAPI.class("0.0.0", pluginCRef, webServices, appConfiguration);
-        pluginD = new PluginAPI.class("0.0.0", pluginDRef, webServices, appConfiguration);
-        pluginInvalidDependencies = new PluginAPI.class("0.0.0", pluginInvalidDependenciesRef, webServices, appConfiguration);
+
+        pluginA = new PluginAPI.class("0.0.0", pluginARef, webServices, appConfiguration, servicesManager, dbManager, translateManager, formManager, confManager, timeEventService, schedulerService, dashboardManager, themeManager, sensorsManager, installationManager, userManager, messageManager, scenarioManager, alarmManager, camerasManager, radioManager, environmentManager, pluginsManager, iotManager, botEngine, eventBus, deviceManager, backupManager, gatewayManager);
+        pluginB = new PluginAPI.class("0.0.0", pluginBRef, webServices, appConfiguration, servicesManager, dbManager, translateManager, formManager, confManager, timeEventService, schedulerService, dashboardManager, themeManager, sensorsManager, installationManager, userManager, messageManager, scenarioManager, alarmManager, camerasManager, radioManager, environmentManager, pluginsManager, iotManager, botEngine, eventBus, deviceManager, backupManager, gatewayManager);
+        pluginC = new PluginAPI.class("0.0.0", pluginCRef, webServices, appConfiguration, servicesManager, dbManager, translateManager, formManager, confManager, timeEventService, schedulerService, dashboardManager, themeManager, sensorsManager, installationManager, userManager, messageManager, scenarioManager, alarmManager, camerasManager, radioManager, environmentManager, pluginsManager, iotManager, botEngine, eventBus, deviceManager, backupManager, gatewayManager);
+        pluginD = new PluginAPI.class("0.0.0", pluginDRef, webServices, appConfiguration, servicesManager, dbManager, translateManager, formManager, confManager, timeEventService, schedulerService, dashboardManager, themeManager, sensorsManager, installationManager, userManager, messageManager, scenarioManager, alarmManager, camerasManager, radioManager, environmentManager, pluginsManager, iotManager, botEngine, eventBus, deviceManager, backupManager, gatewayManager);
+        pluginInvalidDependencies = new PluginAPI.class("0.0.0", pluginInvalidDependenciesRef, webServices, appConfiguration, servicesManager, dbManager, translateManager, formManager, confManager, timeEventService, schedulerService, dashboardManager, themeManager, sensorsManager, installationManager, userManager, messageManager, scenarioManager, alarmManager, camerasManager, radioManager, environmentManager, pluginsManager, iotManager, botEngine, eventBus, deviceManager, backupManager, gatewayManager);
 
     });
 
