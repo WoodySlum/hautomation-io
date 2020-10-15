@@ -37,7 +37,6 @@ const Icons = require("./../../utils/Icons");
 const ImageUtils = require("./../../utils/ImageUtils");
 const Cleaner = require("./../../utils/Cleaner");
 const SmartiesRunnerConstants = require("./../../../SmartiesRunnerConstants");
-const OAUTH_RENEW = "https://www.smarties.io/renew-oauth";
 
 /**
  * This class is an interface for plugins
@@ -140,7 +139,7 @@ class PluginsAPI {
         this.backupAPI = new BackupAPI.class(backupManager);
         this.gatewayAPI = new GatewayAPI.class(gatewayManager);
         this.aiAPI = new AiAPI.class(this.identifier, aiManager);
-        this.apiUrl = gatewayManager.getDistantApiUrl();
+        this.apiUrl = gatewayManager.getBaseUrl();
 
         PrivateProperties.oprivate(this).pluginsManager = pluginsManager;
     }
@@ -256,7 +255,7 @@ class PluginsAPI {
             getReq.slice(0, -1);
         }
 
-        request(OAUTH_RENEW + "?" + getReq, (err) => {
+        request(this.apiUrl + "renew-oauth?" + getReq, (err) => {
             if (err) {
                 if (cb) {
                     cb(err);

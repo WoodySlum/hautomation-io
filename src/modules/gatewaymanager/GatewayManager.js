@@ -108,6 +108,15 @@ class GatewayManager {
         return UI_URL + ((this.appConfiguration.customIdentifier && this.appConfiguration.customIdentifier.length > 0) ? this.appConfiguration.customIdentifier : this.environmentManager.getSmartiesId()) + this.webServices.getEndpointApi();
     }
 
+    /**
+     * Get full smarties API URL
+     *
+     * @returns {string} The URL
+     */
+    getBaseUrl() {
+        return UI_URL;
+    }
+
 
     /**
      * Transmit function threaded methods (threads manager)
