@@ -139,7 +139,8 @@ class PluginsAPI {
         this.backupAPI = new BackupAPI.class(backupManager);
         this.gatewayAPI = new GatewayAPI.class(gatewayManager);
         this.aiAPI = new AiAPI.class(this.identifier, aiManager);
-        this.apiUrl = gatewayManager.getBaseUrl();
+        this.apiUrl = gatewayManager.getDistantApiUrl();
+        this.baseUrl = gatewayManager.getBaseUrl();
 
         PrivateProperties.oprivate(this).pluginsManager = pluginsManager;
     }
@@ -254,8 +255,8 @@ class PluginsAPI {
         if (allParams.length > 0) {
             getReq.slice(0, -1);
         }
-
-        request(this.apiUrl + "renew-oauth?" + getReq, (err) => {
+        
+        request(this.baseUrl + "renew-oauth?" + getReq, (err) => {
             if (err) {
                 if (cb) {
                     cb(err);

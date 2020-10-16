@@ -244,7 +244,7 @@ function loaded(api) {
             if (!context) {
                 context = this;
             }
-            
+
             // context.retrieveDevicesAndStates(() => {
             //     context.api.deviceAPI.getDevices().forEach((device) => {
             //         let isTuyaDevice = false;

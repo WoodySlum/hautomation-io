@@ -2,6 +2,9 @@
 const request = require("request");
 const SUBSCRIPTION_KEY = "c401d271b92a4f29b56ef000aa07bdf3";
 const CLIENT_ID = "ed334198-9da8-4a2f-ac49-831a047eda46";
+const SHUTTER_STOP = -1;
+const SHUTTER_OPEN = 100;
+const SHUTTER_CLOSE = 0;
 
 /**
  * Loaded plugin function
@@ -10,6 +13,64 @@ const CLIENT_ID = "ed334198-9da8-4a2f-ac49-831a047eda46";
  */
 function loaded(api) {
     api.init();
+
+
+    /**
+     * This class manage Legrand device form configuration
+     * @class
+     */
+    class LegrandDeviceForm extends api.exported.FormObject.class {
+        /**
+         * Constructor
+         *
+         * @param  {number} id The identifier
+         * @param {string} legrandId  The device identifier
+         * @returns {LegrandDeviceForm}        The instance
+         */
+        constructor(id, legrandId) {
+            super(id);
+
+            /**
+             * @Property("legrandId");
+             * @Type("string");
+             * @Title("legrand.device.id");
+             * @Enum("getLegrandIds");
+             * @EnumNames("getLegrandIdsLabels");
+             */
+            this.legrandId = legrandId;
+        }
+
+        /**
+         * Form injection method for ports
+         *
+         * @param  {...Object} inject The ports list array
+         * @returns {Array}        An array of ports
+         */
+        static getLegrandIds(...inject) {
+            return inject[0];
+        }
+
+        /**
+         * Form injection method for ports name
+         *
+         * @param  {...Object} inject The ports name list array
+         * @returns {Array}        An array of ports name
+         */
+        static getLegrandIdsLabels(...inject) {
+            return inject[1];
+        }
+
+        /**
+         * Convert a json object to HueForm object
+         *
+         * @param  {Object} data Some data
+         * @returns {LegrandDeviceForm}      An instance
+         */
+        json(data) {
+            return new LegrandDeviceForm(data.id, data.legrandId);
+        }
+    }
+
     /**
      * This class manage Legrand smart things
      * @class
@@ -24,15 +85,20 @@ function loaded(api) {
         constructor(api) {
             this.plant = null;
             this.modules = null;
-            try {
-                this.oauthData = {};
-                this.oauthData = api.configurationAPI.loadData(Object, true);
-                this.refreshOAuth(() => {
-                    this.refreshData();
-                });
-            } catch(e) {
-                api.exported.Logger.err(e);
-            }
+            setTimeout(() => {
+                try {
+                    this.oauthData = {};
+                    this.oauthData = api.configurationAPI.loadData(Object, true);
+                    this.refreshOAuth(() => {
+                        this.refreshData(() => {
+                            // this.setAutomationStatus(this.plant, this.modules.automations[0], SHUTTER_CLOSE, () => {});
+                        });
+                    });
+                } catch(e) {
+                    api.exported.Logger.err(e);
+                }
+            }, 10000);
+
 
             // Refresh oauth token every hours
             api.timeEventAPI.register((self) => {
@@ -165,6 +231,42 @@ function loaded(api) {
                     this.plant = data.plants[0];
                     this.getModules(this.plant, (err, data) => {
                         this.modules = data.modules;
+
+                        const legrandIds = [];
+                        const legrandIdsLabels = [];
+                        this.modules.automations.forEach((automation) => {
+                            legrandIds.push(automation.sender.plant.module.id);
+                            legrandIdsLabels.push(automation.sender.plant.module.id);
+                        });
+                        api.deviceAPI.addForm("legrandDevice", LegrandDeviceForm, "legrand.form.title", true, legrandIds, legrandIdsLabels);
+                        api.deviceAPI.registerSwitchDevice("legrandDevice", (device, formData, deviceStatus) => {
+                            if (formData && formData.length > 0) {
+                                formData.forEach((data) => {
+                                    let sAutomation = null;
+                                    this.modules.automations.forEach((automation) => {
+                                        if (automation.sender.plant.module.id == data.legrandId) {
+                                            sAutomation = automation;
+                                        }
+                                    });
+
+                                    if (sAutomation) {
+                                        if (deviceStatus.getStatus() === api.deviceAPI.constants().INT_STATUS_ON) {
+                                            this.setAutomationStatus(this.plant, sAutomation, SHUTTER_OPEN, () => {
+
+                                            });
+                                        } else if (deviceStatus.getStatus() === api.deviceAPI.constants().INT_STATUS_OFF) {
+                                            this.setAutomationStatus(this.plant, sAutomation, SHUTTER_CLOSE, () => {
+
+                                            });
+                                        }
+                                    }
+
+                                });
+                            }
+
+                            return deviceStatus;
+                        }, api.deviceAPI.constants().DEVICE_TYPE_SHUTTER);
+
                         if (cb) {
                             cb();
                         }
