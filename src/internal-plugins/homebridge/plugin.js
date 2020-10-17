@@ -139,7 +139,7 @@ function loaded(api) {
             this.devices = [];
             this.api.deviceAPI.getDevices().forEach((device) => {
                 if (device.visible) {
-                    if (device.bestDeviceType == DEVICE_TYPE_LIGHT_DIMMABLE_COLOR || device.bestDeviceType == DEVICE_TYPE_LIGHT_DIMMABLE || device.bestDeviceType == DEVICE_TYPE_LIGHT) {
+                    if (device.bestDeviceType == this.api.deviceAPI.constants().DEVICE_TYPE_LIGHT_DIMMABLE_COLOR || device.bestDeviceType == this.api.deviceAPI.constants().DEVICE_TYPE_LIGHT_DIMMABLE || device.bestDeviceType == this.api.deviceAPI.constants().DEVICE_TYPE_LIGHT) {
                         this.devices.push({
                             accessory: "Smarties lights",
                             identifier: device.id,
