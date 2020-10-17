@@ -12,6 +12,7 @@ const TILE_GENERIC_ACTION = "GenericAction"; // Extended from ActionOneIcon (act
 const TILE_GENERIC_ACTION_DARK = "GenericActionDark"; // Extended from ActionOneIcon (action auto mapping on)
 const TILE_GENERIC_ACTION_STATUS = "GenericActionWithStatus"; // One icon, one action, one color, and a status (red / green btn)
 const TILE_DEVICE = "Device"; // One icon, one text, device subinfo items
+const TILE_SHUTTER = "Shutter"; // One icon, one text, device subinfo items
 const TILE_SUB_TILES = "SubTiles"; // Multiple sub tiles
 
 
@@ -166,5 +167,6 @@ module.exports = {class:Tile,
     TILE_GENERIC_ACTION_DARK:TILE_GENERIC_ACTION_DARK,
     TILE_GENERIC_ACTION_STATUS:TILE_GENERIC_ACTION_STATUS,
     TILE_DEVICE:TILE_DEVICE,
-    TILE_SUB_TILES:TILE_SUB_TILES
+    TILE_SUB_TILES:TILE_SUB_TILES,
+    TILE_SHUTTER:TILE_SHUTTER
 };

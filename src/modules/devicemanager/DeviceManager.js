@@ -20,19 +20,26 @@ const DEVICE_TYPE_LIGHT = "light";
 const DEVICE_TYPE_LIGHT_DIMMABLE = "light-dimmable";
 const DEVICE_TYPE_LIGHT_DIMMABLE_COLOR = "light-dimmable-color";
 const DEVICE_TYPE_SHUTTER = "shutter";
+const DEVICE_TYPE_LIGHT_PRIORITY = 20;
+const DEVICE_TYPE_LIGHT_DIMMABLE_PRIORITY = 30;
+const DEVICE_TYPE_LIGHT_DIMMABLE_COLOR_PRIORITY = 40;
+const DEVICE_TYPE_SHUTTER_PRIORITY = 50;
 
 const DB_VERSION = "0.0.0";
 
 const STATUS_ON = "on";
 const STATUS_OFF = "off";
+const STATUS_STOP = "stop";
 const STATUS_IGNORE = "ignore";
 const INT_STATUS_ON = 1;
+const INT_STATUS_STOP = 0;
 const INT_STATUS_OFF = -1;
 const STATUS_INVERT = "invert";
 const ROUTE_ALL_ON = "/devices/allon/";
 const ROUTE_ALL_OFF = "/devices/alloff/";
 const DEVICE_NAME_COMPARE_CONFIDENCE = 0.31;
 const EVENT_UPDATE_CONFIG_DEVICES = "update-config-devices";
+
 
 const ITEM_CHANGE_STATUS = "status";
 const ITEM_CHANGE_BRIGHTNESS = "brightness";
@@ -318,6 +325,35 @@ class DeviceManager {
     }
 
     /**
+     * Return a best device type
+     *
+     * @param  {Array} deviceTypes            A list of device types
+     * @returns {string} Best device type;
+     */
+    bestDeviceType(deviceTypes) {
+        let bestDeviceTypePriority = 0;
+        let bestDeviceType = DEVICE_TYPE_LIGHT;
+        deviceTypes.forEach((deviceType) => {
+            if (deviceType == DEVICE_TYPE_LIGHT && DEVICE_TYPE_LIGHT_PRIORITY > bestDeviceTypePriority) {
+                bestDeviceTypePriority = DEVICE_TYPE_LIGHT_PRIORITY;
+                bestDeviceType = DEVICE_TYPE_LIGHT;
+            } else if (deviceType == DEVICE_TYPE_LIGHT_DIMMABLE && DEVICE_TYPE_LIGHT_DIMMABLE_PRIORITY > bestDeviceTypePriority) {
+                bestDeviceTypePriority = DEVICE_TYPE_LIGHT_DIMMABLE_PRIORITY;
+                bestDeviceType = DEVICE_TYPE_LIGHT_DIMMABLE;
+            } else if (deviceType == DEVICE_TYPE_LIGHT_DIMMABLE_COLOR && DEVICE_TYPE_LIGHT_DIMMABLE_COLOR_PRIORITY > bestDeviceTypePriority) {
+                bestDeviceTypePriority = DEVICE_TYPE_LIGHT_DIMMABLE_COLOR_PRIORITY;
+                bestDeviceType = DEVICE_TYPE_LIGHT_DIMMABLE_COLOR;
+            } else if (deviceType == DEVICE_TYPE_SHUTTER && DEVICE_TYPE_SHUTTER_PRIORITY > bestDeviceTypePriority) {
+                bestDeviceTypePriority = DEVICE_TYPE_SHUTTER_PRIORITY;
+                bestDeviceType = DEVICE_TYPE_SHUTTER;
+            }
+
+        });
+
+        return bestDeviceType;
+    }
+
+    /**
      * Register a device on dashboard
      *
      * @param  {DeviceForm} device A device
@@ -327,12 +363,22 @@ class DeviceManager {
     registerDeviceTile(device, data = [], index = -1) {
         if (device.visible) {
             let i = (index === -1)?(9000 + data.indexOf(device)):index;
-            const deviceStatus = new DeviceStatus.class(this.getDeviceTypes(device), device.status, device.brightness, device.color, device.colorTemperature);
+            const deviceTypes = this.getDeviceTypes(device);
+            const deviceType = this.bestDeviceType(deviceTypes);
+            const deviceStatus = new DeviceStatus.class(deviceTypes, device.status, device.brightness, device.color, device.colorTemperature);
+
             let deviceInfos = deviceStatus.tileFormat();
-            if (deviceStatus.deviceTypes.indexOf(DEVICE_TYPE_LIGHT_DIMMABLE_COLOR) > -1) {
+            if (deviceType == DEVICE_TYPE_LIGHT_DIMMABLE_COLOR) {
                 deviceInfos = Object.assign(deviceInfos, {colors:DEVICE_COLORS});
             }
-            const tile = new Tile.class(this.dashboardManager.themeManager, device.id, Tile.TILE_DEVICE, device.icon.icon, null, device.name, null, null, null, device.status > 0?1:0, i, "/device/set/" + device.id + "/", deviceInfos, null, Authentication.AUTH_GUEST_LEVEL);
+
+            let tile;
+            if (deviceType === DEVICE_TYPE_LIGHT || deviceType === DEVICE_TYPE_LIGHT_DIMMABLE || deviceType === DEVICE_TYPE_LIGHT_DIMMABLE_COLOR) {
+                tile = new Tile.class(this.dashboardManager.themeManager, device.id, Tile.TILE_DEVICE, device.icon.icon, null, device.name, null, null, null, device.status > 0?1:0, i, "/device/set/" + device.id + "/", deviceInfos, null, Authentication.AUTH_GUEST_LEVEL);
+            } else if (deviceType === DEVICE_TYPE_SHUTTER) {
+                tile = new Tile.class(this.dashboardManager.themeManager, device.id, Tile.TILE_SHUTTER, device.icon.icon, null, device.name, null, null, null, device.status > 0?1:0, i, "/device/set/" + device.id + "/", deviceInfos, null, Authentication.AUTH_GUEST_LEVEL);
+            }
+
             this.dashboardManager.registerTile(tile);
         }
     }
@@ -346,6 +392,7 @@ class DeviceManager {
     getDeviceTypes(device) {
         const modes = [];
         Object.keys(this.switchDeviceModules).forEach((switchDeviceModuleKey) => {
+
             const switchDeviceModule = this.switchDeviceModules[switchDeviceModuleKey];
             if (device && device[switchDeviceModule.formName]) {
                 if (modes.indexOf(switchDeviceModule.type) === -1) {
@@ -390,6 +437,8 @@ class DeviceManager {
                 status = INT_STATUS_ON;
             } else if (status && status.toLowerCase() === STATUS_OFF) {
                 status = INT_STATUS_OFF;
+            } else if (status && status.toLowerCase() === STATUS_STOP) {
+                status = INT_STATUS_STOP;
             } else if (status && status.toLowerCase() === STATUS_INVERT) {
                 const device = this.getDeviceById(id);
                 if (device.status === INT_STATUS_ON) {
@@ -631,4 +680,4 @@ class DeviceManager {
     }
 }
 
-module.exports = {class:DeviceManager, STATUS_ON:STATUS_ON, INT_STATUS_ON:INT_STATUS_ON, INT_STATUS_OFF:INT_STATUS_OFF, STATUS_OFF:STATUS_OFF, STATUS_INVERT:STATUS_INVERT, EVENT_UPDATE_CONFIG_DEVICES:EVENT_UPDATE_CONFIG_DEVICES, DEVICE_TYPE_LIGHT:DEVICE_TYPE_LIGHT, DEVICE_TYPE_LIGHT_DIMMABLE: DEVICE_TYPE_LIGHT_DIMMABLE, DEVICE_TYPE_LIGHT_DIMMABLE_COLOR:DEVICE_TYPE_LIGHT_DIMMABLE_COLOR, DEVICE_TYPE_SHUTTER:DEVICE_TYPE_SHUTTER, ITEM_CHANGE_STATUS:ITEM_CHANGE_STATUS, ITEM_CHANGE_BRIGHTNESS:ITEM_CHANGE_BRIGHTNESS, ITEM_CHANGE_COLOR:ITEM_CHANGE_COLOR, ITEM_CHANGE_COLOR_TEMP: ITEM_CHANGE_COLOR_TEMP};
+module.exports = {class:DeviceManager, STATUS_ON:STATUS_ON, STATUS_STOP:STATUS_STOP, INT_STATUS_ON:INT_STATUS_ON, INT_STATUS_OFF:INT_STATUS_OFF, INT_STATUS_STOP:INT_STATUS_STOP, STATUS_OFF:STATUS_OFF, STATUS_INVERT:STATUS_INVERT, EVENT_UPDATE_CONFIG_DEVICES:EVENT_UPDATE_CONFIG_DEVICES, DEVICE_TYPE_LIGHT:DEVICE_TYPE_LIGHT, DEVICE_TYPE_LIGHT_DIMMABLE: DEVICE_TYPE_LIGHT_DIMMABLE, DEVICE_TYPE_LIGHT_DIMMABLE_COLOR:DEVICE_TYPE_LIGHT_DIMMABLE_COLOR, DEVICE_TYPE_SHUTTER:DEVICE_TYPE_SHUTTER, ITEM_CHANGE_STATUS:ITEM_CHANGE_STATUS, ITEM_CHANGE_BRIGHTNESS:ITEM_CHANGE_BRIGHTNESS, ITEM_CHANGE_COLOR:ITEM_CHANGE_COLOR, ITEM_CHANGE_COLOR_TEMP: ITEM_CHANGE_COLOR_TEMP};

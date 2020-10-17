@@ -250,12 +250,17 @@ function loaded(api) {
                                     });
 
                                     if (sAutomation) {
+
                                         if (deviceStatus.getStatus() === api.deviceAPI.constants().INT_STATUS_ON) {
                                             this.setAutomationStatus(this.plant, sAutomation, SHUTTER_OPEN, () => {
 
                                             });
                                         } else if (deviceStatus.getStatus() === api.deviceAPI.constants().INT_STATUS_OFF) {
                                             this.setAutomationStatus(this.plant, sAutomation, SHUTTER_CLOSE, () => {
+
+                                            });
+                                        } else if (deviceStatus.getStatus() === api.deviceAPI.constants().INT_STATUS_STOP) {
+                                            this.setAutomationStatus(this.plant, sAutomation, SHUTTER_STOP, () => {
 
                                             });
                                         }
