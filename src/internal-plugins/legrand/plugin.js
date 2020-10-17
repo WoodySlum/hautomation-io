@@ -252,16 +252,22 @@ function loaded(api) {
                                     if (sAutomation) {
 
                                         if (deviceStatus.getStatus() === api.deviceAPI.constants().INT_STATUS_ON) {
-                                            this.setAutomationStatus(this.plant, sAutomation, SHUTTER_OPEN, () => {
-
+                                            this.setAutomationStatus(this.plant, sAutomation, SHUTTER_OPEN, (err) => {
+                                                if (err) {
+                                                    api.exported.Logger.err(err);
+                                                }
                                             });
                                         } else if (deviceStatus.getStatus() === api.deviceAPI.constants().INT_STATUS_OFF) {
-                                            this.setAutomationStatus(this.plant, sAutomation, SHUTTER_CLOSE, () => {
-
+                                            this.setAutomationStatus(this.plant, sAutomation, SHUTTER_CLOSE, (err) => {
+                                                if (err) {
+                                                    api.exported.Logger.err(err);
+                                                }
                                             });
                                         } else if (deviceStatus.getStatus() === api.deviceAPI.constants().INT_STATUS_STOP) {
-                                            this.setAutomationStatus(this.plant, sAutomation, SHUTTER_STOP, () => {
-
+                                            this.setAutomationStatus(this.plant, sAutomation, SHUTTER_STOP, (err) => {
+                                                if (err) {
+                                                    api.exported.Logger.err(err);
+                                                }
                                             });
                                         }
                                     }
@@ -290,7 +296,7 @@ module.exports.attributes = {
     name: "legrand",
     version: "0.0.0",
     category: "misc",
-    description: "Legrand home",
+    description: "Legrand home - control bubendorff shutters",
     defaultDisabled: true,
     dependencies:[],
     oauth: {

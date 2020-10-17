@@ -34,8 +34,8 @@ class DevicesListForm extends FormObject.class {
          * @Property("status");
          * @Type("string");
          * @Title("devices.list.form.status");
-         * @Enum(["off", "on", "invert"]);
-         * @EnumNames(["devices.list.form.status.off", "devices.list.form.status.on", "devices.list.form.status.invert"]);
+         * @Enum(["off", "on", "invert", "open", "close", "stop"]);
+         * @EnumNames(["devices.list.form.status.off", "devices.list.form.status.on", "devices.list.form.status.invert", "devices.list.form.status.open", "devices.list.form.status.close", "devices.list.form.status.stop"]);
          */
         this.status = status;
 

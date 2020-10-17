@@ -29,6 +29,8 @@ const DB_VERSION = "0.0.0";
 
 const STATUS_ON = "on";
 const STATUS_OFF = "off";
+const STATUS_OPEN = "open";
+const STATUS_CLOSE = "close";
 const STATUS_STOP = "stop";
 const STATUS_IGNORE = "ignore";
 const INT_STATUS_ON = 1;
@@ -304,7 +306,12 @@ class DeviceManager {
      * @returns {Array} The list of devices
      */
     getDevices() {
-        return this.formConfiguration.getDataCopy();
+        const devices = this.formConfiguration.getDataCopy();
+        devices.forEach((device) => {
+            device.bestDeviceType = this.bestDeviceType(this.getDeviceTypes(device));
+        });
+        
+        return devices;
     }
 
     /**
@@ -433,9 +440,9 @@ class DeviceManager {
     switchDevice(id, status = null, brightness = 0, color = "FFFFFF", colorTemperature = 0) {
         color = color ? color.replace("#", "") : color; // Remove sharp
         if (typeof status === "string") {
-            if (status && status.toLowerCase() === STATUS_ON) {
+            if (status && (status.toLowerCase() === STATUS_ON || status.toLowerCase() === STATUS_OPEN)) {
                 status = INT_STATUS_ON;
-            } else if (status && status.toLowerCase() === STATUS_OFF) {
+            } else if (status && (status.toLowerCase() === STATUS_OFF || status.toLowerCase() === STATUS_CLOSE)) {
                 status = INT_STATUS_OFF;
             } else if (status && status.toLowerCase() === STATUS_STOP) {
                 status = INT_STATUS_STOP;
@@ -505,11 +512,13 @@ class DeviceManager {
                     let shouldExecuteAction = false;
                     scenario.DevicesListScenarioForm.triggerOnDevice.forEach((deviceTriggerScenario) => {
                         if (deviceTriggerScenario.identifier.toString() === id.toString()) {
-                            if (deviceTriggerScenario.status === STATUS_ON && status === INT_STATUS_ON) {
+                            if ((deviceTriggerScenario.status === STATUS_ON || deviceTriggerScenario.status === STATUS_OPEN) && status === INT_STATUS_ON) {
                                 shouldExecuteAction = true;
-                            } else if (deviceTriggerScenario.status === STATUS_OFF && status === INT_STATUS_OFF) {
+                            } else if ((deviceTriggerScenario.status === STATUS_OFF || deviceTriggerScenario.status === STATUS_CLOSE) && status === INT_STATUS_OFF) {
                                 shouldExecuteAction = true;
                             } else if (deviceTriggerScenario.status === STATUS_IGNORE) {
+                                shouldExecuteAction = true;
+                            } else if (deviceTriggerScenario.status === STATUS_STOP) {
                                 shouldExecuteAction = true;
                             }
                         }
@@ -680,4 +689,4 @@ class DeviceManager {
     }
 }
 
-module.exports = {class:DeviceManager, STATUS_ON:STATUS_ON, STATUS_STOP:STATUS_STOP, INT_STATUS_ON:INT_STATUS_ON, INT_STATUS_OFF:INT_STATUS_OFF, INT_STATUS_STOP:INT_STATUS_STOP, STATUS_OFF:STATUS_OFF, STATUS_INVERT:STATUS_INVERT, EVENT_UPDATE_CONFIG_DEVICES:EVENT_UPDATE_CONFIG_DEVICES, DEVICE_TYPE_LIGHT:DEVICE_TYPE_LIGHT, DEVICE_TYPE_LIGHT_DIMMABLE: DEVICE_TYPE_LIGHT_DIMMABLE, DEVICE_TYPE_LIGHT_DIMMABLE_COLOR:DEVICE_TYPE_LIGHT_DIMMABLE_COLOR, DEVICE_TYPE_SHUTTER:DEVICE_TYPE_SHUTTER, ITEM_CHANGE_STATUS:ITEM_CHANGE_STATUS, ITEM_CHANGE_BRIGHTNESS:ITEM_CHANGE_BRIGHTNESS, ITEM_CHANGE_COLOR:ITEM_CHANGE_COLOR, ITEM_CHANGE_COLOR_TEMP: ITEM_CHANGE_COLOR_TEMP};
+module.exports = {class:DeviceManager, STATUS_ON:STATUS_ON, STATUS_OPEN:STATUS_OPEN, STATUS_CLOSE:STATUS_CLOSE, STATUS_STOP:STATUS_STOP, INT_STATUS_ON:INT_STATUS_ON, INT_STATUS_OFF:INT_STATUS_OFF, INT_STATUS_STOP:INT_STATUS_STOP, STATUS_OFF:STATUS_OFF, STATUS_INVERT:STATUS_INVERT, EVENT_UPDATE_CONFIG_DEVICES:EVENT_UPDATE_CONFIG_DEVICES, DEVICE_TYPE_LIGHT:DEVICE_TYPE_LIGHT, DEVICE_TYPE_LIGHT_DIMMABLE: DEVICE_TYPE_LIGHT_DIMMABLE, DEVICE_TYPE_LIGHT_DIMMABLE_COLOR:DEVICE_TYPE_LIGHT_DIMMABLE_COLOR, DEVICE_TYPE_SHUTTER:DEVICE_TYPE_SHUTTER, ITEM_CHANGE_STATUS:ITEM_CHANGE_STATUS, ITEM_CHANGE_BRIGHTNESS:ITEM_CHANGE_BRIGHTNESS, ITEM_CHANGE_COLOR:ITEM_CHANGE_COLOR, ITEM_CHANGE_COLOR_TEMP: ITEM_CHANGE_COLOR_TEMP};

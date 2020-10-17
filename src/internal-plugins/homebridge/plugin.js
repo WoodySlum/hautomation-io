@@ -139,14 +139,16 @@ function loaded(api) {
             this.devices = [];
             this.api.deviceAPI.getDevices().forEach((device) => {
                 if (device.visible) {
-                    this.devices.push({
-                        accessory: "Smarties lights",
-                        identifier: device.id,
-                        name: device.name,
-                        coreApi:api,
-                        status: device.status,
-                        device: device
-                    });
+                    if (device.bestDeviceType == DEVICE_TYPE_LIGHT_DIMMABLE_COLOR || device.bestDeviceType == DEVICE_TYPE_LIGHT_DIMMABLE || device.bestDeviceType == DEVICE_TYPE_LIGHT) {
+                        this.devices.push({
+                            accessory: "Smarties lights",
+                            identifier: device.id,
+                            name: device.name,
+                            coreApi:api,
+                            status: device.status,
+                            device: device
+                        });
+                    }
                 }
             });
         }
