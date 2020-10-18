@@ -9,7 +9,7 @@ const Plugin = require("./../../../node_modules/homebridge/lib/plugin").Plugin;
 const User = require("./../../../node_modules/homebridge/lib/user").User;
 const log = require("./../../../node_modules/homebridge/lib/logger");
 const port = 51826;
-const WAIT_FOR_STARTING_SERVICE = 30; // Wait before starting the service (in seconds)
+const WAIT_FOR_STARTING_SERVICE = 10; // Wait before starting the service (in seconds)
 
 /**
  * Loaded plugin function
@@ -36,6 +36,8 @@ function loaded(api) {
             this.removeLogs();
             this.init(devices, sensors);
             this.ittt = 0;
+            this.startTimer = null;
+            this.disableAutoStart = true;
         }
 
         /**
@@ -43,9 +45,8 @@ function loaded(api) {
          *
          * @param {Array} devices A list of hap devices
          * @param {Array} sensors A list of hap sensors
-         * @param {Array} alarm A list of hap alarm
          */
-        init(devices, sensors, alarm) {
+        init(devices, sensors) {
             const insecureAccess = true;
             Plugin.addPluginPath(__dirname + "/homebridge-plugins/homebridge-smarties-lights");
             Plugin.addPluginPath(__dirname + "/homebridge-plugins/homebridge-smarties-temperature");
@@ -59,7 +60,7 @@ function loaded(api) {
             }
 
             const platforms = [];
-            const pin = "021-92-278";
+            const pin = "021-92-279";
             if (conf.alexaUsername && conf.alexaPassword) {
                 platforms.push({
                     platform: "Alexa",
@@ -79,7 +80,7 @@ function loaded(api) {
                         port: port,
                         pin: pin
                     },
-                    accessories: devices.concat(sensors).concat(alarm),
+                    accessories: devices.concat(sensors),
                     platforms:platforms
                 };
                 hap.init(User.persistPath());
@@ -116,7 +117,7 @@ function loaded(api) {
          */
         start() {
             super.start();
-            setTimeout((self) => {
+            this.startTimer = setTimeout((self) => {
                 if (self.server) {
                     try {
                         self.server.run();
@@ -141,6 +142,9 @@ function loaded(api) {
          * Stop the service
          */
         stop() {
+            if (this.startTimer) {
+                clearTimeout(this.startTimer);
+            }
             api.dashboardAPI.unregisterTile("homebridge");
             api.exported.Logger.info("Stopping homebridge server");
             if (this.server) {

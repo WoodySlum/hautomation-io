@@ -72,7 +72,9 @@ class ServicesManager {
      */
     start() {
         this.services.forEach((service) => {
-            service.start();
+            if (!service.disableAutoStart) {
+                service.start();
+            }
         });
     }
 

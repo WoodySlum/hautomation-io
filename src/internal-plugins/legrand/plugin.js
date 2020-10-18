@@ -243,14 +243,15 @@ function loaded(api) {
                             if (formData && formData.length > 0) {
                                 formData.forEach((data) => {
                                     let sAutomation = null;
-                                    this.modules.automations.forEach((automation) => {
-                                        if (automation.sender.plant.module.id == data.legrandId) {
-                                            sAutomation = automation;
-                                        }
-                                    });
+                                    if (this.modules && this.modules.automations) {
+                                        this.modules.automations.forEach((automation) => {
+                                            if (automation.sender.plant.module.id == data.legrandId) {
+                                                sAutomation = automation;
+                                            }
+                                        });
+                                    }
 
                                     if (sAutomation) {
-
                                         if (deviceStatus.getStatus() === api.deviceAPI.constants().INT_STATUS_ON) {
                                             this.setAutomationStatus(this.plant, sAutomation, SHUTTER_OPEN, (err) => {
                                                 if (err) {

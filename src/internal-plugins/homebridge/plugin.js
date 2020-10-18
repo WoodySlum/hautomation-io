@@ -137,13 +137,22 @@ function loaded(api) {
          */
         generateHapDevices() {
             this.devices = [];
+            this.devicesName = [];
             this.api.deviceAPI.getDevices().forEach((device) => {
                 if (device.visible) {
+                    let i = 2;
                     if (device.bestDeviceType == this.api.deviceAPI.constants().DEVICE_TYPE_LIGHT_DIMMABLE_COLOR || device.bestDeviceType == this.api.deviceAPI.constants().DEVICE_TYPE_LIGHT_DIMMABLE || device.bestDeviceType == this.api.deviceAPI.constants().DEVICE_TYPE_LIGHT) {
+                        let name = device.name;
+                        if (this.devicesName.indexOf(name) >= 0) {
+                            name = name + " " + i;
+                            i++;
+                        } else {
+                            this.devicesName.push(name);
+                        }
                         this.devices.push({
                             accessory: "Smarties lights",
                             identifier: device.id,
-                            name: device.name,
+                            name: name,
                             coreApi:api,
                             status: device.status,
                             device: device
@@ -170,18 +179,38 @@ function loaded(api) {
          */
         generateHapSensors() {
             this.sensors = [];
+            this.sensorsName = [];
+            let i = 2;
             const temperatureSensors = this.api.sensorAPI.getSensors("TEMPERATURE");
             Object.keys(temperatureSensors).forEach((sensorKey) => {
+
+                let sensor = temperatureSensors[sensorKey];
+                if (this.sensorsName.indexOf(sensor) >= 0) {
+                    sensor = sensor + " " + i;
+                    i++;
+                } else {
+                    this.sensorsName.push(sensor);
+                }
+
                 this.sensors.push({
                     accessory: "Smarties temperature sensor",
                     identifier: sensorKey,
-                    name: temperatureSensors[sensorKey],
+                    name: sensor,
                     coreApi:api
                 });
             });
 
             const humiditySensors = this.api.sensorAPI.getSensors("HUMIDITY");
             Object.keys(humiditySensors).forEach((sensorKey) => {
+
+                let sensor = humiditySensors[sensorKey];
+                if (this.sensorsName.indexOf(sensor) >= 0) {
+                    sensor = sensor + " " + i;
+                    i++;
+                } else {
+                    this.sensorsName.push(sensor);
+                }
+
                 this.sensors.push({
                     accessory: "Smarties humidity sensor",
                     identifier: sensorKey,

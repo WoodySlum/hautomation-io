@@ -39,6 +39,7 @@ class Service {
         this.pid = -1;
         this.childProcess = null;
         this.externalTerminatedCommand = null;
+        this.disableAutoStart = false;
     }
 
     /**
