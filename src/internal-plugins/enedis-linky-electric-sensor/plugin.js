@@ -1,5 +1,5 @@
 "use strict";
-const linky = require("@bokub/linky");
+const linky = require("linky");
 
 /**
  * Loaded function

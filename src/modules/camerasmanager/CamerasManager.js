@@ -503,7 +503,7 @@ class CamerasManager {
                     this.timeEventService.unregister(timeEventCb, TimeEventService.EVERY_SECONDS, null, null, null, timeEventServiceKey);
                     this.timeEventService.register(timeEventCb, this, TimeEventService.EVERY_SECONDS, null, null, null, timeEventServiceKey);
                 } else {
-                    Logger.err("Plugin " + configuration.plugin + " does not have linked camera class");
+                    Logger.err("Plugin " + configuration.plugin + " does not have linked camera class, or plugin is disabled");
                 }
             } else {
                 Logger.err("Plugin " + configuration.plugin + " can not be found");
@@ -1074,14 +1074,14 @@ class CamerasManager {
                         cb(null, this.cameraCapture[camera.id.toString()], "image/jpeg");
                     } else {
                         if (camera.snapshotUrl && camera.snapshotUrl.length > 0) {
-                            Logger.info("Retrieving picture from camera " + id);
+                            Logger.verbose("Retrieving picture from camera " + id);
                             request(camera.snapshotUrl, {encoding: "binary"}, function(error, response, body) {
                                 if (error) {
                                     Logger.err("Camera picture " + id + " error");
                                     Logger.err(error);
                                     cb(error);
                                 } else {
-                                    Logger.info("Camera picture " + id + " done !");
+                                    Logger.verbose("Camera picture " + id + " done !");
                                     cb(null, Buffer.from(body, "binary"), response.headers["content-type"]);
                                 }
                             });
@@ -1220,6 +1220,8 @@ class CamerasManager {
                 if (!error && timelapseFilepath) {
                     fs.remove(filename);
                     fs.move(timelapseFilepath, filename);
+
+                    Logger.info("Timelapse generated ! file : " + filename);
                 }
                 this.currentTimelapse = null;
                 if (this.timelapseQueue.length > 0) {

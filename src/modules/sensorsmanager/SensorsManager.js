@@ -189,7 +189,7 @@ class SensorsManager {
 
                     Logger.info("Sensor '" + configuration.name + "' loaded (#" + configuration.id + ")");
                 } else {
-                    Logger.err("Plugin " + configuration.plugin + " does not have linked sensor class");
+                    Logger.err("Plugin " + configuration.plugin + " does not have linked sensor class, or plugin is disabled");
                 }
             } else {
                 Logger.err("Plugin " + configuration.plugin + " can not be found");
