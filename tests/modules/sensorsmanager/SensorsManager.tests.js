@@ -110,7 +110,7 @@ describe("SensorsManager", function() {
         expect(sensorsManager.sensorsConfiguration.length).to.be.equal(0);
 
         expect(confManager.loadData.calledOnce).to.be.true;
-        expect(eventBus.on.calledOnce).to.be.true;
+        expect(eventBus.on.calledTwice).to.be.true;
         expect(webServices.registerAPI.callCount).to.be.equal(7);
 
         confManager.loadData.restore();
