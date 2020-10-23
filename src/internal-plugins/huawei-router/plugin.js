@@ -329,7 +329,7 @@ function loaded(api) {
                             router.login(token, conf.username, conf.password, () => {
                                 router.getAllSms(token, true, (err, messages) => {
                                     if (err) {
-                                        self.api.exported.Logger.warn(err.message);
+                                        self.api.exported.Logger.warn(err);
                                     } else if (messages.length > 0) {
                                         messages.forEach((message) => {
                                             if (self.receivedSms.indexOf(message.Date + "-" + message.Phone) === -1)  {

@@ -30,6 +30,7 @@ const ERROR_NOT_REGISTERED = "Not registered";
 const SENSOR_NAME_COMPARE_CONFIDENCE = 0.31;
 const EVENT_SENSORS_READY = "event-sensors-ready";
 const EVENT_UPDATE_CONFIG_SENSORS = "update-config-sensors";
+const EVENT_SAVE_CONFIG_SENSORS = "save-config-sensors";
 
 const AI_KEY = "sensors";
 
@@ -84,6 +85,11 @@ class SensorsManager {
         self.eventBus.on(require("./../pluginsmanager/PluginsManager").EVENT_LOADED, (pluginsManager) => {
             self.pluginsLoaded(pluginsManager, self);
         });
+
+        self.eventBus.on(EVENT_SAVE_CONFIG_SENSORS, (conf) => {
+            self.sensorsConfiguration = self.confManager.setData(CONF_MANAGER_KEY, conf, self.sensorsConfiguration, self.comparator);
+        });
+
 
         // Web services
         this.webServices.registerAPI(this, WebServices.GET, SENSORS_MANAGER_AVAILABLE_GET, Authentication.AUTH_ADMIN_LEVEL);
@@ -709,4 +715,4 @@ class SensorsManager {
     }
 }
 
-module.exports = {class:SensorsManager, ERROR_ALREADY_REGISTERED:ERROR_ALREADY_REGISTERED, ERROR_NOT_REGISTERED:ERROR_NOT_REGISTERED, EVENT_SENSORS_READY:EVENT_SENSORS_READY, EVENT_UPDATE_CONFIG_SENSORS:EVENT_UPDATE_CONFIG_SENSORS};
+module.exports = {class:SensorsManager, ERROR_ALREADY_REGISTERED:ERROR_ALREADY_REGISTERED, ERROR_NOT_REGISTERED:ERROR_NOT_REGISTERED, EVENT_SENSORS_READY:EVENT_SENSORS_READY, EVENT_UPDATE_CONFIG_SENSORS:EVENT_UPDATE_CONFIG_SENSORS, EVENT_SAVE_CONFIG_SENSORS:EVENT_SAVE_CONFIG_SENSORS};

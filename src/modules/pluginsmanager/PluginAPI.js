@@ -110,7 +110,8 @@ class PluginsAPI {
             {Cleaner: Cleaner},
             {cachePath:appConfiguration.cachePath},
             {IotForm:IotForm.class},
-            {SmartiesRunnerConstants:SmartiesRunnerConstants}
+            {SmartiesRunnerConstants:SmartiesRunnerConstants},
+            {EventBus:eventBus}
         );
 
         // API part
@@ -255,7 +256,7 @@ class PluginsAPI {
         if (allParams.length > 0) {
             getReq.slice(0, -1);
         }
-        
+
         request(this.baseUrl + "renew-oauth?" + getReq, (err) => {
             if (err) {
                 if (cb) {

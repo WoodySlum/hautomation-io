@@ -26,27 +26,34 @@ function loaded(api) {
          * @param  {boolean} statistics      True if display on statistics, otherwise false
          * @param  {string} dashboardColor  The dashboard color
          * @param  {string} statisticsColor The statistics color
-         * @param  {string} username The enedis username
-         * @param  {string} password The enedis password
+         * @param  {string} accessToken The enedis acess token
+         * @param  {string} refreshToken The enedis refresh token
+         * @param  {string} usagePointId The enedis usage point id
          * @returns {ElectricSensorForm}                 The instance
          */
-        constructor(id, plugin, name, dashboard, statistics, dashboardColor, statisticsColor, username, password) {
-            super(id, plugin, name, dashboard, statistics, dashboardColor, statisticsColor, username, password);
+        constructor(id, plugin, name, dashboard, statistics, dashboardColor, statisticsColor, accessToken, refreshToken, usagePointId) {
+            super(id, plugin, name, dashboard, statistics, dashboardColor, statisticsColor, accessToken, refreshToken, usagePointId);
 
             /**
-             * @Property("username");
-             * @Title("enedis.username");
+             * @Property("accessToken");
+             * @Title("enedis.access.token");
              * @Type("string");
              */
-            this.username = username;
+            this.accessToken = accessToken;
 
             /**
-             * @Property("password");
-             * @Title("enedis.password");
+             * @Property("refreshToken");
+             * @Title("enedis.refresh.token");
              * @Type("string");
-             * @Display("password");
              */
-            this.password = password;
+            this.refreshToken = refreshToken;
+
+            /**
+             * @Property("usagePointId");
+             * @Title("enedis.usage.point.id");
+             * @Type("string");
+             */
+            this.usagePointId = usagePointId;
         }
 
         /**
@@ -83,6 +90,9 @@ function loaded(api) {
             api.timeEventAPI.register((self) => {
                 self.updateData(self);
             }, this, api.timeEventAPI.constants().EVERY_HOURS_INACCURATE);
+
+
+            //api.exported.EventBus.emit(api.sensorAPI.constants().EVENT_SAVE_CONFIG_SENSORS, this.configuration);
 
             this.updateData();
         }

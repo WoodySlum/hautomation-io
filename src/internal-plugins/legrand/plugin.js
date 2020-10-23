@@ -85,27 +85,28 @@ function loaded(api) {
         constructor(api) {
             this.plant = null;
             this.modules = null;
-            setTimeout(() => {
-                try {
-                    this.oauthData = {};
-                    this.oauthData = api.configurationAPI.loadData(Object, true);
-                    this.refreshOAuth(() => {
-                        this.refreshData(() => {
-                            // this.setAutomationStatus(this.plant, this.modules.automations[0], SHUTTER_CLOSE, () => {});
-                        });
+
+            try {
+                this.oauthData = {};
+                this.oauthData = api.configurationAPI.loadData(Object, true);
+                this.refreshOAuth(() => {
+                    this.refreshData(() => {
+                        // this.setAutomationStatus(this.plant, this.modules.automations[0], SHUTTER_CLOSE, () => {});
                     });
-                } catch(e) {
-                    api.exported.Logger.err(e);
-                }
-            }, 10000);
+                });
+            } catch(e) {
+                api.exported.Logger.err(e);
+            }
 
 
             // Refresh oauth token every hours
-            api.timeEventAPI.register((self) => {
-                self.refreshOAuth(() => {
-                    self.refreshData();
-                });
-            }, this, api.timeEventAPI.constants().EVERY_HOURS);
+            api.timeEventAPI.register((self, nowHours, nowMinutes) => {
+                if ((nowMinutes % 30) == 0) { // Every 30 minutes
+                    self.refreshOAuth(() => {
+                        self.refreshData();
+                    });
+                }
+            }, this, api.timeEventAPI.constants().CUSTOM, "*", "*", 0, "legrand");
         }
 
         /**
