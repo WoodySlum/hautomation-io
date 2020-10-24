@@ -169,6 +169,7 @@ function loaded(api) {
 
             setTimeout((self) => { // Wait 30s for service start
                 self.init();
+
             }, 30000, this);
 
             this.api.backupAPI.addBackupFolder(BACKUP_DIR);
@@ -527,6 +528,7 @@ function loaded(api) {
          */
         switchLight(light, status, deviceStatus, cb) {
             const on = (!deviceStatus.status ? false : (deviceStatus.status === super.constants().STATUS_ON || deviceStatus.status === super.constants().STATUS_ALL_ON) ? true : false);
+
             const bri = parseInt(deviceStatus.brightness > -1 ? (deviceStatus.brightness * 254) : 254);
             let data = {
                 on: on,
@@ -623,7 +625,6 @@ function loaded(api) {
                         } else {
                             light.stype = LIGHT_TYPE_UNKNOWN;
                         }
-
 
                         light.protocolName = LIGHT_PREFIX + light.uniqueid;
 

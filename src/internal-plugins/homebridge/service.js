@@ -121,7 +121,7 @@ function loaded(api) {
                 if (self.server) {
                     try {
                         self.server.run();
-                        if (typeof api.configurationAPI.getConfiguration().displayHomekitTile === "undefined" || api.configurationAPI.getConfiguration().displayHomekitTile) {
+                        if (api.configurationAPI.getConfiguration() && (typeof api.configurationAPI.getConfiguration().displayHomekitTile === "undefined" || api.configurationAPI.getConfiguration().displayHomekitTile)) {
                             QRCode.toDataURL(self.server._bridge.setupURI(), { errorCorrectionLevel: "L", color:{light:api.themeAPI.getColors().clearColor + "FF", dark:api.themeAPI.getColors().tertiaryColor +"FF"}, margin:18}, (err, data) => {
                                 if (!err && data) {
                                     const tile = api.dashboardAPI.Tile("homebridge", api.dashboardAPI.TileType().TILE_PICTURE_TEXT, null, null, "Homekit", null, data.split(",")[1], null, null, 99999999);
