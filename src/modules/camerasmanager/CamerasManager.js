@@ -1222,12 +1222,17 @@ class CamerasManager {
                     fs.move(timelapseFilepath, filename);
 
                     Logger.info("Timelapse generated ! file : " + filename);
+                } else {
+                    Logger.info("Timelapse error ! file : " + filename);
+                    Logger.err(error);
                 }
                 this.currentTimelapse = null;
                 if (this.timelapseQueue.length > 0) {
                     const nextTimeLapse = this.timelapseQueue.pop();
                     Logger.warn("Generating next timelapse queue. Generating " + nextTimeLapse.filename);
                     this.processAutotimelapse(nextTimeLapse.timelapse, nextTimeLapse.filename);
+                } else {
+                    Logger.info("No more timelapse in queue");
                 }
             });
         }  else {
