@@ -73,9 +73,11 @@ class SmartiesCore {
      * Constructor
      *
      * @param  {EventEmitter} runnerEventBus Runner event bus, used for restart
+     * @param  {Object} smartiesRunnerConstants Runner constants
+     *
      * @returns {SmartiesCore} The instance
      */
-    constructor(runnerEventBus) {
+    constructor(runnerEventBus, smartiesRunnerConstants) {
 
         Logger.info("░   __                      _   _           ");
         Logger.info("░  / _\\_ __ ___   __ _ _ __| |_(░) ___  ___ ");
@@ -89,7 +91,7 @@ class SmartiesCore {
         fs.ensureDirSync(AppConfiguration.configurationPath);
         fs.ensureDirSync(AppConfiguration.cachePath);
 
-
+        this.devMode = ((AppConfiguration.devMode != null && typeof AppConfiguration.devMode != "undefined") ? AppConfiguration.devMode : false);
         this.runnerEventBus = runnerEventBus;
         this.eventBus = this.runnerEventBus?this.runnerEventBus:new events.EventEmitter();
         this.eventBus.setMaxListeners(MAX_EVENT_BUS_LISTENER);
@@ -111,7 +113,7 @@ class SmartiesCore {
         this.IconFormManager = new IconFormManager.class(this.formManager);
 
         // Threads
-        this.threadsManager = new ThreadsManager.class();
+        this.threadsManager = new ThreadsManager.class(this.eventBus, smartiesRunnerConstants);
 
         // Services
         // Web services and API
@@ -150,6 +152,15 @@ class SmartiesCore {
         this.userManager = new UserManager.class(this.confManager, this.formManager, this.webServices, this.dashboardManager, AppConfiguration, this.scenarioManager, this.environmentManager, this.translateManager, this.themeManager);
         // Message manager
         this.messageManager = new MessageManager.class(this.pluginsManager, this.eventBus, this.userManager, this.dbManager, this.webServices, this.translateManager, this.dashboardManager, this.scenarioManager, AppConfiguration.cachePath);
+        // Crash message
+        if (!process.env.TEST && fs.existsSync(smartiesRunnerConstants.CRASH_FILE)) {
+            const crash = JSON.parse(fs.readFileSync(smartiesRunnerConstants.CRASH_FILE));
+            fs.unlinkSync(smartiesRunnerConstants.CRASH_FILE);
+            if (this.devMode) {
+                this.messageManager.sendMessage("*", "Critical error occured : " + crash.message);
+            }
+        }
+
         // Environment manager
         this.environmentManager = new EnvironmentManager.class(AppConfiguration, this.confManager, this.formManager, this.webServices, this.dashboardManager, this.translateManager, this.scenarioManager, NpmPackage.version, commit, this.installationManager, this.timeEventService, this.eventBus, this.messageManager, EVENT_STOP, EVENT_READY, this.userManager);
         // Ai

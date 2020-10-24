@@ -13,10 +13,15 @@ class ThreadsManager {
     /**
      * Constructor
      *
+     * @param  {EventEmitter} eventBus    The global event bus
+     * @param  {Object} smartiesRunnerConstants Runner constants
+     *
      * @returns {ThreadsManager} The thread manager
      */
-    constructor() {
+    constructor(eventBus, smartiesRunnerConstants) {
         this.threads = {};
+        this.eventBus = eventBus;
+        this.smartiesRunnerConstants = smartiesRunnerConstants;
     }
 
     /**
@@ -96,6 +101,7 @@ class ThreadsManager {
             });
 
         this.threads[identifier] = thread;
+        this.eventBus.emit(this.smartiesRunnerConstants.PID_SPAWN, thread.slave.pid);
     }
 
     /**

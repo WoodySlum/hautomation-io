@@ -5,6 +5,7 @@ var sinon = require("sinon");
 var GlobalMocks = require("./../../GlobalMocks");
 
 var ThreadsManager = require("./../../../src/modules/threadsmanager/ThreadsManager");
+var SmartiesRunnerConstants = require("./../../../SmartiesRunnerConstants");
 
 class Foo {
     constructor() {
@@ -20,6 +21,7 @@ function bar(data, send) {
     var a = {};
 }
 
+const eventBus = {emit:()=>{}};
 const expectedStringifyClass = `(data, send) => {
         var a = {};
      return this;}`;
@@ -28,7 +30,7 @@ const expectedStringifyFunc = `(data, send) => {
  return this;}`;
 
 describe("ThreadsManager", function() {
-    const threadsManager = new ThreadsManager.class();
+    const threadsManager = new ThreadsManager.class(eventBus, SmartiesRunnerConstants);
 
     before(() => {
 

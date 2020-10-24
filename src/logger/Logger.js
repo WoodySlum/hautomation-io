@@ -174,7 +174,12 @@ class Logger {
      * @param  {[string]} params    Some parameters
      */
     static err(message, ...params) {
-        this.log(message, 1, ...params);
+        if (message instanceof Error) {
+            this.log(message.message, 1, ...params);
+            this.log(message.stack, 1, ...params);
+        } else {
+            this.log(message, 1, ...params);
+        }
     }
 
     /**
