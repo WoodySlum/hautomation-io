@@ -109,9 +109,13 @@ class TimelapseGenerator {
                 const pictureList = [];
                 files.forEach((file) => {
                     const fileTimesamp = parseInt(file.split(".")[0]);
-                    const stats = fs.statSync(cameraArchiveFolder + file);
-                    if (fileTimesamp >= beginTimestamp && stats["size"] > 50000) { // At least 50 Kb
-                        pictureList.push(file);
+                    try {
+                        const stats = fs.statSync(cameraArchiveFolder + file);
+                        if (fileTimesamp >= beginTimestamp && stats["size"] > 50000) { // At least 50 Kb
+                            pictureList.push(file);
+                        }
+                    } catch(e) {
+                        Logger.err(e);
                     }
                 });
 
