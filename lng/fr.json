@@ -79,6 +79,7 @@
     "scenario.form.delay": "Délai",
     "scenario.form.schedule.unit": "Mode",
     "scenario.form.schedule.immediatly": "Immediatement",
+    "scenario.form.schedule.secondes": "Secondes",
     "scenario.form.schedule.minutes": "Minutes",
     "scenario.form.schedule.hours": "Heures",
     "scenario.form.schedule.days": "Jours",

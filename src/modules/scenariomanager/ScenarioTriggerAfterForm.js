@@ -21,8 +21,8 @@ class ScenarioTriggerAfterForm extends FormObject.class {
          * @Title("scenario.form.schedule.unit");
          * @Default("immediately");
          * @Type("string");
-         * @Enum(["immediately", "minutes", "hours", "days"]);
-         * @EnumNames(["scenario.form.schedule.immediatly", "scenario.form.schedule.minutes", "scenario.form.schedule.hours", "scenario.form.schedule.days"]);
+         * @Enum(["immediately", "seconds", "minutes", "hours", "days"]);
+         * @EnumNames(["scenario.form.schedule.immediatly", "scenario.form.schedule.secondes", "scenario.form.schedule.minutes", "scenario.form.schedule.hours", "scenario.form.schedule.days"]);
          */
         this.unit = unit;
 

@@ -19,6 +19,7 @@ const CONF_KEY = "scenarios";
 const SUB_ACTION_SCHEDULER_KEY = "sub-action";
 const ACTION_SCHEDULER_KEY = "action";
 const DELAY_IMMEDIATELY = "immediately";
+const DELAY_SECONDS = "seconds";
 const DELAY_DAYS = "days";
 const DELAY_HOURS = "hours";
 const DELAY_MINUTES = "minutes";
@@ -280,27 +281,47 @@ class ScenarioManager {
                 // Plan sub actions
                 if (scenario.subActions && scenario.subActions.length > 0) {
                     scenario.subActions.forEach((subAction) => {
-                        let delay = parseInt(subAction.delay);
+                        let delay = parseFloat(String(subAction.delay).replace(",", "."));
                         const nextTriggerTimestamp = delay * 60 + DateUtils.class.timestamp();
                         Logger.info("Scheduling sub scenario " + subAction.scenario.scenario + " at " + nextTriggerTimestamp);
-                        self.schedulerService.schedule(SUB_ACTION_SCHEDULER_KEY, nextTriggerTimestamp , {scenarioId:subAction.scenario.scenario});
+                        if (delay < 1) {
+                            setTimeout(() => {
+                                self.getScenarios().forEach((scenario) => {
+                                    if (scenario.id === subAction.scenario.scenario) {
+                                        self.triggerScenario(scenario, true);
+                                    }
+                                });
+                            }, parseInt(delay * 60) * 1000);
+                        } else {
+                            self.schedulerService.schedule(SUB_ACTION_SCHEDULER_KEY, nextTriggerTimestamp , {scenarioId:subAction.scenario.scenario});
+                        }
                     });
 
                 }
             } else {
                 // Plan action
-                const delay = scenario.delay.delay ? parseInt(scenario.delay.delay) : 0;
+                const delay = scenario.delay.delay ? parseFloat(String(scenario.delay.delay).replace(",", ".")) : 0;
                 let delta = 0;
-                if (scenario.delay.unit === DELAY_DAYS) {
-                    delta += 60 * 60 * 24 * delay;
-                } else if (scenario.delay.unit === DELAY_HOURS) {
-                    delta += 60 * 60 * delay;
-                } else if (scenario.delay.unit === DELAY_MINUTES) {
-                    delta += 60 * delay;
+                if (scenario.delay.unit === DELAY_SECONDS) {
+                    setTimeout(() => {
+                        self.getScenarios().forEach((scenar) => {
+                            if (scenar.id === sscenario.id) {
+                                self.triggerScenario(scenar, true);
+                            }
+                        });
+                    }, delay * 1000);
+                } else {
+                    if (scenario.delay.unit === DELAY_DAYS) {
+                        delta += 60 * 60 * 24 * delay;
+                    } else if (scenario.delay.unit === DELAY_HOURS) {
+                        delta += 60 * 60 * delay;
+                    } else if (scenario.delay.unit === DELAY_MINUTES) {
+                        delta += 60 * delay;
+                    }
+                    const nextTriggerTimestamp = delta + DateUtils.class.timestamp();
+                    Logger.info("Scheduling scenario " + scenario.id + " at " + nextTriggerTimestamp);
+                    self.schedulerService.schedule(ACTION_SCHEDULER_KEY, nextTriggerTimestamp , {scenarioId:scenario.id});
                 }
-                const nextTriggerTimestamp = delta + DateUtils.class.timestamp();
-                Logger.info("Scheduling scenario " + scenario.id + " at " + nextTriggerTimestamp);
-                self.schedulerService.schedule(ACTION_SCHEDULER_KEY, nextTriggerTimestamp , {scenarioId:scenario.id});
 
             }
 
