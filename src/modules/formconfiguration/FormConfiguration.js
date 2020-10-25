@@ -144,7 +144,9 @@ class FormConfiguration {
             this.data = this.confManager.setData(this.confKey, this.formClass ? new (this.formClass)().json(data) : JSON.stringify(data));
         }
 
-        this.confManager.writeDataToDisk(this.confManager, true);
+        if (!process.env.TEST) {
+            this.confManager.writeDataToDisk(this.confManager, true);
+        }
     }
 
     /**

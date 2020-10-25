@@ -268,7 +268,7 @@ class DeviceManager {
         const devicesId = [];
         this.formConfiguration.data.sort((a,b) => a.name.localeCompare(b.name)).forEach((device) => {
             const deviceType = this.bestDeviceType(this.getDeviceTypes(device));
-            devicesName.push(deviceType.charAt(0).toUpperCase() + deviceType.slice(1) + " - " + device.name);
+            devicesName.push((deviceType ? (deviceType.charAt(0).toUpperCase() + deviceType.slice(1) + " - ") : "") + device.name);
             devicesId.push(device.id);
         });
         this.formManager.register(DevicesListForm.class, devicesName, devicesId);
