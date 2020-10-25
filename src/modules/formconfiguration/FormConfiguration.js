@@ -145,7 +145,7 @@ class FormConfiguration {
         }
 
         if (!process.env.TEST) {
-            this.confManager.writeDataToDisk(this.confManager, true);
+            this.confManager.writeDataToDisk(this.confManager, false);
         }
     }
 
