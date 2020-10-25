@@ -288,7 +288,7 @@ class ScenarioManager {
                             setTimeout(() => {
                                 self.getScenarios().forEach((scenario) => {
                                     if (scenario.id === subAction.scenario.scenario) {
-                                        self.triggerScenario(scenario, true);
+                                        self.triggerScenario(scenario);
                                     }
                                 });
                             }, parseInt(delay * 60) * 1000);
