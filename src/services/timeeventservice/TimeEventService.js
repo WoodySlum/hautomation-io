@@ -10,6 +10,9 @@ const EVERY_MINUTES = 1;
 const EVERY_HOURS = 2;
 const EVERY_DAYS = 3;
 const EVERY_HOURS_INACCURATE = 4;
+const EVERY_FIVE_MINUTES = 5;
+const EVERY_FIFTEEN_MINUTES = 6;
+const EVERY_THIRTY_MINUTES = 7;
 const CUSTOM = 99;
 
 /**
@@ -176,6 +179,21 @@ class TimeEventService extends Service.class {
             obj.minute = Math.floor(Math.random() * 58) + 1; // Sleek minutes for day processing
             obj.hour = Math.floor(Math.random() * 5) + 0; // Sleek hours for day processing
             break;
+        case EVERY_FIVE_MINUTES:
+            obj.second = 0;
+            obj.minute = "*/5";
+            obj.hour = "*";
+            break;
+        case EVERY_FIFTEEN_MINUTES:
+            obj.second = 0;
+            obj.minute = "*/15";
+            obj.hour = "*";
+            break;
+        case EVERY_THIRTY_MINUTES:
+            obj.second = 0;
+            obj.minute = "*/30";
+            obj.hour = "*";
+            break;
         }
 
         return obj;
@@ -196,9 +214,9 @@ class TimeEventService extends Service.class {
             let minutes = registeredEl.minute;
             let hours = registeredEl.hour;
 
-            if (parseInt(seconds) === nowSeconds || seconds === "*") {
-                if (parseInt(minutes) === nowMinutes || minutes === "*") {
-                    if (parseInt(hours) === nowHours || hours === "*") {
+            if (parseInt(seconds) === nowSeconds || seconds === "*" || (String(seconds).indexOf("/") > 0 && nowSeconds % parseInt(seconds.split("/")[1]) == 0)) {
+                if (parseInt(minutes) === nowMinutes || minutes === "*" || (String(minutes).indexOf("/") > 0 && nowMinutes % parseInt(minutes.split("/")[1]) == 0)) {
+                    if (parseInt(hours) === nowHours || hours === "*" || (String(hours).indexOf("/") > 0 && nowHours % parseInt(hours.split("/")[1]) == 0)) {
                         try {
                             // Set timeout generate in a new thread
                             setTimeout(() => {
@@ -218,6 +236,9 @@ module.exports = {class:TimeEventService,
     EVERY_SECONDS:EVERY_SECONDS,
     EVERY_MINUTES:EVERY_MINUTES,
     EVERY_HOURS:EVERY_HOURS,
+    EVERY_FIVE_MINUTES:EVERY_FIVE_MINUTES,
+    EVERY_FIFTEEN_MINUTES:EVERY_FIFTEEN_MINUTES,
+    EVERY_THIRTY_MINUTES:EVERY_THIRTY_MINUTES,
     EVERY_HOURS_INACCURATE:EVERY_HOURS_INACCURATE,
     EVERY_DAYS:EVERY_DAYS,
     CUSTOM:CUSTOM

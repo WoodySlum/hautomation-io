@@ -55,7 +55,7 @@ class ConfManager {
         if (!process.env.TEST) {
             this.timeEventService.register((self) => {
                 self.writeDataToDisk(self, true);
-            }, this, TimeEventService.EVERY_HOURS);
+            }, this, TimeEventService.EVERY_FIVE_MINUTES);
         }
     }
 

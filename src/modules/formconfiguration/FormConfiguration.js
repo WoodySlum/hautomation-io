@@ -143,10 +143,6 @@ class FormConfiguration {
         } else {
             this.data = this.confManager.setData(this.confKey, this.formClass ? new (this.formClass)().json(data) : JSON.stringify(data));
         }
-
-        if (!process.env.TEST) {
-            //this.confManager.writeDataToDisk(this.confManager, false);
-        }
     }
 
     /**
