@@ -305,7 +305,7 @@ class ScenarioManager {
                 if (scenario.delay.unit === DELAY_SECONDS) {
                     setTimeout(() => {
                         self.getScenarios().forEach((scenar) => {
-                            if (scenar.id === sscenario.id) {
+                            if (scenar.id === scenario.id) {
                                 self.triggerScenario(scenar, true);
                             }
                         });
