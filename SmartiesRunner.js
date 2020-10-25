@@ -7,6 +7,7 @@ const Logger = require("./src/logger/Logger");
 const os = require("os");
 const fs = require("fs-extra");
 const childProcess = require("child_process");
+const CHILD_PROCESS_STOP_SIGNAL = "SIGTERM";
 const RESTART_DELAY = 5; // In seconds
 
 /**
@@ -37,7 +38,7 @@ class SmartiesRunner {
             Logger.err(e);
             fs.writeFileSync(SmartiesRunnerConstants.CRASH_FILE, JSON.stringify({message:e.message, stack:e.stack}));
             self.childPids.forEach((childPid) => {
-                process.kill(childPid, "SIGTERM");
+                process.kill(childPid, CHILD_PROCESS_STOP_SIGNAL);
             });
             this.stop(this);
             process.exit(1);
@@ -52,7 +53,11 @@ class SmartiesRunner {
     start(self) {
         if (!self.core) {
             this.runnerEventBus.on(SmartiesRunnerConstants.PID_SPAWN, (pid) => {
-                self.childPids.push(pid);
+                try {
+                    self.childPids.push(pid);
+                } catch (e) {
+
+                }
             });
             Logger.log("Starting runner");
             self.core = new SmartiesCore.class(self.runnerEventBus, SmartiesRunnerConstants);
@@ -69,6 +74,13 @@ class SmartiesRunner {
         if (self.core) {
             Logger.log("Sopping runner");
             self.core.stop();
+            self.childPids.forEach((childPid) => {
+                try {
+                    process.kill(childPid, CHILD_PROCESS_STOP_SIGNAL);
+                } catch (e) {
+
+                }
+            });
             self.runnerEventBus.eventNames().forEach((eventName) => {
                 if (eventName !== SmartiesRunnerConstants.RESTART) {
                     self.runnerEventBus.removeAllListeners(eventName);

@@ -87,6 +87,7 @@ class ScenarioManager {
 
         this.formConfiguration.setSortFunction((a,b) => a.name.localeCompare(b.name));
         this.formConfiguration.setUpdateCb((data) => {
+            this.registerScenariosListForm();
             this.registeredScenarioChanges.forEach((cb) => {
                 cb(data);
             });
