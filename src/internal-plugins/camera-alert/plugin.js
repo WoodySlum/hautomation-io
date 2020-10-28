@@ -159,7 +159,9 @@ function loaded(api) {
          */
         registerTile() {
             const buttons = [{human: ""}, {car: ""}, {dog: ""}, {cat: ""}];
-            const tile = this.api.dashboardAPI.Tile(CAMERA_REGISTER_KEY, this.api.dashboardAPI.TileType().TILE_GENERIC_ACTION, api.exported.Icons.class.list()["bell"], null, api.translateAPI.t("camera.alert.tile.title"), null, null, null, null, 101, CAMERA_REGISTER_KEY, {buttons: buttons}, null, api.webAPI.Authentication().AUTH_USAGE_LEVEL);
+            // Credit : Freepik / https://www.flaticon.com/free-icon/message_3622090
+            const svg = "<svg id=\"Capa_1\" enable-background=\"new 0 0 512 512\" height=\"512\" viewBox=\"0 0 512 512\" width=\"512\" xmlns=\"http://www.w3.org/2000/svg\"><g><path d=\"m497 0h-482c-8.284 0-15 6.716-15 15v396.126c0 8.284 6.716 15 15 15h51.616v70.874c0 5.95 3.517 11.337 8.964 13.732 1.94.853 3.994 1.269 6.033 1.269 3.686 0 7.323-1.359 10.145-3.949l89.273-81.926h315.969c8.284 0 15-6.716 15-15v-396.126c0-8.284-6.716-15-15-15zm-15 396.126h-306.807c-3.756 0-7.375 1.409-10.142 3.948l-68.434 62.801v-51.75c0-8.284-6.716-15-15-15h-51.617v-366.125h452z\"/><path d=\"m256 353.993c77.348 0 140.275-62.927 140.275-140.275s-62.927-140.276-140.275-140.276-140.275 62.928-140.275 140.276 62.927 140.275 140.275 140.275zm0-250.551c60.806 0 110.275 49.469 110.275 110.275s-49.469 110.276-110.275 110.276-110.275-49.469-110.275-110.275 49.469-110.276 110.275-110.276z\"/><path d=\"m256 228.344c8.284 0 15-6.716 15-15v-62.654c0-8.284-6.716-15-15-15s-15 6.716-15 15v62.654c0 8.284 6.716 15 15 15z\"/><path d=\"m256 291.745c7.846 0 15.363-6.899 15-15-.364-8.127-6.591-15-15-15-7.846 0-15.363 6.899-15 15 .364 8.127 6.591 15 15 15z\"/></g></svg>";
+            const tile = this.api.dashboardAPI.Tile(CAMERA_REGISTER_KEY, this.api.dashboardAPI.TileType().TILE_GENERIC_ACTION, svg, null, api.translateAPI.t("camera.alert.tile.title"), null, null, null, null, 101, CAMERA_REGISTER_KEY, {buttons: buttons}, null, api.webAPI.Authentication().AUTH_USAGE_LEVEL);
             this.api.dashboardAPI.registerTile(tile);
         }
 
