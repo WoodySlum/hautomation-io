@@ -10,7 +10,6 @@ const FormConfiguration = require("./../formconfiguration/FormConfiguration");
 const AlarmForm = require("./AlarmForm");
 const AlarmSensorsForm = require("./AlarmSensorsForm");
 const Tile = require("./../dashboardmanager/Tile");
-const Icons = require("./../../utils/Icons");
 const DateUtils = require("./../../utils/DateUtils");
 const AlarmScenarioForm = require("./AlarmScenarioForm");
 const AlarmScenarioTriggerForm = require("./AlarmScenarioTriggerForm");
