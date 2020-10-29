@@ -246,7 +246,7 @@ function loaded(api) {
                                                 icon = api.exported.Icons.class.list()["battery-4"];
                                             }
 
-                                            miniTiles.push({icon: icon, text: status.chargingLevelHv + "%" + (status.remainingRangeElectric ? " [" + status.remainingRangeElectric + " km]" : ""), colorDefault: api.themeAPI.constants().DARK_COLOR_KEY});
+                                            miniTiles.push({icon: icon, text: status.chargingLevelHv + "%" + (status.remainingRangeElectric ? " [" + status.remainingRangeElectric + "]" : ""), colorDefault: api.themeAPI.constants().DARK_COLOR_KEY});
 
                                             // Send notifications
                                             if (this.previousChargingStatus[vehicles[i].originalData.vin] == "CHARGING" && status.chargingStatus != "CHARGING") {

@@ -108,6 +108,42 @@ function loaded(api) {
             }
 
             const configuration = context.configuration;
+            if (configuration && configuration.accessToken && configuration.refreshToken && configuration.usagePointId) {
+                const session = new linky.Session({
+                    accessToken: configuration.accessToken,
+                    refreshToken: configuration.refreshToken,
+                    usagePointId: configuration.usagePointId,
+                    onTokenRefresh: (accessToken, refreshToken) => {
+                        context.configuration.accessToken = accessToken;
+                        context.configuration.refreshToken = refreshToken;
+                        context.api.exported.Logger.info("Save Enedis update tokens");
+                        context.api.exported.EventBus.emit(context.api.sensorAPI.constants().EVENT_SAVE_CONFIG_SENSORS);
+                    }
+                });
+
+                const dateStart = new Date();
+                dateStart.setDate(dateStart.getDate() - 1);
+                const dateEnd = new Date();
+                dateEnd.setDate(dateEnd.getDate());
+                const dateTxtStart = dateStart.getFullYear() + "-" + (dateStart.getMonth() + 1) + "-" + dateStart.getDate();
+                const dateTxtEnd = dateEnd.getFullYear() + "-" + (dateEnd.getMonth() + 1) + "-" + dateEnd.getDate();
+                session.getDailyConsumption(dateTxtStart, dateTxtEnd).then((result) => {
+
+                    if (result && result.data && result.data.length === 1) {
+                        const value = result.data[0].value;
+                        const timestamp = this.api.exported.DateUtils.class.dateToTimestamp(dateTxtStart + " 00:00:00");
+                        const previousMode = context.aggregationMode;
+                        context.aggregationMode = context.api.exported.Sensor.constants().AGGREGATION_MODE_AVG;
+                        context.setValue(value, 0, () => {
+                            context.aggregationMode = previousMode;
+                        }, timestamp);
+                    }
+                }).catch((e) => {
+                    context.api.exported.Logger.err(e);
+                });
+            }
+
+            /*const configuration = context.configuration;
             if (configuration && configuration.username && configuration.password) {
                 try {
                     if (configuration && configuration.username && configuration.password) {
@@ -150,7 +186,7 @@ function loaded(api) {
                 } catch(e) {
                     context.api.exported.Logger.err(e.message);
                 }
-            }
+            }*/
         }
 
         /**
