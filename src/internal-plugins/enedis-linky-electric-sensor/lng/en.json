@@ -1,5 +1,6 @@
 {
-    "enedis.username": "Enedis account username",
-    "enedis.password": "Enedis account password",
+    "enedis.access.token": "Enedis access token (Go to https://conso.vercel.app/)",
+    "enedis.refresh.token": "Enedis refresh token",
+    "enedis.usage.point.id": "Enedis usage point id",
     "enedis.accept.term.of.use": "Enedis : You need to accept term of use"
 }

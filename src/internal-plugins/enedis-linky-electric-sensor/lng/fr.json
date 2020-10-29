@@ -1,5 +1,6 @@
 {
-    "enedis.username": "Nom d'utilisateur du compte particulier Enedis",
-    "enedis.password": "Mot de passe du compte particulier Enedis",
+    "enedis.access.token": "Enedis access token (Voir https://conso.vercel.app/)",
+    "enedis.refresh.token": "Enedis refresh token",
+    "enedis.usage.point.id": "Enedis usage point id",
     "enedis.accept.term.of.use": "Enedis : Vous devez vous connecter à votre espace et accepter les conditions générales"
 }
