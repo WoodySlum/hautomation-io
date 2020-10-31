@@ -39,7 +39,8 @@ function loaded(api) {
          * @returns {ContactSensor}                                                       The instance
          */
         constructor(api, id, configuration) {
-            super(api, id, "CONTACT", configuration, api.exported.Icons.class.list()["columns-1"], 0);
+            const svg = "<svg height=\"512pt\" viewBox=\"-45 0 512 512\" width=\"512pt\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"m302 0v512h120v-512zm90 482h-60v-452h60zm0 0\"/><path d=\"m0 512h272v-512h-272zm30-482h212v452h-212zm0 0\"/><path d=\"m136 362c-24.8125 0-45 20.1875-45 45s20.1875 45 45 45 45-20.1875 45-45-20.1875-45-45-45zm0 60c-8.269531 0-15-6.730469-15-15s6.730469-15 15-15 15 6.730469 15 15-6.730469 15-15 15zm0 0\"/><path d=\"m136 242c-24.8125 0-45 20.1875-45 45s20.1875 45 45 45 45-20.1875 45-45-20.1875-45-45-45zm0 60c-8.269531 0-15-6.730469-15-15s6.730469-15 15-15 15 6.730469 15 15-6.730469 15-15 15zm0 0\"/></svg>";
+            super(api, id, "CONTACT", configuration, svg, 0);
             this.chartType = api.exported.Sensor.constants().CHART_TYPE_BAR;
             this.aggregationMode = api.exported.Sensor.constants().AGGREGATION_MODE_LAST;
             this.unit = api.translateAPI.t("contact.unit.state");

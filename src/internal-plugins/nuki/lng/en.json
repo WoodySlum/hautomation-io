@@ -9,8 +9,9 @@
     "nuki.scenario": "Nuki",
     "nuki.state.locked": "Locked",
     "nuki.state.unlocked": "Unlocked",
-    "nuki.door.state.opened": "Door opened",
-    "nuki.door.state.closed": "Door closed",
+    "nuki.door.state.opened": "Opened",
+    "nuki.door.state.closed": "Unlocked",
+    "nuki.door.state.locked": "Locked",
     "nuki.battery.low": "Nuki battery is critical. Please replace quickly"
 
 

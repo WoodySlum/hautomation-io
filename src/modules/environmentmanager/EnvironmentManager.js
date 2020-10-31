@@ -189,15 +189,17 @@ class EnvironmentManager {
      */
     registerTile() {
         let tileTitle = this.translateManager.t("environment.day");
-        let icon = "sun-1";
+        // Credits : kosonicon / https://www.flaticon.com/premium-icon/sunny_3222672
+        let icon = "<svg xmlns=\"http://www.w3.org/2000/svg\" id=\"outline\" viewBox=\"0 0 512 512\" width=\"512\" height=\"512\"><path d=\"M256,96.745C168.187,96.745,96.745,168.187,96.745,256S168.187,415.255,256,415.255,415.255,343.813,415.255,256,343.813,96.745,256,96.745Zm0,298.51c-76.786,0-139.255-62.469-139.255-139.255S179.214,116.745,256,116.745,395.255,179.214,395.255,256,332.786,395.255,256,395.255Z\"/><path d=\"M256,67.293a10,10,0,0,0,10-10V10a10,10,0,0,0-20,0V57.293A10,10,0,0,0,256,67.293Z\"/><path d=\"M256,444.707a10,10,0,0,0-10,10V502a10,10,0,0,0,20,0V454.707A10,10,0,0,0,256,444.707Z\"/><path d=\"M147.986,88.915a10,10,0,0,0,17.321-10L141.66,37.958a10,10,0,1,0-17.32,10Z\"/><path d=\"M364.014,423.085a10,10,0,0,0-17.321,10l23.647,40.957a10,10,0,1,0,17.32-10Z\"/><path d=\"M88.915,147.986,47.958,124.34a10,10,0,1,0-10,17.32l40.957,23.647a10,10,0,0,0,10-17.321Z\"/><path d=\"M474.042,370.34l-40.957-23.647a10,10,0,0,0-10,17.321l40.957,23.646a10,10,0,1,0,10-17.32Z\"/><path d=\"M67.293,256a10,10,0,0,0-10-10H10a10,10,0,0,0,0,20H57.293A10,10,0,0,0,67.293,256Z\"/><path d=\"M502,246H454.707a10,10,0,0,0,0,20H502a10,10,0,0,0,0-20Z\"/><path d=\"M78.915,346.693,37.958,370.34a10,10,0,1,0,10,17.32l40.957-23.646a10,10,0,0,0-10-17.321Z\"/><path d=\"M428.1,166.648a9.953,9.953,0,0,0,4.99-1.341l40.957-23.647a10,10,0,1,0-10-17.32l-40.957,23.646a10,10,0,0,0,5.01,18.662Z\"/><path d=\"M161.646,419.425a10,10,0,0,0-13.66,3.66L124.34,464.042a10,10,0,1,0,17.32,10l23.647-40.957A10,10,0,0,0,161.646,419.425Z\"/><path d=\"M350.354,92.575a10,10,0,0,0,13.66-3.66L387.66,47.958a10,10,0,1,0-17.32-10L346.693,78.915A10,10,0,0,0,350.354,92.575Z\"/></svg>";
         let background = fs.readFileSync("./res/tiles/day.jpg").toString("base64");
         if (this.isNight()) {
             tileTitle = this.translateManager.t("environment.night");
-            icon = "moon";
+            // Credits : kosonicon / https://www.flaticon.com/premium-icon/crescent-moon_3222719
+            icon = "<svg id=\"outline\" height=\"512\" viewBox=\"0 0 512 512\" width=\"512\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"m263.567 512a256.078 256.078 0 0 1 -184.079-434.108 254.733 254.733 0 0 1 174.891-77.886 10 10 0 0 1 6.871 17.578 194.977 194.977 0 0 0 -68 148c0 107.564 87.51 195.074 195.074 195.074a194.719 194.719 0 0 0 101.013-28.156 10 10 0 0 1 14.569 12.01 256.181 256.181 0 0 1 -240.339 167.488zm-35.845-489.458a236.1 236.1 0 0 0 -131.094 400.31 236.191 236.191 0 0 0 377.5-60 215.093 215.093 0 0 1 -246.4-340.308z\"/></svg>";
             background = fs.readFileSync("./res/tiles/night.jpg").toString("base64");
         }
         //TILE_INFO_ONE_TEXT
-        const tile = new Tile.class(this.dashboardManager.themeManager, "day-night", Tile.TILE_GENERIC_ACTION_DARK, Icons.class.list()[icon], null, tileTitle, null, background, null, null, 200);
+        const tile = new Tile.class(this.dashboardManager.themeManager, "day-night", Tile.TILE_GENERIC_ACTION_DARK, icon, null, tileTitle, null, background, null, null, 200);
         this.dashboardManager.registerTile(tile);
     }
 
