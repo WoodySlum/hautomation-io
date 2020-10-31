@@ -685,7 +685,7 @@ class SensorsManager {
         } else {
             let foundConfiguration = null;
             this.sensorsConfiguration.forEach((sensorConfiguration) => {
-                if (sensorConfiguration.id === sensorId) {
+                if (sensorConfiguration && sensorConfiguration.id === sensorId) {
                     foundConfiguration = sensorConfiguration;
                 }
             });

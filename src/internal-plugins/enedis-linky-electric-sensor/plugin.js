@@ -117,7 +117,7 @@ function loaded(api) {
                         context.configuration.accessToken = accessToken;
                         context.configuration.refreshToken = refreshToken;
                         context.api.exported.Logger.info("Save Enedis update tokens");
-                        context.api.exported.EventBus.emit(context.api.sensorAPI.constants().EVENT_SAVE_CONFIG_SENSORS);
+                        context.api.exported.EventBus.emit(context.api.sensorAPI.constants().EVENT_SAVE_CONFIG_SENSORS, context.configuration);
                     }
                 });
 
