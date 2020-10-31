@@ -119,6 +119,8 @@
     "devices.list.form.color": "Couleur",
     "devices.list.form.color.temperature": "Température (froid <--> chaud)",
     "devices.list.form.color.update.brightness": "Changer la luminosité",
+    "devices.list.form.color.update.temperature": "Changer la température",
+    "devices.list.form.color.update.color": "Changer la couleur",
     "devices.list.form.keep.params": "Conserver les paramètres existants (luminosité, couleur et température)",
     "devices.list.scenario.devices": "Périphériques",
     "devices.list.scenario.title": "Périphériques",

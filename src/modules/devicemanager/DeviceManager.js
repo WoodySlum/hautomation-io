@@ -243,17 +243,55 @@ class DeviceManager {
 
             if (scenario.DevicesListScenarioForm.devices && scenario.DevicesListScenarioForm.devices.length > 0) {
                 scenario.DevicesListScenarioForm.devices.forEach((scenarioDevice) => {
+
                     let adjustBrightness = 0;
                     if (typeof scenarioDevice.updateBrightness !== "undefined") {
                         adjustBrightness = parseFloat(scenarioDevice.updateBrightness);
                     }
 
+                    let adjustTemperature = 0;
+                    if (typeof scenarioDevice.updateTemperature !== "undefined") {
+                        adjustTemperature = parseFloat(scenarioDevice.updateTemperature);
+                    }
+
+                    let adjustColor = 0;
+                    if (typeof scenarioDevice.updateColor !== "undefined") {
+                        adjustColor = parseFloat(scenarioDevice.updateColor);
+                    }
+
+                    const newColor = (adjustColor, color) => {
+                        let i = 0;
+                        let found = 0;
+                        DEVICE_COLORS.forEach((deviceColor) => {
+                            if (deviceColor == color) {
+                                found = i;
+                            }
+                            i++;
+                        });
+                        if ((found + adjustColor) >= 0 && (found + adjustColor) < DEVICE_COLORS.length) {
+                            color = DEVICE_COLORS[(found + adjustColor)];
+                        } else if ((found + adjustColor) >= DEVICE_COLORS.length) {
+                            color = DEVICE_COLORS[0];
+                        } else if ((found + adjustColor) < 0) {
+                            color = DEVICE_COLORS[DEVICE_COLORS.length - 1];
+                        }
+
+                        return color;
+                    };
+
                     if (!scenarioDevice.keepParams) {
-                        context.switchDevice(scenarioDevice.identifier, scenarioDevice.status, (parseFloat(scenarioDevice.brightness) + adjustBrightness), scenarioDevice.color, scenarioDevice.colorTemperature);
+                        context.switchDevice(scenarioDevice.identifier, scenarioDevice.status, scenarioDevice.brightness, scenarioDevice.color, scenarioDevice.colorTemperature);
                     } else {
                         const device = context.getDeviceById(scenarioDevice.identifier);
                         if (device) {
-                            context.switchDevice(scenarioDevice.identifier, scenarioDevice.status, (parseFloat(device.brightness) + adjustBrightness), device.color, device.colorTemperature);
+                            if (typeof device.brightness === "undefined") {
+                                device.brightness = 0;
+                            }
+                            if (typeof device.colorTemperature === "undefined") {
+                                device.colorTemperature = 0;
+                            }
+
+                            context.switchDevice(scenarioDevice.identifier, scenarioDevice.status, (parseFloat(device.brightness) + adjustBrightness), newColor(adjustColor, device.color), parseFloat(device.colorTemperature) + adjustTemperature);
                         }
                     }
                 });

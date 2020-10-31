@@ -15,10 +15,12 @@ class DevicesListForm extends FormObject.class {
      * @param {string} [color="FFFFFF"]  Color
      * @param {string} [colorTemperature=0]  Color temperature
      * @param {boolean} [keepParams=true]    Keep params existing
-     * @param {number} [updateBrightness=1]    Update brightness
+     * @param {number} [updateBrightness=0]    Update brightness
+     * @param {number} [updateTemperature=0]    Update temperature
+     * @param {number} [updateColor=0]    Update temperature
      * @returns {DevicesListForm}                            The instance
      */
-    constructor(id = null, identifier = null, status = null, brightness = 1, color = "FFFFFF", colorTemperature = 0, keepParams = true, updateBrightness = 0) {
+    constructor(id = null, identifier = null, status = null, brightness = 1, color = "FFFFFF", colorTemperature = 0, keepParams = true, updateBrightness = 0, updateTemperature = 0, updateColor = 0) {
         super(id);
 
         /**
@@ -78,6 +80,22 @@ class DevicesListForm extends FormObject.class {
          * @Range([-1, 1, 0.1]);
          */
         this.updateBrightness = updateBrightness;
+
+        /**
+         * @Property("updateTemperature");
+         * @Type("number");
+         * @Title("devices.list.form.color.update.temperature");
+         * @Range([-1, 1, 0.1]);
+         */
+        this.updateTemperature = updateTemperature;
+
+        /**
+         * @Property("updateColor");
+         * @Type("number");
+         * @Title("devices.list.form.color.update.color");
+         * @Range([-1, 1, 1]);
+         */
+        this.updateColor = updateColor;
     }
 
     /**
@@ -107,7 +125,7 @@ class DevicesListForm extends FormObject.class {
      * @returns {DevicesListForm}      A form object
      */
     json(data) {
-        return new DevicesListForm(data.id, data.identifier, data.status, data.brightness, data.color, data.colorTemperature, data.keepParams, data.updateBrightness);
+        return new DevicesListForm(data.id, data.identifier, data.status, data.brightness, data.color, data.colorTemperature, data.keepParams, data.updateBrightness, data.updateTemperature, data.updateColor);
     }
 }
 

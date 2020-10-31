@@ -121,6 +121,8 @@
     "devices.list.form.color": "Color",
     "devices.list.form.color.temperature": "Temperature (cold <--> hot)",
     "devices.list.form.color.update.brightness": "Update brightness",
+    "devices.list.form.color.update.temperature": "Update temperature",
+    "devices.list.form.color.update.color": "Update color",
     "devices.list.form.keep.params": "Keep parameters as is (brightness, color and color temperature)",
     "devices.list.scenario.devices": "Devices",
     "devices.list.scenario.title": "Devices global",
