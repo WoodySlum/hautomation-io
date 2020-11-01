@@ -14,7 +14,6 @@ const Logger = require("./../../logger/Logger");
 const FormConfiguration = require("./../formconfiguration/FormConfiguration");
 const EnvironmentForm = require("./EnvironmentForm");
 const Tile = require("./../dashboardmanager/Tile");
-const Icons = require("./../../utils/Icons");
 const DayNightScenarioForm = require("./DayNightScenarioForm");
 const DayNightScenarioTriggerForm = require("./DayNightScenarioTriggerForm");
 const WebServices = require("./../../services/webservices/WebServices");

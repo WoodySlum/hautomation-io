@@ -546,7 +546,7 @@ class CamerasManager {
             context.getImage(defaultCamera.id, (err, data) => {
                 if (!err) {
                     ImageUtils.class.resize(data.toString("base64"), (error, tData) => {
-                        tile = new Tile.class(context.dashboardManager.themeManager, "cameras", Tile.TILE_GENERIC_ACTION_DARK, Icons.class.list()["facetime_video"], null, context.translateManager.t("cameras.tile"), null, tData, null, 0, 100, "cameras");
+                        tile = new Tile.class(context.dashboardManager.themeManager, "cameras", Tile.TILE_GENERIC_ACTION_DARK, svg, null, context.translateManager.t("cameras.tile"), null, tData, null, 0, 100, "cameras");
                         if (context.cameras.length > 0) {
                             context.dashboardManager.registerTile(tile);
                         }

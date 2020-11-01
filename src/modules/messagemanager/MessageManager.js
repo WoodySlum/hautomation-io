@@ -9,7 +9,6 @@ const APIResponse = require("./../../services/webservices/APIResponse");
 const Authentication = require("./../authentication/Authentication");
 const DateUtils = require("./../../utils/DateUtils");
 const Tile = require("./../dashboardmanager/Tile");
-const Icons = require("./../../utils/Icons");
 const MessageScenarioForm = require("./MessageScenarioForm");
 const MessageScenarioTriggerForm = require("./MessageScenarioTriggerForm");
 const fs = require("fs-extra");
