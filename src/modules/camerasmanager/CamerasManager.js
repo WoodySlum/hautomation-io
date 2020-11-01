@@ -14,7 +14,6 @@ const DateUtils = require("./../../utils/DateUtils");
 const CamerasForm = require("./CamerasForm");
 const CamerasListForm = require("./CamerasListForm");
 const Tile = require("./../dashboardmanager/Tile");
-const Icons = require("./../../utils/Icons");
 const ImageUtils = require("./../../utils/ImageUtils");
 const TimeEventService = require("./../../services/timeeventservice/TimeEventService");
 const TimelapseGenerator = require("./TimelapseGenerator");
