@@ -18,6 +18,7 @@ const ImageUtils = require("./../../utils/ImageUtils");
 const TimeEventService = require("./../../services/timeeventservice/TimeEventService");
 const TimelapseGenerator = require("./TimelapseGenerator");
 const CameraRecordScenarioForm = require("./CameraRecordScenarioForm");
+const Icons = require("./../../utils/Icons");
 
 const CONF_MANAGER_KEY = "cameras";
 const CAMERAS_MANAGER_AVAILABLE_GET = ":/cameras/available/get/";
@@ -532,10 +533,7 @@ class CamerasManager {
      * @param  {CamerasManager} context The instance
      */
     registerTile(context) {
-
-        // Credits : Good Ware / https://www.flaticon.com/free-icon/security-camera_2933760
-        const svg = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"512\" height=\"512\" viewBox=\"0 0 128 128\"><g><path d=\"M127.125,55.9l-78-45.031A9.762,9.762,0,0,0,35.81,14.436L26.83,29.989,20.852,40.342a9.763,9.763,0,0,0,3.57,13.319L51.165,69.1l-4.159,7.092a6.275,6.275,0,0,1-5.392,3.089H26v-11.9a1.75,1.75,0,0,0-1.75-1.75h-9.5V63.373A7.759,7.759,0,0,0,7,55.623H1.75A1.749,1.749,0,0,0,0,57.373V116.69a1.749,1.749,0,0,0,1.75,1.75H7a7.759,7.759,0,0,0,7.75-7.75v-5.559h9.5a1.75,1.75,0,0,0,1.75-1.75v-8.6H41.614A21.834,21.834,0,0,0,60.376,84.036l4.213-7.184,14.659,8.463a9.7,9.7,0,0,0,4.858,1.31,9.8,9.8,0,0,0,2.54-.336A9.689,9.689,0,0,0,90.881,83.9,14.579,14.579,0,0,0,97,85.254a14.813,14.813,0,0,0,3.836-.508,14.614,14.614,0,0,0,7.971-5.4l3.584,2.069a1.749,1.749,0,0,0,2.391-.641l12.98-22.481A1.751,1.751,0,0,0,127.125,55.9ZM11.25,110.69A4.254,4.254,0,0,1,7,114.94H3.5V59.123H7a4.254,4.254,0,0,1,4.25,4.25V110.69Zm11.25-9.059H14.75v-32.5H22.5v32.5ZM57.356,82.265a18.318,18.318,0,0,1-15.742,9.017H26v-8.5H41.614a9.788,9.788,0,0,0,8.411-4.818L54.2,70.852l7.362,4.25ZM81,82.284,26.172,50.63a6.257,6.257,0,0,1-2.288-8.538l5.1-8.837,50.247,29.01,15.405,8.894L89.535,80l-.007.011a6.176,6.176,0,0,1-.441.65l0,.007A6.256,6.256,0,0,1,81,82.284Zm18.937-.919A11.155,11.155,0,0,1,93,81l4.673-8.093,8.093,4.672A11.155,11.155,0,0,1,99.935,81.365Zm12.695-3.86-11.317-6.534L97.9,69,59.263,46.694,30.736,30.224l8.105-14.038A6.257,6.257,0,0,1,47.379,13.9l76.48,44.157Z\"/><path d=\"M105.154,67.993a6.689,6.689,0,0,0,3.355.905,6.775,6.775,0,0,0,1.752-.232,6.73,6.73,0,1,0-5.107-.673Zm.569-7.443a3.211,3.211,0,0,1,1.961-1.5,3.264,3.264,0,0,1,.84-.111,3.233,3.233,0,1,1-2.8,1.616Z\"/><path d=\"M45.5,50.27,31.16,41.989a1.75,1.75,0,1,0-1.75,3.031L43.754,53.3A1.75,1.75,0,0,0,45.5,50.27Z\"/></g></svg>";
-        let tile = new Tile.class(context.dashboardManager.themeManager, "cameras", Tile.TILE_GENERIC_ACTION_DARK, svg, null, context.translateManager.t("cameras.tile"), null, null, null, 0, 100, "cameras");
+        let tile = new Tile.class(context.dashboardManager.themeManager, "cameras", Tile.TILE_GENERIC_ACTION_DARK, Icons.icons["camera"], null, context.translateManager.t("cameras.tile"), null, null, null, 0, 100, "cameras");
         if (context.cameras.length > 0) {
             context.dashboardManager.registerTile(tile);
         }
@@ -545,7 +543,7 @@ class CamerasManager {
             context.getImage(defaultCamera.id, (err, data) => {
                 if (!err) {
                     ImageUtils.class.resize(data.toString("base64"), (error, tData) => {
-                        tile = new Tile.class(context.dashboardManager.themeManager, "cameras", Tile.TILE_GENERIC_ACTION_DARK, svg, null, context.translateManager.t("cameras.tile"), null, tData, null, 0, 100, "cameras");
+                        tile = new Tile.class(context.dashboardManager.themeManager, "cameras", Tile.TILE_GENERIC_ACTION_DARK, Icons.icons["camera"], null, context.translateManager.t("cameras.tile"), null, tData, null, 0, 100, "cameras");
                         if (context.cameras.length > 0) {
                             context.dashboardManager.registerTile(tile);
                         }
@@ -586,7 +584,7 @@ class CamerasManager {
                         cameras.push({
                             identifier: camera.id,
                             name: camera.name,
-                            icon: "E908",
+                            icon: Icons.icons["camera"],
                             category:"TEST",
                             form:Object.assign(self.formManager.getForm(cameraPlugin.cameraAPI.form), {data:camera})
                         });

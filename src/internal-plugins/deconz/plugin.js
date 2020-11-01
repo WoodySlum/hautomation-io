@@ -258,7 +258,7 @@ function loaded(api) {
          * Add tile on dashboard
          */
         addTile() {
-            const tile = this.api.dashboardAPI.Tile("deconz-scan", this.api.dashboardAPI.TileType().TILE_GENERIC_ACTION, this.api.exported.Icons.class.list()["rss-1"], null, this.api.translateAPI.t("deconz.tile.scan.zigbee"), null, null, null, 0, 1000100, WS_SCAN_ENDPOINT, this.api.webAPI.Authentication().AUTH_ADMIN_LEVEL);
+            const tile = this.api.dashboardAPI.Tile("deconz-scan", this.api.dashboardAPI.TileType().TILE_GENERIC_ACTION, api.exported.Icons.icons["add"], null, this.api.translateAPI.t("deconz.tile.scan.zigbee"), null, null, null, 0, 1000100, WS_SCAN_ENDPOINT, this.api.webAPI.Authentication().AUTH_ADMIN_LEVEL);
             this.api.dashboardAPI.unregisterTile("deconz-scan");
             this.api.dashboardAPI.registerTile(tile);
         }

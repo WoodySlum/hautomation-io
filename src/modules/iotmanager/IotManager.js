@@ -8,6 +8,7 @@ const APIResponse = require("./../../services/webservices/APIResponse");
 const Authentication = require("./../authentication/Authentication");
 const IotForm = require("./IotForm");
 const IotsListForm = require("./IotsListForm");
+const Icons = require("./../../utils/Icons");
 
 const FLASH_TIMEOUT_REQUEST_S = 10 * 60;
 const CONF_MANAGER_KEY = "iots";
@@ -454,8 +455,6 @@ class IotManager {
                 resolve(new APIResponse.class(true, iots));
             });
         } else if (apiRequest.route === IOT_MANAGER_GET) {
-            // Credits : Payungkead / https://www.flaticon.com/free-icon/processor_2339168
-            const svg = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 64 64\" width=\"512\" height=\"512\"><g id=\"Semiconductor-transistor-chip-electronics-4\" data-name=\"Semiconductor-transistor-chip-electronics\"><path d=\"M59,27a3,3,0,0,0,0-6H56V19h3a3,3,0,0,0,0-6H56V11a1.033,1.033,0,0,0-.29-.71l-2-2A1.033,1.033,0,0,0,53,8H51V5a3,3,0,0,0-6,0V8H43V5a3,3,0,0,0-6,0V8H35V5a3,3,0,0,0-6,0V8H27V5a3,3,0,0,0-6,0V8H19V5a3,3,0,0,0-6,0V8H11a1.033,1.033,0,0,0-.71.29l-2,2A1.033,1.033,0,0,0,8,11v2H5a3,3,0,0,0,0,6H8v2H5a3,3,0,0,0,0,6H8v2H5a3,3,0,0,0,0,6H8v2H5a3,3,0,0,0,0,6H8v2H5a3,3,0,0,0,0,6H8v2a1.033,1.033,0,0,0,.29.71l2,2A1.033,1.033,0,0,0,11,56h2v3a3,3,0,0,0,6,0V56h2v3a3,3,0,0,0,6,0V56h2v3a3,3,0,0,0,6,0V56h2v3a3,3,0,0,0,6,0V56h2v3a3,3,0,0,0,6,0V56h2a1.033,1.033,0,0,0,.71-.29l2-2A1.033,1.033,0,0,0,56,53V51h3a3,3,0,0,0,0-6H56V43h3a3,3,0,0,0,0-6H56V35h3a3,3,0,0,0,0-6H56V27ZM56,15h3a1,1,0,0,1,0,2H56Zm0,8h3a1,1,0,0,1,0,2H56ZM8,49H5a1,1,0,0,1,0-2H8Zm0-8H5a1,1,0,0,1,0-2H8Zm0-8H5a1,1,0,0,1,0-2H8Zm0-8H5a1,1,0,0,1,0-2H8Zm0-8H5a1,1,0,0,1,0-2H8ZM47,5a1,1,0,0,1,2,0V8H47ZM39,5a1,1,0,0,1,2,0V8H39ZM31,5a1,1,0,0,1,2,0V8H31ZM23,5a1,1,0,0,1,2,0V8H23ZM15,5a1,1,0,0,1,2,0V8H15Zm2,54a1,1,0,0,1-2,0V56h2Zm8,0a1,1,0,0,1-2,0V56h2Zm8,0a1,1,0,0,1-2,0V56h2Zm8,0a1,1,0,0,1-2,0V56h2Zm8,0a1,1,0,0,1-2,0V56h2Zm5-6.41L52.59,54H11.41L10,52.59V11.41L11.41,10H52.59L54,11.41ZM59,47a1,1,0,0,1,0,2H56V47Zm0-8a1,1,0,0,1,0,2H56V39Zm0-8a1,1,0,0,1,0,2H56V31Z\"/><path d=\"M51,12H13a1,1,0,0,0-1,1V51a1,1,0,0,0,1,1H51a1,1,0,0,0,1-1V13A1,1,0,0,0,51,12ZM50,50H14V14H50Z\"/><circle cx=\"18\" cy=\"18\" r=\"2\"/></g></svg>";
             return new Promise((resolve) => {
                 const iots = [];
                 self.iots.forEach((iot) => {
@@ -464,7 +463,7 @@ class IotManager {
                         iots.push({
                             identifier: iot.id,
                             name: iot.name,
-                            icon: svg,
+                            icon: Icons.icons["iot"],
                             iotApp: iot.iotApp,
                             form:Object.assign(self.formManager.getForm(this.iotApps[iot.iotApp].form), {data:iot}),
                             wiringSchema: this.iotApps[iot.iotApp].wiringSchema,
