@@ -42,7 +42,7 @@ function loaded(api) {
          */
         constructor(api, id, configuration) {
             super(api, id, configuration);
-            this.icon = api.exported.Icons.class.list()["microchip"];
+            this.icon = api.exported.Icons.icons["cpu"];
             this.value = 0;
             this.count = 4;
             api.timeEventAPI.register((self, hour, minute) => {

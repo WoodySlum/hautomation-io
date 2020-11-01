@@ -42,7 +42,7 @@ function loaded(api) {
          */
         constructor(api, id, configuration) {
             super(api, id, configuration);
-            this.icon = api.exported.Icons.class.list()["microchip"];
+            this.icon = api.exported.Icons.icons["ram"];
             api.timeEventAPI.register((self) => {
                 self.setValue(Math.round(os.freememPercentage() * 100));
             }, this, api.timeEventAPI.constants().EVERY_HOURS_INACCURATE);
