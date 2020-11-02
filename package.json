@@ -127,7 +127,7 @@
         "sinon": "^7.5.0"
     },
     "dependencies": {
-        "linky": "1.0.1",
+        "linky": "1.1.0",
         "@mihaiblaga89/bmw-connecteddrive-api": "^0.5",
         "ajv": "^6.10",
         "annotation": "git://github.com/WoodySlum/node-annotation.git#master",
