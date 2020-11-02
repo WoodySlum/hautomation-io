@@ -75,7 +75,7 @@ function loaded(api) {
                     if (i === sensors.length) {
                         const tiles = [];
                         Object.keys(rooms).forEach((room) => {
-                            tiles.push({icon: rooms[room].open ? api.exported.Icons.icons()["door-opened"] : api.exported.Icons.icons["door-closed"], text: room, colorDefault: (rooms[room].open ? context.api.themeAPI.constants().OFF_COLOR_KEY : context.api.themeAPI.constants().ON_COLOR_KEY)});
+                            tiles.push({icon: rooms[room].open ? api.exported.Icons.icons["door-opened"] : api.exported.Icons.icons["door-closed"], text: room, colorDefault: (rooms[room].open ? context.api.themeAPI.constants().OFF_COLOR_KEY : context.api.themeAPI.constants().ON_COLOR_KEY)});
                         });
 
                         const tile = context.api.dashboardAPI.Tile("contact-sensor-sumup", context.api.dashboardAPI.TileType().TILE_SUB_TILES, null, null, null, null, null, null, 0, 700, null, tiles, context.api.webAPI.Authentication().AUTH_USAGE_LEVEL);
