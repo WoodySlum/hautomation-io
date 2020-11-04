@@ -5,6 +5,7 @@ const WebServices = require("./../../services/webservices/WebServices");
 const Authentication = require("./../authentication/Authentication");
 const APIResponse = require("./../../services/webservices/APIResponse");
 const Logger = require("./../../logger/Logger");
+const Icons = require("./../../utils/Icons");
 
 /**
  * This class generates dashboard
@@ -110,7 +111,8 @@ class ThemeManager {
             clearColor:(customizedTheme.clearColor ? customizedTheme.clearColor : "#E4EEDD"),
             onColor:(customizedTheme.onColor ? customizedTheme.onColor : "#77A310"),
             offColor:(customizedTheme.offColor ? customizedTheme.offColor : "#D04B48"),
-            tilesSpacing:(typeof customizedTheme.tilesSpacing !== "undefined" ? customizedTheme.tilesSpacing : 0)
+            tilesSpacing:(typeof customizedTheme.tilesSpacing !== "undefined" ? customizedTheme.tilesSpacing : 0),
+            icons:Icons.iconsSvg
         };
     }
 

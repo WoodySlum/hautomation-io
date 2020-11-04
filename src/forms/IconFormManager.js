@@ -19,14 +19,15 @@ class IconFormManager {
         const icons = [];
         const iconsLabels = [];
         const list = Icons.class.list();
-        const raw = Icons.class.raw();
 
         Object.keys(list).forEach((key) => {
             icons.push(list[key]);
-            iconsLabels.push((key.charAt(0).toUpperCase() + key.slice(1).toLowerCase()).split("_").join(" ").split("-").join(" "));
+            iconsLabels.push(list[key]);
         });
 
-        formManager.register(IconForm.class, icons, iconsLabels);
+
+
+        formManager.register(IconForm.class, icons.sort(), iconsLabels.sort());
     }
 }
 
