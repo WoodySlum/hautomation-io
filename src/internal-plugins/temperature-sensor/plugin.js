@@ -125,8 +125,12 @@ function loaded(api) {
                 api.exported.Logger.err("Invalid value for temperature : ", value);
             }
 
-            if (value > 10) {
+            if (value > 28) {
                 this.setTileBackground("./res/tiles/hot.jpg");
+            } else if (value > 12) {
+                this.setTileBackground("./res/tiles/nice-day.jpg");
+            } else if (value > 4) {
+                this.setTileBackground("./res/tiles/cold-day.jpg");
             } else {
                 this.setTileBackground("./res/tiles/cold.jpg");
             }

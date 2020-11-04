@@ -1,4 +1,5 @@
 "use strict";
+const fs = require("fs-extra");
 const Logger = require("./../../logger/Logger");
 const DeviceForm = require("./DeviceForm");
 const FormConfiguration = require("./../formconfiguration/FormConfiguration");
@@ -415,7 +416,7 @@ class DeviceManager {
             if (deviceType === DEVICE_TYPE_LIGHT || deviceType === DEVICE_TYPE_LIGHT_DIMMABLE || deviceType === DEVICE_TYPE_LIGHT_DIMMABLE_COLOR) {
                 tile = new Tile.class(this.dashboardManager.themeManager, device.id, Tile.TILE_DEVICE, device.icon.icon, null, device.name, null, null, null, device.status > 0?1:0, i, "/device/set/" + device.id + "/", deviceInfos, null, Authentication.AUTH_GUEST_LEVEL);
             } else if (deviceType === DEVICE_TYPE_SHUTTER) {
-                tile = new Tile.class(this.dashboardManager.themeManager, device.id, Tile.TILE_SHUTTER, device.icon.icon, null, device.name, null, null, null, device.status > 0?1:0, i, "/device/set/" + device.id + "/", deviceInfos, null, Authentication.AUTH_GUEST_LEVEL);
+                tile = new Tile.class(this.dashboardManager.themeManager, device.id, Tile.TILE_SHUTTER, device.icon.icon, null, device.name, null, fs.readFileSync("./res/tiles/shutter.jpg").toString("base64"), null, device.status > 0?1:0, i, "/device/set/" + device.id + "/", deviceInfos, null, Authentication.AUTH_GUEST_LEVEL);
             }
 
             this.dashboardManager.registerTile(tile);
