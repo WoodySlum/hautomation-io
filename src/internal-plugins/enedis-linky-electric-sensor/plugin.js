@@ -125,8 +125,8 @@ function loaded(api) {
                 dateStart.setDate(dateStart.getDate() - 1);
                 const dateEnd = new Date();
                 dateEnd.setDate(dateEnd.getDate());
-                const dateTxtStart = dateStart.getFullYear() + "-" + (dateStart.getMonth() + 1) + "-" + dateStart.getDate();
-                const dateTxtEnd = dateEnd.getFullYear() + "-" + (dateEnd.getMonth() + 1) + "-" + dateEnd.getDate();
+                const dateTxtStart = dateStart.getFullYear() + "-" + String(dateStart.getMonth() + 1).padStart(2, "0") + "-" + String(dateStart.getDate()).padStart(2, "0");
+                const dateTxtEnd = dateEnd.getFullYear() + "-" + String(dateEnd.getMonth() + 1).padStart(2, "0") + "-" + String(dateEnd.getDate()).padStart(2, "0");
                 session.getDailyConsumption(dateTxtStart, dateTxtEnd).then((result) => {
 
                     if (result && result.data && result.data.length === 1) {
