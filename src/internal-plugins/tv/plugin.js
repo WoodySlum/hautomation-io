@@ -170,7 +170,7 @@ function loaded(api) {
          * @param  {int} [status=0]   The TV sattus (on => 1, off => 0)
          */
         update(status = 0) {
-            const tile = this.api.dashboardAPI.Tile(this.identifier, this.api.dashboardAPI.TileType().TILE_GENERIC_ACTION_STATUS, this.api.exported.Icons.class.list()["television"], null, this.tileTitle, null, null, null, status, 8000, this.identifier, {buttons:this.buttons}, null, api.webAPI.Authentication().AUTH_GUEST_LEVEL);
+            const tile = this.api.dashboardAPI.Tile(this.identifier, this.api.dashboardAPI.TileType().TILE_GENERIC_ACTION_STATUS, this.api.exported.Icons.class.list()["tv-screen"], null, this.tileTitle, null, null, null, status, 8000, this.identifier, {buttons:this.buttons}, null, api.webAPI.Authentication().AUTH_GUEST_LEVEL);
             this.api.dashboardAPI.registerTile(tile);
         }
 

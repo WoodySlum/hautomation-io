@@ -1,6 +1,8 @@
 "use strict";
 
 const THEME_GET = ":/theme/get/";
+const THEME_GET_ROUTE = THEME_GET + "[hash*]/";
+const sha256 = require("sha256");
 const WebServices = require("./../../services/webservices/WebServices");
 const Authentication = require("./../authentication/Authentication");
 const APIResponse = require("./../../services/webservices/APIResponse");
@@ -24,7 +26,7 @@ class ThemeManager {
         this.webServices = webServices;
         this.userThemes = {};
 
-        this.webServices.registerAPI(this, WebServices.GET, THEME_GET, Authentication.AUTH_NO_LEVEL);
+        this.webServices.registerAPI(this, WebServices.GET, THEME_GET_ROUTE, Authentication.AUTH_NO_LEVEL);
     }
 
     /**
@@ -124,9 +126,16 @@ class ThemeManager {
      */
     processAPI(apiRequest) {
         const self = this;
-        if (apiRequest.route === THEME_GET) {
+        if (apiRequest.route.startsWith(THEME_GET)) {
             return new Promise((resolve) => {
-                resolve(new APIResponse.class(true, self.getColors(apiRequest.authenticationData.username)));
+                const theme = self.getColors(apiRequest.authenticationData.username);
+                const hash = sha256(JSON.stringify(theme)).substring(1, 5);
+                theme.hash = hash;
+                if (apiRequest.data && apiRequest.data.hash && apiRequest.data.hash == hash) {
+                    resolve(new APIResponse.class(true, {}, null, null, true));
+                } else {
+                    resolve(new APIResponse.class(true, theme));
+                }
             });
         }
     }

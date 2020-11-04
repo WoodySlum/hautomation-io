@@ -550,11 +550,11 @@ function loaded(api) {
             const config = api.configurationAPI.getConfiguration();
 
             if (forecast && config && config.rainForecastTileMode && config.rainForecastTileMode > 0) {
-                let tile = api.dashboardAPI.Tile("openweather-rain-forecast", api.dashboardAPI.TileType().TILE_INFO_ONE_TEXT, api.exported.Icons.class.list()["rain"], null, this.api.translateAPI.t("openweather.rain.forecast.no.rain"));
+                let tile = api.dashboardAPI.Tile("openweather-rain-forecast", api.dashboardAPI.TileType().TILE_INFO_ONE_TEXT, api.exported.Icons.class.list()["sun"], null, this.api.translateAPI.t("openweather.rain.forecast.no.rain"));
                 if (forecast.snow) {
-                    tile = api.dashboardAPI.Tile("openweather-rain-forecast", api.dashboardAPI.TileType().TILE_INFO_ONE_TEXT, api.exported.Icons.class.list()["snow-heavy"], null, this.api.translateAPI.t("openweather.rain.forecast.snow", Math.round(forecast.snowForecastTime / (60 * 60))));
+                    tile = api.dashboardAPI.Tile("openweather-rain-forecast", api.dashboardAPI.TileType().TILE_INFO_ONE_TEXT, api.exported.Icons.class.list()["snowflake"], null, this.api.translateAPI.t("openweather.rain.forecast.snow", Math.round(forecast.snowForecastTime / (60 * 60))));
                 } else if (forecast.rain) {
-                    tile = api.dashboardAPI.Tile("openweather-rain-forecast", api.dashboardAPI.TileType().TILE_INFO_ONE_TEXT, api.exported.Icons.class.list()["rain"], null, this.api.translateAPI.t("openweather.rain.forecast.rain", Math.round(forecast.rainForecastTime / (60 * 60))));
+                    tile = api.dashboardAPI.Tile("openweather-rain-forecast", api.dashboardAPI.TileType().TILE_INFO_ONE_TEXT, api.exported.Icons.class.list()["umbrellas"], null, this.api.translateAPI.t("openweather.rain.forecast.rain", Math.round(forecast.rainForecastTime / (60 * 60))));
                 }
 
                 api.dashboardAPI.registerTile(tile);

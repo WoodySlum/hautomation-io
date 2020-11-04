@@ -39,7 +39,7 @@ function loaded(api) {
          * @returns {RainTimeSensor}                                                       The instance
          */
         constructor(api, id, configuration) {
-            super(api, id, "RAIN-TIME", configuration, api.exported.Icons.class.list()["rain-inv"], 0);
+            super(api, id, "RAIN-TIME", configuration, api.exported.Icons.class.list()["umbrellas"], 0);
             this.chartType = api.exported.Sensor.constants().CHART_TYPE_BAR;
             this.aggregationMode = api.exported.Sensor.constants().AGGREGATION_MODE_SUM;
             this.unit = api.translateAPI.t("rain.time.unit.seconds");

@@ -55,7 +55,7 @@ function loaded(api) {
          * @returns {Tile}                  A tile
          */
         getTile(convertedValue) {
-            return this.api.dashboardAPI.Tile("sensor-"+this.id, this.api.dashboardAPI.TileType().TILE_INFO_TWO_TEXT, ((convertedValue === 1) ? this.api.exported.Icons.class.list()["lock-open"] : this.api.exported.Icons.class.list()["lock"]), null, this.name, ((convertedValue === 1) ? this.api.translateAPI.t("contact.unit.state.open") : this.api.translateAPI.t("contact.unit.state.closed")), null, null, null, 800, "statistics");
+            return this.api.dashboardAPI.Tile("sensor-"+this.id, this.api.dashboardAPI.TileType().TILE_INFO_TWO_TEXT, ((convertedValue === 1) ? this.api.exported.Icons.class.list()["unlocked"] : this.api.exported.Icons.class.list()["locked"]), null, this.name, ((convertedValue === 1) ? this.api.translateAPI.t("contact.unit.state.open") : this.api.translateAPI.t("contact.unit.state.closed")), null, null, null, 800, "statistics");
         }
 
         /**

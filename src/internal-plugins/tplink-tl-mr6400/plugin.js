@@ -190,7 +190,7 @@ function loaded(api) {
                                             }
 
                                             if (conf.technoTile) {
-                                                const tile = api.dashboardAPI.Tile("tl-mr6400-network", api.dashboardAPI.TileType().TILE_INFO_TWO_TEXT, api.exported.Icons.class.list()["signal"], null, api.translateAPI.t("tlmr6400.router.title"), networkType + " [" + parseInt(self.apiInfos.wan.signalStrength / 4 * 100) + "%]");
+                                                const tile = api.dashboardAPI.Tile("tl-mr6400-network", api.dashboardAPI.TileType().TILE_INFO_TWO_TEXT, api.exported.Icons.class.list()["router"], null, api.translateAPI.t("tlmr6400.router.title"), networkType + " [" + parseInt(self.apiInfos.wan.signalStrength / 4 * 100) + "%]");
                                                 api.dashboardAPI.registerTile(tile);
                                             } else {
                                                 api.dashboardAPI.unregisterTile("tl-mr6400-network");
