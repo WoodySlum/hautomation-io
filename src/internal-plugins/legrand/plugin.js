@@ -85,7 +85,6 @@ function loaded(api) {
         constructor(api) {
             this.plant = null;
             this.modules = null;
-
             try {
                 this.oauthData = {};
                 this.oauthData = api.configurationAPI.loadData(Object, true);
@@ -98,6 +97,8 @@ function loaded(api) {
                 api.exported.Logger.err(e);
             }
 
+            this.plant = this.oauthData.plant ? this.oauthData.plant : null;
+            this.modules = this.oauthData.modules ? this.oauthData.modules : null;
 
             // Refresh oauth token every hours
             api.timeEventAPI.register((self, nowHours, nowMinutes) => {
@@ -115,6 +116,8 @@ function loaded(api) {
          * @param  {Object} oAuthData The oAuth data
          */
         onOAuthData(oAuthData) {
+            oAuthData.plant = this.plant;
+            oAuthData.modules = this.modules;
             api.exported.Logger.info("Received oauth data");
             api.configurationAPI.saveData(oAuthData);
             this.oauthData = oAuthData;
@@ -232,6 +235,9 @@ function loaded(api) {
                     this.plant = data.plants[0];
                     this.getModules(this.plant, (err, data) => {
                         this.modules = data.modules;
+                        this.oauthData.plant = this.plant;
+                        this.oauthData.modules = this.modules;
+                        api.configurationAPI.saveData(this.oauthData);
 
                         const legrandIds = [];
                         const legrandIdsLabels = [];
