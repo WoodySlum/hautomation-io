@@ -8,6 +8,7 @@ const Authentication = require("./../authentication/Authentication");
 const APIResponse = require("./../../services/webservices/APIResponse");
 const Tile = require("./../dashboardmanager/Tile");
 const DevicesListForm = require("./DevicesListForm");
+const DevicesListSimpleForm = require("./DevicesListSimpleForm");
 const DevicesListScenarioTriggerForm = require("./DevicesListScenarioTriggerForm");
 const DevicesListScenarioForm = require("./DevicesListScenarioForm");
 const Icons = require("./../../utils/Icons");
@@ -312,6 +313,7 @@ class DeviceManager {
             devicesId.push(device.id);
         });
         this.formManager.register(DevicesListForm.class, devicesName, devicesId);
+        this.formManager.register(DevicesListSimpleForm.class, devicesName, devicesId);
         this.formManager.register(DevicesListScenarioTriggerForm.class, devicesName, devicesId);
     }
 
@@ -471,6 +473,12 @@ class DeviceManager {
      * @param  {int} [colorTemperature=0] Color temperature (between 0 and 1)
      */
     switchDevice(id, status = null, brightness = 0, color = "FFFFFF", colorTemperature = 0) {
+        const device = this.getDeviceById(id);
+        if (device && device.subDevices && device.subDevices.length > 0) {
+            device.subDevices.forEach((subDevice) => {
+                this.switchDevice(subDevice.identifier, status, brightness, color, colorTemperature);
+            });
+        }
         color = color ? color.replace("#", "") : color; // Remove sharp
         if (typeof status === "string") {
             if (status && (status.toLowerCase() === STATUS_ON || status.toLowerCase() === STATUS_OPEN)) {
@@ -480,7 +488,6 @@ class DeviceManager {
             } else if (status && status.toLowerCase() === STATUS_STOP) {
                 status = INT_STATUS_STOP;
             } else if (status && status.toLowerCase() === STATUS_INVERT) {
-                const device = this.getDeviceById(id);
                 if (device.status === INT_STATUS_ON) {
                     status = INT_STATUS_OFF;
                 } else {
@@ -491,46 +498,49 @@ class DeviceManager {
             }
         }
 
-        this.formConfiguration.getDataCopy().forEach((device) => {
-            if (parseInt(device.id) === parseInt(id)) {
-                Logger.info("Switch device " + device.name + " (" + device.id + "). Status (" + status + ") / Brightness (" + brightness + ") / Color (" + color + ") / ColorTemperature (" + colorTemperature + ")");
+        this.formConfiguration.getDataCopy().forEach((deviceConfiguration) => {
+            if (parseInt(deviceConfiguration.id) === parseInt(id)) {
+                Logger.info("Switch device " + deviceConfiguration.name + " (" + deviceConfiguration.id + "). Status (" + status + ") / Brightness (" + brightness + ") / Color (" + color + ") / ColorTemperature (" + colorTemperature + ")");
                 // Check for day and night mode
-                if (!device.worksOnlyOnDayNight
-                    || (device.worksOnlyOnDayNight === 1)
-                    || (device.worksOnlyOnDayNight === 2 && !this.environmentManager.isNight())
-                    || (device.worksOnlyOnDayNight === 3 && this.environmentManager.isNight())
-                    || device.status === INT_STATUS_ON) {
+                if (!deviceConfiguration.worksOnlyOnDayNight
+                    || (deviceConfiguration.worksOnlyOnDayNight === 1)
+                    || (deviceConfiguration.worksOnlyOnDayNight === 2 && !this.environmentManager.isNight())
+                    || (deviceConfiguration.worksOnlyOnDayNight === 3 && this.environmentManager.isNight())
+                    || deviceConfiguration.status === INT_STATUS_ON) {
 
                     let newDeviceStatus = null;
+                    if (device && device.subDevices && device.subDevices.length > 0) {
+                        newDeviceStatus = new DeviceStatus.class(this.getDeviceTypes(device), status, brightness, color, colorTemperature, []);
+                    }
                     Object.keys(this.switchDeviceModules).forEach((switchDeviceModuleKey) => {
                         const switchDeviceModule = this.switchDeviceModules[switchDeviceModuleKey];
-                        if (device[switchDeviceModule.formName]) {
+                        if (deviceConfiguration[switchDeviceModule.formName]) {
                             // Detect what changed
                             const changes = [];
-                            if (device.status != status) {
+                            if (deviceConfiguration.status != status) {
                                 changes.push(ITEM_CHANGE_STATUS);
                             }
 
-                            if (device.brightness != brightness) {
+                            if (deviceConfiguration.brightness != brightness) {
                                 changes.push(ITEM_CHANGE_BRIGHTNESS);
                             }
-                            if (device.color != color) {
+                            if (deviceConfiguration.color != color) {
                                 changes.push(ITEM_CHANGE_COLOR);
                             }
-                            if (device.colorTemperature != colorTemperature) {
+                            if (deviceConfiguration.colorTemperature != colorTemperature) {
                                 changes.push(ITEM_CHANGE_COLOR_TEMP);
                             }
 
-                            newDeviceStatus = switchDeviceModule.switch(device, device[switchDeviceModule.formName], new DeviceStatus.class(this.getDeviceTypes(device), status, brightness, color, colorTemperature, changes));
+                            newDeviceStatus = switchDeviceModule.switch(deviceConfiguration, deviceConfiguration[switchDeviceModule.formName], new DeviceStatus.class(this.getDeviceTypes(deviceConfiguration), status, brightness, color, colorTemperature, changes));
                         }
                     });
 
                     if (newDeviceStatus) {
-                        device.status = newDeviceStatus.getStatus();
-                        device.brightness = newDeviceStatus.getBrightness();
-                        device.color = newDeviceStatus.getColor();
-                        device.colorTemperature = newDeviceStatus.getColorTemperature();
-                        this.saveDevice(device);
+                        deviceConfiguration.status = newDeviceStatus.getStatus();
+                        deviceConfiguration.brightness = newDeviceStatus.getBrightness();
+                        deviceConfiguration.color = newDeviceStatus.getColor();
+                        deviceConfiguration.colorTemperature = newDeviceStatus.getColorTemperature();
+                        this.saveDevice(deviceConfiguration);
                     }
                 } else {
                     Logger.warn("Turning device " + device.id + " is not authorized due to day / night mode. Device configuration (" + device.worksOnlyOnDayNight + "), Current mode is night (" + this.environmentManager.isNight() + "), Status (" + device.status + "), Compared status (" + INT_STATUS_ON + ")");

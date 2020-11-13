@@ -42,6 +42,7 @@
     "device.form.worksOnlyOnDayNight.day": "Day only",
     "device.form.worksOnlyOnDayNight.night": "Night only",
     "device.form.power.outage.restore": "Restore state after power outage",
+    "device.form.sub.devices": "Trigger other devices",
     "icon.form.name": "Icon",
     "radio.form.module": "Module",
     "radio.form.protocol": "Protocol",

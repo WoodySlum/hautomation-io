@@ -125,7 +125,7 @@ class DevicesListForm extends FormObject.class {
      * @returns {DevicesListForm}      A form object
      */
     json(data) {
-        return new DevicesListForm(data.id, data.identifier, data.status, data.brightness, data.color, data.colorTemperature, data.keepParams, data.updateBrightness, data.updateTemperature, data.updateColor);
+        return new DevicesListForm(data.id, data.identifier, data.status, data.brightness, data.color, data.colorTemperature, data.keepParams, data.updateBrightness, data.updateTemperature, data.updateColor, data.subDevices);
     }
 }
 

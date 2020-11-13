@@ -42,6 +42,7 @@
     "device.form.worksOnlyOnDayNight.day": "Seulement la journée",
     "device.form.worksOnlyOnDayNight.night": "Seulement la nuit",
     "device.form.power.outage.restore": "Restaurer l'état après une coupure de courant",
+    "device.form.sub.devices": "Déclencher d'autres périphériques",
     "icon.form.name": "Icône",
     "radio.form.module": "Module",
     "radio.form.protocol": "Protocole",
