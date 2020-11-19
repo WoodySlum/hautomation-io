@@ -1,4 +1,6 @@
 {
     "hard.reboot": "Hard reboot",
-    "soft.reboot": "Reboot"
+    "soft.reboot": "Reboot",
+    "reboot.scenario.trigger.title": "Trigger scenario when starting",
+    "reboot.scenario.trigger": "Enable on boot"
 }

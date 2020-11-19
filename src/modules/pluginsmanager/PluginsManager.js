@@ -61,7 +61,6 @@ const INTERNAL_PLUGINS = [
     "enedis-linky-electric-sensor",
     "esp8266-weather-station",
     "esp-pressure-sensor",
-    "reboot",
     "rain-time-sensor",
     "esp-rain-time-sensor",
     "generic-throughput-sensor",
@@ -117,7 +116,8 @@ const INTERNAL_PLUGINS = [
     "distance-sensor",
     "bmw-distance-sensor",
     "nuki",
-    "legrand"
+    "legrand",
+    "reboot"
 ];
 
 const CORE_PLUGINS = [
@@ -149,7 +149,8 @@ const CORE_PLUGINS = [
     "radio-contact-sensor",
     "contact-sensor",
     "switch-sensor",
-    "distance-sensor"
+    "distance-sensor",
+    "reboot"
 ];
 
 /**

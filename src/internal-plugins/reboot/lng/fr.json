@@ -1,4 +1,6 @@
 {
     "hard.reboot": "Forcer redémarrage",
-    "soft.reboot": "Redémarrer"
+    "soft.reboot": "Redémarrer",
+    "reboot.scenario.trigger.title": "Déclencher ce scénario au démarrrage",
+    "reboot.scenario.trigger": "Activer au démarrage"
 }

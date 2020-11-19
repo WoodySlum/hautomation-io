@@ -7,6 +7,41 @@ const SOFT_REBOOT_ACTION = "/soft-reboot/";
 function loaded(api) {
     api.init();
 
+    /**
+     * This class provides a form for one device
+     * @class
+     */
+    class RebootTriggerForm extends api.exported.FormObject.class {
+        /**
+         * Constructor
+         *
+         * @param  {number} [id=null]                  An identifier
+         * @param  {boolean} [onBoot=false] The trigger
+         * @returns {RebootTriggerForm}                            The instance
+         */
+        constructor(id = null, onBoot = false) {
+            super(id);
+
+            /**
+             * @Property("onBoot");
+             * @Type("boolean");
+             * @Title("reboot.scenario.trigger");
+             * @Default(false);
+             */
+            this.onBoot = onBoot;
+        }
+
+        /**
+         * Convert json data
+         *
+         * @param  {Object} data Some key / value data
+         * @returns {RebootTriggerForm}      A form object
+         */
+        json(data) {
+            return new RebootTriggerForm(data.id, data.onBoot);
+        }
+    }
+
     class Reboot {
         /**
          * Constructor
@@ -19,6 +54,13 @@ function loaded(api) {
             this.api.webAPI.register(this, api.webAPI.constants().POST, ":" + REBOOT_ACTION, api.webAPI.Authentication().AUTH_ADMIN_LEVEL);
             this.api.webAPI.register(this, api.webAPI.constants().POST, ":" + SOFT_REBOOT_ACTION, api.webAPI.Authentication().AUTH_USAGE_LEVEL);
             this.registerTile();
+            this.api.scenarioAPI.register(RebootTriggerForm, null, "reboot.scenario.trigger.title", 200, false);
+            this.api.scenarioAPI.getScenarios().forEach((scenario) => {
+                if (scenario && scenario.RebootTriggerForm && scenario.RebootTriggerForm.onBoot == true) {
+                    this.api.scenarioAPI.triggerScenario(scenario);
+                }
+            });
+
         }
 
         /**
